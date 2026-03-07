@@ -1,0 +1,63 @@
+## 图类型与用途
+这是一个流程图，展示了 `github.com/kisielk/errcheck` 包及其依赖项的结构。该图由 `godepgraph` 工具生成，用于可视化 Go 包之间的依赖关系，帮助开发者理解项目的依赖树。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是 `github.com/kisielk/errcheck` 包，下方是其依赖的包，形成一个依赖树。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为三个阶段：顶层的 `errcheck` 包、中间层的直接依赖包、以及底层的更深层依赖包。
+
+## 节点逐项说明
+- **github.com/kisielk/errcheck**：表示 `errcheck` 工具的入口包，是依赖关系图的起点。
+- **github.com/kisielk/errcheck/errcheck**：`errcheck` 包的核心逻辑实现。
+- **golang.org/x/tools/go/packages**：Go 官方提供的 `packages` 工具包，用于加载和分析 Go 包。
+- **golang.org/x/tools/go/analysis**：Go 官方提供的 `analysis` 工具包，用于静态代码分析。
+- **golang.org/x/mod/semver**：Go 官方提供的 `semver` 包，用于处理语义版本。
+- **golang.org/x/sync/errgroup**：Go 官方提供的 `errgroup` 包，用于并发错误处理。
+- **golang.org/x/tools/go/gcexportdata**：Go 官方提供的 `gcexportdata` 包，用于处理 Go 编译器导出的数据。
+- **golang.org/x/tools/internal/gcimporter**：Go 官方提供的 `gcimporter` 包，用于从 gc 格式的导出数据中导入类型信息。
+- **golang.org/x/tools/internal/gocommand**：Go 官方提供的 `gocommand` 包，用于执行 Go 命令。
+- **golang.org/x/tools/internal/packagesinternal**：Go 官方提供的 `packagesinternal` 包，是 `packages` 包的内部实现。
+- **golang.org/x/tools/go/types/objectpath**：Go 官方提供的 `objectpath` 包，用于处理 Go 语言的类型对象路径。
+- **golang.org/x/tools/go/types/typeutil**：Go 官方提供的 `typeutil` 包，提供了一些类型相关的工具函数。
+- **golang.org/x/tools/internal/aliases**：Go 官方提供的 `aliases` 包，用于处理别名。
+- **golang.org/x/tools/internal/event**：Go 官方提供的 `event` 包，用于事件处理。
+- **golang.org/x/tools/internal/event/core**：Go 官方提供的 `event/core` 包，是 `event` 包的核心实现。
+- **golang.org/x/tools/internal/event/keys**：Go 官方提供的 `event/keys` 包，用于事件键值对处理。
+- **golang.org/x/tools/internal/event/label**：Go 官方提供的 `event/label` 包，用于事件标签处理。
+- **golang.org/x/tools/internal/pkgbits**：Go 官方提供的 `pkgbits` 包，用于处理包的 bits 信息。
+- **golang.org/x/tools/internal/stdlib**：Go 官方提供的 `stdlib` 包，用于识别标准库包。
+- **golang.org/x/tools/internal/typeparams**：Go 官方提供的 `typeparams` 包，用于处理类型参数。
+- **golang.org/x/tools/internal/typesinternal**：Go 官方提供的 `typesinternal` 包，是 `types` 包的内部实现。
+- **golang.org/x/tools/internal/versions**：Go 官方提供的 `versions` 包，用于处理版本信息。
+
+## 连线、分支与汇聚关系
+- `github.com/kisielk/errcheck -> github.com/kisielk/errcheck/errcheck`：`errcheck` 依赖于其内部的 `errcheck` 包。
+- `github.com/kisielk/errcheck -> golang.org/x/tools/go/packages`：`errcheck` 依赖于 `go/packages` 包。
+- `github.com/kisielk/errcheck/errcheck -> golang.org/x/tools/go/analysis`：`errcheck/errcheck` 依赖于 `go/analysis` 包。
+- `github.com/kisielk/errcheck/errcheck -> golang.org/x/tools/go/packages`：`errcheck/errcheck` 依赖于 `go/packages` 包。
+- `golang.org/x/tools/go/packages -> golang.org/x/sync/errgroup`：`go/packages` 依赖于 `errgroup` 包。
+- `golang.org/x/tools/go/packages -> golang.org/x/tools/go/gcexportdata`：`go/packages` 依赖于 `gcexportdata` 包。
+- `golang.org/x/tools/go/packages -> golang.org/x/tools/internal/gocommand`：`go/packages` 依赖于 `gocommand` 包。
+- `golang.org/x/tools/go/packages -> golang.org/x/tools/internal/packagesinternal`：`go/packages` 依赖于 `packagesinternal` 包。
+- `golang.org/x/tools/go/packages -> golang.org/x/tools/internal/typesinternal`：`go/packages` 依赖于 `typesinternal` 包。
+- `golang.org/x/tools/go/gcexportdata -> golang.org/x/tools/internal/gcimporter`：`gcexportdata` 依赖于 `gcimporter` 包。
+- `golang.org/x/tools/internal/gcimporter -> golang.org/x/tools/go/types/objectpath`：`gcimporter` 依赖于 `objectpath` 包。
+- `golang.org/x/tools/internal/gcimporter -> golang.org/x/tools/internal/aliases`：`gcimporter` 依赖于 `aliases` 包。
+- `golang.org/x/tools/internal/gcimporter -> golang.org/x/tools/internal/pkgbits`：`gcimporter` 依赖于 `pkgbits` 包。
+- `golang.org/x/tools/internal/gcimporter -> golang.org/x/tools/internal/typesinternal`：`gcimporter` 依赖于 `typesinternal` 包。
+- `golang.org/x/tools/internal/gocommand -> golang.org/x/mod/semver`：`gocommand` 依赖于 `semver` 包。
+- `golang.org/x/tools/internal/gocommand -> golang.org/x/tools/internal/event`：`gocommand` 依赖于 `event` 包。
+- `golang.org/x/tools/go/types/objectpath -> golang.org/x/tools/internal/aliases`：`objectpath` 依赖于 `aliases` 包。
+- `golang.org/x/tools/go/types/objectpath -> golang.org/x/tools/internal/typesinternal`：`objectpath` 依赖于 `typesinternal` 包。
+- `golang.org/x/tools/go/types/typeutil -> golang.org/x/tools/internal/typeparams`：`typeutil` 依赖于 `typeparams` 包。
+- `golang.org/x/tools/internal/typeparams -> golang.org/x/tools/internal/aliases`：`typeparams` 依赖于 `aliases` 包。
+- `golang.org/x/tools/internal/typesinternal -> golang.org/x/tools/go/types/typeutil`：`typesinternal` 依赖于 `typeutil` 包。
+- `golang.org/x/tools/internal/typesinternal -> golang.org/x/tools/internal/aliases`：`typesinternal` 依赖于 `aliases` 包。
+- `golang.org/x/tools/internal/typesinternal -> golang.org/x/tools/internal/stdlib`：`typesinternal` 依赖于 `stdlib` 包。
+- `golang.org/x/tools/internal/typesinternal -> golang.org/x/tools/internal/versions`：`typesinternal` 依赖于 `versions` 包。
+- `golang.org/x/tools/internal/event -> golang.org/x/tools/internal/event/core`：`event` 依赖于 `event/core` 包。
+- `golang.org/x/tools/internal/event -> golang.org/x/tools/internal/event/keys`：`event` 依赖于 `event/keys` 包。
+- `golang.org/x/tools/internal/event -> golang.org/x/tools/internal/event/label`：`event` 依赖于 `event/label` 包。
+- `golang.org/x/tools/internal/event/core -> golang.org/x/tools/internal/event/keys`：`event/core` 依赖于 `event/keys` 包。
+- `golang.org/x/tools/internal/event/core -> golang.org/x/tools/internal/event/label`：

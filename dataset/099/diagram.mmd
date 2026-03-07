@@ -1,0 +1,39 @@
+graph LR
+    subgraph "Infrastructure Layer"
+        Utils[utils/]
+        Pipeline[pipeline/]
+    end
+    
+    subgraph "Core Processing"
+        GNN[gnn/]
+        TypeChecker[type_checker/]
+        Validation[validation/]
+        Export[export/]
+    end
+    
+    subgraph "Code Generation"
+        Render[render/]
+        Execute[execute/]
+    end
+    
+    subgraph "Analysis & Output"
+        LLM[llm/]
+        Analysis[analysis/]
+        Report[report/]
+    end
+    
+    Utils --> GNN
+    Utils --> TypeChecker
+    Utils --> Render
+    Pipeline --> GNN
+    Pipeline --> Render
+    
+    GNN --> TypeChecker
+    GNN --> Validation
+    GNN --> Export
+    GNN --> Render
+    
+    Render --> Execute
+    Execute --> Analysis
+    LLM --> Analysis
+    Analysis --> Report

@@ -1,0 +1,22 @@
+flowchart TD
+    F1 -.->|Manual Trigger| F
+
+    subgraph Push
+        A[Push] --> D{Is Protected Branch?}
+
+        D -->|Yes| H{Is it the 'main' branch?}
+        D -->|No| F1[Offer Manual Ephemeral Deployment]
+        H -->|Yes| I1{{Deploy to Production}}
+        H -->|No| I2{{Deploy to Staging}}
+
+        I1 --> J1[Create GitHub Release]
+        H -->|Yes| J2[Deploy Storybook]
+        I2 --> J1
+    end
+    subgraph Pull Request
+        B[Pull Request] --> F{{Ephemeral Deployment}}
+    end
+
+    subgraph Cleanup
+        C[Delete Branch] --> X{{Destroy Deployment Stack}}
+    end

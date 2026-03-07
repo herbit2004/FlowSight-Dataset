@@ -1,0 +1,35 @@
+flowchart LR
+
+subgraph c[Code]
+  wc1[(Working Copy 1)]-->m[(Mainstream)]
+  wc2[(Working Copy 2)]-->m
+  wc3[(Working Copy 3)]-->m
+end
+
+subgraph p[Pipelines]
+  subgraph app1p[App 1 Pipelines]
+    app1ip[Infrastructure Pipeline]
+    app1cp[Code Pipeline]
+  end
+
+  subgraph app2p[App 2 Pipelines]
+    app2ip[Infrastructure Pipeline]
+    app2cp[Code Pipeline]
+  end
+
+  style app1p stroke-dasharray: 5 5
+  style app2p stroke-dasharray: 5 5
+end
+
+m--App 1 Infrastructure Trigger-->app1ip
+m--App 1 Code Trigger-->app1cp
+m--App 2 Infrastructure Trigger-->app2ip
+m--App 2 Code Trigger-->app2cp
+
+subgraph system[System]
+  app1ip-->app1[App 1]
+  app1cp-->app1
+
+  app2ip-->app2[App 2]
+  app2cp-->app2
+end

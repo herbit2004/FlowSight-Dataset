@@ -1,0 +1,46 @@
+## 图类型与用途
+这是一个流程图，描述了 Liquid Haskell 工具的内部架构和验证流程。它展示了 Liquid Haskell 如何从输入到输出，进行程序验证的过程。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是输入节点，右侧是输出节点，中间是验证过程。
+
+## 分组/子图/阶段说明
+图中包含两个子图：Inputs 和 Outputs，分别表示 Liquid Haskell 验证流程的输入和输出部分。
+
+## 节点逐项说明
+- **Liquid Haskell**：整个验证流程的容器。
+- **Inputs**：包含 Liquid Haskell 验证过程所需的各种输入信息。
+- **LiftedDeps**：程序 A 的依赖项，包含提升的规约 (LifttedSpecs)。
+- **CoreBinds**：Haskell 代码的核心绑定信息。
+- **Bare**：原始的规约信息，图上标签为 "BarseSpec"，应为笔误。
+- **Outputs**：Liquid Haskell 验证过程产生的输出结果。
+- **TargetSpec**：最终生成的目标规约。
+- **Constraints**：用于验证的约束条件。
+- **LiftedSpec**：提升后的规约。
+- **DepsOfA_LHAssumptions**：程序 A 的依赖项和 Liquid Haskell 的假设。
+- **DepsOfA.hi**：程序 A 的依赖项的 `.hi` 文件（Haskell 接口文件）。
+- **Mod(A.hs)**：程序 A 的 Haskell 源代码文件。
+- **fixpoint([liquid-fixpoint])**：Liquid Fixpoint 求解器，用于检查验证约束。
+- **File>A.hi**：程序 A 的 `.hi` 文件，包含验证后的信息。图上标签为 "A.hi"，应为笔误。
+
+## 连线、分支与汇聚关系
+- `DepsOfA_LHAssumptions -> LiftedDeps`：Liquid Haskell 从依赖项的假设中提取信息，生成提升的依赖项。
+- `DepsOfA.hi -> LiftedDeps`：Liquid Haskell 从依赖项的接口文件中提取信息，生成提升的依赖项。
+- `Mod(A.hs) -> CoreBinds`：Liquid Haskell 从 Haskell 源代码中提取核心绑定信息。
+- `Mod(A.hs) -> Bare`：Liquid Haskell 从 Haskell 源代码中提取原始规约。
+- `Inputs -> Outputs`：表示输入数据经过 Liquid Haskell 的处理后产生输出。
+- `TargetSpec -> Constraints`：根据目标规约生成验证约束。
+- `Constraints -> fixpoint([liquid-fixpoint])`：验证约束由 Liquid Fixpoint 求解器进行检查。
+- `LiftedSpec -> File>A.hi`：如果验证通过，则将提升的规约序列化到 `.hi` 文件中。
+
+## 仓库语境与术语解释
+- **Liquid Haskell**：一个形式验证工具，用于使用细化类型来验证 Haskell 代码。README 描述了如何安装和使用 Liquid Haskell。
+- **Refinement Types**：Liquid Haskell 使用的类型系统，允许在 Haskell 类型中嵌入逻辑谓词，从而实现更精确的类型检查。
+- **Z3**：一个 SMT 求解器，Liquid Haskell 使用它来检查验证约束。README 提到需要安装 Z3 才能运行 Liquid Haskell。
+- **.hi 文件**：Haskell 接口文件，包含模块的类型签名和其他信息。
+- **cabal**：Haskell 的构建工具。README 提供了使用 cabal 安装和运行 Liquid Haskell 的命令。
+- **Plugin**：Liquid Haskell 作为 GHC 插件运行，允许它在编译时检查代码。
+- **Verification Constraints**：Liquid Haskell 生成的约束，用于验证代码的正确性。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Liquid Haskell 的验证流程。从程序 A 的依赖项假设、接口文件以及源代码文件（A.hs）中提取信息，包括提升的依赖项、核心绑定信息和原始规约。这些信息作为 Inputs 进入 Liquid Haskell 流程，生成 TargetSpec 和 LiftedSpec 作为 Outputs。TargetSpec 用于生成 Verification Constraints，这些约束由 liquid-fixpoint 求解器检查。如果验证通过，LiftedSpec 会被序列化到 A.hi 文件中。该流程的核心在于利用 Liquid Fixpoint 求解器对验证约束进行检查，从而实现对 Haskell 代码的形式验证。

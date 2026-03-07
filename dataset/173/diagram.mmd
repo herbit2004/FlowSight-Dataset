@@ -1,0 +1,22 @@
+graph LR
+    Client["CLI / Package Manager / Frontend"]
+    Backend["Backend<br/>Rust · Axum<br/>45+ format handlers"]
+    DB[(PostgreSQL 16)]
+    Storage["Storage<br/>Filesystem / S3"]
+    Meili["Meilisearch<br/>Full-text search"]
+    Trivy["Trivy<br/>Container & FS scanning"]
+    Grype["Grype<br/>Dependency scanning"]
+    OpenSCAP["OpenSCAP<br/>Compliance scanning"]
+    Peer1["Peer Instance"]
+    Peer2["Peer Instance"]
+
+    Client --> Backend
+    Backend --> DB
+    Backend --> Storage
+    Backend --> Meili
+    Backend --> Trivy
+    Backend --> Grype
+    Backend --> OpenSCAP
+    Backend <-->|Borg Replication| Peer1
+    Backend <-->|Borg Replication| Peer2
+    Peer1 <-->|P2P Mesh| Peer2

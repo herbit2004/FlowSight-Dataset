@@ -1,0 +1,43 @@
+graph TB
+    subgraph "Client Layer"
+        A[Web Clients]
+        B[Mobile Clients]
+    end
+
+    subgraph "Gateway Layer"
+        C[Load Balancer]
+        D[API Gateway]
+    end
+
+    subgraph "Application Layer"
+        E[Service 1]
+        F[Service 2]
+        G[Service 3]
+    end
+
+    subgraph "Caching Layer"
+        H[Redis/Memcached]
+    end
+
+    subgraph "Data Layer"
+        I[Primary DB]
+        J[Read Replicas]
+        K[Message Queue]
+    end
+
+    A --> C
+    B --> C
+    C --> D
+    D --> E
+    D --> F
+    D --> G
+    E --> H
+    F --> H
+    G --> H
+    E --> I
+    F --> I
+    G --> I
+    I --> J
+    E --> K
+    F --> K
+    G --> K

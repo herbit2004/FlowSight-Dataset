@@ -1,0 +1,41 @@
+## 图类型与用途
+这是一个流程图，描述了基于 Git 分支和标签的 Kubernetes 应用部署流程。它展示了从开发到生产环境的应用部署流程，以及不同环境对应的 Git 分支和标签策略，用于实现持续交付。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是 Git 分支和标签，右侧是 Kubernetes 集群。
+
+## 分组/子图/阶段说明
+图中包含一个名为 "Clusters" 的子图，用于表示不同的 Kubernetes 集群环境。逻辑上可以分为开发阶段、预发布阶段和生产阶段。
+
+## 节点逐项说明
+- **D (dev branch\nFast iteration)**：开发分支，用于快速迭代和开发新功能。对应 `argocd-bootstrap-apps/dev-01.yaml` 中 `targetRevision: HEAD`，表示跟踪最新的开发代码。
+- **S (staging branch\nSoak & integration)**：预发布分支，用于集成测试和验证，进行充分的 soak 测试和集成测试。对应 `argocd-bootstrap-apps/stag-01.yaml` 中 `targetRevision: staging`，表示跟踪 staging 分支。
+- **R (release/x.y branch optional)**：可选的发布分支，用于维护特定版本的代码，可以从中合并修复。
+- **P (Production stable tag)**：生产环境的稳定标签，代表已验证并可用于生产环境的版本。对应 `argocd-bootstrap-apps/prod-01.yaml` 中 `targetRevision: stable`，表示跟踪 stable 标签。
+- **C1 (dev-01\ntracks dev)**：开发环境 Kubernetes 集群，跟踪 `dev` 分支的最新代码。
+- **C2 (stag-01\ntracks staging)**：预发布环境 Kubernetes 集群，跟踪 `staging` 分支的最新代码。
+- **C3 (prod-01\ntracks stable)**：生产环境 Kubernetes 集群，跟踪 `stable` 标签的最新代码。
+- **C4 (ops-01\ntracks stable)**：运维环境 Kubernetes 集群，跟踪 `stable` 标签的最新代码。对应 `argocd-bootstrap-apps/ops-01.yaml` 中 `targetRevision: ops-stable`，表示跟踪 ops-stable 标签。
+
+## 连线、分支与汇聚关系
+- `D --> S`：开发分支的代码合并到预发布分支。
+- `S --> P`：预发布分支的代码经过测试后，创建一个 `stable` 标签，表示该版本可以发布到生产环境。
+- `S --> R`：预发布分支的代码合并到发布分支（可选）。
+- `S --> R`：预发布分支的修复合并到发布分支（可选）。
+- `R --> P`：发布分支的代码打上 `stable` 标签，表示该版本可以发布到生产环境。
+- `D --> C1`：开发分支的变更自动部署到开发环境集群。
+- `S --> C2`：预发布分支的变更自动部署到预发布环境集群。
+- `P --> C3`：带有 `stable` 标签的代码自动部署到生产环境集群。
+- `P --> C4`：带有 `stable` 标签的代码自动部署到运维环境集群。
+
+## 仓库语境与术语解释
+- **GitOps**: 一种利用 Git 作为单一可信源来管理基础设施和应用程序的实践。
+- **Argo CD**: 一个 Kubernetes 的 GitOps 持续交付工具。
+- **Helm Charts**: Kubernetes 的包管理工具，用于定义、安装和升级 Kubernetes 应用程序。参考 `README.md` 中的 "Helm Charts" 标题。
+- **app-of-apps**: 一种 Argo CD 模式，使用一个 Argo CD Application 来管理其他的 Argo CD Applications。参考 `charts/app-of-apps/README.md`。
+- **stable tag**: 生产环境的稳定标签，代表已验证并可用于生产环境的版本。
+- **dev branch**: 用于快速迭代和开发新功能的分支。
+- **staging branch**: 用于集成测试和验证的分支。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了一个基于 GitOps 的 Kubernetes 应用部署流程。从开发分支（dev branch）开始，代码合并到预发布分支（staging branch）进行测试。通过在 staging 分支上创建 stable 标签，可以将代码发布到生产环境。不同的 Kubernetes 集群（dev-01, stag-01, prod-01, ops-01）分别跟踪不同的 Git 分支或标签，例如 `argocd-bootstrap-apps/dev-01.yaml` 跟踪 HEAD，`argocd-bootstrap-apps/prod-01.yaml` 跟踪 stable，从而实现环境隔离和版本控制。`charts/app-of-apps` 使用 app-of-apps 模式来管理这些应用。

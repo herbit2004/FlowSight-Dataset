@@ -1,0 +1,21 @@
+flowchart TD;
+        app(User program)
+        vfs(Virtual File System)
+        dsk(Disk module)
+        drv(Driver implementation: video, keyboard, serial, etc...)
+        fs(File System)
+        sysdis(Syscall dispatcher)
+        hw(Hardware)
+        time(Time & Date module)
+        mem(Memory module)
+        loader(Loader module)
+        app -- syscall/rst 8 --> sysdis;
+        sysdis --getdate/time--> time;
+        sysdis --mount--> dsk;
+        sysdis --> vfs;
+        sysdis --map--> mem;
+        sysdis -- exec/exit --> loader;
+        vfs --> dsk & drv;
+        dsk <--> fs;
+        fs --> drv;
+        drv --> hw;

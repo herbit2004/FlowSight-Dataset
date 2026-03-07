@@ -1,0 +1,35 @@
+## 图类型与用途
+这是一个流程图，描述了 Gas Town 系统中 Mayor 如何启动并协调其他 agent 完成构建任务的流程。它在仓库中的作用是展示 Mayor 的核心工作流程。
+
+## 图的整体布局
+图整体采用从左到右的布局。起点是启动 Mayor，终点是审查工作。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：启动与告知、任务创建与监控、完成与审查。
+
+## 节点逐项说明
+- **Start Mayor**：流程的起点，表示启动 Mayor 这个 AI 协调器。根据 README，Mayor 是一个 Claude Code 实例，作为主要 AI 协调器。
+- **Tell Mayor what to build**：用户与 Mayor 交互，告知 Mayor 需要完成的任务或构建目标。
+- **Mayor creates convoy + agents**：Mayor 接收到任务后，会创建 convoy（任务队列或工作组）以及相关的 agents（工作代理）。根据 README，Convoys 是工作跟踪单元，agents 是执行任务的工作代理。
+- **Monitor progress via convoy list**：用户可以通过 convoy 列表来监控任务的进度。
+- **All done?**：一个判断节点，用于检查所有任务是否已经完成。
+- **Review work**：如果所有任务都已完成，则进入审查工作阶段，用户检查完成的结果。
+
+## 连线、分支与汇聚关系
+- `Start Mayor -> Tell Mayor what to build`：启动 Mayor 后，告知 Mayor 需要构建的内容。
+- `Tell Mayor what to build -> Mayor creates convoy + agents`：Mayor 接收到指令后，创建 convoy 和 agents，开始执行任务。
+- `Mayor creates convoy + agents -> Monitor progress via convoy list`：创建 convoy 和 agents 后，用户可以通过 convoy 列表监控任务的进度。
+- `Monitor progress via convoy list -> All done?`：监控任务进度后，判断所有任务是否完成。
+- `All done? -- No --> Monitor progress via convoy list`：如果任务未完成，则返回监控节点继续监控。
+- `All done? -- Yes --> Review work`：如果任务已完成，则进入审查工作阶段。
+
+## 仓库语境与术语解释
+- **Mayor**：Gas Town 的主要 AI 协调器，负责启动 Convoys，协调工作分配，并通知用户重要事件。
+- **Convoy**：工作跟踪单元，用于捆绑分配给 agents 的多个 beads。
+- **Agents**：在 Gas Town 系统中执行任务的工作代理，包括 Polecats、Crew Members 等。
+- **Beads**：Git 支持的问题跟踪系统，将工作状态存储为结构化数据。
+- **Town**：Gas Town 的管理总部，协调多个 Rigs 的所有 workers。
+- **Rig**：Gas Town 管理下的项目特定 Git 仓库。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图描述了 Gas Town 系统中 Mayor 的核心工作流程。流程从启动 Mayor 开始，用户告知 Mayor 需要构建的内容，Mayor 创建 convoy 和 agents 来执行任务，用户通过 convoy 列表监控进度，当所有任务完成后，用户可以审查工作结果。其中，Mayor 作为主要协调器，Convoys 作为工作跟踪单元，agents 作为执行任务的工作代理，是该流程的关键组成部分。

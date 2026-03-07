@@ -1,0 +1,49 @@
+## 图类型与用途
+这是一个流程图，更准确地说是一个依赖关系图或架构图，用于展示 Trino 数据库中不同视图之间的依赖关系，特别是与客户数据相关的视图。该图旨在帮助用户理解这些视图是如何相互关联的，以及数据是如何在这些视图之间流动的。该图由 `viewmapper-agent` 仓库中的 `GenerateMermaidToolExecutor` 类生成。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是数据源和临时表，中间是维度表和中间计算视图，底部是核心视图 `customer_360` 和最终结果视图。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：数据准备阶段、数据处理与分析阶段、结果汇总阶段。
+
+## 节点逐项说明
+- **`customer_segments`**：客户分群视图，可能包含将客户按照某些特征划分成的不同群体。
+- **`customer_360`**：一个综合的客户视图，汇集了关于单个客户的各种信息。图中可见，该视图是整个架构的核心，并用红色突出显示。
+- **`stg_customers`**：一个临时或暂存的客户数据表，可能是从源系统提取并经过初步处理的数据。
+- **`dim_customers`**：客户维度表，通常包含客户的基本信息，用于数据分析和报表。
+- **`at_risk_customers`**：高风险客户视图，可能包含有流失风险的客户。
+- **`churn_risk_score`**：流失风险评分视图，可能包含客户流失风险的评分或概率。
+- **`fact_orders`**：订单事实表，记录了订单的相关信息。
+- **`fact_payments`**：支付事实表，记录了支付的相关信息。
+- **`customer_lifetime_value`**：客户生命周期价值视图，可能包含预测客户在整个生命周期内为企业带来的价值。
+
+## 连线、分支与汇聚关系
+- `customer_segments -> customer_360`：客户分群视图依赖于客户360视图。
+- `stg_customers -> dim_customers`：临时客户表数据进入客户维度表。
+- `dim_customers -> customer_lifetime_value`：客户维度表是计算客户生命周期价值的基础。
+- `dim_customers -> at_risk_customers`：客户维度表是识别高风险客户的基础。
+- `dim_customers -> churn_risk_score`：客户维度表是计算流失风险评分的基础。
+- `dim_customers -> customer_360`：客户维度表是构建客户360视图的基础。
+- `at_risk_customers -> churn_risk_score`：高风险客户的识别依赖于流失风险评分。
+- `at_risk_customers -> customer_360`：高风险客户的识别依赖于客户360视图。
+- `churn_risk_score -> customer_360`：流失风险评分是客户360视图的一部分。
+- `fact_orders -> customer_lifetime_value`：订单数据用于计算客户生命周期价值。
+- `fact_orders -> at_risk_customers`：订单数据用于识别高风险客户。
+- `fact_payments -> customer_lifetime_value`：支付数据用于计算客户生命周期价值。
+- `customer_lifetime_value -> customer_segments`：客户生命周期价值用于客户分群。
+- `customer_lifetime_value -> churn_risk_score`：客户生命周期价值用于流失风险评分。
+- `customer_lifetime_value -> customer_360`：客户生命周期价值用于构建客户360视图。
+- 多个节点（`dim_customers`、`at_risk_customers`、`churn_risk_score`、`customer_lifetime_value`）汇聚到 `customer_360`，形成汇聚关系。
+
+## 仓库语境与术语解释
+- **Trino**：一个开源的分布式 SQL 查询引擎，用于大数据分析。该仓库 `viewmapper` 旨在帮助用户发现和映射 Trino 视图之间的关系。
+- **View**：Trino 中的视图是从一个或多个表中导出的虚拟表。
+- **`customer_360`**：一个综合的客户视图，汇集了关于单个客户的各种信息。在 `viewmapper` 仓库的 README 中，该视图被用作示例，展示了如何使用 ViewMapper 来聚焦于特定视图周围的关系。
+- **Mermaid**：一种基于 JavaScript 的图表绘制工具，ViewMapper 使用它来生成可视化依赖关系图。
+- **DependencyAnalyzer**：`viewmapper-agent` 仓库中的一个 Java 类，用于分析视图依赖关系并提供基于图的见解。
+- **GenerateMermaidToolExecutor**：`viewmapper-agent` 仓库中的一个 Java 类，用于从依赖关系子图生成 Mermaid 图。
+- **Anthropic Claude**：一个 AI 模型，`viewmapper` 使用它来分析 Trino 视图并生成 Mermaid 图。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Trino 数据库中与客户数据相关的视图之间的依赖关系。从 `stg_customers` 开始，数据流经 `dim_customers`，并与 `fact_orders` 和 `fact_payments` 结合，用于计算 `customer_lifetime_value` 和识别 `at_risk_customers`。这些视图最终汇聚到核心视图 `customer_360`，并用于生成 `customer_segments`。`customer_360` 是整个架构的核心，并用红色突出显示。该图由 `viewmapper` 仓库中的 `GenerateMermaidToolExecutor` 类生成，旨在帮助用户理解 Trino 视图之间的关系。

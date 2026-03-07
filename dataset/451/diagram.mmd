@@ -1,0 +1,100 @@
+flowchart LR
+
+%% =========================
+%% EXPERIENCE LAYER
+%% =========================
+subgraph EXP[Experience Layer FastAPI SSE]
+direction LR
+IN[User prompt]
+RL{Rate limit check}
+STREAM[Token stream SSE]
+FB[Feedback API]
+IN --> RL
+STREAM --> FB
+end
+
+%% =========================
+%% MEMORY LAYER
+%% =========================
+subgraph MEM[Memory and Feedback]
+direction TB
+SQL[(SQLite messages)]
+VEC[(Chroma vector KB)]
+CIT[Citations store]
+end
+
+RL -->|ok| START
+RL -->|429| HALT[Backoff and retry]
+
+%% =========================
+%% REASONING AND PLANNING
+%% =========================
+subgraph GRAPH[Reasoning and Planning LangGraph]
+direction LR
+START((START))
+PLAN[PLAN create plan]
+DECIDE{DECIDE next action}
+ACT[ACT bind tool emit call]
+TOOLS((ToolNode executes call))
+REFLECT[REFLECT briefing or next]
+FINALIZE([FINALIZE result])
+
+START --> PLAN
+PLAN --> DECIDE
+
+DECIDE -->|search| ACT
+DECIDE -->|fetch| ACT
+DECIDE -->|kb_search| ACT
+DECIDE -->|calculate| ACT
+DECIDE -->|write_file| ACT
+DECIDE -->|draft_email| ACT
+DECIDE -->|finalize| FINALIZE
+DECIDE -->|otherwise| REFLECT
+
+ACT --> TOOLS
+TOOLS --> REFLECT
+
+REFLECT -->|done| FINALIZE
+REFLECT -->|not done| DECIDE
+
+PLAN -.-> STREAM
+DECIDE -.-> STREAM
+REFLECT -.-> STREAM
+FINALIZE -.-> STREAM
+end
+
+PLAN -. use kb hits .-> VEC
+
+%% =========================
+%% TOOL AND API LAYER
+%% =========================
+subgraph TOOLS_LAYER[Tool and API Layer]
+direction TB
+TSEARCH[web search]
+TFETCH[web fetch]
+TKBS[kb search]
+TKBADD[kb add]
+TCALC[calculator]
+TWRITE[file write]
+TEMAIL[emailer]
+end
+
+TOOLS -->|query| TSEARCH
+TOOLS -->|url| TFETCH
+TOOLS -->|semantic| TKBS
+TOOLS -->|ingest| TKBADD
+TOOLS -->|expr| TCALC
+TOOLS -->|path content| TWRITE
+TOOLS -->|to subject body| TEMAIL
+
+TKBS -->|results| PLAN
+TKBADD --> VEC
+TSEARCH --> TFETCH
+TFETCH -->|text| PLAN
+TFETCH --> CIT
+TWRITE -->|artifact path| PLAN
+TEMAIL -->|eml path| PLAN
+
+IN -->|save user| SQL
+FINALIZE -->|save assistant| SQL
+FB -->|save feedback| SQL

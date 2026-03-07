@@ -1,0 +1,45 @@
+## 图类型与用途
+这是一个流程图，描述了使用 GitHub Actions 和 Terraform 将 Django, Celery, Redis 应用部署到 AWS 云基础设施的过程。它展示了从代码提交到 AWS 部署的自动化流程。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是 GitHub Actions 触发，经过 Docker 镜像构建和推送，然后进入 Terraform 部署阶段，最后与 AWS 基础设施交互。
+
+## 分组/子图/阶段说明
+图中包含一个名为 "Terraform Deployment" 的子图，该子图表示 Terraform 部署阶段，包含 Provision ECS Cluster, Deploy Containers to ECS, Configure CloudWatch Logs, Create VPC and Network Resources 四个步骤。
+
+## 节点逐项说明
+- **GitHub Actions**：表示 GitHub 提供的 CI/CD 服务，负责自动化构建、测试和部署流程。根据 `.github/workflows/deploy.yml`，它监听 `main` 分支的 push 事件。
+- **Build Docker Images**：表示使用 Dockerfile 构建应用程序的 Docker 镜像。
+- **Push to Amazon ECR**：表示将构建好的 Docker 镜像推送到 Amazon Elastic Container Registry (ECR)。
+- **Terraform Deployment**：表示使用 Terraform 自动化部署 AWS 基础设施和应用程序。
+- **Provision ECS Cluster**：表示使用 Terraform 在 AWS 上创建 Elastic Container Service (ECS) 集群。
+- **Deploy Containers to ECS**：表示使用 Terraform 将 Docker 容器部署到 ECS 集群。
+- **Configure CloudWatch Logs**：表示使用 Terraform 配置 CloudWatch Logs，以便收集和监控应用程序的日志。
+- **Create VPC and Network Resources**：表示使用 Terraform 创建 Virtual Private Cloud (VPC) 和相关的网络资源，例如子网、安全组和路由表。
+- **AWS Infrastructure**：表示已经存在的或将要创建的 AWS 云基础设施，包括 VPC、子网、安全组等。
+
+## 连线、分支与汇聚关系
+- `GitHub Actions -> Build Docker Images`：GitHub Actions 触发 Docker 镜像的构建过程。
+- `Build Docker Images -> Push to Amazon ECR`：构建好的 Docker 镜像被推送到 Amazon ECR 镜像仓库。
+- `Push to Amazon ECR -> Terraform Deployment`：Terraform Deployment 阶段使用 ECR 中的镜像进行部署。
+- `Terraform Deployment -> Provision ECS Cluster`：Terraform 部署过程的一部分是创建 ECS 集群。
+- `Terraform Deployment -> Deploy Containers to ECS`：Terraform 部署过程的一部分是将容器部署到 ECS 集群。
+- `Terraform Deployment -> Configure CloudWatch Logs`：Terraform 部署过程的一部分是配置 CloudWatch Logs。
+- `Terraform Deployment -> Create VPC and Network Resources`：Terraform 部署过程的一部分是创建 VPC 和网络资源。
+- `AWS Infrastructure -> Provision ECS Cluster`：AWS 基础设施为 ECS 集群的创建提供基础。形成汇聚关系。
+- `AWS Infrastructure -> Deploy Containers to ECS`：AWS 基础设施为容器的部署提供基础。形成汇聚关系。
+- `AWS Infrastructure -> Configure CloudWatch Logs`：AWS 基础设施为日志的配置提供基础。形成汇聚关系。
+- `AWS Infrastructure -> Create VPC and Network Resources`：AWS 基础设施为网络资源的创建提供基础。形成汇聚关系。
+
+## 仓库语境与术语解释
+- **GitHub Actions**: 用于自动化 CI/CD 流程，配置文件位于 `.github/workflows/deploy.yml`。
+- **Terraform**: 用于基础设施即代码 (IaC)，通过声明式配置文件管理 AWS 资源，相关文件位于 `terraform/` 目录下，如 `terraform/main.tf`。
+- **Amazon ECR**: AWS 提供的 Docker 镜像仓库，用于存储构建好的 Docker 镜像。
+- **Amazon ECS**: AWS 提供的容器编排服务，用于部署和管理 Docker 容器。
+- **CloudWatch Logs**: AWS 提供的日志管理服务，用于收集和监控应用程序的日志。
+- **VPC**: AWS 提供的私有网络环境，用于隔离和保护应用程序的网络资源。
+- **Dockerfile**: 用于定义 Docker 镜像的构建过程，位于仓库根目录。
+- **docker-compose.yml**: 用于定义和管理本地开发环境中的多个 Docker 容器，包括 Django 应用、Redis、Celery worker 和 Celery beat。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Django, Celery, Redis 应用通过 GitHub Actions 和 Terraform 自动化部署到 AWS 的流程。流程从 GitHub Actions 触发开始，构建 Docker 镜像并推送到 Amazon ECR。随后，Terraform 部署阶段负责创建 ECS 集群、部署容器、配置 CloudWatch Logs 以及创建 VPC 和网络资源。AWS Infrastructure 为 ECS 集群的创建、容器的部署、日志的配置和网络资源的创建提供基础。其中，Terraform 的配置位于 `terraform/main.tf`，GitHub Actions 的 workflow 定义位于 `.github/workflows/deploy.yml`。

@@ -1,0 +1,45 @@
+## 图类型与用途
+这是一个流程图，描述了使用 USRP 设备扫描和检测 5G NR SSB 信号的流程。它在仓库中的作用是展示如何通过选择频段、计算 GSCN 范围、频率迭代扫描和检测 SSB 信号，并将结果更新到 Web UI。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是流程的起始节点，中间是频段选择、GSCN 范围计算和频率迭代扫描，底部是流程的结束节点。
+
+## 分组/子图/阶段说明
+图中包含一个名为 "Frequency Iteration" 的子图，该子图描述了频率迭代扫描的详细步骤，包括获取下一个 GSCN 频率、调整 USRP 到该频率、检测 SSB 信号、保存检测结果和更新 Web UI 进度。
+
+## 节点逐项说明
+- **Start Scanning**：流程的起始点，表示开始扫描过程。
+- **Select 5G NR Band n1, n3, n77, n78, n79**：选择要扫描的 5G NR 频段，例如 n1, n3, n77, n78, n79。这些频段也在 README 中被列为支持的频段。
+- **Calculate GSCN Range Based on 3GPP TS 38.104**：基于 3GPP TS 38.104 标准，计算所选频段的 GSCN 频率范围。GSCN (Global Synchronization Channel Number) 是一个用于标识 5G NR 同步信号的索引。`gscn_calculator.py` 文件包含了 GSCN 频率计算的相关函数。
+- **Get Next GSCN Frequency**：从计算出的 GSCN 频率范围中获取下一个要扫描的频率。
+- **Tune USRP to Frequency**：将 USRP 设备调谐到当前 GSCN 频率。`usrp_controller.py` 文件负责 USRP 设备的通信和进程管理。
+- **SSB Signal Detected?**：检测当前频率上是否存在 SSB 信号。
+- **Save Detection Result**：如果检测到 SSB 信号，则保存检测结果。
+- **Update Web UI Progress**：更新 Web UI 界面，显示扫描进度和检测结果。`app.py` 文件是 Flask 应用的主文件，负责 Web UI 的更新。
+- **More Frequencies?**：判断是否还有未扫描的 GSCN 频率。
+- **Scan Complete**：流程的结束点，表示扫描过程完成。
+
+## 连线、分支与汇聚关系
+- `Start Scanning -> Select 5G NR Band n1, n3, n77, n78, n79`：流程从开始扫描节点进入频段选择节点。
+- `Select 5G NR Band n1, n3, n77, n78, n79 -> Calculate GSCN Range Based on 3GPP TS 38.104`：选择频段后，计算 GSCN 范围。
+- `Calculate GSCN Range Based on 3GPP TS 38.104 -> Get Next GSCN Frequency`：计算 GSCN 范围后，进入频率迭代子流程，首先获取下一个 GSCN 频率。
+- `Get Next GSCN Frequency -> Tune USRP to Frequency`：获取下一个 GSCN 频率后，调整 USRP 设备到该频率。
+- `Tune USRP to Frequency -> SSB Signal Detected?`：调整 USRP 设备到该频率后，检测 SSB 信号。
+- `SSB Signal Detected? -- Yes --> Save Detection Result`：如果检测到 SSB 信号，则保存检测结果。
+- `SSB Signal Detected? -- No --> Update Web UI Progress`：如果没有检测到 SSB 信号，则直接更新 Web UI 进度。
+- `Save Detection Result -> Update Web UI Progress`：保存检测结果后，更新 Web UI 进度。
+- `Update Web UI Progress -> More Frequencies?`：更新 Web UI 进度后，判断是否还有更多频率需要扫描。
+- `More Frequencies? -- Yes --> Get Next GSCN Frequency`：如果还有更多频率需要扫描，则返回获取下一个 GSCN 频率节点，形成循环。
+- `More Frequencies? -- No --> Scan Complete`：如果没有更多频率需要扫描，则流程结束。
+
+## 仓库语境与术语解释
+- **5G NR**：第五代移动通信技术新空口（New Radio）。
+- **SSB (Synchronization Signal Block)**：5G NR 中的同步信号块，用于设备初始接入网络。
+- **USRP (Universal Software Radio Peripheral)**：通用软件无线电外设，用于接收和发送无线信号。该仓库使用 NI USRP X310。
+- **GSCN (Global Synchronization Channel Number)**：全局同步信道号，用于标识 5G NR 同步信号的索引。`gscn_calculator.py` 文件实现了 GSCN 与频率之间的转换。
+- **3GPP TS 38.104**：3GPP 技术规范 38.104，定义了 5G NR 基站的射频指标。
+- **Web UI**：Web 用户界面，用于显示扫描进度和检测结果。`app.py` 文件是 Flask 应用的主文件，负责 Web UI 的实现。
+- **config.json / config.py**：`config.json` 文件存储了应用程序的配置信息，`config.py` 文件用于加载和管理这些配置。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 5G NR SSB 信号扫描的流程，从开始扫描开始，首先选择要扫描的 5G NR 频段（如 n1, n3, n77, n78, n79），然后根据 3GPP TS 38.104 标准计算 GSCN 频率范围。接着进入频率迭代扫描过程，包括获取下一个 GSCN 频率、调整 USRP 设备到该频率、检测 SSB 信号，并根据检测结果保存或更新 Web UI 进度。如果还有更多频率需要扫描，则循环进行频率迭代，否则扫描完成。其中，GSCN 范围计算和 USRP 设备的调谐是两个关键的中间环节，`gscn_calculator.py` 和 `usrp_controller.py` 分别负责这两个环节的具体实现。

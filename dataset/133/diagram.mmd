@@ -1,0 +1,27 @@
+flowchart TD
+    Quickstart[quickstart/脚本]
+    Admin[safety-admin<br/>后台管理]
+    Bert[safety-bert<br/>独立服务]
+    FastText[safety-fasttext<br/>独立服务]
+    Keywords[safety-keywords<br/>独立服务]
+    Knowledge[safety-knowledge<br/>独立服务]
+    DB[(MySQL/Redis)]
+    Vearch[(Vearch 向量库)]
+    Strategy[防御策略编排]
+    Business[业务场景配置]
+
+    Quickstart-->|初始化/注册|Admin
+    Admin-->|注册原子能力|Bert
+    Admin-->|注册原子能力|FastText
+    Admin-->|注册原子能力|Keywords
+    Admin-->|注册原子能力|Knowledge
+    Admin-->|敏感词管理|Keywords
+    Admin-->|知识库管理|Knowledge
+    Admin-->|配置写入|DB
+    Admin-->|策略编排|Strategy
+    Admin-->|业务场景配置|Business
+    Bert-->|模型/配置|DB
+    FastText-->|模型/配置|DB
+    Keywords-->|敏感词数据|DB
+    Knowledge-->|知识/配置|DB
+    Knowledge-->|向量检索|Vearch

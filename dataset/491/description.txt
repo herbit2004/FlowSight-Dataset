@@ -1,0 +1,51 @@
+## 图类型与用途
+这是一个流程图，描述了 Local Email Agent 系统处理用户问题的架构和流程。它展示了用户问题如何通过 Supervisor Agent 协调，并分配给不同的子代理和工具进行处理，最终完成任务。该图在 `ARCHITECTURE.md` 中用于概括系统架构。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是用户问题作为流程的起点，中间是 Supervisor Agent 和各种工具/子代理，底部是与 Microsoft 365 API 的交互。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为以下阶段：问题接收与协调、任务分配与处理、数据访问与交互。
+
+## 节点逐项说明
+- **User Question**：用户提出的问题或请求，是整个流程的起点。
+- **Supervisor Agent**：核心的协调代理，负责接收用户问题，并根据问题类型将其分配给不同的子代理或工具进行处理。`agent_graph.py` 中定义了该 Agent 的系统提示和工具。
+- **search_email_history**：用于搜索邮件历史的工具。
+- **manage_email**：用于管理邮件的工具。
+- **schedule_event**：用于安排日程事件的工具。
+- **Question Tool**：一个通用的问题回答工具，可能需要人工介入。
+- **Done Tool**：表示流程已完成的工具。
+- **Email Sub-Agent**：专门处理邮件相关任务的子代理。
+- **Calendar Sub-Agent**：专门处理日程安排相关任务的子代理。
+- **MCPEmail**：一组用于处理邮件的工具，通过 Microsoft 365 API 实现邮件功能。
+- **MCPCalendar**：一组用于处理日程的工具，通过 Microsoft 365 API 实现日历功能。
+- **VectorDB (PostgreSQL + pgvector)**：一个向量数据库，用于存储和检索邮件历史数据，使用 PostgreSQL 数据库和 pgvector 扩展。`email_storage.py` 中定义了向量数据库的初始化和使用。
+- **M365 (Microsoft 365 API)**：Microsoft 365 提供的 API，用于访问邮件和日历数据。
+
+## 连线、分支与汇聚关系
+- `User Question -> Supervisor Agent`：用户问题被发送到 Supervisor Agent。
+- `Supervisor Agent -> search_email_history`：Supervisor Agent 将问题分配给 search_email_history 工具。
+- `Supervisor Agent -> manage_email`：Supervisor Agent 将问题分配给 manage_email 工具。
+- `Supervisor Agent -> schedule_event`：Supervisor Agent 将问题分配给 schedule_event 工具。
+- `Supervisor Agent -> Question Tool`：Supervisor Agent 将问题分配给 Question Tool。
+- `Supervisor Agent -> Done Tool`：Supervisor Agent 将问题分配给 Done Tool，表示流程完成。
+- `manage_email -> Email Sub-Agent`：manage_email 工具将任务委托给 Email Sub-Agent。
+- `schedule_event -> Calendar Sub-Agent`：schedule_event 工具将任务委托给 Calendar Sub-Agent。
+- `Email Sub-Agent -> MCPEmail`：Email Sub-Agent 使用 MCPEmail 工具来处理邮件任务。
+- `Calendar Sub-Agent -> MCPCalendar`：Calendar Sub-Agent 使用 MCPCalendar 工具来处理日程安排任务。
+- `search_email_history -> VectorDB`：search_email_history 工具使用 VectorDB 来搜索邮件历史。
+- `MCPEmail -> M365`：MCPEmail 通过 Microsoft 365 API (M365) 来访问邮件数据。
+- `MCPCalendar -> M365`：MCPCalendar 通过 Microsoft 365 API (M365) 来访问日历数据。MCPEmail 和 MCPCalendar 都访问 M365，形成汇聚关系。
+
+## 仓库语境与术语解释
+- **Supervisor Agent**：根据用户问题，决定使用哪个工具或子代理来处理任务。
+- **Email Sub-Agent / Calendar Sub-Agent**：专门处理邮件和日历相关任务的子代理，简化了 Supervisor Agent 的复杂性。
+- **MCP (Model Context Protocol)**：用于与 Microsoft 365 API 进行交互的协议。README 中提到 "Microsoft 365 connectivity via MCP"。
+- **VectorDB (PostgreSQL + pgvector)**：用于存储邮件内容的向量表示，支持语义搜索。`email_storage.py` 文件负责向量数据库的初始化和操作。
+- **HITL (Human-in-the-Loop)**：在某些操作（如发送邮件、创建日历事件）需要人工审批的机制。`hitl_schemas.py` 定义了相关的数据结构。
+- **Foundry Local**：本地运行 LLM 的服务。`foundry_service.py` 中定义了 Foundry Local 的相关操作。
+- **agent_graph.py**：定义了 LangGraph agent 的结构，包括 Supervisor Agent 和子代理之间的关系。
+- **ARCHITECTURE.md**：包含系统架构的详细描述，以及 Mermaid 流程图。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Local Email Agent 系统处理用户问题的流程，从接收用户问题开始，通过 Supervisor Agent 将问题分配给不同的工具或子代理，例如 `search_email_history`、`manage_email` 和 `schedule_event`。`manage_email` 和 `schedule_event` 分别委托给 `Email Sub-Agent` 和 `Calendar Sub-Agent` 处理，它们通过 `MCPEmail` 和 `MCPCalendar` 工具与 Microsoft 365 API 交互。`search_email_history` 使用 `VectorDB (PostgreSQL + pgvector)` 进行邮件历史搜索。整个流程体现了分层代理架构和人机协作机制，其中 `agent_graph.py` 定义了 agent 的结构，`hitl_schemas.py` 定义了人机交互的数据结构。

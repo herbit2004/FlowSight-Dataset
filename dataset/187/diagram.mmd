@@ -1,0 +1,46 @@
+flowchart TD
+    Start([User Query]) --> Entry[process_user_message]
+    
+    %% Ingestion
+    Entry --> ChunkEngine[ChunkEngine: Chunk & Embed]
+    
+    %% Parallel Fan-Out
+    ChunkEngine --> ParallelStart{Launch Parallel Tasks}
+    
+    %% Task 1: Scribe (User Profile)
+    ParallelStart -->|Task 1: Fire-and-Forget| Scribe[Scribe Agent]
+    Scribe -->|Update Profile| UserProfile[(User Profile JSON)]
+    
+    %% Task 2: Fact Extraction
+    ParallelStart -->|Task 2: Async| FactScrubber[FactScrubber]
+    FactScrubber -->|Extract Key-Value| FactStore[(Fact Store SQL)]
+    
+    %% Task 3: Retrieval (Key 1)
+    ParallelStart -->|Task 3: Retrieval| Crawler[LatticeCrawler]
+    Crawler -->|Key 1: Vector Search| Candidates[Raw Candidates]
+    
+    %% Task 4: Governor (The Brain)
+    %% Governor waits for Candidates to be ready
+    Candidates --> Governor[Governor: Router & Filter]
+    ParallelStart -->|Task 4: Main Logic| Governor
+    
+    %% Governor Internal Logic
+    Governor -->|Key 2: Context Filter| ValidatedMems[Truly Relevant Memories]
+    Governor -->|Routing Logic| Decision{Routing Decision}
+    
+    Decision -->|Active Topic| ResumeBlock[Resume Bridge Block]
+    Decision -->|New Topic| CreateBlock[Create Bridge Block]
+    
+    %% Hydration (Assembly)
+    ResumeBlock --> Hydrator[ContextHydrator]
+    CreateBlock --> Hydrator
+    
+    %% All Context Sources Converge
+    ValidatedMems --> Hydrator
+    FactStore --> Hydrator
+    UserProfile --> Hydrator
+    
+    %% Generation
+    Hydrator --> FinalPrompt[Final LLM Prompt]
+    FinalPrompt --> MainLLM[Response Generation]
+    MainLLM --> End([End])

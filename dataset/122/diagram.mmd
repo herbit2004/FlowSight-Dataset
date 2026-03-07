@@ -1,0 +1,16 @@
+flowchart TD
+  Start([Transition]) --> NeedsExitTime{"Does active state<br>need exit time?"}
+
+  NeedsExitTime -->|No| End([Change State])
+
+  NeedsExitTime -->|Yes| OnExitRequest["FSM calls<br>activeState.OnExitRequest()"]
+  OnExitRequest --> StateCanExit{"Does the active state<br>call fsm.StateCanExit()?"}
+  StateCanExit -->|Yes| End
+  StateCanExit -->|No| Later
+
+  subgraph "Delayed State Change"
+    Later["Later in<br>OnLogic / an event / ..."]
+    Later --> CallStateCanExit["fsm.StateCanExit()"]
+  end
+
+  CallStateCanExit --> End

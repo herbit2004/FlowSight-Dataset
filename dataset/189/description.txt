@@ -1,0 +1,48 @@
+## 图类型与用途
+这是一个架构图，描述了 Claude-Gemini Bridge 项目的测试套件结构。它展示了如何对该桥接工具进行测试，确保其各个组件和集成部分的正确性和可靠性，对应 README 中的 "Test Architecture" 部分。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是 "Test Suite" 总览，其内部包含 "Mock Data"、"Component Tests" 和 "Integration Tests" 三个子模块，"Test Runner" 和 "Manual Tester" 作为测试执行的入口，连接到不同的测试模块。
+
+## 分组/子图/阶段说明
+- **Test Suite**：整个测试体系的顶层容器，包含了所有测试相关的组件和数据。
+- **Component Tests**：包含对各个独立组件的单元测试，例如 "Path Converter"、"JSON Parser" 等。
+- **Integration Tests**：包含对各个组件之间协同工作的测试，例如 "Hook Tests"、"End-to-End" 测试等。
+- **Mock Data**：提供测试所需的模拟数据，包括 "Mock Tool Calls" 和 "Test Files"。
+
+## 节点逐项说明
+- **Test Runner (test-runner.sh)**：自动化测试的执行入口，对应脚本 `test/test-runner.sh`，负责运行各种组件测试和集成测试。
+- **Manual Tester (manual-test.sh)**：手动测试的执行入口，对应脚本 `test/manual-test.sh`，用于执行需要人工干预的测试。
+- **Path Converter**：测试路径转换相关功能的组件，对应文件 `hooks/lib/path-converter.sh`。
+- **JSON Parser**：测试 JSON 解析功能的组件，对应文件 `hooks/lib/json-parser.sh`。
+- **Debug Helpers**：测试调试辅助功能的组件，对应文件 `hooks/lib/debug-helpers.sh`。
+- **Gemini Wrapper**：测试与 Google Gemini API 交互的封装器组件，对应文件 `hooks/lib/gemini-wrapper.sh`。
+- **Hook Tests**：测试 Claude Code 钩子集成功能的组件。
+- **End-to-End**：测试整个桥接流程的完整性。
+- **Cache Tests**：测试缓存机制的组件。
+- **Mock Tool Calls**：模拟 Claude Code 工具调用的数据，位于目录 `test/mock-tool-calls/` 下。
+- **Test Files**：包含各种测试所需的文件。
+
+## 连线、分支与汇聚关系
+- `Test Runner -> Path Converter`：测试运行器执行路径转换器组件的测试。
+- `Test Runner -> JSON Parser`：测试运行器执行 JSON 解析器组件的测试。
+- `Test Runner -> Debug Helpers`：测试运行器执行调试助手组件的测试。
+- `Test Runner -> Gemini Wrapper`：测试运行器执行 Gemini 封装器组件的测试。
+- `Test Runner -> Hook Tests`：测试运行器执行钩子测试。
+- `Test Runner -> End-to-End`：测试运行器执行端到端测试。
+- `Test Runner -> Cache Tests`：测试运行器执行缓存测试。
+- `Manual Tester -> Mock Tool Calls`：手动测试器使用模拟工具调用数据。
+- `Manual Tester -> Test Files`：手动测试器使用测试文件。
+
+## 仓库语境与术语解释
+- **Test Suite**：整个测试体系的顶层容器，用于组织和管理各种测试。
+- **Test Runner (test-runner.sh)**：自动化测试的执行脚本，负责运行组件测试和集成测试。
+- **Manual Tester (manual-test.sh)**：手动测试的执行脚本，用于执行需要人工干预的测试，例如模拟工具调用。
+- **Component Tests**：针对独立组件的单元测试，用于验证组件的功能是否符合预期。
+- **Integration Tests**：针对组件之间协同工作的测试，用于验证组件之间的集成是否正确。
+- **Mock Data**：用于模拟 Claude Code 工具调用的数据，方便进行测试。
+- **Gemini Wrapper (gemini-wrapper.sh)**：封装了与 Google Gemini API 交互的逻辑，包括缓存和速率限制等功能。
+- **Hook Tests**：测试 Claude Code 钩子集成功能的组件，确保 Claude-Gemini Bridge 能够正确地与 Claude Code 集成。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Claude-Gemini Bridge 项目的测试架构，顶层是 "Test Suite"，包含 "Component Tests"、"Integration Tests" 和 "Mock Data" 三个子模块。"Test Runner" 负责执行自动化测试，包括 "Path Converter"、"JSON Parser"、"Gemini Wrapper" 等组件的测试，以及 "Hook Tests" 和 "End-to-End" 集成测试。"Manual Tester" 则依赖 "Mock Tool Calls" 和 "Test Files" 进行手动验证。整个测试架构旨在确保 Claude-Gemini Bridge 的稳定性和可靠性。

@@ -1,0 +1,47 @@
+## 图类型与用途
+这是一个依赖关系图，展示了 `awkernel` 项目中各个 crate 之间的依赖关系。该图用于清晰地呈现 `awkernel` 项目的模块化架构，以及各个模块之间的相互依赖关系，方便开发者理解和维护项目。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是核心模块 `kernel`，其他模块根据依赖关系分布在下方。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为核心层、异步支持层、底层库和硬件相关层。
+
+## 节点逐项说明
+- **kernel**：`awkernel` 的核心，包含启动代码、初始化（虚拟内存、堆内存、栈内存、设备等）。根据 README，它负责操作系统的启动和初始化。
+- **awkernel_lib**：一个库，被 `kernel` 和 `awkernel_async_lib` 共同使用，提供底层支持。README 中提到它是被 `kernel` 和 `awkernel_async_lib` 使用的库。
+- **awkernel_async_lib**：一个用于 `no_std` 环境的异步库。README 中提到它是为 `no_std` 环境设计的异步库。
+- **awkernel_async_lib_verified**：`awkernel_async_lib` 的验证版本，使用纯 Rust 实现，不依赖外部函数和内联汇编。README 中提到它是 `awkernel_async_lib` 的验证版本，不依赖外部函数和内联汇编。
+- **awkernel_futures_macro**：宏 crate，可能用于简化异步编程。
+- **awkernel_drivers**：设备驱动 crate。README 中提到它包含设备驱动。
+- **awkernel_aarch64**：针对 AArch64 架构的特定代码。README 中提到它是针对 AArch64 架构的代码。
+- **userland**：用户空间代码。README 中提到它包含用户空间代码。
+- **awkernel_sync**：同步库，`awkernel_lib` 依赖它。图中可见，但仓库上下文未进一步说明。
+
+## 连线、分支与汇聚关系
+- `awkernel_async_lib -> awkernel_async_lib_verified`：`awkernel_async_lib` 被 `awkernel_async_lib_verified` 验证。
+- `awkernel_async_lib -> awkernel_futures_macro`：`awkernel_async_lib` 使用 `awkernel_futures_macro`。
+- `awkernel_lib -> awkernel_aarch64`：`awkernel_lib` 依赖 `awkernel_aarch64`。
+- `awkernel_async_lib -> awkernel_lib`：`awkernel_async_lib` 依赖 `awkernel_lib`。
+- `awkernel_lib -> awkernel_sync`：`awkernel_lib` 依赖 `awkernel_sync`。
+- `userland -> awkernel_async_lib`：`userland` 依赖 `awkernel_async_lib`。
+- `kernel -> awkernel_lib`：`kernel` 依赖 `awkernel_lib`。
+- `kernel -> awkernel_async_lib`：`kernel` 依赖 `awkernel_async_lib`。
+- `kernel -> awkernel_aarch64`：`kernel` 依赖 `awkernel_aarch64`。
+- `kernel -> awkernel_drivers`：`kernel` 依赖 `awkernel_drivers`。
+- `awkernel_drivers -> awkernel_lib`：`awkernel_drivers` 依赖 `awkernel_lib`。
+- `kernel -> userland`：`kernel` 依赖 `userland`。
+
+## 仓库语境与术语解释
+- **kernel**：`awkernel` 的核心模块，负责启动和初始化操作系统。
+- **awkernel_lib**：底层库，被多个模块依赖，提供基础功能。
+- **awkernel_async_lib**：为 `no_std` 环境提供的异步库，支持在内核空间安全地执行异步/等待应用程序。
+- **awkernel_async_lib_verified**：`awkernel_async_lib` 的验证版本，提供更高的安全性。
+- **awkernel_futures_macro**：用于简化异步编程的宏 crate。
+- **awkernel_drivers**：包含各种设备驱动，用于与硬件交互。
+- **awkernel_aarch64**：包含特定于 AArch64 架构的代码。
+- **userland**：用户空间代码，包含应用程序。
+- **no_std**：表示不依赖标准库的环境，适用于嵌入式系统和内核开发。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `awkernel` 项目的 crate 依赖关系。核心 `kernel` 依赖于 `awkernel_lib`、`awkernel_async_lib`、`awkernel_aarch64`、`awkernel_drivers` 和 `userland`。`awkernel_async_lib` 依赖于 `awkernel_lib` 和 `awkernel_futures_macro`，并被 `awkernel_async_lib_verified` 验证。`awkernel_drivers` 依赖于 `awkernel_lib`。`awkernel_lib` 依赖于 `awkernel_aarch64` 和 `awkernel_sync`。`userland` 依赖于 `awkernel_async_lib`。整体架构呈现分层和模块化设计，核心 `kernel` 依赖多个库和模块来提供不同功能。其中，`awkernel_async_lib` 使得在内核空间安全地执行异步/等待应用程序成为可能。

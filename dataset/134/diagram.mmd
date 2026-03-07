@@ -1,0 +1,23 @@
+flowchart TD
+    User[用户/业务系统]
+    API[safety-api<br/>API服务]
+    Core[safety-basic<br/>Java lib]
+    Bert[safety-bert<br/>独立服务]
+    FastText[safety-fasttext<br/>独立服务]
+    Keywords[safety-keywords<br/>独立服务]
+    Knowledge[safety-knowledge<br/>独立服务]
+    DB[(MySQL/Redis)]
+    Vearch[(Vearch 向量库)]
+
+    User-->|HTTP/SDK|API
+    API-->|依赖|Core
+    API-->|读策略/配置|DB
+    API-->|HTTP/RESTful|Bert
+    API-->|HTTP/RESTful|FastText
+    API-->|HTTP/RESTful|Keywords
+    API-->|HTTP/RESTful|Knowledge
+    Bert-->|模型/数据|DB
+    FastText-->|模型/数据|DB
+    Keywords-->|敏感词数据|DB
+    Knowledge-->|知识/配置|DB
+    Knowledge-->|向量检索|Vearch

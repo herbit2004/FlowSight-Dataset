@@ -1,0 +1,59 @@
+## 图类型与用途
+这是一个流程图，描述了 Cyber-AutoAgent 如何进行自主网络安全评估和渗透测试。它展示了代理的思考、工具选择、任务执行、结果评估以及后续行动的循环过程，用于自动化渗透测试或漏洞评估。
+
+## 图的整体布局
+图采用从上到下的布局。流程从顶部的“Think: Analyze Current State”节点开始，经过工具选择和执行，到结果评估，最终到达底部的“Complete Assessment”节点。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为四个阶段：分析与思考、工具选择、任务执行与评估、结果处理与目标判断。
+
+## 节点逐项说明
+- **A (Think: Analyze Current State)**：代理的思考阶段，分析当前网络环境和已有信息，为下一步行动做准备。
+- **B (Select Tool Type)**：根据当前任务的性质，选择合适的工具类型。
+- **C (Shell Commands)**：选择执行基本的 Shell 命令。根据 `docs/architecture.md`，Shell 工具用于执行系统命令。
+- **D (Cyber Tools via Shell)**：选择通过 Shell 调用网络安全工具。根据 `docs/architecture.md`，安全工具通过 Shell 访问，例如 nmap、sqlmap 和 nikto。
+- **E (Create Meta-Tool)**：选择创建自定义的元工具，用于更复杂的任务。根据 `docs/architecture.md`，Cyber-AutoAgent 具有 Meta-Tooling 能力，可以在运行时创建、修改和部署新工具。
+- **P (Swarm Orchestration)**：选择进行集群编排，用于并行执行任务。根据 `docs/architecture.md`，Cyber-AutoAgent 具有 swarm 能力，可以部署动态代理作为工具，每个代理都为特定的子任务定制。
+- **F (Reflect: Evaluate Results)**：代理的反思阶段，评估执行工具后的结果。
+- **G (Findings?)**：判断是否发现了有价值的信息或漏洞。
+- **H (Exploit Immediately)**：如果发现关键漏洞，立即进行利用。
+- **I (Store & Continue)**：如果发现有用的信息，存储并继续评估。
+- **J (Try Different Approach)**：如果没有发现任何有价值的信息，尝试不同的方法。
+- **K (Document Evidence)**：记录发现的证据。
+- **L (Objective Met?)**：判断是否达到了预定的目标。
+- **M (Complete Assessment)**：完成评估。
+
+## 连线、分支与汇聚关系
+- `A --> B`：从思考阶段到选择工具类型。
+- `B --> C`：选择执行基本的 Shell 命令（Basic Task）。
+- `B --> D`：选择通过 Shell 调用网络安全工具（Security Task）。
+- `B --> E`：选择创建自定义的元工具（Complex Task）。
+- `B --> P`：选择进行集群编排（Parallel Task）。
+- `C --> F`：执行 Shell 命令后，进入结果评估阶段。
+- `D --> F`：执行网络安全工具后，进入结果评估阶段。
+- `E --> F`：创建并执行元工具后，进入结果评估阶段。
+- `P --> F`：进行集群编排后，进入结果评估阶段。
+- `C, D, E, P --> F`：形成汇聚关系，各种工具执行方式完成后，进入结果评估阶段。
+- `F --> G`：评估结果后，判断是否发现了有价值的信息。
+- `G -- Critical --> H`：如果发现关键漏洞，立即利用。
+- `G -- Informational --> I`：如果发现有用的信息，存储并继续评估。
+- `G -- None --> J`：如果没有发现任何有价值的信息，尝试不同的方法。
+- `H --> K`：如果发现关键漏洞，立即利用并记录证据。
+- `I --> L`：如果发现有用的信息，存储并判断是否达到目标。
+- `J --> A`：如果没有发现任何有价值的信息，返回思考阶段，尝试不同的方法。
+- `K --> L`：记录证据后，判断是否达到目标。
+- `L -- Yes --> M`：如果达到目标，完成评估。
+- `L -- No --> A`：如果没有达到目标，返回思考阶段，重新分析。
+
+## 仓库语境与术语解释
+- **Cyber-AutoAgent**：一个自主的网络安全代理，用于自动化渗透测试和漏洞评估。根据 README，它使用 AWS Bedrock, Litellm 或 local Ollama 模型和 Strands 框架。
+- **Strands framework**：Cyber-AutoAgent 的核心框架，用于自然语言推理和动态工具选择。
+- **Shell Commands**：通过操作系统 Shell 执行的命令，用于执行基本的任务。
+- **Cyber Tools via Shell**：通过 Shell 调用的网络安全工具，例如 nmap、sqlmap 和 nikto。
+- **Meta-Tool**：Cyber-AutoAgent 动态创建的自定义工具，用于处理更复杂的任务。
+- **Swarm Orchestration**：集群编排，用于并行执行任务，提高效率。
+- **Mem0 memory**：用于存储和检索发现的证据和知识的持久性内存系统。`docs/architecture.md` 提到 Mem0 Platform backends 用于持久性内存。
+- **AWS Bedrock / Litellm / Ollama**：用于提供 AI 模型服务的平台。根据 README，Cyber-AutoAgent 可以使用这些平台进行自然语言推理。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+Cyber-AutoAgent 的流程从分析当前状态开始，然后选择合适的工具类型，包括 Shell 命令、网络安全工具、元工具或集群编排。执行工具后，评估结果并判断是否发现了有价值的信息。如果发现关键漏洞，立即利用并记录证据；如果发现有用的信息，存储并继续评估；如果没有发现任何信息，尝试不同的方法。最后，判断是否达到预定目标，如果达到则完成评估，否则返回思考阶段重新分析。该流程体现了 Cyber-AutoAgent 通过循环迭代进行网络安全评估的自主性。`docs/architecture.md` 提到了 Strands 框架和 Meta-Tooling 的概念。

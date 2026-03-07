@@ -1,0 +1,59 @@
+## 图类型与用途
+这是一个系统架构图，描述了 Z-Image Turbo 2API (Cloudflare Worker Edition) 的整体架构和数据流向。它展示了客户端如何通过 Cloudflare Worker 访问上游的 Z-Image 原始接口，并获得图像生成服务。该图在 README.md 中用于概览系统架构。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是客户端层，中间是 Z-Image Turbo Worker，底部是上游服务。数据流从客户端经过 Worker 到上游服务，再返回到客户端。
+
+## 分组/子图/阶段说明
+图中包含三个显式子图：客户端 | Client Layer、Z-Image Turbo Worker、上游服务 | Upstream Service。Z-Image Turbo Worker 内部又包含核心处理器 | Core Handlers 和 轮询引擎 | Polling Engine 两个子图。
+
+## 节点逐项说明
+- **A (Cherry Studio 聊天客户端)**：一个聊天客户端，通过 OpenAI 标准请求与 Z-Image Turbo Worker 交互。
+- **B (NextChat WebUI)**：一个 WebUI，通过标准 API 调用与 Z-Image Turbo Worker 交互。
+- **C (开发者驾驶舱 HTML5 UI)**：一个开发者界面，通过 WebSocket/HTTP 与 Z-Image Turbo Worker 交互。
+- **D (标准 API 客户端 curl/Python)**：使用 curl 或 Python 等工具的标准 API 客户端，通过 REST API 与 Z-Image Turbo Worker 交互。
+- **E (路由分发器 /v1/*)**：接收来自客户端的请求，并根据 URL 路径 (`/v1/*`) 将请求路由到相应的处理器。
+- **F (身份伪装引擎 IdentityForge)**：负责对请求进行身份伪装，可能包括添加必要的头部信息或进行会话保持。
+- **G (图像生成 API /v1/images/generations)**：处理图像生成请求。
+- **H (聊天适配器 /v1/chat/completions)**：处理聊天相关的请求。
+- **I (状态查询 /v1/query/status)**：处理状态查询请求。
+- **J (服务端轮询模式)**：Z-Image Turbo Worker 在服务端进行轮询，以获取图像生成的状态。
+- **K (客户端轮询模式)**：客户端主动轮询 Z-Image Turbo Worker，以获取图像生成的状态。
+- **L (TransformStream SSE 实时流)**：使用 Server-Sent Events (SSE) 将图像生成的实时进度反馈给客户端。
+- **M (响应标准化 OpenAI Format)**：将从上游服务接收到的响应转换为 OpenAI 格式，以便与各种客户端兼容。
+- **N (Z-Image 原始接口 z-image.62tool.com)**：实际提供图像生成服务的原始接口。
+
+## 连线、分支与汇聚关系
+- `A -> E`：Cherry Studio 聊天客户端通过 OpenAI 标准请求发送到路由分发器。
+- `B -> E`：NextChat WebUI 通过标准 API 调用发送到路由分发器。
+- `C -> E`：开发者驾驶舱 HTML5 UI 通过 WebSocket/HTTP 发送到路由分发器。
+- `D -> E`：标准 API 客户端 curl/Python 通过 REST API 发送到路由分发器。
+- `E -> F`：路由分发器将请求转发给身份伪装引擎。
+- `F -> G`：身份伪装引擎将请求转发给图像生成 API，并动态伪装头部。
+- `F -> H`：身份伪装引擎将请求转发给聊天适配器，并保持会话。
+- `G -> J`：图像生成 API 提交任务到服务端轮询模式。
+- `G -> K`：图像生成 API 返回任务 ID 给客户端轮询模式。
+- `H -> L`：聊天适配器将请求发送到 TransformStream SSE 实时流。
+- `L -> A`：TransformStream SSE 实时流将流式进度反馈给 Cherry Studio 聊天客户端。
+- `L -> J`：TransformStream SSE 实时流进行异步轮询。
+- `J -> N`：服务端轮询模式轮询 Z-Image 原始接口的状态。
+- `K -> I`：客户端轮询模式进行客户端轮询，查询状态。
+- `I -> N`：状态查询接口查询 Z-Image 原始接口的状态。
+- `N -> M`：Z-Image 原始接口返回图像 URL 给响应标准化模块。
+- `M -> A`：响应标准化模块将标准化响应发送给 Cherry Studio 聊天客户端。
+- `M -> B`：响应标准化模块将 Markdown/JSON 数据发送给 NextChat WebUI。
+- `M -> C`：响应标准化模块将 HTML 预览发送给开发者驾驶舱 HTML5 UI。
+- `M -> D`：响应标准化模块将结构化数据发送给标准 API 客户端 curl/Python。
+
+## 仓库语境与术语解释
+- **Z-Image Turbo 2API**：一个运行在 Cloudflare Workers 上的轻量级中间件，充当智能协议转换器，详情见 README.md。
+- **Cloudflare Workers**：Cloudflare 提供的边缘计算平台，用于部署 Z-Image Turbo 2API，详情见 README.md。
+- **OpenAI Format**：Z-Image Turbo 2API 模拟的 OpenAI API 格式，用于兼容各种客户端，详情见 README.md。
+- **IdentityForge**：身份伪装引擎，用于动态生成指纹、Cookie 和 Session，增强访问安全性，详情见 README.md。
+- **SSE (Server-Sent Events)**：一种服务器推送技术，用于实时反馈图像生成进度，详情见 README.md。
+- **/v1/images/generations**：用于生成图像的 API 端点，详情见 README.md。
+- **/v1/chat/completions**：用于聊天式图像生成的 API 端点，详情见 README.md。
+- **worker.js**：项目的核心代码文件，包含了所有的业务逻辑，详情见 README.md。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该架构图展示了 Z-Image Turbo 2API 的数据流。客户端（包括 Cherry Studio、NextChat、开发者驾驶舱和标准 API 客户端）通过不同的协议与 Z-Image Turbo Worker 的路由分发器交互。请求经过身份伪装引擎处理后，被转发到图像生成 API 或聊天适配器。图像生成任务通过服务端或客户端轮询获取状态，最终从 Z-Image 原始接口获取图像 URL，并以 OpenAI 格式返回给客户端。其中，身份伪装引擎和响应标准化是关键的中间环节，Cloudflare Workers 是部署平台。

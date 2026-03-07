@@ -1,0 +1,41 @@
+## 图类型与用途
+这是一个流程图，描述了 Typerighter 服务的架构和数据流，Typerighter 用于检查文档是否符合用户自定义规则。该图展示了规则的创建、存储、管理和应用过程，以及用户与服务交互的方式。
+
+## 图的整体布局
+图整体采用从左到右的布局，分为上下两层。上层描述规则的创建和管理流程，下层描述用户请求的检查流程。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：规则管理阶段、规则存储阶段、规则应用阶段。
+
+## 节点逐项说明
+- **Rule owner role**：规则所有者角色，负责创建和编辑规则。
+- **Google Sheet**：规则的初始来源，规则所有者可以在 Google 表格中定义规则。
+- **Manager service**：规则管理服务，负责规则的创建、编辑、存储和发布。根据 README，该服务负责规则的生命周期，并将规则发布为 artefact。
+- **Postgres DB**：存储规则的数据库，Manager 服务用于读写规则。
+- **typerighter-rules.json**：存储规则的 JSON 文件，由 Manager 服务生成，Checker 服务读取。存储在 AWS S3 对象存储中。
+- **Checker service**：核心的文本检查服务，接收客户端的文本，根据规则进行检查，并返回匹配结果。
+- **Typerighter client**：用户使用的客户端界面，用于提交需要检查的文档，并展示检查结果。根据 README，`prosemirror-typerighter` 插件提供了一个 Prosemirror 富文本编辑器的集成示例。
+- **Rule user role**：使用 Typerighter 客户端进行文档检查的用户角色。
+
+## 连线、分支与汇聚关系
+- `Rule owner role -- Edit rules --> Google Sheet`：规则所有者编辑 Google 表格中的规则。
+- `Google Sheet -- Get rules --> Manager service`：Manager 服务从 Google 表格中获取规则。
+- `Rule owner role -- Force manager to re-fetch sheet --> Manager service`：规则所有者可以强制 Manager 服务重新从 Google 表格获取规则。
+- `Manager service -- Write rules --> Postgres DB`：Manager 服务将规则写入 Postgres 数据库。
+- `Postgres DB -- Read rules --> Manager service`：Manager 服务从 Postgres 数据库读取规则。
+- `Manager service -- Write rule artefact --> typerighter-rules.json`：Manager 服务将规则编译成 JSON 格式的规则文件，并写入 S3 存储。
+- `Checker service -- Read rule artefact --> typerighter-rules.json`：Checker 服务从 S3 存储读取规则文件。
+- `Typerighter client -- Request matches --> Checker service`：Typerighter 客户端向 Checker 服务发送文档检查请求。
+- `Rule user role -- Request document check --> Typerighter client`：规则用户使用 Typerighter 客户端请求文档检查。
+
+## 仓库语境与术语解释
+- **Checker service**：根据 README，Checker service 消费 Rule Manager 产生的 artefact，并响应文本检查请求。
+- **Manager service**：根据 README，Rule Manager service 负责规则的生命周期，并将规则发布为 artefact。
+- **typerighter-rules.json**：根据 README，该文件是一个 JSON artefact，包含了系统中的所有规则，包括 regex 规则、LanguageTool 规则等。
+- **Rule owner**：根据 README，Rule owner 负责维护 Typerighter 使用的规则。
+- **Rule user**：根据 README，Rule user 使用 Checker service 检查文本。
+- **Matcher**：根据 README，每个规则对应一个 `Matcher`，它接收文档并返回 `RuleMatch` 列表。
+- **RuleMatch**：根据 `apps/common-lib/src/main/scala/com/gu/typerighter/model/RuleMatch.scala`，`RuleMatch` 包含了匹配的范围、描述以及相关的建议。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+Typerighter 的核心流程是：规则所有者在 Google 表格中定义规则，Manager 服务从 Google 表格读取规则并存储到 Postgres 数据库中。Manager 服务定期或在被强制触发时，将数据库中的规则编译成 JSON 格式的规则文件，并存储到 S3 存储中（`typerighter-rules.json`）。Checker 服务从 S3 存储读取规则文件，并根据这些规则检查客户端提交的文档。客户端将文档提交给 Checker 服务，Checker 服务返回检查结果。其中，Rule owner 和 Rule user 分别代表规则的维护者和使用者。

@@ -1,0 +1,32 @@
+graph TB
+    subgraph User Context
+        User[User Aggregate Root]
+        UserGateway[User Gateway]
+        UserDomainService[User Domain Service]
+    end
+    
+    subgraph Role Context
+        Role[Role Aggregate Root]
+        RoleGateway[Role Gateway]
+    end
+    
+    subgraph Permission Context
+        Permission[Permission Aggregate Root]
+        PermissionGateway[Permission Gateway]
+    end
+    
+    subgraph Menu Context
+        Menu[Menu Aggregate Root]
+        MenuGateway[Menu Gateway]
+    end
+    
+    subgraph RBAC Context
+        RbacDomainService[RBAC Domain Service]
+    end
+    
+    User -.->|Assign| Role
+    Role -.->|Associate| Permission
+    Role -.->|Associate| Menu
+    RbacDomainService --> User
+    RbacDomainService --> Role
+    RbacDomainService --> Permission

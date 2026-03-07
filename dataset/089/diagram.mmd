@@ -1,0 +1,21 @@
+flowchart TD
+    Start([Start Installation]) --> Clone[Clone Repository]
+    Clone --> Run[Run install-complete.sh]
+    Run --> Detect[Detect Environment<br/>WSL/Git Bash/Cygwin/macOS/Linux]
+    Detect --> Check[Check Prerequisites<br/>Claude Code, Python, Git]
+    Check --> Install[Install 14 Hook Scripts<br/>to ~/.claude/hooks/]
+    Install --> Config[Configure Settings<br/>settings.json & settings.local.json]
+    Config --> Perms[Set Permissions<br/>chmod +x hooks]
+    Perms --> Audio[Verify Audio Files<br/>14 MP3 files]
+    Audio --> Test[Run Tests<br/>Automated validation]
+
+    Test --> Success{Success?}
+    Success -->|Yes| Done([✅ Installation Complete<br/>Restart Claude Code])
+    Success -->|No| Diagnose[Run Diagnostics<br/>Check installation log]
+    Diagnose --> Fix[Apply Fixes<br/>See Troubleshooting]
+    Fix --> Test
+
+    style Start fill:#4A90E2
+    style Done fill:#7ED321
+    style Success fill:#F5A623
+    style Diagnose fill:#BD10E0

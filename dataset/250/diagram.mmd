@@ -1,0 +1,44 @@
+flowchart LR
+    %% External actors
+    User((User))
+    IdP["External<br/>Identity Provider"]
+    LLM["LLM Provider<br/>Ollama / OpenAI / Anthropic"]
+    S3["S3-Compatible<br/>Object Storage"]
+
+    %% Kubernetes boundary
+    subgraph K8s["Kubernetes<br/>EKS · AKS · GKE · k3s"]
+        direction LR
+
+        %% Ingress & Auth
+        Nginx["Nginx Router"]
+        OAuth2["OAuth2 Proxy"]
+
+        %% Core API
+        RustServer["High Performance<br/>Rust Web Server"]
+
+        %% Engines
+        RAG["High Performance<br/>RAG Engine"]
+        DocEngine["Rust Document<br/>Engine"]
+
+        %% Database
+        Postgres["Postgres<br/>Relational DB & PgVector"]
+    end
+
+    %% Request flow
+    User --> Nginx --> OAuth2 --> RustServer
+
+    %% Authentication flow
+    OAuth2 --> IdP
+    IdP --> OAuth2
+
+    %% Control & inference
+    RustServer --> RAG
+    RustServer --> LLM
+    RustServer --> Postgres
+
+    %% RAG orchestration
+    RAG --> Postgres
+    RAG --> DocEngine
+
+    %% Object storage access
+    RustServer --> S3

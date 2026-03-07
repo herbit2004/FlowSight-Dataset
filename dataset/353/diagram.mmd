@@ -1,0 +1,13 @@
+graph TB
+    gltf_Material([surfacematerial:material])
+    style gltf_Material   fill:#090, color:#FFF
+    gltf_Shader[gltf_pbr:surfaceshader]
+    subgraph gltf_procedural
+    gltf_procedural_output_color4([output:color3])
+    style gltf_procedural_output_color4  fill:#09D, color:#FFF
+    gltf_procedural_constant_color4([constant:color3:1,1,1])
+    style gltf_procedural_constant_color4  fill:#888, color:#000
+    end
+    gltf_Shader --"surfaceshader"--> gltf_Material
+    gltf_procedural_constant_color4 --> gltf_procedural_output_color4
+    gltf_procedural_output_color4 --"base_color"--> gltf_Shader

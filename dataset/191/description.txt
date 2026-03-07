@@ -1,0 +1,53 @@
+## 图类型与用途
+这是一个流程图/架构图，展示了 LLM Agent Trader 系统的整体架构，用于说明系统各模块之间的关系和数据流向，帮助理解系统的运作逻辑。该系统集成了大型语言模型（LLM）来进行智能交易决策分析。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是前端用户界面，中间是 API 网关、LLM 流式回测引擎等核心模块，底部是数据层和回测结果记录。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为四个阶段：用户交互层、核心功能模块、数据层、LLM 策略引擎。
+
+## 节点逐项说明
+- **Frontend - Next.js**：前端用户界面，使用 Next.js 构建，负责与用户交互，接收用户指令，并展示回测结果。
+- **API Gateway - FastAPI Backend**：API 网关，使用 FastAPI 构建的后端服务，作为前端和后端各模块之间的桥梁，负责路由请求。
+- **LLM Streaming Backtest Engine**：LLM 流式回测引擎，是系统的核心模块，负责执行回测过程，并以流式方式返回结果。
+- **Backtest Analysis API**：回测分析 API，负责对回测结果进行分析，生成各种指标和报告。
+- **Daily Feedback API**：每日反馈 API，可能用于收集每日交易数据和反馈，用于优化 LLM 策略。
+- **Stock Data Service YFinance**：股票数据服务，使用 YFinance 获取股票历史数据，为回测引擎提供数据支持。
+- **SQLite Database Backtest Logs**：SQLite 数据库，用于存储回测日志、交易记录和结果数据。
+- **LLM Smart Strategy**：LLM 智能策略模块，是 LLM 策略的核心，负责根据市场信息和技术指标生成交易策略。
+- **Azure OpenAI GPT-4**：Azure OpenAI 提供的 GPT-4 模型，作为 LLM 智能策略的底层支持，提供自然语言处理和决策能力。
+- **Technical Analysis Engine**：技术分析引擎，负责计算各种技术指标，为 LLM 策略提供输入。
+- **Risk Management Module**：风险管理模块，负责评估和控制交易风险，确保交易安全。
+- **Trading Signal Generation**：交易信号生成模块，根据 LLM 策略生成具体的交易信号（买入、卖出）。
+- **Performance Calculation**：性能计算模块，负责计算回测的各项性能指标，如收益率、夏普比率等。
+- **Result Recording**：结果记录模块，负责将回测结果记录到数据库中。
+
+## 连线、分支与汇聚关系
+- `Frontend - Next.js -> API Gateway - FastAPI Backend`：前端通过 API 网关与后端交互。
+- `API Gateway - FastAPI Backend -> LLM Streaming Backtest Engine`：API 网关将请求路由到 LLM 流式回测引擎。
+- `API Gateway - FastAPI Backend -> Backtest Analysis API`：API 网关将请求路由到回测分析 API。
+- `API Gateway - FastAPI Backend -> Daily Feedback API`：API 网关将请求路由到每日反馈 API。
+- `Stock Data Service YFinance -> LLM Streaming Backtest Engine`：股票数据服务为回测引擎提供数据。
+- `LLM Streaming Backtest Engine -> LLM Smart Strategy`：回测引擎使用 LLM 智能策略。
+- `LLM Smart Strategy -> Azure OpenAI GPT-4`：LLM 智能策略使用 Azure OpenAI GPT-4 模型。
+- `LLM Smart Strategy -> Technical Analysis Engine`：LLM 智能策略使用技术分析引擎。
+- `LLM Smart Strategy -> Risk Management Module`：LLM 智能策略使用风险管理模块。
+- `LLM Streaming Backtest Engine -> Trading Signal Generation`：回测引擎生成交易信号。
+- `Trading Signal Generation -> Performance Calculation`：交易信号用于性能计算。
+- `Performance Calculation -> Result Recording`：性能计算结果被记录。
+- `Result Recording -> SQLite Database Backtest Logs`：回测结果被记录到数据库中。
+- `SQLite Database Backtest Logs -> Backtest Analysis API`：回测分析 API 从数据库获取数据。
+- `SQLite Database Backtest Logs -> Daily Feedback API`：每日反馈 API 从数据库获取数据。
+
+## 仓库语境与术语解释
+- **Next.js**：一个 React 框架，用于构建用户界面。
+- **FastAPI**：一个现代、快速（高性能）的 Web 框架，用于构建 API。
+- **YFinance**：一个 Python 库，用于从 Yahoo Finance 获取股票数据。
+- **Azure OpenAI GPT-4**：Azure OpenAI 服务提供的 GPT-4 模型，用于自然语言处理和决策。可以通过修改 `.env` 文件切换 LLM Provider，例如使用 Google Gemini。
+- **Backtest Engine**：回测引擎，用于模拟交易策略在历史数据上的表现。相关代码位于 `backend/app/backtesting/engine.py`。
+- **LLM Smart Strategy**：基于 LLM 的智能交易策略，相关代码位于 `backend/app/llm/strategies/llm_strategy.py`。
+- **API Gateway**：API 网关，使用 FastAPI 构建，作为前端和后端各模块之间的桥梁，负责路由请求。相关代码位于 `backend/app/main.py`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 LLM Agent Trader 系统的架构，从前端 Next.js 用户界面发起请求，通过 FastAPI API 网关路由到 LLM 流式回测引擎。回测引擎使用 YFinance 获取股票数据，并结合 LLM 智能策略（由 Azure OpenAI GPT-4 提供支持）、技术分析引擎和风险管理模块生成交易信号。回测结果经过性能计算后记录到 SQLite 数据库中，并可由回测分析 API 和每日反馈 API 使用。该架构的核心在于利用 LLM 进行智能交易决策分析，并通过流式回测提供实时反馈。

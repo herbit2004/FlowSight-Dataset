@@ -1,0 +1,33 @@
+graph TB
+    subgraph "Claude Code"
+        CC[Claude Code CLI]
+        TC[Tool Call]
+    end
+    
+    subgraph "Claude-Gemini Bridge"
+        HS[Hook System]
+        DE[Decision Engine]
+        PC[Path Converter]
+        CH[Cache Layer]
+    end
+    
+    subgraph "External APIs"
+        GC[Gemini CLI]
+        GA[Gemini API]
+    end
+    
+    CC -->|PreToolUse Hook| HS
+    HS --> PC
+    PC --> DE
+    DE -->|Delegate?| CH
+    CH -->|Yes| GC
+    GC --> GA
+    GA -->|Analysis| CH
+    CH -->|Response| HS
+    HS -->|Result| CC
+    DE -->|No| CC
+    
+    style CC fill:#e1f5fe
+    style HS fill:#f3e5f5
+    style GC fill:#e8f5e8
+    style DE fill:#fff3e0

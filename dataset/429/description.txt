@@ -1,0 +1,80 @@
+## 图类型与用途
+这是一个流程图，描述了 Pulumi CLI 的架构，展示用户如何通过 CLI 与 Pulumi 系统交互，以及 CLI 内部各个组件之间的关系。它在仓库中的作用是概括 Pulumi CLI 的内部架构。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是用户，中间是 CLI 容器及其内部组件，底部是后端服务和文件系统。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表 CLI 容器的不同组成部分：
+- **CLI Container**：包含 CLI 的所有组件，是整个流程的核心。
+- **Core Components**：包含命令处理器、配置管理器、栈管理器、资源管理器和插件管理器，是 CLI 的核心功能模块。
+- **Command Implementations**：包含各种命令的实现，如 New、Up、Preview、Destroy、Config 和 Stack 命令。
+- **Utility Components**：包含日志器、错误处理器、提示管理器和输出格式化器，提供 CLI 的辅助功能。
+- **Backend Interaction**：包含后端客户端和密钥管理器，负责与 Pulumi 后端服务进行通信。
+- **Project Management**：包含项目加载器和模板管理器，负责 Pulumi 项目的管理。
+
+## 节点逐项说明
+- **User**：代表使用 Pulumi CLI 的用户，是整个流程的起点。
+- **Main Entry Point**：CLI 的入口，接收用户命令。
+- **Command Handler**：解析用户命令，并将其分发到相应的命令实现。
+- **Config Manager**：管理 Pulumi 项目的配置信息。参考 `component-architecture/backend/config-manager.md`，Config Manager 包含 Secret Manager, Config Provider 等子模块。
+- **Stack Manager**：管理 Pulumi 栈（Stack）的状态。
+- **Resource Manager**：管理 Pulumi 项目中的资源。参考 `component-architecture/backend/resource-manager.md`，Resource Manager 包含 Deployment Manager, Resource Provider 等子模块。
+- **Plugin Manager**：管理 Pulumi 插件。
+- **New Command**：创建新的 Pulumi 项目。
+- **Up Command**：部署 Pulumi 项目。
+- **Preview Command**：预览 Pulumi 项目的部署计划。
+- **Destroy Command**：销毁 Pulumi 项目。
+- **Config Command**：管理 Pulumi 项目的配置。
+- **Stack Command**：管理 Pulumi 栈。
+- **Logger**：记录 CLI 的日志信息。
+- **Error Handler**：处理 CLI 的错误。
+- **Prompt Manager**：向用户显示提示信息。
+- **Output Formatter**：格式化 CLI 的输出。
+- **Backend Client**：与 Pulumi 后端服务进行通信。
+- **Secrets Manager**：管理 Pulumi 项目的密钥。
+- **Project Loader**：加载 Pulumi 项目。
+- **Template Manager**：管理 Pulumi 项目的模板。
+- **Backend Services**：Pulumi 的后端服务，用于存储状态、管理资源等。
+- **File System**：存储 Pulumi 项目的文件。
+
+## 连线、分支与汇聚关系
+- `User --> MainEntryPoint`：用户通过 CLI 与主入口点交互。
+- `MainEntryPoint --> CommandHandler`：主入口点将命令传递给命令处理器。
+- `CommandHandler --> NewCmd`：命令处理器将请求分发给 New 命令。
+- `CommandHandler --> UpCmd`：命令处理器将请求分发给 Up 命令。
+- `CommandHandler --> PreviewCmd`：命令处理器将请求分发给 Preview 命令。
+- `CommandHandler --> DestroyCmd`：命令处理器将请求分发给 Destroy 命令。
+- `CommandHandler --> ConfigCmd`：命令处理器将请求分发给 Config 命令。
+- `CommandHandler --> StackCmd`：命令处理器将请求分发给 Stack 命令。
+- `NewCmd --> ProjectLoader`：New 命令使用项目加载器。
+- `NewCmd --> TemplateManager`：New 命令使用模板管理器。
+- `UpCmd --> ResourceManager`：Up 命令使用资源管理器。
+- `UpCmd --> StackManager`：Up 命令使用栈管理器。
+- `PreviewCmd --> ResourceManager`：Preview 命令使用资源管理器。
+- `DestroyCmd --> ResourceManager`：Destroy 命令使用资源管理器。
+- `ConfigCmd --> ConfigManager`：Config 命令使用配置管理器。
+- `StackCmd --> StackManager`：Stack 命令使用栈管理器。
+- `ResourceManager --> PluginManager`：资源管理器使用插件管理器。
+- `StackManager --> BackendClient`：栈管理器使用后端客户端。
+- `ConfigManager --> SecretsManager`：配置管理器使用密钥管理器。
+- `CommandHandler -.-> Logger`：命令处理器使用日志器。
+- `CommandHandler -.-> ErrorHandler`：命令处理器使用错误处理器。
+- `CommandHandler -.-> PromptManager`：命令处理器使用提示管理器。
+- `CommandHandler -.-> OutputFormatter`：命令处理器使用输出格式化器。
+- `BackendClient --> Backend`：后端客户端与后端服务交互。
+- `ProjectLoader --> FileSystem`：项目加载器访问文件系统。
+- `TemplateManager --> FileSystem`：模板管理器访问文件系统。
+
+## 仓库语境与术语解释
+- **CLI (Command Line Interface)**：Pulumi 提供的命令行工具，用于与 Pulumi 系统进行交互。
+- **Stack**：Pulumi 中的一个环境或部署单元，例如开发环境、测试环境或生产环境。
+- **Resource**：Pulumi 管理的基础设施资源，例如虚拟机、数据库、存储桶等。
+- **Plugin**：Pulumi 插件，用于支持不同的云提供商和服务。
+- **Backend Services**：Pulumi 的后端服务，用于存储状态、管理资源等。
+- **Project**：Pulumi 项目，包含 Pulumi 程序的代码和配置文件。
+- **component-architecture/cli/cli.md**：仓库中描述 CLI 架构的文档。
+- **system-architecture.md**：仓库中描述 Pulumi 系统架构的文档。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Pulumi CLI 的架构，用户通过 CLI 与系统交互，命令经过主入口点和命令处理器分发到不同的命令实现（如 New, Up, Preview, Destroy, Config, Stack）。这些命令会使用核心组件（如资源管理器、配置管理器、栈管理器）和实用组件（如日志器、错误处理器），并与后端服务和文件系统进行交互。其中，资源管理器和配置管理器是关键中间节点，分别负责资源和配置的管理。该图对应仓库中的 `component-architecture/cli/cli.md` 文档，描述了 Pulumi CLI 的内部结构。

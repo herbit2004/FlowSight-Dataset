@@ -1,0 +1,61 @@
+## 图类型与用途
+这是一个架构图，展示了 `arolariu.ro` 项目在 Azure 云平台上的部署架构，包括网络、网站、数据、安全配置和可观测性等多个层面的组件及其相互关系。该图旨在提供一个高层次的概览，帮助理解该平台的构建方式。
+
+## 图的整体布局
+图采用从上到下的布局，将整个架构划分为不同的层级，从 Azure 订阅开始，依次展示网络层、网站层、数据层、安全与配置层，以及可观测性层。各层之间通过箭头连接，展示了数据流和依赖关系。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表不同的功能层：
+- **Networking**：包含 Azure Front Door 和 DNS Zone，负责网络流量的管理和域名解析。
+- **Websites Layer**：包含多个网站应用，如 `arolariu.ro`、`api.arolariu.ro`、`docs.arolariu.ro` 和 `cv.arolariu.ro`。
+- **Data Layer**：包含 Azure SQL、Cosmos DB、Blob Storage 和 Azure OpenAI，负责数据存储和 AI 服务。
+- **Security & Config**：包含 Key Vault、App Configuration 和 Managed Identities，负责安全配置和身份验证。
+- **Observability**：包含 Log Analytics、App Insights 和 Grafana，负责监控和日志分析。
+
+## 节点逐项说明
+- **Azure Subscription (swedencentral)**：整个架构都位于 Azure 云平台的瑞典中部区域的订阅中。
+- **Azure Front Door (AFD)**：Azure 的 CDN（内容分发网络）和 WAF（Web 应用防火墙），用于加速内容传输和保护网站安全。根据 `infra/Azure/Bicep/network/azureFrontDoor.bicep`，它提供全球 CDN、WAF 防护、SSL/TLS 终止等功能。
+- **DNS Zone (arolariu.ro)**：托管 `arolariu.ro` 域名的 DNS 区域。
+- **arolariu.ro (Next.js)**：主网站，使用 Next.js 框架构建。根据 README，它是一个现代化的全栈平台。
+- **api.arolariu.ro (.NET)**：API 服务，使用 .NET 构建。根据 `infra/Azure/Bicep/sites/api-arolariu-ro.bicep`，它是一个 .NET 10.0 应用，作为所有业务逻辑和数据操作的中心后端。
+- **docs.arolariu.ro (DocFX)**：文档网站，使用 DocFX 生成。
+- **cv.arolariu.ro (SvelteKit)**：简历网站，使用 SvelteKit 框架构建。
+- **Azure SQL**：Azure SQL 数据库服务。
+- **Cosmos DB**：Azure Cosmos DB NoSQL 数据库服务。
+- **Blob Storage**：Azure Blob 存储服务，用于存储非结构化数据。
+- **Azure OpenAI**：Azure OpenAI 服务，提供 OpenAI 的模型能力。
+- **Key Vault**：Azure Key Vault，用于安全地存储密钥、密码和证书。
+- **App Configuration**：Azure App Configuration，用于集中管理应用程序配置。
+- **Managed Identities (MI)**：Azure 托管身份，允许 Azure 服务安全地访问其他 Azure 资源。
+- **Log Analytics**：Azure Log Analytics，用于收集和分析日志数据。
+- **App Insights**：Azure Application Insights，用于监控应用程序性能和可用性。
+- **Grafana**：Grafana，一个数据可视化工具，用于展示监控数据。
+
+## 连线、分支与汇聚关系
+- `Azure Front Door (AFD) --> DNS Zone`：Azure Front Door 与 DNS 区域集成，将域名指向 Front Door。
+- `Azure Front Door (AFD) --> arolariu.ro (Next.js)`：Azure Front Door 将流量路由到主网站。
+- `Azure Front Door (AFD) --> api.arolariu.ro (.NET)`：Azure Front Door 将流量路由到 API 服务。
+- `Azure Front Door (AFD) --> docs.arolariu.ro (DocFX)`：Azure Front Door 将流量路由到文档网站。
+- `Azure Front Door (AFD) --> cv.arolariu.ro (SvelteKit)`：Azure Front Door 将流量路由到简历网站。
+- `api.arolariu.ro (.NET) --> Azure SQL`：API 服务访问 Azure SQL 数据库。
+- `api.arolariu.ro (.NET) --> Cosmos DB`：API 服务访问 Cosmos DB 数据库。
+- `api.arolariu.ro (.NET) --> Blob Storage`：API 服务访问 Blob Storage。
+- `api.arolariu.ro (.NET) --> Azure OpenAI`：API 服务使用 Azure OpenAI 服务。
+- `api.arolariu.ro (.NET) --> Key Vault`：API 服务访问 Key Vault 获取密钥和配置。
+- `arolariu.ro (Next.js) --> App Configuration`：主网站访问 App Configuration 获取应用程序配置。
+- `arolariu.ro (Next.js) --> App Insights`：主网站将应用指标发送到 Application Insights。
+- `api.arolariu.ro (.NET) --> App Insights`：API 服务将应用指标发送到 Application Insights。
+- `Managed Identities (MI) -.-> arolariu.ro (Next.js)`：托管身份验证主网站。
+- `Managed Identities (MI) -.-> api.arolariu.ro (.NET)`：托管身份验证 API 服务。
+
+## 仓库语境与术语解释
+- **Azure Front Door (AFD)**：根据 `infra/Azure/Bicep/network/azureFrontDoor.bicep`，Azure Front Door 提供全球 CDN、WAF 和负载均衡功能。
+- **.NET API**: 根据 `infra/Azure/Bicep/sites/api-arolariu-ro.bicep`，API 使用 .NET 10.0 构建，作为所有业务逻辑和数据操作的中心后端。
+- **Next.js**: 根据 README，用于构建主网站 `arolariu.ro`。
+- **Managed Identities (MI)**：用于 Azure 服务安全地访问其他 Azure 资源，避免硬编码凭据。
+- **App Configuration**: 用于集中管理应用程序配置，方便统一管理和动态更新配置信息。
+- **Domain-Driven Design (DDD)**：根据 `docs/rfc/2001-domain-driven-design-architecture.md`，后端 API 采用 DDD 架构，具有清晰的边界上下文和丰富的领域模型。
+- **Bicep**: 用于基础设施即代码 (IaC) 的领域特定语言 (DSL)，用于在 Azure 中以声明方式创建资源。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该架构图展示了 `arolariu.ro` 项目在 Azure 云平台上的部署架构，从 Azure Front Door 接收流量开始，经过 DNS 解析后，流量被路由到不同的网站应用，包括使用 Next.js 构建的主网站 `arolariu.ro` 和使用 .NET 构建的 API 服务 `api.arolariu.ro`。API 服务负责访问 Azure SQL、Cosmos DB 等数据存储服务，并通过 Managed Identities 进行身份验证。整个架构的安全配置由 Key Vault 和 App Configuration 管理，并通过 Log Analytics 和 App Insights 进行监控和日志分析。其中，Azure Front Door 作为流量入口，.NET API 作为后端服务，以及 Managed Identities 作为安全保障是该架构的关键组成部分。

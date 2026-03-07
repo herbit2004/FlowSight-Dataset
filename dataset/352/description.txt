@@ -1,0 +1,50 @@
+## 图类型与用途
+这是一个流程图，描述了AI聊天机器人前端组件的交互和消息处理流程。它展示了用户输入如何通过前端组件传递到后端，以及后端如何处理请求并将结果返回到前端显示。该图在仓库中用于概括前端组件的结构和消息流。
+
+## 图的整体布局
+图采用从左到右的布局。起点是 `page.tsx`，表示页面入口，终点是 `Citation Display`、`Loading Indicators` 和 `Message Formatting`，表示消息的不同展示形式。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为三个阶段：前端组件渲染、消息传递与后端处理、消息展示。
+
+## 节点逐项说明
+- **Page[page.tsx]**：页面的入口点，负责渲染整个聊天界面。根据 `app/page.tsx` 文件，该组件是 Next.js 应用中的一个页面文件。
+- **ChatInterface[Chat Interface]**：聊天界面组件，是整个聊天应用的核心容器，负责组织和管理其他组件。
+- **Header[Header Component]**：头部组件，通常包含聊天机器人的名称、logo 或其他头部信息。根据 `components/chat/header.tsx` 文件，它还包含主题切换和清除消息的按钮。
+- **Messages[Messages Component]**：消息组件，负责显示聊天消息列表。
+- **Input[Input Component]**：输入组件，用户输入消息的地方，通常包含一个文本输入框和发送按钮。根据 `components/chat/input.tsx` 文件，该组件还使用了 `react-hook-form` 来处理表单。
+- **Footer[Footer Component]**：底部组件，可能包含版权信息或其他底部内容。根据 `components/chat/footer.tsx` 文件，它包含服务条款链接和开发者信息。
+- **Citation[Citation Display]**：引用显示，用于显示消息中引用的来源或参考资料。
+- **Loading[Loading Indicators]**：加载指示器，用于在消息加载时显示加载动画。
+- **Formatting[Message Formatting]**：消息格式化，负责将消息内容进行格式化，例如添加链接、代码高亮等。
+- **API[API Route]**：API 路由，前端通过这个路由与后端进行通信，发送用户输入并接收聊天机器人的回复。根据 `app/api/chat/route.ts` 文件，该路由处理用户意图识别和生成回复。
+- **Intent[Intention Module]**：意图模块，后端负责理解用户意图的模块。根据 `app/api/chat/route.ts` 文件，该模块用于确定用户消息的类型（例如，问题、敌对消息等）。
+- **Response[Response Module]**：响应模块，后端负责生成回复的模块。根据 `app/api/chat/route.ts` 文件，该模块根据用户意图生成不同的回复。
+- **Streaming[Streaming Handler]**：流式处理，后端将回复以流的形式发送给前端，允许逐步显示消息。
+
+## 连线、分支与汇聚关系
+- `Page -> ChatInterface`：页面渲染聊天界面。
+- `ChatInterface -> Header`：聊天界面包含头部组件。
+- `ChatInterface -> Messages`：聊天界面包含消息列表组件。
+- `ChatInterface -> Input`：聊天界面包含输入组件。
+- `ChatInterface -> Footer`：聊天界面包含底部组件。
+- `Messages -> Citation`：消息列表包含引用显示。
+- `Messages -> Loading`：消息列表包含加载指示器。
+- `Messages -> Formatting`：消息列表包含消息格式化。
+- `Input -> API`：用户输入通过 API 发送到后端。
+- `API -> Intent`：API 路由将请求传递给意图模块。
+- `API -> Response`：API 路由将请求传递给响应模块。
+- `Response -> Streaming`：响应模块通过流式处理将回复发送给前端。
+- `Streaming -> Messages`：流式处理的结果最终显示在消息列表中。
+
+## 仓库语境与术语解释
+- **Next.js**：一个 React 框架，用于构建用户界面和 API 路由。该项目使用 Next.js 构建前端和后端 API。
+- **Tailwind CSS**：一个 CSS 框架，用于快速 UI 开发。该项目使用 Tailwind CSS 来样式化组件。
+- **RAG (Retrieval-Augmented Generation)**：一种通过检索相关文档来增强生成模型的技术。该项目使用 RAG 来提供更准确的回复。
+- **Pinecone**：一个向量数据库，用于管理和查询文档嵌入。该项目使用 Pinecone 来存储和检索文档向量。
+- **API Route**：Next.js 中用于创建 API 端点的文件。`app/api/chat/route.ts` 文件定义了处理聊天消息的 API 路由。
+- **Streaming**：一种将数据分段发送到客户端的技术，允许逐步显示消息。该项目使用流式处理来提供更交互的体验。
+- **Intention Module**：负责理解用户意图的模块。`modules/intention.ts` 文件包含意图检测的逻辑。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 AI 聊天机器人前端的组件交互和消息处理流程。用户在 `Input` 组件中输入消息，消息通过 `API Route` 发送到后端。后端通过 `Intention Module` 理解用户意图，然后使用 `Response Module` 生成回复，并通过 `Streaming Handler` 将回复以流的形式发送回前端。最终，消息在 `Messages` 组件中显示，并包含 `Citation Display`、`Loading Indicators` 和 `Message Formatting` 等元素。`page.tsx` 是页面的入口点，而 `components/chat/header.tsx` 提供了主题切换和清除消息的功能。

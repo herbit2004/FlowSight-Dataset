@@ -1,0 +1,32 @@
+flowchart LR
+  subgraph Client
+    B["Browser/App\n(WS Client)"]
+  end
+
+  subgraph Transport
+    H["WebSocketHandler"]
+  end
+
+  subgraph SessionLayer
+    SM["SessionManager"]
+    S["Session\n- options\n- messages\n- busy/loading state\n- clients"]
+  end
+
+  subgraph SDK
+    CSDK["SimpleClaudeAgentSDKClient\n(simple implementation)"]
+    AGSDK["@anthropic-ai/claude-agent-sdk"]
+    I[("IClaudeAgentSDKClient\n<<interface>>")] 
+  end
+
+  subgraph Storage
+    F[(".claude/projects\nJSONL logs")] 
+  end
+
+  B -->|chat / setSDKOptions / resume| H
+  H --> SM
+  SM --> S
+  S <--> I
+  CSDK -. implements .-> I
+  CSDK --> AGSDK
+  H -->|messages / state| S
+  S -. loadMessages .-> F

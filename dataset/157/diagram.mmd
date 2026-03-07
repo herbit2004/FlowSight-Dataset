@@ -1,0 +1,22 @@
+flowchart TD
+    User([User / Terminal]) --> CLI
+    
+    subgraph Musoq.AgentLocal [Musoq Server & CLI ecosystem]
+        CLI[Musoq CLI]
+        LocalHost[(Local Server)]
+        CLI <-->|JSON / Pipes| LocalHost
+    end
+
+    subgraph Core [Engine]
+        Engine[Musoq Engine]
+        LocalHost -->|Compiles Query| Engine
+    end
+    
+    subgraph Plugins [Musoq.DataSources]
+        DS_OS[OS Files]
+        DS_Git[Git Repos]
+        DS_AI[OpenAI / LLMs]
+        Engine -->|Requests Data| DS_OS
+        Engine -->|Requests Data| DS_Git
+        Engine -->|Requests Data| DS_AI
+    end

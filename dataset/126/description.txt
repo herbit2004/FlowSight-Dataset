@@ -1,0 +1,81 @@
+## 图类型与用途
+这是一个流程图，描述了 `fastrender` 渲染引擎中布局阶段的格式化上下文处理流程。它展示了 Box 节点如何通过不同的格式化上下文进行布局，并在仓库中用于概括布局阶段的主要流程和组件。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是起始节点 Box node，中间是 formatting context 的选择，底部是各种布局算法和处理步骤。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为三个阶段：
+1.  **Box 节点**: 布局流程的起点。
+2.  **格式化上下文选择**: 根据不同的上下文类型选择不同的布局算法。
+3.  **布局算法执行**: 执行具体的布局算法和处理步骤。
+
+## 节点逐项说明
+- **Box node (Box)**：代表布局树中的一个节点，通常对应于 HTML 元素。它是布局流程的起点。
+- **formatting context (FC)**：格式化上下文，决定了元素如何布局其内容。不同的格式化上下文有不同的布局规则。
+- **Block formatting context (BFC)**：块级格式化上下文，用于块级元素的布局。README 提到它与 floats, margin collapsing, `clear` 相关。
+- **Block layout (BFCLayout)**：块级布局算法，处理块级元素的位置和尺寸。
+- **Float clearing (Clear)**：处理浮动元素的清除，确保后续元素不被浮动元素覆盖。
+- **Margin collapsing (Collapse)**：处理相邻块级元素之间的外边距折叠。
+- **Inline formatting context (IFC)**：行内格式化上下文，用于行内元素的布局。README 提到它与 line box construction, baseline alignment, bidirectional text 相关。
+- **Inline layout (IFCLayout)**：行内布局算法，处理行内元素的位置和尺寸。
+- **Bidi reordering (Bidi)**：处理双向文本的重排序。
+- **Text shaping (Shaping)**：文本塑形，将字符转换为字形，并进行连字等处理。
+- **Line breaking (Wrap)**：断行，将文本分成多行。
+- **Flex formatting context (FlexFC)**：Flex 格式化上下文，用于 Flexbox 布局。
+- **Flex layout (FlexLayout)**：Flex 布局算法，处理 Flex 容器中 Flex 项目的布局。
+- **flex-grow/shrink (FlexGrow)**：处理 Flex 项目的伸缩。
+- **Alignment (FlexAlign)**：处理 Flex 项目的对齐。
+- **Grid formatting context (GridFC)**：Grid 格式化上下文，用于 Grid 布局。
+- **Grid layout (GridLayout)**：Grid 布局算法，处理 Grid 容器中 Grid 项目的布局。
+- **Auto-placement (AutoPlace)**：处理 Grid 项目的自动放置。
+- **Track sizing (TrackSize)**：处理 Grid 轨道（行和列）的尺寸。
+- **Table formatting context (TableFC)**：Table 格式化上下文，用于表格布局。
+- **Table layout (TableLayout)**：表格布局算法，处理表格单元格的布局。
+- **Column distribution (ColWidth)**：处理表格列的宽度分配。
+- **Border collapse (BorderCollapse)**：处理表格边框的合并。
+- **Multi-column context (MultiCol)**：多列格式化上下文，用于多列布局。
+- **Column layout (ColLayout)**：多列布局算法，处理多列容器中内容的布局。
+- **Column breaks (ColBreak)**：处理列之间的断裂。
+- **Balancing (ColBalance)**：处理列的平衡。
+
+## 连线、分支与汇聚关系
+- `Box -> FC`：Box 节点是格式化上下文选择的起点。
+- `FC -> BFC`：根据格式化上下文选择，进入块级格式化上下文。
+- `FC -> IFC`：根据格式化上下文选择，进入行内格式化上下文。
+- `FC -> FlexFC`：根据格式化上下文选择，进入 Flex 格式化上下文。
+- `FC -> GridFC`：根据格式化上下文选择，进入 Grid 格式化上下文。
+- `FC -> TableFC`：根据格式化上下文选择，进入 Table 格式化上下文。
+- `FC -> MultiCol`：根据格式化上下文选择，进入 Multi-column 格式化上下文。
+- `BFC -> BFCLayout`：块级格式化上下文使用块级布局算法。
+- `BFCLayout -> Clear`：块级布局算法处理浮动元素的清除。
+- `BFCLayout -> Collapse`：块级布局算法处理外边距折叠。
+- `IFC -> IFCLayout`：行内格式化上下文使用行内布局算法。
+- `IFCLayout -> Bidi`：行内布局算法处理双向文本重排序。
+- `IFCLayout -> Shaping`：行内布局算法处理文本塑形。
+- `IFCLayout -> Wrap`：行内布局算法处理断行。
+- `FlexFC -> FlexLayout`：Flex 格式化上下文使用 Flex 布局算法。
+- `FlexLayout -> FlexGrow`：Flex 布局算法处理 Flex 项目的伸缩。
+- `FlexLayout -> FlexAlign`：Flex 布局算法处理 Flex 项目的对齐。
+- `GridFC -> GridLayout`：Grid 格式化上下文使用 Grid 布局算法。
+- `GridLayout -> AutoPlace`：Grid 布局算法处理 Grid 项目的自动放置。
+- `GridLayout -> TrackSize`：Grid 布局算法处理 Grid 轨道的尺寸。
+- `TableFC -> TableLayout`：Table 格式化上下文使用 Table 布局算法。
+- `TableLayout -> ColWidth`：Table 布局算法处理表格列的宽度分配。
+- `TableLayout -> BorderCollapse`：Table 布局算法处理表格边框的合并。
+- `MultiCol -> ColLayout`：Multi-column 格式化上下文使用 Column 布局算法。
+- `ColLayout -> ColBreak`：Column 布局算法处理列之间的断裂。
+- `ColLayout -> ColBalance`：Column 布局算法处理列的平衡。
+
+## 仓库语境与术语解释
+- **Box node**: 代表布局树中的节点，由 `tree/box_tree.rs` 定义。
+- **Formatting context**: 决定元素如何布局其内容，不同的上下文类型在 `layout/contexts/` 目录下有不同的实现。
+- **Block formatting context**: 用于块级元素的布局，相关代码在 `layout/contexts/block/` 目录下。
+- **Inline formatting context**: 用于行内元素的布局，相关代码在 `layout/contexts/inline/` 目录下。
+- **Flex formatting context**: 用于 Flexbox 布局，使用了 vendor 目录下的 `taffy` 库。
+- **Grid formatting context**: 用于 Grid 布局，使用了 vendor 目录下的 `taffy` 库。
+- **Table layout**: 表格布局，相关代码在 `layout/table.rs` 中。
+- **Multi-column**: 多列布局，相关代码在 `layout/fragmentation.rs` 中。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 `fastrender` 渲染引擎的布局阶段，从 Box 节点开始，根据不同的格式化上下文（如 Block、Inline、Flex、Grid、Table、Multi-column）选择不同的布局算法。块级布局涉及浮动清除和外边距折叠，行内布局涉及双向文本重排序、文本塑形和断行，Flex 和 Grid 布局使用了 `taffy` 库，Table 布局处理表格的列宽和边框合并，Multi-column 布局处理列之间的断裂和平衡。整体流程展示了从 Box 节点到最终布局的详细步骤。

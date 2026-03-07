@@ -1,0 +1,38 @@
+## 图类型与用途
+这是一个流程图，描述了 `connet` 如何通过控制服务器和中继服务器，在客户端源和客户端目标之间建立连接，实现 NAT 穿透。该图在 README 中用于展示 `connet` 的整体架构。
+
+## 图的整体布局
+图采用从左到右的布局。左侧是客户端源，中间是服务器，右侧是客户端目标。数据流从客户端源开始，经过服务器，最终到达客户端目标。
+
+## 分组/子图/阶段说明
+图中包含三个子图：Server（服务器）、Client Source（客户端源）和 Client Destination（客户端目标）。
+
+## 节点逐项说明
+- **Control Server**：控制服务器，负责交换客户端的连接信息，例如直连信息和中继信息。
+- **Relay Server**：中继服务器，在客户端无法直连时，用于中继数据。
+- **Source**：`connet` 客户端的源端，负责与控制服务器交换信息，并尝试与目标端建立连接。
+- **Client**：实际发起连接请求的客户端应用程序。
+- **Destination**：`connet` 客户端的目标端，负责与控制服务器交换信息，并等待源端建立连接。
+- **Server**：实际提供服务的服务器应用程序。
+
+## 连线、分支与汇聚关系
+- `Control Server -.-> Relay Server`：控制服务器向中继服务器传递中继信息。
+- `Source --> Control Server`：源端与控制服务器交换直连信息和中继信息。
+- `Destination --> Control Server`：目标端与控制服务器交换直连信息和中继信息。
+- `Client -..-> Source`：客户端通过 `connet` 客户端的源端发起连接请求。
+- `Destination -..-> Server`：目标端 `connet` 客户端将接收到的连接请求转发给实际提供服务的服务器。
+- `Source --- Destination`：源端尝试与目标端建立直连连接。
+- `Source --> Relay Server`：如果直连失败，源端通过中继服务器建立连接。
+- `Relay Server --> Destination`：中继服务器将源端的数据中继到目标端。
+
+## 仓库语境与术语解释
+- **NAT traversal**：网络地址转换（NAT）穿透，`connet` 的主要功能，允许客户端访问位于 NAT 后面的服务。
+- **Control Server**：根据 `cmd/connet/server.go` 和 `server/control/server.go`，控制服务器负责客户端认证、端点管理和中继服务器协调。
+- **Relay Server**：根据 `cmd/connet/server.go` 和 `server/relay/server.go`，中继服务器在客户端无法直连时提供数据中继服务。
+- **Source / Destination**：`connet` 客户端的两种角色，分别对应请求发起方和提供服务方。
+- **QUIC protocol**：README 提到 `connet` 使用 QUIC 协议进行所有通信，QUIC 构建于 UDP 之上。
+- **Token**：根据 `cmd/connet/client.go` 和 `config.go`，客户端需要提供 Token 才能连接到控制服务器。
+- **server.toml / client.toml**：README 提到可以使用 toml 配置文件来配置 connet server 和 client。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `connet` 的 NAT 穿透架构。客户端源通过与控制服务器交换信息，尝试与客户端目标建立直连连接。如果直连失败，则通过中继服务器进行中继连接。控制服务器负责协调连接信息，中继服务器负责数据中继。客户端需要提供 Token 才能连接到控制服务器。整体流程为“客户端发起请求 -> 控制服务器协调 -> 直连或中继连接 -> 目标服务器提供服务”。

@@ -1,0 +1,25 @@
+flowchart TB
+    subgraph "MCP Client Environment"
+        MC[MCP Client]
+    end
+
+    subgraph "GUARDRAIL"
+        direction TB
+        IGL[Information Gateway Layer]
+        CVL[Context Verification Layer]
+        RCL[Request Control Layer]
+        ECL[Execution Containment Layer]
+        AML[Audit & Monitoring Layer]
+
+        IGL --> CVL
+        CVL --> RCL
+        RCL --> ECL
+        ECL --> AML
+    end
+
+    subgraph "MCP Server Environment"
+        MS[MCP Server]
+    end
+
+    MC -- "MCP Protocol" --> IGL
+    ECL -- "Contained Execution" --> MS

@@ -1,0 +1,60 @@
+graph TB
+  %% GitHub 兼容简化版（仅使用基础语法）
+
+  subgraph ext_layer[外部系统与数据源层]
+    ext_contrib[社区贡献者]
+    ext_sheet[Google 表格 / 外部表格]
+    ext_md[外部 Markdown 提示词]
+    ext_api[预留：其他数据源 / API]
+    ext_contrib --> ext_sheet
+    ext_contrib --> ext_md
+    ext_api --> ext_sheet
+  end
+
+  subgraph ingest_layer[数据接入与采集层]
+    excel_raw[prompt_excel/*.xlsx]
+    md_raw[prompt_docs/外部MD输入]
+    excel_to_docs[prompts-library/scripts/excel_to_docs.py]
+    docs_to_excel[prompts-library/scripts/docs_to_excel.py]
+    ingest_bus[标准化数据帧]
+    ext_sheet --> excel_raw
+    ext_md --> md_raw
+    excel_raw --> excel_to_docs
+    md_raw --> docs_to_excel
+    excel_to_docs --> ingest_bus
+    docs_to_excel --> ingest_bus
+  end
+
+  subgraph core_layer[数据处理与智能决策层 / 核心]
+    ingest_bus --> validate[字段校验与规范化]
+    validate --> transform[格式映射转换]
+    transform --> artifacts_md[prompt_docs/规范MD]
+    transform --> artifacts_xlsx[prompt_excel/导出XLSX]
+    orchestrator[main.py · scripts/start_convert.py] --> validate
+    orchestrator --> transform
+  end
+
+  subgraph consume_layer[执行与消费层]
+    artifacts_md --> catalog_coding[i18n/zh/prompts/coding_prompts]
+    artifacts_md --> catalog_system[i18n/zh/prompts/system_prompts]
+    artifacts_md --> catalog_assist[i18n/zh/prompts/assistant_prompts]
+    artifacts_md --> catalog_user[i18n/zh/prompts/user_prompts]
+    artifacts_md --> docs_repo[i18n/zh/documents/*]
+    artifacts_md --> new_consumer[预留：其他下游渠道]
+    catalog_coding --> ai_flow[AI 结对编程流程]
+    ai_flow --> deliverables[项目上下文 / 计划 / 代码产出]
+  end
+
+  subgraph ux_layer[用户交互与接口层]
+    cli[CLI: python main.py] --> orchestrator
+    makefile[Makefile 任务封装] --> cli
+    readme[README.md 使用指南] --> cli
+  end
+
+  subgraph infra_layer[基础设施与横切能力层]
+    git[Git 版本控制] --> orchestrator
+    backups[backups/一键备份.sh · backups/快速备份.py] --> artifacts_md
+    deps[requirements.txt · scripts/requirements.txt] --> orchestrator
+    config[prompts-library/scripts/config.yaml] --> orchestrator
+    monitor[预留：日志与监控] --> orchestrator
+  end

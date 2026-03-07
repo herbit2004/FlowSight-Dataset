@@ -1,0 +1,53 @@
+## 图类型与用途
+这是一个流程图/架构图，描述了 Artifact Keeper 系统的后端架构，展示了 HTTP 请求如何被处理并最终与数据层交互的流程。该图在仓库中用于概括 Artifact Keeper 的后端处理流程，体现了分层架构的设计。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是 HTTP 请求入口，依次经过中间件管道、路由、处理层、服务层，最终到达数据层。
+
+## 分组/子图/阶段说明
+图中包含多个 subgraph，分别代表不同的处理层：
+- **Middleware Pipeline**：表示中间件管道，负责请求的预处理和后处理。
+- **Handler Layer**：表示处理程序层，负责处理具体的业务逻辑。
+- **Service Layer**：表示服务层，提供可重用的业务逻辑服务。
+- **Data Layer**：表示数据层，负责数据的存储和检索。
+
+## 节点逐项说明
+- **REQ (HTTP Request)**：表示客户端发起的 HTTP 请求，是整个流程的起点。
+- **CORS**：处理跨域资源共享 (CORS) 的中间件。
+- **AUTH**：身份验证中间件，支持多种身份验证方式，包括 JWT、OIDC、LDAP、SAML 和 API Key。
+- **RL (Rate Limiter)**：限流中间件，用于防止恶意请求或过度使用。
+- **TRACE (Tracing + Metrics)**：追踪和指标收集中间件，用于监控系统性能和诊断问题。
+- **DEMO (Demo Mode Guard)**：演示模式保护中间件，可能用于限制演示环境中的某些功能。
+- **ROUTER (Router)**：路由组件，根据请求的 URL 将请求转发到相应的处理程序。它包含 50+ 路由组。
+- **FMT (Format Handlers)**：格式处理程序，用于处理不同格式的软件包，例如 Maven、PyPI、NPM、Docker 等，支持 41 种以上格式。
+- **CORE (Core Handlers)**：核心处理程序，用于处理仓库、制品、用户和身份验证等核心功能。
+- **ADV (Advanced Handlers)**：高级处理程序，用于处理安全、插件、对等节点和迁移等高级功能。
+- **ART (Artifact Service)**：制品服务，用于管理和操作制品。
+- **REPO (Repository Service)**：仓库服务，用于管理和操作仓库。
+- **SCAN (Scanner Service)**：扫描服务，用于扫描制品的安全漏洞。
+- **PLUG (Plugin Service)**：插件服务，用于管理和操作插件。
+- **SEARCH (Search Service)**：搜索服务，用于搜索制品。
+- **PG (PostgreSQL)**：PostgreSQL 数据库，用于存储元数据和其他结构化数据。
+- **FS (Storage)**：文件存储，用于存储制品文件，支持本地文件系统 (FS) 和 S3 对象存储。
+- **MS (Meilisearch)**：Meilisearch 搜索引擎，用于提供快速的全文搜索。
+- **SC (Trivy / Grype / OpenSCAP)**：安全扫描工具，用于检测制品中的安全漏洞。
+
+## 连线、分支与汇聚关系
+- `REQ -> MW`：HTTP 请求进入中间件管道。
+- `CORS -> AUTH -> RL -> TRACE -> DEMO`：中间件管道中的处理流程。
+- `MW -> ROUTER`：中间件处理完成后，请求被路由。
+- `ROUTER -> HANDLERS`：请求被路由到处理程序层。
+- `HANDLERS -> SERVICES`：处理程序层将请求传递到服务层。
+- `SERVICES -> DATA`：服务层将请求传递到数据层。
+
+## 仓库语境与术语解释
+- **Middleware Pipeline**：根据 README，后端采用分层架构，中间件管道处理每个请求。
+- **45+ Package Formats**：Artifact Keeper 支持 45+ 种软件包格式，每种格式都有原生协议处理器。
+- **WASM Plugin System**：Artifact Keeper 允许通过 WASM 插件系统扩展自定义格式处理程序。
+- **Security Scanning**：Artifact Keeper 会自动扫描上传的制品，检测已知漏洞。
+- **PostgreSQL**：用于存储元数据和其他结构化数据。
+- **Meilisearch**：用于提供快速全文搜索，支持跨仓库和制品的搜索。
+- **Trivy / Grype / OpenSCAP**：用于安全扫描，Trivy 用于文件系统/容器分析，Grype 用于依赖树分析。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Artifact Keeper 的后端架构，从接收 HTTP 请求开始，依次经过中间件管道进行预处理，然后通过 Router 将请求转发到 Handler Layer 进行业务逻辑处理。Handler Layer 调用 Service Layer 提供的服务，最终与 Data Layer 交互，完成数据的存储和检索。其中，Middleware Pipeline 负责请求的预处理和后处理，Data Layer 包括 PostgreSQL 数据库、文件存储 (FS/S3) 和 Meilisearch 搜索引擎。安全扫描工具 Trivy/Grype/OpenSCAP 用于检测制品中的安全漏洞。

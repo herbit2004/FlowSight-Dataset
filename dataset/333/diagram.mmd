@@ -1,0 +1,56 @@
+graph TB
+    subgraph Diagram
+        subgraph source
+            stm32
+            Camera
+
+            style stm32 fill:#32f
+            style Camera fill:#32f
+        end
+        subgraph queue
+            D1[picture queue]
+            D2[serial data queue]
+
+            style D1 fill:#bbf
+            style D2 fill:#bbf
+        end
+        subgraph thread
+            subgraph detector
+            A(detector start)-->A2[wait for a picture]
+            D1-->A2
+            A2-->A3[wait for a serial data]
+            D2-->A3
+            A3-->A4[image process]
+            A4-->A5[posture estimate]
+            A5-->A6[state estimate]
+            A6-->A7[send data to stm32]
+            A7-->stm32
+            A7-->A8(end a loop)
+            A8-->A2
+            style A fill:#f9f,stroke:#f92,stroke-width:4px
+            style A8 fill:#bbf,stroke:#f66,stroke-width:2px,color:#fff,stroke-dasharray: 5 5
+            end
+
+            subgraph camera
+            B(camera start)-->B1[wait for image from camera]
+            B1-->B2[send data to queue]
+            B2-->D1
+            B2-->B3(end a loop)
+            style B fill:#f9f,stroke:#f92,stroke-width:4px
+            style B3 fill:#bbf,stroke:#f66,stroke-width:2px,color:#fff,stroke-dasharray: 5 5
+            end
+            subgraph serial
+            C(serial start)-->C1[wait for serial data]
+            C1-->C2[send data to queue]
+            C2-->D2
+            C2-->C3(end a loop)
+            C3-->C1
+            style C fill:#f9f,stroke:#f92,stroke-width:4px
+            style C3 fill:#bbf,stroke:#f66,stroke-width:2px,color:#fff,stroke-dasharray: 5 5
+            end
+        end
+
+
+        stm32-->|send data| C1
+        Camera-->|send picture| B1
+    end

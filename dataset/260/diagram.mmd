@@ -1,0 +1,39 @@
+flowchart LR
+  subgraph Inputs
+    HW["Hardware detector<br/>CPU/GPU/RAM/backend"]
+    REG["Dynamic Ollama catalog<br/>(curated fallback if unavailable)"]
+    LOCAL["Installed local models"]
+    FLAGS["CLI options<br/>use-case/runtime/limits/policy"]
+  end
+
+  subgraph Pipeline["Selection Pipeline"]
+    NORMALIZE["Normalize and deduplicate model pool"]
+    PROFILE["Hardware profile and memory budget"]
+    FILTER["Use-case/category filtering"]
+    QUANT["Quantization fit selection"]
+    SCORE["Deterministic 4D scoring<br/>Q/S/F/C"]
+    POLICY["Policy evaluation (optional)<br/>audit or enforce"]
+    RANK["Rank and explain candidates"]
+  end
+
+  subgraph Outputs
+    REC["check / recommend output"]
+    AUDIT["audit export<br/>JSON / CSV / SARIF"]
+    RUN["pull/run-ready commands"]
+  end
+
+  REG --> NORMALIZE
+  LOCAL --> NORMALIZE
+  HW --> PROFILE
+  FLAGS --> FILTER
+  FLAGS --> POLICY
+  NORMALIZE --> FILTER
+  PROFILE --> QUANT
+  FILTER --> QUANT
+  QUANT --> SCORE
+  SCORE --> POLICY
+  SCORE --> RANK
+  POLICY --> RANK
+  RANK --> REC
+  POLICY --> AUDIT
+  RANK --> RUN

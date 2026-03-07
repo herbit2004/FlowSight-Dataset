@@ -1,0 +1,40 @@
+## 图类型与用途
+这是一个流程图，描述了 GUARDRAIL 项目中 MCP Client/Server 的安全架构，重点展示了可扩展安全中间件 (ESM) 的内部结构和运作方式。该图旨在展示如何通过分层和插件化的方法对 MCP 消息进行安全处理。
+
+## 图的整体布局
+图的整体布局是从上到下的，分为两个主要部分：左侧是 MCP Client/Server 的外部结构，右侧是 ESM 的内部结构。消息从 MCP 协议层流向传输层，配置信息从 MCP Client/Server 流向插件管理器。
+
+## 分组/子图/阶段说明
+图中包含两个子图：
+- **MCP Client/Server**：表示 MCP 客户端或服务器的外部结构，包括 MCP 协议层、可扩展安全中间件和传输层。
+- **ESM Internals**：表示可扩展安全中间件的内部结构，包括插件管理器和各种安全插件。
+
+## 节点逐项说明
+- **MP (MCP Protocol Layer)**：MCP 协议层，负责处理 MCP 协议相关的逻辑。
+- **ESM (Extensible Security Middleware)**：可扩展的安全中间件，是整个安全架构的核心，负责对 MCP 消息进行安全处理。
+- **TL (Transport Layer)**：传输层，负责消息的传输。
+- **PM (Plugin Manager)**：插件管理器，负责加载、管理和调用各种安全插件。
+- **SP1 (Validation Plugin)**：验证插件，负责验证消息的有效性。
+- **SP2 (Classification Plugin)**：分类插件，负责对消息进行分类。
+- **SP3 (Encryption Plugin)**：加密插件，负责对消息进行加密。
+- **SP4 (Custom Plugins...)**：自定义插件，允许用户根据需要添加额外的安全插件。
+- **MC (MCP Client/Server)**：代表 MCP 客户端或服务器，是整个系统的端点。
+
+## 连线、分支与汇聚关系
+- `MP -> ESM`：MCP 协议层将 MCP 消息发送到可扩展安全中间件。
+- `ESM -> TL`：可扩展安全中间件将处理后的消息发送到传输层。
+- `MC -> PM`：MCP Client/Server 将配置信息发送到插件管理器。
+- `PM -> SP1`：插件管理器加载和管理验证插件。
+- `PM -> SP2`：插件管理器加载和管理分类插件。
+- `PM -> SP3`：插件管理器加载和管理加密插件。
+- `PM -> SP4`：插件管理器加载和管理自定义插件。
+
+## 仓库语境与术语解释
+- **MCP (Model Context Protocol)**：根据 README 和 `2-technical-spec.md`，MCP 是一种协议，用于在 LLM 应用生态系统中实现安全的信息流控制。
+- **ESM (Extensible Security Middleware)**：该中间件通过插件化的方式，对 MCP 消息进行安全处理，实现灵活的安全策略。
+- **Plugin Manager**：插件管理器负责加载和管理各种安全插件，允许系统方便地添加、删除或修改安全插件。
+- **Security Plugins**：安全插件包括验证、分类、加密和自定义插件，用于实现不同的安全功能。
+- **Config**：配置信息，用于配置插件管理器，从而控制安全策略。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 MCP Client/Server 的安全架构，其中 MCP 协议层将消息发送到可扩展安全中间件 (ESM)，ESM 处理后发送到传输层。ESM 内部通过插件管理器加载和管理各种安全插件，包括验证、分类、加密和自定义插件。MCP Client/Server 通过配置信息来控制插件管理器，从而实现对安全策略的控制。该架构采用分层和插件化的设计，将安全处理逻辑从 MCP 协议层和传输层中解耦出来。

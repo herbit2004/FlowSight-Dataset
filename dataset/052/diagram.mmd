@@ -1,0 +1,21 @@
+graph TD
+    User[User Query] --> Supervisor[Supervisor Agent]
+    Supervisor --> Policy[Policy Agent]
+    Supervisor --> Billing[Billing Agent]
+    Supervisor --> Claims[Claims Agent]
+    Supervisor --> General[General Help Agent]
+    Supervisor --> Human[Human Escalation Agent]
+    Supervisor --> Final[Final Answer Agent]
+
+    Policy --> Database[(SQLite DB)]
+    Billing --> Database
+    Claims --> Database
+    General --> VectorDB[(ChromaDB)]
+
+    Policy --> Supervisor
+    Billing --> Supervisor
+    Claims --> Supervisor
+    General --> Supervisor
+
+    Final --> End[Conversation Complete]
+    Human --> End

@@ -1,0 +1,43 @@
+## 图类型与用途
+这是一个流程图，展示了基于 RBAC（Role-Based Access Control，基于角色的访问控制）的权限管理系统的架构。该图描述了用户、角色、权限和菜单四个核心上下文以及它们之间的关系，以及 RBAC 领域服务在其中的作用，用于在 COLA 架构中实现 DDD（Domain-Driven Design）。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是 RBAC Context，中间是 User Context 和 Role Context，底部是 Menu Context 和 Permission Context。
+
+## 分组/子图/阶段说明
+图中包含五个显式子图，分别代表不同的上下文：
+- **User Context**：用户上下文，包含用户相关的实体和服务。
+- **Role Context**：角色上下文，包含角色相关的实体和服务。
+- **Permission Context**：权限上下文，包含权限相关的实体和服务。
+- **Menu Context**：菜单上下文，包含菜单相关的实体和服务。
+- **RBAC Context**：RBAC 上下文，包含 RBAC 相关的领域服务，协调各个上下文之间的关系。
+
+## 节点逐项说明
+- **User Aggregate Root**：用户聚合根，代表系统中的用户实体。参考 `eden-demo-cola-domain/src/main/java/org/ylzl/eden/demo/domain/user/entity/User.java`。
+- **User Gateway**：用户网关，负责用户数据的访问和持久化，是用户上下文与外部数据存储交互的接口。
+- **User Domain Service**：用户领域服务，包含与用户相关的业务逻辑。
+- **Role Aggregate Root**：角色聚合根，代表系统中的角色实体。参考 `eden-demo-cola-domain/src/main/java/org/ylzl/eden/demo/domain/role/entity/Role.java`。
+- **Role Gateway**：角色网关，负责角色数据的访问和持久化，是角色上下文与外部数据存储交互的接口。
+- **Permission Aggregate Root**：权限聚合根，代表系统中的权限实体。参考 `eden-demo-cola-domain/src/main/java/org/ylzl/eden/demo/domain/permission/entity/Permission.java`。
+- **Permission Gateway**：权限网关，负责权限数据的访问和持久化，是权限上下文与外部数据存储交互的接口。
+- **Menu Aggregate Root**：菜单聚合根，代表系统中的菜单实体，定义了用户可以访问的菜单项。参考 `eden-demo-cola-domain/src/main/java/org/ylzl/eden/demo/domain/menu/entity/Menu.java`。
+- **Menu Gateway**：菜单网关，负责菜单数据的访问和持久化，是菜单上下文与外部数据存储交互的接口。
+- **RBAC Domain Service**：RBAC 领域服务，包含 RBAC 相关的核心业务逻辑，例如角色分配、权限验证等。参考 `eden-demo-cola-domain/src/main/java/org/ylzl/eden/demo/domain/rbac/domainservice/RbacDomainService.java`。
+
+## 连线、分支与汇聚关系
+- `User -.-> Role`：用户被分配到角色（Assign）。虚线表示关联关系。
+- `Role -.-> Permission`：角色与权限相关联（Associate）。虚线表示关联关系。
+- `Role -.-> Menu`：角色与菜单相关联（Associate）。虚线表示关联关系。
+- `RbacDomainService --> User`：RBAC 领域服务依赖于用户上下文，可以访问和操作用户数据。
+- `RbacDomainService --> Role`：RBAC 领域服务依赖于角色上下文，可以访问和操作角色数据。
+- `RbacDomainService --> Permission`：RBAC 领域服务依赖于权限上下文，可以访问和操作权限数据。
+
+## 仓库语境与术语解释
+- **RBAC (Role-Based Access Control)**：基于角色的访问控制，是一种权限管理机制，通过将权限与角色关联，然后将角色分配给用户，从而实现对用户权限的管理。
+- **Aggregate Root (聚合根)**：DDD 中的一个概念，代表一个聚合的根实体，负责维护聚合内部的一致性。
+- **Gateway**：在 COLA 架构中，Gateway 负责与外部系统进行交互，例如数据库、缓存等。
+- **Domain Service (领域服务)**：DDD 中的一个概念，包含不属于任何实体的业务逻辑。
+- **COLA Architecture**：一种清洁的、面向对象的、分层的、可适配的应用架构，旨在降低复杂应用场景中的系统熵，提高开发和运营效率。README.md 中提到 COLA 架构集成了 CQRS、DDD、SOLID 等设计原则。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了一个基于 RBAC 的权限管理系统的核心架构，采用了 COLA 架构和 DDD 思想。用户通过被分配到不同的角色，从而获得不同的权限和菜单访问权限。RBAC 领域服务负责处理角色、权限和用户的关联关系，以及权限验证等核心业务逻辑。每个上下文（用户、角色、权限、菜单）都有自己的聚合根和网关，负责数据的管理和持久化。RBAC 领域服务依赖于用户、角色和权限上下文，是整个权限管理系统的核心。

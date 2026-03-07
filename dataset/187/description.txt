@@ -1,0 +1,71 @@
+## 图类型与用途
+这是一个流程图，描述了 HMLR 架构中处理用户查询并生成响应的完整流程。它展示了 AI Agent 如何利用分层记忆系统，通过并行处理、信息提取、检索和路由等步骤，最终生成高质量的回复。该图在 README.md 中作为 HMLR 架构的概览。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是用户查询的起始节点，经过一系列处理和并行任务，最终在底部生成回复并结束。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为以下几个阶段：
+- **Ingestion**：用户查询的初步处理和分块嵌入。
+- **Parallel Tasks**：启动并行任务，包括用户画像更新、事实提取、记忆检索和路由过滤。
+- **Context Hydration**：整合所有相关信息，形成完整的上下文。
+- **Response Generation**：使用大型语言模型生成最终回复。
+
+## 节点逐项说明
+- **Start (User Query)**：用户发起的初始查询，作为整个流程的起点。
+- **Entry (process_user_message)**：接收用户查询并进行初步处理的入口点。
+- **ChunkEngine (Chunk & Embed)**：将用户查询分割成更小的块 (Chunk)，并将其嵌入到向量空间中，以便后续的向量搜索。根据 `hmlr/memory/chunking/chunk_engine.py`，该组件负责将文本分割成句子、段落和 Bridge Blocks 等不同粒度的 chunks。
+- **ParallelStart (Launch Parallel Tasks)**：启动并行任务的分支点，允许同时执行多个任务以提高效率。
+- **Scribe Agent**：负责维护用户画像 (User Profile) 的代理。
+- **UserProfile (User Profile JSON)**：以 JSON 格式存储的用户画像，包含用户的偏好、历史交互等信息。
+- **FactScrubber**：从用户查询中提取关键事实 (Key-Value) 的组件。根据 `hmlr/memory/fact_scrubber.py`，该组件用于提取定义、缩写、密钥等信息。
+- **FactStore (Fact Store SQL)**：以 SQL 数据库形式存储的事实库，用于存储和检索提取出的事实。
+- **Crawler (LatticeCrawler)**：负责在记忆系统中进行检索的组件，使用向量搜索 (Key 1: Vector Search) 查找相关的候选记忆。根据 `hmlr/memory/retrieval/crawler.py`，该组件使用向量嵌入进行语义相似性搜索。
+- **Candidates (Raw Candidates)**：Crawler 检索到的原始候选记忆列表。
+- **Governor (Router & Filter)**：核心的路由和过滤组件，负责根据上下文信息对候选记忆进行筛选和排序，并决定如何路由查询。
+- **ValidatedMems (Truly Relevant Memories)**：Governor 筛选后得到的真正相关的记忆。
+- **Decision (Routing Decision)**：Governor 根据当前上下文和记忆状态做出的路由决策，决定是继续当前话题 (Active Topic) 还是开启新的话题 (New Topic)。
+- **ResumeBlock (Resume Bridge Block)**：如果是继续当前话题，则使用此模块恢复之前的上下文。
+- **CreateBlock (Create Bridge Block)**：如果是开启新的话题，则使用此模块创建新的上下文桥梁。
+- **Hydrator (ContextHydrator)**：将所有相关信息（ValidatedMems, FactStore, UserProfile）整合到一起，形成完整的上下文。根据 `hmlr/memory/retrieval/context_hydrator.py`，该组件负责构建 LLM prompts。
+- **FinalPrompt (Final LLM Prompt)**：根据整合后的上下文生成的最终提示词，用于输入到大型语言模型 (LLM)。
+- **MainLLM (Response Generation)**：使用大型语言模型生成最终的回复。
+- **End**：流程结束，返回生成的回复。
+
+## 连线、分支与汇聚关系
+- `Start -> Entry`：用户查询进入系统，由 Entry 节点进行初步处理。
+- `Entry -> ChunkEngine`：Entry 节点将查询传递给 ChunkEngine 进行分块和嵌入。
+- `ChunkEngine -> ParallelStart`：ChunkEngine 完成处理后，启动并行任务。
+- `ParallelStart -> Scribe`：启动 Scribe Agent，更新用户画像。
+- `Scribe -> UserProfile`：Scribe Agent 更新用户画像。
+- `ParallelStart -> FactScrubber`：启动 FactScrubber，提取事实。
+- `FactScrubber -> FactStore`：FactScrubber 提取事实并存储到 FactStore。
+- `ParallelStart -> Crawler`：启动 Crawler，进行向量搜索。
+- `Crawler -> Candidates`：Crawler 进行向量搜索，检索候选记忆。
+- `ParallelStart -> Governor`：启动 Governor，进行路由和过滤。
+- `Candidates -> Governor`：候选记忆传递给 Governor 进行处理。
+- `Governor -> ValidatedMems`：Governor 根据上下文过滤得到真正相关的记忆。
+- `Governor -> Decision`：Governor 根据上下文做出路由决策。
+- `Decision -- Active Topic --> ResumeBlock`：如果是继续当前话题，则进入 ResumeBlock。
+- `Decision -- New Topic --> CreateBlock`：如果是开启新的话题，则进入 CreateBlock。
+- `ResumeBlock -> Hydrator`：ResumeBlock 将上下文传递给 Hydrator。
+- `CreateBlock -> Hydrator`：CreateBlock 将上下文传递给 Hydrator。
+- `ValidatedMems -> Hydrator`：真正相关的记忆传递给 Hydrator。
+- `FactStore -> Hydrator`：事实库中的事实传递给 Hydrator。
+- `UserProfile -> Hydrator`：用户画像传递给 Hydrator。
+- `Hydrator -> FinalPrompt`：Hydrator 生成最终的提示词。
+- `FinalPrompt -> MainLLM`：最终提示词传递给大型语言模型进行回复生成。
+- `MainLLM -> End`：流程结束，返回生成的回复。
+
+## 仓库语境与术语解释
+- **HMLR (Hierarchical Memory Lookup & Routing)**：一种状态感知的长期记忆架构，用于 AI Agent，具有经过验证的多跳、时间和跨主题推理保证。
+- **ChunkEngine**：负责将输入文本分割成更小单元的组件，如句子、段落和 Bridge Blocks。
+- **FactScrubber**：用于从对话中提取“硬性事实”的组件，例如定义、缩写、密钥和实体。
+- **LatticeCrawler**：根据 `hmlr/memory/retrieval/crawler.py`，该组件使用向量嵌入进行语义相似性搜索，从存储的记忆中检索相关上下文。
+- **Governor**：负责路由和过滤检索到的记忆，根据上下文信息进行筛选和排序。
+- **ContextHydrator**：根据 `hmlr/memory/retrieval/context_hydrator.py`，该组件负责构建 LLM prompts，将检索到的上下文、事实和用户画像整合在一起。
+- **Bridge Block**：根据 `hmlr/memory/chunking/chunk_engine.py`，是文本分块的一种粒度，用于表示话题。
+- **run_gardener.py**：README 中提到，该脚本用于将短期记忆传递到长期记忆，并将当天的当前事实存储在 dossiers 中。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 HMLR 架构中处理用户查询并生成响应的流程。流程从用户查询开始，经过初步处理和分块嵌入后，启动并行任务，包括更新用户画像、提取事实、检索记忆和路由过滤。Governor 组件根据上下文做出路由决策，选择继续当前话题或开启新的话题。ContextHydrator 整合所有相关信息，生成最终的提示词，并传递给大型语言模型生成回复。其中，ChunkEngine 的分块嵌入、FactScrubber 的事实提取、LatticeCrawler 的记忆检索和 Governor 的路由过滤是关键中间环节。`run_gardener.py` 脚本用于将短期记忆传递到长期记忆。

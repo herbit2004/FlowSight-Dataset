@@ -1,0 +1,32 @@
+flowchart TD
+    Start[User Input: Target] --> Clean[Clean Input<br/>Remove http://, brackets]
+    Clean --> CheckIP{Is it<br/>already an IP?}
+    
+    CheckIP -->|Yes| ValidateIP{Validate<br/>IP Format}
+    CheckIP -->|No| ResolveDNS[Resolve as Hostname]
+    
+    ValidateIP --> CheckIPv4{is_ipv4?}
+    ValidateIP --> CheckIPv6{is_ipv6?}
+    
+    CheckIPv4 -->|Yes| IPv4Valid[Validate 4 octets<br/>0-255 each]
+    CheckIPv6 -->|Yes| IPv6Valid[Validate IPv6 format<br/>socket.inet_pton]
+    
+    IPv4Valid -->|Valid| ReturnIPv4[Return AF_INET<br/>socket.AF_INET]
+    IPv4Valid -->|Invalid| Error[Return None]
+    
+    IPv6Valid -->|Valid| ReturnIPv6[Return AF_INET6<br/>socket.AF_INET6]
+    IPv6Valid -->|Invalid| Error
+    
+    ResolveDNS --> TryIPv4[Try IPv4 Resolution<br/>socket.gethostbyname]
+    TryIPv4 -->|Success| ReturnIPv4
+    TryIPv4 -->|Fail| TryIPv6[Try IPv6 Resolution<br/>socket.getaddrinfo]
+    TryIPv6 -->|Success| ReturnIPv6
+    TryIPv6 -->|Fail| Error
+    
+    ReturnIPv4 --> UseIPv4[Use AF_INET Socket]
+    ReturnIPv6 --> UseIPv6[Use AF_INET6 Socket]
+    
+    UseIPv4 --> Scan[Perform Port Scan]
+    UseIPv6 --> Scan
+    
+    Error --> FailMsg[Display Error Message]

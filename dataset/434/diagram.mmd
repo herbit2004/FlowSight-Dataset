@@ -1,0 +1,21 @@
+flowchart LR
+    subgraph Client
+        A[Chat Interface]
+    end
+
+    subgraph Server
+        B[Next.js API]
+        C[Knowledge Loader]
+        D[OpenRouter API]
+    end
+
+    subgraph Knowledge
+        E[content/*.md]
+    end
+
+    A -->|User Message| B
+    B --> C
+    C -->|Read Files| E
+    C -->|Context + Message| D
+    D -->|Streaming Response| B
+    B -->|SSE Stream| A

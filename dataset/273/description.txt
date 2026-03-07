@@ -1,0 +1,35 @@
+## 图类型与用途
+这是一个流程图，描述了 `8mb.local` 应用程序的整体架构和视频压缩流程。该图展示了用户上传视频到最终下载压缩后视频的完整过程。
+
+## 图的整体布局
+图采用从左到右的布局。起点是用户界面，经过后端处理、任务队列、视频压缩，最终输出压缩后的文件。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为前端交互、后端任务调度、视频压缩处理和结果存储四个阶段。
+
+## 节点逐项说明
+- **Browser / SvelteKit UI**：用户与应用程序交互的前端界面，用于上传视频文件，并通过服务器发送事件 (SSE) 接收压缩进度，以及下载压缩后的视频。根据 README，该前端基于 SvelteKit 构建。
+- **FastAPI Backend**：应用程序的后端服务，接收前端上传请求，并将压缩任务加入队列。它还负责通过发布/订阅模式 (Pub/Sub relay) 将压缩进度信息传递给前端，并提供下载压缩后视频文件的接口。
+- **Redis**：内存数据存储，用作 Celery 任务队列的 Broker。FastAPI 后端将压缩任务放入 Redis 队列中，Celery Worker 从 Redis 队列中取出任务进行处理。
+- **Celery Worker + FFmpeg NVENC**：实际执行视频压缩任务的工作进程。它使用 FFmpeg 和 NVIDIA NVENC (或其他硬件加速编码器) 来对视频进行编码，并定期将压缩进度和日志信息发送到 Redis。README 说明该组件支持 NVIDIA NVENC, Intel/AMD VAAPI (Linux), 和 CPU fallback。
+- **outputs/**：存储压缩后视频文件的目录。
+
+## 连线、分支与汇聚关系
+- `Browser / SvelteKit UI -- Upload / SSE --> FastAPI Backend`：用户通过前端上传视频文件，并通过服务器发送事件 (SSE) 接收进度更新。
+- `FastAPI Backend -- Enqueue --> Redis`：后端将压缩任务加入 Redis 队列。
+- `Celery Worker + FFmpeg NVENC -- Progress / Logs --> Redis`：Celery Worker 将压缩进度和日志信息发送到 Redis。
+- `FastAPI Backend -- Pub/Sub relay --> Browser / SvelteKit UI`：后端通过发布/订阅模式将 Redis 中的进度信息传递给前端。
+- `Celery Worker + FFmpeg NVENC -- Files --> outputs/`：压缩后的视频文件存储在 `outputs/` 目录中。
+- `Browser / SvelteKit UI -- Download --> FastAPI Backend`：用户可以通过前端从后端下载压缩后的视频文件。
+
+## 仓库语境与术语解释
+- **SvelteKit UI**：前端界面，基于 SvelteKit 框架构建，负责用户交互和数据显示。
+- **FastAPI Backend**：后端服务，使用 FastAPI 框架构建，负责处理上传请求、任务调度和文件下载。
+- **Redis**：用作 Celery 任务队列的 Broker，存储待处理的压缩任务和进度信息。
+- **Celery Worker**：异步任务队列的 worker，负责执行实际的视频压缩任务。
+- **FFmpeg NVENC**：视频压缩工具，使用 FFmpeg 和 NVIDIA NVENC (或其他硬件加速编码器) 来对视频进行编码。README 说明该组件支持 NVIDIA NVENC, Intel/AMD VAAPI (Linux), 和 CPU fallback。
+- **SSE (Server-Sent Events)**：服务器发送事件，用于将压缩进度实时推送给前端。
+- **Pub/Sub relay**：发布/订阅模式，用于在后端和前端之间传递压缩进度信息。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 `8mb.local` 应用程序的视频压缩流程，从用户在 Browser / SvelteKit UI 上传视频开始，上传请求被发送到 FastAPI Backend，后端将压缩任务加入 Redis 队列。Celery Worker 从 Redis 队列中取出任务，使用 FFmpeg NVENC 进行视频压缩，并将压缩进度和日志信息发送到 Redis。FastAPI 后端通过发布/订阅模式将 Redis 中的进度信息传递给 Browser / SvelteKit UI。最终，压缩后的视频文件存储在 `outputs/` 目录中，用户可以下载。其中，Celery Worker + FFmpeg NVENC 是核心的视频压缩处理组件，Redis 用于任务队列和进度信息传递。

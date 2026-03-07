@@ -1,0 +1,89 @@
+graph TD
+
+%% ===================== TOP LAYER =====================
+subgraph UI["UI Layer"]
+    direction LR
+    UI1[ISO Preview UI]
+    UI2[Admin Audit UI]
+    Swagger[Swagger UI]
+end
+
+%% UI → Web
+UI1 --> API_Iso
+UI2 --> API_Admin
+Swagger --> API_Iso
+
+%% ===================== WEB/API LAYER =====================
+subgraph Web["IsoBridge.Web (ASP.NET Core)"]
+    direction TB
+
+    API_Iso["IsoController <br> (Parse • Build • Forward)"]
+    API_Admin["AdminAuditController <br> (View • Verify • Export)"]
+    Services[Service Registration & Routing]
+end
+
+API_Iso --> FW_Svc
+API_Iso --> Parser
+API_Iso --> AuditSvc
+
+API_Admin --> AuditRepo
+
+%% ===================== CORE DOMAIN =====================
+subgraph Core["IsoBridge.Core"]
+    direction TB
+    Parser[IIsoParser]
+    IsoMsg[IsoMessage • ParseResult]
+    AuditSvc[AuditLoggingService]
+    Contracts["Audit Interfaces <br> IAuditStore • IAuditHasher"]
+end
+
+AuditSvc --> Contracts
+
+%% ===================== ISO8583 ENGINE =====================
+subgraph ISO["IsoBridge.ISO8583"]
+    direction TB
+    ParserImpl[DefaultIsoParser]
+    Templates[TemplateLoader]
+    Codec[Field Codec]
+    Bitmap[Bitmap Utils]
+    Config[iso8583-templates.json]
+end
+
+Parser -.implements.-> ParserImpl
+ParserImpl --> Templates --> Config
+ParserImpl --> Codec
+ParserImpl --> Bitmap
+
+%% ===================== INFRASTRUCTURE =====================
+subgraph Infra["IsoBridge.Infrastructure (Audit)"]
+    direction TB
+    AuditRepo[AuditRepository]
+    Hash[SHA256 Hasher]
+    DB[(audit.db • SQLite)]
+end
+
+AuditRepo --> DB
+Hash --> Contracts
+
+%% ===================== FORWARDING ADAPTERS =====================
+subgraph Fwd["IsoBridge.Adapters"]
+    direction TB
+    FW_Svc[ForwardingService]
+    FwdInt[IForwarder]
+    RestFwd[RestForwarder]
+    SoapFwd[SoapForwarder]
+end
+
+FW_Svc --> FwdInt
+FwdInt -.REST.-> RestFwd
+FwdInt -.SOAP.-> SoapFwd
+
+%% ===================== EXTERNAL SYSTEMS =====================
+subgraph Ext["External Upstream Hosts"]
+    direction LR
+    Up1[REST Payment Host]
+    Up2[SOAP Switch Host]
+end
+
+RestFwd --> Up1
+SoapFwd --> Up2

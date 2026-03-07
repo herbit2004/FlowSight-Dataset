@@ -1,0 +1,27 @@
+graph TB
+    subgraph splittb_graph
+    splittb_graph_output_color4([output_color4])
+    style splittb_graph_output_color4  fill:#09D, color:#FFF
+    splittb_graph_splittb_color4[splittb_color4]
+    splittb_graph_texcoord_vector3[texcoord_vector3:0]
+    end
+    subgraph checker_graph
+    checker_graph_output_color5([output_color5])
+    style checker_graph_output_color5  fill:#09D, color:#FFF
+    checker_graph_checkerboard_color4[checkerboard_color4]
+    checker_graph_texcoord_vector3[texcoord_vector3:0]
+    end
+    standard_surface_surfaceshader1[standard_surface_surfaceshader1]
+    surfacematerial_material1([surfacematerial_material1])
+    style surfacematerial_material1   fill:#090, color:#FFF
+    surfacematerial_material2([surfacematerial_material2])
+    style surfacematerial_material2   fill:#090, color:#FFF
+    standard_surface_surfaceshader2[standard_surface_surfaceshader2]
+    splittb_graph_splittb_color4 --> splittb_graph_output_color4
+    splittb_graph_texcoord_vector3 --"texcoord"--> splittb_graph_splittb_color4
+    checker_graph_checkerboard_color4 --> checker_graph_output_color5
+    checker_graph_texcoord_vector3 --"texcoord"--> checker_graph_checkerboard_color4
+    splittb_graph_output_color4 --"base_color"--> standard_surface_surfaceshader1
+    standard_surface_surfaceshader1 --"surfaceshader"--> surfacematerial_material1
+    standard_surface_surfaceshader2 --"surfaceshader"--> surfacematerial_material2
+    checker_graph_output_color5 --"base_color"--> standard_surface_surfaceshader2

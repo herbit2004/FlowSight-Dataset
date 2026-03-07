@@ -1,0 +1,34 @@
+flowchart LR
+    subgraph Gemini["Gemini Flow: 2 LLM Calls"]
+        direction LR
+        GV[Video] --> GU[Upload + Transcribe<br/>1 LLM call] --> GC[Generate Cards<br/>1 LLM call] --> GD[Done]
+    end
+
+    subgraph Local["Local Flow: 33+ LLM Calls"]
+        direction LR
+        LV[Video] --> LE[Extract 30 frames] --> LD[30 descriptions<br/>30 LLM calls] --> LM[Merge<br/>1 call] --> LT[Title<br/>1 call] --> LC[Merge Check<br/>1 call] --> LMC[Merge Cards<br/>1 call] --> LD2[Done]
+    end
+
+    subgraph ChatCLI["ChatGPT/Claude Flow: 4-6 LLM Calls"]
+        direction LR
+        CV[Video] --> CE[Extract frames<br/>every 60s] --> CB[Batch describe<br/>10 frames/call] --> CM[Merge segments<br/>1 call] --> CC[Generate Cards<br/>1 call] --> CD[Done]
+    end
+
+    %% Styling
+    classDef geminiFlow fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
+    classDef localFlow fill:#fff8e1,stroke:#ff9800,stroke-width:2px
+    classDef chatcliFlow fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef geminiStep fill:#4caf50,color:#fff
+    classDef localStep fill:#ff9800,color:#fff
+    classDef chatcliStep fill:#1976d2,color:#fff
+    classDef processing fill:#f5f5f5,stroke:#666
+    classDef result fill:#e3f2fd,stroke:#1976d2
+
+    class Gemini geminiFlow
+    class Local localFlow
+    class ChatCLI chatcliFlow
+    class GU,GC geminiStep
+    class LD,LM,LT,LC,LMC localStep
+    class CB,CM,CC chatcliStep
+    class GV,LV,LE,CV,CE processing
+    class GD,LD2,CD result

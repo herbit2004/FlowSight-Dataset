@@ -1,0 +1,32 @@
+flowchart TD
+    Start([Start Scanning])
+    SelectBand[Select 5G NR Band<br/>n1, n3, n77, n78, n79]
+    CalcGSCN[Calculate GSCN Range<br/>Based on 3GPP TS 38.104]
+    
+    subgraph "Frequency Iteration"
+        GetFreq[Get Next GSCN Frequency]
+        TuneUSRP[Tune USRP to Frequency]
+        Detect{SSB Signal<br/>Detected?}
+        SaveResult[Save Detection Result]
+        UpdateUI[Update Web UI Progress]
+    end
+    
+    MoreFreq{More<br/>Frequencies?}
+    Complete([Scan Complete])
+    
+    Start --> SelectBand
+    SelectBand --> CalcGSCN
+    CalcGSCN --> GetFreq
+    GetFreq --> TuneUSRP
+    TuneUSRP --> Detect
+    Detect -->|Yes| SaveResult
+    Detect -->|No| UpdateUI
+    SaveResult --> UpdateUI
+    UpdateUI --> MoreFreq
+    MoreFreq -->|Yes| GetFreq
+    MoreFreq -->|No| Complete
+    
+    style Start fill:#90EE90
+    style Complete fill:#90EE90
+    style Detect fill:#FFE4B5
+    style SaveResult fill:#87CEEB

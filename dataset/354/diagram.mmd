@@ -1,0 +1,33 @@
+graph TB
+    subgraph NG_main
+    NG_main_uvtiling([input:vector2:8,8])
+    style NG_main_uvtiling  fill:#09D, color:#FFF
+    NG_main_color1([input:color3:1,0.094118,0.031373])
+    style NG_main_color1  fill:#09D, color:#FFF
+    NG_main_color2([input:color3:0.035294,0.090196,0.878431])
+    style NG_main_color2  fill:#09D, color:#FFF
+    NG_main_output_N_mtlxmix_out([output:color3])
+    style NG_main_output_N_mtlxmix_out  fill:#09D, color:#FFF
+    NG_main_N_mtlxmix[mix:color3]
+    NG_main_N_mtlxdotproduct[dotproduct:float]
+    NG_main_N_mtlxmult[multiply:vector2]
+    NG_main_N_mtlxsubtract[subtract:vector2]
+    NG_main_N_mtlxfloor[floor:vector2]
+    NG_main_N_modulo[modulo:float]
+    NG_main_Texcoord[texcoord:vector2:0]
+    end
+    Gltf_pbr[gltf_pbr:surfaceshader]
+    MAT_Gltf_pbr([surfacematerial:material])
+    style MAT_Gltf_pbr   fill:#090, color:#FFF
+    NG_main_N_mtlxmix --> NG_main_output_N_mtlxmix_out
+    NG_main_color1 --"fg"--> NG_main_N_mtlxmix
+    NG_main_color2 --"bg"--> NG_main_N_mtlxmix
+    NG_main_N_modulo --"mix"--> NG_main_N_mtlxmix
+    NG_main_N_mtlxfloor --"in1"--> NG_main_N_mtlxdotproduct
+    NG_main_Texcoord --"in1"--> NG_main_N_mtlxmult
+    NG_main_uvtiling --"in2"--> NG_main_N_mtlxmult
+    NG_main_N_mtlxmult --"in1"--> NG_main_N_mtlxsubtract
+    NG_main_N_mtlxsubtract --"in"--> NG_main_N_mtlxfloor
+    NG_main_N_mtlxdotproduct --"in1"--> NG_main_N_modulo
+    NG_main_output_N_mtlxmix_out --"base_color"--> Gltf_pbr
+    Gltf_pbr --"surfaceshader"--> MAT_Gltf_pbr

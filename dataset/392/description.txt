@@ -1,0 +1,46 @@
+## 图类型与用途
+这是一个架构图，描述了 Git-Captain 应用程序的整体架构和数据流。它展示了用户如何通过浏览器与 Git-Captain 交互，以及 Git-Captain 如何处理用户请求、进行安全验证、调用 GitHub API 并记录日志。该图在 `docs/ARCHITECTURE.md` 中作为系统架构文档的一部分。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是用户和浏览器，中间是反向代理和 Git-Captain 应用，底部是安全层、GitHub API、日志和静态资源。
+
+## 分组/子图/阶段说明
+图中包含多个子图/分组：
+- **Client Layer**：包含 User 和 Browser 节点，代表用户与应用的交互入口。
+- **Infrastructure Layer**：包含 Reverse Proxy 节点，负责处理 HTTPS 请求。
+- **Application Layer**：包含 Git-Captain App 和 Security Middleware Stack 节点，是应用的核心逻辑和安全保障。
+- **Security Middleware Stack**：包含 Helmet, CORS, Rate Limiting, Auth 节点，提供安全防护。
+- **External Services**：包含 GitHub API 和 Data Storage 节点，代表应用依赖的外部服务。
+
+## 节点逐项说明
+- **User (👤 User)**：代表最终用户，即使用 Git-Captain 应用程序的人。
+- **Browser (🌐 Browser)**：用户的 Web 浏览器，用于访问 Git-Captain 应用。
+- **Proxy (🔄 Reverse Proxy)**：反向代理服务器，用于处理 HTTPS 请求，例如 nginx 或 Apache。
+- **App (🚀 Git-Captain App)**：Git-Captain 应用程序的核心，使用 Node.js 和 Express 框架构建。负责处理用户请求、协调各个组件、并与 GitHub API 交互。
+- **Security (🛡️ Security Layer)**：安全层，包含 Helmet、CORS 和 Rate Limiting 等安全机制，用于保护应用程序免受攻击。
+- **Auth (🔐 GitHub OAuth)**：GitHub OAuth 认证模块，用于验证用户身份，并授权 Git-Captain 访问用户的 GitHub 仓库。
+- **API (🐙 GitHub API)**：GitHub API 接口，Git-Captain 通过此接口与 GitHub 进行交互，执行仓库操作，例如创建、删除分支等。
+- **Logs (📄 Winston Logging)**：日志记录模块，使用 Winston 库记录应用程序的运行日志，用于调试和监控。对应 `controllers/logger.js` 文件。
+- **Static (📁 Static Assets)**：静态资源文件，包括 HTML、CSS、JavaScript 等，用于构建用户界面。
+
+## 连线、分支与汇聚关系
+- `User -> Browser`：用户通过浏览器访问 Git-Captain 应用。
+- `Browser -> Proxy`：浏览器通过 HTTPS 协议向反向代理服务器发送请求。
+- `Proxy -> App`：反向代理服务器将请求转发给 Git-Captain 应用程序。
+- `App -> Security`：Git-Captain 应用程序通过安全层进行安全验证和保护。
+- `App -> Auth`：Git-Captain 应用程序通过 GitHub OAuth 认证模块验证用户身份。
+- `App -> API`：Git-Captain 应用程序通过 GitHub API 接口与 GitHub 进行交互，执行仓库操作。
+- `App -> Logs`：Git-Captain 应用程序将运行日志记录到日志记录模块。
+- `App -> Static`：Git-Captain 应用程序提供静态资源文件给浏览器，用于构建用户界面。
+
+## 仓库语境与术语解释
+- **Reverse Proxy**：反向代理服务器，如 nginx 或 Apache，用于处理 HTTPS 请求，并可能提供负载均衡、缓存等功能。
+- **Helmet**：一个安全中间件，用于设置各种 HTTP 头部以增强安全性，例如防止 XSS 攻击。对应 `controllers/middleware.js` 文件。
+- **CORS**：跨域资源共享，用于配置允许哪些域可以访问 Git-Captain 应用的 API。对应 `controllers/middleware.js` 文件。
+- **Rate Limiting**：限制来自单个 IP 地址的请求数量，以防止恶意攻击和滥用。对应 `controllers/middleware.js` 文件，其中定义了 `generalLimiter`、`strictLimiter` 和 `authLimiter`。
+- **GitHub OAuth**：GitHub 的 OAuth 认证机制，用于验证用户身份并授权 Git-Captain 访问用户的 GitHub 仓库。
+- **Winston Logging**：一个灵活的日志记录库，用于记录应用程序的运行日志，方便调试和监控。对应 `controllers/logger.js` 文件。
+- **Node.js + Express**：Git-Captain 应用的后端技术栈，Node.js 是 JavaScript 运行时环境，Express 是一个流行的 Node.js Web 应用框架。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+用户通过浏览器访问 Git-Captain 应用，请求经过反向代理，到达基于 Node.js 和 Express 构建的 Git-Captain 应用。应用通过 Security Layer (Helmet, CORS, Rate Limiting) 进行安全验证，并通过 GitHub OAuth 认证用户身份。认证通过后，应用调用 GitHub API 执行仓库操作，并将运行日志记录到 Winston Logging 模块，同时提供静态资源文件给浏览器。核心流程是“用户请求 -> 反向代理 -> 应用处理 -> 安全验证 -> GitHub API 调用/日志记录/静态资源服务”。`controllers/middleware.js` 实现了安全中间件，`controllers/logger.js` 实现了日志记录。

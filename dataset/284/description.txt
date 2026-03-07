@@ -1,0 +1,38 @@
+## 图类型与用途
+这是一个流程图，描述了 `docfind` 如何将原始文档数据转换为可用于 WebAssembly 的搜索索引。它展示了索引构建过程中的关键步骤，以及最终如何在浏览器环境中使用该索引进行搜索。
+
+## 图的整体布局
+图采用从左到右的布局。流程从左侧的输入数据开始，经过一系列处理步骤，最终在右侧生成 WebAssembly 模块和 JavaScript 代码。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为三个阶段：数据准备与引擎初始化、索引构建与优化、结果打包与输出。
+
+## 节点逐项说明
+- **documents.json**：原始的文档数据，格式为 JSON，作为整个流程的起点。根据 README，该文件包含待搜索的文档集合。
+- **docfind**：`docfind` 引擎本身，负责处理文档、提取关键词、压缩数据等操作。
+- **Keyword Extraction RAKE**：关键词提取模块，使用 RAKE (Rapid Automatic Keyword Extraction) 算法从文档内容中自动提取关键词。README 中提到 RAKE 用于识别重要的多词短语。
+- **FST Map keywords → docs**：使用 FST (Finite State Transducers) 构建的映射，将关键词映射到包含这些关键词的文档。这是索引的核心部分，用于快速搜索。README 提到 FST 用于高效的关键词匹配。
+- **FSST Compression document strings**：使用 FSST (Finite State String Transducer) 算法对文档字符串进行压缩，以减小索引的大小。README 提到 FSST 压缩用于减少索引大小，同时保持快速解压缩。
+- **Index**：最终构建完成的索引，包含了 FST 映射和压缩后的文档数据。
+- **docfind_bg.wasm + docfind.js**：WebAssembly 模块 (`docfind_bg.wasm`) 和 JavaScript 胶水代码 (`docfind.js`)，它们一起在浏览器环境中运行，提供搜索功能。
+
+## 连线、分支与汇聚关系
+- `documents.json -> docfind`：原始文档数据作为输入传递给 `docfind` 引擎。
+- `docfind -> Keyword Extraction RAKE`：`docfind` 引擎将文档数据传递给关键词提取模块。
+- `docfind -> FSST Compression document strings`：`docfind` 引擎将文档数据传递给 FSST 压缩模块。
+- `Keyword Extraction RAKE -> FST Map keywords → docs`：关键词提取模块的输出用于构建 FST 映射。
+- `FST Map keywords → docs -> Index`：FST 映射作为索引的一部分。
+- `FSST Compression document strings -> Index`：压缩后的文档字符串也作为索引的一部分，与 FST 映射形成汇聚关系。
+- `Index -> docfind_bg.wasm + docfind.js`：最终的索引被打包成 WebAssembly 模块和 JavaScript 胶水代码。
+
+## 仓库语境与术语解释
+- **FST (Finite State Transducers)**：一种用于高效关键词匹配的数据结构，支持模糊搜索和 Levenshtein 距离。
+- **FSST (Fast Static Symbol Table)**：一种用于压缩文本数据的算法，能够在减小索引大小的同时保持快速解压缩。
+- **RAKE (Rapid Automatic Keyword Extraction)**：一种从文档中自动提取关键词的算法，用于识别重要的多词短语。
+- **WebAssembly (WASM)**：一种可以在浏览器中运行的二进制代码格式，用于提供高性能的搜索功能。
+- **documents.json**：包含待索引的文档数据的 JSON 文件。
+- **docfind_bg.wasm**：包含索引和搜索逻辑的 WebAssembly 模块。
+- **docfind.js**：用于加载和使用 WebAssembly 模块的 JavaScript 胶水代码。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 `docfind` 如何将 `documents.json` 中的原始文档数据转换为可在浏览器中使用的搜索索引。流程从 `docfind` 引擎开始，并行进行关键词提取（使用 RAKE 算法）和文档字符串压缩（使用 FSST 算法）。提取的关键词用于构建 FST 映射，压缩后的文档字符串与 FST 映射共同构成最终的 `Index`。最后，索引被打包成 `docfind_bg.wasm` 和 `docfind.js`，以便在浏览器中使用。该流程的关键在于使用 FST 实现快速的模糊匹配，并使用 FSST 压缩减小索引大小，从而实现高性能的浏览器端搜索。

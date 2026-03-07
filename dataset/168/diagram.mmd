@@ -1,0 +1,23 @@
+flowchart TD
+    USER((User)) -->|"Research competitor pricing"| SUPPORT
+
+    subgraph TEAM["Agent Team"]
+        SUPPORT["Support Bot<br/>(Claude Haiku)"]
+        RESEARCH["Research Bot<br/>(GPT-4)"]
+        WRITER["Content Writer<br/>(Claude Sonnet)"]
+        BILLING["Billing Bot<br/>(Gemini)"]
+    end
+
+    SUPPORT -->|"sync: wait for answer"| RESEARCH
+    RESEARCH -->|"result"| SUPPORT
+    SUPPORT -->|"async: don't wait"| WRITER
+    WRITER -.->|"announce when done"| SUPPORT
+    SUPPORT -.-x|"no link"| BILLING
+
+    SUPPORT -->|"final answer"| USER
+
+    style USER fill:#e1f5fe
+    style SUPPORT fill:#fff3e0
+    style RESEARCH fill:#e8f5e9
+    style WRITER fill:#f3e5f5
+    style BILLING fill:#ffebee

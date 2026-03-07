@@ -1,0 +1,35 @@
+flowchart LR
+    subgraph Client["👤 Client"]
+        Browser["Browser"]
+        Mobile["Mobile App"]
+        AdminUI["Admin UI"]
+    end
+
+    subgraph Services["🚀 Services"]
+        API["api-server<br/>:3001"]
+        WS["websocket-service<br/>:3002"]
+        Admin["admin<br/>:3003"]
+    end
+
+    subgraph Worker["⚙️ Background"]
+        WorkerService["worker<br/>(No Port)"]
+    end
+
+    subgraph Database["💾 Database"]
+        MongoDB["MongoDB"]
+        PostgreSQL["PostgreSQL"]
+        MySQL["MySQL"]
+    end
+
+    Browser -->|HTTP/REST| API
+    Mobile -->|HTTP/REST| API
+    Browser -->|WebSocket| WS
+    AdminUI -->|HTTP/REST| Admin
+
+    API -->|Read/Write| Database
+    WS -->|Read/Write| Database
+    Admin -->|Read/Write| Database
+    WorkerService -->|Read/Write| Database
+
+    API -.->|Events| WS
+    WorkerService -.->|Process| API

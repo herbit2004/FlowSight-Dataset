@@ -1,0 +1,22 @@
+flowchart LR
+    subgraph PRIVILEGED["Privileged Zone"]
+        Agent["AI Agent\n(has API keys)"]
+    end
+    subgraph FETCH["Firewall Zone"]
+        Proxy["Pipelock\n(NO secrets)"]
+        Scanner["Scanner Pipeline\nSSRF · Blocklist · Rate Limit\nDLP · Env Leak · Entropy · Length"]
+    end
+    subgraph NET["Internet"]
+        Web["Web"]
+    end
+
+    Agent -- "fetch URL\nCONNECT\nor WebSocket" --> Proxy
+    Proxy --> Scanner
+    Scanner -- "content or\ntunnel" --> Agent
+    Scanner -- "request" --> Web
+    Web -- "response" --> Scanner
+    Scanner -- "clean content" --> Agent
+
+    style PRIVILEGED fill:#fee,stroke:#c33
+    style FETCH fill:#efe,stroke:#3a3
+    style NET fill:#eef,stroke:#33c

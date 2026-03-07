@@ -1,0 +1,55 @@
+graph LR
+    subgraph "Scan Initialization"
+        Input[Target IP + Scan Mode] --> Validate[Validate IP Format]
+        Validate --> Family{Detect Address<br/>Family}
+        Family -->|IPv4| AF_INET[socket.AF_INET]
+        Family -->|IPv6| AF_INET6[socket.AF_INET6]
+    end
+    
+    subgraph "Port Queue Management"
+        AF_INET --> PortQueue[Create Port Queue]
+        AF_INET6 --> PortQueue
+        DeepScan{Deep Scan?} -->|Yes| Ports1024[Ports 1-1024]
+        DeepScan -->|No| CommonPorts[23 Common Ports]
+        Ports1024 --> PortQueue
+        CommonPorts --> PortQueue
+    end
+    
+    subgraph "Thread Pool - 100 Workers"
+        PortQueue --> Worker1[Worker Thread 1]
+        PortQueue --> Worker2[Worker Thread 2]
+        PortQueue --> Worker3[Worker Thread ...]
+        PortQueue --> WorkerN[Worker Thread 100]
+    end
+    
+    subgraph "Port Connection Process"
+        Worker1 --> Connect1[Socket Connect]
+        Worker2 --> Connect2[Socket Connect]
+        WorkerN --> ConnectN[Socket Connect]
+        
+        Connect1 --> Open1{Port Open?}
+        Connect2 --> Open2{Port Open?}
+        ConnectN --> OpenN{Port Open?}
+        
+        Open1 -->|Yes| Banner1[Grab Banner]
+        Open2 -->|Yes| Banner2[Grab Banner]
+        OpenN -->|Yes| BannerN[Grab Banner]
+        
+        Banner1 --> Analyze1[Map Service & Severity]
+        Banner2 --> Analyze2[Map Service & Severity]
+        BannerN --> AnalyzeN[Map Service & Severity]
+    end
+    
+    subgraph "Result Aggregation"
+        Analyze1 --> Results[Results List]
+        Analyze2 --> Results
+        AnalyzeN --> Results
+        Results --> Sort[Sort by Port Number]
+        Sort --> Return[Return Scan Data]
+    end
+    
+    subgraph "Real-time Updates"
+        Open1 -->|Callback| WebSocket1[Emit 'port_found']
+        Open2 -->|Callback| WebSocket2[Emit 'port_found']
+        Analyze1 -->|Progress| Progress[Emit 'scan_progress']
+    end

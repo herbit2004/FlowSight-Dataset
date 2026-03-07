@@ -1,0 +1,37 @@
+graph TB
+    user((Global Users))
+
+    subgraph "Traffic Management"
+        dns[Route 53<br/>Latency-Based Routing]
+        cdn[CloudFront CDN]
+    end
+
+    subgraph "Region A (Active)"
+        direction TB
+        alb1[Load Balancer]
+        eks1[EKS Cluster<br/>Microservices]
+        db1[(Aurora Primary)]
+    end
+
+    subgraph "Region B (Active)"
+        direction TB
+        alb2[Load Balancer]
+        eks2[EKS Cluster<br/>Microservices]
+        db2[(Aurora Secondary)]
+    end
+
+    user --> dns
+    user --> cdn
+    dns --> alb1
+    dns --> alb2
+
+    alb1 --> eks1
+    alb2 --> eks2
+
+    eks1 --> db1
+    eks2 --> db2
+
+    db1 <-->|Global Replication<br/>& Write Forwarding| db2
+
+    classDef plain fill:#fff,stroke:#333,stroke-width:1px;
+    class user,dns,cdn,alb1,eks1,db1,alb2,eks2,db2 plain;

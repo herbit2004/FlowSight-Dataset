@@ -1,0 +1,30 @@
+graph TB
+    subgraph Frontend
+        UI[React Chat UI]
+        MD[Markdown Renderer]
+        MM[Mermaid Component]
+        CB[Code Block Component]
+    end
+
+    subgraph API_Layer[API Layer]
+        STREAM[Stream Endpoint]
+        CHAT[Chat Endpoint]
+    end
+
+    subgraph Knowledge_System[Knowledge System]
+        LOADER[File Loader]
+        CONTENT[Content Files]
+    end
+
+    subgraph External
+        OR[OpenRouter API]
+    end
+
+    UI --> STREAM
+    STREAM --> LOADER
+    LOADER --> CONTENT
+    STREAM --> OR
+    OR --> UI
+    UI --> MD
+    MD --> MM
+    MD --> CB

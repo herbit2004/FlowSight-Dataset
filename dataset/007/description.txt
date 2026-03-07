@@ -1,0 +1,34 @@
+## 图类型与用途
+这是一个流程图，描述了 `beads_viewer` 应用程序的架构，展示了用户输入、数据模型、图引擎、视图、布局和终端输出之间的关系。它在仓库中的作用是概括 `beads_viewer` 的核心组件及其交互方式。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是输入和图引擎，中间是模型和视图，右侧是布局和终端输出。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为输入阶段、数据处理阶段和输出阶段。
+
+## 节点逐项说明
+- **⌨️ Input Keys · Mouse · Resize**：表示用户与程序的交互输入，包括键盘、鼠标和窗口大小调整等事件。
+- **🫖 Model Issues · Stats · Focus**：表示应用程序的数据模型，存储 issue 数据、统计信息和当前焦点状态。
+- **🧮 Graph Engine PageRank · HITS · Cycles**：表示用于分析 issue 之间关系的图计算引擎，计算 PageRank、HITS 和环路等指标。该引擎使用 `bv-graph-wasm` 仓库中的 WASM 编译的图算法。
+- **🖼️ Views List · Board · Graph · Tree · Insights**：表示用户界面的各种视图，包括列表视图、看板视图、图视图、树视图和洞察视图。
+- **📐 Layout Mobile · Split · Wide**：表示用户界面的布局方式，支持移动端布局、分屏布局和宽屏布局。
+- **🖥️ Terminal 60fps Output**：表示最终的输出目标，即用户的终端，程序以 60fps 的帧率在终端上渲染界面。
+
+## 连线、分支与汇聚关系
+- `INPUT -> MODEL`：用户输入 (tea.Msg) 被传递给 Model 进行处理。
+- `GRAPH -> MODEL`：图引擎计算出的指标 (metrics) 被传递给 Model，用于丰富 issue 数据和生成洞察报告。
+- `MODEL -> VIEWS`：Model 的状态 (state) 被传递给 Views，用于渲染用户界面。
+- `VIEWS -> LAYOUT`：Views 根据 Model 的状态生成界面元素，然后由 Layout 决定这些元素的排列方式。
+- `LAYOUT -> TERM`：Layout 将最终的界面布局传递给 Terminal，由 Terminal 负责在屏幕上渲染。
+
+## 仓库语境与术语解释
+- **Beads**：指 `beads_viewer` 应用程序所针对的 issue 跟踪系统，参见 README。
+- **tea.Msg**：指 Bubble Tea 框架中的消息类型，用于在组件之间传递事件和数据。
+- **PageRank, HITS, Cycles**：指图引擎计算的 issue 关系指标，用于洞察视图，参见 README。
+- **Graph Engine**：使用 `bv-graph-wasm` 仓库提供的 WASM 编译的图算法，实现在浏览器中快速进行依赖分析。
+- **Model**：存储 issue 数据、统计信息和当前焦点状态，由 `pkg/ui/model.go` 定义。
+- **Views**：包括列表、看板、图、树和洞察视图，由 `pkg/ui/model.go` 定义。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `beads_viewer` 应用程序的架构，用户通过 Input 与程序交互，输入信息和图引擎计算的指标被传递给 Model 进行处理，Model 的状态驱动 Views 的渲染，Layout 组件负责界面布局，最终通过 Terminal 输出。核心流程是“用户输入/图引擎 -> 数据模型 -> 视图渲染 -> 终端输出”，其中 Graph Engine 使用 WASM 编译的图算法进行 issue 关系分析。

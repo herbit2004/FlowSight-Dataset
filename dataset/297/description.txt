@@ -1,0 +1,40 @@
+## 图类型与用途
+这是一个架构图，描述了 Claude Agent Kit 中客户端、传输层、会话层、SDK 层和存储层之间的关系和数据流向。它展示了如何使用 `@anthropic-ai/claude-agent-sdk` 构建 Claude 驱动的 Agent 应用的架构，并在 README 中作为系统设计的概览。
+
+## 图的整体布局
+图采用从左到右的布局。客户端位于最左侧，数据依次流经传输层、会话层、SDK 层，最终到达存储层。
+
+## 分组/子图/阶段说明
+图中包含 Client、Transport、SessionLayer、SDK 和 Storage 五个子图，分别代表客户端、传输层、会话层、SDK 层和存储层。
+
+## 节点逐项说明
+- **B (Browser/App (WS Client))**：代表浏览器或应用程序，作为 WebSocket 客户端与服务器进行通信。
+- **H (WebSocketHandler)**：WebSocket 处理程序，负责处理客户端通过 WebSocket 发送的消息，并将消息传递给会话管理器。根据 `packages/websocket/src/websocket-handler.ts`，它还负责接收不同类型的消息，如 chat、setSDKOptions 和 resume。
+- **SM (SessionManager)**：会话管理器，负责管理和维护会话。根据 `packages/server/src/server/session-manager.ts`，它负责创建、获取和订阅会话。
+- **S (Session)**：代表一个会话，包含会话的选项、消息、繁忙/加载状态以及客户端信息。根据 `packages/server/src/server/session.ts`，Session 封装了 SDK streaming，跟踪消息和状态，并发出面向客户端的事件。
+- **CSDK (SimpleClaudeAgentSDKClient (simple implementation))**：`IClaudeAgentSDKClient` 接口的一个简单实现，用于与 `@anthropic-ai/claude-agent-sdk` 交互。根据 `packages/server/src/server/simple-cas-client.ts`，它实现了查询和加载消息的功能。
+- **AGSDK (@anthropic-ai/claude-agent-sdk)**：Anthropic 提供的 Claude Agent SDK，是核心的 Agent 功能库。
+- **I (IClaudeAgentSDKClient <<interface>>)**：一个接口，定义了与 Claude Agent SDK 交互所需的方法。
+- **F (.claude/projects JSONL logs)**：存储会话日志的 JSONL 文件，位于 `.claude/projects` 目录下。
+
+## 连线、分支与汇聚关系
+- `B --> H`：客户端通过 WebSocket 向 WebSocket 处理程序发送聊天消息、设置 SDK 选项或恢复会话。
+- `H --> SM`：WebSocket 处理程序将接收到的消息传递给会话管理器。
+- `SM --> S`：会话管理器管理会话。
+- `S <--> I`：会话与 SDK 接口进行交互，例如发送消息给 Claude 模型。
+- `CSDK -. implements .-> I`：`SimpleClaudeAgentSDKClient` 实现了 `IClaudeAgentSDKClient` 接口。
+- `CSDK --> AGSDK`：`SimpleClaudeAgentSDKClient` 使用 `@anthropic-ai/claude-agent-sdk`。
+- `H --> S`：WebSocket 处理程序将消息和状态更新传递给会话。
+- `S -. loadMessages .-> F`：会话从存储层加载消息。
+
+## 仓库语境与术语解释
+- **@anthropic-ai/claude-agent-sdk**: Anthropic 提供的 Claude Agent SDK，是构建 Claude 驱动的 Agent 应用的核心依赖。
+- **Session**: 封装了与 Claude 模型的交互，包括消息流、状态管理和配置选项。
+- **SessionManager**: 管理多个 Session 实例，负责会话的创建、订阅和消息路由。
+- **WebSocketHandler**: 处理 WebSocket 连接，接收客户端消息并将其转发到 SessionManager。
+- **SimpleClaudeAgentSDKClient**: `IClaudeAgentSDKClient` 的一个简单实现，用于与 `@anthropic-ai/claude-agent-sdk` 交互。
+- **.claude/projects JSONL logs**: 存储会话历史记录的文件，用于恢复会话状态。
+- **SessionSDKOptions**: 扩展了 SDK `Options`，包含 `thinkingLevel`, `cwd`, `allowedTools`, `mcpServers`, 和可选的 `hooks`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Claude Agent Kit 的架构，从客户端发起请求，通过 WebSocketHandler 传递到 SessionManager，SessionManager 管理 Session，Session 通过 SimpleClaudeAgentSDKClient 与 @anthropic-ai/claude-agent-sdk 交互，最终将消息存储在 .claude/projects JSONL logs 中。关键组件包括 WebSocketHandler、SessionManager、Session 和 SimpleClaudeAgentSDKClient，它们共同实现了会话管理、消息处理和与 Claude 模型的交互。客户端可以通过 chat, setSDKOptions, resume 等操作与后端进行交互。

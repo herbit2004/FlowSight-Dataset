@@ -1,0 +1,58 @@
+## 图类型与用途
+这是一个架构图，展示了 VulnX 安全扫描器的系统架构，包括客户端层、应用层、核心模块、网络层、外部服务和数据存储。该图旨在帮助理解 VulnX 的组件及其交互方式，在仓库中作为系统架构的概览。
+
+## 图的整体布局
+图采用从上到下的布局，将系统划分为不同的层级。顶层是客户端层，底层是数据存储，中间层是应用层、核心模块和网络层。数据流从客户端层开始，经过各层处理，最终到达数据存储。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表系统的不同层级或模块：
+- **Client Layer**：客户端层，包含 Web 浏览器和 React-like UI 组件。
+- **Application Layer - Flask**：应用层，基于 Flask 框架，包含 Flask 应用、路由处理程序和 Flask-SocketIO。
+- **Core Modules**：核心模块，包含扫描引擎和 PDF 报告生成器。
+- **Network Layer**：网络层，包含 Python Socket API、DNS 解析器以及 IPv4 和 IPv6 支持。
+- **External Services**：外部服务，包含 Google Gemini API，用于 AI 分析。
+- **Data Storage**：数据存储，包含 JSON 历史文件和全局状态。
+
+## 节点逐项说明
+- **Browser**：Web 浏览器，是用户与 VulnX 系统交互的入口。
+- **UI**：React-like UI 组件，负责构建用户界面，提供交互功能。
+- **App**：Flask 应用，是整个系统的核心，处理 HTTP 请求和 WebSocket 连接。`app.py` 是 Flask 应用的主文件。
+- **Routes**：路由处理程序，负责处理不同的 URL 路径，例如 `/`, `/dashboard`, `/history`, `/subdomain`。
+- **SocketIO**：Flask-SocketIO 扩展，提供 WebSocket 服务器功能，用于实时事件通信。
+- **Scanner**：扫描引擎，负责执行实际的网络扫描任务。`core/scanner.py` 是扫描引擎的实现文件。
+- **Reporter**：PDF 报告生成器，负责生成扫描结果的 PDF 报告。`core/reporter.py` 是报告生成器的实现文件。
+- **Socket**：Python Socket API，用于进行底层的网络通信。
+- **DNS**：DNS 解析器，用于将域名解析为 IP 地址。
+- **IPv4**：IPv4 协议支持，使用 `AF_INET` 地址族。
+- **IPv6**：IPv6 协议支持，使用 `AF_INET6` 地址族。
+- **Gemini**：Google Gemini API，用于 AI 分析，可能用于漏洞分析或威胁情报。
+- **History**：JSON 历史文件，用于存储扫描历史记录。`scan_history.json` 是存储历史记录的文件。
+- **State**：全局状态，用于存储最新的扫描结果。`latest_results` 变量可能用于存储这些结果。
+
+## 连线、分支与汇聚关系
+- `Browser -- HTTP/WebSocket --> App`：浏览器通过 HTTP/WebSocket 协议与 Flask 应用进行通信。
+- `App --> Routes`：Flask 应用将请求路由到相应的路由处理程序。
+- `App --> SocketIO`：Flask 应用使用 SocketIO 处理 WebSocket 连接。
+- `Routes --> Scanner`：路由处理程序调用扫描引擎执行扫描任务。
+- `Routes --> Reporter`：路由处理程序调用报告生成器生成报告。
+- `SocketIO -- Real-time Events --> Browser`：SocketIO 通过 WebSocket 连接向浏览器发送实时事件。
+- `Scanner --> Socket`：扫描引擎使用 Python Socket API 进行网络通信。
+- `Scanner --> DNS`：扫描引擎使用 DNS 解析器将域名解析为 IP 地址。
+- `Scanner --> IPv4`：扫描引擎支持 IPv4 协议。
+- `Scanner --> IPv6`：扫描引擎支持 IPv6 协议。
+- `App --> Gemini`：Flask 应用使用 Google Gemini API 进行 AI 分析。
+- `App --> History`：Flask 应用将扫描历史记录存储到 JSON 历史文件中。
+- `App --> State`：Flask 应用将最新的扫描结果存储到全局状态中。
+- `Reporter --> History`：报告生成器将报告信息存储到 JSON 历史文件中。
+
+## 仓库语境与术语解释
+- **Flask**：是一个轻量级的 Python Web 框架，用于构建 VulnX 的后端应用。`app.py` 文件是 Flask 应用的入口点。
+- **Flask-SocketIO**：是一个 Flask 扩展，提供了 WebSocket 支持，用于实现 VulnX 的实时更新功能。
+- **Scanner Engine**：是 VulnX 的核心组件，负责执行端口扫描、服务识别和漏洞分析等任务。其实现位于 `core/scanner.py` 文件中。
+- **Google Gemini API**：是一个 AI 服务，用于增强 VulnX 的安全分析能力，例如识别攻击向量和提供安全建议。
+- **PDF Reporter**：用于生成专业的 PDF 格式扫描报告，其实现位于 `core/reporter.py` 文件中。
+- **scan_history.json**：用于持久化存储扫描历史记录，方便用户查看之前的扫描结果。
+- **React-like UI Components**：指的是用于构建用户界面的前端组件，README 提到 VulnX 使用现代 Web 技术构建，但未明确指出使用的 React 或其他框架。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+VulnX 架构图展示了从客户端浏览器发起请求，通过 Flask 应用路由到扫描引擎，再利用 Socket API 和 DNS 解析进行网络扫描，并可选择使用 Google Gemini API 进行 AI 分析的完整流程。扫描结果一方面通过 SocketIO 实时反馈给浏览器，另一方面通过 PDF Reporter 生成报告并存储到 JSON 历史文件中。该架构的核心在于 Flask 应用作为控制中心，以及扫描引擎执行实际扫描任务，并集成了 AI 分析和报告生成功能。

@@ -1,0 +1,33 @@
+flowchart TD
+    A[用户输入研究内容] --> B[调用 Outline Agent]
+    B --> C[MCP 检索资料]
+    C --> D[生成大纲]
+    D --> E{用户确认大纲}
+    E --> F[发送大纲给 PPT 生成 Agent]
+
+    F --> G[Split Outline Agent 拆分大纲]
+    G --> H[Parallel Agent 并行处理]
+
+    %% 并发 Research Agent
+    H --> I1[Research Agent 1]
+    H --> I2[Research Agent 2]
+    H --> I3[Research Agent 3]
+
+    I1 --> RAG1[自动知识库检索 RAG]
+    I2 --> RAG2[自动知识库检索 RAG]
+    I3 --> RAG3[自动知识库检索 RAG]
+
+    RAG1 --> J[SummaryAgent合并结果]
+    RAG2 --> J
+    RAG3 --> J
+
+    J --> L[Loop PPT Agent 生成幻灯片页]
+
+    subgraph Loop PPT Agent
+        L1[Write PPT Agent<br>生成每页幻灯片]
+        L2[Check PPT Agent<br>检查每页内容质量，最多重试 3 次]
+        L1 --> L2
+        L2 --> L1
+    end
+
+    L --> L1

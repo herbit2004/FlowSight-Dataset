@@ -1,0 +1,34 @@
+flowchart TD
+    subgraph Workflows["Workflows"]
+        direction TB
+        W1["/coordinate"]
+        W2["/orchestrate"]
+        W3["/plan"]
+        W4["/review"]
+        W5["/debug"]
+    end
+
+    subgraph Orchestration["Orchestration"]
+        direction TB
+        PM[pm-agent]
+        WF[workflow-guide]
+        ORC[orchestrator]
+    end
+
+    subgraph Domain["Domain Agents"]
+        direction TB
+        FE[frontend-agent]
+        BE[backend-agent]
+        MB[mobile-agent]
+    end
+
+    subgraph Quality["Quality"]
+        direction TB
+        QA[qa-agent]
+        DBG[debug-agent]
+    end
+
+    Workflows --> Orchestration
+    Orchestration --> Domain
+    Domain --> Quality
+    Quality --> CMT([commit])

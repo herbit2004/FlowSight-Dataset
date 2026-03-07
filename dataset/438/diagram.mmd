@@ -1,0 +1,52 @@
+flowchart TD
+    subgraph "Core Architecture"
+        Init[index.ts] --> Config[Configuration Loader]
+        Config --> Transport{Transport Type}
+        Transport --> |stdio| StdioTransport[Stdio Transport]
+        Transport --> |sse| SSETransport[SSE Transport]
+        StdioTransport --> Server[MCP Server]
+        SSETransport --> Server
+        Server --> ToolReg[Tool Registry]
+        ToolReg --> InitEmbed[Initialize Embeddings]
+        InitEmbed --> Ready[Server Ready]
+    end
+
+    subgraph "Request Processing"
+        Req[Client Request] --> SessionMgr[Session Manager]
+        SessionMgr --> Router[Hybrid Router]
+        Router --> Semantic[Semantic Matcher]
+        Router --> Sequential[Sequential Thinking]
+        Semantic --> |High Confidence| Execute[Tool Execution]
+        Sequential --> |Fallback| Execute
+        Execute --> JobMgr[Job Manager]
+        JobMgr --> Response[Response to Client]
+    end
+
+    subgraph "Tool Ecosystem"
+        Execute --> Research[Research Tool]
+        Execute --> TaskMgr[Vibe Task Manager]
+        Execute --> CodeMap[Code Map Tool]
+        Execute --> FullStack[Fullstack Generator]
+        Execute --> PRDGen[PRD Generator]
+        Execute --> UserStories[User Stories Generator]
+        Execute --> TaskList[Task List Generator]
+        Execute --> Rules[Rules Generator]
+        Execute --> Workflow[Workflow Runner]
+    end
+
+    subgraph "Support Services"
+        JobMgr --> AsyncJobs[Async Job Processing]
+        Execute --> FileOps[File Operations]
+        Execute --> LLMHelper[LLM Integration]
+        Execute --> ErrorHandler[Error Handling]
+        Execute --> StateManager[Session State]
+    end
+
+    subgraph "Configuration & Security"
+        Config --> LLMConfig[LLM Config Mapping]
+        Config --> MCPConfig[MCP Tool Config]
+        Config --> EnvVars[Environment Variables]
+        FileOps --> SecurityBoundary[Security Boundaries]
+        SecurityBoundary --> ReadOps[Read Operations]
+        SecurityBoundary --> WriteOps[Write Operations]
+    end

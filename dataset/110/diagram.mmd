@@ -1,0 +1,18 @@
+graph TD
+    FFSRC[Firefox Source] -->|make fetch| REPO
+
+    subgraph REPO[Camoufox Repository]
+        PATCHES[Fingerprint masking patches]
+        ADDONS[uBlock & B.P.C.]
+        DEBLOAT[Debloat/optimizations]
+        SYSTEM_FONTS[Win, Mac, Linux fonts]
+        JUGGLER[Patched Juggler]
+    end
+
+    subgraph Local
+    REPO -->|make dir| PATCH[Patched Source]
+    PATCH -->|make build| BUILD[Built]
+    BUILD -->|make package-linux| LINUX[Linux Portable]
+    BUILD -->|make package-windows| WIN[Windows Portable]
+    BUILD -->|make package-macos| MAC[macOS Portable]
+    end

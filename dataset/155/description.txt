@@ -1,0 +1,48 @@
+## 图类型与用途
+这是一个流程图/架构图，用于展示 NetAdmin 项目的分层架构。它描述了业务实例层、系统组件层和框架层之间的关系和数据流向，用于帮助理解项目的整体结构。
+
+## 图的整体布局
+图整体采用从上到下的布局，分为业务实例层、系统组件层和框架层三个主要层次。数据流向从顶部的业务实例层向下传递到框架层。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为三个阶段：业务实例层、系统组件层、框架层。
+- **业务实例层 (biz-*)**：代表具体的业务场景下的实现。
+- **系统组件层 (sys-*)**：处理系统级别的业务逻辑。
+- **框架层**：提供基础框架和通用组件。
+
+## 节点逐项说明
+- **biz-host** (YourSolution.XXX.Host)：业务实例主机层，代表具体的业务场景下的主机层实现。
+- **biz-cache** (YourSolution.XXX.Cache)：业务实例缓存层，代表具体的业务场景下的缓存层实现。
+- **biz-app** (YourSolution.XXX.Application)：业务实例应用层，代表具体的业务场景下的应用层实现。
+- **biz-domain** (YourSolution.XXX.Domain)：业务实例数据实体层，代表具体的业务场景下的数据实体层实现。
+- **biz-infra** (YourSolution.XXX.Infrastructure)：业务实例基础设施层，代表具体的业务场景下的基础设施层实现。
+- **sys-host** (NetAdmin.SysComponent.Host)：系统组件主机层，负责系统级别的输入输出格式化、数据校验和鉴权等。
+- **sys-cache** (NetAdmin.SysComponent.Cache)：系统组件缓存层，提供基于 Redis 或 MemoryCache 的缓存策略实现。
+- **sys-app** (NetAdmin.SysComponent.Application)：系统组件应用层，处理系统级别的业务逻辑。
+- **host** (NetAdmin.Host)：框架主机层，作为 .NET 自托管主机程序，负责输入输出格式化、数据校验、鉴权以及所有 HTTP 管道过滤器中间件。
+- **cache** (NetAdmin.Cache)：框架缓存层，提供基于 Redis 或 MemoryCache 的缓存策略实现。
+- **app** (NetAdmin.Application)：框架业务应用层，负责内部和外部服务的增删改查，以及所有业务用例的计算与组合逻辑的模块化。
+- **domain** (NetAdmin.Domain)：框架数据实体层，负责数据库关系实体映射、DTO 数据传输对象以及所有数据模型的抽象与封装。
+- **infra** (NetAdmin.Infrastructure)：框架基础设施层，负责第三方组件和 NuGet 包引用、公共构建和程序运行配置、公共常量枚举异常定义、全球化和多语言支持以及所有公共 Utility 工具。
+
+## 连线、分支与汇聚关系
+- `biz-host -> biz-cache -> biz-app -> biz-domain -> biz-infra`：业务实例层内部组件之间的依赖关系。
+- `biz-host -> sys-host -> host`：业务实例主机层依赖于系统组件主机层，系统组件主机层又依赖于框架主机层。
+- `biz-cache -> sys-cache -> cache`：业务实例缓存层依赖于系统组件缓存层，系统组件缓存层又依赖于框架缓存层。
+- `biz-app -> sys-app -> app`：业务实例应用层依赖于系统组件应用层，系统组件应用层又依赖于框架应用层。
+- `biz-domain -> domain`：业务实例数据实体层依赖于框架数据实体层。
+- `biz-infra -> infra`：业务实例基础设施层依赖于框架基础设施层。
+- `sys-host -> sys-cache -> sys-app -> domain -> infra`：系统组件层内部组件之间的依赖关系，并最终依赖于框架层。
+- `host -> cache -> app -> domain -> infra`：框架层内部组件之间的依赖关系。
+
+## 仓库语境与术语解释
+- **NetAdmin**：通用后台权限管理系统、快速开发框架，基于 C#13/.NET9、Vue3/Vite、ElementPlus 等技术构建，参见 `README.md`。
+- **YourSolution.XXX**：代表具体的业务解决方案，XXX 是占位符，表示实际的业务模块名称。
+- **.NET 自托管主机程序**：`NetAdmin.Host` 是一个 .NET 自托管主机程序，负责处理 HTTP 请求的管道和中间件。
+- **Redis/MemoryCache**：`NetAdmin.Cache` 支持基于 Redis 或 MemoryCache 的缓存策略，Redis 是一个内存数据结构存储，常用作缓存，参见 `README.md`。
+- **NuGet 包**：`NetAdmin.Infrastructure` 负责引用第三方组件和 NuGet 包，NuGet 是 .NET 的包管理器。
+- **FreeSql**：README 中提到 FreeSql 用于数据库关系映射。
+- **SolutionDir**：在 `NetAdmin.Domain.csproj` 等文件中被引用，表示解决方案根目录。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 NetAdmin 项目的分层架构，从顶层的业务实例层（biz-host, biz-cache, biz-app, biz-domain, biz-infra）开始，通过系统组件层（sys-host, sys-cache, sys-app）连接到框架层（host, cache, app, domain, infra）。业务实例层依赖于系统组件层，系统组件层又依赖于框架层，框架层提供了基础组件和基础设施。其中，框架层中的 `NetAdmin.Infrastructure` 负责第三方组件和 NuGet 包的引用，`NetAdmin.Domain` 负责数据实体映射。整体架构体现了分层设计和依赖关系。

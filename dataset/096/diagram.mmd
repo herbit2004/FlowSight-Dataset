@@ -1,0 +1,23 @@
+graph TB
+    subgraph "Client Layer"
+        A[User Action] --> B[Local Storage - IndexedDB]
+        B --> C[Immediate UI Update]
+        B --> D[Background Sync Queue]
+    end
+
+    subgraph "Sync Layer"
+        D --> E[Appwrite Cloud Database]
+        E --> F[Real-time Events]
+        F --> G[WebSocket Broadcast]
+    end
+
+    subgraph "Multi-Device"
+        G --> H[Other Devices/Tabs]
+        H --> I[Local Update]
+        I --> J[UI Refresh]
+    end
+
+    style A fill:#3b82f6,stroke:#1e40af,color:#fff
+    style C fill:#10b981,stroke:#059669,color:#fff
+    style E fill:#f59e0b,stroke:#d97706,color:#fff
+    style J fill:#10b981,stroke:#059669,color:#fff

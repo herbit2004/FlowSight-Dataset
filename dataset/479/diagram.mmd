@@ -1,0 +1,40 @@
+flowchart TB
+    subgraph INPUT["📁 Input"]
+        COBOL["COBOL Files<br/>source/*.cbl, *.cpy"]
+    end
+    
+    subgraph PROCESS["⚙️ Processing Pipeline"]
+        REGEX["Regex / Syntax Parsing<br/>(Deep SQL/Variable Extraction)"]
+        AGENTS["🤖 AI Agents<br/>(MS Agent Framework)"]
+        ANALYZER["CobolAnalyzerAgent"]
+        EXTRACTOR["BusinessLogicExtractor"]
+        CONVERTER["Java/C# Converter"]
+        MAPPER["DependencyMapper"]
+    end
+    
+    subgraph STORAGE["💾 Hybrid Storage"]
+        SQLITE[("SQLite<br/>Data/migration.db<br/><br/>• Run metadata<br/>• File content<br/>• Raw AI analysis<br/>• Generated code")]
+        NEO4J[("Neo4j<br/>bolt://localhost:7687<br/><br/>• Dependencies<br/>• Relationship Graph<br/>• Impact Analysis")]
+    end
+    
+    subgraph OUTPUT["📦 Output"]
+        CODE["Java/C# Code<br/>output/java or output/csharp"]
+        PORTAL["Web Portal & MCP Server<br/>localhost:5028"]
+    end
+    
+    COBOL --> REGEX
+    REGEX --> AGENTS
+    
+    AGENTS --> ANALYZER
+    AGENTS --> EXTRACTOR
+    AGENTS --> CONVERTER
+    AGENTS --> MAPPER
+    
+    ANALYZER --> SQLITE
+    EXTRACTOR --> SQLITE
+    CONVERTER --> SQLITE
+    CONVERTER --> CODE
+    MAPPER --> NEO4J
+    
+    SQLITE --> PORTAL
+    NEO4J --> PORTAL

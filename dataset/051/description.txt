@@ -1,0 +1,40 @@
+## 图类型与用途
+这是一个流程图，描述了用户与 Antigravity 认知引擎交互的系统架构。该图展示了用户输入如何通过一系列组件处理，最终生成经过验证的工作成果，旨在将 AI 代理从简单的聊天机器人转变为具有长期记忆、专业知识和工程纪律的专业代理。
+
+## 图的整体布局
+图采用从上到下的布局。用户提示作为流程的起点，经过认知引擎的处理，最终输出工作证明。认知引擎部分被包含在一个子图中。
+
+## 分组/子图/阶段说明
+图中包含一个名为 "The Cognitive Engine" 的子图，该子图内部可以分为三个阶段：
+- **Discovery**：通过 `Super Protokol v2` 与 `MCP Server (SkillPort)` 交互，发现合适的技能。
+- **Search & Load**：`MCP Server` 在 `Skill Manifest` 中搜索技能，并将技能信息加载到 `Audited Skills` 中。
+- **Execute & Verify**：`Audited Skills` 中的技能在 `Local Workspace` 中执行，并生成 `Proof of Work`，然后进行验证。
+
+## 节点逐项说明
+- **User (👤 User Prompt)**：代表用户发起的提示或请求，是整个流程的起点。
+- **Protocol (📡 Super Protokol v2)**：代表 `Super Protokol v2`，负责处理用户输入，确保流程遵循一定的工程规范和纪律。根据 `README.md`，该协议旨在确保 AI 代理的工程纪律。
+- **MCP Server (🛠️ MCP Server (SkillPort))**：MCP Server，也被称为 SkillPort，是技能管理和发现的核心组件。它负责发现和管理可用的技能。
+- **Skill Manifest (📋 Skill Manifest)**：技能清单，包含了可用技能的元数据，例如技能的描述、输入参数和输出格式。
+- **Audited Skills (🧠 Audited Skills (137+))**：代表经过审计的技能库，其中包含 137 个以上的技能。这些技能是经过验证和审查的，可以安全地执行。`README.md` 中提到 Antigravity 具有 137+ Evidence-Based Skills。
+- **Local Workspace (💻 Local Workspace)**：代表本地工作区，技能在这里被执行，并生成结果。
+- **Proof of Work (✅ Proof of Work)**：代表工作证明，即技能执行的结果，经过验证后返回给用户。
+
+## 连线、分支与汇聚关系
+- `User -> Protocol`：用户通过 `User Prompt` 触发整个流程。
+- `Protocol -> MCP`：`Super Protokol v2` 通过 `Discovery` 步骤与 `MCP Server (SkillPort)` 进行交互。
+- `MCP -> Manifest`：`MCP Server` 通过 `Search` 步骤在 `Skill Manifest` 中查找合适的技能。
+- `Manifest -> Skills`：`Skill Manifest` 将技能信息加载到 `Audited Skills` 中。
+- `Skills -> Workspace`：`Audited Skills` 中的技能在 `Local Workspace` 中被 `Execute`（执行）。
+- `Workspace -> Proof`：`Local Workspace` 生成 `Proof of Work`（工作证明）。
+- `Proof -> User`：`Proof of Work` 经过 `Verify`（验证）后，最终返回给 `User`。
+
+## 仓库语境与术语解释
+- **Antigravity**：根据 `README.md`，是一个旨在将 AI 代理转变为具有长期记忆、专业知识和工程纪律的专业代理的认知架构项目。
+- **Super Protokol v2**：根据 `README.md`，该协议旨在确保 AI 代理的工程纪律。`workflows/super_protokol_v2.md` 文件详细描述了该协议的各个阶段。
+- **SkillPort MCP**：根据 `README.md`，需要先安装 SkillPort MCP。
+- **Skills Manifest**：`docs/SKILL_MANAGEMENT_PROTOCOL.md` 描述了 Skill Management Protocol，强调从 `skills_manifest.json` 文件管理技能。
+- **Skills**：根据 `README.md`，`skills` 目录包含了 137+ Expertises。
+- **Proof of Work**：图中可见，但仓库上下文未进一步说明。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Antigravity 认知引擎的系统架构，用户通过 `User Prompt` 触发流程，`Super Protokol v2` 处理用户输入，与 `MCP Server (SkillPort)` 交互进行技能发现和搜索，从 `Skill Manifest` 加载 `Audited Skills`，在 `Local Workspace` 执行技能，生成 `Proof of Work` 并验证后返回给用户。该流程的核心在于通过协议和技能管理，将用户的需求转化为可执行的、经过验证的任务。`README.md` 提到 Antigravity 旨在将 AI 代理转变为具有长期记忆、专业知识和工程纪律的专业代理。

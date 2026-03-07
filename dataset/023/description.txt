@@ -1,0 +1,47 @@
+## 图类型与用途
+这是一个流程图，描述了 RepoMind 应用中上下文感知引擎（Context-Aware Engine）处理用户查询并生成答案的流程。该图在仓库中用于展示 RepoMind 如何利用上下文感知引擎，结合仓库信息和网络搜索，为用户提供智能的 GitHub 仓库聊天服务。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是用户查询的输入节点，中间是“Blazing Fast Optimization”和“Native Web Search”两个主要流程，底部是最终的聊天界面输出。
+
+## 分组/子图/阶段说明
+图中包含两个显式子图：
+- **Blazing Fast Optimization**：该子图描述了如何通过智能文件选择和分层剪枝，从仓库中提取相关上下文信息，以优化查询效率。
+- **Native Web Search**：该子图描述了当用户查询涉及未知主题时，如何利用 Google 搜索来获取相关信息。
+
+## 节点逐项说明
+- **User Query**：用户发起的查询请求，作为整个流程的起点。
+- **Context-Aware Engine**：RepoMind 的核心组件，负责处理用户查询，提取相关信息，并生成最终答案。
+- **Profile Metadata**：仓库的元数据信息，例如仓库的描述、贡献者等。
+- **Language & Topics**：仓库使用的编程语言和相关主题。
+- **Smart File Selection**：智能文件选择模块，用于从仓库中选择与用户查询相关的代码文件。根据 `src/lib/gemini.ts`，如果用户明确提到了文件名，则会跳过 AI 选择，直接使用提及的文件。
+- **Target Modules**：目标模块，通过分层剪枝，筛选出最相关的代码模块。
+- **Relevant Context**：相关上下文，包含从仓库中提取的与用户查询相关的代码片段和信息。
+- **Google Search**：Google 搜索，用于搜索与用户查询相关的外部信息。
+- **Answer Synthesis**：答案合成模块，负责将从仓库和网络搜索中获取的信息整合，生成最终的答案。
+- **Chat Interface**：用户界面，用于展示 RepoMind 生成的答案。
+
+## 连线、分支与汇聚关系
+- `User Query -> Context-Aware Engine`：用户发起查询，查询请求作为输入传递给上下文感知引擎。
+- `Context-Aware Engine -> Profile Metadata`：引擎通过延迟加载获取仓库的元数据信息。
+- `Profile Metadata -> Language & Topics`：仓库元数据提供仓库的编程语言和主题信息。
+- `Context-Aware Engine -> Smart File Selection`：引擎根据用户查询，智能地选择相关的代码文件。
+- `Smart File Selection -> Target Modules`：智能文件选择模块通过分层剪枝，筛选出最相关的代码模块。
+- `Target Modules -> Relevant Context`：目标模块提供与用户查询相关的代码片段和信息。
+- `Context-Aware Engine -> Google Search`：如果用户查询涉及未知主题，引擎会使用 Google 搜索来获取相关信息。
+- `Google Search -> Answer Synthesis`：Google 搜索结果作为实时数据传递给答案合成模块。
+- `Relevant Context -> Answer Synthesis`：从仓库中提取的相关上下文信息传递给答案合成模块。
+- `Profile Metadata -> Answer Synthesis`：仓库元数据信息传递给答案合成模块。
+- `Answer Synthesis -> Chat Interface`：答案合成模块将最终答案传递给用户界面进行展示。
+
+## 仓库语境与术语解释
+- **Context-Aware Engine**：RepoMind 的核心组件，利用 Agentic Context Augmented Generation (Agentic CAG) 技术，进行深度代码分析，无需克隆仓库。
+- **Agentic CAG**：一种上下文增强生成技术，RepoMind 使用该技术加载完整的相关文件到模型的长上下文窗口中，以实现更好的理解，而不是将代码分割成碎片化的向量。
+- **Hierarchical Pruning**：对于大型仓库（1000+ 文件），RepoMind 使用多阶段的向下钻取，利用 Gemini 3 Flash Preview 将数千个文件缩小到相关的模块。
+- **Smart Context Loading**：根据查询智能地选择相关的代码文件，如果明确提到了文件名，则绕过 AI 选择。
+- **Gemini 3 Flash Preview**：Google 的 Gemini AI 模型的快速预览版本，用于在 RepoMind 中进行快速的代码分析和信息提取。
+- `src/lib/services/query-pipeline.ts`：定义了统一的仓库查询管道，包括文件选择、内容获取和 AI 响应生成。
+- `src/components/Mermaid.tsx`：该文件包含了 Mermaid 图表的渲染和处理逻辑，包括语法验证和安全清理。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 RepoMind 如何处理用户查询。用户查询首先进入 Context-Aware Engine，引擎通过 Lazy Load 获取 Profile Metadata，并通过 Flash Selection 选择 Smart File Selection。Smart File Selection 经过 Hierarchical Pruning 得到 Target Modules，进而提取 Relevant Context。如果查询涉及 Unknown Topic，则会使用 Google Search。Relevant Context、Profile Metadata 和 Google Search 的结果汇聚到 Answer Synthesis，最终通过 Chat Interface 展示给用户。该流程的核心是 Context-Aware Engine 和 Blazing Fast Optimization，利用 Gemini 3 Flash Preview 和 Agentic CAG 技术，实现高效的代码分析和智能问答。

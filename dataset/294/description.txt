@@ -1,0 +1,61 @@
+## 图类型与用途
+这是一个架构图，展示了 MCP Gateway 在 Kubernetes 环境中作为反向代理和管理层，处理 Model Context Protocol (MCP) 服务器的流量和生命周期。它描述了数据和管理请求的流向，以及 MCP Gateway 如何与 MCP 服务器、工具服务器和 Kubernetes 集群交互。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是客户端，中间是 MCP Gateway 的各个组件，底部是 Kubernetes 集群和元数据存储。数据流和管理流分别从客户端出发，经过不同的认证和路由组件，最终到达 MCP 服务器或工具服务器。
+
+## 分组/子图/阶段说明
+- **Clients**：表示客户端，包括 DataClient (数据客户端) 和 MgmtClient (管理客户端)。
+- **Gateway**：表示 MCP Gateway，是核心组件，包含 Authentication & Authorization (认证与授权)、Data Plane (数据平面)、Control Plane (控制平面) 和 Management (后端服务) 四个子模块。
+- **Authentication & Authorization**：负责数据平面和控制平面的认证与授权。
+- **Data Plane**：负责数据请求的路由，包括 Adapter Routing (适配器路由) 和 Tool Router Gateway (工具路由网关)。
+- **Control Plane**：负责 MCP 服务器和工具的管理，包括 Adapter Management (适配器管理) 和 Tool Management (工具管理)。
+- **Management**：负责后端服务的部署和元数据管理，包括 Deployment Manager (部署管理器) 和 Metadata Manager (元数据管理器)。
+- **Cluster**：表示 Kubernetes 集群，运行 MCP 服务器和工具服务器。
+- **MCPServers**：运行 MCP 协议的服务器实例。
+- **ToolRouters**：充当智能路由器的 MCP 服务器，将工具请求动态路由到相应的工具服务器。
+- **ToolServers**：实际执行工具逻辑的服务器实例。
+
+## 节点逐项说明
+- **DataClient**：发送 MCP 请求的 Agent/MCP 数据客户端。
+- **MgmtClient**：用于管理 MCP 服务器的客户端。
+- **Auth**：数据平面认证，使用 Bearer Token 或 RBAC 对数据平面请求进行认证和授权。
+- **Auth2**：控制平面认证，使用 Bearer Token 或 RBAC 对控制平面请求进行认证和授权。
+- **Routing**：适配器路由，根据 `/adapters/{name}/mcp` 路径将请求路由到相应的 MCP 服务器。
+- **ToolRouting**：工具路由网关，根据 `/mcp` 路径将请求路由到相应的工具网关路由器。
+- **AdapterMgmt**：适配器管理，提供 `/adapters` 的 CRUD 操作，用于管理 MCP 服务器的生命周期。
+- **ToolMgmt**：工具管理，提供 `/tools` 的 CRUD 操作，用于管理工具的定义。
+- **DeploymentMgmt**：部署管理器，负责在 Kubernetes 集群中部署和监控 MCP 服务器。
+- **MetadataMgmt**：元数据管理器，负责管理 MCP 服务器和工具的元数据。
+- **PodA, PodA1, PodB**：MCP 服务器的 Pod 实例，例如 mcp-a-0, mcp-a-1, mcp-b-0。
+- **Router1, Router2**：工具网关路由器的实例，例如 toolgateway-0, toolgateway-1。
+- **Tool1, Tool2**：注册工具服务器的实例，例如 tool-1-0, tool-2-0。
+- **Metadata**：元数据存储，存储 MCP 服务器和工具的信息。
+
+## 连线、分支与汇聚关系
+- `DataClient -> Auth`：数据客户端发送 MCP 请求到数据平面认证。
+- `MgmtClient -> Auth2`：管理客户端发送 API 调用到控制平面认证。
+- `Auth -> Routing`：数据平面认证后，将请求路由到适配器路由。
+- `Auth -> ToolRouting`：数据平面认证后，将请求路由到工具路由网关。
+- `Auth2 -> AdapterMgmt`：控制平面认证后，将请求发送到适配器管理。
+- `Auth2 -> ToolMgmt`：控制平面认证后，将请求发送到工具管理。
+- `AdapterMgmt & ToolMgmt -> DeploymentMgmt`：适配器管理和工具管理的结果汇聚到部署管理器。
+- `AdapterMgmt & ToolMgmt -> MetadataMgmt`：适配器管理和工具管理的结果汇聚到元数据管理器。
+- `Routing -.-> MCPServers`：适配器路由通过 Session Affinity 将请求路由到 MCP 服务器。
+- `ToolRouting -.-> ToolRouters`：工具路由网关通过 Session Affinity 将请求路由到工具网关路由器。
+- `ToolRouters ==> ToolServers`：工具网关路由器通过 Dynamic Routing 将请求路由到注册工具服务器。
+- `DeploymentMgmt -> Cluster`：部署管理器部署和监控 Kubernetes 集群中的服务。
+- `MetadataMgmt <--> Metadata`：元数据管理器读写元数据存储。
+
+## 仓库语境与术语解释
+- **MCP (Model Context Protocol)**：一种协议，用于在模型上下文之间进行通信。
+- **MCP Gateway**：作为 MCP 服务器的反向代理和管理层，实现可扩展的、会话感知的路由、授权和生命周期管理。
+- **Adapters**：表示网关中 MCP 服务器的逻辑资源，在 `/adapters` 范围内管理。
+- **Tools**：具有 MCP 工具定义的注册资源，可以通过工具网关路由器动态路由。
+- **Tool Gateway Router**：一个 MCP 服务器，充当智能路由器，根据工具定义将工具执行请求定向到相应的注册工具服务器。
+- **Session Affinity**：确保具有给定 `session_id` 的所有请求始终路由到同一个 MCP 服务器实例。
+- **Kubernetes Cluster**：用于部署和管理容器化应用程序的平台。
+- **Entra ID**：Azure 的身份验证和授权服务，用于对 MCP 服务器和工具进行身份验证和授权，相关配置参见 `docs/entra-app-roles.md`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 MCP Gateway 的架构，从客户端发起数据或管理请求开始，分别经过数据平面认证或控制平面认证，然后通过适配器路由或工具路由网关，最终到达 Kubernetes 集群中的 MCP 服务器或工具服务器。其中，适配器管理和工具管理模块负责服务器的生命周期管理，部署管理器负责在 Kubernetes 集群中部署和监控服务，元数据管理器负责管理服务器和工具的元数据，这些元数据存储在元数据存储中。工具网关路由器通过动态路由将请求转发到注册工具服务器，实现了工具的动态发现和执行。`README.md` 解释了 MCP Gateway 的关键概念，而 `docs/entra-app-roles.md` 描述了如何配置 Azure Entra ID 进行身份验证和授权。

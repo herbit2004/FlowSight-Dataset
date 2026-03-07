@@ -1,0 +1,21 @@
+flowchart TD
+    clix-->|TCP|srva
+    clix-->|TCP|srvb
+    cliy-->|TCP|srvb
+    cliy-.->|TCP|srvn
+    subgraph hostn[Any]
+    srvn["llama-box-*-cuda/metal/... (rpc server)"]
+    end
+    subgraph hostb[Apple Mac Studio]
+    srvb["llama-box-*-metal (rpc server)"]
+    end
+    subgraph hosta[NVIDIA 4090]
+    srva["llama-box-*-cuda (rpc server)"]
+    end
+    subgraph hosty[Apple Mac Max]
+    cliy["llama-box-*-metal"]
+    end
+    subgraph hostx[NVIDIA 4080]
+    clix["llama-box-*-cuda"]
+    end
+    style hostn stroke:#66,stroke-width:2px,stroke-dasharray: 5 5

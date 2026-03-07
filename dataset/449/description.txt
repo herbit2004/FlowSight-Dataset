@@ -1,0 +1,37 @@
+## 图类型与用途
+这是一个流程图/架构图，描述了 Pipelock 如何作为 AI Agent 的防火墙工作，展示了数据流和安全检查流程。它在仓库中的作用是概括 Pipelock 的整体架构，以及 Agent、防火墙和互联网之间的关系。
+
+## 图的整体布局
+图整体采用从左到右的布局。最左侧是特权区，中间是防火墙区，最右侧是互联网。数据流从 AI Agent 开始，经过 Pipelock 的扫描管道，最终到达 Web 服务，响应则反向流动。
+
+## 分组/子图/阶段说明
+图中包含三个显式子图，分别代表不同的安全区域：
+- **Privileged Zone**：表示特权区域，包含运行中的 AI Agent，该 Agent 拥有敏感的 API 密钥。
+- **Firewall Zone**：表示防火墙区域，包含 Pipelock 代理和扫描管道，负责对请求和响应进行安全检查。
+- **Internet**：表示互联网区域，包含 Agent 尝试访问的外部 Web 服务。
+
+## 节点逐项说明
+- **AI Agent (has API keys)**：位于特权区，代表运行中的 AI Agent，它拥有敏感的 API 密钥，并且可能具有 shell 访问权限。
+- **Pipelock (NO secrets)**：位于防火墙区，是 Pipelock 的核心组件，作为一个代理服务器，不存储任何敏感信息。根据 README，Pipelock 使用 capability separation，Agent 进程有 secrets 但网络受限，而 Pipelock 有完整互联网访问权限但没有 secrets。
+- **Scanner Pipeline**：位于防火墙区，是 Pipelock 的扫描管道，负责对请求和响应进行安全检查，包括 SSRF、Blocklist、Rate Limit、DLP、Env Leak、Entropy 和 Length 等检查。
+- **Web**：位于互联网区，代表 Agent 尝试访问的外部 Web 服务。
+
+## 连线、分支与汇聚关系
+- `Agent -- "fetch URL\nCONNECT\nor WebSocket" --> Proxy`：AI Agent 通过 `fetch URL`、`CONNECT` 或 `WebSocket` 等方式发起网络请求，首先将请求发送到 Pipelock 代理。
+- `Proxy --> Scanner`：Pipelock 代理将请求传递给 Scanner Pipeline 进行安全检查。
+- `Scanner -- "request" --> Web`：Scanner Pipeline 将请求转发到目标 Web 服务。
+- `Web -- "response" --> Scanner`：Web 服务返回响应给 Scanner Pipeline。
+- `Scanner -- "clean content" --> Agent`：Scanner Pipeline 对响应进行处理（例如，清理内容），然后将处理后的内容返回给 AI Agent。
+- `Scanner -- "content or\ntunnel" --> Agent`：Scanner Pipeline 将内容或隧道信息传递给 Agent。
+
+## 仓库语境与术语解释
+- **AI Agent**：指运行中的 AI 代理，可能拥有 API 密钥和 shell 访问权限。
+- **Pipelock**：一个为 AI Agent 设计的 Agent Firewall，位于 Agent 和互联网之间，用于检查和控制 Agent 的网络行为。
+- **Scanner Pipeline**：Pipelock 的核心安全检查模块，包含多个扫描器，用于检测各种安全威胁，如 SSRF、数据泄露等。
+- **DLP (Data Loss Prevention)**：数据泄露防护，用于检测和阻止敏感数据泄露。
+- **Entropy**：熵值分析，用于检测异常数据，例如 Base64 编码的密钥。
+- **Fetch proxy**：Pipelock 的一种代理模式，通过 `/fetch?url=...` 接收请求，扫描 URL，获取内容，并返回提取的文本。
+- **Forward proxy**：Pipelock 的另一种代理模式，拦截标准的 `HTTPS_PROXY` 流量，无需修改 Agent 代码即可使用。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Pipelock 作为 AI Agent 防火墙的架构。AI Agent 发起网络请求，流量经过 Pipelock 防火墙，由 Scanner Pipeline 进行多层安全检查，包括 SSRF、DLP 和熵值分析等。Pipelock 作为一个无状态代理，不存储敏感信息。根据 README，Pipelock 支持 Fetch proxy 和 Forward proxy 两种模式，以适应不同的 Agent 集成方式。最终，Scanner Pipeline 将处理后的内容或隧道信息返回给 Agent。

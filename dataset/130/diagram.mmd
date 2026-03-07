@@ -1,0 +1,20 @@
+flowchart TD
+  subgraph UserLayer
+    UserInput[User Speech Input]
+    UserOutput[AI Generated Speech Output]
+  end
+  
+  UserInput --> ESP32
+  ESP32[ESP32 Device] -->|WebSocket| Edge[Deno Edge Function]
+  Edge -->|OpenAI API| OpenAI[OpenAI Realtime API]
+  Edge -->|Gemini API| Gemini[Gemini Live API]
+  Edge -->|xAI API| xAI[xAI Grok Voice Agent API]
+  Edge -->|ElevenLabs API| ElevenLabs[ElevenLabs AI Agents]
+  Edge -->|Hume API| Hume[Hume AI EVI4]
+  OpenAI --> Edge
+  Gemini --> Edge
+  xAI --> Edge
+  ElevenLabs --> Edge
+  Hume --> Edge
+  Edge -->|WebSocket| ESP32
+  ESP32 --> UserOutput

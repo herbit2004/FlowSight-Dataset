@@ -1,0 +1,47 @@
+## 图类型与用途
+这是一个流程图，用于可视化 ClickHouse 数据库中表之间的依赖关系，展示数据在不同表之间的流动和转换过程。该图由 `clickhouse-table-graph` 工具生成，用于理解 ClickHouse 数据库中表之间的连接方式和数据流。
+
+## 图的整体布局
+图整体采用从上到下的布局。图中存在多个起点，数据最终汇聚到下方的 `tree.target_distributed` 和 `tree.target_2_distributed` 节点。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为两个主要分支：
+1.  从 `tree.base_table` 出发，经过 `tree.mid_table_mv` 和 `tree.mid_table`，最终到达 `tree.mid_distributed` 和 `tree.target_table_mv`。
+2.  从 `tree.another_base_table` 和 `default.value_dict` 出发，经过 `tree.target_table_mv_2`，最终到达 `tree.target_table`，并进一步到达 `tree.target_distributed` 和 `tree.target_2_distributed`。
+
+## 节点逐项说明
+- **tree.mid_table (ReplacingMergeTree)**：一个名为 `tree.mid_table` 的表，其存储引擎是 `ReplacingMergeTree`。`ReplacingMergeTree` 是一种 ClickHouse 存储引擎，用于处理重复数据。
+- **tree.mid_distributed (Distributed)**：一个名为 `tree.mid_distributed` 的表，其存储引擎是 `Distributed`。`Distributed` 是一种 ClickHouse 存储引擎，用于将数据分布到多个节点上。
+- **tree.target_table_mv (MaterializedView)**：一个名为 `tree.target_table_mv` 的物化视图（Materialized View）。物化视图是预先计算并存储结果的视图，可以提高查询性能。
+- **tree.mid_table_mv (MaterializedView)**：一个名为 `tree.mid_table_mv` 的物化视图。
+- **tree.base_table (Null)**：一个名为 `tree.base_table` 的基础表，其存储引擎是 `Null`。`Null` 存储引擎不存储任何数据，通常用作数据流的起点。
+- **tree.target_table (ReplacingMergeTree)**：一个名为 `tree.target_table` 的表，其存储引擎是 `ReplacingMergeTree`。
+- **tree.target_2_distributed (Distributed)**：一个名为 `tree.target_2_distributed` 的表，其存储引擎是 `Distributed`。
+- **tree.target_distributed (Distributed)**：一个名为 `tree.target_distributed` 的表，其存储引擎是 `Distributed`。
+- **tree.target_table_mv_2 (MaterializedView)**：一个名为 `tree.target_table_mv_2` 的物化视图。
+- **tree.another_base_table (Null)**：一个名为 `tree.another_base_table` 的基础表，其存储引擎是 `Null`。
+- **default.value_dict (Dictionary)**：一个名为 `default.value_dict` 的字典（Dictionary）。ClickHouse 字典用于存储键值对，可以用于数据转换和丰富。
+
+## 连线、分支与汇聚关系
+- `tree.mid_table -> tree.mid_distributed`：`tree.mid_table` 将数据流向 `tree.mid_distributed`。
+- `tree.mid_table -> tree.target_table_mv`：`tree.mid_table` 将数据流向 `tree.target_table_mv`。
+- `tree.mid_table_mv -> tree.mid_table`：`tree.mid_table_mv` 将数据流向 `tree.mid_table`，形成一个循环。
+- `tree.base_table -> tree.mid_table_mv`：`tree.base_table` 将数据流向 `tree.mid_table_mv`。
+- `tree.target_table_mv -> tree.target_table`：`tree.target_table_mv` 将数据流向 `tree.target_table`。
+- `tree.target_table -> tree.target_2_distributed`：`tree.target_table` 将数据流向 `tree.target_2_distributed`。
+- `tree.target_table -> tree.target_distributed`：`tree.target_table` 将数据流向 `tree.target_distributed`。
+- `tree.target_table_mv_2 -> tree.target_table`：`tree.target_table_mv_2` 将数据流向 `tree.target_table`。
+- `tree.another_base_table -> tree.target_table_mv_2`：`tree.another_base_table` 将数据流向 `tree.target_table_mv_2`。
+- `default.value_dict -> tree.target_table_mv_2`：`default.value_dict` 将数据流向 `tree.target_table_mv_2`。
+
+## 仓库语境与术语解释
+- **ClickHouse**：一个开源的列式数据库管理系统，用于在线分析处理（OLAP）。该工具旨在可视化 ClickHouse 表的依赖关系。
+- **ReplacingMergeTree**：一种 ClickHouse 存储引擎，用于处理重复数据。
+- **Distributed**：一种 ClickHouse 存储引擎，用于将数据分布到多个节点上。
+- **MaterializedView**：物化视图是预先计算并存储结果的视图，可以提高查询性能。该工具从 `create_table_query` 中的 `TO` 子句提取物化视图的目标表。
+- **Null Engine**：一种 ClickHouse 存储引擎，不存储任何数据，通常用作数据流的起点。
+- **Dictionary**：ClickHouse 字典用于存储键值对，可以用于数据转换和丰富。该工具从字典函数（如 `dictGet`）的使用中提取字典依赖关系。
+- **system.tables**：ClickHouse 系统表，包含关于数据库中所有表的信息。该工具通过查询 `system.tables` 表的 `create_table_query` 和 `dependencies_table` 列来提取表依赖关系。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 ClickHouse 表之间的依赖关系。数据从 `tree.base_table` 和 `tree.another_base_table` 等基础表出发，经过物化视图（如 `tree.mid_table_mv` 和 `tree.target_table_mv_2`）和中间表（如 `tree.mid_table`），最终汇聚到分布式表（如 `tree.target_distributed` 和 `tree.target_2_distributed`）。`default.value_dict` 字典也参与到数据流中。该图由 `clickhouse-table-graph` 工具生成，用于可视化 ClickHouse 数据库中表之间的连接方式和数据流，其中 `system.tables` 是信息提取的关键来源。

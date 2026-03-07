@@ -1,0 +1,68 @@
+## 图类型与用途
+这是一个流程图/架构图，旨在说明 `cass` 工具如何从各种本地和远程源收集、处理、存储和呈现编码代理会话数据。该图展示了 `coding-agent-search (cass)` 工具的整体架构，用于索引和搜索本地编码代理的历史记录。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是数据源节点，中间是数据处理和存储阶段，右侧是数据展示层。
+
+## 分组/子图/阶段说明
+图中包含多个子图/分组，分别是：
+- **Local Sources**：包含各种本地编码代理工具，是会话数据的来源。
+- **Remote Sources**：包含远程数据源，包括配置文件 `sources.toml`，用于同步数据的 SSH/rsync 同步引擎，以及存储同步数据的 `remotes/Synced Data` 目录。
+- **Ingestion Layer**：负责自动发现和扫描来自本地和远程源的会话数据，并对其进行规范化和去重。
+- **Dual Storage**：包含两个存储组件：`frankensqlite` 和 `frankensearch`。
+- **Presentation**：包含两个用户界面：`TUI (FrankenTUI)` 和 `CLI / Robot`。
+
+## 节点逐项说明
+- **Codex**：本地编码代理工具，是会话数据的来源之一。
+- **Cline**：本地编码代理工具，是会话数据的来源之一。
+- **Gemini**：本地编码代理工具，是会话数据的来源之一。
+- **Claude**：本地编码代理工具，是会话数据的来源之一。
+- **OpenCode**：本地编码代理工具，是会话数据的来源之一。
+- **Amp**：本地编码代理工具，是会话数据的来源之一。
+- **Cursor**：本地编码代理工具，是会话数据的来源之一。
+- **ChatGPT**：本地编码代理工具，是会话数据的来源之一。
+- **Aider**：本地编码代理工具，是会话数据的来源之一。
+- **Pi-Agent**：本地编码代理工具，是会话数据的来源之一。
+- **Factory**：本地编码代理工具，是会话数据的来源之一。
+- **sources.toml**：远程数据源配置文件，用于同步数据。
+- **SSH/rsync Sync Engine**：用于从远程同步数据的同步引擎。
+- **remotes/Synced Data**：存储从远程同步的数据的目录。
+- **franken_agent_detection Auto-Discover & Scan Normalize & Dedupe**：负责自动发现和扫描来自本地和远程源的会话数据，并对其进行规范化和去重。
+- **frankensqlite (WAL) Source of Truth BEGIN CONCURRENT Migrations**：作为数据的真实来源，使用 WAL (Write-Ahead Logging) 模式，支持并发迁移。
+- **frankensearch BM25 + Semantic RRF Fusion Reranking**：用于快速搜索，使用 BM25 算法进行文本匹配，并结合语义搜索和 RRF (Reciprocal Rank Fusion) 融合和重排序。
+- **TUI (FrankenTUI) Elm Architecture Analytics Dashboard Async Search**：一个基于 Elm 架构的终端用户界面，提供分析仪表板和异步搜索功能。
+- **CLI / Robot JSON Output Automation**：一个命令行界面，以 JSON 格式输出数据，用于自动化任务。
+
+## 连线、分支与汇聚关系
+- `Codex -> franken_agent_detection Auto-Discover & Scan Normalize & Dedupe`：Codex 的数据输入到 Ingestion Layer。
+- `Cline -> franken_agent_detection Auto-Discover & Scan Normalize & Dedupe`：Cline 的数据输入到 Ingestion Layer。
+- `Gemini -> franken_agent_detection Auto-Discover & Scan Normalize & Dedupe`：Gemini 的数据输入到 Ingestion Layer。
+- `Claude -> franken_agent_detection Auto-Discover & Scan Normalize & Dedupe`：Claude 的数据输入到 Ingestion Layer。
+- `OpenCode -> franken_agent_detection Auto-Discover & Scan Normalize & Dedupe`：OpenCode 的数据输入到 Ingestion Layer。
+- `Amp -> franken_agent_detection Auto-Discover & Scan Normalize & Dedupe`：Amp 的数据输入到 Ingestion Layer。
+- `Cursor -> franken_agent_detection Auto-Discover & Scan Normalize & Dedupe`：Cursor 的数据输入到 Ingestion Layer。
+- `ChatGPT -> franken_agent_detection Auto-Discover & Scan Normalize & Dedupe`：ChatGPT 的数据输入到 Ingestion Layer。
+- `Aider -> franken_agent_detection Auto-Discover & Scan Normalize & Dedupe`：Aider 的数据输入到 Ingestion Layer。
+- `Pi-Agent -> franken_agent_detection Auto-Discover & Scan Normalize & Dedupe`：Pi-Agent 的数据输入到 Ingestion Layer。
+- `Factory -> franken_agent_detection Auto-Discover & Scan Normalize & Dedupe`：Factory 的数据输入到 Ingestion Layer。
+- `sources.toml -> SSH/rsync Sync Engine`：`sources.toml` 配置驱动 `SSH/rsync Sync Engine`。
+- `SSH/rsync Sync Engine -> remotes/Synced Data`：`SSH/rsync Sync Engine` 从远程同步数据到 `remotes/Synced Data` 目录。
+- `remotes/Synced Data -> franken_agent_detection Auto-Discover & Scan Normalize & Dedupe`：`remotes/Synced Data` 目录的数据也输入到 `Ingestion Layer`。
+- `franken_agent_detection Auto-Discover & Scan Normalize & Dedupe -> frankensqlite (WAL) Source of Truth BEGIN CONCURRENT Migrations`：Ingestion Layer 将处理后的数据持久化到 `frankensqlite` 数据库。
+- `franken_agent_detection Auto-Discover & Scan Normalize & Dedupe -> frankensearch BM25 + Semantic RRF Fusion Reranking`：Ingestion Layer 为 `frankensearch` 创建索引。
+- `frankensqlite (WAL) Source of Truth BEGIN CONCURRENT Migrations -.-> frankensearch BM25 + Semantic RRF Fusion Reranking`：`frankensqlite` 数据库可以重建 `frankensearch` 索引。
+- `frankensearch BM25 + Semantic RRF Fusion Reranking -> TUI (FrankenTUI) Elm Architecture Analytics Dashboard Async Search`：`frankensearch` 接收来自 TUI 的查询，并返回搜索结果。
+- `frankensearch BM25 + Semantic RRF Fusion Reranking -> CLI / Robot JSON Output Automation`：`frankensearch` 接收来自 CLI/Robot 的查询，并返回搜索结果。
+
+## 仓库语境与术语解释
+- **cass**：`coding-agent-search` 的缩写，是一个用于索引和搜索本地编码代理历史记录的工具。
+- **Local Sources**：包括 Codex, Cline, Gemini, Claude, OpenCode, Amp, Cursor, ChatGPT, Aider, Pi-Agent, 和 Factory (Droid) 等编码代理工具，`cass` 工具会索引和搜索它们的会话数据。
+- **Remote Sources**：包括配置文件 `sources.toml`，用于同步数据的 SSH/rsync 同步引擎，以及存储同步数据的 `remotes/Synced Data` 目录。
+- **Ingestion Layer**：负责自动发现和扫描来自本地和远程源的会话数据，并对其进行规范化和去重。
+- **Dual Storage**：包含 `frankensqlite` 和 `frankensearch` 两个存储组件，前者作为数据的真实来源，后者用于快速搜索。
+- **FrankenTUI**：一个基于 Elm 架构的终端用户界面，提供分析仪表板和异步搜索功能，其架构设计在 `docs/FRANKENTUI_UX_ARCHITECTURE.md` 中有详细描述。
+- **Robot Mode**：一种命令行模式，以 JSON 格式输出数据，用于自动化任务，相关文档位于 `docs/ROBOT_MODE.md`。
+- **AGENTS.md**：包含了 AI 编码代理在该 Rust 代码库中工作的指南，例如文件删除规则、Git 分支使用规范、Rust 工具链配置等。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `cass` 工具的整体架构，从本地和远程数据源（如 Codex, ChatGPT, `sources.toml`）收集数据，通过 `franken_agent_detection` 组件进行自动发现、扫描、规范化和去重，然后将处理后的数据存储在 `frankensqlite` 数据库中，并使用 `frankensearch` 创建索引。最终，用户可以通过 `TUI (FrankenTUI)` 或 `CLI / Robot` 界面查询和展示这些数据。`cass` 工具旨在将分散的编码代理历史记录整合为一个统一的知识库，并提供快速搜索功能。

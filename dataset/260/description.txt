@@ -1,0 +1,57 @@
+## 图类型与用途
+这是一个流程图，描述了 LLM Checker 工具选择 LLM 模型的流程。该流程根据硬件配置、Ollama 模型目录、本地模型以及命令行选项，最终输出推荐的模型、审计报告或可直接运行的命令。该图在仓库中用于概括模型选择的主流程。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是输入节点，中间是模型选择流程，右侧是输出节点。
+
+## 分组/子图/阶段说明
+图中包含三个显式子图：
+- **Inputs**：包含硬件检测器、Ollama 模型目录、本地模型和命令行选项，作为整个流程的输入。
+- **Pipeline**：包含模型选择流程的各个阶段，如规范化、过滤、量化、评分、策略评估和排序。
+- **Outputs**：包含推荐模型、审计报告和可直接运行的命令，作为整个流程的输出。
+
+## 节点逐项说明
+- **HW (Hardware detector)**：硬件检测器，用于检测用户的 CPU、GPU、RAM 和后端环境。仓库语境表明，该模块对应 `src/hardware/detector.js` 文件，用于获取系统硬件信息。
+- **REG (Dynamic Ollama catalog)**：动态 Ollama 模型目录，包含大量的模型信息。如果无法访问动态目录，则使用预先配置的备用模型列表。
+- **LOCAL (Installed local models)**：用户本地已经安装的模型。
+- **FLAGS (CLI options)**：命令行选项，包括使用场景、运行时要求、资源限制和策略等。
+- **NORMALIZE (Normalize and deduplicate model pool)**：规范化和去重模型池，将来自 Ollama 目录和本地安装的模型合并，并去除重复项。
+- **PROFILE (Hardware profile and memory budget)**：硬件配置分析和内存预算，根据硬件检测结果，确定可用的内存资源。
+- **FILTER (Use-case/category filtering)**：根据用户指定的使用场景和模型类别进行过滤。
+- **QUANT (Quantization fit selection)**：量化适配选择，根据硬件配置和内存预算，选择合适的量化级别。
+- **SCORE (Deterministic 4D scoring)**：确定性的 4D 评分，对模型进行多维度评分（Q/S/F/C，可能代表质量、速度、功能、成本等）。仓库语境表明，该模块对应 `src/models/scoring-engine.js` 文件，用于对模型进行多维度评分。
+- **POLICY (Policy evaluation (optional))**：策略评估（可选），根据用户定义的策略（例如，审计或强制执行），对模型进行评估。仓库语境表明，该模块对应 `src/policy/policy-engine.js` 文件，用于评估模型是否符合用户定义的策略。
+- **RANK (Rank and explain candidates)**：对候选模型进行排序，并给出推荐理由。
+- **REC (check / recommend output)**：检查/推荐输出，向用户推荐最佳模型。
+- **AUDIT (audit export)**：审计报告导出，以 JSON、CSV 或 SARIF 格式导出审计报告。
+- **RUN (pull/run-ready commands)**：可直接运行的命令，用于拉取和运行推荐的模型。
+
+## 连线、分支与汇聚关系
+- `REG -> NORMALIZE`：Ollama 模型目录流入规范化和去重步骤。
+- `LOCAL -> NORMALIZE`：本地安装的模型流入规范化和去重步骤。
+- `HW -> PROFILE`：硬件检测器的结果流入硬件配置分析步骤。
+- `FLAGS -> FILTER`：命令行选项流入过滤器步骤。
+- `FLAGS -> POLICY`：命令行选项流入策略评估步骤。
+- `NORMALIZE -> FILTER`：规范化后的模型池流入过滤器步骤。
+- `PROFILE -> QUANT`：硬件配置流入量化适配选择步骤。
+- `FILTER -> QUANT`：过滤后的模型流入量化适配选择步骤。
+- `QUANT -> SCORE`：量化后的模型流入评分步骤。
+- `SCORE -> POLICY`：评分后的模型流入策略评估步骤。
+- `SCORE -> RANK`：评分后的模型流入排序步骤。
+- `POLICY -> RANK`：策略评估后的模型流入排序步骤。
+- `RANK -> REC`：排序后的模型流入推荐输出步骤。
+- `POLICY -> AUDIT`：策略评估结果流入审计报告导出步骤。
+- `RANK -> RUN`：排序后的模型流入运行命令生成步骤。
+
+## 仓库语境与术语解释
+- **LLM Checker**：一个 AI 驱动的 CLI 工具，用于分析硬件并推荐最佳 LLM 模型。
+- **Ollama**：一个用于运行 LLM 模型的工具。`src/ollama/client.js` 文件用于与 Ollama 交互。
+- **Dynamic Ollama catalog**：一个包含大量模型信息的动态目录，如果不可用，则使用预先配置的备用模型列表。
+- **4D scoring**：一种多维度评分系统，用于评估模型的质量、速度、适配性和上下文能力。
+- **Policy evaluation**：根据用户定义的策略评估模型，例如审计或强制执行。
+- **Calibration Policy**：用于配置模型选择流程的策略，`src/calibration/policy-routing.js` 文件用于加载和解析校准策略文件。
+- **CLI options**：命令行选项，用于配置 LLM Checker 的行为，例如使用场景、运行时要求、资源限制和策略。
+- **Hardware detector**: 负责检测用户的硬件信息，如 CPU、GPU、RAM 和后端环境。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 LLM Checker 的模型选择流程，从硬件检测、Ollama 模型目录和本地模型等输入开始，经过规范化、过滤、量化、评分和策略评估等步骤，最终输出推荐的模型、审计报告或可直接运行的命令。其中，硬件检测、Ollama 模型目录、4D 评分和策略评估是关键环节。该流程旨在根据用户的硬件配置和使用场景，智能地推荐最佳的 LLM 模型。`src/commands/check.js` 文件实现了该流程的核心功能。

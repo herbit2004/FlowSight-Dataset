@@ -1,0 +1,21 @@
+flowchart LR
+    subgraph Parse
+        HTML[HTML bytes] --> DOM[DOM tree]
+        CSS[CSS bytes] --> Sheets[Stylesheet collection]
+    end
+    
+    subgraph Style
+        DOM --> Styled[Styled tree]
+        Sheets --> Styled
+        Styled --> |cascade + inherit| Computed[Computed values]
+    end
+    
+    subgraph Layout
+        Computed --> BoxTree[Box tree]
+        BoxTree --> |anonymous wrappers| Fragments[Fragment tree]
+    end
+    
+    subgraph Paint
+        Fragments --> DisplayList[Display list]
+        DisplayList --> |stacking order| Raster[Pixmap]
+    end

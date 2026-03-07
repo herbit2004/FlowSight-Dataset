@@ -1,0 +1,21 @@
+graph TD
+    Start[User Requests Scan] --> Select[Select Code Files]
+    Select --> Fetch[Fetch Content]
+    
+    subgraph "Pattern Engine (Fast)"
+        Fetch --> Secrets[Detect Secrets]
+        Fetch --> Patterns[Code Patterns]
+        Fetch --> Deps[Check Dependencies]
+    end
+    
+    subgraph "AI Engine (Deep)"
+        Fetch -->|High Risk Files| AI[Gemini 3 Analysis]
+        AI -->|Context Aware| AIFindings[AI Findings]
+    end
+    
+    Secrets --> Dedup[Deduplicate & Aggregate]
+    Patterns --> Dedup
+    Deps --> Dedup
+    AIFindings --> Dedup
+    
+    Dedup --> Report[Generate Security Report]

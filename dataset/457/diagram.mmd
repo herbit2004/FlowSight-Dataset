@@ -1,0 +1,37 @@
+flowchart LR
+    subgraph "Plan Commands"
+        Direction["Input Selection"]
+        
+        subgraph "Exploration Phase"
+            StartURL["Start URL"]
+            ExploreDepth["Depth: 1-10"]
+            PageLimit["Max Pages"]
+            Navigation["Navigation Graph"]
+            ElementDiscovery["Element Discovery"]
+        end
+        
+        subgraph "Generation Phase"
+            TestTypes["Test Types"]
+            PlanGeneration["Test Plan"]
+            MarkdownSpecs["Markdown Specs"]
+        end
+        
+        subgraph "Output Artifacts"
+            GraphFile["navigation-graph.json"]
+            ElementsFile["elements.json"]
+            TranscriptFile["transcript.jsonl"]
+            TestPlanFile["test-plan.json"]
+            SpecFiles["specs/*.md"]
+        end
+    end
+    
+    Direction --> ExplorePhase
+    Direction --> GeneratePhase
+    
+    ExplorePhase --> OutputArtifacts
+    GeneratePhase --> OutputArtifacts
+    
+    style Direction fill:#e3f2fd,stroke:#2196f3,color:#0d47a1
+    style ExplorePhase fill:#f3e5f5,stroke:#9c27b0,color:#4a148c
+    style GeneratePhase fill:#e8f5e9,stroke:#4caf50,color:#1b5e20
+    style OutputArtifacts fill:#fff3e0,stroke:#ff9800,color:#e65100

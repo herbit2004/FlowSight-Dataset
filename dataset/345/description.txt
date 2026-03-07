@@ -1,0 +1,41 @@
+## 图类型与用途
+这是一个流程图，描述了 SCALLOP-INF 项目中从数据到分析再到多组学分析的流程，重点在于利用遗传数据（pQTL）研究心血管疾病等疾病的遗传基础。该图在仓库中用于概括分析流程，而非展示具体代码实现。
+
+## 图的整体布局
+图的整体布局分为左右两部分，左侧是从 tryggve 数据集到 csd3 数据集的流程，右侧是从 Meta 分析到多组学分析的流程。整体上是从上到下的流程。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可分为数据准备与关联分析阶段、Meta 分析与多组学分析阶段。
+
+## 节点逐项说明
+- **tryggve**：代表输入数据，是 tryggve 数据集，包含基因型和表型数据，是整个分析的起点。
+- **cardio**：代表心血管疾病相关的数据或分析，表明研究的重点之一是心血管疾病。
+- **csd3**：代表一个特定的数据集或分析步骤，可能与心血管疾病相关，也可能是一个中间结果。
+- **csd3Analysis**：表示对 csd3 数据集进行条件分析和精细定位等操作，目的是更精确地找到与心血管疾病相关的基因变异。
+- **software**：表示分析过程中使用的 R 语言包，这些包来自 CRAN 或 GitHub，提供了统计分析和可视化等功能。
+- **tryggveAnalysis**：表示对 tryggve 数据集进行 Meta 分析，使用一系列 shell 脚本（list.sh, format.sh, metal.sh, QCGWAS.sh, analysis.sh）进行数据处理、格式转换、Meta 分析计算和质量控制。
+- **GWAS**：代表全基因组关联分析（GWAS），基于 pQTL 选择和特征分析，目的是找到与特定炎症蛋白水平相关的基因位点。
+- **Prototyping**：代表原型分析阶段，使用一系列 shell 脚本（INTERVAL.sh, cardio.sh 等）进行初步的探索性分析，验证假设，并为后续的多组学分析做准备。
+- **Multi-omics-analysis**：代表多组学分析，将基因组学数据与其他组学数据整合起来，更全面地研究疾病的遗传机制。
+
+## 连线、分支与汇聚关系
+- `tryggve ==> cardio`：tryggve 数据集与心血管疾病相关的数据集或分析相关联。
+- `cardio ==> csd3`：心血管疾病相关的数据集或分析与 csd3 相关联。
+- `csd3 --> csd3Analysis`：csd3 数据集被用于进行条件分析和精细定位。
+- `csd3 --> software`：csd3 分析可能使用了特定的 R 语言包。
+- `tryggveAnalysis --> GWAS`：对 tryggve 数据集进行 Meta 分析的结果被用于 GWAS 分析。
+- `GWAS --> Prototyping`：GWAS 分析的结果被用于原型分析。
+- `Prototyping --> Multi-omics-analysis`：原型分析的结果为多组学分析提供基础。
+
+## 仓库语境与术语解释
+- **tryggve, cardio, csd3**：README 指出这些目录与用于分析的 Linux 集群相关。
+- **Meta analysis**：使用 METAL 软件进行，相关脚本包括 `metal.sh`，用于进行统计分析。
+- **pQTL**：数量性状位点，与炎症相关的蛋白质数量性状位点是研究重点。
+- **GWAS**：全基因组关联分析，用于寻找与特定炎症蛋白水平相关的基因位点。
+- **R Packages**：分析过程中使用了 R 语言包，例如 `gap` 和 `pQTLtools`。
+- **list.sh, format.sh**：`list.sh` 用于生成蛋白质列表，`format.sh` 用于格式化数据，为后续分析做准备。
+- **QCGWAS.sh**：用于质量控制 GWAS 结果。
+- **analysis.sh**：包含用于生成 Manhattan/Q-Q/forest/LocusZoom 图的代码，以及使用 PLINK 进行聚类和条件分析的代码。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图从 tryggve 数据集开始，关联到心血管疾病数据，并进一步分析 csd3 数据集。同时，tryggve 数据集经过 Meta 分析（通过 `metal.sh` 等脚本）和 GWAS，用于原型分析，最终进行多组学分析。其中，Meta 分析和 GWAS 是关键步骤，用于识别与炎症蛋白水平相关的基因位点，并为后续分析提供基础。R 语言包在整个流程中被广泛使用。

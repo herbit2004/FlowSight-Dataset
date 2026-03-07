@@ -1,0 +1,40 @@
+## 图类型与用途
+这是一个流程图，描述了 AutoQA-Agent 如何将 Markdown 格式的测试用例转化为可执行的 Playwright 测试代码。它展示了自动化测试流程的架构，体现了 "Docs-as-Tests" 的核心理念。
+
+## 图的整体布局
+图采用从上到下的布局。流程从 Markdown 测试用例开始，经过解析、Agent 循环执行、浏览器工具操作，最终生成测试产物和可复用的 Playwright 代码。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为四个阶段：用例解析、Agent 驱动执行、结果记录与代码导出。
+
+## 节点逐项说明
+- **Markdown Test Case**：以 Markdown 格式编写的测试用例，是整个流程的起点。
+- **Parser\nExtract Preconditions & Steps**：解析器，负责从 Markdown 测试用例中提取前提条件和测试步骤。对应 `src/markdown/parse-markdown-spec.ts` 文件中的解析逻辑。
+- **Claude Agent SDK\nReAct Loop Execution**：使用 Claude Agent SDK，通过 ReAct 循环执行测试步骤。ReAct 是一种让 Agent 先思考 (Reasoning) 再行动 (Acting) 的模式，使其能够更智能地处理复杂的测试场景。
+- **MCP Browser Tools\nsnapshot/navigate/click/fill**：MCP (Model-Control-Policy) 浏览器工具，提供了一系列操作浏览器的功能，例如快照、导航、点击和填充等。
+- **Playwright Engine\nActual Browser Operations**：实际执行浏览器操作的引擎，根据 MCP 浏览器工具的指令，控制浏览器进行各种操作。
+- **Artifacts\nScreenshots/Snapshots/Logs/Traces**：测试执行过程中产生的各种产物，包括屏幕截图、快照、日志和追踪信息，用于调试和分析测试结果。
+- **Action IR\n.autoqa/runs/<runId>/ir.jsonl**：记录测试执行过程中的动作指令，存储在 `.autoqa/runs/<runId>/ir.jsonl` 文件中。IR (Intermediate Representation) 是一种中间表示形式，方便后续处理。
+- **Export Code\ntests/autoqa/*.spec.ts**：将 Action IR 转换为 Playwright 测试代码，并导出到 `tests/autoqa/*.spec.ts` 文件中，以便后续复用和维护。
+
+## 连线、分支与汇聚关系
+- `Markdown Test Case -> Parser\nExtract Preconditions & Steps`：Markdown 测试用例首先被解析器处理。
+- `Parser\nExtract Preconditions & Steps -> Claude Agent SDK\nReAct Loop Execution`：解析器将提取的测试步骤交给 Claude Agent SDK 执行。
+- `Claude Agent SDK\nReAct Loop Execution -> MCP Browser Tools\nsnapshot/navigate/click/fill`：Claude Agent SDK 驱动 MCP 浏览器工具执行操作。
+- `MCP Browser Tools\nsnapshot/navigate/click/fill -> Playwright Engine\nActual Browser Operations`：MCP 浏览器工具的指令被传递给 Playwright 引擎。
+- `Playwright Engine\nActual Browser Operations -> Artifacts\nScreenshots/Snapshots/Logs/Traces`：Playwright 引擎在执行过程中生成各种测试产物。
+- `Playwright Engine\nActual Browser Operations -> Action IR\n.autoqa/runs/<runId>/ir.jsonl`：Playwright 引擎的执行过程被记录为 Action IR。
+- `Action IR\n.autoqa/runs/<runId>/ir.jsonl -> Export Code\ntests/autoqa/*.spec.ts`：Action IR 被转换为 Playwright 测试代码并导出。
+
+## 仓库语境与术语解释
+- **Markdown Test Case**：使用 Markdown 格式编写的测试用例，作为测试流程的输入。
+- **Claude Agent SDK**：AutoQA-Agent 依赖 Claude Agent SDK 来管理推理循环，优化浏览器工具的质量。
+- **ReAct Loop**：ReAct (Reasoning and Acting) 循环是一种让 Agent 先思考 (Reasoning) 再行动 (Acting) 的模式，使其能够更智能地处理复杂的测试场景。
+- **MCP Browser Tools**：MCP (Model-Control-Policy) 浏览器工具提供了一系列操作浏览器的功能，例如 `snapshot`、`navigate`、`click` 和 `fill` 等。
+- **Playwright Engine**：AutoQA-Agent 使用 Playwright 引擎来执行实际的浏览器操作。`playwright.config.ts` 文件配置了 Playwright 的相关设置。
+- **Action IR**：Action IR (Intermediate Representation) 是一种中间表示形式，记录测试执行过程中的动作指令，方便后续处理和代码生成。
+- **Docs-as-Tests**：AutoQA-Agent 旨在实现 "Docs-as-Tests" 的目标，即从文档直接生成可执行的自动化测试。
+- **`autoqa run`**：`autoqa run` 是 AutoQA-Agent 的一个 CLI 命令，用于执行测试用例。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 AutoQA-Agent 的自动化测试流程。流程从 Markdown 测试用例开始，经过解析器提取测试步骤，然后 Claude Agent SDK 使用 ReAct 循环驱动 MCP 浏览器工具，进而通过 Playwright 引擎执行实际的浏览器操作。在执行过程中，会生成各种产物用于调试和分析，同时 Action IR 会记录执行过程中的动作指令，并最终导出为 Playwright 测试代码，实现“Docs-as-Tests”的目标。其中，Claude Agent SDK 和 Playwright 引擎是两个关键组件。

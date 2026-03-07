@@ -1,0 +1,22 @@
+flowchart TD
+    AI[AI Agent: Claude/Cursor/Copilot]
+    
+    AI -->|MCP Protocol - JSON-RPC over stdio| MCP
+    
+    MCP[mcp_cheatengine.py - Python MCP Server]
+    
+    MCP <-->|Named Pipe - Async| PIPE
+    
+    PIPE["\\.\\pipe\\CE_MCP_Bridge_v99"]
+    
+    PIPE <--> CE
+    
+    subgraph CE[Cheat Engine - DBVM Mode]
+        subgraph LUA[ce_mcp_bridge.lua]
+            WORKER[Worker Thread - Blocking I/O]
+            MAIN[Main Thread - GUI + CE API]
+            WORKER <-->|Sync| MAIN
+        end
+    end
+    
+    MAIN -->|Memory Access| TARGET[Target .exe]

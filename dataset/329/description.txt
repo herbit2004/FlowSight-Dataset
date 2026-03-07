@@ -1,0 +1,96 @@
+## 图类型与用途
+这是一个架构图，用于展示 Weaver 平台的整体架构，包括前端、API 网关、Agent 编排、工具生态、存储和外部服务等多个层次的组件及其相互关系。该图旨在帮助开发者理解 Weaver 平台的内部结构和数据/控制流走向，对应 `docs/architecture.md` 中“核心架构图（概览）”一节。
+
+## 图的整体布局
+图采用从上到下的布局，将系统划分为多个层次，从前端层开始，依次经过 API 网关层、Agent 编排层、工具层、存储层，以及外部服务。数据和控制流主要沿着这个方向流动。
+
+## 分组/子图/阶段说明
+图中包含多个显式子图，分别对应不同的系统层次：
+- **前端层 Frontend**：包含用户界面和事件处理器，负责用户交互和事件处理。
+- **API 网关层 API Gateway**：包含 FastAPI Server 和中间件，负责 API 路由、认证、跨域处理和限流。
+- **Agent 编排层 Agent Orchestration**：包含智能路由器和各种 Agent 节点，负责根据用户请求选择不同的策略和工具。
+- **工具层 Tool Ecosystem**：包含各种工具，如沙箱、浏览器、桌面自动化、搜索等，提供各种功能支持。
+- **存储层 Storage Layer**：包含 PostgreSQL、Redis、Mem0 和 FileStore，负责数据存储和缓存。
+- **外部服务 External Services**：包含 LLM 服务、Tavily 搜索 API、E2B 沙箱服务和 DashScope，提供外部能力支持。
+
+## 节点逐项说明
+- **UI (Next.js Web UI)**：用户界面，使用 Next.js 构建。
+- **EventHandler (事件处理器)**：处理来自后端服务器发送的 SSE (Server-Sent Events) 流。
+- **BrowserStream (浏览器实时流)**：通过 WebSocket 提供浏览器实时流功能。
+- **FastAPI (FastAPI Server)**：API 网关，使用 FastAPI 构建。
+- **Auth (认证中间件)**：负责用户认证。
+- **CORS (CORS 处理)**：处理跨域资源共享。
+- **Rate (限流控制)**：限制 API 请求速率。
+- **Router (智能路由器)**：根据用户请求选择不同的策略，对应 `agent/core/smart_router.py`。
+- **DirectNode (直接回答)**：直接回答用户问题。
+- **WebNode (网页搜索)**：通过网页搜索回答用户问题。
+- **AgentNode (工具调用)**：调用工具来完成任务。
+- **DeepNode (深度研究)**：进行多轮研究来回答用户问题，对应 `agent/workflows/deep_agent.py`。
+- **ToolRegistry (工具注册表)**：注册和管理可用的工具，对应 `tools/core/registry.py`。
+- **Sandbox (E2B 沙箱工具)**：提供代码执行和文件操作的沙箱环境。
+- **Browser (浏览器自动化)**：提供浏览器自动化功能。
+- **Desktop (桌面自动化)**：提供桌面自动化功能。
+- **Search (搜索与爬虫)**：提供搜索和爬虫功能。
+- **MCP (MCP 工具桥)**：桥接第三方工具。
+- **CodeExec (代码执行)**：执行代码。
+- **FileOps (文件操作)**：进行文件操作。
+- **DocGen (文档生成)**：生成文档。
+- **Playwright (Playwright)**：使用 Playwright 进行浏览器自动化。
+- **CDP (Chrome DevTools)**：使用 Chrome DevTools 进行浏览器自动化。
+- **PG (PostgreSQL 会话存储)**：使用 PostgreSQL 存储会话信息。
+- **Redis (Redis 缓存)**：使用 Redis 进行缓存。
+- **Mem0 (Mem0 长期记忆)**：使用 Mem0 存储长期记忆。
+- **FileStore (文件存储)**：存储文件、截图和日志。
+- **LLM (LLM 服务)**：提供 LLM 服务，例如 OpenAI、DeepSeek、Claude。
+- **TavilyAPI (Tavily 搜索 API)**：提供 Tavily 搜索 API。
+- **E2B (E2B 沙箱服务)**：提供 E2B 沙箱服务。
+- **DashScope (DashScope ASR/TTS)**：提供语音识别和语音合成服务。
+
+## 连线、分支与汇聚关系
+- `UI -> EventHandler`：UI 通过 SSE Stream 向 EventHandler 发送事件流。
+- `UI -> BrowserStream`：UI 通过 WebSocket 向 BrowserStream 发送实时流。
+- `UI -> FastAPI`：UI 向 FastAPI Server 发送请求。
+- `FastAPI -> Auth`：FastAPI Server 经过认证中间件处理。
+- `FastAPI -> CORS`：FastAPI Server 经过 CORS 处理。
+- `FastAPI -> Rate`：FastAPI Server 经过限流控制。
+- `FastAPI -> Router`：FastAPI Server 将请求路由到智能路由器。
+- `Router -> DirectNode`：智能路由器根据策略将请求路由到直接回答节点。
+- `Router -> WebNode`：智能路由器根据策略将请求路由到网页搜索节点。
+- `Router -> AgentNode`：智能路由器根据策略将请求路由到工具调用节点。
+- `Router -> DeepNode`：智能路由器根据策略将请求路由到深度研究节点。
+- `AgentNode -.-> LLM`：工具调用节点使用 LLM 服务。
+- `WebNode -.-> TavilyAPI`：网页搜索节点使用 Tavily 搜索 API。
+- `DeepNode -.-> TavilyAPI`：深度研究节点使用 Tavily 搜索 API。
+- `AgentNode -> ToolRegistry`：工具调用节点使用工具注册表。
+- `DeepNode -> MultiEpoch`：深度研究节点使用多轮研究引擎。
+- `ToolRegistry -> Sandbox`：工具注册表提供 E2B 沙箱工具。
+- `ToolRegistry -> Browser`：工具注册表提供浏览器自动化工具。
+- `ToolRegistry -> Desktop`：工具注册表提供桌面自动化工具。
+- `ToolRegistry -> Search`：工具注册表提供搜索与爬虫工具。
+- `ToolRegistry -> MCP`：工具注册表提供 MCP 工具桥。
+- `Sandbox -> CodeExec`：E2B 沙箱工具提供代码执行功能。
+- `Sandbox -> FileOps`：E2B 沙箱工具提供文件操作功能。
+- `Sandbox -> DocGen`：E2B 沙箱工具提供文档生成功能。
+- `Browser -> Playwright`：浏览器自动化工具使用 Playwright。
+- `Browser -> CDP`：浏览器自动化工具使用 Chrome DevTools。
+- `Sandbox -.-> E2B`：E2B 沙箱工具使用 E2B 沙箱服务。
+- `Search -.-> TavilyAPI`：搜索与爬虫工具使用 Tavily 搜索 API。
+- `FastAPI -> PG`：FastAPI Server 访问 PostgreSQL 会话存储。
+- `FastAPI -> Redis`：FastAPI Server 访问 Redis 缓存。
+- `AgentNode -> Mem0`：工具调用节点访问 Mem0 长期记忆。
+- `Browser -> FileStore`：浏览器自动化工具访问文件存储。
+- `FastAPI -> FileStore`：FastAPI Server 访问文件存储。
+
+## 仓库语境与术语解释
+- **Frontend (Next.js Web UI)**：使用 Next.js 构建的前端用户界面，负责用户交互和展示。
+- **FastAPI Server**：使用 FastAPI 框架构建的后端 API 网关，负责接收和处理来自前端的请求。
+- **LangGraph**：Weaver 平台的核心组件，用于工作流编排、工具调用和流式输出，在 `docs/architecture.md` 中被提及。
+- **智能路由器 (Router)**：根据用户查询的类型，自动选择合适的执行策略，例如直接回答、网页搜索、工具调用或深度研究，对应 `agent/core/smart_router.py`。
+- **ToolRegistry**：动态工具注册和管理系统，用于管理、发现、验证和跟踪工具，对应 `tools/core/registry.py`。
+- **E2B 沙箱**：提供安全的代码执行环境，用于执行用户提供的代码或工具生成的代码。
+- **MCP (Model Context Protocol)**：用于桥接第三方工具的协议，允许 Weaver 平台与外部模型和服务进行集成。
+- **LLM 服务 (OpenAI/DeepSeek/Claude)**：提供语言模型服务的外部服务，用于生成文本、回答问题等。
+- **SSE (Server-Sent Events)**：一种服务器推送技术，用于将后端事件实时推送到前端，实现流式体验。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+Weaver 平台的架构从前端 UI 开始，用户请求通过 API 网关层的 FastAPI Server，经过认证、CORS 处理和限流后，到达 Agent 编排层的智能路由器。路由器根据请求类型选择不同的策略，例如直接回答、网页搜索、工具调用或深度研究。工具调用节点通过工具注册表调用各种工具，例如 E2B 沙箱、浏览器自动化、搜索等。深度研究节点使用 Tavily 搜索 API 进行多轮研究。数据存储在 PostgreSQL、Redis、Mem0 和 FileStore 中。整个架构集成了 LLM 服务、Tavily 搜索 API、E2B 沙箱服务和 DashScope 等外部服务，实现了智能化的 AI Agent 平台。`docs/architecture.md` 概括了该架构。

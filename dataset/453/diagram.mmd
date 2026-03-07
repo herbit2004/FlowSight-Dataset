@@ -1,0 +1,15 @@
+flowchart TD
+  T[Developer Task] --> OR[AgenticCodingPipeline]
+  OR --> C1[GPT Coding Agent]
+  OR --> C2[Claude Coding Agent]
+  C1 --> OR
+  C2 --> OR
+  OR --> F[Ruff Formatter]
+  F --> OR
+  OR --> TS[Claude Test Author + Pytest Runner]
+  TS --> OR
+  OR --> QA[Gemini QA Reviewer]
+  QA -->|PASS?| OR
+  OR --> OUT[Ready-to-commit Patch]
+  OR -. feedback .-> C1
+  OR -. feedback .-> C2

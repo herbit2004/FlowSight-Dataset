@@ -1,0 +1,46 @@
+## 图类型与用途
+这是一个云应用架构图，展示了从边缘到数据层的服务组件以及它们之间的交互关系。它在仓库中的作用是作为一个基于 AWS 云平台的微服务架构示例，用于 Cloudwright 工具的演示和测试。
+
+## 图的整体布局
+图整体采用从上到下的分层布局，从顶部的边缘层开始，依次经过接入层、计算层，最后到达数据层。数据流从上到下，表示请求的处理流程。
+
+## 分组/子图/阶段说明
+图中通过 subgraph 显式地分为了四个层级，分别对应不同的功能区域：
+- **Tier 0 - Edge**：边缘层，负责内容分发和加速。
+- **Tier 1 - Ingress**：接入层，负责负载均衡和流量路由。
+- **Tier 2 - Compute**：计算层，包含多个微服务和事件队列。
+- **Tier 3 - Data**：数据层，提供数据存储和缓存服务。
+
+## 节点逐项说明
+- **CloudFront CDN**：位于边缘层，用于缓存静态内容，加速用户访问，并提供安全防护。
+- **Application Load Balancer**：位于接入层，负责将外部流量路由到不同的后端服务，实现负载均衡。
+- **API Service**：位于计算层，处理 API 请求，是系统的核心服务之一。
+- **User Service**：位于计算层，处理用户相关的操作，如注册、登录等。
+- **Order Service**：位于计算层，处理订单相关的操作，如创建、支付等。
+- **SQS Event Queue**：位于计算层，用于异步处理事件，解耦服务之间的依赖关系。
+- **ElastiCache Redis**：位于数据层，用于缓存数据，提高 API 服务的性能。
+- **RDS PostgreSQL**：位于数据层，用于存储持久化数据。
+
+## 连线、分支与汇聚关系
+- `CloudFront CDN -> Application Load Balancer`：用户通过 HTTPS 协议访问 CloudFront CDN，CDN 将请求转发到 Application Load Balancer。
+- `Application Load Balancer -> API Service`：ALB 根据 URL 路径 `/api/*` 将请求路由到 API Service。
+- `Application Load Balancer -> User Service`：ALB 根据 URL 路径 `/users/*` 将请求路由到 User Service。
+- `Application Load Balancer -> Order Service`：ALB 根据 URL 路径 `/orders/*` 将请求路由到 Order Service。
+- `API Service -> RDS PostgreSQL`：API Service 需要访问 RDS PostgreSQL 数据库进行数据读写。
+- `User Service -> RDS PostgreSQL`：User Service 需要访问 RDS PostgreSQL 数据库进行数据读写。
+- `Order Service -> RDS PostgreSQL`：Order Service 需要访问 RDS PostgreSQL 数据库进行数据读写。
+- `API Service -> ElastiCache Redis`：API Service 需要访问 ElastiCache Redis 缓存来提高性能。
+- `Order Service -> SQS Event Queue`：Order Service 发布事件到 SQS Event Queue。
+- `API Service -> SQS Event Queue`：API Service 消费 SQS Event Queue 中的事件，形成汇聚关系。
+
+## 仓库语境与术语解释
+- **CloudFront CDN**：AWS 提供的内容分发网络服务，用于加速静态和动态内容的传输。
+- **Application Load Balancer (ALB)**：AWS 提供的应用负载均衡服务，用于将流量分发到多个后端服务。根据 `catalog/aws/networking.json`，Cloudwright 可以对 ALB 进行成本估算。
+- **API Service, User Service, Order Service**：微服务架构中的三个核心服务，分别处理 API 请求、用户操作和订单操作。
+- **SQS Event Queue**：AWS 提供的消息队列服务，用于实现服务之间的异步通信。
+- **ElastiCache Redis**：AWS 提供的内存数据缓存服务，用于提高数据访问速度。
+- **RDS PostgreSQL**：AWS 提供的关系型数据库服务，用于存储持久化数据。Cloudwright 使用 `catalog/aws/database.json` 中的数据来估算 RDS 的成本。
+- **Tier 0 - Edge, Tier 1 - Ingress, Tier 2 - Compute, Tier 3 - Data**：表示云应用架构的不同层级，从边缘到数据层，每一层负责不同的功能。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该架构图展示了一个典型的三层微服务架构，从 CloudFront CDN 接收请求，通过 Application Load Balancer 将请求分发到 API Service, User Service, Order Service 三个计算服务。这些服务依赖于 RDS PostgreSQL 和 ElastiCache Redis 进行数据存储和缓存。Order Service 通过 SQS Event Queue 发布事件，API Service 消费这些事件。整体架构清晰地展示了请求的流向和各个组件之间的依赖关系，是一个常见的云原生应用架构模式。Cloudwright 可以根据 `catalog/aws/compute.json`、`catalog/aws/database.json` 和 `catalog/aws/networking.json` 中的数据对该架构进行成本估算。

@@ -1,0 +1,62 @@
+## 图类型与用途
+这是一个流程图，描述了使用 GitHub Actions、Terraform 和 AWS ECS 部署 Django 应用的自动化 CI/CD 流程。它在仓库中的作用是展示代码提交后，如何自动构建 Docker 镜像、推送镜像到 AWS ECR，并使用 Terraform 更新 AWS ECS 服务，从而实现应用的自动部署。
+
+## 图的整体布局
+图整体采用从上到下的布局。流程从 GitHub Actions 开始，经过 Terraform，最终到达 AWS ECS。
+
+## 分组/子图/阶段说明
+图中包含三个子图：GitHub_Actions、Terraform 和 AWS_ECS，分别代表三个主要阶段。
+
+## 节点逐项说明
+- **GitHub Push to main**：指向主分支的推送事件，触发整个 GitHub Actions 工作流的开始。
+- **Trigger GitHub Actions Workflow**：触发 GitHub Actions 工作流。
+- **Build Docker Image**：构建 Docker 镜像。
+- **Tag Docker Image with Commit SHA**：使用 Commit SHA 标记 Docker 镜像。
+- **Push Image to ECR**：将 Docker 镜像推送到 AWS ECR (Elastic Container Registry)。
+- **Set IMAGE_URI Environment Variable**：设置镜像 URI 环境变量，传递给 Terraform。
+- **Initialize Terraform**：初始化 Terraform。
+- **Run terraform plan with IMAGE_URI**：使用镜像 URI 运行 Terraform 计划，预览变更。
+- **Apply terraform plan**：应用 Terraform 计划，执行实际的资源变更。
+- **Initialize Backend with S3 and DynamoDB**：使用 S3 和 DynamoDB 初始化 Terraform 后端，用于存储状态。
+- **Load Variables from variables.tf**：从 `terraform/variables.tf` 文件加载变量，例如 AWS 区域和 ECS 集群名称。
+- **Use container_definitions.json.tpl**：使用 `terraform/container_definitions.json.tpl` 模板文件，定义容器配置，例如容器名称和镜像。
+- **Create/Update ECS Task Definition**：创建或更新 ECS 任务定义。
+- **Update ECS Service**：更新 ECS 服务，使其使用新的任务定义。
+- **Output Information from outputs.tf**：从 `terraform/outputs.tf` 文件输出信息，例如 ECS 集群 ID 和 ECS 服务名称。
+- **ECR Stores Docker Image**：ECR 存储 Docker 镜像。
+- **ECS Pulls Image from ECR**：ECS 从 ECR 拉取 Docker 镜像。
+- **Run Containers using ECS Task Definition**：使用 ECS 任务定义运行容器。
+- **ECS Service Updated with New Containers**：ECS 服务更新，使用新的容器。
+
+## 连线、分支与汇聚关系
+- `GitHub Push to main -> Trigger GitHub Actions Workflow`：推送事件触发 GitHub Actions 工作流。
+- `Trigger GitHub Actions Workflow -> Build Docker Image`：触发工作流后构建 Docker 镜像。
+- `Build Docker Image -> Tag Docker Image with Commit SHA`：构建镜像后，使用 Commit SHA 标记镜像。
+- `Tag Docker Image with Commit SHA -> Push Image to ECR`：标记镜像后，推送到 ECR。
+- `Push Image to ECR -> Set IMAGE_URI Environment Variable`：推送镜像后，设置镜像 URI 环境变量。
+- `Set IMAGE_URI Environment Variable -> Initialize Terraform`：设置环境变量后，初始化 Terraform。
+- `Initialize Terraform -> Run terraform plan with IMAGE_URI`：初始化 Terraform 后，运行 Terraform 计划。
+- `Run terraform plan with IMAGE_URI -> Apply terraform plan`：运行计划后，应用 Terraform 计划。
+- `Apply terraform plan -> Initialize Backend with S3 and DynamoDB`：应用 Terraform 计划后，初始化 Terraform 后端。
+- `Initialize Backend with S3 and DynamoDB -> Load Variables from variables.tf`：初始化后端后，加载变量。
+- `Load Variables from variables.tf -> Use container_definitions.json.tpl`：加载变量后，使用容器定义模板。
+- `Use container_definitions.json.tpl -> Create/Update ECS Task Definition`：使用模板后，创建或更新 ECS 任务定义。
+- `Create/Update ECS Task Definition -> Update ECS Service`：创建或更新任务定义后，更新 ECS 服务。
+- `Update ECS Service -> Output Information from outputs.tf`：更新服务后，输出信息。
+- `Apply terraform plan -> Initialize Backend with S3 and DynamoDB`：应用 Terraform 计划后，初始化 Terraform 后端。
+- `Create/Update ECS Task Definition -> ECS Pulls Image from ECR`：创建或更新 ECS 任务定义后，ECS 从 ECR 拉取镜像。
+- `ECR Stores Docker Image -> ECS Pulls Image from ECR`：ECR 存储 Docker 镜像，ECS 从 ECR 拉取镜像。
+- `ECS Pulls Image from ECR -> Run Containers using ECS Task Definition`：拉取镜像后，使用 ECS 任务定义运行容器。
+- `Run Containers using ECS Task Definition -> ECS Service Updated with New Containers`：运行容器后，ECS 服务更新。
+
+## 仓库语境与术语解释
+- **GitHub Actions**: GitHub 的自动化工作流，用于构建、测试和部署代码，配置文件位于 `.github/workflows/deploy.yml`。
+- **Terraform**: 基础设施即代码 (IaC) 工具，用于管理 AWS 资源，相关配置文件位于 `terraform/` 目录下，例如 `terraform/main.tf`、`terraform/variables.tf` 和 `terraform/outputs.tf`。
+- **AWS ECS**: AWS Elastic Container Service，用于运行 Docker 容器。
+- **ECR**: AWS Elastic Container Registry，用于存储 Docker 镜像。
+- **container_definitions.json.tpl**: Terraform 模板文件，用于定义 ECS 任务中的容器配置，例如镜像、端口映射和环境变量。
+- **variables.tf**: Terraform 变量定义文件，用于配置部署参数，例如 AWS 区域、ECS 集群名称和服务名称。
+- **outputs.tf**: Terraform 输出定义文件，用于输出部署后的资源信息，例如 ECS 集群 ID 和服务名称。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Django 应用的自动化 CI/CD 流程，从 GitHub Push 事件开始，触发 GitHub Actions 工作流，构建 Docker 镜像并推送到 ECR。随后，Terraform 初始化并应用计划，创建或更新 ECS 任务定义，并更新 ECS 服务。ECS 从 ECR 拉取镜像并运行容器，最终更新 ECS 服务。其中，`variables.tf` 和 `container_definitions.json.tpl` 是 Terraform 配置的关键文件，用于定义部署参数和容器配置。

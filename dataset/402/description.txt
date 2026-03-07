@@ -1,0 +1,54 @@
+## 图类型与用途
+这是一个系统架构图，展示了 Flutter Template Project 的整体架构和流程，包括 GitHub 集成、Flutter 架构和质量保证流程。它在仓库中用于概览整个项目的架构，方便开发者理解各个模块之间的关系。
+
+## 图的整体布局
+图采用从上到下的布局，分为三个主要子图，分别代表 GitHub 集成、Flutter 架构和质量保证流程。整体流程从 GitHub Issues 开始，最终到 Production Release。
+
+## 分组/子图/阶段说明
+- **GitHub Integration**：描述了 GitHub Issues 如何通过 Claude Code AI 辅助开发，并利用 Git Worktree 隔离开发环境。
+- **Flutter Architecture**：展示了 Flutter 架构中 Riverpod 状态管理、Go Router 路由导航和 Slang 国际化的关系，最终呈现为 UI 组件。
+- **Quality Assurance Pipeline**：描述了 AI 评审、静态分析、自动化测试和 GitHub Actions 如何确保代码质量，最终发布到生产环境。
+
+## 节点逐项说明
+- **GitHub Issues**：代表 GitHub 的问题跟踪系统，是任务管理的起点。
+- **Claude Code /task**：代表 Claude Code AI，它根据 GitHub Issues 生成代码或执行任务。
+- **Git Worktree**：代表 Git 的工作区，用于隔离开发环境。
+- **Isolated Development**：代表隔离的开发环境，允许开发者在独立的环境中进行开发，避免影响主分支。
+- **Riverpod State**：代表 Riverpod 状态管理，用于管理应用程序的状态。
+- **Go Router Navigation**：代表 Go Router 路由导航，用于管理应用程序的页面跳转。
+- **Slang i18n**：代表 Slang 国际化，用于支持应用程序的多语言。
+- **UI Components**：代表用户界面组件，是应用程序的最终呈现。
+- **AI Review Cycles**：代表 AI 评审周期，使用 AI 进行代码评审。
+- **Static Analysis**：代表静态代码分析，用于检查代码中的潜在问题。
+- **Automated Tests**：代表自动化测试，用于验证代码的正确性。
+- **GitHub Actions**：代表 GitHub Actions，用于自动化构建、测试和部署流程。
+- **Quality Gates**：代表质量门禁，用于确保代码质量符合标准。
+- **Production Release**：代表最终的生产环境发布。
+
+## 连线、分支与汇聚关系
+- `GitHub Issues -> Claude Code /task`：GitHub Issues 被 Claude Code AI 处理。
+- `Claude Code /task -> Git Worktree`：Claude Code 生成的代码或任务在 Git Worktree 中进行隔离开发。
+- `Git Worktree -> Isolated Development`：在隔离的开发环境中进行开发。
+- `Isolated Development -> Riverpod State`：隔离开发的代码影响 Riverpod 状态管理。
+- `Riverpod State -> Go Router Navigation`：Riverpod 管理应用程序的状态，影响 Go Router 页面导航。
+- `Go Router Navigation -> Slang i18n`：Go Router 影响 Slang 国际化。
+- `Slang i18n -> UI Components`：Slang 提供国际化支持，最终呈现为 UI 组件。
+- `GitHub Issues -> AI Review Cycles`：GitHub Issues 触发 AI 评审周期。
+- `AI Review Cycles -> Static Analysis`：AI 评审代码，进行静态代码分析。
+- `Static Analysis -> Automated Tests`：进行静态代码分析后，运行自动化测试。
+- `Automated Tests -> GitHub Actions`：自动化测试通过 GitHub Actions 自动化流程。
+- `GitHub Actions -> Quality Gates`：GitHub Actions 流程通过质量门禁。
+- `Quality Gates -> Production Release`：通过质量门禁后，发布到生产环境。
+- `Claude Code /task -> AI Review Cycles`：Claude Code 生成的代码也会进入 AI 评审流程。
+
+## 仓库语境与术语解释
+- **GitHub Issues**：用于任务管理，是整个开发流程的起点。
+- **Claude Code**：一个 AI 代码助手，用于根据 GitHub Issues 生成代码或执行任务。参考 `CLAUDE.md`，该文件为 Claude Code 提供了在仓库中工作的指导。
+- **Git Worktree**：Git 的工作区，用于隔离开发环境，允许多个分支并行开发。
+- **Riverpod**：Flutter 的状态管理库，用于管理应用程序的状态。
+- **Go Router**：Flutter 的路由库，用于管理应用程序的页面跳转。参考 `app/lib/router/app_router.dart`，该文件定义了应用程序的路由配置。
+- **Slang i18n**：用于 Flutter 应用程序的国际化，支持多语言。参考 `app/lib/core/gen/slang.g.dart`，该文件是 Slang 自动生成的代码。
+- **GitHub Actions**：GitHub 的 CI/CD 服务，用于自动化构建、测试和部署流程。参考 `.github/workflows/check-pr.yml`，该文件定义了 PR 检查的工作流程。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该架构图展示了一个基于 GitHub 集成的 Flutter 应用开发流程。GitHub Issues 作为任务的起点，通过 Claude Code AI 辅助开发，利用 Git Worktree 隔离开发环境。Flutter 架构采用 Riverpod 进行状态管理，Go Router 进行路由导航，Slang 进行国际化。同时，通过 AI 评审、静态分析、自动化测试和 GitHub Actions 确保代码质量，最终发布到生产环境。整个流程强调了 AI 辅助开发、GitHub 集成和质量保证的重要性，其中 Claude Code 和 GitHub Actions 是两个关键环节。

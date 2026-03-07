@@ -1,0 +1,95 @@
+flowchart TB
+    subgraph USER["👤 User Interface"]
+        WEB[Web Browser<br/>localhost:5000]
+    end
+
+    subgraph FLASK["🌐 Flask Backend"]
+        API[REST API + WebSocket]
+        AUTH[Authentication<br/>CSRF Protection]
+        ROUTES[Research Routes]
+    end
+
+    subgraph RESEARCH["🔬 Research Engine"]
+        STRAT[Strategy Selector<br/>20+ strategies]
+        QGEN[Question Generator]
+        EXEC[Search Executor]
+        SYNTH[Report Synthesizer]
+    end
+
+    subgraph LLM["🤖 LLM Providers"]
+        direction TB
+        LOCAL_LLM[/"🏠 Local LLMs"\]
+        OLLAMA[Ollama]
+        LMSTUDIO[LM Studio]
+        CLOUD_LLM[/"☁️ Cloud LLMs"\]
+        OPENAI[OpenAI]
+        ANTHROPIC[Anthropic]
+        GEMINI[Google Gemini]
+        OPENROUTER[OpenRouter<br/>100+ models]
+    end
+
+    subgraph SEARCH["🔍 Search Engines"]
+        direction TB
+        LOCAL_SEARCH[/"🏠 Local Search"\]
+        SEARXNG[SearXNG]
+        ELASTIC[Elasticsearch]
+        LIBRARY[Document Library]
+        WEB_SEARCH[/"🌐 Web Search"\]
+        TAVILY[Tavily]
+        BRAVE[Brave]
+        DDG[DuckDuckGo]
+        ACADEMIC[/"📚 Academic"\]
+        ARXIV[ArXiv]
+        PUBMED[PubMed]
+        SEMANTIC[Semantic Scholar]
+    end
+
+    subgraph STORAGE["💾 Storage Layer"]
+        SQLCIPHER[(SQLCipher DB<br/>AES-256 Encrypted)]
+        VECTORS[(Vector Store<br/>Embeddings)]
+        FILES[(File Storage<br/>PDFs & Docs)]
+    end
+
+    subgraph OUTPUT["📄 Output"]
+        MD[Markdown]
+        PDF[PDF Export]
+        LATEX[LaTeX]
+        QUARTO[Quarto]
+        RIS[RIS/BibTeX]
+    end
+
+    WEB <--> API
+    API --> AUTH
+    AUTH --> ROUTES
+    ROUTES --> STRAT
+
+    STRAT --> QGEN
+    QGEN --> EXEC
+    EXEC --> SYNTH
+
+    EXEC <--> OLLAMA & LMSTUDIO
+    EXEC <--> OPENAI & ANTHROPIC & GEMINI & OPENROUTER
+
+    EXEC <--> SEARXNG & ELASTIC & LIBRARY
+    EXEC <--> TAVILY & BRAVE & DDG
+    EXEC <--> ARXIV & PUBMED & SEMANTIC
+
+    SYNTH --> SQLCIPHER
+    LIBRARY <--> VECTORS
+    LIBRARY <--> FILES
+
+    SYNTH --> MD & PDF & LATEX & QUARTO & RIS
+
+    LOCAL_LLM ~~~ OLLAMA
+    CLOUD_LLM ~~~ OPENAI
+    LOCAL_SEARCH ~~~ SEARXNG
+    WEB_SEARCH ~~~ TAVILY
+    ACADEMIC ~~~ ARXIV
+
+    style USER fill:#e1f5fe
+    style FLASK fill:#fff3e0
+    style RESEARCH fill:#f3e5f5
+    style LLM fill:#e8f5e9
+    style SEARCH fill:#fce4ec
+    style STORAGE fill:#fff8e1
+    style OUTPUT fill:#e0f2f1

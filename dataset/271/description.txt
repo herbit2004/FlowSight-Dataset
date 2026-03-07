@@ -1,0 +1,68 @@
+## 图类型与用途
+这是一个流程图，展示了 DeepMCPAgent 的整体架构和数据流。它描述了用户如何通过 Prompt 与 Agent 交互，Agent 如何利用 Model Context Protocol (MCP) 工具完成任务，并将结果返回给用户。该图在仓库中的作用是概括智能体的运行时流程。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是用户输入和 MCP 服务器，右侧是 Agent Runtime 和 Tooling Layer。整体呈现一个数据流动的过程，从用户输入开始，经过 Agent 的处理，最终返回结果。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表不同的组件或阶段：
+- **User / App**：代表用户或应用程序，是整个流程的起点。
+- **Agent Runtime**：代表智能体运行时，是核心组件，负责处理用户请求、调用工具、生成最终答案。
+- **Tooling Layer (MCP)**：代表工具层，负责加载和封装 MCP 工具，使其可以在 LangChain 中使用。
+- **FastMCP Client**：代表 FastMCP 客户端，用于与 MCP 服务器通信。
+- **MCP Servers (HTTP/SSE)**：代表 MCP 服务器，提供各种工具服务。
+
+## 节点逐项说明
+- **Prompt / Task**：用户输入的查询或需要解决的任务。
+- **CLI (Typer)**：用户通过命令行与智能体交互的方式。
+- **Python API**：用户通过 Python 代码与智能体交互的方式。
+- **build_deep_agent()**：构建 DeepMCPAgent 的函数或方法。
+- **prompt.py (DEFAULT_SYSTEM_PROMPT)**：包含智能体的系统提示，定义其行为和目标。
+- **Agent Graph**：智能体的核心逻辑，使用 LangGraph 实现。
+- **DeepAgents loop (if installed)**：如果安装了 DeepAgents，则使用其循环逻辑。
+- **LangGraph ReAct (fallback)**：如果没有安装 DeepAgents，则使用 LangGraph 的 ReAct 模式作为回退方案。
+- **LangChain Model (instance or init_chat_model(provider-id))**：用于生成文本的语言模型，可以是已实例化的模型或通过 `init_chat_model(provider-id)` 初始化。README 中提到 DeepMCPAgent 允许传入任何 LangChain chat model 实例。
+- **LangChain Tools (BaseTool[])**：智能体可以使用的工具列表，用于执行特定任务。
+- **MCPToolLoader (JSON-Schema ➜ Pydantic ➜ BaseTool)**：将 MCP 工具的 JSON Schema 转换为 Pydantic 模型，再转换为 LangChain 的 BaseTool。
+- **_FastMCPTool (async _arun → client.call_tool)**：对 MCP 工具进行封装，通过 `async _arun` 方法调用 `client.call_tool`。
+- **servers_to_mcp_config() (mcpServers dict)**：将 MCP 服务器字典转换为配置信息。
+- **FastMCPMulti (fastmcp.Client)**：`fastmcp.Client` 的实例，用于与多个 MCP 服务器通信。
+- **Server A (e.g., math)**：提供数学计算服务的服务器，例如数学计算服务。
+- **Server B (e.g., search)**：提供搜索服务的服务器，例如搜索服务。
+- **Server C (e.g., github)**：提供 GitHub 相关服务的服务器。
+
+## 连线、分支与汇聚关系
+- `Q -> CLI`：用户通过 Prompt/Task，经由 CLI 提交查询。
+- `Q -> PY`：用户通过 Prompt/Task，经由 Python API 提交查询。
+- `CLI -> DIR`：CLI 的输入传递给 `build_deep_agent()`。
+- `PY -> DIR`：Python API 的输入传递给 `build_deep_agent()`。
+- `DIR -> PROMPT`：`build_deep_agent()` 使用 `prompt.py` 中的系统提示。
+- `DIR -> LLM`：`build_deep_agent()` 初始化 LangChain 模型。
+- `DIR -> LOADER`：`build_deep_agent()` 使用 `MCPToolLoader` 加载工具。
+- `DIR -> AGRT`：`build_deep_agent()` 构建 Agent Graph。
+- `LOADER -> MULTI`：`MCPToolLoader` 的输出传递给 `FastMCPMulti`。
+- `CFG -> MULTI`：`servers_to_mcp_config()` 的输出传递给 `FastMCPMulti`。
+- `MULTI -> SRV`：`FastMCPMulti` 列出可用的 MCP 服务器。
+- `LOADER -> TOOLS`：`MCPToolLoader` 加载的工具传递给 `LangChain Tools`。
+- `TOOLS -> AGRT`：`LangChain Tools` 被 Agent Graph 使用。
+- `AGRT <--> LLM`：Agent Graph 和 LangChain 模型之间进行消息传递。
+- `AGRT -> TOOLWRAP`：Agent Graph 调用工具。
+- `TOOLWRAP -> MULTI`：工具调用传递给 `FastMCPMulti`。
+- `MULTI -> SRV`：`FastMCPMulti` 调用 MCP 服务器。
+- `SRV -> MULTI`：MCP 服务器返回工具结果给 `FastMCPMulti`。
+- `MULTI -> TOOLWRAP`：`FastMCPMulti` 将工具结果传递给 `_FastMCPTool`。
+- `TOOLWRAP -> AGRT`：`_FastMCPTool` 将工具结果传递给 Agent Graph。
+- `AGRT -> CLI`：Agent Graph 将最终答案返回给 CLI。
+- `AGRT -> PY`：Agent Graph 将最终答案返回给 Python API。
+
+## 仓库语境与术语解释
+- **DeepMCPAgent**：一个基于 LangChain/LangGraph 的智能体，利用 Model Context Protocol (MCP) 工具，通过 HTTP/SSE 协议与外部服务交互。
+- **MCP (Model Context Protocol)**：一种用于智能体与工具之间通信的协议，DeepMCPAgent 通过 MCP 动态发现和调用工具。
+- **LangChain/LangGraph**：用于构建智能体的框架，DeepMCPAgent 使用 LangChain 的模型和 LangGraph 的图结构来实现智能体的核心逻辑。
+- **FastMCP**：用于与 MCP 服务器通信的客户端，DeepMCPAgent 使用 FastMCP 动态发现 MCP 工具。
+- **HTTP/SSE**：用于 MCP 服务器与客户端之间通信的协议。
+- **DeepAgents**：一个可选的智能体循环逻辑，如果安装了 DeepAgents，DeepMCPAgent 将使用它；否则，将使用 LangGraph 的 ReAct 模式作为回退方案。
+- **JSON-Schema ➜ Pydantic ➜ LangChain BaseTool**：工具类型定义的转换过程，DeepMCPAgent 使用 JSON Schema 定义工具的类型，然后将其转换为 Pydantic 模型，最后转换为 LangChain 的 BaseTool。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 DeepMCPAgent 的整体架构，用户通过 CLI 或 Python API 提交 Prompt/Task，`build_deep_agent()` 函数构建 Agent Graph，Agent Graph 使用 LangChain Model 和 LangChain Tools，通过 FastMCP Client 与 MCP Servers 交互，最终将结果返回给用户。Agent Graph 可以选择 DeepAgents loop 或 LangGraph ReAct 作为其循环逻辑。MCPToolLoader 负责将 MCP 工具的 JSON Schema 转换为 LangChain 的 BaseTool。该架构的核心在于通过 MCP 协议动态发现和调用工具，实现 Model-agnostic 的智能体。

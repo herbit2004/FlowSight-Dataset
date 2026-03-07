@@ -1,0 +1,80 @@
+## 图类型与用途
+这是一个流程图，描述了导航系统或路径规划系统的架构。它展示了从地图数据预处理、用户查询处理，到实时交通数据更新和最终路线生成的整个流程。该图在仓库中用于可视化算法混合，特别是 Google Maps 的导航系统。
+
+## 图的整体布局
+图的整体布局可以看作是从左到右、从上到下的流程。它将系统分为了五个主要层级：预处理层、查询处理层、实时层、后处理层和回退层。
+
+## 分组/子图/阶段说明
+- **Preprocessing Layer（预处理层）**：负责地图数据的准备，包括地图数据获取、图结构构建和预处理加速技术。
+- **Query Processing Layer（查询处理层）**：处理用户查询，根据起点和终点进行区域检查，并选择合适的路径查找算法。
+- **Real-time Layer（实时层）**：整合实时交通数据，使用机器学习模型预测交通状况，并更新道路权重。
+- **Post-processing Layer（后处理层）**：对生成的路线进行优化，考虑转弯限制和成本，生成车道引导信息，并计算预计到达时间。
+- **Fallback Layer（回退层）**：处理查询失败或超时的情况，提供备用方案。
+
+## 节点逐项说明
+- **MAP_DATA**：地图数据，来源可以是开放街道地图 (OSM) 或专有数据。
+- **GRAPH_BUILD**：图构建，将地图数据转换为图结构，其中节点代表路口，边代表道路。
+- **CH_PREP**：Contraction Hierarchies 预处理，一种加速路径查询的预处理技术。README 中提到 Contraction Hierarchies 可以实现 1000 倍的速度提升。
+- **ARCFLAGS**：Arc Flags 计算，另一种加速路径查询的预处理技术，用于剪枝不通往目的地的边。
+- **USER_QUERY**：用户查询，包含起点 A 和终点 B。
+- **REGION_CHECK**：区域检查，判断起点和终点是否在同一区域。
+- **LOCAL_ALG**：局部 Dijkstra 算法，用于小区域内的路径查找。
+- **CH_QUERY**：CH 查询，使用 Contraction Hierarchies 进行路径查询，通常是双向的。
+- **CH_PATH**：CH 图中的路径，是 CH 查询的结果。
+- **UNPACK**：解包，将 CH 图中的快捷方式 (shortcuts) 展开为原始道路。
+- **TRAFFIC_DATA**：实时交通数据，来自传感器或众包数据。
+- **ML_MODEL**：机器学习交通预测模型，用于预测未来交通状况。
+- **WEIGHT_UPDATE**：边权重更新，根据交通预测结果更新道路的权重。
+- **RECOMPUTE**：重新计算，判断交通变化是否显著，需要重新计算路线。
+- **REROUTE**：SPFA 算法进行增量更新，快速重新计算路线。仓库中包含 SPFA 算法的 C++ 实现。
+- **KEEP**：保持当前路线，如果交通变化不显著。
+- **TURN_COST**：转弯限制和成本调整，考虑转弯的限制和成本。
+- **LANE_GUIDE**：车道引导生成，生成详细的车道引导信息。
+- **ETA**：预计到达时间计算，使用历史数据计算准确的 ETA。
+- **FINAL**：最终路线，包含所有信息，可以呈现给用户。
+- **TIMEOUT**：超时，判断局部 Dijkstra 算法是否超时。
+- **GREEDY**：贪婪算法，选择最近的下一个节点。
+- **SUCCESS**：找到路线，局部Dijkstra成功。
+- **FAIL**：失败，判断 CH 查询是否失败。
+- **STANDARD_DIJ**：标准 Dijkstra 算法，作为 CH 查询失败时的备用方案。仓库中包含 Dijkstra 算法的 C++ 实现。
+
+## 连线、分支与汇聚关系
+- `MAP_DATA -> GRAPH_BUILD`：地图数据用于构建图结构。
+- `GRAPH_BUILD -> CH_PREP`：图结构构建后进行 Contraction Hierarchies 预处理。
+- `GRAPH_BUILD -> ARCFLAGS`：图结构构建后进行 Arc Flags 计算。
+- `USER_QUERY -> REGION_CHECK`：用户查询后进行区域检查。
+- `REGION_CHECK -- Yes --> LOCAL_ALG`：如果起点和终点在同一区域，则使用局部 Dijkstra 算法。
+- `REGION_CHECK -- No --> CH_QUERY`：如果起点和终点不在同一区域，则使用 CH 查询。
+- `CH_QUERY -> CH_PATH`：CH 查询得到 CH 图中的路径。
+- `CH_PATH -> UNPACK`：解包 CH 图中的快捷方式。
+- `TRAFFIC_DATA -> ML_MODEL`：实时交通数据用于机器学习模型进行交通预测。
+- `ML_MODEL -> WEIGHT_UPDATE`：机器学习模型预测结果用于更新边权重。
+- `WEIGHT_UPDATE -> RECOMPUTE`：边权重更新后判断是否需要重新计算路线。
+- `RECOMPUTE -- Yes --> REROUTE`：如果交通变化显著，则使用 SPFA 算法进行增量更新。
+- `RECOMPUTE -- No --> KEEP`：如果交通变化不显著，则保持当前路线。
+- `UNPACK -> TURN_COST`：解包后的路径进行转弯限制和成本调整。
+- `TURN_COST -> LANE_GUIDE`：转弯限制和成本调整后生成车道引导信息。
+- `LANE_GUIDE -> ETA`：车道引导信息用于计算预计到达时间。
+- `ETA -> FINAL`：预计到达时间计算后得到最终路线。
+- `LOCAL_ALG -> TIMEOUT`：局部 Dijkstra 算法可能超时。
+- `TIMEOUT -- Yes --> GREEDY`：如果局部 Dijkstra 算法超时，则使用贪婪算法。
+- `TIMEOUT -- No --> SUCCESS`：如果局部 Dijkstra 算法未超时，则成功找到路线。
+- `CH_QUERY -> FAIL`：CH 查询可能失败。
+- `FAIL -- Yes --> STANDARD_DIJ`：如果 CH 查询失败，则使用标准 Dijkstra 算法。
+- `REROUTE -> FINAL`：增量更新后的路线作为最终路线。
+- `KEEP -> FINAL`：保持的当前路线作为最终路线。
+- `SUCCESS -> TURN_COST`：成功找到的路线进行转弯限制和成本调整。
+- `GREEDY -> TURN_COST`：贪婪算法找到的路线进行转弯限制和成本调整。
+- `STANDARD_DIJ -> TURN_COST`：标准 Dijkstra 算法找到的路线进行转弯限制和成本调整。
+
+## 仓库语境与术语解释
+- **Contraction Hierarchies (CH)**：一种用于加速最短路径查询的预处理技术，通过预先计算节点之间的快捷方式来减少搜索空间。
+- **Arc Flags**：另一种用于加速最短路径查询的预处理技术，通过将图划分为区域，并为每个边标记其是否通往目标区域来减少搜索空间。
+- **Dijkstra 算法**：一种用于在图中查找最短路径的经典算法。仓库中包含 Dijkstra 算法的 C++ 实现。
+- **SPFA 算法**：一种用于在图中查找最短路径的算法，特别适用于边权重可以为负数的情况。仓库中包含 SPFA 算法的 C++ 实现。
+- **OSM (OpenStreetMap)**：一个开放的、可编辑的地图数据库，可以作为地图数据来源。
+- **Real-time Layer**：该层负责整合实时的交通信息，并动态更新路线，以应对交通状况的变化。
+- **Fallback Layer**：该层提供备用方案，以应对查询失败或超时的情况，确保导航系统能够提供可行的路线。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Google Maps 导航系统的架构，从地图数据预处理开始，包括图结构构建和 Contraction Hierarchies 预处理。用户查询经过区域检查后，选择局部 Dijkstra 算法或 CH 查询。实时交通数据通过机器学习模型更新边权重，并使用 SPFA 算法进行增量更新。最终路线经过转弯限制、车道引导和 ETA 计算后呈现给用户。如果查询失败或超时，则使用贪婪算法或标准 Dijkstra 算法作为备用方案。其中 Contraction Hierarchies 和实时交通数据更新是关键环节。

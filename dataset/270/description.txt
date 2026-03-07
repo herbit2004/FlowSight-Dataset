@@ -1,0 +1,35 @@
+## 图类型与用途
+这是一个架构图，展示了 StackQL 如何与用户和云提供商 API 交互。它描述了 StackQL 系统的核心组件及其相互关系，以及用户如何通过 StackQL 与云服务进行交互。
+
+## 图的整体布局
+图采用从左到右的布局，用户位于左侧，StackQL 系统位于中间，云提供商 API 位于右侧。StackQL 内部组件采用自上而下的布局。
+
+## 分组/子图/阶段说明
+图中 StackQL 部分包含两个子图：
+- **App**：表示 StackQL 应用程序，包含 `stackql exec`, `stackql shell`, 和 `stackql srv` 三个子命令。
+- **ProviderDefs**：表示 Provider 定义，包含 `Provider Registry Docs`，用于定义 StackQL 如何与不同的云提供商 API 进行交互。
+
+## 节点逐项说明
+- **User**：表示使用 StackQL 的用户。
+- **StackQL**：代表 StackQL 系统本身。
+  - **App**：StackQL 应用程序，包含 `$ stackql exec`, `$ stackql shell`, `$ stackql srv` 三个子命令，是用户与 StackQL 交互的主要方式。
+  - **ProviderDefs**：Provider 定义，包含 `Provider Registry Docs`，表示云提供商的注册表文档。这些文档定义了 StackQL 如何与不同的云提供商 API 进行交互。
+  - **Registry**：`Provider Registry Docs`，图中可见，但仓库上下文未进一步说明。
+  - **Proc**：`$ stackql exec\n$ stackql shell\n$ stackql srv`，表示 StackQL 提供的三个主要命令，用户可以通过这些命令与云提供商进行交互。
+- **Provider**：`Cloud Provider API`，表示云提供商的 API，例如 AWS, Azure, GCP 等。
+
+## 连线、分支与汇聚关系
+- `User <--> StackQL`：用户与 StackQL 系统之间存在双向交互。
+- `StackQL <--> Provider`：StackQL 系统与云提供商 API 之间存在双向交互。
+- `ProviderDefs --> App`：Provider 定义被 StackQL 应用程序使用。
+
+## 仓库语境与术语解释
+- **StackQL**：一个开源项目，允许使用 SQL 语义创建、修改和查询跨不同本地和远程接口的服务和资源状态，参见 README。
+- **ProviderDefs**：Provider 定义，用于定义 StackQL 如何与不同的云提供商 API 进行交互，其源存储在 [StackQL Registry](https://github.com/stackql/stackql-provider-registry)。
+- **App**：StackQL 应用程序，可以通过 `exec` 或 `shell` 在客户端模式下使用，也可以通过 Postgres wire protocol 客户端在服务器模式下使用，参见 README。
+- **`stackql exec`**：StackQL 命令行工具，用于执行 StackQL 命令和查询，参见 `internal/stackql/cmd/exec.go`。
+- **`stackql shell`**：StackQL 交互式 shell，用于交互式地运行 StackQL 命令，参见 `internal/stackql/cmd/shell.go`。
+- **`stackql srv`**：StackQL 服务器模式，通过 PostgreSQL wire 协议提供 StackQL 服务，参见 `internal/stackql/cmd/srv.go`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 StackQL 的架构，用户通过 StackQL 提供的命令行工具或服务（`stackql exec`, `stackql shell`, `stackql srv`），根据 ProviderDefs 中定义的云提供商 API 信息，与云提供商 API 进行交互。StackQL 充当用户和云提供商 API 之间的桥梁，负责请求的转换和响应的处理。ProviderDefs 提供了 StackQL 与不同云提供商 API 交互所需的元数据。

@@ -1,0 +1,26 @@
+graph LR
+    subgraph "Analytics Engine"
+        NLQ[Natural Language Query]
+        NLQ --> IA[Intelligence Agent]
+        IA --> QP[Query Planner]
+        QP --> QE[Query Executor]
+        QE --> RS[Result Synthesizer]
+    end
+
+    subgraph "Data Layer"
+        QE --> PG[(PostgreSQL)]
+        QE --> DD[(DuckDB)]
+        QE --> N4J[(Neo4j)]
+        QE --> MDB[(MongoDB)]
+    end
+
+    subgraph "Knowledge Layer"
+        IA --> KG[Knowledge Graph]
+        RS --> KG
+        KG --> Memory[(Team Memory)]
+    end
+
+    style NLQ fill:#e1f5fe
+    style IA fill:#fff3e0
+    style RS fill:#f3e5f5
+    style KG fill:#e8f5e9

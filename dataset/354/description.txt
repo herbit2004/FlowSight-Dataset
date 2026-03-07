@@ -1,0 +1,49 @@
+## 图类型与用途
+这是一个流程图，描述了 MaterialX 材质图到 glTF PBR 材质的转换流程，重点展示了程序纹理的转换过程。该图在仓库中用于说明 MaterialX 材质网络如何映射到 glTF 的 PBR 材质模型上，属于材质转换流程的一部分，如 README 所述，该仓库支持 MaterialX 和 glTF 之间的双向转换。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是 MaterialX 材质图的主要节点网络 `NG_main`，底部是 glTF 的 PBR 材质表示。流程从 `NG_main` 子图中的输入节点开始，经过一系列计算节点，最终连接到 `Gltf_pbr` 节点，并输出到 `MAT_Gltf_pbr` 节点。
+
+## 分组/子图/阶段说明
+图中包含一个名为 `NG_main` 的子图，代表 MaterialX 材质图的主要节点网络。该子图内部包含多个输入节点和计算节点，用于定义材质的程序纹理。
+
+## 节点逐项说明
+- **NG_main_uvtiling**：一个输入节点，类型为 `vector2`，默认值为 `8,8`，用于控制 UV 坐标的平铺数量。
+- **NG_main_color1**：一个输入节点，类型为 `color3`，默认值为 `1,0.094118,0.031373`，代表一种颜色。
+- **NG_main_color2**：一个输入节点，类型为 `color3`，默认值为 `0.035294,0.090196,0.878431`，代表另一种颜色。
+- **NG_main_output_N_mtlxmix_out**：一个输出节点，类型为 `color3`，代表材质图最终输出的颜色。
+- **NG_main_N_mtlxmix**：一个混合（mix）节点，类型为 `color3`，用于混合两种颜色。
+- **NG_main_N_mtlxdotproduct**：一个点积（dotproduct）节点，类型为 `float`。
+- **NG_main_N_mtlxmult**：一个乘法（multiply）节点，类型为 `vector2`。
+- **NG_main_N_mtlxsubtract**：一个减法（subtract）节点，类型为 `vector2`。
+- **NG_main_N_mtlxfloor**：一个向下取整（floor）节点，类型为 `vector2`。
+- **NG_main_N_modulo**：一个取模（modulo）节点，类型为 `float`。
+- **NG_main_Texcoord**：一个纹理坐标（texcoord）节点，类型为 `vector2`，索引为 `0`。
+- **Gltf_pbr**：代表 glTF 的 PBR (Physically Based Rendering) 着色器，类型为 `surfaceshader`。
+- **MAT_Gltf_pbr**：代表 glTF 的材质，类型为 `material`。
+
+## 连线、分支与汇聚关系
+- `NG_main_N_mtlxmix -> NG_main_output_N_mtlxmix_out`：混合节点的输出作为最终颜色输出。
+- `NG_main_color1 -- fg --> NG_main_N_mtlxmix`：颜色 1 作为前景色输入到混合节点。
+- `NG_main_color2 -- bg --> NG_main_N_mtlxmix`：颜色 2 作为背景色输入到混合节点。
+- `NG_main_N_modulo -- mix --> NG_main_N_mtlxmix`：取模节点的输出作为混合因子输入到混合节点。
+- `NG_main_N_mtlxfloor -- in1 --> NG_main_N_mtlxdotproduct`：向下取整节点的输出作为点积节点的输入。
+- `NG_main_Texcoord -- in1 --> NG_main_N_mtlxmult`：纹理坐标作为乘法节点的输入。
+- `NG_main_uvtiling -- in2 --> NG_main_N_mtlxmult`：UV 平铺参数作为乘法节点的输入。
+- `NG_main_N_mtlxmult -- in1 --> NG_main_N_mtlxsubtract`：乘法节点的输出作为减法节点的输入。
+- `NG_main_N_mtlxsubtract -- in --> NG_main_N_mtlxfloor`：减法节点的输出作为向下取整节点的输入。
+- `NG_main_N_mtlxdotproduct -- in1 --> NG_main_N_modulo`：点积节点的输出作为取模节点的输入。
+- `NG_main_output_N_mtlxmix_out -- base_color --> Gltf_pbr`：混合节点的输出作为 glTF PBR 着色器的基础颜色。
+- `Gltf_pbr -- surfaceshader --> MAT_Gltf_pbr`：glTF PBR 着色器连接到 glTF 材质。
+
+## 仓库语境与术语解释
+- **MaterialX**：一种开放标准的材质和外观描述语言，用于在不同渲染平台和应用程序之间交换材质信息。
+- **glTF**：一种开放标准的 3D 场景和模型格式，旨在实现 3D 内容的高效传输和加载。
+- **PBR (Physically Based Rendering)**：一种基于物理原理的渲染方法，能够更真实地模拟光与材质的交互。
+- **KHR_texture_procedurals**：glTF 扩展，用于支持程序纹理，允许在 glTF 场景中使用算法生成的纹理。如 README 所述，该仓库支持此扩展。
+- **surfaceshader**：一种着色器类型，用于描述表面的光照和材质属性。
+- **surfacematerial**：一种材质类型，用于将着色器应用于表面。
+- `materialx_to_gltf.py`：仓库提供的命令行工具，用于将 MaterialX 文档转换为 glTF 格式。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 MaterialX 材质图转换为 glTF PBR 材质的流程，重点在于程序纹理的生成。流程从 `NG_main` 子图开始，通过纹理坐标、UV 平铺、颜色混合等一系列计算，生成最终的颜色输出。`NG_main_uvtiling`、`NG_main_color1` 和 `NG_main_color2` 是关键的输入节点，`NG_main_N_mtlxmix` 是颜色混合的核心节点。最终，颜色输出被传递到 `Gltf_pbr` 节点，并最终输出为 `MAT_Gltf_pbr` 材质。该流程体现了 MaterialX 程序纹理到 glTF PBR 材质的映射关系，是 `materialx_to_gltf.py` 工具的核心功能之一。

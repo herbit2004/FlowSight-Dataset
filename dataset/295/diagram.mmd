@@ -1,0 +1,36 @@
+flowchart LR
+    A[开始对话] --> B[语音唤醒]
+    A --> M[通过串口发送消息]
+    A --> Q[按下BOOT键]
+    Q --> C[系统进入录音状态]
+    
+    B --> C
+    C --> D[INMP441麦克风录音]
+    D --> E[讯飞STT服务]
+    E --> F{识别结果}
+    
+    F -->|有效| G{是否为指令}
+    F -->|无效| H[提示重新说话]
+    H --> C
+    
+    G -->|否| I[发送至大模型]
+    G -->|是| L[本地函数处理]
+    
+    I --> J[接收大模型回复]
+    J --> K[回复内容分段]
+    K --> N[百度TTS服务]
+    N --> O[语音输出]
+    O --> P[一轮对话完成]
+    
+    P --> R{是否连续对话}
+    R -->|是| C
+    R -->|否| A
+    
+    M --> G
+    
+    %% 样式定义
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+    style Q fill:#bbf,stroke:#333,stroke-width:2px
+    style M fill:#bbf,stroke:#333,stroke-width:2px
+    style P fill:#bfb,stroke:#333,stroke-width:2px

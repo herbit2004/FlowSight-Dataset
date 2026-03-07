@@ -1,0 +1,67 @@
+## 图类型与用途
+这是一个系统架构图，描述了 EstateWise 项目的前端、后端、服务和数据摄取组件之间的关系和数据流。EstateWise 是一个房地产领域的 AI 聊天机器人和数据分析项目，该图旨在展示各个组件如何协同工作，以提供智能的房地产助手服务。
+
+## 图的整体布局
+图采用从左到右的布局，分为四个主要部分：Frontend（前端）、Backend（后端）、Services（服务）和 Ingestion（数据摄取）。数据流从前端开始，经过后端处理，利用各种服务，并通过数据摄取流程将数据导入数据库。
+
+## 分组/子图/阶段说明
+图中包含四个子图，分别代表 EstateWise 架构中的不同层级：
+- **Frontend**：包含用户界面组件，是用户与系统交互的入口。
+- **Backend**：包含 API 接口，处理前端请求并与后端服务交互。
+- **Services**：包含后端使用的各种服务，如数据库、缓存和 AI 模型。
+- **Ingestion**：包含数据处理脚本，用于将数据导入到数据库中。
+
+## 节点逐项说明
+- **Chat ("/chat - Chat UI + charts")**：聊天界面，提供聊天功能和图表展示。
+- **Insights ("/insights - Graph tools + calculators")**：提供图分析工具和计算器，用于深入了解房地产数据。
+- **Map ("/map - Leaflet map")**：地图界面，使用 Leaflet 地图库展示房地产信息。
+- **ChatAPI ("POST /api/chat")**：处理聊天请求的 API 接口。
+- **RateAPI ("POST /api/chat/rate")**：处理用户对聊天回复评分的 API 接口。
+- **PropsAPI ("GET /api/properties")**：获取房地产信息的 API 接口。
+- **ByIdsAPI ("GET /api/properties/by-ids")**：通过 ID 获取房地产信息的 API 接口。
+- **SimAPI ("GET /api/graph/similar/:zpid")**：获取与指定 ZPID (Zillow Property ID) 相似的房地产信息的 API 接口。
+- **ExplAPI ("GET /api/graph/explain")**：解释图数据的 API 接口。
+- **HoodAPI ("GET /api/graph/neighborhood/:name")**：获取指定社区信息的 API 接口。
+- **Gemini ("Google Gemini")**：Google 的 Gemini 大语言模型，用于聊天机器人的自然语言处理。
+- **Pinecone ("Pinecone Index")**：Pinecone 向量数据库，用于存储和检索房地产信息的向量嵌入。
+- **Neo4j ("Neo4j Aura")**：Neo4j 图数据库，用于存储和查询房地产之间的关系。
+- **Mongo ("MongoDB Atlas")**：MongoDB 文档数据库，用于存储房地产信息。
+- **Redis ("Redis Cache")**：Redis 缓存，用于缓存数据以提高性能。
+- **Prom ("Prometheus")**：Prometheus 监控系统，用于监控系统性能。
+- **Clean ("cleanProperties.ts")**：清理房地产数据的脚本，位于 `backend/src/scripts/cleanProperties.ts`。
+- **Upsert ("upsertProperties.ts")**：将房地产数据插入或更新到 Pinecone 中的脚本，位于 `backend/src/scripts/upsertProperties.ts`。
+- **IngestGraph ("ingestNeo4j.ts")**：将房地产关系数据导入到 Neo4j 中的脚本，位于 `backend/src/scripts/ingestNeo4j.ts`。
+
+## 连线、分支与汇聚关系
+- `Chat --> ChatAPI`：聊天界面调用 ChatAPI 处理聊天请求。
+- `Chat --> RateAPI`：聊天界面调用 RateAPI 处理用户对聊天回复的评分。
+- `Insights --> SimAPI`：图分析工具调用 SimAPI 获取相似的房地产信息。
+- `Insights --> ExplAPI`：图分析工具调用 ExplAPI 解释图数据。
+- `Insights --> HoodAPI`：图分析工具调用 HoodAPI 获取社区信息。
+- `Map --> PropsAPI`：地图界面调用 PropsAPI 获取房地产信息。
+- `Map --> ByIdsAPI`：地图界面调用 ByIdsAPI 通过 ID 获取房地产信息。
+- `ChatAPI --> Gemini`：ChatAPI 使用 Google Gemini 大语言模型进行自然语言处理。
+- `ChatAPI --> Pinecone`：ChatAPI 使用 Pinecone 向量数据库存储和检索房地产信息。
+- `ChatAPI -. optional .-> Neo4j`：ChatAPI 可选地使用 Neo4j 图数据库存储和查询房地产关系。
+- `PropsAPI --> Pinecone`：PropsAPI 使用 Pinecone 向量数据库获取房地产信息。
+- `ByIdsAPI --> Pinecone`：ByIdsAPI 使用 Pinecone 向量数据库获取房地产信息。
+- `ByIdsAPI --> Mongo`：ByIdsAPI 使用 MongoDB 数据库获取房地产信息。
+- `SimAPI --> Neo4j`：SimAPI 使用 Neo4j 图数据库获取相似的房地产信息。
+- `ExplAPI --> Neo4j`：ExplAPI 使用 Neo4j 图数据库解释图数据。
+- `HoodAPI --> Neo4j`：HoodAPI 使用 Neo4j 图数据库获取社区信息。
+- `Clean --> Mongo`：cleanProperties.ts 脚本将清理后的数据导入 MongoDB。
+- `Upsert --> Pinecone`：upsertProperties.ts 脚本将数据插入或更新到 Pinecone。
+- `IngestGraph --> Neo4j`：ingestNeo4j.ts 脚本将关系数据导入 Neo4j。
+
+## 仓库语境与术语解释
+- **Frontend**：EstateWise 的用户界面，使用 React 和 Next.js 构建，提供聊天、地图和数据分析等功能。
+- **Backend**：使用 Node.js 和 Express 构建的 API 服务，处理前端请求并与后端服务交互。
+- **Gemini**：Google 的 Gemini 大语言模型，用于聊天机器人的自然语言处理，相关代码位于 `backend/src/services/geminiChat.service.ts`。
+- **Pinecone**：一个向量数据库，用于存储和检索房地产信息的向量嵌入，支持快速相似性搜索，相关代码位于 `backend/src/pineconeClient.ts`。
+- **Neo4j**：一个图数据库，用于存储和查询房地产之间的关系，支持复杂的图查询和分析，相关代码位于 `backend/src/graph/neo4j.client.ts`。
+- **MongoDB Atlas**：一个文档数据库，用于存储房地产信息，提供灵活的数据存储和查询能力。
+- **Ingestion Scripts**：位于 `backend/src/scripts/` 目录下的脚本，用于将数据导入到数据库中，包括清理、插入和更新数据。
+- **ZPID (Zillow Property ID)**：Zillow 房地产的唯一标识符，用于在系统中查找和关联房地产信息。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+EstateWise 架构图展示了从前端用户界面到后端服务的完整数据流。用户通过 Chat、Insights 和 Map 组件与系统交互，这些组件调用后端 API（如 ChatAPI、PropsAPI），后端 API 使用 Google Gemini 进行自然语言处理，并利用 Pinecone 和 Neo4j 数据库存储和检索房地产信息。数据摄取流程（Clean, Upsert, IngestGraph）负责将数据导入到 MongoDB、Pinecone 和 Neo4j 中。该架构利用了混合 RAG (Vector + Graph) 技术，通过 Pinecone 进行 kNN 向量检索，并通过 Neo4j 进行图数据增强，以提供个性化的房地产推荐。

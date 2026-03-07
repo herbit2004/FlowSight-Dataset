@@ -1,0 +1,39 @@
+## 图类型与用途
+这是一个架构图，描述了 `jcode` 应用程序的整体架构，展示了其主要组件以及它们之间的交互方式。`jcode` 是一个 AI 编码助手，该图概括了用户如何通过命令行界面 (CLI) 与应用程序交互，以及数据如何在不同组件之间流动。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是用户交互的入口点 CLI，中间是 Server 和 Agent，底部是 Provider、Tool Registry 和 Session。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分成三个阶段：用户交互层、核心处理层、资源层。
+
+## 节点逐项说明
+- **CLI (main.rs)**：命令行界面，是用户与 `jcode` 交互的主要入口点。用户通过 CLI 执行不同的命令，例如 `serve`、`connect`、`run` 等。对应代码文件为 `src/main.rs`。
+- **TUI (app.rs / ui.rs)**：文本用户界面，提供一个交互式的界面供用户使用。对应代码文件为 `src/tui/app.rs` 和 `src/tui/ui.rs`。
+- **Server (Unix Socket)**：服务器组件，通过 Unix Socket 与 TUI 和 Agent 进行通信。
+- **Standalone (Agent Loop)**：独立运行的 Agent 循环，用于在没有 TUI 或 Server 的情况下执行任务。
+- **Agent (agent.rs)**：核心的 AI 代理，负责处理用户请求、调用工具、与 Provider 交互等。对应代码文件为 `src/agent.rs`。
+- **Provider (Claude / Copilot / OpenAI / OpenRouter)**：提供 AI 模型服务的提供商，例如 Claude、GitHub Copilot、OpenAI 和 OpenRouter。
+- **Tool Registry (30+ tools)**：工具注册表，包含 30 多个内置工具，供 Agent 使用，例如文件操作、搜索、Web 访问、Shell 命令执行等。
+- **Session (Persistence)**：会话管理组件，负责持久化存储 Agent 的状态和用户数据，以便在会话之间保持上下文。
+
+## 连线、分支与汇聚关系
+- `CLI -> TUI`：CLI 可以启动 TUI。
+- `CLI -> Server`：CLI 可以启动 Server。
+- `CLI -> Standalone`：CLI 可以直接运行 Standalone Agent。
+- `TUI <--> Server`：TUI 通过 `events` 与 Server 进行双向通信。
+- `Server -> Agent`：Server 将用户请求传递给 Agent。
+- `Agent -> Provider`：Agent 与 Provider 交互，获取 AI 模型的输出。
+- `Agent -> Registry`：Agent 可以调用 Tool Registry 中的工具来执行各种任务。
+- `Agent -> Session`：Agent 使用 Session 组件来持久化存储数据。
+
+## 仓库语境与术语解释
+- **CLI**：根据 README，用户可以通过 CLI 使用 `jcode` 的各种功能，例如启动 TUI、连接到服务器或运行独立的 Agent。
+- **TUI**：README 提到 `jcode` 具有一个“Blazing Fast TUI”，可以在终端中提供流畅的用户体验。
+- **Agent**：Agent 是 `jcode` 的核心组件，负责处理用户请求、调用 Provider 获取 AI 模型的输出，调用 Tool Registry 中的工具来执行各种任务，并使用 Session 组件来持久化存储数据。
+- **Provider**：`jcode` 支持多种 AI 模型提供商，例如 Claude、GitHub Copilot、OpenAI 和 OpenRouter。可以通过 `/login` 命令进行 OAuth 认证。
+- **Tool Registry**：`jcode` 包含 30 多个内置工具，涵盖文件操作、搜索、Web 访问、Shell 命令执行等。
+- **Session**：会话管理组件，负责持久化存储 Agent 的状态和用户数据，以便在会话之间保持上下文。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `jcode` 应用程序的整体架构。用户通过 CLI 与 `jcode` 交互，CLI 可以启动 TUI 或 Server，或者直接运行 Standalone Agent。如果启动了 TUI，用户可以通过 TUI 与 Server 进行交互。Server 将用户请求传递给 Agent。Agent 是 `jcode` 的核心组件，它负责处理用户请求，调用 Provider 获取 AI 模型的输出，调用 Tool Registry 中的工具来执行各种任务，并使用 Session 组件来持久化存储数据。`jcode` 支持多种 AI 模型提供商和工具，并具有持久化记忆功能。

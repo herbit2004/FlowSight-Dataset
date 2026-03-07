@@ -1,0 +1,41 @@
+## 图类型与用途
+这是一个流程图，描述了 PGSync 如何将 PostgreSQL 数据库中的数据同步到 Elasticsearch 或 OpenSearch 的架构。该图在 `ARCHITECTURE.md` 文档中用于展示 PGSync 的整体架构和数据流。
+
+## 图的整体布局
+图整体采用从上到下的布局。PostgreSQL 数据库位于顶部，PGSync 进程位于中间，Elasticsearch/OpenSearch 位于底部。数据从 PostgreSQL 流向 Elasticsearch/OpenSearch。
+
+## 分组/子图/阶段说明
+图中有一个显式的子图，名为 "PostgreSQL Database"，它包含了 PostgreSQL 数据库及其相关的组件。逻辑上可以分为三个阶段：数据源（PostgreSQL Database）、数据同步处理（pgsync）、数据目标（Elasticsearch/OpenSearch）。
+
+## 节点逐项说明
+- **Postgres DB (PG)**：代表 PostgreSQL 数据库，是数据同步的源头。
+- **Replication Slot/WAL (WAL)**：代表 PostgreSQL 的预写式日志（Write-Ahead Logging）的逻辑解码功能和复制槽。PGSync 通过读取 WAL 来捕获数据库中的更改。
+- **pg_notify (TG)**：代表 PostgreSQL 的通知机制，触发器通过该机制通知 PGSync 数据变更。
+- **pgsync (SP)**：代表 PGSync 进程，它是数据同步的核心组件。它从 WAL 轮询数据更改，或者接收来自触发器的通知。
+- **Query Builder (QB)**：代表查询构建器，PGSync 使用它将数据转换成 Elasticsearch/OpenSearch 可以接受的 JSON 格式。
+- **JSON Documents (DOC)**：代表转换后的 JSON 文档，这些文档将被索引到 Elasticsearch/OpenSearch 中。
+- **Elasticsearch/OpenSearch (ES)**：代表 Elasticsearch 或 OpenSearch 搜索引擎，它是数据同步的目标。
+- **Redis/Valkey (REDIS)**：代表 Redis 或 Valkey 数据库，PGSync 使用它来进行检查点和锁定，以保证数据同步的一致性。
+
+## 连线、分支与汇聚关系
+- `Postgres DB -> Replication Slot/WAL`：PostgreSQL 数据库将数据更改写入 WAL，并通过复制槽提供给 PGSync。
+- `Postgres DB -> pg_notify`：PostgreSQL 数据库上的触发器通过 `pg_notify` 通知 PGSync 数据变更。
+- `pgsync -- poll --> Replication Slot/WAL`：PGSync 进程从 WAL 轮询数据更改。
+- `pg_notify -- notify --> pgsync`：触发器通过 `pg_notify` 通知 PGSync 进程数据变更。
+- `pgsync -> Query Builder`：PGSync 进程使用查询构建器将捕获的数据更改转换为 JSON 文档。
+- `Query Builder -> JSON Documents`：查询构建器将数据转换为 JSON 文档。
+- `JSON Documents -> Elasticsearch/OpenSearch`：JSON 文档通过 Bulk Index 操作批量索引到 Elasticsearch/OpenSearch 中。
+- `pgsync -> Redis/Valkey`：PGSync 进程使用 Redis/Valkey 进行检查点和锁定。
+
+## 仓库语境与术语解释
+- **PostgreSQL Database**: 关系型数据库，作为数据源，参见 `ARCHITECTURE.md`。
+- **Elasticsearch/OpenSearch**: 搜索引擎，作为数据同步的目标，参见 `ARCHITECTURE.md`。
+- **WAL (Write-Ahead Logging)**: PostgreSQL 的预写式日志，用于捕获数据变更。
+- **Replication Slot**: 用于存储 WAL 更改的复制槽，确保 PGSync 可以可靠地读取 WAL 数据。
+- **pg_notify**: PostgreSQL 的通知机制，允许触发器异步通知 PGSync 数据变更。
+- **pgsync**: 核心同步进程，负责从 PostgreSQL 读取数据变更，并将其转换为 JSON 文档，最终索引到 Elasticsearch/OpenSearch。
+- **Redis/Valkey**: 用于检查点和锁定，保证数据同步的一致性，参见 `pgsync/redisqueue.py`。
+- **Query Builder**: 用于构建 SQL 查询，将数据转换为 JSON 格式，参见 `pgsync/querybuilder.py`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+PGSync 通过监听 PostgreSQL 数据库的 WAL 日志或触发器，捕获数据库中的数据更改。PostgreSQL 数据库通过 Logical Decoding WAL 和 Triggers 两种方式将数据变更传递给 PGSync 进程。PGSync 进程使用 Query Builder 将捕获的数据更改转换为 JSON 文档，并批量索引到 Elasticsearch/OpenSearch 中。Redis/Valkey 用于管理检查点和锁定，以保证数据同步的一致性。整体流程是从 PostgreSQL 数据库到 Elasticsearch/OpenSearch 的实时数据同步，其中 WAL 和触发器是数据变更捕获的关键机制。

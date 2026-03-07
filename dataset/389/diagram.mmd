@@ -1,0 +1,47 @@
+graph TB
+    subgraph "Client Layer"
+        Browser[Web Browser]
+        UI[React-like UI Components]
+    end
+    
+    subgraph "Application Layer - Flask"
+        App[Flask Application<br/>app.py]
+        Routes[Route Handlers<br/>/, /dashboard, /history, /subdomain]
+        SocketIO[Flask-SocketIO<br/>WebSocket Server]
+    end
+    
+    subgraph "Core Modules"
+        Scanner[Scanner Engine<br/>core/scanner.py]
+        Reporter[PDF Reporter<br/>core/reporter.py]
+    end
+    
+    subgraph "Network Layer"
+        Socket[Python Socket API]
+        DNS[DNS Resolution]
+        IPv4[IPv4 Support<br/>AF_INET]
+        IPv6[IPv6 Support<br/>AF_INET6]
+    end
+    
+    subgraph "External Services"
+        Gemini[Google Gemini API<br/>AI Analysis]
+    end
+    
+    subgraph "Data Storage"
+        History[JSON History File<br/>scan_history.json]
+        State[Global State<br/>latest_results]
+    end
+    
+    Browser -->|HTTP/WebSocket| App
+    App --> Routes
+    App --> SocketIO
+    Routes --> Scanner
+    Routes --> Reporter
+    SocketIO -->|Real-time Events| Browser
+    Scanner --> Socket
+    Scanner --> DNS
+    Scanner --> IPv4
+    Scanner --> IPv6
+    App --> Gemini
+    App --> History
+    App --> State
+    Reporter --> History

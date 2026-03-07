@@ -1,0 +1,22 @@
+flowchart TB
+    subgraph service [AutoMem Service Flask]
+        API[REST API<br/>Memory Lifecycle]
+        Enrichment[Background Enrichment<br/>Pipeline]
+        Consolidation[Consolidation<br/>Engine]
+        Backups[Automated Backups<br/>Optional]
+    end
+
+    subgraph storage [Dual Storage Layer]
+        FalkorDB[(FalkorDB<br/>Graph Database)]
+        Qdrant[(Qdrant<br/>Vector Database)]
+    end
+
+    Client[AI Client] -->|Store/Recall/Associate| API
+    API --> FalkorDB
+    API --> Qdrant
+    Enrichment -->|11 edge types<br/>Pattern nodes| FalkorDB
+    Enrichment -->|Semantic search<br/>3072-d vectors| Qdrant
+    Consolidation --> FalkorDB
+    Consolidation --> Qdrant
+    Backups -.->|Optional| FalkorDB
+    Backups -.->|Optional| Qdrant

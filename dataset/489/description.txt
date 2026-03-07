@@ -1,0 +1,45 @@
+## 图类型与用途
+这是一个流程图，描述了 `Erdus` 项目将多种实体关系图（ERD）格式和数据库模式定义语言（DDL）转换为统一的中间表示形式（Intermediate Representation），然后再将该中间表示形式转换为多种目标格式的核心功能。该图在仓库中用于概括数据转换流程。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是输入格式，中间是核心转换逻辑，右侧是输出格式。
+
+## 分组/子图/阶段说明
+图中包含三个显式子图：Input（输入）、Core（核心）和 Output（输出），分别代表数据转换流程的三个阶段。
+
+## 节点逐项说明
+- **ERDPlus Old**：旧版本的 ERDPlus 格式的实体关系图，作为输入格式之一。
+- **ERDPlus New**：新版本的 ERDPlus 格式的实体关系图，作为输入格式之一。
+- **SQL DDL**：SQL 数据定义语言，用于描述数据库模式，作为输入格式之一。
+- **Prisma**：Prisma ORM 的模式定义，作为输入格式之一。
+- **TypeORM**：TypeORM ORM 的实体定义，作为输入格式之一。
+- **IR (Intermediate Representation)**：中间表示形式，是所有输入格式的统一抽象。
+- **SQL DDL**：SQL 数据定义语言，作为输出格式之一。
+- **Prisma**：Prisma ORM 的模式定义，作为输出格式之一。
+- **TypeORM**：TypeORM ORM 的实体定义，作为输出格式之一。
+- **DBML**：Database Markup Language，一种用于描述数据库模式的语言，作为输出格式之一。
+- **Mermaid**：Mermaid 格式，一种用于生成图表的文本标记语言，作为输出格式之一。
+
+## 连线、分支与汇聚关系
+- `ERDPlus Old -> IR`：旧版本的 ERDPlus 格式转换为中间表示形式。
+- `ERDPlus New -> IR`：新版本的 ERDPlus 格式转换为中间表示形式。
+- `SQL DDL -> IR`：SQL 数据定义语言转换为中间表示形式。
+- `Prisma -> IR`：Prisma ORM 的模式定义转换为中间表示形式。
+- `TypeORM -> IR`：TypeORM ORM 的实体定义转换为中间表示形式。
+- `IR -> SQL DDL`：中间表示形式转换为 SQL 数据定义语言。
+- `IR -> Prisma`：中间表示形式转换为 Prisma ORM 的模式定义。
+- `IR -> TypeORM`：中间表示形式转换为 TypeORM ORM 的实体定义。
+- `IR -> DBML`：中间表示形式转换为 DBML。
+- `IR -> Mermaid`：中间表示形式转换为 Mermaid 格式。
+
+## 仓库语境与术语解释
+- **ERDPlus**：一种实体关系图格式，`Erdus` 项目支持旧版本和新版本之间的转换。README 提到 ERDPlus 模块具有自动检测输入格式的功能。
+- **SQL DDL**：SQL 数据定义语言，用于描述数据库模式。`Erdus` 项目支持将 SQL DDL 转换为中间表示形式，以及将中间表示形式转换为 SQL DDL。
+- **Prisma**：Prisma ORM 的模式定义。`Erdus` 项目支持将 Prisma 模式定义转换为中间表示形式，以及将中间表示形式转换为 Prisma 模式定义。
+- **TypeORM**：TypeORM ORM 的实体定义。`Erdus` 项目支持将 TypeORM 实体定义转换为中间表示形式，以及将中间表示形式转换为 TypeORM 实体定义。
+- **DBML**：Database Markup Language，一种用于描述数据库模式的语言。`Erdus` 项目支持将中间表示形式转换为 DBML，用于 dbdiagram.io 的文档生成。
+- **Mermaid**：Mermaid 格式，一种用于生成图表的文本标记语言。`Erdus` 项目支持将中间表示形式转换为 Mermaid 格式，用于 README 文件和技术文档。
+- **Intermediate Representation (IR)**：中间表示形式，是 `Erdus` 项目的核心概念，用于统一各种输入格式，实现不同格式之间的转换。`src/ir.ts` 定义了 IR 的接口。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `Erdus` 项目的核心数据转换流程。从左侧的各种输入格式（ERDPlus Old/New, SQL DDL, Prisma, TypeORM）开始，它们都被转换为统一的中间表示形式（IR）。然后，IR 被转换为右侧的各种输出格式（SQL DDL, Prisma, TypeORM, DBML, Mermaid）。IR 作为核心枢纽，实现了各种数据库模式定义格式之间的解耦和转换。该流程使得在不同数据库技术栈之间迁移或共享数据库模式变得更加容易。

@@ -1,0 +1,31 @@
+graph TB
+    subgraph Clients
+        WEB["Web Dashboard<br/>(React SPA)"]
+        TG["Telegram"]
+        DC["Discord"]
+        FS["Feishu/Lark"]
+        ZL["Zalo OA"]
+        ZLP["Zalo Personal"]
+        API["HTTP API"]
+    end
+
+    subgraph Gateway["GoClaw Gateway"]
+        direction TB
+        WS["WebSocket RPC"] & REST["HTTP Server"] & CM["Channel Manager"]
+        WS & REST & CM --> BUS["Message Bus"]
+        BUS --> SCHED["Lane-based Scheduler<br/>main · subagent · delegate · cron"]
+        SCHED --> ROUTER["Agent Router"]
+        ROUTER --> LOOP["Agent Loop<br/>think → act → observe"]
+        LOOP --> TOOLS["Tool Registry<br/>fs · exec · web · memory · delegate · team · mcp · custom"]
+        LOOP --> LLM["LLM Providers<br/>Anthropic (native + prompt caching) · OpenAI-compat (12+)"]
+    end
+
+    subgraph Storage
+        FILE["File-based<br/>(standalone)"]
+        PG["PostgreSQL 18 + pgvector<br/>(managed · multi-tenant)"]
+    end
+
+    WEB --> WS
+    TG & DC & FS & ZL & ZLP --> CM
+    API --> REST
+    LOOP --> FILE & PG

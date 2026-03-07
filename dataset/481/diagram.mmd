@@ -1,0 +1,33 @@
+flowchart TD
+  CLI[["CLI / doctor.sh\n- Loads AI config\n- Selects target language"]]
+  
+  subgraph ANALYZE_PHASE["PHASE 1: Deep Analysis"]
+      REGEX["Regex Parsing\n(Fast SQL/Variable Extraction)"]
+      ANALYZER["CobolAnalyzerAgent\n(Structure & Logic)"]
+      SQLITE[("SQLite Storage")]
+  end
+  
+  subgraph DEPENDENCY_PHASE["PHASE 2: Dependencies"]
+      MAPPER["DependencyMapperAgent\n(Builds Graph)"]
+      NEO4J[("Neo4j Graph DB")]
+  end
+  
+  subgraph CONVERT_PHASE["PHASE 3: Conversion"]
+      FETCHER["Context Fetcher\n(Aggregates Dependencies)"]
+      CONVERTER["CodeConverterAgent\n(Java/C# Generation)"]
+      OUTPUT["Output Files"]
+  end
+
+  CLI --> REGEX
+  REGEX --> SQLITE
+  REGEX --> ANALYZE_PHASE
+  
+  ANALYZER --> SQLITE
+  
+  SQLITE --> MAPPER
+  MAPPER --> NEO4J
+  
+  SQLITE --> FETCHER
+  NEO4J --> FETCHER
+  FETCHER --> CONVERTER
+  CONVERTER --> OUTPUT

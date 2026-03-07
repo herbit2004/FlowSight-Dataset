@@ -1,0 +1,26 @@
+flowchart LR
+
+subgraph w[Working Copy]
+  subgraph l[Local Environment]
+    c[Code]-->lut[Unit Testing]
+    lut-->laft[Automated Functional Testing]
+    lut-->lmft[Manual Functional Testing]
+  end
+end
+
+laft-->pr[Pull Request]
+lmft-->pr[Pull Request]
+
+subgraph i[Integration]
+  pr-->ib[Build]
+  ib-->iut[Unit Testing]
+  pr-->cr[Code Review]
+  iut-->id[Deploy]
+  subgraph ie[Integration Environment]
+    id-->ift[Automated Functional Testing]
+  end
+  cr-->prc[Complete]
+  ift-->prc
+end
+
+prc-->m[Mainstream]

@@ -1,0 +1,31 @@
+## 图类型与用途
+这是一个流程图，描述了一个自动化流程，该流程用于在 Gmail 收到带有附件的新邮件时，自动将附件保存到 Google Drive，并在 Airtable 中记录相关元数据，最后在 Slack 上发送通知。该图在仓库中作为架构图示例，用于解释整个自动化流程。
+
+## 图的整体布局
+图采用从左到右的布局，展示了数据从一个服务流向另一个服务的线性流程。流程的起点是 Gmail，终点是 Slack。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为邮件接收、数据提取、文件上传、数据记录和消息通知五个阶段。
+
+## 节点逐项说明
+- **A [Gmail<br>New Email with Attachment]**：代表 Gmail 邮箱，作为整个流程的触发器。当收到带有附件的新邮件时，流程开始。根据 README，此节点监听带有附件的新邮件。
+- **B [Extract<br>Attachment Data]**：代表数据提取步骤，从收到的邮件中提取附件数据，例如附件的文件名、邮件主题、发件人等信息。
+- **C [Google Drive<br>Upload File]**：代表 Google Drive，负责将提取的附件文件上传到指定的 Google Drive 文件夹中。根据 README，附件会被上传到 `/n8n/Email Attachments` 文件夹（或根目录）。
+- **D [Airtable<br>Create Record]**：代表 Airtable，负责在 Airtable 的指定表格中创建一个新的记录，记录的内容包括邮件主题、发件人、接收时间、附件名称和 Google Drive 链接等信息。根据 README，Airtable 表格需要预先设置好字段。
+- **E [Slack<br>Send Notification]**：代表 Slack，负责向指定的 Slack 频道发送通知消息，通知消息中通常包含 Google Drive 链接，方便团队成员查看。根据 README，通知会被发送到 `#automation-logs` 频道（或其他指定频道）。
+
+## 连线、分支与汇聚关系
+- `A -> B`：当 Gmail 收到带有附件的新邮件时，触发数据提取步骤。
+- `B -> C`：提取附件数据后，将附件上传到 Google Drive。
+- `C -> D`：附件上传成功后，在 Airtable 中创建记录。
+- `D -> E`：Airtable 记录创建成功后，Slack 发送通知消息。
+
+## 仓库语境与术语解释
+- **n8n**：根据 README，这是一个工作流自动化平台，用于连接不同的应用程序和服务。
+- **Gmail Trigger**：根据 README，该节点用于监听 Gmail 邮箱中的新邮件，并可以设置搜索查询条件，例如 `has:attachment is:unread`。
+- **Airtable Base ID & Table**：根据 README，需要在 Airtable 中创建一个新的 base 和 table，用于存储邮件附件的元数据。
+- **Slack Bot Token**：根据 README，需要创建一个 Slack bot token，并授予 `chat:write` 和 `files:write` 权限，以便发送通知消息。
+- **OAuth**：根据 README，Gmail 和 Google Drive 节点需要使用 OAuth 认证方式连接账户。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了一个自动化流程，从 Gmail 收到带有附件的新邮件开始，提取附件数据后，将附件上传到 Google Drive，并在 Airtable 中创建包含邮件元数据的记录，最后通过 Slack 发送通知。整个流程的关键节点包括 Gmail 触发器、数据提取、Google Drive 上传和 Airtable 记录创建，最终目的是实现邮件附件的自动备份、元数据记录和团队通知，其中需要配置 n8n、Gmail、Google Drive、Airtable 和 Slack 等服务。

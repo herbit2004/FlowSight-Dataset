@@ -1,0 +1,86 @@
+## 图类型与用途
+这是一个流程图，描述了将 COBOL 代码迁移到 Java 或 C# 的自动化流程。它详细展示了代码的摄入、分析、复杂性评估、分块、上下文管理、速率限制、API 调用以及最终代码生成等关键步骤，旨在概括代码迁移的主流程。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是输入阶段，中间是代码分析、处理和 AI 调用阶段，底部是结果的合并与输出阶段。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表不同的处理阶段：
+- **INPUT ("📥 FILE INTAKE")**：负责接收 COBOL 源代码文件，并进行初步的文件大小检查。
+- **TOKEN_EST ("🔢 TOKEN ESTIMATION")**：用于估计输入代码的 Token 数量，为后续的复杂性评估和 API 调用做准备。
+- **COMPLEXITY ("🎯 THREE-TIER COMPLEXITY SCORING")**：根据代码的复杂性进行评分，并确定转换的难度等级和相应的 Token 数量乘数。
+- **OUTPUT_CALC ("📐 OUTPUT TOKEN CALCULATION")**：根据输入的 Token 数量和复杂性等级的乘数，计算输出的 Token 数量，并将其限制在 Codex 和 Chat 模型的最大 Token 范围内。
+- **CHUNKING ("✂️ SMART CHUNKING")**：如果输入文件过大，则进行智能分块，将代码分割成更小的语义单元。
+- **CONTEXT ("📋 CONTEXT WINDOW MANAGEMENT")**：管理代码块的上下文信息，包括完整细节窗口、压缩历史和跨块状态。
+- **RATE_LIMIT ("⏱️ DUAL RATE LIMITING")**：通过 Token Bucket 和滑动窗口等机制，对 API 调用进行速率限制，防止超出 Azure OpenAI 的配额。
+- **API_CALL ("🤖 API CALL + ESCALATION")**：调用 Azure OpenAI API 进行代码转换，并处理各种响应状态，包括成功、推理耗尽和速率限制等情况。
+- **RECONCILE ("🔗 RECONCILIATION")**：将各个代码块的转换结果进行合并、验证和去重，解决前向引用等问题。
+- **FINAL ("📤 FINAL OUTPUT")**：将转换后的 Java/C# 代码写入输出目录。
+
+## 节点逐项说明
+- **COBOL Source File**：原始的 COBOL 代码文件，作为整个迁移流程的输入。
+- **File Size Check**：检查输入 COBOL 代码文件的大小，判断是否需要进行分块处理。
+- **Single-File Processing**：表示文件大小符合要求，进行单文件处理。
+- **Smart Chunking Required**：表示文件过大，需要进行智能分块处理。
+- **TokenHelper.EstimateCobolTokens**：使用 `TokenHelper.EstimateCobolTokens` 函数估计 COBOL 代码的 Token 数量。
+- **Estimated Input Tokens**：估计的输入 Token 数量，用于后续的复杂性评估和输出 Token 计算。
+- **Complexity Score Calculation**：计算代码的复杂性得分，该得分基于正则表达式匹配和密度奖励。
+- **Score Threshold**：根据复杂性得分判断复杂度等级，分为 LOW、MEDIUM 和 HIGH 三个等级。
+- **🟢 LOW**：低复杂度等级，对应较低的转换难度和 Token 数量乘数（1.5×）。
+- **🟡 MEDIUM**：中等复杂度等级，对应中等的转换难度和 Token 数量乘数（2.5×）。
+- **🔴 HIGH**：高复杂度等级，对应较高的转换难度和 Token 数量乘数（3.5×）。
+- **estimatedOutput = input × multiplier**：根据输入的 Token 数量和复杂性等级的乘数，计算估计的输出 Token 数量。
+- **clamp(estimated, minTokens, maxTokens)**：将输出 Token 数量限制在最小和最大 Token 范围内，以符合 Codex 和 Chat 模型的 Token 限制。
+- **Final maxOutputTokens**：最终的最大输出 Token 数量，根据 Codex 和 Chat 模型有所不同。
+- **CobolAdapter.IdentifySemanticUnits**：使用 `CobolAdapter.IdentifySemanticUnits` 函数识别 COBOL 代码中的语义单元，例如 Divisions、Sections 和 Paragraphs。
+- **Divisions / Sections / Paragraphs**：COBOL 代码的语义单元，用于智能分块。
+- **SemanticUnitChunker.ChunkFileAsync**：使用 `SemanticUnitChunker.ChunkFileAsync` 函数异步执行分块操作。
+- **Chunking Decision**：判断如何进行分块，包括单块、语义边界分割和基于行的回退方案。
+- **Single Chunk**：单个代码块，表示不需要进行分块或已经完成分块。
+- **Semantic Boundary Split**：根据语义边界进行分割，优先级为 DIVISION > SECTION > Paragraph。
+- **Line-Based Fallback**：如果无法根据语义单元分割，则使用基于行的回退方案，设置 300 行的重叠。
+- **ChunkContextManager**：管理代码块的上下文信息。
+- **Full Detail Window**：完整细节窗口，包含最近的 3 个代码块。
+- **Compressed History**：压缩历史，包含更早的代码块，大小压缩到 30%。
+- **Cross-Chunk State**：跨块状态，包含签名和类型映射等信息。
+- **ChunkContext**：代码块的上下文信息，包括完整细节窗口、压缩历史和跨块状态。
+- **System A: RateLimiter**：使用 Token Bucket 和 Semaphore 实现的速率限制器。
+- **System B: RateLimitTracker**：使用滑动窗口 TPM/RPM 实现的速率限制跟踪器。
+- **Capacity Check**：检查 API 调用是否超出容量限制。
+- **Wait / Proceed**：根据容量检查结果，等待或继续执行 API 调用。
+- **Azure OpenAI Responses API**：调用 Azure OpenAI API 进行代码转换。
+- **Response Status**：API 调用的响应状态。
+- **✅ Success**：API 调用成功。
+- **Reasoning Exhaustion**：推理耗尽，表示模型在推理上消耗了过多的 Token，而实际输出的文本较少。
+- **Escalation Loop**：升级循环，包括双倍 `maxTokens`、提升 `effort` 和 `Thrash guard` 等策略，最多重试 2 次。
+- **Adaptive Re-Chunking**：自适应重新分块，在语义中点进行分割，设置 50 行的重叠。
+- **429 Rate Limited**：API 调用受到速率限制。
+- **Exponential Backoff**：指数退避，等待时间从 5 秒到 60 秒不等，最多重试 5 次。
+- **Record Chunk Result**：记录代码块的转换结果。
+- **Validate Chunk Output**：验证代码块的输出。
+- **More Chunks?**：判断是否还有更多的代码块需要处理。
+- **Reconciliation Pass**：协调过程，用于合并结果、解决前向引用和去重导入。
+- **Merge Results**：合并转换结果。
+- **Resolve forward references**：解决前向引用。
+- **Deduplicate imports**：去重导入。
+- **Converted Java/C# Code**：转换后的 Java/C# 代码。
+- **Write to Output Directory**：将转换后的代码写入输出目录。
+
+## 连线、分支与汇聚关系
+- `COBOL Source File -> File Size Check`：输入 COBOL 源代码文件后，进行文件大小检查。
+- `File Size Check -- ≤ 3,000 lines\n≤ 150,000 chars --> Single-File Processing`：如果文件大小小于等于 3,000 行或 150,000 字符，则进行单文件处理。
+- `File Size Check -- > 3,000 lines\n> 150,000 chars --> Smart Chunking Required`：如果文件大小大于 3,000 行或 150,000 字符，则需要进行智能分块处理。
+- `Single-File Processing -> TokenHelper.EstimateCobolTokens`：单文件处理和智能分块处理都会进入 Token 估计阶段，形成汇聚关系。
+- `Smart Chunking Required -> TokenHelper.EstimateCobolTokens`：同上。
+- `TokenHelper.EstimateCobolTokens -- COBOL: chars ÷ 3.0 --> Estimated Input Tokens`：使用 COBOL 特定的字符与 Token 比例（3.0）估计 Token 数量。
+- `TokenHelper.EstimateCobolTokens -- General: chars ÷ 3.5 --> Estimated Input Tokens`：使用通用的字符与 Token 比例（3.5）估计 Token 数量。
+- `Estimated Input Tokens -> Complexity Score Calculation`：估计输入 Token 数量后，进行复杂性得分计算。
+- `Complexity Score Calculation -- Σ regex×weight + density bonuses --> Score Threshold`：根据正则表达式匹配和密度奖励计算复杂性得分。
+- `Score Threshold -- < 5 --> 🟢 LOW`：如果复杂性得分小于 5，则为低复杂度等级。
+- `Score Threshold -- 5 – 14 --> 🟡 MEDIUM`：如果复杂性得分在 5 到 14 之间，则为中等复杂度等级。
+- `Score Threshold -- ≥ 15 --> 🔴 HIGH`：如果复杂性得分大于等于 15，则为高复杂度等级。
+- `🟢 LOW -> estimatedOutput = input × multiplier`：低、中、高复杂度等级都会进入输出 Token 计算阶段，形成汇聚关系。
+- `🟡 MEDIUM -> estimatedOutput = input × multiplier`：同上。
+- `🔴 HIGH -> estimatedOutput = input × multiplier`：同上。
+- `estimatedOutput = input × multiplier -> clamp(estimated, minTokens, maxTokens)`：根据输入的 Token 数量和复杂性等级的乘数，计算估计的输出 Token 数量。
+- `clamp(estimated, minTokens, maxTokens) -- Codex

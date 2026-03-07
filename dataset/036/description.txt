@@ -1,0 +1,41 @@
+## 图类型与用途
+这是一个流程图，描述了 Keycloak Webhook 插件的架构和事件流。该插件用于在 Keycloak 中发生特定事件时触发 Webhook，并将事件通知发送到不同的外部系统，例如 HTTP 服务器、RabbitMQ 消息队列或 Syslog 服务器。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是事件源 Keycloak，中间是插件的核心模块和 Provider，底部是外部系统。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：事件触发与加载、核心模块处理、事件通知发送。
+
+## 节点逐项说明
+- **Keycloak (Event Source)**：Keycloak 是身份认证和授权服务器，是事件的源头。当 Keycloak 中发生特定事件时，会触发相应的事件。
+- **ServiceLoader (SPI)**：Java 的 ServiceLoader 机制，用于动态加载 Keycloak Webhook 插件的不同 Provider。Keycloak 利用 ServiceLoader 发现并加载实现了特定 SPI 的 Provider。
+- **Core Module**：核心模块，包含公共的 SPI 接口、共享数据模型和辅助工具类。所有 Provider 都依赖于核心模块。根据 README，该模块对应 `keycloak-webhook-provider-core`。
+- **HTTP Provider**：HTTP Provider，负责通过 HTTP 协议将事件通知发送到外部 HTTP 服务器。根据 README，该模块对应 `keycloak-webhook-provider-http`。
+- **AMQP Provider**：AMQP Provider，负责通过 AMQP 协议（例如 RabbitMQ）将事件通知发送到消息队列。根据 README，该模块对应 `keycloak-webhook-provider-amqp`。
+- **Syslog Provider**：Syslog Provider，负责通过 Syslog 协议（TCP/UDP）将事件通知发送到 Syslog 服务器。根据 README，该模块对应 `keycloak-webhook-provider-syslog`。
+- **External HTTP Server**：外部 HTTP 服务器，接收来自 HTTP Provider 的 Webhook 通知。
+- **RabbitMQ Broker**：RabbitMQ 消息队列服务器，接收来自 AMQP Provider 的 Webhook 通知。
+- **Syslog Server**：Syslog 服务器，接收来自 Syslog Provider 的 Webhook 通知。
+
+## 连线、分支与汇聚关系
+- `Keycloak (Event Source) -> ServiceLoader (SPI)`：Keycloak 触发事件后，通过 ServiceLoader 机制加载 Webhook 插件的 Provider。
+- `ServiceLoader (SPI) -> Core Module`：ServiceLoader 加载后，将控制权交给 Core Module。
+- `Core Module -> HTTP Provider`：Core Module 为 HTTP Provider 提供支持。
+- `Core Module -> AMQP Provider`：Core Module 为 AMQP Provider 提供支持。
+- `Core Module -> Syslog Provider`：Core Module 为 Syslog Provider 提供支持。
+- `HTTP Provider -> External HTTP Server`：HTTP Provider 将事件通知发送到 External HTTP Server。
+- `AMQP Provider -> RabbitMQ Broker`：AMQP Provider 将事件通知发送到 RabbitMQ Broker。
+- `Syslog Provider -> Syslog Server`：Syslog Provider 将事件通知发送到 Syslog Server。
+
+## 仓库语境与术语解释
+- **Keycloak Webhook Plugin**：一个模块化的 Keycloak 事件监听器插件，用于在特定事件发生时触发 Webhook。
+- **ServiceLoader (SPI)**：Java 的服务提供者接口，用于动态加载插件的不同 Provider。
+- **Core Module**：插件的核心模块，提供公共接口、模型和工具类。对应仓库中的 `keycloak-webhook-provider-core` 目录。
+- **HTTP Provider**：通过 HTTP 协议发送 Webhook 通知的模块。对应仓库中的 `keycloak-webhook-provider-http` 目录。
+- **AMQP Provider**：通过 AMQP 协议（如 RabbitMQ）发送 Webhook 通知的模块。对应仓库中的 `keycloak-webhook-provider-amqp` 目录。
+- **Syslog Provider**：通过 Syslog 协议发送 Webhook 通知的模块。对应仓库中的 `keycloak-webhook-provider-syslog` 目录。
+- **Webhook**：一种 Web 回调或 HTTP 推送技术，用于在事件发生时将信息发送到其他应用程序或服务器。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Keycloak Webhook 插件的架构，从 Keycloak 事件源开始，通过 Java ServiceLoader 加载插件的 Core Module，Core Module 为 HTTP、AMQP 和 Syslog Provider 提供支持，然后根据配置选择相应的 Provider，将事件通知通过不同的协议发送到外部系统，例如 HTTP 服务器、RabbitMQ 消息队列或 Syslog 服务器。其中，Core Module 提供了共享接口和模型，而各个 Provider 实现了不同的 Webhook 发送机制。

@@ -1,0 +1,81 @@
+## 图类型与用途
+这是一个流程图，描述了 GABBE (Generative Architectural Brain Base Engine) 的 Agentic Software R&D 工程套件的整体工作流程。它将软件开发过程分解为五个主要阶段：设置 (Setup)、定义 (Definition)、设计 (Design)、执行 (Execution) 和交付 (Delivery)，旨在可视化 GABBE 的核心工作循环。
+
+## 图的整体布局
+图整体采用从上到下的布局。流程从顶部的 "Start" 节点开始，依次经过设置、定义、设计、执行和交付阶段，最终到达底部的 "Done" 节点。
+
+## 分组/子图/阶段说明
+图中包含五个显式子图，分别对应软件研发的五个阶段：
+- **Setup [1. Setup Phase]**：设置阶段，包括初始化环境、导入任务描述文件和配置代理设置。
+- **Definition [2. Definition Phase]**：定义阶段，生成项目规范和产品需求文档，并进行人工审查。
+- **Design [3. Design Phase]**：设计阶段，进行架构设计，生成设计文档和 C4 模型图，并进行人工审查。
+- **Execution [4. Execution Loop]**：执行阶段，将项目分解为更小的任务，执行测试驱动开发循环，并进行代码重构和验证。
+- **Delivery [5. Delivery Phase]**：交付阶段，进行完整性检查和安全审计，进行人工审查，修复问题并部署。
+
+## 节点逐项说明
+- **Start**：流程的起点。
+- **Init**：运行 `init.py` 脚本，设置环境。根据 README，`init.py` 是一个 Universal Skill Compiler，用于生成 AI 工具所需的正确格式。
+- **Mission**：导入 `BOOTSTRAP_MISSION.md` 或 `SETUP_MISSION.md` 文件，定义项目的初始目标。
+- **Config**：编辑 `AGENTS.md` 文件，配置代理的设置，例如角色和权限。根据 `AGENTS.md` 文件，该文件是所有 AI 编码代理的单一事实来源。
+- **Spec**：触发 `spec-writer.skill`，生成项目规范。根据 `agents/skills/product/spec-writer.skill.md`，该 skill 用于生成包含 EARS 语法的 PRD。
+- **PRD**：生成产品需求文档 (`PRD.md`)。
+- **Review1**：人工审查 PRD。
+- **Plan**：触发 `arch-design.skill`，进行架构设计。根据 `agents/skills/architecture/arch-design.skill.md`，该 skill 用于设计系统架构。
+- **Arch**：生成设计文档 (`PLAN.md`) 和 C4 模型图。
+- **Review2**：人工审查架构设计。
+- **Tasks**：触发任务分解，将项目分解为更小的任务，存储在 `TASKS.md` 中。
+- **LoopCheck**：检查是否还有剩余任务。
+- **Pick**：选择一个任务执行。
+- **TDD**：触发 TDD (测试驱动开发) 循环。根据 `agents/skills/coding/tdd-cycle.skill.md`，该 skill 用于执行 Red-Green-Refactor TDD 循环。
+- **Red**：测试失败。
+- **Green**：实现代码并通过测试。
+- **Refactor**：重构代码。
+- **Verify**：验证并记录审计日志。
+- **Integrity**：触发完整性检查。根据 `agents/skills/core/integrity-check.skill.md`，该 skill 用于执行端到端 8 维度验证。
+- **Security**：触发安全审计。
+- **HumanRev**：人工审查。
+- **Fix**：修复发现的问题。
+- **Deploy**：部署。
+- **Done**：流程的终点。
+
+## 连线、分支与汇聚关系
+- `Start -> Init`：流程从启动开始，首先运行初始化脚本。
+- `Init -> Mission`：初始化脚本运行后，导入任务描述文件。
+- `Mission -> Config`：导入任务描述文件后，编辑代理配置文件。
+- `Config -> Spec`：配置代理后，触发项目规范生成。
+- `Spec -> PRD`：生成项目规范后，生成产品需求文档。
+- `PRD -> Review1`：生成 PRD 后，进行人工审查。
+- `Review1 -- No --> Spec`：如果 PRD 未通过人工审查，则返回项目规范生成步骤。
+- `Review1 -- Yes --> Plan`：如果 PRD 通过人工审查，则进入架构设计阶段。
+- `Plan -> Arch`：进行架构设计后，生成设计文档和 C4 模型图。
+- `Arch -> Review2`：生成设计文档后，进行人工审查。
+- `Review2 -- No --> Plan`：如果架构设计未通过人工审查，则返回架构设计步骤。
+- `Review2 -- Yes --> Tasks`：如果架构设计通过人工审查，则进入任务分解阶段。
+- `Tasks -> LoopCheck`：任务分解后，检查是否还有剩余任务。
+- `LoopCheck -- Yes --> Pick`：如果还有剩余任务，则选择一个任务执行。
+- `Pick -> TDD`：选择任务后，触发 TDD 循环。
+- `TDD -> Red`：TDD 循环中，测试失败。
+- `Red -> Green`：测试失败后，实现代码并通过测试。
+- `Green -> Refactor`：代码通过测试后，进行重构。
+- `Refactor -> Verify`：重构后，验证并记录审计日志。
+- `Verify -> LoopCheck`：验证完成后，返回任务检查步骤，形成循环。
+- `LoopCheck -- No --> Integrity`：如果没有剩余任务，则进入完整性检查阶段。
+- `Integrity -> Security`：完整性检查后，进行安全审计。
+- `Security -> HumanRev`：安全审计后，进行人工审查。
+- `HumanRev -- No --> Fix`：如果安全审计未通过人工审查，则修复发现的问题。
+- `Fix -> Integrity`：问题修复后，返回完整性检查步骤。
+- `HumanRev -- Yes --> Deploy`：如果安全审计通过人工审查，则进行部署。
+- `Deploy -> End`：部署完成后，流程结束。
+
+## 仓库语境与术语解释
+- **GABBE (Generative Architectural Brain Base Engine)**：一个 Agentic Software R&D 工程套件，旨在将 AI 代理集成到软件开发流程中。
+- **Agentic Software R&D Engineering Kit**：一种利用 AI 代理进行软件研发的工具包。
+- **Skill**：GABBE 中的一个专门能力单元，例如 `spec-writer.skill` 和 `arch-design.skill`。根据 README，该仓库包含 140+ Skills。
+- **AGENTS.md**：一个 YAML 文件，用于配置 AI 代理的项目身份和操作命令。
+- **EARS (Easy Approach to Requirements Syntax)**：一种用于编写需求文档的语法，强调清晰和可验证性。
+- **TDD (Test-Driven Development)**：一种软件开发方法，先编写测试用例，然后编写代码以通过测试。
+- **C4 模型**：一种用于可视化软件架构的图表方法，包括 Context、Containers、Components 和 Code 四个层次。
+- **init.py**：一个 Universal Skill Compiler，用于生成 AI 工具所需的正确格式。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 GABBE 的软件研发流程，从 "Start" 节点开始，首先通过运行 `init.py` 初始化环境，然后配置 `AGENTS.md`。接着进入定义阶段，生成 PRD 并进行人工审查。通过审查后，进入设计阶段，生成架构设计文档和 C4 模型图，再次进行人工审查。之后进入执行阶段，将项目分解为任务，执行 TDD 循环，包括测试、实现和重构。如果没有剩余任务，则进行完整性检查和安全审计，最后进行人工审查和部署，到达 "Done" 节点。其中，`AGENTS.md` 的配置、PRD 的生成、TDD 循环和完整性检查是关键环节。

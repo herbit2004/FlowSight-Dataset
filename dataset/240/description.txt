@@ -1,0 +1,62 @@
+## 图类型与用途
+这是一个流程图，展示了 GLaDOS 系统的架构，描述了 GLaDOS 如何接收输入、处理信息并产生输出。该图在仓库中的作用是概括 GLaDOS 的整体架构和信息流。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是输入（Input）和子代理（Subagents），中间是上下文（Context）和核心代理（Main Agent），底部是输出（Output）。信息流主要从上到下，从输入到输出。
+
+## 分组/子图/阶段说明
+图中包含四个子图：
+- **Input**：负责接收来自不同来源的信息，包括语音、文本、图像和定时器事件。
+- **Subagents**：包含多个专门的智能体，负责从各种传感器收集数据，提供天气、情感、新闻和记忆信息。
+- **Core (Main Agent)**：系统的核心处理单元，包含 LLM 和 TTS。
+- **Output**：负责将处理后的信息呈现给用户，包括扬声器、日志、图像和机械动画。
+
+## 节点逐项说明
+- **🎤 Microphone**：语音输入设备，接收用户的语音输入。
+- **VAD**：语音活动检测，检测麦克风输入中是否存在语音。根据 `src/glados/audio_io/vad.py`，VAD 使用 Silero VAD 模型。
+- **ASR**：自动语音识别，将语音转换为文本。
+- **⌨️ Text Input**：直接的文本输入。
+- **⏱️ Timer**：定时器，定期触发事件，提供自主性。
+- **📷 Camera**：视觉输入设备，捕获图像。
+- **VLM**：视觉语言模型，处理图像并生成文本描述。根据 `src/glados/vision/fastvlm.py`，VLM 用于场景描述。
+- **Sensors**：从各种传感器收集数据。
+- **Weather**：提供天气信息。
+- **Emotion**：分析情感状态。
+- **News**：提供新闻信息。
+- **Memory**：存储和检索信息，提供上下文。
+- **📋 Context**：一个中央存储库，用于存储来自各种来源的信息，为 LLM 提供上下文。
+- **🧠 LLM**：大型语言模型，负责生成文本响应，是 GLaDOS 的“大脑”。根据 `src/glados/core/llm_processor.py`，LLM 接收文本输入并生成文本响应。
+- **TTS**：文本转语音，将文本转换为语音。根据 `src/glados/TTS/tts_glados.py`，TTS 使用 PiperConfig 进行配置。
+- **🔊 Speaker**：播放语音输出。
+- **Logs**：记录系统活动。
+- **🖼️ Images**：显示图像。
+- **⚙️ Animatronics**：控制机械装置。
+- **Tools**：外部工具，LLM 可以调用它们来执行特定任务。
+- **MCP**：主控程序，LLM 与 Tools 之间的接口，用于控制和协调工具的使用。
+
+## 连线、分支与汇聚关系
+- `🎤 Microphone -> VAD -> ASR`：麦克风接收语音，VAD 检测语音活动，ASR 将语音转换为文本。
+- `⌨️ Text Input -> LLM`：文本输入直接进入 LLM。
+- `⏱️ Timer -> LLM`：定时器定期触发 LLM。
+- `📷 Camera -> VLM -> 📋 Context`：摄像头捕获图像，VLM 将图像转换为文本描述，然后写入 Context。
+- `Minds -> 📋 Context`：子代理（传感器、天气、情感、新闻、记忆）的信息被写入到 Context 中。
+- `📋 Context -> LLM`：LLM 从 Context 中读取信息。
+- `ASR -> LLM`：ASR 的输出以“优先级”方式输入到 LLM。
+- `Text Input -> LLM`：文本输入以“优先级”方式输入到 LLM。
+- `LLM -> TTS -> 🔊 Speaker`：LLM 的输出传递给 TTS，然后通过扬声器播放。
+- `LLM -> Logs`：LLM 的输出被记录到日志中。
+- `LLM <--> MCP <--> Tools`：LLM 通过 MCP 与 Tools 交互，形成双向通信。
+- `Tools -> 🖼️ Images`：Tools 可以输出图像。
+- `Tools -> ⚙️ Animatronics`：Tools 可以控制机械动画。
+
+## 仓库语境与术语解释
+- **GLaDOS**：是 Valve 的 Portal 系列中的 AI 反派角色，该项目旨在构建一个具有类似个性的 AI 系统。
+- **VAD (Voice Activity Detection)**：用于检测音频流中的语音活动，在 `src/glados/audio_io/vad.py` 中使用 Silero VAD 模型实现。
+- **VLM (Vision Language Model)**：用于处理图像并生成文本描述，在 `src/glados/vision/fastvlm.py` 中实现。
+- **LLM (Large Language Model)**：是系统的核心，负责生成文本响应。
+- **TTS (Text-to-Speech)**：用于将文本转换为语音，在 `src/glados/TTS/tts_glados.py` 中实现。
+- **MCP (Master Control Program)**：是 LLM 与 Tools 之间的接口，用于控制和协调工具的使用。相关信息可以在 `docs/mcp.md` 中找到。
+- **Autonomy**：GLaDOS 的自主性，使其能够在没有用户提示的情况下观察、思考和说话。相关信息可以在 `docs/autonomy.md` 中找到。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+GLaDOS 系统的架构从 Input 子图开始，包括麦克风、摄像头、文本输入和定时器。麦克风的语音输入经过 VAD 和 ASR 处理，摄像头的图像输入经过 VLM 处理。Subagents 提供传感器、天气、情感、新闻和记忆信息，这些信息被写入 Context。LLM 从 Context 读取信息，并根据优先级处理 ASR 和文本输入，以及定时器的自主触发。LLM 通过 MCP 与 Tools 交互，最终输出到扬声器、日志、图像和机械动画。该架构的关键组件包括 VAD、VLM、LLM、TTS 和 MCP，以及 Context 在信息整合中的作用。

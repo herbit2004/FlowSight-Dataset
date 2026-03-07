@@ -1,0 +1,49 @@
+## 图类型与用途
+这是一个流程图，描述了 Jump Cutter 扩展程序的内容脚本部分如何检测和跳过视频静音部分。它展示了 `watchAllElements` 如何找到媒体元素，以及如何通过不同的控制器来处理这些元素，以实现静音跳过功能。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是 `watchAllElements` 节点，负责查找媒体元素，然后通过 `AllMediaElementsController` 分发到不同的控制器，最终实现静音检测和跳过。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为三个阶段：媒体元素发现与管理、控制器选择、以及两种不同的静音处理算法（克隆算法和拉伸算法）。
+
+## 节点逐项说明
+- **watchAllElements**：负责在网页上查找媒体元素（例如 `<video>` 或 `<audio>` 标签）。仓库语境表明，该组件通过 `document.getElementsByTagName('video')` (在 `src/entry-points/content/watchAllElements.ts` 中) 查找元素，并使用 `MutationObserver` 监听新元素的插入。
+- **AllMediaElementsController**：一个协调器，负责管理所有检测到的媒体元素，并决定使用哪种控制器来处理它们。仓库语境表明，该组件位于 `src/entry-points/content/AllMediaElementsController.ts`。
+- **chooseController**：一个决策节点，根据媒体元素的类型和特性，选择合适的控制器。图中可见，但仓库上下文未进一步说明。
+- **ElementPlaybackControllerCloning**：一种控制器，通过克隆原始媒体元素，并在克隆的元素上进行静音检测，从而控制原始媒体元素的播放速度。仓库语境表明，该组件位于 `src/entry-points/content/ElementPlaybackControllerCloning/ElementPlaybackControllerCloning.ts`。
+- **ElementPlaybackControllerStretching**：另一种控制器，直接控制原始媒体元素的播放速度，通过拉伸时间来跳过静音部分。仓库语境表明，该组件位于 `src/entry-points/content/ElementPlaybackControllerStretching/ElementPlaybackControllerStretching.ts`。
+- **Lookahead**：在克隆的媒体元素上播放，用于查找静音范围。仓库语境表明，该组件位于 `src/entry-points/content/ElementPlaybackControllerCloning/Lookahead.ts`。
+- **createCloneElementWithSameSrc**：负责创建与原始媒体元素具有相同来源的克隆元素。仓库语境表明，该组件位于 `src/entry-points/content/ElementPlaybackControllerCloning/createCloneElementWithSameSrc.ts`。
+- **cloneMediaSources**：拦截所有的 MediaSource 对象，并持有一个克隆的 HTMLMediaElement。仓库语境表明，该组件位于 `src/entry-points/content/cloneMediaSources/lib.ts`。
+- **SilenceDetector1 & SilenceDetector2**：使用 Web Audio API 检测音频中的静音部分。有两个实例，分别用于 `ElementPlaybackControllerCloning` 和 `ElementPlaybackControllerStretching`。仓库语境表明，该组件位于 `src/entry-points/content/SilenceDetector/SilenceDetectorProcessor.ts`。
+- **Popup**：扩展程序的 UI 界面，显示图表和其他信息。仓库语境表明，该组件位于 `src/entry-points/popup/App.svelte`。
+
+## 连线、分支与汇聚关系
+- `watchAllElements --> AllMediaElementsController`：`watchAllElements` 找到新的媒体元素后，通过 `onNewMediaElements(...elements)` 方法将它们传递给 `AllMediaElementsController`。
+- `AllMediaElementsController --> chooseController`：`AllMediaElementsController` 将原始的 `HTMLMediaElement` 传递给 `chooseController`，后者选择合适的控制器。
+- `chooseController --> ElementPlaybackControllerCloning`：根据选择，将 `HTMLMediaElement` 传递给 `ElementPlaybackControllerCloning`。
+- `chooseController --> ElementPlaybackControllerStretching`：根据选择，将 `HTMLMediaElement` 传递给 `ElementPlaybackControllerStretching`。
+- `ElementPlaybackControllerCloning --> Lookahead`：`ElementPlaybackControllerCloning` 持有原始 `HTMLMediaElement` 的引用，并将其传递给 `Lookahead`。
+- `Lookahead --> ElementPlaybackControllerCloning`：`Lookahead` 将检测到的静音范围传递给 `ElementPlaybackControllerCloning`。
+- `createCloneElementWithSameSrc --> Lookahead`：`createCloneElementWithSameSrc` 创建 `HTMLMediaElement` 克隆，并传递给 `Lookahead`。
+- `Lookahead --> createCloneElementWithSameSrc`：`Lookahead` 将原始 `HTMLMediaElement` 的引用传递给 `createCloneElementWithSameSrc`。
+- `cloneMediaSources --> Lookahead`：`cloneMediaSources` 拦截 MediaSource 对象，并为 `Lookahead` 提供克隆的 `HTMLMediaElement`。
+- `Lookahead --> cloneMediaSources`：`Lookahead` 通过 `getMediaSourceCloneElement` 获取 `cloneMediaSources` 提供的克隆元素。
+- `Lookahead --> SilenceDetector1`：`Lookahead` 将克隆的 `HTMLMediaElement` 的音频传递给 `SilenceDetector1`。
+- `SilenceDetector1 --> Lookahead`：`SilenceDetector1` 检测静音，并返回带有时间戳的 `SILENCE_END` 和 `SILENCE_START` 事件给 `Lookahead`。
+- `ElementPlaybackControllerStretching --> SilenceDetector2`：`ElementPlaybackControllerStretching` 将原始 `HTMLMediaElement` 的音频传递给 `SilenceDetector2`。
+- `SilenceDetector2 --> ElementPlaybackControllerStretching`：`SilenceDetector2` 检测静音，并返回带有时间戳的 `SILENCE_END` 和 `SILENCE_START` 事件给 `ElementPlaybackControllerStretching`。
+- `AllMediaElementsController --> Popup`：`AllMediaElementsController` 将遥测数据传递给 `Popup`。
+
+## 仓库语境与术语解释
+- **watchAllElements**：该模块负责监听网页上的媒体元素，是整个流程的起点。
+- **AllMediaElementsController**：该模块负责协调和管理所有媒体元素，并根据情况选择合适的控制器。
+- **ElementPlaybackControllerCloning**：该控制器通过克隆媒体元素并提前检测静音来实现静音跳过。
+- **ElementPlaybackControllerStretching**：该控制器通过实时分析音频并调整播放速度来实现静音跳过。
+- **SilenceDetector**：该模块使用 Web Audio API 检测音频中的静音部分。
+- **MediaSource**：一种 HTML5 API，允许 JavaScript 生成媒体流。`cloneMediaSources` 模块拦截并克隆 MediaSource 对象，以支持克隆算法。
+- **Popup**：扩展程序的 UI 界面，用于显示图表和其他信息，例如节省的时间。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Jump Cutter 扩展程序如何检测和跳过视频中的静音部分。流程从 `watchAllElements` 查找媒体元素开始，然后由 `AllMediaElementsController` 选择 `ElementPlaybackControllerCloning` 或 `ElementPlaybackControllerStretching` 进行处理。`ElementPlaybackControllerCloning` 通过克隆媒体元素，使用 `Lookahead` 和 `SilenceDetector1` 提前检测静音；`ElementPlaybackControllerStretching` 则直接分析原始音频，使用 `SilenceDetector2` 实时调整播放速度。最终，`AllMediaElementsController` 将遥测数据发送到 `Popup` 以显示统计信息。该图展示了两种不同的静音检测和跳过算法，以及它们之间的协作关系。

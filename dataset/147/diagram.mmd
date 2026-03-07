@@ -1,0 +1,44 @@
+flowchart TD
+    subgraph OpenMCP Core Components
+        renderer[Renderer]
+        openmcpservice[OpenMCPService]
+    end
+
+    subgraph OpenMCP_Web["OpenMCP Web"]
+        renderer
+        openmcpservice
+        nginx[Nginx]
+    end
+
+    subgraph OpenMCP_Plugin["OpenMCP Plugin"]
+        renderer
+        openmcpservice
+        vscode[VSCode Plugin Code]
+    end
+
+    subgraph OpenMCP_App["OpenMCP App"]
+        renderer
+        openmcpservice
+        electron[Electron Code]
+    end
+
+    subgraph QQBot["OpenMCP-based QQ Bot"]
+        lagrange[Lagrange.OneBot]
+        openmcpservice
+    end
+
+    %% Dependencies
+    OpenMCP_Web -->|Frontend Rendering| renderer
+    OpenMCP_Web -->|Backend Service| openmcpservice
+    OpenMCP_Web -->|Reverse Proxy| nginx
+
+    OpenMCP_Plugin -->|UI Interface| renderer
+    OpenMCP_Plugin -->|Core Logic| openmcpservice
+    OpenMCP_Plugin -->|IDE Integration| vscode
+
+    OpenMCP_App -->|Frontend UI| renderer
+    OpenMCP_App -->|Local Service| openmcpservice
+    OpenMCP_App -->|Desktop Packaging| electron
+
+    QQBot -->|Protocol Adaptation| lagrange
+    QQBot -->|Business Logic| openmcpservice

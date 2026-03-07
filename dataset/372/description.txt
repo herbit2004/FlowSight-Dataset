@@ -1,0 +1,38 @@
+## 图类型与用途
+这是一个架构图，展示了 Aden MCP Analytics Framework 中的优化策略及其带来的效果。该图旨在说明如何通过不同的优化策略来提高效率和性能，是框架设计理念的概览。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是包含各种优化策略的子图，底部是这些策略带来的性能提升。
+
+## 分组/子图/阶段说明
+图中有一个名为 "Optimization Strategies" 的子图，它包含了五个具体的优化策略节点。
+
+## 节点逐项说明
+- **Tiered Model Selection**：分层模型选择，根据任务的复杂性选择不同级别的模型，规划阶段使用 Pro/Sonnet 模型，执行阶段使用 Flash/Haiku 模型，简单任务使用最快的模型。
+- **Parallel Execution**：并行执行，允许独立工具调用、并发代理任务和批量操作并行执行。
+- **Caching Layers**：缓存层，使用多层缓存来加速数据访问，包括 5 分钟 TTL 的模式缓存、决策模式缓存和工具结果缓存。
+- **Circuit Breaker**：熔断器，用于快速检测故障、自动恢复并防止重试。
+- **Fast Path Optimization**：快速路径优化，对于简单的查询，允许单步绕过、直接工具执行，并跳过多代理流程。
+- **COST**：成本降低。
+- **LAT**：延迟降低。
+- **PERF**：性能提升，具体表现为 schema access 时间小于 10ms。
+- **REL**：可靠性提升。
+- **SPEED**：速度提升，具体表现为简单查询速度提升 70-80%。
+
+## 连线、分支与汇聚关系
+- `Tiered Model Selection -> COST`：分层模型选择策略带来成本降低。
+- `Parallel Execution -> LAT`：并行执行策略带来延迟降低。
+- `Caching Layers -> PERF`：缓存层策略带来性能提升。
+- `Circuit Breaker -> REL`：熔断器策略带来可靠性提升。
+- `Fast Path Optimization -> SPEED`：快速路径优化策略带来速度提升。
+
+## 仓库语境与术语解释
+- **Aden MCP Analytics Framework**：Aden 公司提供的开源分析框架，旨在通过对话式 AI 实现数据分析的普及化，详情见 README。
+- **Model Context Protocol (MCP)**：该框架基于 MCP 构建，使 AI 代理能够自主导航数据库、执行复杂的分析查询，并通过自然语言提供可操作的业务见解，详情见 README。
+- **Tiered Model Selection**：根据 `packages/agent-client/src/decision-executor/fast-decision-optimizer.js` 和 `packages/agent-client/src/config.js`，框架会根据任务复杂度选择不同的 LLM 模型，以优化性能和成本。
+- **Caching Layers**：框架使用多层缓存来加速数据访问，提高性能。
+- **Fast Path Optimization**：对于简单查询，框架会尝试快速路径优化，跳过多代理流程，以提高速度。
+- **LLMFactory**：`packages/agent-client/src/llm/llm-factory.js` 文件定义了 LLMFactory，用于创建不同 LLM 供应商（如 Claude、OpenAI、Gemini、Groq）的实例。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Aden MCP Analytics Framework 的优化策略。从分层模型选择、并行执行、缓存层、熔断器和快速路径优化这五个策略出发，分别实现了成本降低、延迟降低、性能提升、可靠性提升和速度提升。其中，分层模型选择根据任务复杂度选择不同的 LLM 模型，快速路径优化则针对简单查询跳过多代理流程，以提升效率。这些策略共同作用，旨在优化整个分析流程。

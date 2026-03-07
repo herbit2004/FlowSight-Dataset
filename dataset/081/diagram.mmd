@@ -1,0 +1,53 @@
+graph TB
+    subgraph "CLI Layer"
+        CLI[cmd/cpp/main.go<br/>Cobra CLI]
+    end
+    
+    subgraph "Internal Packages"
+        Hubble[internal/hubble/<br/>Flow Parsing]
+        Synth[internal/synth/<br/>Policy Synthesis]
+        Verify[internal/verify/<br/>Policy Validation]
+        Explain[internal/explain/<br/>Report Generation]
+        Graph[internal/graph/<br/>Network Graph]
+        Validate[internal/validate/<br/>Input Validation]
+    end
+    
+    subgraph "Data Sources"
+        HubbleJSON[Hubble Flows<br/>JSON Files]
+        HubbleCLI[Hubble CLI<br/>Future: API]
+    end
+    
+    subgraph "Outputs"
+        Policies[CiliumNetworkPolicy<br/>YAML]
+        Report[HTML Report<br/>with Graph]
+    end
+    
+    CLI -->|learn| Hubble
+    CLI -->|propose| Synth
+    CLI -->|verify| Verify
+    CLI -->|explain| Explain
+    
+    HubbleJSON --> Hubble
+    HubbleCLI -.->|future| Hubble
+    
+    Hubble -->|Parsed Flows| Synth
+    Synth -->|Policies| Verify
+    Synth -->|Policies| Explain
+    Hubble -->|Flows| Explain
+    Explain --> Graph
+    
+    Validate --> Hubble
+    Validate --> Synth
+    Validate --> Verify
+    Validate --> Explain
+    
+    Synth --> Policies
+    Explain --> Report
+    
+    style CLI fill:#e1f5ff
+    style Hubble fill:#fff4e1
+    style Synth fill:#e8f5e9
+    style Verify fill:#fce4ec
+    style Explain fill:#f3e5f5
+    style Graph fill:#f3e5f5
+    style Validate fill:#fff9c4

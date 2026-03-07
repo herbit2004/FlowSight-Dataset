@@ -1,0 +1,19 @@
+graph TB
+    CC[Claude Code] -->|MCP Protocol| S[MemCP Server<br/>FastMCP]
+    S --> M[Memory<br/>24 tools]
+    S --> G[MAGMA Graph<br/>SQLite]
+    S --> SR[Search<br/>5 tiers]
+    S --> C[Context Store<br/>Filesystem]
+
+    G -->|4 edge types| E1[Semantic]
+    G --> E2[Temporal]
+    G --> E3[Causal]
+    G --> E4[Entity]
+
+    SA[Sub-Agents] -->|MCP| S
+    SA --> A1[Analyzer]
+    SA --> A2[Mapper x N]
+    SA --> A3[Synthesizer]
+
+    H[Hooks] -->|PreCompact| CC
+    H -->|Reminders| CC

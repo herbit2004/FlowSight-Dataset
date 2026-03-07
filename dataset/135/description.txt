@@ -1,0 +1,40 @@
+## 图类型与用途
+这是一个流程图，描述了 WiFi-3D-Fusion 系统中实时 3D 运动感知的数据采集和处理流程。它展示了如何从不同的 WiFi 数据源捕获数据，经过处理和融合，最终在 Open3D 中实时显示 3D 运动。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是数据捕获阶段，中间是数据处理和融合阶段，右侧是结果可视化阶段。
+
+## 分组/子图/阶段说明
+图中包含一个名为 "Capture" 的子图，用于表示数据捕获阶段。该子图包含三个不同的数据源：ESP32 UDP JSON, Nexmon + tcpdump, Monitor Radiotap。
+在 Capture 子图之外，逻辑上可以分为数据处理、数据融合和可视化三个阶段。
+
+## 节点逐项说明
+- **ESP32 UDP JSON**：表示从 ESP32 设备通过 UDP 协议接收 JSON 格式的数据，其中包含 CSI (Channel State Information) 批处理数据。`esp32_udp.py` 脚本用于处理这些数据。
+- **Nexmon + tcpdump**：表示使用 Nexmon 工具和 tcpdump 命令捕获原始的 WiFi 数据包，以 pcap 格式存储。`nexmon_pcap.py` 脚本用于处理这些数据。
+- **Monitor Radiotap**：表示通过监听 Radiotap 头部信息，获取 RSSI (Received Signal Strength Indicator) 信号强度流数据。`monitor_radiotap.py` 脚本用于处理这些数据。
+- **esp32_udp.py**：一个 Python 脚本，用于处理从 ESP32 接收到的 UDP JSON 数据，提取 CSI 数据。
+- **nexmon_pcap.py**：一个 Python 脚本，用于处理从 Nexmon + tcpdump 捕获的 pcap 数据，提取 CSI 数据。
+- **monitor_radiotap.py**：一个 Python 脚本，用于处理从 Radiotap 监听到的 RSSI 流数据。
+- **realtime_detector.py**：一个 Python 脚本，作为实时检测器，接收来自不同数据源的数据，并进行初步处理和分析，检测运动。
+- **fusion rf/rssi**：代表射频 (RF) 和 RSSI 数据的融合处理阶段，用于将不同来源的数据整合，以提高运动感知的准确性。
+- **Open3D live viewer**：使用 Open3D 库实现的实时 3D 可视化界面，用于显示最终的 3D 运动感知结果。
+
+## 连线、分支与汇聚关系
+- `ESP32 UDP JSON -> esp32_udp.py`：ESP32 UDP JSON 数据通过 `csi_batch` 数据流向 `esp32_udp.py`。
+- `Nexmon + tcpdump -> nexmon_pcap.py`：Nexmon + tcpdump 捕获的 pcap 数据通过 `pcap` 数据流向 `nexmon_pcap.py`。
+- `Monitor Radiotap -> monitor_radiotap.py`：Monitor Radiotap 监听到的 RSSI 流数据通过 `RSSI stream` 数据流向 `monitor_radiotap.py`。
+- `esp32_udp.py & nexmon_pcap.py & monitor_radiotap.py -> realtime_detector.py`：`esp32_udp.py`、`nexmon_pcap.py` 和 `monitor_radiotap.py` 的输出都流向 `realtime_detector.py`，形成汇聚关系。
+- `realtime_detector.py -> fusion rf/rssi`：`realtime_detector.py` 的输出流向 `fusion rf/rssi`，进行射频和 RSSI 数据的融合。
+- `fusion rf/rssi -> Open3D live viewer`：`fusion rf/rssi` 的输出流向 `Open3D live viewer`，进行 3D 运动感知结果的可视化。
+
+## 仓库语境与术语解释
+- **ESP32**：一种低成本、低功耗的微控制器，常用于 WiFi 数据采集。
+- **CSI (Channel State Information)**：信道状态信息，用于描述无线信道的特性。
+- **RSSI (Received Signal Strength Indicator)**：接收信号强度指示，用于表示接收到的无线信号的强度。
+- **Nexmon**：一个用于在博通 WiFi 芯片上启用监控模式和 CSI 捕获的工具。
+- **tcpdump**：一个常用的命令行数据包捕获工具。
+- **Open3D**：一个开源的 3D 数据处理库，用于 3D 可视化。
+- **fusion rf/rssi**：根据 `configs/fusion.yaml` 配置文件，该阶段融合射频数据和 RSSI 数据，以提高运动感知的准确性。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 WiFi-3D-Fusion 系统的数据采集和处理流程。从左侧的 "Capture" 子图开始，通过 ESP32 UDP JSON、Nexmon + tcpdump 和 Monitor Radiotap 三种方式捕获 WiFi 数据，分别经过 `esp32_udp.py`、`nexmon_pcap.py` 和 `monitor_radiotap.py` 脚本处理后，汇聚到 `realtime_detector.py` 进行实时检测。然后，数据流向 `fusion rf/rssi` 进行融合处理，最后通过 `Open3D live viewer` 进行 3D 可视化。该流程的关键环节包括数据捕获、实时检测和数据融合，最终实现 3D 运动的实时感知和可视化。`configs/fusion.yaml` 文件配置了数据融合和运动检测的相关参数。

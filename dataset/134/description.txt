@@ -1,0 +1,45 @@
+## 图类型与用途
+这是一个流程图/架构图，描述了 JoySafety 大模型安全框架的执行时期架构，展示了用户请求如何通过 API 服务，并调用多个独立服务进行安全检测和处理。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是用户/业务系统，中间是 API 服务和多个独立服务，底部是数据库和向量库。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：用户请求接入、API 服务协调处理、以及各独立服务进行安全检测。
+
+## 节点逐项说明
+- **User (用户/业务系统)**：代表使用 JoySafety 框架的最终用户或业务系统，发起需要进行安全检测的请求。
+- **API (safety-api API服务)**：安全框架的入口点，提供 API 接口供用户或业务系统调用，接收请求并协调各个安全检测模块。根据 `safety-api/README.md`，该服务作为防御系统能力入口，对外提供统一的 API。
+- **Core (safety-basic Java lib)**：核心的 Java 库，包含一些基础的安全检测逻辑和算法，供 API 服务调用。根据 `safety/safety-basic/README.md`，该库聚焦于安全检测、原子能力编排、DAG 流程引擎、会话与鉴权等基础能力。
+- **Bert (safety-bert 独立服务)**：基于 BERT 模型的独立服务，用于进行深度语义分析和安全检测。
+- **FastText (safety-fasttext 独立服务)**：基于 FastText 模型的独立服务，用于进行快速文本分类和安全检测。
+- **Keywords (safety-keywords 独立服务)**：基于关键词匹配的独立服务，用于检测文本中是否包含敏感词。
+- **Knowledge (safety-knowledge 独立服务)**：知识库服务，用于存储和检索安全相关的知识和配置信息，例如恶意模式、攻击向量等。
+- **DB (MySQL/Redis)**：数据库，用于存储策略、配置、模型数据、敏感词数据等。
+- **Vearch (Vearch 向量库)**：向量数据库，用于存储和检索知识相关的向量数据，支持语义相似度搜索。
+
+## 连线、分支与汇聚关系
+- `User -> API`：用户/业务系统通过 HTTP/SDK 调用 API 服务，发送需要检测的文本或请求。
+- `API -> Core`：API 服务依赖于 Core 库，调用其中的安全检测逻辑。
+- `API -> DB`：API 服务从数据库中读取安全策略和配置信息。
+- `API -> Bert`：API 服务通过 HTTP/RESTful 接口调用 Bert 服务，进行安全检测。
+- `API -> FastText`：API 服务通过 HTTP/RESTful 接口调用 FastText 服务，进行安全检测。
+- `API -> Keywords`：API 服务通过 HTTP/RESTful 接口调用 Keywords 服务，进行安全检测。
+- `API -> Knowledge`：API 服务通过 HTTP/RESTful 接口调用 Knowledge 服务，进行安全检测。
+- `Bert -> DB`：Bert 服务从数据库中读取模型数据。
+- `FastText -> DB`：FastText 服务从数据库中读取模型数据。
+- `Keywords -> DB`：Keywords 服务从数据库中读取敏感词数据和知识/配置。
+- `Knowledge -> DB`：Knowledge 服务从数据库中读取知识/配置。
+- `Knowledge -> Vearch`：Knowledge 服务使用 Vearch 向量库进行向量检索，以查找相似的知识。
+
+## 仓库语境与术语解释
+- **safety-api**：根据 `safety-api/README.md`，该服务作为防御系统能力入口，对外提供统一的 API。
+- **safety-basic**：根据 `safety/safety-basic/README.md`，该库聚焦于安全检测、原子能力编排、DAG 流程引擎、会话与鉴权等基础能力。
+- **safety-bert**：提供基于 BERT 模型的深度语义分析和安全检测能力。
+- **safety-fasttext**：提供基于 FastText 模型的快速文本分类和安全检测能力。
+- **safety-keywords**：提供基于关键词匹配的敏感词检测服务。
+- **safety-knowledge**：提供知识检索、RAG、多轮对话检测等能力。
+- **Vearch**：向量数据库，用于存储和检索知识相关的向量数据，支持语义相似度搜索。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 JoySafety 框架的执行时期架构。用户请求首先通过 HTTP/SDK 进入 API 服务，API 服务依赖 safety-basic 库，并从数据库读取策略和配置。随后，API 服务通过 HTTP/RESTful 接口调用 Bert、FastText、Keywords 和 Knowledge 等独立服务进行安全检测。其中，Knowledge 服务还使用 Vearch 向量库进行向量检索。各独立服务从数据库读取模型数据、敏感词数据和知识/配置，最终 API 服务根据检测结果采取相应的安全措施。

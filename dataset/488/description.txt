@@ -1,0 +1,82 @@
+## 图类型与用途
+这是一个流程图，描述了基于 Issue-Driven Development 和 Behavior-Driven Development (BDD) 的软件开发流程，并展示了如何利用 AI Agent 自动化部分开发环节。它在仓库中的作用是展示从用户故事到最终部署的完整流程，以及各个阶段涉及的角色和工具。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是流程的起点，即用户故事，底部是流程的终点，即生产部署。流程从用户故事开始，经过一系列阶段，最终部署到生产环境。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分成以下几个阶段：
+- **用户故事与 BDD 规范阶段**：从用户故事开始，生成 BDD 规范。
+- **Epic 创建与分解阶段**：将 BDD 规范转化为 Epic，并分解为多个 Sub-Issue。
+- **任务分配与 AI Agent 实现阶段**：将 Sub-Issue 分解为 Tasks，并由 AI Agent 自动执行。
+- **代码审查与集成阶段**：对 AI Agent 生成的代码进行审查，并将通过审查的代码合并到集成主干。
+- **生产部署阶段**：将集成主干的代码部署到生产环境。
+
+## 节点逐项说明
+- **A (User Story)**：用户故事，描述了用户希望软件实现的功能或解决的问题。可以通过 `/user-story` 命令创建，参考 `commands/user-story.md`。
+- **B (BDD Specification)**：BDD 规范，基于用户故事编写的，使用 Gherkin 语言描述的行为驱动开发规范。
+- **C (Epic Creation)**：创建 Epic，将用户故事分解为更大的工作单元，通常对应一个大的功能模块。
+- **D (Epic Parent Issue)**：Epic 的父 Issue，在代码仓库中代表一个 Epic。可以通过 `/issue` 命令创建，参考 `commands/issue.md`。
+- **E1 (Sub-Issue 1: Backend API)**：Epic 的子 Issue，将 Epic 分解为更小的、可管理的任务，对应后端 API。
+- **E2 (Sub-Issue 2: Frontend UI)**：Epic 的子 Issue，将 Epic 分解为更小的、可管理的任务，对应前端 UI。
+- **E3 (Sub-Issue 3: Database Schema)**：Epic 的子 Issue，将 Epic 分解为更小的、可管理的任务，对应数据库 Schema。
+- **E4 (Sub-Issue 4: Integration Tests)**：Epic 的子 Issue，将 Epic 分解为更小的、可管理的任务，对应集成测试。
+- **F1 (Backend Tasks)**：Backend API 子 Issue 下的任务，进一步细化需要完成的工作。可以通过 `/task` 命令创建，参考 `commands/task.md`。
+- **F2 (Frontend Tasks)**：Frontend UI 子 Issue 下的任务，进一步细化需要完成的工作。
+- **F3 (Database Tasks)**：Database Schema 子 Issue 下的任务，进一步细化需要完成的工作。
+- **F4 (Testing Tasks)**：Integration Tests 子 Issue 下的任务，进一步细化需要完成的工作。
+- **G1 (API Implementation)**：由 AI Agent 自动执行的任务，对应 API 实现，由 `backend-architect` Agent 负责。
+- **G2 (UI Implementation)**：由 AI Agent 自动执行的任务，对应 UI 实现，由 `frontend-developer` Agent 负责。
+- **G3 (Schema Migration)**：由 AI Agent 自动执行的任务，对应 Schema 迁移，由 `database-optimizer` Agent 负责。
+- **G4 (Test Suite)**：由 AI Agent 自动执行的任务，对应测试套件生成，由 `test-automator` Agent 负责。
+- **H1 (Backend PR)**：API 实现任务完成后创建的 Pull Request，等待代码审查。可以通过 `/pr` 命令创建，参考 `commands/pr.md`。
+- **H2 (Frontend PR)**：UI 实现任务完成后创建的 Pull Request，等待代码审查。
+- **H3 (Database PR)**：Schema 迁移任务完成后创建的 Pull Request，等待代码审查。
+- **H4 (Testing PR)**：测试套件生成任务完成后创建的 Pull Request，等待代码审查。
+- **I1 (Security Check)**：代码审查环节，由安全审计员 `security-auditor` 进行安全检查。
+- **I2 (Code Quality)**：代码审查环节，由代码审查员 `code-reviewer` 进行代码质量检查。
+- **I3 (Schema Validation)**：代码审查环节，由数据库管理员 `database-admin` 进行 Schema 验证。
+- **I4 (Coverage Check)**：代码审查环节，由测试自动化工具 `test-automator` 进行覆盖率检查。
+- **J (Integration Branch)**：集成分支，所有通过审查的 Pull Request 合并到该分支。
+- **K (Production Deploy)**：生产部署，将集成分支的代码部署到生产环境。
+
+## 连线、分支与汇聚关系
+- `A -> B`：通过 `/user-story` 命令，从用户故事生成 BDD 规范。
+- `B -> C`：通过 Gherkin 场景驱动 Epic 创建。
+- `C -> D`：通过 `/issue` 命令创建 Epic Parent Issue。
+- `D -> E1`：Epic Parent Issue 被分解为 Sub-Issue 1: Backend API。
+- `D -> E2`：Epic Parent Issue 被分解为 Sub-Issue 2: Frontend UI。
+- `D -> E3`：Epic Parent Issue 被分解为 Sub-Issue 3: Database Schema。
+- `D -> E4`：Epic Parent Issue 被分解为 Sub-Issue 4: Integration Tests。
+- `E1 -> F1`：Backend API 子 Issue 被分解为 Backend Tasks。
+- `E2 -> F2`：Frontend UI 子 Issue 被分解为 Frontend Tasks。
+- `E3 -> F3`：Database Schema 子 Issue 被分解为 Database Tasks。
+- `E4 -> F4`：Integration Tests 子 Issue 被分解为 Testing Tasks。
+- `F1 -> G1`：Backend Tasks 由 `backend-architect` Agent 负责 API Implementation。
+- `F2 -> G2`：Frontend Tasks 由 `frontend-developer` Agent 负责 UI Implementation。
+- `F3 -> G3`：Database Tasks 由 `database-optimizer` Agent 负责 Schema Migration。
+- `F4 -> G4`：Testing Tasks 由 `test-automator` Agent 负责 Test Suite。
+- `G1 -> H1`：API Implementation 完成后创建 Backend PR。
+- `G2 -> H2`：UI Implementation 完成后创建 Frontend PR。
+- `G3 -> H3`：Schema Migration 完成后创建 Database PR。
+- `G4 -> H4`：Test Suite 完成后创建 Testing PR。
+- `H1 -> I1`：Backend PR 经过 `security-auditor` 的 Security Check。
+- `H2 -> I2`：Frontend PR 经过 `code-reviewer` 的 Code Quality 检查。
+- `H3 -> I3`：Database PR 经过 `database-admin` 的 Schema Validation。
+- `H4 -> I4`：Testing PR 经过 `test-automator` 的 Coverage Check。
+- `I1 & I2 & I3 & I4 -> J`：Security Check、Code Quality、Schema Validation 和 Coverage Check 通过后，代码合并到 Integration Branch，形成汇聚关系。
+- `J -> K`：Integration Branch 经过 Final Review 后，部署到 Production Deploy。
+
+## 仓库语境与术语解释
+- **User Story**: 描述用户需求的文档，是 BDD 的起点。
+- **BDD (Behavior-Driven Development)**: 一种软件开发方法，通过描述软件的行为来驱动开发过程。
+- **Gherkin**: 一种用于描述软件行为的语言，通常用于编写 BDD 规范。
+- **Epic**: 一个大的用户故事，通常对应一个大的功能模块。
+- **Sub-Issue**: Epic 的子任务，将 Epic 分解为更小的、可管理的任务。
+- **Task**: Sub-Issue 的子任务，进一步细化需要完成的工作。
+- **AI Agent**: 负责自动执行 Task 的 AI 代理，例如 `backend-architect`、`frontend-developer`、`database-optimizer` 和 `test-automator`。参考 `skills/README.md` 中关于 Skills vs Agents 的解释。
+- **Pull Request (PR)**: 代码变更的请求，用于代码审查和合并。
+- **Slash Commands**: 用于触发特定操作的命令，例如 `/user-story`、`/issue`、`/task` 和 `/pr`。参考 `commands/README.md`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了一个从用户故事开始，经过 BDD 规范、Epic 创建与分解、任务分配与 AI Agent 实现、代码审查与集成，最终部署到生产环境的软件开发流程。用户故事通过 `/user-story` 命令转化为 BDD 规范，再通过 `/issue` 命令创建 Epic Parent Issue，Epic 被分解为多个 Sub-Issue，每个 Sub-Issue 又被分解为 Tasks，由不同的 AI Agent 负责实现，例如 `backend-architect` 负责 API 实现。最终，所有通过审查的代码合并到 Integration Branch，并部署到生产环境。其中，AI Agent 的选择和任务分解是两个关键中间环节。

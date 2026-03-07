@@ -1,0 +1,13 @@
+flowchart LR
+    subgraph Triage["Triage Agent"]
+        NEO4J[(Neo4j\nAttack Surface)] --> COLLECT[9 Cypher\nQueries]
+        COLLECT --> LLM_T[LLM Analysis\nCorrelate + Prioritize]
+        LLM_T --> REMS[Remediation\nEntries]
+    end
+
+    subgraph CodeFix["CodeFix Agent"]
+        REMS --> CLONE[Clone Repo\nCreate Branch]
+        CLONE --> REACT[ReAct Loop\n11 Code Tools]
+        REACT --> DIFF[Diff Blocks\nUser Review]
+        DIFF --> PR[Commit + Push\nGitHub PR]
+    end

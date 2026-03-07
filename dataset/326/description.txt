@@ -1,0 +1,84 @@
+## 图类型与用途
+这是一个架构图，展示了 `dotnet-artisan` 插件的内部结构和组件之间的关系。该插件旨在为 .NET 开发提供全面的技能和专家代理，并与 Claude Code, GitHub Copilot CLI, 和 OpenAI Codex 等工具集成。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是插件容器，包含 Agents, Skills, Infra 三个子模块，Agents 和 Skills 之间存在复杂的路由关系。
+
+## 分组/子图/阶段说明
+- **Plugin ("dotnet-artisan Plugin")**：整个插件的容器，包含 Agents, Skills, Infra 三个子模块。
+- **Agents ("14 Specialist Agents")**：包含 14 个专门的代理，每个代理负责特定的 .NET 开发任务。
+- **Skills ("8 Broad Skills")**：包含 8 个广泛的技能领域，涵盖 .NET 开发的各个方面。
+- **Infra ("Infrastructure")**：基础设施组件，包含配置文件。
+
+## 节点逐项说明
+- **PJ (plugin.json)**：插件的配置文件，可能包含插件的元数据和配置信息。根据 `.claude-plugin/plugin.json` 文件，它定义了插件的名称、版本、描述、作者、主页、仓库地址、license、关键词、技能列表和代理列表。
+- **DA (dotnet-architect Central Router)**：中央路由代理，负责将请求路由到其他代理。
+- **CSC (concurrency-specialist)**：并发专家。
+- **SR (security-reviewer)**：安全审查员。
+- **BSA (blazor-specialist)**：Blazor 专家。
+- **US (uno-specialist)**：Uno 平台专家。
+- **MS (maui-specialist)**：MAUI 专家。
+- **PA (performance-analyst)**：性能分析师。
+- **BD (benchmark-designer)**：基准测试设计者。
+- **DG (docs-generator)**：文档生成器。
+- **ASP (async-performance-specialist)**：异步性能专家。
+- **ASN (aspnetcore-specialist)**：ASP.NET Core 专家。
+- **TS (testing-specialist)**：测试专家。
+- **CS (cloud-specialist)**：云专家。
+- **CR (code-review-agent)**：代码审查代理。
+- **ADV (dotnet-advisor Router)**：顾问，作为路由。根据 `skills/dotnet-advisor/SKILL.md`，它负责将 .NET/C# 请求路由到正确的领域技能，并加载编码标准作为所有代码路径的基线。
+- **CS (dotnet-csharp C# Language)**：C# 语言技能。根据 `skills/dotnet-csharp/SKILL.md`，它提供 C# 语言模式、编码标准和 .NET 运行时特性。
+- **API (dotnet-api ASP.NET/Backend)**：ASP.NET/后端技能。根据 `skills/dotnet-api/SKILL.md`，它用于构建 ASP.NET Core APIs, EF Core 数据访问, gRPC, SignalR, 和后端服务。
+- **UIS (dotnet-ui UI Frameworks)**：UI 框架技能。
+- **TEST (dotnet-testing Testing/Quality)**：测试/质量技能。
+- **DEVOPS (dotnet-devops CI/CD/Ops)**：CI/CD/Ops 技能。
+- **TOOL (dotnet-tooling Build/Tools)**：构建/工具技能。
+- **DBG (dotnet-debugging Debugging)**：调试技能。
+- **HK (hooks/hooks.json)**：钩子配置文件，可能用于在特定事件发生时触发操作。
+- **MCP (.mcp.json)**：图中可见，但仓库上下文未进一步说明。
+
+## 连线、分支与汇聚关系
+- `DA -> BSA`：dotnet-architect 路由到 blazor-specialist。
+- `DA -> US`：dotnet-architect 路由到 uno-specialist。
+- `DA -> MS`：dotnet-architect 路由到 maui-specialist。
+- `DA -> CSC`：dotnet-architect 路由到 concurrency-specialist。
+- `DA -> SR`：dotnet-architect 路由到 security-reviewer。
+- `DA -> PA`：dotnet-architect 路由到 performance-analyst。
+- `DA -> BD`：dotnet-architect 路由到 benchmark-designer。
+- `DA -> DG`：dotnet-architect 路由到 docs-generator。
+- `DA -> ASP`：dotnet-architect 路由到 async-performance-specialist。
+- `DA -> ASN`：dotnet-architect 路由到 aspnetcore-specialist。
+- `DA -> TS`：dotnet-architect 路由到 testing-specialist。
+- `DA -> CS`：dotnet-architect 路由到 cloud-specialist。
+- `DA -> CR`：dotnet-architect 路由到 code-review-agent。
+- `BSA -> UIS`：blazor-specialist 关联到 dotnet-ui。
+- `US -> UIS`：uno-specialist 关联到 dotnet-ui。
+- `MS -> UIS`：maui-specialist 关联到 dotnet-ui。
+- `CSC -> CS`：concurrency-specialist 关联到 dotnet-csharp。
+- `SR -> API`：security-reviewer 关联到 dotnet-api。
+- `PA -> TOOL`：performance-analyst 关联到 dotnet-tooling。
+- `BD -> TEST`：benchmark-designer 关联到 dotnet-testing。
+- `DG -> TOOL`：docs-generator 关联到 dotnet-tooling。
+- `DA -> API`：dotnet-architect 路由到 dotnet-api。
+- `DA -> CS`：dotnet-architect 路由到 dotnet-csharp。
+- `ADV -> CS`：dotnet-advisor 路由到 dotnet-csharp。
+- `ADV -> API`：dotnet-advisor 路由到 dotnet-api。
+- `ADV -> UIS`：dotnet-advisor 路由到 dotnet-ui。
+- `ADV -> TEST`：dotnet-advisor 路由到 dotnet-testing。
+- `ADV -> DEVOPS`：dotnet-advisor 路由到 dotnet-devops。
+- `ADV -> TOOL`：dotnet-advisor 路由到 dotnet-tooling。
+- `ADV -> DBG`：dotnet-advisor 路由到 dotnet-debugging。
+
+## 仓库语境与术语解释
+- **dotnet-artisan**: 这是一个 .NET 开发的插件，旨在提供全面的技能和专家代理。
+- **Skills**: 技能，代表 .NET 开发的各个方面，例如 C# 语言、ASP.NET Core API、UI 框架、测试、DevOps、工具和调试。根据 `.claude-plugin/plugin.json`，技能目录位于 `skills/*`。
+- **Agents**: 专家代理，提供特定领域的专业知识，例如架构设计、并发处理、安全审查、Blazor 开发、Uno 平台开发、MAUI 开发、性能分析、基准测试设计、文档生成、异步性能优化、ASP.NET Core 优化、测试、云和代码审查。根据 `.claude-plugin/plugin.json`，agent 定义位于 `agents/*.md`。
+- **dotnet-architect**: 中央路由代理，负责将请求路由到其他代理。
+- **dotnet-advisor**: 路由技能，负责将 .NET/C# 请求路由到正确的领域技能。
+- **plugin.json**: 插件的配置文件，包含插件的元数据和配置信息。
+- **hooks/hooks.json**: 钩子配置文件，可能用于在特定事件发生时触发操作。
+- **MCP**: 图中可见，但仓库上下文未进一步说明。
+- **Claude Code, GitHub Copilot CLI, OpenAI Codex**: 该插件兼容的工具，用于技能路由。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `dotnet-artisan` 插件的架构，该插件包含 Skills, Agents, Infra 三个主要模块。其中，`dotnet-architect` 作为中央路由代理，将请求分发给不同的 Specialist Agents，而 `dotnet-advisor` 作为路由技能，将请求路由到不同的 Skills。Skills 涵盖了 .NET 开发的各个方面，例如 C# 语言、ASP.NET Core API、UI 框架、测试、DevOps、工具和调试。该插件旨在为 .NET 开发提供全面的技能和专家代理，并与 Claude Code, GitHub Copilot CLI, 和 OpenAI Codex 等工具集成。`plugin.json` 文件定义了插件的元数据和配置信息。

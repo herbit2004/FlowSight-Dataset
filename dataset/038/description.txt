@@ -1,0 +1,60 @@
+## 图类型与用途
+这是一个架构图，展示了 Secure Enterprise OS 系统的整体架构，该系统是一个 AI 驱动的软件开发平台，旨在自动化和智能化 1C:Enterprise 平台的开发、测试和运维流程。该图概括了系统的主要组件及其相互关系。
+
+## 图的整体布局
+图采用从上到下的分层布局。顶部是客户端入口，中间是网关层和 AI 核心，底部是认知记忆和事件总线。整体呈现一个分层、模块化的系统架构。
+
+## 分组/子图/阶段说明
+- **Clients & Entry Points (客户端 & 入口点)**：表示用户与系统交互的各种客户端和入口点。
+- **Gateway Layer (网关层)**：负责处理客户端请求，进行认证和授权，并将请求路由到相应的 AI 核心组件。
+- **AI Core (The Brain) (AI核心)**：系统的核心，包含 AI 编排器、专业代理和革命性组件，负责执行各种 AI 任务。
+- **Cognitive Memory (Nested Learning) (认知记忆)**：存储系统所需的各种知识和数据，包括短期记忆、长期记忆、知识图谱和模型注册表。
+- **Event Bus (Nervous System) (事件总线)**：用于在各个组件之间传递事件和消息，实现异步通信。
+
+## 节点逐项说明
+- **IDE Plugins (MCP)**：集成开发环境插件，允许开发者在 IDE 中直接与系统交互。
+- **Everywhere Client (gRPC)**：基于 gRPC 协议的客户端，支持从任何地方访问系统。
+- **Web Dashboard (React)**：基于 React 框架的 Web 仪表盘，用于监控和管理系统。
+- **CI/CD Pipelines (GitHub Actions)**：使用 GitHub Actions 实现的持续集成/持续部署流水线，自动化构建、测试和部署流程。
+- **API Gateway / Load Balancer**：API 网关和负载均衡器，管理和路由客户端请求。
+- **MCP Server**：MCP 服务器，可能与 IDE 插件相关，处理插件的请求。根据 `1c_mcp/README.md`，MCP (Model Context Protocol) 是一种开放标准，允许模型本身通过“工具”请求所需数据。
+- **Auth Service (JWT/OAuth)**：认证服务，使用 JWT 或 OAuth 进行身份验证和授权。
+- **AI Orchestrator**：AI 编排器，协调和管理各个 AI 代理和组件。根据 `docs/architecture/01-high-level-design.md`，AI Orchestrator 负责智能路由请求到 AI 服务，进行请求分类、缓存和回退机制。
+- **Developer**：开发者代理，可能用于自动生成代码、修复 bug 等。
+- **Architect**：架构师代理，可能用于设计系统架构。
+- **QA Engineer**：质量保证工程师代理，可能用于自动测试和验证代码。
+- **Business Analyst**：业务分析师代理，可能用于分析需求和生成规格说明。
+- **Self-Healing Engine**：自愈引擎，自动检测和修复系统中的问题。
+- **Self-Evolution (MAB)**：自进化引擎，使用多臂老虎机算法进行优化和改进。
+- **Code DNA Engine**：代码 DNA 引擎，分析和理解代码的结构和语义。
+- **Short-Term (Redis)**：短期记忆，使用 Redis 作为存储。
+- **Long-Term (Qdrant)**：长期记忆，使用 Qdrant 作为向量数据库。
+- **Knowledge Graph (Neo4j)**：知识图谱，使用 Neo4j 存储知识和关系。
+- **Model Registry (MLFlow)**：模型注册表，使用 MLFlow 管理和跟踪机器学习模型。
+- **NATS JetStream**：事件总线，用于在各个组件之间传递事件和消息。根据 README，NATS JetStream 用于实现毫秒级的异步响应。
+
+## 连线、分支与汇聚关系
+- `Clients -> API Gateway`：客户端请求通过 API 网关进入系统。
+- `Clients -> MCP Server`：客户端请求也可以通过 MCP 服务器进入系统。
+- `API Gateway -> AI Orchestrator`：API 网关将请求路由到 AI 编排器。
+- `MCP Server -> AI Orchestrator`：MCP 服务器也将请求路由到 AI 编排器。
+- `AI Orchestrator -> Specialized Agents`：AI 编排器将任务分配给不同的专业代理。
+- `AI Orchestrator <--> Revolutionary Components`：AI 编排器与革命性组件进行交互。
+- `Specialized Agents <--> Cognitive Memory`：专业代理与认知记忆系统进行交互，形成双向数据流动。
+- `Revolutionary Components <--> Cognitive Memory`：革命性组件与认知记忆系统进行交互，形成双向数据流动。
+- `Specialized Agents <--> NATS JetStream`：专业代理通过事件总线进行通信，形成双向数据流动。
+- `Revolutionary Components <--> NATS JetStream`：革命性组件通过事件总线进行通信，形成双向数据流动。
+- `Knowledge Graph -> Specialized Agents`：知识图谱向专业代理提供元数据。
+- `Long-Term -> Specialized Agents`：长期记忆通过 RAG (Retrieval-Augmented Generation) 向专业代理提供信息。
+
+## 仓库语境与术语解释
+- **1C:Enterprise**：俄罗斯流行的企业级应用平台，该系统旨在自动化和智能化基于该平台的软件开发。
+- **MCP (Model Context Protocol)**：一种开放标准，允许 AI 模型通过“工具”请求所需数据，从而实现上下文感知的智能交互。
+- **LangGraph**：根据 README，AI 核心的中央大脑使用 LangGraph 重写，支持有状态的代理和循环图。
+- **NATS JetStream**：一种高性能的事件总线，用于实现组件之间的异步通信和实时响应。
+- **Nested Learning Architecture**：一种多层记忆系统，旨在解决 LLM 的“灾难性遗忘”问题，使代理能够长期积累经验。
+- **AI Orchestrator**：负责协调和管理各个 AI 代理和组件，根据 `config/architecture.yaml`，AI Orchestrator 包含查询分类器、路由表、执行策略和响应排序器等组件。
+- **Revolutionary Components**：包括自愈引擎、自进化引擎和代码 DNA 引擎，旨在提高系统的可靠性、适应性和智能性。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该架构图展示了 Secure Enterprise OS 系统的整体架构，从客户端入口开始，请求经过 API 网关或 MCP 服务器进入系统，由 AI 编排器协调各个 AI 代理和组件，利用认知记忆系统存储知识和数据，并通过事件总线实现异步通信。AI 编排器是核心组件，负责请求路由和任务分配，而 MCP 服务器和 NATS JetStream 分别解决了 AI 客户端连接和组件间通信的问题。该系统旨在自动化和智能化 1C:Enterprise 平台的软件开发，并利用 LangGraph 和 Nested Learning 等技术提高 AI 代理的性能和可靠性。

@@ -1,0 +1,35 @@
+## 图类型与用途
+这是一个流程图，展示了 Sui 区块链中客户端与 Authority 节点交互以获取 AuthorityState 的过程。它描述了客户端请求如何被处理，以及如何与多个 Authority 节点交互以确保一致性和可靠性。
+
+## 图的整体布局
+图采用从左到右的布局。客户端位于左侧，通过一系列服务最终到达右侧的 Authority 节点。
+
+## 分组/子图/阶段说明
+图中包含两个子图：Authority1 和 Authority2，分别代表两个独立的 Authority 节点。
+
+## 节点逐项说明
+- **CLI Client**：命令行客户端，用户通过命令行与 Sui 区块链交互。
+- **Rest Client**：REST 客户端，用户通过 REST API 与 Sui 区块链交互。
+- **RPC Client**：RPC 客户端，用户通过 RPC 调用与 Sui 区块链交互。
+- **ClientService**：客户端服务，接收来自不同类型客户端的请求，并将其转发到 AuthorityAggregator。
+- **AuthorityAggregator**：Authority 聚合器，负责将客户端请求分发到多个 Authority 节点，并聚合来自这些节点的结果。
+- **AuthorityClient (AC1, AC2)**：Authority 客户端，负责与单个 Authority 节点建立连接，并发送和接收消息。
+- **Authority1, Authority2**：代表两个独立的 Authority 节点。
+- **AuthorityState (AS, AS2)**：Authority 状态，存储在 Authority 节点上，包含区块链的账本信息和状态数据。
+
+## 连线、分支与汇聚关系
+- `CLI Client -> ClientService`：命令行客户端连接到客户端服务。
+- `Rest Client -> ClientService`：REST 客户端连接到客户端服务。
+- `RPC Client -> ClientService`：RPC 客户端连接到客户端服务。
+- `ClientService -> AuthorityAggregator`：客户端服务连接到 Authority 聚合器。
+- `AuthorityAggregator -> AuthorityClient`：Authority 聚合器将请求分发到多个 Authority 客户端，形成分支关系。
+- `AuthorityClient <==> Authority`：Authority 客户端通过网络 TCP 连接与对应的 Authority 节点进行双向通信。
+
+## 仓库语境与术语解释
+- **Sui**：根据 README，Sui 是一个新一代智能合约平台，具有高吞吐量、低延迟和面向资产的编程模型。
+- **Authority Node**：根据 README，Authority 节点在 Sui 中扮演类似于其他区块链系统中验证者或矿工的角色。
+- **AuthorityState**：图中可见，但仓库上下文未进一步说明。
+- **Network TCP**：图中可见，表示 AuthorityClient 与 Authority 节点之间通过 TCP 网络进行通信。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Sui 客户端如何通过 CLI、REST 或 RPC 等方式与区块链交互。客户端请求首先到达 ClientService，然后传递给 AuthorityAggregator，后者将请求分发到多个 Authority 节点。Authority 节点包含 AuthorityState，存储了区块链的状态。AuthorityAggregator 聚合来自不同 Authority 节点的结果，最终返回给客户端。这种架构通过与多个 Authority 节点交互，提高了系统的容错性和可靠性。

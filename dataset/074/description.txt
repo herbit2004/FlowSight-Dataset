@@ -1,0 +1,38 @@
+## 图类型与用途
+这是一个流程图，描述了 `erdia` 工具如何从 TypeORM Entity 生成各种格式的数据库文档和 ER 图。它在仓库中的作用是展示 `erdia` 工具的工作流程和架构。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是输入节点，中间是 `erdia` 工具的处理流程，右侧是输出节点。
+
+## 分组/子图/阶段说明
+图中包含一个名为 "erdia" 的子图，该子图描述了 `erdia` 工具内部提取实体规范的流程。整个流程可以分为三个阶段：TypeORM Entity 输入、`erdia` 工具处理、文档和 ER 图输出。
+
+## 节点逐项说明
+- **A [TypeORM Entity]**：表示使用 TypeORM 定义的数据库实体类，作为 `erdia` 工具的输入。TypeORM 是一个 TypeScript 和 JavaScript 的 ORM (对象关系映射) 工具，用于管理数据库。
+- **erdia**：代表 `erdia` 工具本身，是流程的核心。
+- **C [TypeORM Entity]**：在 `erdia` 子图中，再次出现的 `TypeORM Entity` 节点，强调其作为输入源。
+- **B [erdia]**：在 `erdia` 子图中，再次出现的 `erdia` 节点，强调其在提取实体规范中的作用。
+- **D [ETA template engine]**：代表 ETA 模板引擎，用于根据提取的规范生成不同格式的文档。ETA 是一个快速、轻量级的 JavaScript 模板引擎。
+- **E [html]**：代表生成的 HTML 格式的文档。
+- **F [markdown]**：代表生成的 Markdown 格式的文档。
+- **G [pdf]**：代表生成的 PDF 格式的文档。
+- **H [image]**：代表生成的图片格式的 ER 图。
+
+## 连线、分支与汇聚关系
+- `A [TypeORM Entity] --> erdia`：TypeORM Entity 作为 `erdia` 工具的输入。
+- `C [TypeORM Entity] --> B [erdia]`：`erdia` 工具从 TypeORM Entity 中提取实体规范。
+- `erdia --> D [ETA template engine]`：`erdia` 工具提取的规范传递给 ETA 模板引擎。
+- `D [ETA template engine] --> E [html]`：ETA 模板引擎生成 HTML 格式的文档。
+- `D [ETA template engine] --> F [markdown]`：ETA 模板引擎生成 Markdown 格式的文档。
+- `D [ETA template engine] --> G [pdf]`：ETA 模板引擎生成 PDF 格式的文档。
+- `D [ETA template engine] --> H [image]`：ETA 模板引擎生成图片格式的 ER 图。
+
+## 仓库语境与术语解释
+- **TypeORM Entity**：使用 TypeORM 定义的数据库实体类。TypeORM 是一个 TypeScript 和 JavaScript 的 ORM 工具，用于管理数据库。
+- **erdia**：一个 CLI 工具，可以自动生成 DB 规范和 ER 图文档。
+- **ETA template engine**：一个快速、轻量级的 JavaScript 模板引擎，`erdia` 使用它来生成各种格式的文档。模板文件位于 `templates/` 目录下。
+- **build command**：`erdia` 支持的命令之一，用于构建 erdiagram 文档。 见 `src/cli.ts`。
+- **dataSourcePath**：用于指定 TypeORM 数据源的路径。见 `src/typeorm/getDataSource.ts`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `erdia` 工具的工作流程，从 TypeORM Entity 开始，`erdia` 工具内部提取实体规范，然后使用 ETA 模板引擎将这些规范转换成多种格式的文档，包括 HTML、Markdown、PDF 和图片。`erdia` 工具的主要目的是自动化生成数据库文档和 ER 图，从而减轻开发人员手动维护这些文档的工作量。其中，TypeORM Entity 作为输入，ETA 模板引擎作为文档生成的核心组件。

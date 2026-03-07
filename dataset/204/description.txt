@@ -1,0 +1,37 @@
+## 图类型与用途
+这是一个流程图，描述了 `vibe-log-cli` 工具如何处理 Claude Code 会话数据，并生成生产力报告。它在仓库中的作用是展示从 Claude Code 会话到最终报告生成的完整流程。
+
+## 图的整体布局
+图采用从上到下的布局。流程从用户提供的 Claude Code 会话开始，经过数据提取、Claude 模型分析，最终生成 HTML 报告。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为四个阶段：数据准备、Claude 模型分析、报告生成和结果输出。
+
+## 节点逐项说明
+- **📝 Claude Code Sessions (Start)**：流程的起点，表示用户提供的 Claude 代码会话数据。
+- **vibe-log-cli select time frame and projects (Select)**：用户使用 `vibe-log-cli` 工具选择要分析的时间范围和项目。
+- **Extracts & prepares session data (Extract)**：从选定的会话中提取数据，并进行预处理，以便后续分析。
+- **Launches Claude with instructions (Launch)**：使用预处理后的数据启动 Claude 模型，并提供相应的指令，指示 Claude 如何分析会话数据。
+- **Parallel sub-agents session analysis (Parallel)**：使用多个子代理并行分析会话数据，以提高效率。根据 `src/lib/sub-agents/manager.ts`，这些 sub-agents 位于 `~/.claude/agents` 目录下。
+- **Gathers results & Generates report (Gather)**：收集来自各个子代理的分析结果，并将这些结果汇总生成报告。
+- **📊 HTML Report in current folder (Output)**：流程的终点，表示在当前文件夹中生成 HTML 格式的报告，供用户查看。根据 `src/lib/report-generator.ts`，报告的文件名以 `vibe-log-report` 开头，并包含日期。
+
+## 连线、分支与汇聚关系
+- `📝 Claude Code Sessions (Start) -> vibe-log-cli select time frame and projects (Select)`：从 Claude 代码会话开始，用户选择要分析的时间范围和项目。
+- `vibe-log-cli select time frame and projects (Select) -> Extracts & prepares session data (Extract)`：选择时间范围和项目后，提取并准备会话数据。
+- `Extracts & prepares session data (Extract) -> Launches Claude with instructions (Launch)`：准备好会话数据后，启动 Claude 模型进行分析。
+- `Launches Claude with instructions (Launch) -> Parallel sub-agents session analysis (Parallel)`：启动 Claude 模型后，并行分析会话数据。
+- `Parallel sub-agents session analysis (Parallel) -> Gathers results & Generates report (Gather)`：并行分析完成后，收集结果并生成报告。
+- `Gathers results & Generates report (Gather) -> 📊 HTML Report in current folder (Output)`：生成报告后，输出 HTML 报告。
+
+## 仓库语境与术语解释
+- **vibe-log-cli**：一个开源命令行工具，用于分析 Claude Code 会话并生成生产力报告。
+- **Claude Code Sessions**：指在 Claude Code 编辑器中进行的代码会话数据，`vibe-log-cli` 工具旨在分析这些会话。
+- **Sub-agents**：用于并行分析 Claude Code 会话的独立代理，提高了分析效率。根据 `src/lib/sub-agents/manager.ts`，这些 sub-agents 位于 `~/.claude/agents` 目录下。
+- **HTML Report**：`vibe-log-cli` 工具生成的最终报告格式，用于展示代码会话的生产力分析结果。
+- **Local Report Generation**：README 中提到，所有分析都在本地进行，数据不会离开用户的机器。
+- **Today's Standup**：README 中提到，该工具可以用于生成每日站会报告。
+- **src/lib/report-generator.ts**：该文件负责生成 HTML 报告，包括确定报告的文件名和处理 JSON 报告数据。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 `vibe-log-cli` 工具分析 Claude Code 会话并生成生产力报告的流程。流程从用户提供的 Claude Code 会话开始，用户选择时间范围和项目后，工具提取并预处理数据，然后启动 Claude 模型进行并行分析。最后，工具收集分析结果并生成 HTML 格式的报告。关键步骤包括选择时间范围和项目、并行子代理分析以及最终的报告生成。该工具的所有分析都在本地进行，确保用户数据的安全性。

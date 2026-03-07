@@ -1,0 +1,168 @@
+graph TB
+    subgraph "用户界面层 UI Layer"
+        UI[React Components]
+        Monaco[Monaco Editor]
+        XTerm[XTerm Terminal]
+        ChatUI[Chat Panel]
+    end
+
+    subgraph "渲染进程 Renderer Process"
+        subgraph "AI Agent 核心"
+            AgentCore[Agent Core]
+            EventBus[Event Bus]
+            ToolRegistry[Tool Registry]
+            ToolExecutors[Tool Executors]
+        end
+        
+        subgraph "状态管理"
+            AgentStore[Agent Store]
+            EditorStore[Editor Store]
+            UIStore[UI Store]
+        end
+        
+        subgraph "前端服务"
+            TermMgr[Terminal Manager]
+            LSPClient[LSP Client]
+            WorkspaceMgr[Workspace Manager]
+            CompletionSvc[Completion Service]
+        end
+        
+        subgraph "Agent 子系统"
+            Context[Context Manager]
+            Compression[Compression Manager]
+            Memory[Memory Service]
+            Session[Session Service]
+            Emotion[Emotion System]
+        end
+        
+        subgraph "Web Workers 线程池"
+            ComputeWorker[Compute Worker Pool]
+            MonacoWorkers[Monaco Language Workers]
+            TSWorker[TypeScript Worker]
+            JSONWorker[JSON Worker]
+            CSSWorker[CSS Worker]
+            HTMLWorker[HTML Worker]
+        end
+    end
+
+    subgraph "IPC 通信层 IPC Bridge"
+        IPC[Type-Safe IPC Handlers]
+    end
+
+    subgraph "主进程 Main Process"
+        subgraph "安全层"
+            Security[Security Module]
+            FileWatcher[File Watcher]
+            AuditLog[Audit Logger]
+        end
+        
+        subgraph "核心服务"
+            LSPMgr[LSP Manager]
+            IndexSvc[Indexing Service]
+            MCPMgr[MCP Manager]
+            LLMProxy[LLM Proxy]
+        end
+        
+        subgraph "索引系统"
+            Chunker[Code Chunker]
+            Embedder[Embedder]
+            VectorDB[(LanceDB)]
+        end
+        
+        subgraph "Node.js Worker Threads"
+            IndexWorker[Indexer Worker]
+        end
+        
+        subgraph "LSP 生态"
+            TSServer[TypeScript]
+            Pyright[Python]
+            Gopls[Go]
+            OtherLSP[10+ Languages]
+        end
+        
+        subgraph "MCP 生态"
+            MCPClient[MCP Client]
+            MCPAuth[OAuth Provider]
+            MCPServers[External MCP Servers]
+        end
+    end
+
+    subgraph "外部服务 External Services"
+        OpenAI[OpenAI]
+        Claude[Anthropic]
+        Gemini[Google]
+        DeepSeek[DeepSeek]
+        Ollama[Ollama]
+    end
+
+    UI --> AgentStore
+    Monaco --> EditorStore
+    Monaco --> MonacoWorkers
+    XTerm --> TermMgr
+    ChatUI --> AgentCore
+    
+    AgentCore --> ToolRegistry
+    ToolRegistry --> ToolExecutors
+    AgentCore --> Context
+    AgentCore --> EventBus
+    Context --> Compression
+    AgentCore --> Memory
+    AgentCore --> Session
+    
+    MonacoWorkers --> TSWorker
+    MonacoWorkers --> JSONWorker
+    MonacoWorkers --> CSSWorker
+    MonacoWorkers --> HTMLWorker
+    
+    Context --> ComputeWorker
+    Compression --> ComputeWorker
+    
+    AgentStore --> AgentCore
+    ToolExecutors --> IPC
+    LSPClient --> IPC
+    TermMgr --> IPC
+    WorkspaceMgr --> IPC
+    CompletionSvc --> IPC
+    
+    IPC --> Security
+    Security --> LSPMgr
+    Security --> IndexSvc
+    Security --> FileWatcher
+    Security --> AuditLog
+    
+    IPC --> MCPMgr
+    IPC --> LLMProxy
+    
+    IndexSvc --> IndexWorker
+    IndexWorker --> Chunker
+    IndexWorker --> Embedder
+    Embedder --> VectorDB
+    
+    LSPMgr --> TSServer
+    LSPMgr --> Pyright
+    LSPMgr --> Gopls
+    LSPMgr --> OtherLSP
+    
+    MCPMgr --> MCPClient
+    MCPMgr --> MCPAuth
+    MCPClient --> MCPServers
+    
+    LLMProxy --> OpenAI
+    LLMProxy --> Claude
+    LLMProxy --> Gemini
+    LLMProxy --> DeepSeek
+    LLMProxy --> Ollama
+    
+    Emotion -.情绪感知.-> AgentCore
+
+    style AgentCore fill:#667eea
+    style Security fill:#764ba2
+    style IndexSvc fill:#f093fb
+    style LSPMgr fill:#4facfe
+    style LLMProxy fill:#43e97b
+    style MCPMgr fill:#fa709a
+    style VectorDB fill:#fee140
+    style Emotion fill:#ff6b9d
+    style ComputeWorker fill:#a8edea
+    style MonacoWorkers fill:#fed6e3
+    style IndexWorker fill:#c1dfc4

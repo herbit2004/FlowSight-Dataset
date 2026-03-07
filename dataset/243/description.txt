@@ -1,0 +1,32 @@
+## 图类型与用途
+这是一个流程图，描述了本地深度研究（Local Deep Research）的核心流程，从研究开始，经过下载资源、存储到库、索引和嵌入，最终搜索文档。它在仓库中的作用是展示一个闭环的研究流程，强调本地化和高效搜索。
+
+## 图的整体布局
+图采用从左到右的水平布局。流程从左侧的“Research”节点开始，经过一系列处理步骤，最终到达右侧的“Search Your Docs”节点，并通过虚线箭头返回到“Research”节点，形成一个循环。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为三个阶段：资源获取与存储、索引与嵌入、搜索与反馈。
+
+## 节点逐项说明
+- **Research (R)**：表示研究的起始阶段，是整个流程的起点。
+- **Download Sources (D)**：表示下载用于研究的各种数据源，例如文档、网页等。
+- **Library (L)**：表示下载的资源被整理和存储在一个库中，方便后续处理。根据 `docs/library-and-rag.md`，Library 允许用户上传文档（PDFs, text files, markdown）并组织成 collections。
+- **Index & Embed (I)**：表示对库中的文档进行索引，并将其嵌入到向量空间中，以便进行语义搜索。根据 `docs/library-and-rag.md`，RAG (Retrieval-Augmented Generation) 实现了对文档的语义搜索。
+- **Search Your Docs (S)**：表示用户使用索引和嵌入后的文档库进行搜索，以找到与研究相关的答案或信息。
+
+## 连线、分支与汇聚关系
+- `R -> D`：研究开始后，需要下载相关的数据源。
+- `D -> L`：下载的资源被整理并存储在 Library 中。
+- `L -> I`：Library 中的文档进行索引和嵌入处理。
+- `I -> S`：索引和嵌入的结果用于搜索文档。
+- `S -.-> R`：搜索结果可能会影响或指导进一步的研究方向，形成一个反馈循环。
+
+## 仓库语境与术语解释
+- **Library**：根据 `src/local_deep_research/database/models/library.py`，Library 用于存储和管理文档，支持多种文件类型，并提供 collections 功能。
+- **Index & Embed**：对应 RAG (Retrieval-Augmented Generation) 过程，将文档转换为向量嵌入，以便进行语义搜索。`docs/library-and-rag.md` 详细介绍了 RAG 索引的工作原理。
+- **Embedding Provider**：根据 `src/local_deep_research/embeddings/__init__.py`，LDR 支持多种 Embedding Provider，包括 Sentence Transformers, Ollama 和 OpenAI。
+- **SQLCipher**：根据 README.md，用户的 Research Library 数据存储在 SQLCipher 数据库中，并使用 AES-256 加密。
+- **Research Strategy**：根据 `src/local_deep_research/advanced_search_system/strategies/base_strategy.py`，LDR 提供了多种 Research Strategy，用于自动执行研究任务。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图描述了 Local Deep Research 的核心流程：从 Research 开始，下载 Sources 并存储到 Library 中，然后对 Library 中的文档进行 Index & Embed 处理，最后通过 Search Your Docs 进行搜索，搜索结果会反馈回 Research 阶段，形成闭环。Library 用于存储和管理文档，Index & Embed 对应 RAG 过程，支持多种 Embedding Provider。整个流程强调本地化和高效搜索，并使用 SQLCipher 数据库进行数据加密。

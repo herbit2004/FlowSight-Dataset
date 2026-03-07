@@ -1,0 +1,25 @@
+flowchart TB
+  subgraph Pipeline["Transform Pipeline"]
+    CA["1. CacheAligner\nStabilizes prefix for KV cache"]
+    CR["2. ContentRouter\nDetects content type, picks compressor"]
+    IC["3. IntelligentContext\nScore-based token fitting"]
+    QE["4. Query Echo\nRe-injects user question"]
+    CA --> CR --> IC --> QE
+  end
+
+  subgraph Compressors["ContentRouter dispatches to"]
+    SC["SmartCrusher\nAny JSON type"]
+    CC["CodeCompressor\nAST-aware code"]
+    LL["LLMLingua\nML-based text"]
+  end
+
+  subgraph CCR["CCR: Compress-Cache-Retrieve"]
+    Store[("Compressed\nStore")]
+    Tool["headroom_retrieve"]
+    Tool <--> Store
+  end
+
+  CR --> Compressors
+  SC -. "stores originals +\nsummary of what's omitted" .-> Store
+  QE --> LLM["LLM Provider"]
+  LLM -. "retrieves when\nit needs more" .-> Tool

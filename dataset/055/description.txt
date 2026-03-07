@@ -1,0 +1,85 @@
+## 图类型与用途
+这是一个流程图/架构图，描述了 `spec-gen` 工具的内部架构和数据流，展示了如何从代码分析到生成和验证规范，以及检测代码和规范之间的偏差。该图概括了 `spec-gen` 工具的主要层级和组件，以及它们之间的关系。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是 CLI 层和 Programmatic API 层，中间是 Core 层，底部是 Output 部分。数据流从 CLI 或 API 进入，经过 Core 层的处理，最终输出到 Output 部分。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表不同的层级和阶段：
+- **CLI Layer**：表示命令行界面，是用户与 `spec-gen` 交互的入口。
+- **Programmatic API**：表示程序化 API 层，允许通过代码调用 `spec-gen` 的功能。
+- **Core Layer**：表示核心层，包含初始化 (Init)、分析 (Analyze)、生成 (Generate)、验证 (Verify) 和漂移检测 (Drift) 等子模块。
+- **Init**：初始化阶段，负责项目检测和配置管理。
+- **Analyze**：分析阶段，负责扫描代码库、构建依赖关系图和生成分析工件。
+- **Generate**：生成阶段，负责使用 LLM 生成规范和架构决策记录。
+- **Verify**：验证阶段，负责验证规范的正确性。
+- **Drift**：漂移检测阶段，负责检测代码和规范之间的偏差。
+- **Output**：表示输出部分，包含生成的规范、架构决策记录、分析工件和漂移报告。
+
+## 节点逐项说明
+- **CMD (spec-gen commands)**：用户通过命令行界面执行的 `spec-gen` 命令。
+- **API_INIT (specGenInit)**：初始化 `spec-gen` 项目的 API 调用。
+- **API_ANALYZE (specGenAnalyze)**：分析代码库的 API 调用。
+- **API_GENERATE (specGenGenerate)**：生成规范的 API 调用。
+- **API_VERIFY (specGenVerify)**：验证规范的 API 调用。
+- **API_DRIFT (specGenDrift)**：检测代码和规范之间偏差的 API 调用。
+- **API_RUN (specGenRun)**：运行整个流程（初始化、分析、生成）的 API 调用。
+- **PD (Project Detector)**：项目检测器，用于识别项目类型。
+- **CM (Config Manager)**：配置管理器，用于管理 `spec-gen` 的配置。
+- **FW (File Walker)**：文件遍历器，用于扫描代码库中的文件。
+- **SS (Significance Scorer)**：重要性评分器，用于评估文件的重要性。
+- **IP (Import Parser)**：导入解析器，用于解析文件中的导入和导出。
+- **DG (Dependency Graph)**：依赖关系图，用于构建代码库的依赖关系。
+- **RM (Repository Mapper)**：仓库映射器，用于将文件映射到业务领域。
+- **AG (Artifact Generator)**：工件生成器，用于生成分析工件。
+- **SP (Spec Pipeline)**：规范管道，用于生成规范。
+- **FF (OpenSpec Formatter)**：OpenSpec 格式化器，用于将规范格式化为 OpenSpec 格式。
+- **OW (OpenSpec Writer)**：OpenSpec 写入器，用于将规范写入文件。
+- **ADR (ADR Generator)**：ADR (Architecture Decision Record) 生成器，用于生成架构决策记录。
+- **VE (Verification Engine)**：验证引擎，用于验证规范的正确性。
+- **GA (Git Analyzer)**：Git 分析器，用于分析 Git 提交历史。
+- **SM (Spec Mapper)**：规范映射器，用于将代码文件映射到规范文件。
+- **DD (Drift Detector)**：漂移检测器，用于检测代码和规范之间的偏差。
+- **LE (LLM Enhancer)**：LLM 增强器，用于使用 LLM 改进漂移检测结果。
+- **LLM (LLM Service -- Anthropic / OpenAI / Compatible)**：LLM 服务，用于生成规范和增强漂移检测。
+- **SPECS (openspec/specs/\*.md)**：生成的 OpenSpec 规范文件。
+- **ADRS (openspec/decisions/\*.md)**：生成的架构决策记录文件。
+- **ANALYSIS (.spec-gen/analysis/)**：生成的分析工件。
+- **REPORT (Drift Report)**：生成的漂移报告。
+
+## 连线、分支与汇聚关系
+- `CMD -> API_INIT & API_ANALYZE & API_GENERATE & API_VERIFY & API_DRIFT`：命令行命令可以触发多个 API 调用。
+- `API_RUN -> API_INIT & API_ANALYZE & API_GENERATE`：`specGenRun` API 依次调用初始化、分析和生成 API。
+- `API_INIT -> Init`：初始化 API 调用触发 Init 阶段。
+- `API_ANALYZE -> Analyze`：分析 API 调用触发 Analyze 阶段。
+- `API_GENERATE -> Generate`：生成 API 调用触发 Generate 阶段。
+- `API_VERIFY -> Verify`：验证 API 调用触发 Verify 阶段。
+- `API_DRIFT -> Drift`：漂移检测 API 调用触发 Drift 阶段。
+- `Init -> PD & CM`：Init 阶段包含项目检测和配置管理。
+- `Analyze -> FW -> SS -> IP -> DG -> RM -> AG`：Analyze 阶段包含文件遍历、重要性评分、导入解析、依赖关系图构建、仓库映射和工件生成。
+- `Generate -> SP -> FF & ADR`：Generate 阶段使用规范管道生成规范，并使用 OpenSpec 格式化器格式化规范，同时生成 ADR。
+- `SP -> LLM`：规范管道使用 LLM 服务。
+- `Verify -> VE`：Verify 阶段使用验证引擎。
+- `VE -> LLM`：验证引擎使用 LLM 服务。
+- `Drift -> GA -> SM -> DD`：Drift 阶段包含 Git 分析、规范映射和漂移检测。
+- `DD -.->|optional| LE`：漂移检测可以选择性地使用 LLM 增强器。
+- `LE -.-> LLM`：LLM 增强器使用 LLM 服务。
+- `AG -->|analysis artifacts| SP`：分析工件被传递给规范管道。
+- `AG -->|analysis artifacts| VE`：分析工件被传递给验证引擎。
+- `OW -> SPECS`：OpenSpec 写入器将规范写入文件。
+- `ADR -> ADRS`：ADR 生成器将 ADR 写入文件。
+- `AG -> ANALYSIS`：工件生成器将分析工件写入目录。
+- `DD -> REPORT`：漂移检测器生成漂移报告。
+
+## 仓库语境与术语解释
+- **OpenSpec**: 指的是 Fission-AI 提出的 OpenSpec 规范，用于描述软件系统的接口和行为。
+- **spec-gen**: 该仓库的名称，是一个用于从现有代码库中反向工程 OpenSpec 规范的工具。
+- **CLI Layer**: 命令行界面，用户通过命令行与 `spec-gen` 交互，执行各种命令，如 `init`, `analyze`, `generate`, `verify`, `drift` 和 `run`。
+- **Programmatic API**: 程序化 API，允许开发者通过代码调用 `spec-gen` 的功能，例如 `specGenInit`, `specGenAnalyze`, `specGenGenerate`, `specGenVerify`, `specGenDrift` 和 `specGenRun`。这些 API 在 `src/api/index.ts` 中定义。
+- **Core Layer**: 核心层，包含 `spec-gen` 的核心处理逻辑，包括代码分析、规范生成、规范验证和漂移检测。
+- **LLM**: Large Language Model，大型语言模型，用于生成规范和增强漂移检测。`spec-gen` 支持多种 LLM 提供商，如 Anthropic, OpenAI 和 Google Gemini。
+- **Drift Detection**: 漂移检测，用于检测代码和规范之间的偏差，确保规范与代码保持同步。
+- **ADR (Architecture Decision Record)**：架构决策记录，用于记录软件系统的架构决策。`spec-gen` 可以生成和管理 ADR 文件。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `spec-gen` 工具的架构，从 CLI 或 API 命令开始，经过 Init 阶段的项目检测和配置管理，进入 Analyze 阶段进行代码分析，构建依赖关系图，然后进入 Generate 阶段使用 LLM 生成 OpenSpec 规范和 ADR。生成的规范经过 Verify 阶段的验证，并使用 Drift 阶段检测代码和规范之间的偏差。最终，生成的规范、ADR、分析工件和漂移报告被输出到指定目录。LLM 在生成和验证阶段起着关键作用，而 Drift 检测则保证了规范与代码的同步。`spec-gen` 的核心功能是自动化生成和维护 OpenSpec 规范，从而解决软件缺乏规范的问题。

@@ -1,0 +1,36 @@
+graph RL;
+  subgraph "Infrastructure";
+    Web(Web & Devices) <--> Con
+    UI("User Interface (UI)") <--> Pre
+    DB(Databases & External Integrations) <--> Gat
+
+    subgraph "Adapters";
+      Con(Controllers) <--> UC
+      Pre(Presenters) <--> UC
+      Gat(Gateways) -..-> |implements| IGat
+
+      subgraph "Use Cases";
+        UC(Use Cases) <--> LA
+        UC <--> IGat
+
+        subgraph "Entities";
+          LA("Learning Objects (LOs)")
+          LA -.- LOA[<em>Metadata includes:\n Transcript, Language,\n Revision, License etc.</em>]
+          IGat(Gateway Interfaces)
+          IGat -.- IRep(<em>Any external integrations:\n Database, WebClient,\n Producer etc.</em>)
+        end
+     end
+    end
+  end
+
+classDef infra fill:#a3c9ff,stroke:#00315c,color:#00315c;
+classDef adapters fill:#67dbb1,stroke:#003828,color:#003828;
+classDef ucs fill:#ffb1c1,stroke:#5f112b,color:#5f112b;
+classDef entities fill:#e2c54b,stroke:#3a3000,color:#3a3000;
+classDef entities_secondary fill:#fff0c0,stroke:#3a3000,color:#3a3000;
+
+class Web,Dev,UI,DB,EXT infra;
+class Con,Gat,Pre adapters;
+class UC ucs;
+class LA,IGat entities;
+class LOA,IRep entities_secondary;

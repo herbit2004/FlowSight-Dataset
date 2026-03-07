@@ -1,0 +1,46 @@
+## 图类型与用途
+这是一个架构图，展示了 Weaver AI 智能体平台的整体架构和数据流向。它描述了用户界面如何与后端服务交互，以及请求如何被路由到不同的处理模块，在仓库中作为系统架构的概览图存在，对应 `docs/architecture.md`。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是用户界面，中间是 API 和路由模块，底部是各种处理模块和工具。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为四个阶段：用户界面层、API 网关层、Agent 编排层、工具层。
+
+## 节点逐项说明
+- **UI (Next.js Web UI)**：用户界面，使用 Next.js 构建，是用户与 Weaver 平台交互的入口。
+- **API (FastAPI)**：后端 API 服务，使用 FastAPI 构建，负责接收来自 UI 的请求，并协调各个模块进行处理。
+- **Router (Router)**：路由模块，根据请求的类型或内容，将请求分发到不同的处理策略。根据 `agent/core/smart_router.py`，Router 会将请求路由到 direct、agent、web、deep 或 clarify 几种模式。
+- **Direct (Direct)**：直接处理模块，可能用于处理一些简单的、不需要复杂逻辑的请求。
+- **Web (Web Search)**：Web 搜索模块，用于执行网络搜索，获取相关信息。
+- **Agent (Agent Tools)**：智能体工具模块，使用 AI Agent 技术，调用各种工具来完成任务。
+- **Deep (Deep Research)**：深度研究模块，可能涉及更复杂的搜索、分析和推理过程，以进行深入的研究。
+- **Tools (Tool Registry)**：工具注册中心，管理各种可供智能体使用的工具。
+- **E2B (E2B Sandbox)**：E2B 沙箱环境，用于安全地执行代码。
+- **Browser (Browser Automation)**：浏览器自动化模块，用于模拟用户在浏览器中的操作。
+- **MCP (MCP Bridge)**：MCP (Model Context Protocol) 桥接，用于连接第三方工具或模型。
+
+## 连线、分支与汇聚关系
+- `UI -> API`：用户界面通过 Server-Sent Events (SSE) 将请求发送到后端 API。
+- `API -> Router`：API 接收到请求后，将其传递给路由模块。
+- `Router -> Direct`：路由模块将一部分请求路由到直接处理模块。
+- `Router -> Web`：路由模块将一部分请求路由到 Web 搜索模块。
+- `Router -> Agent`：路由模块将一部分请求路由到智能体工具模块。
+- `Router -> Deep`：路由模块将一部分请求路由到深度研究模块。
+- `Agent -> Tools`：智能体工具模块可以调用工具注册中心中的工具。
+- `Deep -> Tools`：深度研究模块也可以调用工具注册中心中的工具。
+- `Tools -> E2B`：工具注册中心中的工具可能包括 E2B 沙箱环境。
+- `Tools -> Browser`：工具注册中心中的工具可能包括浏览器自动化模块。
+- `Tools -> MCP`：工具注册中心中的工具可能包括 MCP 桥接。
+
+## 仓库语境与术语解释
+- **Next.js Web UI**：使用 Next.js 构建的前端用户界面，参见 `web/` 目录。
+- **FastAPI**：使用 FastAPI 构建的后端 API 服务，参见 `main.py`。
+- **Router**：智能路由模块，根据用户查询选择 direct / web / agent / deep 四种策略，相关代码见 `agent/core/smart_router.py`。
+- **E2B Sandbox**：用于安全执行代码的沙箱环境，相关配置在 `common/config.py` 中。
+- **MCP (Model Context Protocol)**：用于桥接第三方工具的协议，相关配置在 `common/config.py` 中。
+- **SSE (Server-Sent Events)**：服务器推送技术，用于将数据从后端 API 流式传输到前端 UI，相关实现在 `common/sse.py` 和 `sdk/python/weaver_sdk/sse.py`。
+- **Tool Registry**：动态工具注册和管理系统，用于管理、发现、验证和跟踪工具，相关代码见 `tools/core/registry.py`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该架构图展示了 Weaver 平台从用户界面（Next.js Web UI）发起请求，通过 SSE 传输到后端 API（FastAPI），再由 Router 智能路由到 Direct、Web Search、Agent Tools 或 Deep Research 模块的处理流程。Agent Tools 和 Deep Research 模块可以调用 Tool Registry 中的 E2B Sandbox、Browser Automation 和 MCP Bridge 等工具。该架构支持智能路由、工具调用和深度研究等功能，其中 Router 的智能路由策略和 Tool Registry 的工具管理是关键环节。

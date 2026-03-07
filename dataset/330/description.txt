@@ -1,0 +1,59 @@
+## 图类型与用途
+这是一个流程图，描述了交互式 Prompt 迭代器如何处理用户输入，并将其转化为结构化的 Prompt 或流式文本响应。它在仓库中的作用是展示用户输入到最终输出的整个流程。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是用户输入节点，中间是输入类型判断、文件处理和 AI SDK 处理阶段，底部是最终的 Prompt 或文本响应展示。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分成三个阶段：输入与预处理、AI 分析与处理、结果生成与输出。
+
+## 节点逐项说明
+- **User Input**：用户提供的初始输入，可以是文本或文件。
+- **Input Type**：判断用户输入类型，是文本还是文件。
+- **Text Processing**：对文本类型的输入进行处理。
+- **File Parsing**：对文件类型的输入进行解析。
+- **PDF.js Parsing**：使用 PDF.js 库解析 PDF 文件。对应 `src/app/api/parse-file/route.ts` 中对 PDF 文件的处理。
+- **Base64 Encoding**：将图像文件编码为 Base64 格式。
+- **API Route**：API 路由，接收处理后的用户输入，并将其传递给 AI SDK。
+- **AI SDK**：AI 软件开发工具包，负责与 AI 模型进行交互。
+- **Tool Call?**：判断 AI SDK 是否需要调用工具。
+- **suggest_enhancements**：如果 AI SDK 需要调用工具，且是 `suggest_enhancements`，则表示建议增强功能。对应 `src/components/enhancement-form.tsx` 中生成交互式表单的逻辑。
+- **propose_prompt**：如果 AI SDK 需要调用工具，且是 `propose_prompt`，则表示建议 Prompt。
+- **Streaming Text Response**：AI 模型生成的流式文本响应。
+- **Interactive Form**：交互式表单，用于用户选择增强建议。
+- **User Selection**：用户在交互式表单中做出的选择。
+- **Structured Prompt**：结构化的 Prompt，由 AI 模型根据用户输入和反馈生成。
+- **Display Response**：将 AI 模型的响应展示给用户。
+
+## 连线、分支与汇聚关系
+- `User Input -> Input Type`：用户输入后，判断输入类型。
+- `Input Type -- Text --> Text Processing`：如果输入是文本，则进行文本处理。
+- `Input Type -- File --> File Parsing`：如果输入是文件，则进行文件解析。
+- `File Parsing -- PDF --> PDF.js Parsing`：如果文件是 PDF，则使用 PDF.js 解析。
+- `File Parsing -- Image --> Base64 Encoding`：如果文件是图像，则进行 Base64 编码。
+- `Text Processing -> API Route`：文本处理的结果传递给 API 路由。
+- `PDF.js Parsing -> API Route`：PDF 解析的结果传递给 API 路由。
+- `Base64 Encoding -> API Route`：Base64 编码的结果传递给 API 路由。
+- `API Route -> AI SDK`：API 路由将数据传递给 AI SDK。
+- `AI SDK -> Tool Call?`：AI SDK 判断是否需要调用工具。
+- `Tool Call? -- Yes --> suggest_enhancements`：如果需要调用工具，且是 `suggest_enhancements`，则生成交互式表单。
+- `Tool Call? -- Yes --> propose_prompt`：如果需要调用工具，且是 `propose_prompt`，则生成结构化的 Prompt。
+- `Tool Call? -- No --> Streaming Text Response`：如果不需要调用工具，则生成流式文本响应。
+- `suggest_enhancements -> Interactive Form`：生成交互式表单。
+- `Interactive Form -> User Selection`：用户在交互式表单中做出选择。
+- `User Selection -> API Route`：用户选择的结果返回给 API 路由，进行下一轮迭代。
+- `propose_prompt -> Structured Prompt`：生成结构化的 Prompt。
+- `Structured Prompt -> Display Response`：结构化的 Prompt 展示给用户。
+- `Streaming Text Response -> Display Response`：流式文本响应展示给用户。
+
+## 仓库语境与术语解释
+- **Interactive Prompt Iterator**：该项目旨在通过多轮交互式对话，将用户输入的模糊想法转化为结构化的、高质量的 AI Prompt。参考 `README.md`。
+- **AI SDK**：负责与 AI 模型进行交互，根据用户输入和反馈生成 Prompt 或文本响应。
+- **API Route**：接收处理后的用户输入，并将其传递给 AI SDK。对应 `src/app/api/chat/route.ts`。
+- **PDF.js**：用于解析 PDF 文件内容的库。对应 `src/app/api/parse-file/route.ts`。
+- **suggest_enhancements**：AI SDK 调用的一种工具，用于建议增强功能，并生成交互式表单。
+- **propose_prompt**：AI SDK 调用的另一种工具，用于建议 Prompt，并生成结构化的 Prompt。
+- **Streaming Text Response**：AI 模型生成的流式文本响应，直接展示给用户。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了交互式 Prompt 迭代器的核心流程：用户输入可以是文本或文件，系统判断输入类型后进行相应处理（文本处理、PDF 解析、图像 Base64 编码），处理结果通过 API 路由传递给 AI SDK。AI SDK 判断是否需要调用工具，如果需要，则根据工具类型（`suggest_enhancements` 或 `propose_prompt`）生成交互式表单或结构化 Prompt；如果不需要，则生成流式文本响应。最终，结构化 Prompt 或流式文本响应都将展示给用户。其中，`suggest_enhancements` 对应交互式表单的生成，用户选择后会返回 API 路由进行迭代。该流程旨在将模糊需求转化为高质量的 AI Prompt。`src/app/api/chat/route.ts` 负责处理 AI SDK 的调用和响应。

@@ -1,0 +1,67 @@
+## 图类型与用途
+这是一个流程图，描述了 EstateWise 智能房产助手平台中，用户消息从接收到最终在UI上展示响应的整个过程。它展示了用户消息处理和AI响应生成的整体架构流程，包括用户认证、AI处理、数据检索以及用户反馈循环。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是用户消息输入，中间是后端处理、AI 代理编排和数据检索阶段，底部是响应生成与用户反馈环节。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分成四个阶段：消息接收与预处理、用户认证与历史加载、AI 代理处理与数据检索、响应生成与用户反馈。
+
+## 节点逐项说明
+- **UM (User Message)**：用户发送的消息，作为整个流程的起点。
+- **API (RESTful APIs)**：应用程序编程接口，负责接收用户消息并将其传递给后端。
+- **RME (Receive Message Event)**：接收到消息事件。
+- **BP (Backend Processing)**：后端处理模块，负责处理用户消息的逻辑。
+- **Auth (Is User Authenticated?)**：用户认证环节，判断用户是否已认证。
+- **LMDB (Load Conversation History from MongoDB)**：从 MongoDB 数据库加载用户的历史对话记录。
+- **LBrowser (Load Conversation History from Local Browser Storage)**：从本地浏览器存储加载用户的历史对话记录。
+- **Prep (Prepare AI Agent Input)**：准备 AI 代理的输入，包括用户消息、系统历史记录和系统提示。
+- **AInput (AI Agent Input)**：准备好的 AI 代理输入。
+- **Orchestration (Agent Tool Orchestration)**：代理工具编排，负责协调不同的 AI 工具。根据 `agentic-ai/README.md`，此步骤利用 MCP 工具进行数据检索和处理。
+- **UsePinecone (Use Data from Pinecone?)**：判断是否使用来自 Pinecone 的数据。Pinecone 是一个向量数据库，用于存储房产信息的向量化表示。
+- **QueryPinecone (Queries Vectorized Properties Data from Pinecone)**：从 Pinecone 查询向量化的房产数据。
+- **NoPinecone (Proceed without RAG data from Pinecone)**：如果不使用 Pinecone 数据，则直接进入下一步。RAG 指的是检索增强生成。
+- **MOE (Mixture-of-Experts API Request Pipeline)**：混合专家 API 请求管道，包含多个专门的 AI 专家和一个 AI 合并器。
+- **Generate (Generate Final Response)**：生成最终的响应，包括文本和图表。
+- **APIResp (API Request Response)**：API 请求的响应。
+- **Display (Display Response)**：在用户界面上显示响应。
+- **Rate (User Rates Response?)**：用户对响应进行评分。
+- **Update (User Gives Thumbs Down)**：用户给出差评，需要更新专家权重，并重新进行 API 请求。
+- **End (User Gives Thumbs Up)**：用户给出好评，无需更新。
+
+## 连线、分支与汇聚关系
+- `UM -> API`：用户消息通过 API 传递到后端。
+- `API -> RME`：API 接收到用户消息后触发接收消息事件。
+- `RME -> BP`：接收消息事件后进行后端处理。
+- `BP -> Auth`：后端处理后进行用户认证。
+- `Auth -- Yes --> LMDB`：如果用户已认证，从 MongoDB 加载历史记录。
+- `Auth -- No --> LBrowser`：如果用户未认证，从本地浏览器存储加载历史记录。
+- `LMDB -> Prep`：从 MongoDB 加载历史记录后，准备 AI 代理输入。
+- `LBrowser -> Prep`：从本地浏览器存储加载历史记录后，准备 AI 代理输入。
+- `Prep -> AInput`：准备 AI 代理输入。
+- `AInput -> Orchestration`：准备好的 AI 代理输入进入代理工具编排阶段。
+- `Orchestration -> UsePinecone`：代理工具编排后，判断是否使用 Pinecone 数据。
+- `UsePinecone -- Yes --> QueryPinecone`：如果使用 Pinecone 数据，则查询 Pinecone。
+- `UsePinecone -- No --> NoPinecone`：如果不使用 Pinecone 数据，则跳过 Pinecone 查询。
+- `QueryPinecone -> MOE`：从 Pinecone 查询到数据后，进入混合专家 API 请求管道。
+- `NoPinecone -> MOE`：不使用 Pinecone 数据，直接进入混合专家 API 请求管道，形成汇聚关系。
+- `MOE -> Generate`：混合专家 API 请求管道生成最终响应。
+- `Generate -> APIResp`：生成最终响应后，返回 API 请求响应。
+- `APIResp -> Display`：API 请求响应在用户界面上显示。
+- `Display -> Rate`：用户对显示的响应进行评分。
+- `Rate -- Thumbs Down --> Update`：如果用户给出差评，需要更新专家权重，并重新进行 API 请求。
+- `Update -> MOE`：更新专家权重后，重新进入混合专家 API 请求管道。
+- `Rate -- Thumbs Up --> End`：如果用户给出好评，流程结束。
+
+## 仓库语境与术语解释
+- **EstateWise**：一个智能房产助手平台，旨在帮助用户发现理想的房产。
+- **RESTful APIs**：根据 `ARCHITECTURE.md`，REST API 是最广泛的集成表面。
+- **MongoDB**：根据 `backend/README.md`，MongoDB 用于存储用户数据、会话历史等。
+- **Pinecone**：根据 `backend/README.md`，Pinecone 用于存储房产信息的向量化表示，支持向量搜索。
+- **RAG (Retrieval-Augmented Generation)**：一种 AI 技术，通过检索外部知识来增强生成模型的性能。
+- **Mixture-of-Experts (MoE)**：一种 AI 架构，使用多个专门的 AI 专家和一个 AI 合并器来生成更准确和个性化的响应。
+- **Agentic AI Pipeline**：根据 `agentic-ai/README.md`，Agentic AI Pipeline 用于协调整个 AI 流程，处理数据获取、专家选择、答案创建和反馈整合。
+- **MCP (Model Context Protocol)**：根据 `agentic-ai/README.md`，MCP 用于规范模型和后端之间的交互，保证统一的上下文管理和答案结构。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 EstateWise 平台处理用户消息并生成 AI 响应的流程。用户消息首先通过 RESTful APIs 进入后端处理，经过用户认证后，系统会从 MongoDB 或本地浏览器存储加载会话历史。然后，系统准备 AI 代理输入，通过 Agent Tool Orchestration 协调不同的 AI 工具，并根据情况从 Pinecone 查询向量化的房产数据。最终，通过 Mixture-of-Experts API 请求管道生成最终响应，并在用户界面上显示。用户可以对响应进行评分，如果给出差评，系统会更新专家权重并重新进行 API 请求。其中，Agent Tool Orchestration 和 Mixture-of-Experts 是两个关键的中间环节，Pinecone 用于支持 RAG。

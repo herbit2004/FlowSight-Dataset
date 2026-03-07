@@ -1,0 +1,26 @@
+flowchart TD
+    TRAFFIC["🌐 Live Network Traffic\nTCP / UDP / ICMP Stream"]:::node
+
+    TRAFFIC --> CAP["📦 Packet Capture\nScapy · Wireshark"]:::node
+    CAP --> EXTRACT["🔧 Feature Extraction\n• Packet size distribution\n• Flow duration & timing\n• Protocol anomalies\n• Behavioural signatures"]:::process
+
+    EXTRACT --> LSTM["🧠 LSTM Classifier\n128 → 64 units\nBidirectional · Dropout 0.2"]:::model
+    EXTRACT --> ISO["🔍 Isolation Forest\nContamination: 0.01\nEstimators: 200"]:::model
+    EXTRACT --> AUTO["📐 AutoEncoder\nEncoder-Decoder\nReconstruction error scoring"]:::model
+
+    LSTM & ISO & AUTO --> ENSEMBLE["🗳️ Ensemble Voting\nWeighted majority vote\n+ confidence scoring"]:::ensemble
+
+    ENSEMBLE -->|"Score > 0.85"| THREAT["⚠️ THREAT DETECTED\nSeverity: CRITICAL / HIGH / MED\nMITRE ATT&CK Mapping"]:::alert
+    ENSEMBLE -->|"Score < 0.15"| SAFE["✅ CLEAN TRAFFIC\nPassed all checks\nLogged & archived"]:::safe
+
+    THREAT --> BLOCK["🔒 Auto-Block\nFirewall rule push"]:::action
+    THREAT --> REPORT["📊 Threat Report\nIOC extraction"]:::action
+    THREAT --> NOTIFY["📡 Alert Dispatch\nSIEM · SOAR · Email"]:::action
+
+    classDef node fill:#020c18,stroke:#00e5ff,color:#cdd9e5
+    classDef process fill:#020c18,stroke:#00e5ff,color:#00e5ff
+    classDef model fill:#061220,stroke:#b06aff,color:#b06aff,stroke-width:2px
+    classDef ensemble fill:#020c18,stroke:#00ff9d,color:#00ff9d,stroke-width:2px
+    classDef alert fill:#1a0800,stroke:#ff5e1a,color:#ff5e1a
+    classDef safe fill:#001a08,stroke:#00ff9d,color:#00ff9d
+    classDef action fill:#020c18,stroke:#00e5ff,color:#00e5ff

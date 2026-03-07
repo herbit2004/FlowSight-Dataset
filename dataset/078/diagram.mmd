@@ -1,0 +1,42 @@
+graph LR
+    subgraph "User Interface Layer"
+        HTML[index.html<br/>1120+ lines]
+        JS[JavaScript<br/>Real-time Updates]
+        CSS[Bootstrap CSS<br/>Responsive Design]
+    end
+    
+    subgraph "Application Layer"
+        FLASK[app.py<br/>605 lines<br/>REST API]
+        CONFIG_MGR[config.py<br/>135 lines<br/>Settings Management]
+        GSCN_CALC[gscn_calculator.py<br/>176 lines<br/>Frequency Calculation]
+        USRP_CTRL[usrp_controller.py<br/>301 lines<br/>Hardware Control]
+    end
+    
+    subgraph "Hardware Layer"
+        EXEC[init_ssb_block<br/>RFNoC Application]
+        FPGA_BIN[FPGA Bitstream<br/>Custom Processing]
+        X310[USRP X310<br/>SDR Hardware]
+    end
+    
+    subgraph "Data Layer"
+        CONFIG_JSON[(config.json)]
+        FREQ_JSON[(detected_frequencies.json)]
+        SIGNAL_DATA[(*.dat files)]
+    end
+    
+    HTML <--> JS
+    JS <--> FLASK
+    FLASK --> CONFIG_MGR
+    FLASK --> GSCN_CALC
+    FLASK --> USRP_CTRL
+    CONFIG_MGR <--> CONFIG_JSON
+    USRP_CTRL --> EXEC
+    USRP_CTRL <--> FREQ_JSON
+    USRP_CTRL --> SIGNAL_DATA
+    EXEC --> FPGA_BIN
+    FPGA_BIN --> X310
+    
+    style HTML fill:#e1f5ff
+    style FLASK fill:#e1f5ff
+    style X310 fill:#ffe1e1
+    style FPGA_BIN fill:#ffe1e1

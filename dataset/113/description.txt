@@ -1,0 +1,30 @@
+## 图类型与用途
+这是一个流程图，展示了 `portless` 如何将浏览器请求路由到不同的本地开发应用。其用途是解释 `portless` 如何使用稳定的、命名的 `.localhost` URL 来替代端口号，从而解决本地开发中端口冲突等问题。该图在 README.md 中用于解释 `portless` 的工作原理。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是浏览器发起的请求，中间是 `portless proxy`，底部是两个本地开发应用。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：浏览器请求发起、`portless proxy` 路由、请求转发到本地应用。
+
+## 节点逐项说明
+- **Browser\nmyapp.localhost:1355**：代表用户的浏览器，它通过 `myapp.localhost:1355` 这样的 URL 发起请求。`myapp.localhost` 是 `portless` 提供的命名 URL，`1355` 是 `portless proxy` 监听的端口。
+- **portless proxy\n(port 1355)**：代表 `portless` 代理服务器，它运行在特定的端口（例如 1355），负责接收来自浏览器的请求，并将其路由到相应的本地开发应用。根据 README，代理服务器可以显式启动，也可以在运行应用时自动启动。
+- **:4123\nmyapp**：代表一个本地开发的应用，运行在端口 `4123` 上，并且通过 `myapp` 这个名字与 `portless` 关联。
+- **:4567\napi**：代表另一个本地开发的应用，运行在端口 `4567` 上，并且通过 `api` 这个名字与 `portless` 关联。
+
+## 连线、分支与汇聚关系
+- `Browser -> portless proxy`：浏览器通过 `myapp.localhost:1355` 向 `portless proxy` 发送请求。连线上标明了端口 `1355`。
+- `portless proxy -> :4123\nmyapp`：`portless proxy` 接收到请求后，根据 URL 中的 `myapp` 部分，将请求路由到运行在端口 `4123` 的 `App1`。
+- `portless proxy -> :4567\napi`：`portless proxy` 接收到请求后，根据 URL 中的 `api` 部分，将请求路由到运行在端口 `4567` 的 `App2`。
+
+## 仓库语境与术语解释
+- **portless**：一个用稳定的、命名的 `.localhost` URL 替代端口号的工具，解决本地开发中端口冲突等问题。
+- **.localhost URL**：`portless` 提供的命名 URL，例如 `myapp.localhost:1355`，用于访问本地开发应用。
+- **portless proxy**：`portless` 提供的代理服务器，负责接收来自浏览器的请求，并将其路由到相应的本地开发应用。
+- **portless run**：`portless` 提供的命令，用于运行本地开发应用，并自动将其注册到 `portless proxy`。根据 README，`portless run` 可以自动推断项目名称。
+- **package.json**：项目的配置文件，`portless run` 可以从中推断项目名称。
+- **Git Worktrees**：`portless run` 可以自动检测 Git Worktrees，并根据分支名称生成唯一的 URL。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `portless` 如何将浏览器请求路由到不同的本地开发应用。浏览器通过 `myapp.localhost:1355` 向 `portless proxy` 发送请求，`portless proxy` 根据 URL 中的应用名称（例如 `myapp` 或 `api`）将请求路由到相应的本地应用。`portless` 通过一个代理服务器，将浏览器发起的、基于命名 URL 的请求，路由到不同的本地开发应用，解决了端口冲突、记忆端口等问题。`portless run` 命令用于运行本地开发应用，并自动将其注册到 `portless proxy`。

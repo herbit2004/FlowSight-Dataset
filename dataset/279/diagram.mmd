@@ -1,0 +1,42 @@
+flowchart TB
+    subgraph Monitoring["CloudWatch Monitoring"]
+        subgraph Dashboards["Dashboards"]
+            HL["High-Level Dashboard<br/>API Gateway Metrics<br/>Business KPIs"]
+            LL["Low-Level Dashboard<br/>Lambda Metrics<br/>DynamoDB Metrics"]
+        end
+
+        subgraph Alarms["CloudWatch Alarms"]
+            API_ALARM["API Gateway Alarms<br/>5XX Errors, Latency"]
+            LAMBDA_ALARM["Lambda Alarms<br/>Errors, P90 Latency"]
+            DDB_ALARM["DynamoDB Alarms<br/>Throttles, Errors"]
+        end
+    end
+
+    subgraph Notification["Notification"]
+        SNS["SNS Topic<br/>KMS Encrypted"]
+    end
+
+    subgraph Resources["Monitored Resources"]
+        APIGW["API Gateway"]
+        LAMBDA["Lambda Function"]
+        DDB["DynamoDB Tables"]
+    end
+
+    APIGW --> API_ALARM
+    LAMBDA --> LAMBDA_ALARM
+    DDB --> DDB_ALARM
+
+    API_ALARM --> SNS
+    LAMBDA_ALARM --> SNS
+    DDB_ALARM --> SNS
+
+    API_ALARM --> HL
+    LAMBDA_ALARM --> LL
+    DDB_ALARM --> LL
+
+    style HL fill:#4ecdc4,stroke:#333
+    style LL fill:#4ecdc4,stroke:#333
+    style SNS fill:#ff6b6b,stroke:#333
+    style API_ALARM fill:#ffe66d,stroke:#333
+    style LAMBDA_ALARM fill:#ffe66d,stroke:#333
+    style DDB_ALARM fill:#ffe66d,stroke:#333

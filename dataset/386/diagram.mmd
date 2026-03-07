@@ -1,0 +1,69 @@
+graph TB
+    subgraph "客户端 | Client Layer"
+        A[Cherry Studio<br>聊天客户端]
+        B[NextChat<br>WebUI]
+        C[开发者驾驶舱<br>HTML5 UI]
+        D[标准 API 客户端<br>curl/Python]
+    end
+
+    subgraph "Z-Image Turbo Worker"
+        E{路由分发器<br>/v1/*}
+        
+        F[/身份伪装引擎<br>IdentityForge/]
+        
+        subgraph "核心处理器 | Core Handlers"
+            G[图像生成 API<br>/v1/images/generations]
+            H[聊天适配器<br>/v1/chat/completions]
+            I[状态查询<br>/v1/query/status]
+        end
+        
+        subgraph "轮询引擎 | Polling Engine"
+            J[服务端轮询模式]
+            K[客户端轮询模式]
+        end
+        
+        L[TransformStream<br>SSE 实时流]
+        
+        M[响应标准化<br>OpenAI Format]
+    end
+
+    subgraph "上游服务 | Upstream Service"
+        N[Z-Image 原始接口<br>z-image.62tool.com]
+    end
+
+    A -->|OpenAI 标准请求| E
+    B -->|标准 API 调用| E
+    C -->|WebSocket/HTTP| E
+    D -->|REST API| E
+    
+    E --> F
+    F -->|动态伪装头部| G
+    F -->|会话保持| H
+    
+    G -->|提交任务| J
+    G -->|返回任务ID| K
+    
+    H --> L
+    L -->|流式进度反馈| A
+    L -->|异步轮询| J
+    
+    J -->|轮询状态| N
+    K -->|客户端轮询| I
+    I -->|查询状态| N
+    
+    N -->|返回图像URL| M
+    M -->|标准化响应| A
+    M -->|Markdown/JSON| B
+    M -->|HTML 预览| C
+    M -->|结构化数据| D
+    
+    style A fill:#4A90E2,stroke:#333,stroke-width:2px
+    style B fill:#6FCF97,stroke:#333,stroke-width:2px
+    style C fill:#F2994A,stroke:#333,stroke-width:2px
+    style D fill:#BB6BD9,stroke:#333,stroke-width:2px
+    style E fill:#2D9CDB,stroke:#333,stroke-width:3px
+    style F fill:#27AE60,stroke:#333,stroke-width:2px
+    style G fill:#EB5757,stroke:#333,stroke-width:2px
+    style H fill:#9B51E0,stroke:#333,stroke-width:2px
+    style I fill:#F2C94C,stroke:#333,stroke-width:2px
+    style N fill:#828282,stroke:#333,stroke-width:2px

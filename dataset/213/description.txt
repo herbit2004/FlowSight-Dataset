@@ -1,0 +1,39 @@
+## 图类型与用途
+这是一个流程图，展示了 AGI-Alpha-Agent-v0 项目中不同领域 Agent 之间的关系，以及它们如何向 ORC 组件提供信息。该图用于描绘一个分层架构，将 Agent 分为三个不同的领域，并展示这些领域如何协同工作。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是三个子图，分别代表不同的领域，底部是 ORC 组件，所有 Agent 都向 ORC 提供信息。
+
+## 分组/子图/阶段说明
+- **Macro-Finance Δβ**：代表宏观金融领域，包含 FinanceAgent 和 EnergyAgent 两个 Agent。
+- **Supply-Chain ΔS**：代表供应链领域，包含 ManufacturingAgent 和 LogisticsAgent 两个 Agent。
+- **Bio/Chem ΔH**：代表生物/化学领域，包含 BiotechAgent 和 MaterialsAgent 两个 Agent。
+
+## 节点逐项说明
+- **FinanceAgent (FIN)**：金融代理，负责处理金融相关任务。根据 `alpha_factory_v1/backend/agents/finance_agent.py`，它是一个跨资产的自主交易者，具有机构级别的风险控制。
+- **EnergyAgent (ENE)**：能源代理，负责处理能源相关任务。根据 `alpha_factory_v1/backend/agents/energy_agent.py`，它融合了实时电网遥测、高分辨率天气预报和 ISO/LMP 价格曲线，以发现短期调度中的 alpha。
+- **ManufacturingAgent (MFG)**：制造代理，负责处理制造相关任务。根据 `alpha_factory_v1/backend/agents/manufacturing_agent.py`，它协调混合作业车间/流水线生产设施，将实时订单簿更新和车间遥测转换为可执行的、风险感知的计划。
+- **LogisticsAgent (LOG)**：物流代理，负责处理物流相关任务。图中可见，但仓库上下文未进一步说明。
+- **BiotechAgent (BIO)**：生物技术代理，负责处理生物技术相关任务。根据 `alpha_factory_v1/backend/agents/biotech_agent.py`，它将零散的生命科学数据流转化为可操作的 alpha，用于目标发现、通路智能、实验设计和组合优先级排序。
+- **MaterialsAgent (MAT)**：材料代理，负责处理材料科学相关任务。图中可见，但仓库上下文未进一步说明。
+- **ORC**：一个中心组件，接收来自三个不同领域的 Agent 的信息，可能是一个决策中心、数据聚合器或优化器。图中可见，但仓库上下文未进一步说明。
+
+## 连线、分支与汇聚关系
+- `FinanceAgent (FIN) -> ORC`：FinanceAgent 向 ORC 提供信息，信息流标记为 "β feed"。
+- `EnergyAgent (ENE) -> ORC`：EnergyAgent 向 ORC 提供信息，信息流标记为 "β feed"。
+- `ManufacturingAgent (MFG) -> ORC`：ManufacturingAgent 向 ORC 提供信息，信息流标记为 "entropy ΔS"。
+- `LogisticsAgent (LOG) -> ORC`：LogisticsAgent 向 ORC 提供信息，信息流标记为 "entropy ΔS"。
+- `BiotechAgent (BIO) -> ORC`：BiotechAgent 向 ORC 提供信息，信息流标记为 "latent ΔH"。
+- `MaterialsAgent (MAT) -> ORC`：MaterialsAgent 向 ORC 提供信息，信息流标记为 "latent ΔH"。
+- 所有 Agent 都向 ORC 提供信息，形成汇聚关系。
+
+## 仓库语境与术语解释
+- **Agent**：在此上下文中，Agent 指的是能够自主执行特定任务的软件实体。
+- **ORC**：可能是整个系统的决策中心，它接收来自不同领域的输入，并基于这些输入做出决策或执行操作。
+- **Macro-Finance Δβ, Supply-Chain ΔS, Bio/Chem ΔH**：分别代表宏观金融、供应链和生物/化学三个不同的领域。
+- **β feed, entropy ΔS, latent ΔH**：分别代表来自宏观金融、供应链和生物/化学领域的信息流。
+- **Model Context Protocol (MCP)**：在 `alpha_factory_v1/backend/agents/manufacturing_agent.py` 中提到，所有工件都封装在 Model Context Protocol (MCP v0.2) 中，带有 SHA-256 摘要、ISO 22400 KPI 标签和 SOX 审计痕迹。
+- **OpenAI Agents SDK tools**：在 `alpha_factory_v1/backend/agents/biotech_agent.py` 中提到，BiotechAgent 使用 OpenAI Agents SDK 工具，例如 `ask_biotech`、`propose_experiment` 等。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 AGI-Alpha-Agent-v0 项目的分层架构，其中 FinanceAgent 和 EnergyAgent 属于 Macro-Finance 领域，ManufacturingAgent 和 LogisticsAgent 属于 Supply-Chain 领域，BiotechAgent 和 MaterialsAgent 属于 Bio/Chem 领域。所有这些 Agent 都将信息（分别标记为 "β feed", "entropy ΔS" 和 "latent ΔH"）传递给中心组件 ORC，ORC 可能是整个系统的决策中心。该架构体现了一种分层和模块化的设计，允许不同领域的 Agent 独立工作，并将结果汇总到中心组件进行处理。其中 FinanceAgent, EnergyAgent, ManufacturingAgent, BiotechAgent 在代码中有明确定义。

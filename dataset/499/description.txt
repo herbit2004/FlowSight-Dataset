@@ -1,0 +1,50 @@
+## 图类型与用途
+这是一个 AWS 云架构图，展示了 OpenRepoWiki 项目在 AWS 上的部署和运行方式。该图在 README 中作为架构概览，帮助理解项目的整体架构和组件之间的关系。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是 CDN，作为流量入口，底部是数据存储和密钥管理。数据流从上到下，经过多个服务组件，最终到达数据存储。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为以下几个阶段：
+- **流量入口与分发**：CloudFront CDN 接收用户请求，并根据请求类型分发到 S3 或 API Gateway。
+- **API 请求处理**：API Gateway 接收 API 请求，进行认证和授权，然后路由到相应的 Lambda 函数。
+- **任务编排与处理**：Jobs Handler 触发 Step Functions 状态机，编排仓库处理流程，调用 ECS Fargate 运行代码总结程序。
+- **数据存储与管理**：ECS Fargate 将生成的摘要存储到 DynamoDB，并将处理过程中生成的工件存储到 S3，同时从 Secrets Manager 获取必要的凭证。
+
+## 节点逐项说明
+- **CloudFront CDN**：内容分发网络，加速静态资源访问，并提供自定义域名和 SSL 终止。`CF["openrepowiki.xyz, api.*"]` 表示 CloudFront 负责处理 `openrepowiki.xyz` 域名和所有 `api.*` 子域名的请求。
+- **S3 (Frontend)**：S3 存储桶，用于存储前端静态资源，例如 HTML、CSS、JavaScript 文件。
+- **API Gateway**：API 网关，作为 REST API 的入口，负责请求路由、认证授权、流量控制等。
+- **Lambda: Jobs Handler**：Lambda 函数，处理与任务相关的请求，例如创建、查询任务。
+- **Lambda: Repos Handler**：Lambda 函数，处理与仓库相关的请求，例如获取仓库信息。
+- **Lambda: Authorizer**：Lambda 函数，负责 API 请求的认证和授权，验证用户身份。
+- **Step Functions**：Step Functions 状态机，用于编排仓库处理的工作流，定义任务执行的顺序和依赖关系。
+- **ECS Fargate (Processor)**：ECS Fargate 容器，运行 LLM (大型语言模型) 驱动的代码总结程序，负责分析仓库代码并生成摘要。
+- **DynamoDB**：DynamoDB 数据库，用于存储仓库数据、任务状态和代码摘要。
+- **S3 (Artifacts)**：S3 存储桶，用于存储处理过程中生成的各种工件，例如中间结果、日志文件。
+- **Secrets Manager**：用于安全地存储和管理敏感信息，例如 API 密钥、数据库密码等。
+
+## 连线、分支与汇聚关系
+- `CF -> S3F`：CloudFront CDN 将静态资源请求转发到 S3 (Frontend)。
+- `CF -> APIGW`：CloudFront CDN 将 API 请求转发到 API Gateway。
+- `APIGW -> JobsLambda`：API Gateway 将任务相关的请求路由到 Lambda: Jobs Handler。
+- `APIGW -> ReposLambda`：API Gateway 将仓库相关的请求路由到 Lambda: Repos Handler。
+- `APIGW -> AuthLambda`：API Gateway 将请求转发到 Lambda: Authorizer 进行认证和授权。
+- `JobsLambda -> SFN`：Lambda: Jobs Handler 触发 Step Functions 状态机。
+- `SFN -> ECS`：Step Functions 状态机调用 ECS Fargate (Processor) 运行代码总结程序。
+- `ECS -> DDB`：ECS Fargate 将生成的摘要存储到 DynamoDB。
+- `ECS -> S3A`：ECS Fargate 将处理过程中生成的工件存储到 S3 (Artifacts)。
+- `ECS -> SM`：ECS Fargate 从 Secrets Manager 获取必要的凭证。
+
+## 仓库语境与术语解释
+- **CloudFront CDN**：根据 `infra/terraform/modules/cloudfront/main.tf`，CloudFront 用于静态 UI 分发，并配置了 Origin Access Control (OAC) 以访问 S3 存储桶。
+- **S3 (Frontend)**：根据 `infra/terraform/modules/s3/main.tf`，S3 存储桶用于存储工件，并启用了 Block Public Access 和 SSE-S3 加密。
+- **API Gateway**：根据 `infra/terraform/modules/apigw/main.tf`，API Gateway 作为 REST API 的入口，支持请求认证和授权，并路由到不同的 Lambda 函数。
+- **Lambda**：根据 `infra/terraform/modules/lambda/main.tf`，Lambda 函数处理 API 请求，并配置了 CloudWatch Logs 用于记录 API 请求。
+- **ECS Fargate (Processor)**：根据 `infra/terraform/modules/ecs/main.tf`，ECS Fargate 运行代码总结程序，并配置了 CloudWatch Logs 用于记录任务日志。
+- **Step Functions**：用于编排任务流程，确保任务按照正确的顺序执行。
+- **DynamoDB**：用于存储仓库数据、任务状态和代码摘要。
+- **Secrets Manager**：用于安全地存储和管理敏感信息，例如 API 密钥、数据库密码等。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 OpenRepoWiki 的 AWS 云架构，用户请求通过 CloudFront CDN 进入，静态资源直接从 S3 (Frontend) 获取，API 请求则通过 API Gateway 路由到不同的 Lambda 函数。Jobs Handler 触发 Step Functions 编排任务，调用 ECS Fargate 运行代码总结程序，并将结果存储到 DynamoDB 和 S3 (Artifacts)，同时从 Secrets Manager 获取凭证。整体架构体现了无服务器架构的特点，利用 AWS 的各种服务组件实现自动化文档生成。

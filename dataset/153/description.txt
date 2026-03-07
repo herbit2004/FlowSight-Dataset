@@ -1,0 +1,46 @@
+## 图类型与用途
+这是一个流程图，用于指导 Svedit 用户如何根据节点的功能和特性，将其归类为 `annotation`、`document`、`block` 或 `text` 四种 `kind` 之一。它在仓库中的作用是帮助开发者更好地组织和管理其内容模型，并利用 Svedit 的功能来构建可编辑的网站。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是流程的起点，中间是一系列判断条件，底部是最终的节点类型分类。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为：起始、问题判断、类型确定三个阶段。
+
+## 节点逐项说明
+- **Start (I need a new node type)**：流程的起点，表示用户需要定义一个新的节点类型。
+- **Q1 (Is it inline formatting applied within text?)**：判断节点是否是应用于文本内部的格式化，例如粗体、斜体或链接。
+- **Q2 (Is it a top-level routable entry point?)**：判断节点是否是顶层可路由的入口点，例如页面、文章或事件。
+- **Q3 (Is text the node's entire purpose?)**：判断节点的主要目的是否是文本。
+- **Q4 (Does it have exactly one annotated_text property?)**：判断节点是否只有一个 `annotated_text` 属性。
+- **Q5 (Does pressing Enter to split into two nodes make sense?)**：判断按下回车键将节点分割成两个节点是否有意义。
+- **KindAnnotation (kind: annotation e.g. bold, italic, link)**：表示节点类型是注解，用于对文本进行格式化或添加元数据。根据 README，annotation 是 Svedit 的一种节点 `kind`。
+- **KindDocument (kind: document e.g. page, article, event)**：表示节点类型是文档，代表一个独立的、可路由的内容单元。根据 README，document 是 Svedit 的一种节点 `kind`。
+- **KindBlock (kind: block e.g. image+caption, quote+author, list, nav, embed)**：表示节点类型是块，包含非文本属性或子节点，例如图像、引用、列表、导航或嵌入内容。根据 README，block 是 Svedit 的一种节点 `kind`。
+- **KindText (kind: text e.g. paragraph, heading, list_item)**：表示节点类型是文本，用于表示段落、标题或列表项等文本内容。根据 README，text 是 Svedit 的一种节点 `kind`。
+
+## 连线、分支与汇聚关系
+- `Start -> Q1`：流程从 Start 节点开始，进入第一个问题判断。
+- `Q1 -- Yes --> KindAnnotation`：如果 Q1 的答案是 Yes，则确定节点类型为 Annotation。
+- `Q1 -- No --> Q2`：如果 Q1 的答案是 No，则进入下一个问题 Q2。
+- `Q2 -- Yes --> KindDocument`：如果 Q2 的答案是 Yes，则确定节点类型为 Document。
+- `Q2 -- No --> Q3`：如果 Q2 的答案是 No，则进入下一个问题 Q3。
+- `Q3 -- "No — it has non-text properties or children" --> KindBlock`：如果 Q3 的答案是 No，则确定节点类型为 Block。
+- `Q3 -- Yes --> Q4`：如果 Q3 的答案是 Yes，则进入下一个问题 Q4。
+- `Q4 -- "No — multiple text properties" --> KindBlock`：如果 Q4 的答案是 No，则确定节点类型为 Block。
+- `Q4 -- Yes --> Q5`：如果 Q4 的答案是 Yes，则进入下一个问题 Q5。
+- `Q5 -- "No — splitting doesn't make sense" --> KindBlock`：如果 Q5 的答案是 No，则确定节点类型为 Block。
+- `Q5 -- Yes --> KindText`：如果 Q5 的答案是 Yes，则确定节点类型为 Text。
+
+## 仓库语境与术语解释
+- **Svedit**：一个用于在 Svelte 中构建可编辑网站的库，允许用户直接在布局中编辑内容，无需 CMS。
+- **Node**：Svedit 中内容的基本单元，可以是文档、块、文本或注解。
+- **Kind**：节点的类型，决定了节点的行为。Svedit 定义了四种 `kind`：`document`、`block`、`text` 和 `annotation`。
+- **Document**：一种节点类型，表示顶层可路由的入口点，例如页面、文章或事件。
+- **Block**：一种节点类型，包含非文本属性或子节点，例如图像、引用、列表、导航或嵌入内容。
+- **Text**：一种节点类型，用于表示段落、标题或列表项等文本内容。
+- **Annotation**：一种节点类型，用于对文本进行格式化或添加元数据，例如粗体、斜体或链接。
+- **Annotated Text**: README 中提到，`annotated_text` 是一种特殊的属性类型，表示带有注解的文本。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图旨在帮助 Svedit 用户确定他们需要创建的新节点类型应该属于哪种 `kind`。流程从“I need a new node type”开始，经过一系列问题（Q1-Q5）的判断，根据节点的特性，最终确定节点类型为 `annotation`、`document`、`block` 或 `text` 四种 `kind` 之一。其中，`annotated_text` 属性和是否能通过回车分割节点是判断节点类型的重要依据。该流程图简化了 Svedit 中自定义节点类型的过程，有助于用户更好地组织和管理其内容模型。

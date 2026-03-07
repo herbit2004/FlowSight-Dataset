@@ -1,0 +1,54 @@
+## 图类型与用途
+这是一个架构图，描述了 Cilium PolicyPilot 工具的内部组件和数据流。该工具用于根据网络流量自动生成、验证和解释 CiliumNetworkPolicies，该图在仓库中用于展示 PolicyPilot 的整体架构。
+
+## 图的整体布局
+图采用从左到右的布局。左侧是 CLI Layer 和 Data Sources，中间是 Internal Packages，右侧是 Outputs。数据流从左向右流动。
+
+## 分组/子图/阶段说明
+图中包含四个子图：CLI Layer、Data Sources、Internal Packages 和 Outputs。这些子图代表了 PolicyPilot 架构中的不同层级和模块。
+
+## 节点逐项说明
+- **CLI (cmd/cpp/main.go Cobra CLI)**：PolicyPilot 的命令行界面，用户通过它来执行命令，如 `learn`、`propose`、`verify` 和 `explain`。它由 `cmd/cpp/main.go` 文件实现，并使用 Cobra CLI 框架。
+- **HubbleJSON (Hubble Flows JSON Files)**：PolicyPilot 的数据来源之一，从 Hubble Flows 的 JSON 文件读取网络流量数据。
+- **HubbleCLI (Hubble CLI Future: API)**：PolicyPilot 的另一个数据来源，未来将通过 Hubble CLI 或 API 直接获取网络流量数据。
+- **Hubble (internal/hubble/ Flow Parsing)**：负责解析 Hubble Flows 数据，提取有用的信息。
+- **Synth (internal/synth/ Policy Synthesis)**：根据解析后的流量数据，合成 CiliumNetworkPolicies。
+- **Verify (internal/verify/ Policy Validation)**：验证生成的 CiliumNetworkPolicies 的语法和结构是否正确。
+- **Explain (internal/explain/ Report Generation)**：生成包含网络图和统计信息的 HTML 报告，用于解释生成的策略。
+- **Graph (internal/graph/ Network Graph)**：生成网络图，作为报告的一部分。
+- **Validate (internal/validate/ Input Validation)**：验证各个模块的输入数据是否有效。
+- **Policies (CiliumNetworkPolicy YAML)**：Synth 模块生成的 CiliumNetworkPolicy YAML 文件。
+- **Report (HTML Report with Graph)**：Explain 模块生成的包含网络图的 HTML 报告。
+
+## 连线、分支与汇聚关系
+- `CLI -- learn --> Hubble`：用户通过 CLI 的 `learn` 命令触发 Hubble 模块。
+- `CLI -- propose --> Synth`：用户通过 CLI 的 `propose` 命令触发 Synth 模块。
+- `CLI -- verify --> Verify`：用户通过 CLI 的 `verify` 命令触发 Verify 模块。
+- `CLI -- explain --> Explain`：用户通过 CLI 的 `explain` 命令触发 Explain 模块。
+- `HubbleJSON --> Hubble`：Hubble 模块从 HubbleJSON 文件获取网络流量数据。
+- `HubbleCLI -. future .-> Hubble`：Hubble 模块未来将从 HubbleCLI 获取网络流量数据。
+- `Hubble --> Synth`：Hubble 模块将解析后的流量数据传递给 Synth 模块。
+- `Synth --> Verify`：Synth 模块将生成的 CiliumNetworkPolicies 传递给 Verify 模块进行验证。
+- `Synth --> Explain`：Synth 模块将生成的 CiliumNetworkPolicies 传递给 Explain 模块用于生成报告。
+- `Hubble --> Explain`：Hubble 模块将原始流量数据传递给 Explain 模块用于生成报告。
+- `Validate --> Hubble`：Validate 模块对 Hubble 模块的输入数据进行验证。
+- `Validate --> Synth`：Validate 模块对 Synth 模块的输入数据进行验证。
+- `Validate --> Verify`：Validate 模块对 Verify 模块的输入数据进行验证。
+- `Validate --> Explain`：Validate 模块对 Explain 模块的输入数据进行验证。
+- `Synth --> Policies`：Synth 模块将生成的 CiliumNetworkPolicies 输出为 YAML 文件。
+- `Explain --> Graph`：Explain 模块调用 Graph 模块生成网络图。
+- `Explain --> Report`：Explain 模块将生成的报告输出为 HTML 文件。
+
+## 仓库语境与术语解释
+- **CiliumNetworkPolicy**：Cilium 的网络策略，用于控制 Kubernetes 集群中 Pod 之间的网络流量。
+- **Hubble Flows**：Cilium 的网络流量监控工具 Hubble 产生的流量数据。PolicyPilot 使用 Hubble Flows 作为输入来生成网络策略。
+- **Cobra CLI**：一个用于创建命令行界面的 Go 语言框架，PolicyPilot 的 CLI 使用 Cobra 构建。
+- **`cmd/cpp/main.go`**：PolicyPilot 的命令行入口文件，定义了 CLI 的命令和参数。
+- **`internal/hubble/parser.go`**：包含解析 Hubble Flows 数据的逻辑。
+- **`internal/synth/policy.go`**：包含合成 CiliumNetworkPolicies 的逻辑。
+- **`internal/verify/verify.go`**：包含验证 CiliumNetworkPolicies 的逻辑。
+- **`internal/explain/report.go`**：包含生成 HTML 报告的逻辑。
+- **`internal/graph/graph.go`**：包含生成网络图的逻辑。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Cilium PolicyPilot 的架构，从 CLI 接收用户指令，通过 HubbleJSON 或 HubbleCLI 获取网络流量数据，经过 Hubble 模块解析后，由 Synth 模块生成 CiliumNetworkPolicies。生成的策略经过 Verify 模块验证，并由 Explain 模块生成包含网络图的 HTML 报告。Validate 模块对各个模块的输入数据进行验证，确保数据的有效性。最终，Synth 模块将生成的 CiliumNetworkPolicies 输出为 YAML 文件，Explain 模块将生成的报告输出为 HTML 文件。该架构的核心流程是“流量数据 -> 策略生成 -> 策略验证 -> 报告生成”，其中 Hubble Flows 和 CiliumNetworkPolicy 是两个关键的仓库语境锚点。

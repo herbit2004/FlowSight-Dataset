@@ -1,0 +1,7 @@
+graph TB
+    A["order-service<br>Producer<br>Port: 2222"] -->|ex.stream.out| B["RabbitMQ Broker"]
+    B -->|ex.stream.out| C["product-service<br>Function<br>Port: 2223"]
+    B -->|ex.stream.out| D["shipment-service<br>Function<br>Port: 2224"]
+    C -->|ex.stream.out2| E["RabbitMQ Broker"]
+    D -->|ex.stream.out2| E
+    E -->|ex.stream.out2| F["payment-service<br>Consumer<br>Port: 2225"]

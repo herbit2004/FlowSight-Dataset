@@ -1,0 +1,52 @@
+## 图类型与用途
+这是一个流程图，描述了 Claude Code Audio Hooks 的完整安装流程。它在仓库中的作用是指导用户完成安装，并处理安装过程中可能出现的错误。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是安装流程的起点，中间是安装步骤，底部是安装成功或失败的处理分支。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分成三个阶段：环境准备、安装配置、测试与修复。
+
+## 节点逐项说明
+- **Start Installation**：流程的起点，表示开始安装 Claude Code Audio Hooks。
+- **Clone Repository**：从 GitHub 克隆 Claude Code Audio Hooks 的代码仓库到本地。
+- **Run install-complete.sh**：运行安装脚本 `install-complete.sh`，该脚本负责执行后续的安装步骤。
+- **Detect Environment WSL/Git Bash/Cygwin/macOS/Linux**：自动检测当前运行环境，例如 WSL、Git Bash、Cygwin、macOS 或 Linux。
+- **Check Prerequisites Claude Code, Python, Git**：检查系统是否满足安装所需的先决条件，包括 Claude Code、Python 和 Git。
+- **Install 14 Hook Scripts to ~/.claude/hooks/**：将 14 个 Hook 脚本安装到 `~/.claude/hooks/` 目录下。这些脚本用于在 Claude Code 完成任务或需要用户注意时触发通知。
+- **Configure Settings settings.json & settings.local.json**：配置 `settings.json` 和 `settings.local.json` 文件，用于自定义通知设置。
+- **Set Permissions chmod +x hooks**：使用 `chmod +x hooks` 命令设置 Hook 脚本的执行权限。
+- **Verify Audio Files 14 MP3 files**：验证是否存在 14 个 MP3 音频文件，这些文件用于音频通知。
+- **Run Tests Automated validation**：运行自动化测试来验证安装是否成功。
+- **Success?**：一个判断节点，根据测试结果判断安装是否成功。
+- **✅ Installation Complete Restart Claude Code**：流程的终点，表示安装成功，并提示重启 Claude Code。
+- **Run Diagnostics Check installation log**：如果测试失败，则运行诊断程序来检查安装日志，找出问题所在。
+- **Apply Fixes See Troubleshooting**：根据诊断结果，应用相应的修复措施，并参考故障排除指南。
+
+## 连线、分支与汇聚关系
+- `Start Installation -> Clone Repository`：开始安装后，首先克隆代码仓库。
+- `Clone Repository -> Run install-complete.sh`：克隆仓库后，运行安装脚本。
+- `Run install-complete.sh -> Detect Environment WSL/Git Bash/Cygwin/macOS/Linux`：运行安装脚本后，检测当前环境。
+- `Detect Environment WSL/Git Bash/Cygwin/macOS/Linux -> Check Prerequisites Claude Code, Python, Git`：检测环境后，检查先决条件。
+- `Check Prerequisites Claude Code, Python, Git -> Install 14 Hook Scripts to ~/.claude/hooks/`：检查先决条件后，安装 Hook 脚本。
+- `Install 14 Hook Scripts to ~/.claude/hooks/ -> Configure Settings settings.json & settings.local.json`：安装 Hook 脚本后，配置设置文件。
+- `Configure Settings settings.json & settings.local.json -> Set Permissions chmod +x hooks`：配置设置后，设置脚本权限。
+- `Set Permissions chmod +x hooks -> Verify Audio Files 14 MP3 files`：设置权限后，验证音频文件。
+- `Verify Audio Files 14 MP3 files -> Run Tests Automated validation`：验证音频文件后，运行测试。
+- `Run Tests Automated validation -> Success?`：运行测试后，判断是否成功。
+- `Success? -- Yes --> ✅ Installation Complete Restart Claude Code`：如果测试成功，则安装完成。
+- `Success? -- No --> Run Diagnostics Check installation log`：如果测试失败，则运行诊断程序。
+- `Run Diagnostics Check installation log -> Apply Fixes See Troubleshooting`：运行诊断程序后，应用修复措施。
+- `Apply Fixes See Troubleshooting -> Run Tests Automated validation`：应用修复后，重新运行测试，形成循环。
+
+## 仓库语境与术语解释
+- **Claude Code Audio Hooks**：该项目旨在为 Claude Code CLI 添加智能通知，通过音频提示、桌面通知和文本转语音来提醒用户。
+- **install-complete.sh**：该脚本是主要的安装脚本，负责检测环境、安装依赖、配置设置等。
+- **~/.claude/hooks/**：该目录是 Claude Code 的 Hook 脚本存放位置，用于在特定事件发生时触发自定义操作。
+- **settings.json & settings.local.json**：这两个文件用于配置 Claude Code Audio Hooks 的设置，例如音频主题、启用的 Hook 类型等。
+- **chmod +x hooks**：该命令用于设置 Hook 脚本的执行权限，确保脚本可以被正确执行。
+- **MP3 音频文件**：用于音频通知，仓库中包含默认和自定义两种音频主题。
+- **scripts/diagnose.py**：该脚本是一个诊断工具，用于检查安装问题，例如依赖缺失、配置错误等。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Claude Code Audio Hooks 的安装流程，从克隆仓库开始，依次进行环境检测、依赖检查、Hook 脚本安装、配置设置、权限设置、音频验证和自动化测试。如果测试失败，则运行诊断程序并应用修复，然后重新测试，直到安装成功。其中，`install-complete.sh` 脚本是安装过程的核心，`~/.claude/hooks/` 目录用于存放 Hook 脚本，`settings.json` 文件用于配置通知设置。

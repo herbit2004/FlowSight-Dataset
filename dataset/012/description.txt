@@ -1,0 +1,39 @@
+## 图类型与用途
+这是一个流程图，描述了 MoAI-ADK (Agentic Development Kit for Claude Code) 在执行任务时选择执行模式的逻辑。该图的作用是展示系统如何根据用户输入或任务复杂度，在子代理模式和代理团队模式之间进行选择。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是起始节点“🗿 MoAI Orchestrator”，流程向下分叉，根据不同的条件选择不同的执行模式，最终到达底部的两种执行模式节点。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为三个阶段：模式选择、自动选择（可选）、执行模式。
+
+## 节点逐项说明
+- **🗿 MoAI Orchestrator**：MoAI 编排器，是整个流程的起点，负责启动和协调整个流程。
+- **Select Execution Mode**：选择执行模式，根据用户输入（`--solo` 或 `--team`）或系统自动判断选择不同的执行模式。
+- **Sub-Agent Mode**：子代理模式，使用单个代理或一系列子代理来完成任务。
+- **Agent Teams Mode**：代理团队模式，使用多个代理团队并行协作来完成任务。
+- **Auto Selection**：自动选择模式，系统根据任务的复杂程度自动选择子代理模式或代理团队模式。
+- **Sequential Expert Delegation**：顺序专家委派，在子代理模式下，任务被顺序委派给不同的专家代理。`Task() → Expert Agent` 表示任务被发送给专家代理。
+- **Parallel Team Collaboration**：并行团队协作，在代理团队模式下，多个代理团队并行工作。`TeamCreate → SendMessage` 表示创建团队并发送消息进行协作。
+
+## 连线、分支与汇聚关系
+- `🗿 MoAI Orchestrator -> Select Execution Mode`：编排器启动后，进入执行模式选择阶段。
+- `Select Execution Mode -- "--solo" --> Sub-Agent Mode`：如果用户输入 `--solo` 参数，则选择子代理模式。
+- `Select Execution Mode -- "--team" --> Agent Teams Mode`：如果用户输入 `--team` 参数，则选择代理团队模式。
+- `Select Execution Mode -- "Default (Auto)" --> Auto Selection`：如果用户选择默认的自动选择模式，则进入自动选择阶段。
+- `Auto Selection -- "High Complexity" --> Agent Teams Mode`：如果任务复杂度高，则选择代理团队模式。
+- `Auto Selection -- "Low Complexity" --> Sub-Agent Mode`：如果任务复杂度低，则选择子代理模式。
+- `Sub-Agent Mode -> Sequential Expert Delegation`：子代理模式下，任务通过顺序专家委派的方式执行。
+- `Agent Teams Mode -> Parallel Team Collaboration`：代理团队模式下，多个代理团队并行协作执行任务。
+
+## 仓库语境与术语解释
+- **MoAI-ADK**：Agentic Development Kit for Claude Code，是一个高性能 AI 开发环境，旨在通过 AI 代理协助代码开发。
+- **Sub-Agent Mode**：根据 `.claude/skills/moai-foundation-claude/reference/claude-code-sub-agents-official.md`，子代理是 Claude Code 可以委派任务的专门 AI 助手。
+- **Agent Teams Mode**：指多个 AI 代理团队并行协作完成任务的模式。
+- **Sequential Expert Delegation**：在子代理模式下，任务被顺序委派给不同的专家代理，每个代理负责特定的任务环节。
+- **Parallel Team Collaboration**：在代理团队模式下，多个代理团队并行工作，共同完成复杂的任务。
+- **quality.development_mode**：根据 `.claude/rules/moai/workflow/workflow-modes.md`，该配置项决定了 MoAI-ADK 使用 DDD (Domain-Driven Development) 还是 TDD (Test-Driven Development) 方法。
+- **Skill("moai")**: 根据 `.claude/commands/moai/run.md`，`run` 命令使用 `Skill("moai")` 来执行 SPEC 需求，并支持 `--team` 参数来强制使用 Agent Teams 模式。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 MoAI-ADK 如何选择执行模式。流程从“🗿 MoAI Orchestrator”开始，通过“Select Execution Mode”节点，根据用户指定的 `--solo` 或 `--team` 参数，或默认的“Auto Selection”模式，选择“Sub-Agent Mode”或“Agent Teams Mode”。在自动选择模式下，系统会根据任务复杂度选择合适的模式。子代理模式采用“Sequential Expert Delegation”，而代理团队模式采用“Parallel Team Collaboration”。该流程体现了 MoAI-ADK 能够根据任务特性灵活选择执行模式的特点。

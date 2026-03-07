@@ -1,0 +1,22 @@
+flowchart LR
+  subgraph ControlPlane[Control Plane]
+    TR[svc-task-resource]
+    EX[svc-task-executor]
+    FS[svc-fault-scheduler]
+    RP[svc-reqrsp-proxy]
+    RS[svc-result-processor]
+    TO[svc-topo]
+  end
+  EX -->|HTTP| RP
+  TR <--> |HTTP| EX
+  RS <--> |HTTP| TR
+  FS -->|K8s API| APIS[(Kubernetes API Server)]
+  RP -->|K8s API & Exec| APIS
+  TO -->|HTTP| Jaeger[(Jaeger Query)]
+  TR & EX & RP -->|JDBC| MYSQL[(MySQL)]
+  FS & RP -->|Redis| REDIS[(Redis)]
+  subgraph TargetNS[Target Namespace]
+    SvcA[(业务Service/Deployment)]
+    Envoy{{Envoy Sidecar}}
+  end
+  APIS <--> TargetNS

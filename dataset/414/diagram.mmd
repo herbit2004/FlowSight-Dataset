@@ -1,0 +1,96 @@
+graph TB
+    subgraph "Layer 1: High-Level Builders"
+        GC["GraphColoring Builder<br/>graphColoring { }"]
+        MC["MaxCut Builder<br/>MaxCut.createProblem"]
+        KS["Knapsack Builder<br/>Knapsack.createProblem"]
+        TS["TSP Builder<br/>TSP.createProblem"]
+        PO["Portfolio Builder<br/>Portfolio.createProblem"]
+        NF["NetworkFlow Builder<br/>NetworkFlow module"]
+        SCHED["TaskScheduling Builder<br/>scheduledTask { }"]
+    end
+    
+    subgraph "Layer 2: Quantum Solvers"
+        QGC["QuantumGraphColoringSolver<br/>(QAOA)"]
+        QMC["QuantumMaxCutSolver<br/>(QAOA)"]
+        QKS["QuantumKnapsackSolver<br/>(QAOA)"]
+        QTS["QuantumTspSolver<br/>(QAOA)"]
+        QPO["QuantumPortfolioSolver<br/>(QAOA)"]
+        QNF["QuantumNetworkFlowSolver<br/>(QAOA)"]
+        QSCHED["QuantumSchedulingSolver<br/>(QAOA)"]
+    end
+    
+    subgraph "Layer 3: Quantum Backends"
+        LOCAL["LocalBackend<br/>(≤20 qubits)"]
+        IONQ["IonQBackend<br/>(Azure Quantum)"]
+        RIGETTI["RigettiBackend<br/>(Azure Quantum)"]
+        ATOM["AtomComputingBackend<br/>(Azure Quantum, 100+ qubits)"]
+        QUANTINUUM["QuantinuumBackend<br/>(Azure Quantum, 99.9%+ fidelity)"]
+    end
+    
+    GC --> QGC
+    MC --> QMC
+    KS --> QKS
+    TS --> QTS
+    PO --> QPO
+    NF --> QNF
+    SCHED --> QSCHED
+    
+    QGC --> LOCAL
+    QMC --> LOCAL
+    QKS --> LOCAL
+    QTS --> LOCAL
+    QPO --> LOCAL
+    QNF --> LOCAL
+    QSCHED --> LOCAL
+    
+    QGC -.-> IONQ
+    QMC -.-> IONQ
+    QKS -.-> IONQ
+    QTS -.-> IONQ
+    QPO -.-> IONQ
+    QNF -.-> IONQ
+    QSCHED -.-> IONQ
+    
+    QGC -.-> RIGETTI
+    QMC -.-> RIGETTI
+    QKS -.-> RIGETTI
+    QTS -.-> RIGETTI
+    QPO -.-> RIGETTI
+    QNF -.-> RIGETTI
+    QSCHED -.-> RIGETTI
+    
+    QGC -.-> ATOM
+    QMC -.-> ATOM
+    QKS -.-> ATOM
+    QTS -.-> ATOM
+    QPO -.-> ATOM
+    QNF -.-> ATOM
+    QSCHED -.-> ATOM
+    
+    QGC -.-> QUANTINUUM
+    QMC -.-> QUANTINUUM
+    QKS -.-> QUANTINUUM
+    QTS -.-> QUANTINUUM
+    QPO -.-> QUANTINUUM
+    QNF -.-> QUANTINUUM
+    QSCHED -.-> QUANTINUUM
+    
+    style GC fill:#90EE90
+    style MC fill:#90EE90
+    style KS fill:#90EE90
+    style TS fill:#90EE90
+    style PO fill:#90EE90
+    style NF fill:#90EE90
+    style SCHED fill:#90EE90
+    style QGC fill:#FFA500
+    style QMC fill:#FFA500
+    style QKS fill:#FFA500
+    style QTS fill:#FFA500
+    style QPO fill:#FFA500
+    style QNF fill:#FFA500
+    style QSCHED fill:#FFA500
+    style LOCAL fill:#5B9BD5
+    style IONQ fill:#70AD47
+    style RIGETTI fill:#ED7D31
+    style ATOM fill:#FFC000
+    style QUANTINUUM fill:#A85CC8

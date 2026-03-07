@@ -1,0 +1,45 @@
+graph TD;
+  server["HTTP Server"];
+  locationA["Location A"];
+  locationB["Location B"];
+  locationPluginListA["Proxy Plugin List A"];
+  locationPluginListB["Proxy Plugin List B"];
+  upstreamA1["Upstream A1"];
+  upstreamA2["Upstream A2"];
+  upstreamB1["Upstream B1"];
+  upstreamB2["Upstream B2"];
+  locationResponsePluginListA["Response Plugin List A"];
+  locationResponsePluginListB["Response Plugin List B"];
+
+  start("New Request") --> server
+
+  server -- "host:HostA, Path:/api/*" --> locationA
+
+  server -- "Path:/rest/*"--> locationB
+
+  locationA -- "Exec Proxy Plugins" --> locationPluginListA
+
+  locationB -- "Exec Proxy Plugins" --> locationPluginListB
+
+  locationPluginListA -- "proxy pass: 10.0.0.1:8001" --> upstreamA1
+
+  locationPluginListA -- "proxy pass: 10.0.0.2:8001" --> upstreamA2
+
+  locationPluginListA -- "done" --> response
+
+  locationPluginListB -- "proxy pass: 10.0.0.1:8002" --> upstreamB1
+
+  locationPluginListB -- "proxy pass: 10.0.0.2:8002" --> upstreamB2
+
+  locationPluginListB -- "done" --> response
+
+  upstreamA1 -- "Exec Response Plugins" --> locationResponsePluginListA
+  upstreamA2 -- "Exec Response Plugins" --> locationResponsePluginListA
+
+  upstreamB1 -- "Exec Response Plugins" --> locationResponsePluginListB
+  upstreamB2 -- "Exec Response Plugins" --> locationResponsePluginListB
+
+  locationResponsePluginListA --> response
+  locationResponsePluginListB --> response
+
+  response["HTTP Response"] --> stop("Logging");

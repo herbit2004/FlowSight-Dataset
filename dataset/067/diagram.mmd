@@ -1,0 +1,25 @@
+graph LR
+    subgraph "Client Environment (On-Prem)"
+        DB[(Legacy SQL)] -- Cloud Interconnect --> B
+    end
+
+    subgraph "GCP Landing Zone"
+        B[Cloud Storage / GCS] --> C(Vertex AI Search)
+        C --> D{Google ADK Agent Engine}
+        
+        subgraph "Multi-Agent Swarm"
+            D --> E[Planner Agent]
+            D --> F[SQL Coder Agent]
+            D --> G[Reviewer Agent]
+        end
+        
+        F -- Query --> H[(BigQuery)]
+        E -- Grounding --> C
+    end
+
+    subgraph "Security Layer"
+        I[VPC Service Controls]
+        J[Identity-Aware Proxy]
+    end
+
+    User((User)) --> J --> D

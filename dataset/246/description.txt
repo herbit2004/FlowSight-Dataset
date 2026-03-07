@@ -1,0 +1,52 @@
+## 图类型与用途
+这是一个流程图，对比了 MiniExcel 框架与其他 Excel 框架在处理 Excel 文件时的流程和资源消耗。它旨在突出 MiniExcel 在处理 Excel 文件时的优势，即更低的内存占用和更高的处理效率。
+
+## 图的整体布局
+图采用从左到右的布局，分为三条平行主线，分别代表通用的 Excel 分析流程、其他 Excel 框架的处理方式以及 MiniExcel 的处理方式。每条主线都从左侧的起点开始，依次经过各个节点，最终到达右侧的输出或处理结果。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个平行的流程，分别对应：
+- Excel 分析流程（蓝色）：描述通用的 Excel 文件分析流程。
+- 其他 Excel 框架（粉色）：描述其他 Excel 框架的处理方式，强调内存消耗。
+- MiniExcel（绿色）：描述 MiniExcel 的处理方式，强调流式处理和低内存占用。
+
+## 节点逐项说明
+- **Excel analysis process**：Excel 分析流程的起点，表示通用的 Excel 文件分析流程的开始。
+- **Unzipping XLSX file**：解压 XLSX 文件。
+- **Parsing OpenXML**：解析 OpenXML 格式。`src/MiniExcel.OpenXml/OpenXmlReader.cs` 和 `src/MiniExcel.OpenXml/OpenXmlWriter.cs` 文件与 OpenXML 格式的读取和写入有关。
+- **Model conversion**：模型转换。
+- **Output**：输出结果。
+- **Other Excel Frameworks**：其他 Excel 框架的起点，表示其他 Excel 框架处理 Excel 文件的开始。
+- **Memory**：强调内存消耗。
+- **Workbooks & Worksheets**：将整个工作簿和工作表加载到内存中。
+- **All rows at the same time**：一次性加载所有行数据到内存中。
+- **MiniExcel**：MiniExcel 的起点，表示 MiniExcel 处理 Excel 文件的开始。
+- **Stream**：使用流式处理。README 提到 MiniExcel 以流式方式逐行处理数据，从而减少内存消耗。
+- **POCO or dynamic**：支持 POCO (Plain Old CLR Object) 对象或动态类型。
+- **Deferred execution row by row**：延迟执行，逐行处理数据。
+
+## 连线、分支与汇聚关系
+- `Excel analysis process -> Unzipping XLSX file`：Excel 分析流程从解压 XLSX 文件开始。
+- `Unzipping XLSX file -> Parsing OpenXML`：解压 XLSX 文件后解析 OpenXML 格式。
+- `Parsing OpenXML -> Model conversion`：解析 OpenXML 格式后进行模型转换。
+- `Model conversion -> Output`：模型转换后输出结果。
+- `Other Excel Frameworks -> Memory`：其他 Excel 框架的处理方式强调内存消耗。
+- `Memory -> Memory`：进一步强调内存消耗。
+- `Memory -> Workbooks & Worksheets`：将整个工作簿和工作表加载到内存中。
+- `Workbooks & Worksheets -> All rows at the same time`：一次性加载所有行数据到内存中。
+- `MiniExcel -> Stream`：MiniExcel 使用流式处理。
+- `Stream -> Stream`：进一步强调流式处理。
+- `Stream -> POCO or dynamic`：MiniExcel 支持 POCO 对象或动态类型。
+- `POCO or dynamic -> Deferred execution row by row`：MiniExcel 采用延迟执行，逐行处理数据。
+
+## 仓库语境与术语解释
+- **MiniExcel**：一个简单高效的 .NET Excel 处理工具，旨在最小化内存使用。
+- **OpenXML**：一种用于表示电子表格、图表、演示文稿和文字处理文档的 XML 文件格式。
+- **Stream**：流式处理，MiniExcel 通过流式处理逐行读取和写入 Excel 数据，从而减少内存占用。
+- **POCO (Plain Old CLR Object)**：简单的 .NET 类，不依赖于任何框架特定的基类或接口。
+- **Deferred execution**：延迟执行，MiniExcel 采用延迟执行的方式，只在需要时才处理数据。
+- **OpenXmlReader**：`src/MiniExcel.OpenXml/OpenXmlReader.cs` 文件定义了 `OpenXmlReader` 类，用于读取 OpenXML 格式的 Excel 文件。
+- **OpenXmlWriter**：`src/MiniExcel.OpenXml/OpenXmlWriter.cs` 文件定义了 `OpenXmlWriter` 类，用于写入 OpenXML 格式的 Excel 文件。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图对比了 Excel 分析流程、其他 Excel 框架和 MiniExcel 的处理方式。其他 Excel 框架倾向于将整个 Excel 文件加载到内存中，而 MiniExcel 则采用流式处理和延迟执行的方式，避免一次性加载整个文件，从而降低内存消耗。MiniExcel 的核心优势在于其流式处理能力，支持 POCO 或动态类型，并采用延迟执行，逐行处理数据。`src/MiniExcel.OpenXml/OpenXmlReader.cs` 和 `src/MiniExcel.OpenXml/OpenXmlWriter.cs` 文件分别负责 OpenXML 格式的读取和写入。

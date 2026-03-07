@@ -1,0 +1,15 @@
+flowchart TD
+    A[Start] --> B[Does website flag in the official Firefox?]
+    B -->|Yes| C[Likely bad IP/rate-limiting. If the website fails on both headless and headful mode on the official Firefox distribution, the issue is not with the browser.]
+    B -->|No| D["Run make ff-dbg(1) and build(2) a clean distribution of Firefox. Does the website flag in Firefox **headless** mode(4)?"]
+    D -->|Yes| E["Does the website flag in headful mode(3) AND headless mode(4)?"]
+    D -->|No| F["Open the developer UI(5), apply config.patch, then rebuild(2). Does the website still flag(3)?"]
+    E -->|No| G["Enable privacy.resistFingerprinting in the config(6). Does the website still flag(3)?"]
+    E -->|Yes| C
+    G -->|No| H["In the config(6), enable FPP and start omitting overrides until you find the one that fixed the leak."]
+    G -->|Yes| I[If you get to this point, you may need to deobfuscate the Javascript behind the website to identify what it's testing.]
+    F -->|Yes| K["Open the developer UI, apply the playwright bootstrap patch, then rebuild. Does it still flag?"]
+    F -->|No| J["Omit options from camoufox.cfg(6) and rerun(3) until you find the one causing the leak."]
+    K -->|No| M[Juggler needs to be debugged to locate the leak.]
+    K -->|Yes| L[The issue has nothing to do with Playwright. Apply the rest of the Camoufox patches one by one until the one causing the leak is found.]
+    M --> I

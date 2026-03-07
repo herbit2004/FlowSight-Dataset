@@ -1,0 +1,23 @@
+graph TB
+    User[User Question] --> Supervisor[Supervisor Agent]
+    
+    Supervisor --> SearchEmail[search_email_history]
+    Supervisor --> ManageEmail[manage_email]
+    Supervisor --> ScheduleEvent[schedule_event]
+    Supervisor --> Question[Question Tool]
+    Supervisor --> Done[Done Tool]
+    
+    ManageEmail --> EmailAgent[Email Sub-Agent]
+    ScheduleEvent --> CalendarAgent[Calendar Sub-Agent]
+    
+    EmailAgent --> MCPEmail[MCP Email Tools]
+    CalendarAgent --> MCPCalendar[MCP Calendar Tools]
+    SearchEmail --> VectorDB[PostgreSQL + pgvector]
+    
+    MCPEmail --> M365[Microsoft 365 API]
+    MCPCalendar --> M365
+    
+    style Supervisor fill:#e1f5ff
+    style EmailAgent fill:#fff4e1
+    style CalendarAgent fill:#fff4e1
+    style VectorDB fill:#e8f5e9

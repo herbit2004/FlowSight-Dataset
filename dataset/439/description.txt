@@ -1,0 +1,59 @@
+## 图类型与用途
+这是一个流程图，描述了 Vibe Coder MCP 服务器如何处理客户端请求并选择合适的工具来执行。它在仓库中的作用是展示服务器如何通过混合匹配器，利用语义路由和顺序思考两种方式，将客户端请求路由到合适的工具，并最终返回响应。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是客户端请求的起点，中间是混合匹配器及其两个分支，底部是工具执行和响应返回的终点。
+
+## 分组/子图/阶段说明
+图中包含两个显式子图：
+- **Primary: Semantic Routing**：表示混合匹配器的主要分支，用于基于语义相似度来选择工具。
+- **Fallback: Sequential Thinking**：表示混合匹配器的备用分支，当语义匹配置信度不高时使用，使用 LLM 分析请求。
+
+## 节点逐项说明
+- **Start (Client Request)**：流程的起点，代表客户端发起的请求。
+- **Process (Process Request)**：处理客户端请求的初始步骤，可能包括解析请求、验证身份等。
+- **Hybrid (Hybrid Matcher)**：混合匹配器，是选择工具的核心组件，它会尝试使用语义路由和顺序思考两种方法来匹配工具。根据 `README.md`，混合匹配器在 0.3.5 版本中进行了全面改进，所有 15 个 MCP 工具现在都具有全面的参数提取。
+- **Semantic (Semantic Matcher)**：语义匹配器，是混合匹配器中的主要分支，用于基于语义相似度来选择工具。
+- **Embeddings (Query Embeddings)**：将客户端请求转换为向量嵌入（embeddings），以便进行语义比较。
+- **Tools (Tool Embeddings)**：存储工具的向量嵌入，用于与查询嵌入进行比较。
+- **Compare (Compare via Cosine Similarity)**：使用余弦相似度比较查询嵌入和工具嵌入，计算它们之间的语义相似度。
+- **Score (Score & Rank Tools)**：根据相似度得分对工具进行排序，选择最相关的工具。
+- **Confidence {High Confidence?}**：一个决策节点，判断语义匹配的置信度是否足够高。
+- **Sequential (Sequential Thinking)**：顺序思考，是混合匹配器中的备用分支，当语义匹配置信度不高时使用。
+- **LLM (LLM Analysis)**：使用大型语言模型（LLM）来分析客户端请求。
+- **ThoughtChain (Thought Chain)**：LLM 生成的思维链，用于逐步推理出需要使用的工具。
+- **Extraction (Extract Tool Name)**：从思维链中提取工具名称。
+- **Registry (Tool Registry)**：工具注册表，存储所有可用工具的信息，包括工具的名称、描述和执行方式。无论是语义匹配还是顺序思考，最终都会通过注册表来获取工具信息。
+- **Executor (Execute Tool)**：执行选定的工具。
+- **Response (Return Response)**：将工具执行的结果返回给客户端。
+
+## 连线、分支与汇聚关系
+- `Start -> Process`：客户端请求首先被处理。
+- `Process -> Hybrid`：处理后的请求进入混合匹配器。
+- `Hybrid -> Semantic`：混合匹配器首先尝试使用语义路由分支。
+- `Semantic -> Embeddings`：语义路由分支将请求转换为嵌入。
+- `Embeddings -> Tools`：将查询嵌入与工具嵌入进行比较。
+- `Tools -> Compare`：使用余弦相似度进行比较。
+- `Compare -> Score`：比较结果用于给工具打分和排序。
+- `Score -> Confidence`：根据得分判断置信度。
+- `Confidence -- Yes --> Registry`：如果置信度足够高，则从工具注册表获取工具信息。
+- `Confidence -- No --> Sequential`：如果语义匹配的置信度不高，则使用顺序思考分支。
+- `Sequential -> LLM`：顺序思考分支使用 LLM 分析请求。
+- `LLM -> ThoughtChain`：LLM 生成思维链。
+- `ThoughtChain -> Extraction`：从思维链中提取工具名称。
+- `Extraction -> Registry`：提取的工具名称用于从工具注册表获取工具信息。
+- `Registry -> Executor`：从工具注册表获取工具信息后，执行选定的工具。
+- `Executor -> Response`：将工具执行的结果返回给客户端。
+
+## 仓库语境与术语解释
+- **MCP (Model Context Protocol)**：根据 `README.md`，Vibe Coder 是一个 MCP 服务器，旨在通过强大的软件开发工具来增强 AI 助手。
+- **Hybrid Matcher**：混合匹配器，根据 `README.md`，0.3.5 版本对混合匹配器进行了全面改进，所有 15 个 MCP 工具现在都具有全面的参数提取。
+- **Semantic Matcher**：语义匹配器，使用向量嵌入和余弦相似度来匹配工具。相关代码见 `src/services/routing/semanticMatcher.ts`。
+- **Sequential Thinking**：顺序思考，使用大型语言模型来分析请求并生成思维链。相关代码见 `src/tools/sequential-thinking.ts`。
+- **Tool Registry**：工具注册表，存储所有可用工具的信息。相关代码见 `src/services/routing/toolRegistry.ts`。
+- **LLM (Large Language Model)**：大型语言模型，用于分析请求和生成思维链。根据 `llm_config.json`，`sequential_thought_generation` 使用的模型是 `google/gemini-2.5-flash-lite`。
+- **Embeddings**：向量嵌入，用于表示文本的语义信息，以便进行相似度比较。
+- **OpenRouter API Key**：根据 `README.md`，使用 Vibe Coder MCP 需要 OpenRouter API Key。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Vibe Coder MCP 服务器处理客户端请求的流程。流程从客户端请求开始，经过混合匹配器，该匹配器首先尝试使用语义路由，如果置信度不高，则使用顺序思考。无论是哪种方式，最终都会从工具注册表获取工具信息，然后执行工具并将结果返回给客户端。混合匹配器是核心组件，语义路由和顺序思考是两种不同的工具选择策略。`README.md` 提到 0.3.5 版本对混合匹配器进行了全面改进，所有 15 个 MCP 工具现在都具有全面的参数提取。

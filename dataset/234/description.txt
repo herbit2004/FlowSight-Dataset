@@ -1,0 +1,94 @@
+## 图类型与用途
+这是一个流程图，描述了 Hive 系统的整体架构，展示了用户、外部事件源、核心组件（Worker Bees, Judge, Queen Bee）以及基础设施之间的交互关系。其主要用途是概览 Hive 系统的运作方式，包括事件处理、任务执行、决策制定以及数据存储和访问。
+
+## 图的整体布局
+图整体采用从左到右的布局，主体流程从左侧的 User 和 PC 开始，经过 Worker Bees 和 Judge，最终与右侧的 Queen Bee 和 Infra 交互。
+
+## 分组/子图/阶段说明
+- **External Event Source**：包含 Schedulers, Webhook, SSE 三个节点，表示外部触发 Hive 系统行为的来源。
+- **Worker Bees**：包含 Conversation, System prompt 和 Graph 子图，表示执行具体任务的组件。Graph 子图包含 Node, Active Node 和 EventLoopNode 子图，表示任务执行流程。
+- **Graph**：是 Worker Bees 的子图，包含 Node, Active Node 和 EventLoopNode 子图，表示任务执行流程。
+- **EventLoopNode**：是 Graph 的子图，包含 listener, System Prompt (Task), Event loop, Conversation 四个节点，表示处理事件的核心组件。
+- **JudgeNode**：包含 Criteria, Principles, Event loop, Scheduler 四个节点，表示评估工蜂行为并进行决策的组件。
+- **Queen Bee**：包含 System prompt, Event loop, Conversation 三个节点，表示负责协调和管理整个系统的组件。
+- **Infra**：包含 Sub Agent, Tool Registry, Write through Conversation Memory, Shared Memory, Event Bus, Credential Store 六个节点，表示提供系统运行所需的基础服务。
+- **PC**：包含 Codebase 和 Browser 两个节点，表示用户使用的客户端环境。
+
+## 节点逐项说明
+- **User**：与系统交互的最终用户。
+- **External Event Source**：外部触发 Hive 系统行为的来源。
+- **Schedulers**：定时触发事件的组件，属于 External Event Source。
+- **Webhook**：外部系统通过 HTTP 回调触发事件，属于 External Event Source。
+- **SSE**：服务器向客户端推送事件，属于 External Event Source。
+- **Worker Bees**：执行具体任务的组件。
+- **Conversation (Worker Bees)**：存储与用户的对话历史，属于 Worker Bees。
+- **System prompt (Worker Bees)**：指导工蜂行为的预设指令，属于 Worker Bees。
+- **Graph**：代表任务执行流程，由多个 Node 组成，属于 Worker Bees。参考 `docs/key_concepts/graph.md`，Hive 将业务流程建模为有向图，由节点完成工作，边连接节点，共享内存传递数据。
+- **Node (Graph)**：代表任务执行流程中的一个节点，属于 Graph。
+- **Active Node**：表示当前正在执行的节点，属于 Graph。
+- **Event Loop Node**：处理事件的核心组件，属于 Graph。参考 `docs/key_concepts/graph.md`，`event_loop` 是 Hive 中唯一的节点类型，是一个多轮 LLM 循环，模型在其中推理当前状态、调用工具、观察结果，直到产生所需的输出。
+- **listener**：监听外部事件，属于 Event Loop Node。
+- **System Prompt (Task)**：指导事件循环节点行为的预设指令，属于 Event Loop Node。
+- **Event loop (EventLoopNode)**：循环处理事件的机制，属于 Event Loop Node。
+- **Conversation (EventLoopNode)**：存储与事件相关的对话历史，属于 Event Loop Node。
+- **JudgeNode**：评估工蜂行为并进行决策的组件。
+- **Criteria**：评估工蜂行为的标准，属于 JudgeNode。
+- **Principles**：指导法官决策的原则，属于 JudgeNode。
+- **Event loop (JudgeNode)**：循环处理评估请求的机制，属于 JudgeNode。
+- **Scheduler (JudgeNode)**：调度评估任务，属于 JudgeNode。
+- **Queen Bee**：负责协调和管理整个系统的组件。参考 README，Queen Bee 是 Hive 的 coding agent，通过对话定义目标，并生成包含动态创建的连接代码的节点图。
+- **System prompt (Queen Bee)**：指导蜂后行为的预设指令，属于 Queen Bee。
+- **Event loop (Queen Bee)**：循环处理系统事件的机制，属于 Queen Bee。
+- **Conversation (Queen Bee)**：存储与系统相关的对话历史，属于 Queen Bee。
+- **Infra**：提供系统运行所需的基础服务。
+- **Sub Agent**：执行特定任务的代理，属于 Infra。
+- **Tool Registry**：存储可用工具的信息，属于 Infra。
+- **Write through Conversation Memory**：记录对话历史的持久化存储，包括日志、RAM 和硬盘，属于 Infra。
+- **Shared Memory**：存储系统状态的持久化存储，包括状态和硬盘，属于 Infra。
+- **Event Bus**：用于组件间异步通信的机制，属于 Infra。参考 `core/framework/runtime/event_bus.py`，Event Bus 是一个发布/订阅事件系统，用于流间通信。
+- **Credential Store**：存储敏感信息，属于 Infra。参考 `core/framework/credentials/store.py`，CredentialStore 用于协调存储、提供者和模板解析。
+- **PC**：用户使用的客户端环境。
+- **Codebase**：表示 Hive 的代码库，属于 PC。
+- **Browser**：用户使用的浏览器，属于 PC。
+
+## 连线、分支与汇聚关系
+- `E_Sch --> ELN_L`：调度器触发事件循环节点的监听器。
+- `E_WH --> ELN_L`：Webhook 触发事件循环节点的监听器。
+- `E_SSE --> ELN_L`：SSE 触发事件循环节点的监听器。
+- `ELN_L -->|"triggers"| ELN_EL`：监听器触发事件循环。
+- `User -->|"Talk"| WB_C`：用户与工蜂进行对话。
+- `User -->|"Talk"| QB_C`：用户与蜂后进行对话。
+- `User -->|"Read/Write Access"| CS`：用户可以读写凭据存储。
+- `ELN_C <-->|"Mirror"| WB_C`：事件循环节点的对话与工蜂的对话相互镜像。
+- `WB_C -->|"Focus"| AN`：工蜂的对话聚焦到活动节点。
+- `WorkerBees -->|"Inquire"| JudgeNode`：工蜂向法官询问。
+- `JudgeNode -->|"Approve"| WorkerBees`：法官批准工蜂。
+- `J_C <-.->|"aligns"| WB_SP`：法官的标准与工蜂的系统提示对齐。
+- `J_P <-.->|"aligns"| QB_SP`：法官的原则与蜂后的系统提示对齐。
+- `J_EL -->|"Report (Escalate)"| QB_EL`：法官的事件循环报告（升级）到蜂后的事件循环。
+- `AN -->|"publish"| EB`：活动节点发布事件到事件总线。
+- `EB -->|"subscribe"| QB_C`：蜂后订阅事件总线的事件。
+- `ELN_EL -->|"Spawn"| SA`：事件循环节点生成子代理。
+- `SA -->|"Inform"| ELN_EL`：子代理通知事件循环节点。
+- `SA -->|"Starts"| B`：子代理启动浏览器。
+- `B -->|"Report"| ELN_EL`：浏览器报告到事件循环节点。
+- `TR -->|"Assigned"| ELN_EL`：工具注册表分配工具到事件循环节点。
+- `CB -->|"Modify Worker Bee"| WB_C`：代码库修改工蜂的对话。
+- `AN <-->|"Read/Write"| WTM`：活动节点读写写穿透对话记忆。
+- `AN <-->|"Read/Write"| SM`：活动节点读写共享内存。
+- `QB_C <-->|"Read/Write"| WTM`：蜂后的对话读写写穿透对话记忆。
+- `QB_EL <-->|"Read/Write"| SM`：蜂后的事件循环读写共享内存。
+- `CS -->|"Read Access"| QB_C`：凭据存储提供读访问给蜂后的对话。
+
+## 仓库语境与术语解释
+- **Worker Bees**：执行具体任务的组件，可以理解为 Agent。
+- **Queen Bee**：负责协调和管理整个系统的组件，可以理解为 Agent Manager。参考 README，Queen Bee 是 Hive 的 coding agent，通过对话定义目标，并生成包含动态创建的连接代码的节点图。
+- **Graph**：代表任务执行流程，由多个 Node 组成。参考 `docs/key_concepts/graph.md`，Hive 将业务流程建模为有向图，由节点完成工作，边连接节点，共享内存传递数据。
+- **Event Loop Node**：处理事件的核心组件。参考 `docs/key_concepts/graph.md`，`event_loop` 是 Hive 中唯一的节点类型，是一个多轮 LLM 循环，模型在其中推理当前状态、调用工具、观察结果，直到产生所需的输出。
+- **Event Bus**：用于组件间异步通信的机制。参考 `core/framework/runtime/event_bus.py`，Event Bus 是一个发布/订阅事件系统，用于流间通信。
+- **Credential Store**：存储敏感信息。参考 `core/framework/credentials/store.py`，CredentialStore 用于协调存储、提供者和模板解析。
+- **MCP (Multi-Choice Programming)**：一种编程范式，允许 AI Agent 在多个选项中进行选择，以完成任务。
+- **Tool Registry**：存储可用工具的信息，工具是 Agent 可以使用的外部服务或功能。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该

@@ -1,0 +1,28 @@
+flowchart TD
+    subgraph trigger ["⏰ Every 5 min — launchd"]
+        check{"📂<br/>Any changes?"}
+    end
+
+    subgraph sync ["🍀 Sync pipeline"]
+        stage["➕ git add -A"]
+        commit["💾 git commit"]
+        pull["⬇️ git pull --rebase"]
+        push["⬆️ git push"]
+    end
+
+    check -->|No| skip(["💤 Sleep — nothing to do"])
+    check -->|Yes| stage
+    stage --> commit --> pull --> push
+    push --> done(["✅ Synced to GitHub"])
+    pull -->|conflict| err(["⚠️ Needs manual fix<br/>gmd doctor to diagnose"])
+
+    style trigger fill:#eff6ff,stroke:#3b82f6,stroke-width:2px,color:#1e40af
+    style sync fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#15803d
+    style check fill:#3b82f6,color:#fff,stroke:#2563eb,stroke-width:2px
+    style stage fill:#16a34a,color:#fff,stroke:#15803d,stroke-width:2px
+    style commit fill:#16a34a,color:#fff,stroke:#15803d,stroke-width:2px
+    style pull fill:#16a34a,color:#fff,stroke:#15803d,stroke-width:2px
+    style push fill:#16a34a,color:#fff,stroke:#15803d,stroke-width:2px
+    style skip fill:#94a3b8,color:#fff,stroke:#64748b,stroke-width:2px
+    style done fill:#15803d,color:#fff,stroke:#166534,stroke-width:2px
+    style err fill:#ef4444,color:#fff,stroke:#dc2626,stroke-width:2px

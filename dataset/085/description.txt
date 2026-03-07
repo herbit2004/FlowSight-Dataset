@@ -1,0 +1,41 @@
+## 图类型与用途
+这是一个架构图，展示了 Django 应用通过 Celery 和 Redis 进行异步任务管理时，在 AWS 云环境中的部署架构。该图概括了应用在 AWS ECS (Elastic Container Service) 上的部署方式，以及如何利用 CloudWatch 进行日志管理。
+
+## 图的整体布局
+图采用从左到右的布局。起点是 VPC，经过一系列 AWS 服务组件，最终到达 CloudWatch Log Group。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为网络基础设施、ECS 集群配置、容器服务和日志管理四个阶段。
+
+## 节点逐项说明
+- **VPC**：虚拟私有云，是 AWS 中隔离的网络环境，应用的所有资源都部署在这个网络中。根据 `terraform/main.tf`，VPC 的 CIDR block 被设置为 `10.0.0.0/16`。
+- **Public Subnets**：公有子网，VPC 中的一部分，允许资源通过 Internet Gateway 连接到互联网。
+- **Internet Gateway**：互联网网关，允许 VPC 和互联网之间的通信。
+- **Security Groups**：安全组，充当虚拟防火墙，控制进出 ECS 实例的网络流量。
+- **ECS Cluster**：ECS 集群，一组 EC2 实例或 Fargate 实例，用于运行 Docker 容器。根据 README，ECS Cluster 是使用 Terraform 创建的。
+- **ECS Task Definitions**：ECS 任务定义，描述了如何运行 Docker 容器，包括使用的镜像、资源限制等。
+- **ECS Service**：ECS 服务，维护指定数量的任务定义副本，确保应用始终可用。
+- **Docker Containers**：Docker 容器，包含 Django 应用、Celery worker 和 Celery beat 等组件。根据 `docker-compose.yml`，这些容器包括 Django 应用、Celery worker 和 Celery beat。
+- **CloudWatch Log Group**：CloudWatch 日志组，用于收集和存储 Docker 容器的日志。根据 `terraform/main.tf`，CloudWatch Log Group 用于收集和存储 Docker 容器的日志。
+
+## 连线、分支与汇聚关系
+- `VPC -> Public Subnets`：VPC 连接到 Public Subnets，表示子网位于 VPC 中。
+- `VPC -> Internet Gateway`：VPC 连接到 Internet Gateway，表示互联网网关位于 VPC 中。
+- `Public Subnets -> Security Groups`：Public Subnets 连接到 Security Groups，表示安全组应用于公有子网中的资源。
+- `Security Groups -> ECS Cluster`：Security Groups 连接到 ECS Cluster，表示安全组控制 ECS 集群的网络流量。
+- `ECS Cluster -> ECS Task Definitions`：ECS Cluster 连接到 ECS Task Definitions，表示 ECS 集群使用任务定义来运行容器。
+- `ECS Task Definitions -> ECS Service`：ECS Task Definitions 连接到 ECS Service，表示 ECS 服务使用任务定义来创建和管理任务。
+- `ECS Service -> Docker Containers`：ECS Service 连接到 Docker Containers，表示 ECS 服务运行 Docker 容器。
+- `Docker Containers -> CloudWatch Log Group`：Docker Containers 连接到 CloudWatch Log Group，表示 Docker 容器的日志被发送到 CloudWatch 进行存储和分析。
+
+## 仓库语境与术语解释
+- **VPC (Virtual Private Cloud)**：AWS 中隔离的网络环境，通过 `terraform/main.tf` 定义。
+- **ECS (Elastic Container Service)**：AWS 提供的容器管理服务，用于运行 Docker 容器。
+- **Celery**：一个分布式任务队列，用于处理异步任务。在 `docker-compose.yml` 中，Celery worker 和 Celery beat 被定义为独立的 Docker 容器。
+- **Redis**：一个内存数据存储，用作 Celery 的消息代理。`docker-compose.yml` 中定义了 Redis 容器，并配置了 Celery 使用 Redis 作为 broker。
+- **Terraform**：基础设施即代码工具，用于自动化 AWS 资源的创建和管理。仓库中 `terraform/` 目录包含了 Terraform 配置文件。
+- **CloudWatch Log Group**：用于收集和存储 Docker 容器的日志，通过 `terraform/main.tf` 创建。
+- **Docker Containers**: 根据 README 和 `docker-compose.yml`，包含 Django 应用、Celery worker 和 Celery beat 等组件。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Django 应用在 AWS ECS 上的部署架构，从 VPC 开始，通过 Public Subnets 和 Internet Gateway 实现网络连通，Security Groups 控制流量，ECS Cluster 运行 ECS Task Definitions 定义的 Docker Containers，最终将日志发送到 CloudWatch Log Group。其中，Celery 和 Redis 用于异步任务管理，Terraform 用于基础设施的自动化部署。该架构展示了如何利用 AWS 云服务来构建和部署可扩展、可靠的 Web 应用。

@@ -1,0 +1,66 @@
+flowchart TD
+    %%
+
+    subgraph Internet
+    Portal[https://portal.contoso.com]
+    Blog[https://blog.contoso.com]
+    CMS[https://cms.contoso.com]
+    Stripe[https://stripe.contoso.com]
+    API[https://api.contoso.com]
+    end
+
+    subgraph Azure API Management
+    APIM(API Gateway)
+    end
+
+    subgraph Azure Static Web Apps
+    SWA_Angular([Angular])
+    end
+
+    subgraph Azure Functions
+    Functions([Node.js])
+    end
+
+    subgraph Azure Container Apps
+    ACA_Next([Next.js])
+    ACA_Strapi([Strapi])
+    ACA_Stripe([Stripe])
+    end
+
+    subgraph Database/Storage
+    DB_PostresSQL[(PostgreSQL - Strapi)]
+    DB_Mongo[(MongoDB - Portal)]
+    Storage([Azure Blob Storage - CMS])
+    end
+
+    Portal --> SWA_Angular -- "portal.contoso.com/api/**" --> APIM -- "portal.contoso.com/api/**" --> Functions
+
+    Blog -- "blog.contoso.com" --> ACA_Next -. "Strapi API" .-> ACA_Strapi
+
+    CMS -- "cms.contoso.com" --> ACA_Strapi
+    ACA_Strapi -- "read/write" ----> DB_PostresSQL -- "read only" --> Functions
+    ACA_Strapi -- "upload" --> Storage
+
+    API --> APIM -- "api.contoso.com" --> Functions <-- "read/write" --> DB_Mongo
+
+    Stripe ---> APIM -- "stripe.contoso.com" --> ACA_Stripe <-. "validate payment (through APIM)" .-> Functions
+
+    %% Portal
+    linkStyle 0 stroke:pink
+    linkStyle 1 stroke:pink
+    linkStyle 2 stroke:pink
+
+    %% Blog
+    linkStyle 3 stroke:blue
+    linkStyle 4 stroke:blue
+    linkStyle 5 stroke:blue
+
+    %% CMS
+    linkStyle 5 stroke:red
+    linkStyle 6 stroke:red
+    linkStyle 8 stroke:red
+
+    linkStyle 7 stroke:lime
+    linkStyle 9 stroke:lime
+    linkStyle 10 stroke:lime
+    linkStyle 11 stroke:lime

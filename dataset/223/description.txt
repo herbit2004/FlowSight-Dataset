@@ -1,0 +1,72 @@
+## 图类型与用途
+这是一个流程图/架构图，用于展示 Ruflo v3 平台的整体架构，描述用户请求如何从用户层开始，经过多个中间层，最终由智能体处理，并利用资源进行学习和优化。该图在 README 中作为“Expanded Architecture”的一部分，用于更详细地展示 RuVector 智能层。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是用户层，依次经过入口层、路由层、集群协调层、智能体层、资源层，最后到达 RuVector 智能层和学习循环。
+
+## 分组/子图/阶段说明
+图中包含多个 subgraph，分别代表不同的层级或功能模块：
+- **USER (用户层)**：代表用户发起请求的入口。
+- **ENTRY (入口层)**：代表系统接收用户请求的入口点，并进行安全防御。
+- **ROUTING (路由层)**：代表请求的路由和分发机制，包含 Q-Learning 路由器、混合专家模型、技能和钩子。
+- **SWARM (集群协调)**：代表智能体集群的拓扑结构和共识机制，以及人与智能体的协调。
+- **AGENTS (智能体)**：代表不同的智能体，负责不同的任务。
+- **RESOURCES (资源)**：代表智能体使用的内存、模型提供商和工作节点。
+- **RUVECTOR (RuVector 智能层)**：代表 RuVector 智能层，包含自优化、防止遗忘、加速计算等组件。
+- **LEARNING (学习循环)**：代表系统的学习循环，包含检索、判断、提炼和巩固等阶段。
+
+## 节点逐项说明
+- **U (User)**：代表最终用户，发起请求的实体。
+- **CLI / MCP Server**：命令行界面或管理控制面板服务器，接收用户请求的入口点。
+- **AIDefence Security**：安全防御模块，用于保护系统免受恶意攻击。
+- **Q-Learning Router**：使用 Q-Learning 算法的路由器，用于选择最佳的执行路径。
+- **MoE - 8 Experts**：混合专家模型，包含 8 个不同的专家，用于处理不同的任务。
+- **Skills - 42+**：平台提供的 42+ 个技能，代表不同的功能模块。
+- **Hooks - 17**：平台提供的 17 个钩子，允许在特定事件发生时执行自定义代码。
+- **Topologies mesh/hier/ring/star**：定义智能体集群的拓扑结构，包括网状、层级、环状和星状等。
+- **Consensus Raft/BFT/Gossip/CRDT**：使用不同的共识算法（如 Raft、BFT、Gossip、CRDT）来确保集群状态的一致性。
+- **Claims Human-Agent Coord**：人工智能体协调机制，允许人类参与到智能体的工作流程中。
+- **AG1 (coder), AG2 (tester), AG3 (reviewer), AG4 (architect), AG5 (security), AG6 (...)**：代表不同的智能体，分别负责编码、测试、评审、架构设计和安全等任务。图示表明平台拥有 60+ 个智能体。
+- **Memory (AgentDB)**：智能体的内存，用于存储知识和经验。
+- **Providers Claude/GPT/Gemini/Ollama**：提供不同大语言模型（LLM）服务的供应商，如 Claude、GPT、Gemini 和 Ollama。
+- **Workers - 12 ultralearn/audit/optimize**：12 个工作节点，用于执行机器学习、审计和优化等任务。
+- **SONA Self-Optimize <0.05ms**：自优化神经网络架构，用于学习最佳路由。
+- **EWC++ No Forgetting**：弹性权重巩固，防止灾难性遗忘。
+- **Flash Attention 2.49-7.47x**：优化的注意力计算，加速计算。
+- **HNSW 150x-12,500x faster**：分层可导航小世界向量搜索，实现亚毫秒级检索。
+- **ReasoningBank Pattern Store**：模式存储，用于轨迹学习。
+- **Hyperbolic Poincaré**：双曲庞加莱嵌入，用于更好地表示分层数据。
+- **LoRA/Micro 128x compress**：低秩适应，用于高效微调。
+- **Int8 Quant 3.92x memory**：内存高效的权重存储，减少内存占用。
+- **9 RL Algos Q/SARSA/PPO/DQN**：9 种强化学习算法，用于特定任务的学习。
+- **L1 (RETRIEVE)**：学习循环的检索阶段。
+- **L2 (JUDGE)**：学习循环的判断阶段。
+- **L3 (DISTILL)**：学习循环的提炼阶段。
+- **L4 (CONSOLIDATE)**：学习循环的巩固阶段。
+- **L5 (ROUTE)**：学习循环的路由阶段。
+
+## 连线、分支与汇聚关系
+- `U -> CLI`：用户通过命令行界面与系统交互。
+- `CLI -> AID`：命令行界面将请求传递给安全防御模块。
+- `AID -> QL & MOE & SK & HK`：安全防御模块将请求分发给 Q-Learning 路由器、混合专家模型、技能和钩子，形成分支关系。
+- `QL & MOE & SK & HK -> TOPO & CONS & CLM`：路由层将请求传递给集群协调层。
+- `TOPO & CONS & CLM -> AG1 & AG2 & AG3 & AG4 & AG5 & AG6`：集群协调层将任务分配给不同的智能体。
+- `AG1 & AG2 & AG3 & AG4 & AG5 & AG6 -> MEM & PROV & WORK`：智能体使用内存、模型提供商和工作节点等资源。
+- `MEM -> SONA & EWC & FLASH`：内存模块连接到 RuVector 智能层的 SONA、EWC 和 Flash Attention 组件。
+- `SONA & EWC & FLASH -> HNSW & RB & HYP`：RuVector 智能层的 SONA、EWC 和 Flash Attention 组件连接到 HNSW、ReasoningBank 和 Hyperbolic 组件。
+- `HNSW & RB & HYP -> LORA & QUANT & RL`：RuVector 智能层的 HNSW、ReasoningBank 和 Hyperbolic 组件连接到 LoRA、Quant 和 RL 组件。
+- `LORA & QUANT & RL -> L1`：RuVector 智能层的 LoRA、Quant 和 RL 组件连接到学习循环的检索阶段。
+- `L5 -.-> QL`：学习循环的路由阶段循环回到 Q-Learning 路由器，形成反馈回路。
+
+## 仓库语境与术语解释
+- **RuFlo**：企业级 AI 编排平台，用于部署、协调和优化 AI 智能体。
+- **Agent**：在 Ruflo 平台中，Agent 是指专门用于执行特定任务的 AI 实体，例如编码、测试、评审等。
+- **Swarm**：Agent 的集合，通过特定的拓扑结构和共识机制协同工作。
+- **MCP (Model Context Protocol)**：用于 Claude Code 的原生集成协议，允许在 Claude Code 会话中直接使用 ruflo 命令。
+- **RuVector**：Ruflo 的智能层，包含自优化、防止遗忘、加速计算等组件，用于提升系统的学习和推理能力。
+- **SONA (Self-Optimizing Neural Architecture)**：RuVector 的一个组件，用于学习最佳路由。
+- **AgentDB**：智能体的内存，用于存储知识和经验。
+- **Providers (Claude/GPT/Gemini/Ollama)**：提供不同大语言模型（LLM）服务的供应商。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Ruflo v3 平台的整体架构，从用户发起请求开始，经过入口层、路由层、集群协调层，最终由智能体处理。智能体利用内存、模型提供商和工作节点等资源，并通过 RuVector 智能层进行学习和优化。学习循环的输出会反馈到 Q-Learning 路由器，形成闭环。该架构支持 60+ 种 Agent，并集成了多种 LLM Providers，体现了“多智能体协同、自学习优化”的设计理念。

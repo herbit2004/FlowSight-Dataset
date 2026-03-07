@@ -1,0 +1,44 @@
+## 图类型与用途
+这是一个流程图，展示了基于 AWS Lambda 的 Serverless 应用架构，用于处理客户端订单请求。该图概括了订单请求从客户端发起，经过安全过滤、API 网关路由，最终存储到 DynamoDB 数据库，并利用 AppConfig 进行功能开关管理和 DynamoDB 实现幂等性控制的完整流程。
+
+## 图的整体布局
+图采用从左到右的布局。客户端作为流程的起点位于最左侧，经过一系列 AWS 服务组件，最终到达存储层。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表 AWS 云中的不同服务类别：
+- **Security (Production)**：表示生产环境下的安全组件，包含 WAF WebACL。
+- **API Gateway**：表示 API 网关服务，用于接收和路由客户端请求。
+- **Compute**：表示计算资源，包含 Lambda 函数和 Lambda 层。
+- **Configuration**：表示配置管理组件，包含 AppConfig。
+- **Storage**：表示存储组件，包含 DynamoDB 订单表和幂等性表。
+
+## 节点逐项说明
+- **Client**：发起订单请求的客户端。
+- **WAF WebACL**：AWS Web Application Firewall，用于保护应用程序免受 Web 攻击，使用了 AWS 托管规则。
+- **REST API**：API Gateway 的 REST API，接收客户端的 HTTP POST 请求，路径为 `/api/orders`。
+- **Lambda Function**：AWS Lambda 函数，使用 Python 3.14 编写，处理 API Gateway 转发的请求。
+- **Lambda Layer**：包含 Lambda 函数所需的公共依赖项，可以被多个 Lambda 函数共享。
+- **AppConfig**：AWS AppConfig 服务，用于管理应用程序的配置，特别是功能开关（Feature Flags）。
+- **DynamoDB Orders Table**：DynamoDB 数据库表，用于存储订单数据。
+- **DynamoDB Idempotency Table**：DynamoDB 数据库表，用于实现幂等性，防止重复处理相同的请求。
+
+## 连线、分支与汇聚关系
+- `Client -> WAF WebACL`：客户端的请求首先到达 WAF 进行安全过滤。
+- `WAF WebACL -> REST API`：WAF 将通过安全检查的请求转发到 API Gateway 的 REST API。
+- `REST API -> Lambda Function`：API Gateway 将请求路由到 Lambda 函数。
+- `Lambda Function -> Lambda Layer`：Lambda 函数使用 Lambda 层中的公共依赖项。
+- `Lambda Function -> AppConfig`：Lambda 函数从 AppConfig 获取配置信息，例如功能开关的状态。
+- `Lambda Function -> DynamoDB Orders Table`：Lambda 函数将订单数据写入 DynamoDB 订单表。
+- `Lambda Function -> DynamoDB Idempotency Table`：Lambda 函数使用 DynamoDB 幂等性表来确保请求的幂等性。
+
+## 仓库语境与术语解释
+- **AWS Lambda**：一种 Serverless 计算服务，允许用户无需管理服务器即可运行代码。该仓库提供了一个 AWS Lambda handler 的示例代码。
+- **API Gateway**：AWS 的 API 管理服务，用于创建、发布、维护、监控和保护任何规模的 API。
+- **DynamoDB**：AWS 提供的 NoSQL 数据库服务，用于存储订单数据和实现幂等性。
+- **AppConfig**：AWS AppConfig 是一项配置管理服务，用于动态更新应用程序配置，例如功能开关。
+- **WAF WebACL**：AWS Web Application Firewall Web 访问控制列表，用于保护 Web 应用程序免受恶意攻击。
+- **Lambda Layer**：Lambda 层是一种将公共依赖项打包并共享给多个 Lambda 函数的机制，参见 README 中 "The AWS Lambda handler uses a Lambda layer optimization"。
+- **Idempotency**：幂等性是指多次执行相同的操作应产生相同的结果，用于防止重复处理相同的请求，参见 README 中 "Idempotent API"。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了一个 Serverless 应用架构，客户端发起请求，经过 WAF 安全过滤后，通过 API Gateway 路由到 Lambda 函数。Lambda 函数从 AppConfig 获取配置，并使用 Lambda Layer 中的依赖。最终，订单数据被写入 DynamoDB 订单表，并通过 DynamoDB 幂等性表确保请求的幂等性。该架构利用了 AWS 的 Serverless 服务，具有高可用性和可扩展性。其中，WAF、Lambda 函数和 DynamoDB 是关键节点。

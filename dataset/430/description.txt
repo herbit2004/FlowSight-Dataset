@@ -1,0 +1,74 @@
+## 图类型与用途
+这是一个系统架构图，描述了 Pulumi 后端架构中 API Server 组件的内部结构和与其他组件的交互方式。它展示了 API Server 如何处理请求、进行身份验证、管理资源和状态、处理事件、访问数据以及与外部系统集成。该图在仓库中用于展示 Pulumi 系统的内部组件关系。
+
+## 图的整体布局
+图采用从上到下的布局。API Gateway 作为入口，位于顶部，核心组件、身份验证、资源管理、状态管理、事件处理和数据访问等子模块位于中间层，数据库和消息队列位于底部。
+
+## 分组/子图/阶段说明
+- **Core Components**：包含 Request Handler、Response Formatter、ErrorHandler 和 Middleware，负责处理 API 请求的核心流程。
+- **Authentication**：包含 Auth Manager 和 Token Validator，负责用户身份验证。
+- **Resource Management**：包含 ResourceManager、StackManager 和 DeploymentManager，负责管理和协调各种资源的操作。
+- **State Management**：包含 StateManager 和 CheckpointManager，负责管理 Pulumi 程序的状态。
+- **Event Handling**：包含 EventDispatcher 和 EventLogger，负责将事件分发到相应的处理程序并记录事件。
+- **Data Access**：包含 DataAccessLayer 和 QueryBuilder，提供对底层数据的访问接口。
+- **External Integrations**：包含 CloudProviderClient 和 SecretsManager，用于与云提供商的 API 进行交互和安全地存储和检索敏感信息。
+
+## 节点逐项说明
+- **API Gateway**：API 网关，接收外部请求的入口。
+- **Request Handler**：请求处理器，负责接收和初步处理 API 请求。
+- **Response Formatter**：响应格式化器，负责将处理结果格式化为 API 响应。
+- **Error Handler**：错误处理器，负责处理请求过程中出现的错误。
+- **Middleware**：中间件，用于在请求处理的不同阶段执行通用任务，例如日志记录、身份验证等。
+- **Auth Manager**：身份验证管理器，负责处理用户身份验证。
+- **Token Validator**：Token 验证器，负责验证用户提供的身份验证令牌。
+- **Resource Manager**：资源管理器，负责管理和协调各种资源的操作。
+- **Stack Manager**：Stack 管理器，负责管理 Pulumi Stack 的生命周期。
+- **Deployment Manager**：Deployment 管理器，负责管理 Pulumi Deployment 的生命周期。
+- **State Manager**：状态管理器，负责管理 Pulumi 程序的状态。
+- **Checkpoint Manager**：检查点管理器，负责管理 Pulumi 程序的检查点。
+- **Event Dispatcher**：事件分发器，负责将事件分发到相应的处理程序。
+- **Event Logger**：事件记录器，负责记录发生的事件。
+- **Data Access Layer**：数据访问层，提供对底层数据的访问接口。
+- **Query Builder**：查询构建器，负责构建数据库查询。
+- **Cloud Provider Client**：云提供商客户端，用于与云提供商的 API 进行交互。
+- **Secrets Manager**：密钥管理器，用于安全地存储和检索敏感信息。
+- **Config Manager**：配置管理器，负责管理应用程序的配置信息。
+- **Logger**：日志记录器，负责记录应用程序的日志信息。
+- **Database**：数据库，用于存储应用程序的数据。
+- **Message Queue**：消息队列，用于异步处理事件。
+
+## 连线、分支与汇聚关系
+- `APIGateway -> RequestHandler`：API 网关将接收到的请求传递给请求处理器。
+- `RequestHandler -> Middleware`：请求处理器通过中间件进行预处理。
+- `Middleware -> AuthManager`：中间件调用身份验证管理器进行身份验证。
+- `AuthManager -> TokenValidator`：身份验证管理器使用 Token 验证器验证令牌。
+- `RequestHandler -> ResourceManager`：请求处理器将请求传递给资源管理器。
+- `ResourceManager -> StackManager`：资源管理器管理 Stack。
+- `ResourceManager -> DeploymentManager`：资源管理器管理 Deployment。
+- `StackManager -> StateManager`：Stack 管理器与状态管理器交互。
+- `DeploymentManager -> CheckpointManager`：Deployment 管理器与检查点管理器交互。
+- `StateManager -> DataAccessLayer`：状态管理器通过数据访问层访问数据。
+- `CheckpointManager -> DataAccessLayer`：检查点管理器通过数据访问层访问数据，形成汇聚关系。
+- `DataAccessLayer -> QueryBuilder`：数据访问层使用查询构建器构建数据库查询。
+- `QueryBuilder -> Database`：查询构建器访问数据库。
+- `RequestHandler -> EventDispatcher`：请求处理器将事件传递给事件分发器。
+- `EventDispatcher -> EventLogger`：事件分发器将事件传递给事件记录器。
+- `EventLogger -> MessageQueue`：事件记录器将事件记录到消息队列。
+- `ResourceManager -> CloudProviderClient`：资源管理器与云提供商客户端交互。
+- `AuthManager -> SecretsManager`：身份验证管理器与密钥管理器交互。
+- `RequestHandler -> ResponseFormatter`：请求处理器将处理结果传递给响应格式化器。
+- `RequestHandler -> ErrorHandler`：请求处理器将错误传递给错误处理器。
+- `ResourceManager -> ConfigManager`：资源管理器与配置管理器交互。
+- `ResourceManager -> Logger`：资源管理器使用日志记录器记录日志。
+
+## 仓库语境与术语解释
+- **API Server**：Pulumi 后端架构的核心组件，负责处理 API 请求。根据 README，该图属于 Level 2: Backend 的一部分。
+- **Stack**：Pulumi 中的一个概念，代表一组相关的云资源。
+- **Deployment**：Pulumi 中对基础设施的一次部署。
+- **CloudProviderClient**：用于与不同的云服务提供商（如 AWS、Azure、GCP）进行交互的客户端。
+- **SecretsManager**：用于安全地存储和检索敏感信息，例如 API 密钥和密码。
+- **Message Queue**：用于异步处理事件，例如使用 RabbitMQ 或 Kafka。
+- **Config Manager**：根据 README，Pulumi 使用 Config Manager 来管理应用程序的配置信息。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Pulumi API Server 的内部架构，从 API Gateway 接收请求开始，经过 Request Handler、Middleware 等核心组件处理，涉及身份验证 (AuthManager, TokenValidator)、资源管理 (ResourceManager, StackManager, DeploymentManager)、状态管理 (StateManager, CheckpointManager)、事件处理 (EventDispatcher, EventLogger) 和数据访问 (DataAccessLayer, QueryBuilder)。其中，ResourceManager 与 CloudProviderClient 和 ConfigManager 交互，AuthManager 与 SecretsManager 交互，最终数据存储在 Database 中，事件异步处理通过 MessageQueue 实现。API Gateway 是入口，Database 和 MessageQueue 是出口，ResourceManager 是核心枢纽。

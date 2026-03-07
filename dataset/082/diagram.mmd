@@ -1,0 +1,17 @@
+flowchart LR
+    A[Hubble Flows<br/>JSON] -->|learn| B[Parse & Validate<br/>internal/hubble]
+    B --> C[Parsed Flows<br/>Metadata Extracted]
+    C -->|propose| D[Synthesize Policies<br/>internal/synth]
+    D --> E[CiliumNetworkPolicy<br/>YAML]
+    E -->|verify| F[Validate Structure<br/>internal/verify]
+    F --> G{Valid?}
+    G -->|Yes| H[Policy Ready<br/>for Deployment]
+    C -->|explain| I[Generate Report<br/>internal/explain]
+    E -->|explain| I
+    I --> J[HTML Report<br/>+ Network Graph]
+    
+    style A fill:#e3f2fd
+    style C fill:#fff3e0
+    style E fill:#e8f5e9
+    style H fill:#c8e6c9
+    style J fill:#f3e5f5

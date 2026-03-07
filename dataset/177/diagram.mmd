@@ -1,0 +1,39 @@
+flowchart TD
+    Y[Send EnemyHit event]
+    EnemyHitEvent["EnemyHitEvent
+        - player
+        - enemy
+        - damage"]
+
+    ProjectileHitEvent["ProjectileHitEvent
+        - projectile
+        - enemy"]
+
+    subgraph physics
+    X[Projectile intersects Enemy] -.-> Y["EventWriter::#60;ProjectileHitEvent#62;::send()"]
+    end
+    
+    Y --> ProjectileHitEvent
+
+    subgraph gameplay
+    hit_recv[Handle Projectile Hit]
+    Z["EventWriter::#60;EnemyHitEvent#62;::send()"]
+    end
+
+    ProjectileHitEvent --> hit_recv
+
+    hit_recv --> Z --> EnemyHitEvent
+
+    subgraph audio
+    audio_recv[Play Hit SFX]
+    end
+
+    subgraph vfx
+    vfx_recv[Play Hit VFX]
+    end
+
+    subgraph achievement
+    achievement_recv[Damage Total]
+    end
+
+    EnemyHitEvent --> audio_recv & vfx_recv & achievement_recv

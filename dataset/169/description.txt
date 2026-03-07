@@ -1,0 +1,40 @@
+## 图类型与用途
+这是一个流程图，展示了 GoClaw 中 Agent Team 如何协同工作以响应 User 的请求。该图描述了用户、领导智能体、专业智能体、共享任务板和团队邮箱之间的交互，用于说明用户如何通过一个由多个智能体组成的团队来完成任务。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是 User 节点，中间是 Agent Team 和 Shared Task Board，右侧是 Team Mailbox。流程从 User 发起消息开始，最终由 Lead Agent 向 User 提供最终答案。
+
+## 分组/子图/阶段说明
+图中包含三个子图：
+- **Agent Team**：包含 Lead Agent 和 Specialist A/B/C，负责任务的协调和执行。
+- **Shared Task Board**：包含 Task 1/2/3，用于跟踪任务状态。
+- **Team Mailbox**：包含 A1 -> LEAD 和 LEAD -> ALL 消息，是智能体之间通信的渠道。
+
+## 节点逐项说明
+- **User**：发起请求或接收最终答案的实体。
+- **Lead Agent (orchestrator)**：Agent Team 的协调者，负责创建任务、广播消息和向 User 提供最终答案。根据 `docs/11-agent-teams.md`，Lead Agent 接收 `TEAM.md` 系统提示，包含完整的编排指令。
+- **Specialist A/B/C**：Agent Team 中的专业成员，负责执行特定任务。
+- **Task 1: pending**：Shared Task Board 上的一个任务，状态为 "pending"（待处理）。
+- **Task 2: in_progress owner: A1**：Shared Task Board 上的一个任务，状态为 "in_progress"（进行中），由 Specialist A1 负责。
+- **Task 3: blocked_by T2**：Shared Task Board 上的一个任务，状态为 "blocked_by T2"（被任务 2 阻塞）。
+- **A1 → LEAD: status update**：Team Mailbox 中的一条消息，表示 Specialist A1 向 Lead Agent 发送状态更新。
+- **LEAD → ALL: broadcast**：Team Mailbox 中的一条消息，表示 Lead Agent 向所有 Agent 广播消息。
+
+## 连线、分支与汇聚关系
+- `USER --> LEAD`：User 向 Lead Agent 发送消息。
+- `LEAD --> BOARD`：Lead Agent 在 Shared Task Board 上创建任务。
+- `A1 --> T2`：Specialist A1 认领 Task 2。
+- `T2 -.-> T3`：Task 2 完成后自动解除 Task 3 的阻塞。
+- `A1 --> MAIL`：Specialist A1 通过 Team Mailbox 向 Lead Agent 发送消息。
+- `LEAD --> MAIL`：Lead Agent 通过 Team Mailbox 向所有 Agent 广播消息。
+- `LEAD --> USER`：Lead Agent 向 User 提供最终答案。
+
+## 仓库语境与术语解释
+- **Agent Team**：由多个 Agent 组成的团队，共同完成任务。根据 `README.md` 和 `docs/11-agent-teams.md`，GoClaw 支持 Agent Team 的编排，包括共享任务板、Agent 间委托、会话切换和质量门控工作流。
+- **Lead Agent**：Agent Team 的协调者，负责任务的创建、分配和结果的汇总。
+- **Shared Task Board**：用于跟踪任务状态的共享空间。
+- **Team Mailbox**：Agent 之间通信的渠道。
+- **Multi-Agent Orchestration**：GoClaw 支持的 Agent 协作模式，通过显式的权限链接进行管理。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 GoClaw 中 User 如何通过 Agent Team 完成任务的流程。User 发送消息给 Lead Agent，Lead Agent 在 Shared Task Board 上创建任务并分配给 Specialist Agent。Specialist Agent 执行任务并通过 Team Mailbox 进行协作和沟通。任务状态的改变可以自动解除其他任务的阻塞。Lead Agent 负责协调整个过程，并向 User 提供最终答案。其中，Agent Team、Shared Task Board 和 Team Mailbox 是关键组件，实现了 Multi-Agent Orchestration。

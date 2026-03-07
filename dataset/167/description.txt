@@ -1,0 +1,60 @@
+## 图类型与用途
+这是一个架构图，展示了 GoClaw 系统的主要组件以及它们之间的交互方式。它描述了客户端请求如何通过 GoClaw 网关，最终与 LLM 提供商和存储系统进行交互。该图在 README 中作为架构概览的一部分。
+
+## 图的整体布局
+图采用从上到下的布局，分为客户端、GoClaw 网关、LLM 和工具提供者以及存储四个主要部分。数据流从顶部的客户端开始，经过中间的网关和核心引擎，最终到达底部的 LLM/工具和存储。
+
+## 分组/子图/阶段说明
+图中包含三个显式子图：Clients、Gateway 和 Storage。
+- **Clients**：表示与 GoClaw 交互的各种客户端类型。
+- **Gateway**：表示 GoClaw 的核心组件，负责处理客户端请求、调度代理以及与 LLM 和工具交互。
+- **Storage**：表示用于存储 GoClaw 数据的存储系统。
+
+## 节点逐项说明
+- **WEB**：Web 仪表盘，使用 React 单页应用 (SPA) 实现。
+- **TG**：Telegram 客户端。
+- **DC**：Discord 客户端。
+- **FS**：Feishu/Lark (飞书/Lark) 客户端。
+- **ZL**：Zalo OA (Zalo 官方账号) 客户端。
+- **ZLP**：Zalo Personal (Zalo 个人账号) 客户端。
+- **API**：HTTP API 客户端。
+- **WS**：WebSocket RPC 服务器，用于与 Web 仪表盘进行实时通信。
+- **REST**：HTTP 服务器，用于处理 HTTP API 请求。
+- **CM**：Channel Manager (通道管理器)，负责处理来自各种聊天渠道的请求。
+- **BUS**：Message Bus (消息总线)，用于组件之间的异步通信。
+- **SCHED**：Lane-based Scheduler (基于 Lane 的调度器)，负责调度不同类型的代理任务，包括主代理、子代理、委托代理和定时任务。
+- **ROUTER**：Agent Router (代理路由器)，负责将任务路由到合适的代理。
+- **LOOP**：Agent Loop (代理循环)，代理的核心执行逻辑，包括思考 (think)、行动 (act) 和观察 (observe) 三个步骤。
+- **TOOLS**：Tool Registry (工具注册表)，包含各种工具，例如文件系统访问、执行命令、Web 访问、内存管理、代理委托、团队协作、多通道协议 (MCP) 和自定义工具。
+- **LLM**：LLM Providers (LLM 提供商)，支持多种 LLM，包括 Anthropic (原生支持和 prompt 缓存) 和兼容 OpenAI 的 LLM (12+)。
+- **FILE**：File-based (基于文件) 存储，用于独立部署场景。
+- **PG**：PostgreSQL 18 + pgvector 存储，用于托管和多租户场景。
+
+## 连线、分支与汇聚关系
+- `WEB -> WS`：Web 仪表盘通过 WebSocket RPC 与 GoClaw 网关通信。
+- `TG -> CM`：Telegram 客户端的请求发送到 Channel Manager。
+- `DC -> CM`：Discord 客户端的请求发送到 Channel Manager。
+- `FS -> CM`：Feishu/Lark 客户端的请求发送到 Channel Manager。
+- `ZL -> CM`：Zalo OA 客户端的请求发送到 Channel Manager。
+- `ZLP -> CM`：Zalo Personal 客户端的请求发送到 Channel Manager。
+- `API -> REST`：HTTP API 客户端的请求发送到 HTTP Server。
+- `WS & REST & CM -> BUS`：WebSocket RPC 服务器、HTTP 服务器和 Channel Manager 的消息汇聚到 Message Bus，形成汇聚关系。
+- `BUS -> SCHED`：Message Bus 将消息发送到 Lane-based Scheduler。
+- `SCHED -> ROUTER`：Lane-based Scheduler 将任务发送到 Agent Router。
+- `ROUTER -> LOOP`：Agent Router 将任务发送到 Agent Loop。
+- `LOOP -> TOOLS`：Agent Loop 可以使用 Tool Registry 中的工具。
+- `LOOP -> LLM`：Agent Loop 可以使用 LLM Providers。
+- `LOOP -> FILE`：Agent Loop 可以将数据存储到 File-based 存储。
+- `LOOP -> PG`：Agent Loop 可以将数据存储到 PostgreSQL 存储。
+
+## 仓库语境与术语解释
+- **GoClaw**：一个多代理 AI 网关，用于连接 LLM 与各种工具、渠道和数据。
+- **Clients**：与 GoClaw 交互的客户端，包括 Web 仪表盘、Telegram、Discord、Feishu/Lark、Zalo 和 HTTP API。
+- **Gateway**：GoClaw 的核心组件，负责处理客户端请求、调度代理以及与 LLM 和工具交互。
+- **Lane-based Scheduler**：根据不同的 Lane（例如 main, subagent, delegate, cron）调度任务的组件，参见 `internal/scheduler/scheduler.go`。
+- **Tool Registry**：包含各种工具的注册表，例如文件系统访问、执行命令、Web 访问、内存管理、代理委托、团队协作、多通道协议 (MCP) 和自定义工具。
+- **LLM Providers**：支持多种 LLM，包括 Anthropic (原生支持和 prompt 缓存) 和兼容 OpenAI 的 LLM (12+)。
+- **PostgreSQL 18 + pgvector**：用于托管和多租户场景的数据库存储，支持向量搜索，参见 `internal/store/pg/factory.go`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 GoClaw 的整体架构，从客户端（包括 Web 仪表盘、Telegram 等）发起请求，这些请求通过 WebSocket RPC、HTTP Server 或 Channel Manager 进入 GoClaw 网关。网关内部通过 Message Bus、Lane-based Scheduler 和 Agent Router 将任务调度到 Agent Loop。Agent Loop 可以调用 Tool Registry 中的工具或使用 LLM Providers，最终将数据存储到 File-based 或 PostgreSQL 存储中。其中，Lane-based Scheduler 和 Agent Loop 是核心中间环节，负责任务调度和执行。GoClaw 的目标是作为一个多代理 AI 网关，连接 LLM 与各种工具、渠道和数据。

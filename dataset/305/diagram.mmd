@@ -1,0 +1,23 @@
+flowchart LR
+    subgraph Input
+        Hotkey["Hotkey<br/>(compositor/evdev)"] --> Audio["Audio<br/>(cpal)"]
+    end
+    subgraph Transcription
+        Audio --> Engine{Engine?}
+        Engine -->|whisper| WhisperBackend{Backend?}
+        Engine -->|onnx| ONNX["ONNX Engine<br/>(Parakeet, Moonshine,<br/>SenseVoice, Paraformer,<br/>Dolphin, Omnilingual)"]
+        WhisperBackend -->|local| Whisper["Whisper<br/>(whisper-rs)"]
+        WhisperBackend -->|cli| CLI["whisper-cli<br/>(subprocess)"]
+        WhisperBackend -->|remote| Remote["Remote Server<br/>(HTTP API)"]
+    end
+    subgraph Output
+        Whisper --> PostProcess["Post-Process<br/>(optional)"]
+        CLI --> PostProcess
+        Remote --> PostProcess
+        ONNX --> PostProcess
+        PostProcess --> PreHook["Pre-Output Hook"]
+        PreHook --> TextOutput["Output<br/>(wtype/dotool/ydotool)"]
+        TextOutput --> PostHook["Post-Output Hook"]
+        PreHook -.-> Compositor["Compositor<br/>(submap/mode)"]
+        PostHook -.-> Compositor
+    end

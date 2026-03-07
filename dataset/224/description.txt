@@ -1,0 +1,50 @@
+## 图类型与用途
+这是一个流程图/架构图，展示了 Ruflo v3 平台的整体架构和数据/控制流。它描述了用户请求如何在不同组件之间传递，以及各个组件在整个系统中所扮演的角色，旨在帮助理解 Ruflo 如何编排 AI 任务。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是用户层，中间是编排层和代理层，底部是智能层和提供商层，展示了请求从用户到 AI 提供商的流向。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分成五个阶段：用户层、编排层、代理层、智能层、提供商层。
+
+## 节点逐项说明
+- **Claude Code**：用户通过 Claude Code 与平台交互。
+- **CLI Commands**：用户通过命令行界面与平台交互。
+- **MCP Server**：主控制面板服务器，负责接收用户请求并协调后续流程。根据 `ruflo/src/ruvocal/docs/source/configuration/mcp-tools.md`，MCP 服务器支持工具调用。
+- **Intelligent Router**：智能路由器，根据请求内容和系统状态，将请求路由到合适的处理模块。根据 `ruflo/src/ruvocal/docs/source/configuration/llm-router.md`，该路由器可以根据会话上下文选择最佳模型。
+- **Self-Learning Hooks**：自学习钩子，可能用于在请求处理过程中动态调整行为，例如根据历史数据优化路由策略。
+- **Queen Coordinator**：皇后协调器，负责管理和协调多个 Agent 的工作。
+- **60+ Specialized Agents**：60多个专业代理，每个代理负责特定的任务或功能。README 中提到这些 agents 用于编码、代码审查、测试、安全审计、文档和 DevOps。
+- **Swarm Manager**：群管理器，可能用于管理和协调多个 Agent 协同工作，形成一个“群”。
+- **SONA Learning**：一种自优化神经架构，用于学习最佳路由。README 中提到 SONA 是 RuVector 组件之一。
+- **Mixture of Experts**：混合专家模型，通过组合多个专家模型的输出来提高性能。
+- **HNSW Vector Search**：使用 HNSW 算法进行向量搜索，可能用于在大量数据中快速找到相似的向量，例如用于检索相关信息。README 中提到 HNSW 是 RuVector 组件之一，用于快速检索。
+- **Anthropic**：Anthropic 公司的 AI 模型，例如 Claude。
+- **OpenAI**：OpenAI 公司的 AI 模型，例如 GPT 系列。
+- **Google**：Google 公司的 AI 模型，例如 PaLM 系列。
+- **Ollama**：Ollama 是一个允许你在本地运行大型语言模型的工具。
+
+## 连线、分支与汇聚关系
+- `CC --> MCP`：用户通过 Claude Code 发起的请求到达 MCP Server。
+- `CLI --> MCP`：用户通过 CLI Commands 发起的请求到达 MCP Server。
+- `MCP --> Router`：MCP Server 将请求传递给 Intelligent Router。
+- `Router --> Hooks`：Intelligent Router 将请求传递给 Self-Learning Hooks。
+- `Hooks --> Queen`：Self-Learning Hooks 将请求传递给 Queen Coordinator。
+- `Queen --> Workers`：Queen Coordinator 将任务分配给 60+ Specialized Agents。
+- `Queen --> Swarm`：Queen Coordinator 将任务分配给 Swarm Manager。
+- `Workers --> Intelligence`：60+ Specialized Agents 利用 Intelligence Layer 的组件进行处理。
+- `Intelligence --> Providers`：Intelligence Layer 将结果传递给 Provider Layer 的 AI 模型。
+
+## 仓库语境与术语解释
+- **RuFlo**：一个企业级 AI 编排平台，旨在将 Claude Code 转化为强大的多代理开发平台。
+- **Claude Code**：Anthropic 提供的用于与 Claude 模型交互的 SDK 或代码。
+- **MCP (Model Context Protocol)**：一种协议，允许模型调用外部工具。`ruflo/src/ruvocal/docs/source/configuration/mcp-tools.md` 描述了如何在 RuFlo 中配置和使用 MCP 服务器。
+- **Intelligent Router**：根据 `ruflo/src/ruvocal/docs/source/configuration/llm-router.md`，RuFlo 使用 LLM Router 智能地选择最佳模型来处理用户请求。
+- **Agents**：RuFlo 平台中的 AI 代理，每个代理都针对特定任务进行了优化。README 提到有 60 多个专业代理。
+- **Swarm**：一组协同工作的 Agents，由 Swarm Manager 管理。
+- **RuVector**：RuFlo 的智能组件，包含 SONA 和 HNSW 等模块，用于自优化和快速检索。
+- **Provider Layer**：提供底层 AI 模型的服务提供商，例如 Anthropic、OpenAI、Google 和 Ollama。
+- **Tool Groups**: `ruflo/src/mcp-bridge/index.js` 中定义了工具组，用于启用/禁用特定类别的工具。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+这张图展示了 Ruflo v3 平台的架构，用户请求通过 Claude Code 或 CLI 进入系统，由 MCP Server 接收并路由到 Intelligent Router。Router 之后，请求经过 Self-Learning Hooks，到达 Queen Coordinator，再分配给 Agents 或 Swarm Manager。Agents 利用 Intelligence Layer 的 SONA 和 HNSW 等组件，最终由 Provider Layer 的 AI 模型（如 Anthropic, OpenAI）处理。其中，Intelligent Router 根据会话上下文选择模型，MCP Server 支持工具调用，Agents 负责执行特定任务。

@@ -1,0 +1,41 @@
+## 图类型与用途
+这是一个流程图，对比了传统 RAG（Retrieval-Augmented Generation）系统和 AutoMem 系统在处理相同查询时的架构差异。该图旨在展示 AutoMem 如何通过结合图数据库和向量数据库，提供更准确、更具推理能力的答案，突出 AutoMem 的优势。
+
+## 图的整体布局
+图整体采用从上到下的布局，分为两个主要部分，分别代表传统的 RAG 系统和 AutoMem 系统。每个部分都从一个查询节点开始，经过不同的处理流程，最终输出结果。
+
+## 分组/子图/阶段说明
+图中包含两个主要的子图：
+- **`trad` (Traditional RAG Vector Only)**：代表传统的 RAG 系统，仅使用向量数据库。
+- **`automem` (AutoMem Graph + Vector)**：代表 AutoMem 系统，结合了图数据库和向量数据库。
+`automem` 子图内部还包含一个子图：
+- **`hybrid` (Hybrid Search)**：代表 AutoMem 的混合搜索组件，同时包含向量数据库和图数据库。
+
+## 节点逐项说明
+- **`Query1`**：用户提出的查询，示例为 "What database?"，用于传统 RAG 系统。
+- **`VectorDB1`**：传统 RAG 系统使用的向量数据库，用于存储和检索向量化的文本信息。
+- **`Result1`**：传统 RAG 系统返回的结果，示例为 "✅ PostgreSQL memory ❌ No reasoning ❌ No connections"。
+- **`Query2`**：用户提出的查询，与 `Query1` 相同，示例为 "What database?"，用于 AutoMem 系统。
+- **`VectorDB2`**：AutoMem 系统使用的向量数据库，示例为 Qdrant，用于语义相似性搜索。根据 README，Qdrant 用于语义召回和相似性搜索。
+- **`GraphDB2`**：AutoMem 系统使用的图数据库，示例为 FalkorDB，用于存储记忆节点和它们之间的关系。根据 README，FalkorDB 用于存储规范记录、关系和整合。
+- **`Result2`**：AutoMem 系统返回的结果，示例为 "✅ PostgreSQL memory ✅ PREFERS_OVER MongoDB ✅ RELATES_TO team expertise ✅ DERIVED_FROM boring tech"。
+
+## 连线、分支与汇聚关系
+- `Query1 -> VectorDB1`：传统 RAG 系统通过相似性搜索连接到向量数据库。
+- `VectorDB1 -> Result1`：向量数据库将检索结果传递给最终结果。
+- `Query2 -> VectorDB2`：AutoMem 系统的查询同时连接到向量数据库。
+- `Query2 -> GraphDB2`：AutoMem 系统的查询同时连接到图数据库。
+- `VectorDB2 -> Result2`：向量数据库的检索结果传递给最终结果。
+- `GraphDB2 -> Result2`：图数据库的检索结果传递给最终结果，与向量数据库的结果形成汇聚关系。
+
+## 仓库语境与术语解释
+- **RAG (Retrieval-Augmented Generation)**：一种结合检索和生成模型的 AI 架构，用于增强生成模型的知识和上下文。
+- **Vector Database**：用于存储向量嵌入的数据库，支持相似性搜索，常用于 RAG 系统中检索相关文档。
+- **Graph Database**：一种使用图结构存储数据的数据库，节点代表实体，边代表实体之间的关系。AutoMem 使用图数据库来存储记忆和它们之间的关系。
+- **FalkorDB**：AutoMem 使用的图数据库，用于存储记忆节点和它们之间的关系。
+- **Qdrant**：AutoMem 使用的向量数据库，用于语义相似性搜索。
+- **Hybrid Search**：AutoMem 结合向量数据库和图数据库进行搜索的方式，旨在提供更全面和智能的答案。
+- **AutoMem**：一个生产级的长期记忆系统，旨在让 AI 助手能够记住、连接和演化它们的理解。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图对比了传统 RAG 系统和 AutoMem 系统处理查询 "What database?" 的流程。传统 RAG 系统仅使用向量数据库进行相似性搜索，返回的结果缺乏推理和连接能力。AutoMem 系统则通过混合搜索，同时利用 Qdrant 向量数据库和 FalkorDB 图数据库，返回更全面、更智能的答案，例如 "PostgreSQL 记忆"、"优先于 MongoDB"、"关联到团队专业知识" 和 "来源于无聊的技术"。AutoMem 的核心优势在于其混合搜索能力，能够结合语义搜索和知识关联，从而提供更准确和更具推理能力的答案。

@@ -1,0 +1,47 @@
+graph TB
+    subgraph UI["🖥️ USER INTERFACE LAYER"]
+        GUI[Calculator GUI Application]
+        style GUI fill:#667eea,stroke:#333,stroke-width:3px,color:#fff
+    end
+    
+    subgraph EVENT["⚡ EVENT DISPATCHER LAYER"]
+        INPUT[Input Handler]
+        OUTPUT[Output Handler]
+        style INPUT fill:#f093fb,stroke:#333,stroke-width:2px,color:#fff
+        style OUTPUT fill:#f093fb,stroke:#333,stroke-width:2px,color:#fff
+    end
+    
+    subgraph CORE["🔧 CORE PROCESSING ENGINE"]
+        CONV[Conversion Engine<br/>Binary ⟷ Octal ⟷ Decimal ⟷ Hex]
+        ARITH[Arithmetic Engine<br/>+ - × ÷ in All Bases]
+        SIGNED[Signed Number Engine<br/>1's & 2's Complement]
+        style CONV fill:#4facfe,stroke:#333,stroke-width:2px,color:#fff
+        style ARITH fill:#43e97b,stroke:#333,stroke-width:2px,color:#fff
+        style SIGNED fill:#fa709a,stroke:#333,stroke-width:2px,color:#fff
+    end
+    
+    subgraph UTIL["🛠️ VALIDATION & UTILITY LAYER"]
+        VALID[Input Validator]
+        PARSER[Number Parser]
+        ERROR[Error Handler]
+        style VALID fill:#ffecd2,stroke:#333,stroke-width:2px,color:#333
+        style PARSER fill:#ffecd2,stroke:#333,stroke-width:2px,color:#333
+        style ERROR fill:#ffecd2,stroke:#333,stroke-width:2px,color:#333
+    end
+    
+    GUI --> INPUT
+    GUI --> OUTPUT
+    INPUT --> CONV
+    INPUT --> ARITH
+    INPUT --> SIGNED
+    CONV --> VALID
+    ARITH --> PARSER
+    SIGNED --> ERROR
+    CONV --> OUTPUT
+    ARITH --> OUTPUT
+    SIGNED --> OUTPUT
+    
+    style UI fill:#1e3c72,stroke:#fff,stroke-width:4px
+    style EVENT fill:#2a5298,stroke:#fff,stroke-width:3px
+    style CORE fill:#0f2027,stroke:#fff,stroke-width:4px
+    style UTIL fill:#16222a,stroke:#fff,stroke-width:3px

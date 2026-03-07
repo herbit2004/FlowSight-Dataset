@@ -1,0 +1,41 @@
+## 图类型与用途
+这是一个流程图，展示了 RedAmon 框架中 Triage Agent 和 CodeFix Agent 协同工作的过程，用于自动化漏洞分析和修复。该图描述了从攻击面分析到自动代码修复并提交 Pull Request 的完整流程。
+
+## 图的整体布局
+图采用从左到右的布局。左侧是 Triage Agent 的流程，右侧是 CodeFix Agent 的流程。整体流程从 Neo4j 攻击面开始，最终到提交 GitHub PR 结束。
+
+## 分组/子图/阶段说明
+图中包含两个子图：
+- **Triage Agent**：负责分析攻击面，识别并优先排序潜在的安全问题。
+- **CodeFix Agent**：负责根据 Triage Agent 提供的修复建议，自动修复代码并提交 Pull Request。
+
+## 节点逐项说明
+- **Neo4j Attack Surface**：存储攻击面信息的 Neo4j 数据库。可以理解为存储了系统潜在漏洞和安全风险的数据。
+- **9 Cypher Queries**：用于从 Neo4j 数据库中提取相关攻击面信息的 Cypher 查询语句。
+- **LLM Analysis Correlate + Prioritize**：使用大型语言模型 (LLM) 分析收集到的攻击面信息，关联不同漏洞，并根据风险程度进行优先级排序。`agentic/cypherfix_triage/orchestrator.py` 和 `agentic/cypherfix_codefix/orchestrator.py` 中都使用了 LLM 进行分析。
+- **Remediation Entries**：LLM 分析后生成的修复建议或修复条目，用于指导代码修复。
+- **Clone Repo Create Branch**：克隆目标代码仓库，并创建一个新的分支用于进行代码修复。
+- **ReAct Loop 11 Code Tools**：使用 ReAct (Reasoning and Acting) 循环，结合 11 个不同的代码工具，进行代码修复。ReAct 是一种让 AI 能够推理并采取行动的框架。`agentic/cypherfix_codefix/tools/__init__.py` 定义了 CodeFix Agent 使用的工具。
+- **Diff Blocks User Review**：生成代码修改的差异 (Diff) 块，供用户进行审核。
+- **Commit + Push GitHub PR**：提交代码修改，推送到 GitHub 仓库，并创建一个 Pull Request (PR)，等待合并。
+
+## 连线、分支与汇聚关系
+- `Neo4j Attack Surface -> 9 Cypher Queries`：从 Neo4j 数据库中提取攻击面信息。
+- `9 Cypher Queries -> LLM Analysis Correlate + Prioritize`：将提取的信息传递给 LLM 进行分析和优先级排序。
+- `LLM Analysis Correlate + Prioritize -> Remediation Entries`：LLM 分析的结果生成修复条目。
+- `Remediation Entries -> Clone Repo Create Branch`：根据修复条目克隆仓库并创建分支。
+- `Clone Repo Create Branch -> ReAct Loop 11 Code Tools`：在克隆的仓库分支上进行代码修复。
+- `ReAct Loop 11 Code Tools -> Diff Blocks User Review`：生成代码修改的 Diff 块供用户审核。
+- `Diff Blocks User Review -> Commit + Push GitHub PR`：提交代码修改并推送 GitHub PR。
+
+## 仓库语境与术语解释
+- **Triage Agent**：负责初步分析和分类安全漏洞。
+- **CodeFix Agent**：负责根据 Triage Agent 的结果自动修复代码。
+- **Neo4j Attack Surface**：使用 Neo4j 数据库存储和查询攻击面信息。`graph_db/neo4j_client.py` 提供了与 Neo4j 数据库交互的客户端。
+- **Cypher Queries**：用于查询 Neo4j 数据库的查询语言。`agentic/cypherfix_triage/prompts/cypher_queries.py` 中定义了 Triage Agent 使用的 Cypher 查询。
+- **LLM (Large Language Model)**：大型语言模型，用于分析和理解安全漏洞。`agentic/orchestrator_helpers/llm_setup.py` 负责 LLM 的初始化。
+- **ReAct Loop**：Reasoning and Acting 循环，一种让 AI 能够推理并采取行动的框架。
+- **GitHub PR**：GitHub Pull Request，用于提交代码修改。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 RedAmon 框架中漏洞分析和修复的自动化流程。流程从 Neo4j 攻击面开始，通过 9 个 Cypher 查询提取信息，然后使用 LLM 分析并生成修复条目。CodeFix Agent 根据修复条目克隆仓库，创建分支，使用 ReAct 循环和 11 个代码工具进行修复，生成 Diff 块供用户审核，最后提交 GitHub PR。该流程的关键环节包括 LLM 分析、ReAct 循环和 GitHub PR 提交。`agentic/cypherfix_triage/orchestrator.py` 和 `agentic/cypherfix_codefix/orchestrator.py` 分别实现了 Triage Agent 和 CodeFix Agent 的核心逻辑。

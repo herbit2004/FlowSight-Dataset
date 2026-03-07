@@ -1,0 +1,31 @@
+graph TD
+    subgraph ClientSide ["Client Side"]
+        LLM["🤖 AI Agent / LLM"]
+        User["👤 User / Developer"]
+    end
+
+    subgraph DockerEnv ["🐳 Self-Hosted Infrastructure"]
+        
+        subgraph RegistryCore ["Registry Core"]
+            API["🌐 Registry API"]
+            Search["🔍 Meilisearch"]
+            DB["📚 Registry Data"]
+            OAuth["🔐 OAuth Proxy"]
+        end
+
+        subgraph RuntimeEnv ["Runtime Environment"]
+            Local["💻 Local Exec"]
+            Sandbox["🛡️ Secure Sandbox"]
+            MCPServer["⚙️ MCP Server"]
+        end
+    end
+
+    User -->|Search Tools| API
+    LLM -->|Execute Tool| API
+    LLM -->|Auth Flow| OAuth
+    API <-->|Query Index| Search
+    API -->|Read Metadata| DB
+    API -->|Run Tool| Local
+    API -->|Run Tool| Sandbox
+    Local -->|Execute| MCPServer
+    Sandbox -->|Execute| MCPServer

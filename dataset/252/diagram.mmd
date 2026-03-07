@@ -1,0 +1,23 @@
+flowchart LR
+    Client[Client<br/>React / Vue / Mobile]
+    
+    subgraph Django
+        subgraph dj-rest-auth
+            Auth[Login / Logout]
+            Reg[Registration]
+            PW[Password Reset]
+        end
+        
+        DRF[Django REST Framework]
+        DJAuth[django.contrib.auth]
+        AA[django-allauth]
+        JWT[simplejwt]
+    end
+    
+    Client <--> dj-rest-auth
+    
+    Auth --> DRF
+    Auth --> DJAuth
+    Auth -.-> JWT
+    Reg -.-> AA
+    PW --> DJAuth

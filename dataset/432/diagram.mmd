@@ -1,0 +1,43 @@
+graph TB
+    subgraph "🎨 UI Layer - Lightning Web Components"
+        QV[jtQueryViewer<br/>Main Orchestrator]
+        CB[jtSearchableCombobox<br/>Config Selector]
+        EB[jtExecuteButton<br/>Smart Button]
+        QR[jtQueryResults<br/>Multi-View Display]
+        CM[jtCacheModal<br/>Cache Manager]
+    end
+
+    subgraph "⚙️ Controller Layer - Apex"
+        QVC[JT_QueryViewerController<br/>Query Execution]
+        MC[JT_MetadataCreator<br/>Config Management]
+        UF[JT_UsageFinder<br/>Usage Search]
+    end
+
+    subgraph "💎 Core Engine"
+        DS[JT_DataSelector<br/>Singleton + Caching]
+    end
+
+    subgraph "💾 Data Layer"
+        MD[(Custom Metadata)]
+        DB[(Salesforce DB)]
+    end
+
+    QV --> CB
+    QV --> EB
+    QV --> QR
+    QV --> CM
+
+    CB --> QVC
+    EB --> QVC
+    CM --> QVC
+
+    QVC --> DS
+    MC --> MD
+    UF --> DB
+
+    DS --> DB
+    DS --> MD
+
+    style QV fill:#667eea,stroke:#333,stroke-width:3px,color:#fff
+    style DS fill:#764ba2,stroke:#333,stroke-width:3px,color:#fff
+    style QVC fill:#48bb78,stroke:#333,stroke-width:2px

@@ -1,0 +1,43 @@
+## 图类型与用途
+这是一个组件架构图，展示了 `jcode` 项目中 `MultiProvider` 组件如何与不同的 AI 模型提供者集成，并说明了每种提供者所需的认证方式。该图在仓库中用于概览 `jcode` 的多模型支持架构。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是核心组件 `MultiProvider`，中间层是各个模型提供者，底部是对应的认证方式。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为三个阶段：核心组件、模型提供者、认证方式。
+
+## 节点逐项说明
+- **MP (MultiProvider)**：核心组件，负责检测凭据，并允许在运行时切换不同的模型提供者。README 和代码上下文表明，它是模型提供者的入口点。
+- **ClaudeProvider**：Claude 模型的提供者，对应代码 `provider/claude.rs`。
+- **CopilotProvider**：GitHub Copilot 模型的提供者，对应代码 `provider/copilot.rs`。
+- **OpenAIProvider**：OpenAI 模型的提供者，对应代码 `provider/openai.rs`。
+- **OpenRouterProvider**：OpenRouter 模型的提供者，对应代码 `provider/openrouter.rs`。
+- **ClaudeCreds**：Claude 模型的 OAuth 认证信息，存储在 `~/.claude/.credentials.json` 文件中，用于 Claude Max 用户。
+- **APIKey**：Claude 模型的 API 密钥，通过环境变量 `ANTHROPIC_API_KEY` 提供，用于直接 API 访问。
+- **GHCreds**：GitHub Copilot 模型的 OAuth 认证信息，存储在 `~/.config/github-copilot/` 目录下，用于 Copilot Pro/Free 用户。
+- **CodexCreds**：OpenAI 模型的 OAuth 认证信息，存储在 `~/.codex/auth.json` 文件中，用于 ChatGPT Pro 用户。
+- **ORKey**：OpenRouter 模型的 API 密钥，通过环境变量 `OPENROUTER_API_KEY` 提供，支持 200+ 模型。
+
+## 连线、分支与汇聚关系
+- `MP -> Claude`：`MultiProvider` 组件指向 `ClaudeProvider`。
+- `MP -> Copilot`：`MultiProvider` 组件指向 `CopilotProvider`。
+- `MP -> OpenAI`：`MultiProvider` 组件指向 `OpenAIProvider`。
+- `MP -> OR`：`MultiProvider` 组件指向 `OpenRouterProvider`。
+- `Claude -> ClaudeCreds`：`ClaudeProvider` 依赖于 `ClaudeCreds` 进行 OAuth 认证。
+- `Claude -> APIKey`：`ClaudeProvider` 也可以使用 `APIKey` 进行直接 API 访问。
+- `Copilot -> GHCreds`：`CopilotProvider` 依赖于 `GHCreds` 进行 OAuth 认证。
+- `OpenAI -> CodexCreds`：`OpenAIProvider` 依赖于 `CodexCreds` 进行 OAuth 认证。
+- `OR -> ORKey`：`OpenRouterProvider` 依赖于 `ORKey` 进行 API 密钥认证。
+
+## 仓库语境与术语解释
+- **MultiProvider**：根据 README 和代码，`MultiProvider` 负责检测可用的认证信息，并允许用户在运行时切换不同的模型提供者。
+- **ClaudeProvider, CopilotProvider, OpenAIProvider, OpenRouterProvider**：这些是具体的模型提供者，分别对应 `src/provider/claude.rs`、`src/provider/copilot.rs`、`src/provider/openai.rs` 和 `src/provider/openrouter.rs` 文件。
+- **OAuth**：OAuth 是一种授权框架，允许第三方应用在不获取用户密码的情况下访问用户在其他服务上的资源。
+- **API Key**：API 密钥是一种用于身份验证的字符串，允许用户访问 API。
+- **ANTHROPIC_API_KEY, OPENROUTER_API_KEY**：这些是环境变量，用于存储 API 密钥。
+- **~/.claude/.credentials.json, ~/.config/github-copilot/, ~/.codex/auth.json**：这些是存储 OAuth 认证信息的文件路径。
+- **Features: Multi-Provider**：README 中提到 `jcode` 的一个特性是 "Multi-Provider"，支持 Claude, OpenAI, GitHub Copilot, OpenRouter 等，并允许用户在运行时切换。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `jcode` 项目中 `MultiProvider` 组件如何支持多种 AI 模型提供者。`MultiProvider` 作为核心组件，负责检测凭据并允许运行时切换。它连接到 `ClaudeProvider`、`CopilotProvider`、`OpenAIProvider` 和 `OpenRouterProvider`，每个提供者使用不同的认证方式，包括 OAuth 认证文件（如 `~/.claude/.credentials.json`）和 API 密钥（如 `ANTHROPIC_API_KEY`）。这种架构使得 `jcode` 可以灵活地支持不同的 AI 模型，并方便用户根据自己的需求进行配置。

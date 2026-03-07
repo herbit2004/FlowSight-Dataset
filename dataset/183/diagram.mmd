@@ -1,0 +1,15 @@
+flowchart LR
+    nv("Make changes to\nthe application") -- Commit --> n7("Build and test frontend\nand backend")
+    n7 --> nf{"Success?"}
+    nf -- Yes --> n2("Logs into host machine\nand copy all relevant files\nfrom repo to it")
+    nf -- No --> n4("Cancel pipeline")
+    n2 --> n5{"Success?"}
+    n5 -- No --> n4
+    n5 -- Yes --> nx("Builds the frontend\nand the backend")
+    nx --> nj{"Success?"}
+    nj -- No --> n4
+    nj -- Yes --> nd("Deploy")
+    nd --> nc("Starts gunicorn server under\nsupervisor to ensure the\nsystem is never down")
+    na{"Success?"} -- No --> ng("Better manually log in\ninto host and fix it")
+    na -- Yes --> nk("Updates are live")
+    nc --> na

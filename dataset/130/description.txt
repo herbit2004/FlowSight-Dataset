@@ -1,0 +1,46 @@
+## 图类型与用途
+这是一个流程图，描述了 ElatoAI 平台处理用户语音输入并生成 AI 语音输出的架构。该图展示了语音数据如何通过 ESP32 设备、Deno 边缘函数以及多个 AI API 进行处理，最终生成语音输出。
+
+## 图的整体布局
+图整体采用从左到右的布局。用户层位于左侧，数据依次经过 ESP32 设备、Deno 边缘函数，最终到达右侧的各个 AI API。
+
+## 分组/子图/阶段说明
+图中包含一个名为 "UserLayer" 的子图，代表用户与系统的交互界面。除此之外，逻辑上可以分为三个阶段：用户输入与输出、边缘设备处理、AI 服务处理。
+
+## 节点逐项说明
+- **UserInput (User Speech Input)**：用户发出的语音输入，作为整个流程的起点。
+- **UserOutput (AI Generated Speech Output)**：系统生成的语音输出，反馈给用户。
+- **ESP32 Device**：一个嵌入式设备，负责接收用户语音输入，并通过 WebSocket 与 Deno 边缘函数进行通信，并将边缘函数返回的语音数据输出给用户。README 提到 ElatoAI 使用 ESP32 进行实时语音处理。
+- **Deno Edge Function**：一个在边缘服务器上运行的函数，负责接收来自 ESP32 的语音数据，并将其传递给不同的 AI API 进行处理。它也负责接收来自 AI API 的响应，并将响应传递回 ESP32。
+- **OpenAI Realtime API**：OpenAI 提供的实时语音 API。
+- **Gemini Live API**：Google Gemini 提供的实时语音 API。
+- **xAI Grok Voice Agent API**：xAI Grok 提供的语音代理 API。
+- **ElevenLabs AI Agents**：ElevenLabs 提供的 AI 语音代理服务。
+- **Hume AI EVI4**：Hume AI 提供的 EVI4 API。
+
+## 连线、分支与汇聚关系
+- `UserInput -> ESP32 Device`：用户语音输入发送到 ESP32 设备。
+- `ESP32 Device -- WebSocket --> Deno Edge Function`：ESP32 设备通过 WebSocket 将语音数据发送到 Deno 边缘函数。
+- `Deno Edge Function -> OpenAI Realtime API`：Deno 边缘函数将语音数据发送到 OpenAI Realtime API。
+- `Deno Edge Function -> Gemini Live API`：Deno 边缘函数将语音数据发送到 Gemini Live API。
+- `Deno Edge Function -> xAI Grok Voice Agent API`：Deno 边缘函数将语音数据发送到 xAI Grok Voice Agent API。
+- `Deno Edge Function -> ElevenLabs AI Agents`：Deno 边缘函数将语音数据发送到 ElevenLabs AI Agents。
+- `Deno Edge Function -> Hume AI EVI4`：Deno 边缘函数将语音数据发送到 Hume AI EVI4。
+- `OpenAI Realtime API -> Deno Edge Function`：OpenAI Realtime API 处理后的数据返回给 Deno 边缘函数。
+- `Gemini Live API -> Deno Edge Function`：Gemini Live API 处理后的数据返回给 Deno 边缘函数。
+- `xAI Grok Voice Agent API -> Deno Edge Function`：xAI Grok Voice Agent API 处理后的数据返回给 Deno 边缘函数。
+- `ElevenLabs AI Agents -> Deno Edge Function`：ElevenLabs AI Agents 处理后的数据返回给 Deno 边缘函数。
+- `Hume AI EVI4 -> Deno Edge Function`：Hume AI EVI4 处理后的数据返回给 Deno 边缘函数。
+- `Deno Edge Function -- WebSocket --> ESP32 Device`：Deno 边缘函数通过 WebSocket 将 AI 生成的语音数据发送回 ESP32 设备。
+- `ESP32 Device -> UserOutput`：ESP32 设备将 AI 生成的语音数据输出给用户。
+
+## 仓库语境与术语解释
+- **ESP32 Device**：一种低成本、低功耗的微控制器，用于接收用户语音输入和输出 AI 生成的语音。`firmware-arduino/src/main.cpp` 文件包含了 ESP32 设备的固件代码。
+- **Deno Edge Function**：在边缘服务器上运行的 JavaScript/TypeScript 函数，用于处理语音数据和与 AI API 进行交互。`server-deno/main.ts` 文件是 Deno 边缘函数的入口点。
+- **WebSocket**：一种网络通信协议，用于在 ESP32 设备和 Deno 边缘函数之间建立持久连接，实现实时语音数据传输。
+- **OpenAI Realtime API, Gemini Live API, xAI Grok Voice Agent API, ElevenLabs AI Agents, Hume AI EVI4**：不同的 AI 语音服务提供商，用于将语音数据转换为 AI 生成的语音。`server-deno/models/` 目录下包含了与这些 API 交互的模型定义。
+- **UserLayer**：表示用户与 ElatoAI 平台的交互界面，包括语音输入和语音输出。
+- **Realtime Speech-to-Speech**: README 提到 ElatoAI 的一个关键特性是实时语音转换，该图展示了实现这一特性的架构。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 ElatoAI 平台如何处理用户语音输入并生成 AI 语音输出。用户语音输入首先通过 ESP32 设备，然后通过 WebSocket 传输到 Deno 边缘函数。Deno 边缘函数将语音数据分发到多个 AI API（包括 OpenAI, Gemini, xAI, ElevenLabs, Hume），这些 API 处理后将结果返回给 Deno 边缘函数，最终通过 ESP32 设备输出给用户。该架构利用 ESP32 进行设备端处理，Deno 边缘函数进行 API 路由和数据转换，实现了实时语音交互。

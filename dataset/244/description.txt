@@ -1,0 +1,82 @@
+## 图类型与用途
+这是一个系统架构图，展示了 `Local Deep Research` 项目的整体架构，描述用户如何通过 Web 界面与系统交互，以及系统如何利用各种组件进行研究、存储和输出结果。该图在仓库中的作用是提供系统的高层视图，便于理解各个组件之间的关系。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是用户界面，中间是 Flask 后端和研究引擎，底部是 LLM 提供商、搜索引擎、存储层和输出格式。整体流程是从用户输入开始，经过后端处理，最终输出研究结果。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表不同的系统组件：
+- **USER (用户界面)**：表示用户与系统交互的入口。
+- **FLASK (Flask 后端)**：表示系统的后端服务，处理用户请求。
+- **RESEARCH (研究引擎)**：表示进行研究的核心组件。
+- **LLM (LLM Providers)**：表示大语言模型提供商，为研究提供语言模型能力。
+- **SEARCH (搜索引擎)**：表示搜索引擎，用于检索信息。
+- **STORAGE (存储层)**：表示数据存储层，用于存储研究数据。
+- **OUTPUT (输出)**：表示研究结果的输出格式。
+
+## 节点逐项说明
+- **WEB (Web Browser localhost:5000)**：用户通过 Web 浏览器与系统交互的界面，地址为 localhost:5000。
+- **API (REST API + WebSocket)**：Flask 后端提供的 REST API 和 WebSocket 接口，用于前后端通信。
+- **AUTH (Authentication CSRF Protection)**：负责用户认证和 CSRF 保护。
+- **ROUTES (Research Routes)**：处理研究相关的路由请求。
+- **STRAT (Strategy Selector 20+ strategies)**：选择研究策略，有 20 多种策略可供选择。
+- **QGEN (Question Generator)**：生成研究问题。
+- **EXEC (Search Executor)**：执行搜索操作。
+- **SYNTH (Report Synthesizer)**：合成研究报告。
+- **LOCAL_LLM (🏠 Local LLMs)**：指代本地部署的大语言模型。
+- **OLLAMA**：Ollama 提供的本地 LLM 服务。
+- **LMSTUDIO**：LM Studio 提供的本地 LLM 服务。
+- **CLOUD_LLM (☁️ Cloud LLMs)**：指代云端部署的大语言模型。
+- **OPENAI**：OpenAI 提供的 LLM 服务。
+- **ANTHROPIC**：Anthropic 提供的 LLM 服务。
+- **GEMINI (Google Gemini)**：Google Gemini 提供的 LLM 服务。
+- **OPENROUTER (100+ models)**：OpenRouter 提供的 LLM 服务，支持 100+ 模型。
+- **LOCAL_SEARCH (🏠 Local Search)**：指代本地部署的搜索引擎。
+- **SEARXNG**：SearXNG 提供的本地搜索引擎。
+- **ELASTIC (Elasticsearch)**：Elasticsearch 提供的本地搜索引擎。
+- **LIBRARY (Document Library)**：文档库，用于本地文档搜索。
+- **WEB_SEARCH (🌐 Web Search)**：指代 Web 搜索引擎。
+- **TAVILY**：Tavily 提供的 Web 搜索引擎。
+- **BRAVE**：Brave 提供的 Web 搜索引擎。
+- **DDG (DuckDuckGo)**：DuckDuckGo 提供的 Web 搜索引擎。
+- **ACADEMIC (📚 Academic)**：指代学术搜索引擎。
+- **ARXIV**：ArXiv 提供的学术搜索引擎。
+- **PUBMED**：PubMed 提供的学术搜索引擎。
+- **SEMANTIC (Semantic Scholar)**：Semantic Scholar 提供的学术搜索引擎。
+- **SQLCIPHER (SQLCipher DB AES-256 Encrypted)**：使用 AES-256 加密的 SQLCipher 数据库。根据 README，每个用户都有自己独立的 SQLCipher 数据库，并使用 AES-256 加密。
+- **VECTORS (Vector Store Embeddings)**：向量存储，用于存储嵌入向量。
+- **FILES (File Storage PDFs & Docs)**：文件存储，用于存储 PDF 和文档。
+- **MD (Markdown)**：Markdown 格式的输出。
+- **PDF (PDF Export)**：PDF 格式的导出。
+- **LATEX**：LaTeX 格式的输出。
+- **QUARTO**：Quarto 格式的输出。
+- **RIS/BibTeX**：RIS/BibTeX 格式的输出。
+
+## 连线、分支与汇聚关系
+- `WEB <--> API`：Web 浏览器与 Flask 后端 API 进行双向通信。
+- `API --> AUTH`：API 请求需要经过身份验证。
+- `AUTH --> ROUTES`：身份验证后，请求被路由到相应的研究路由。
+- `ROUTES --> STRAT`：研究路由选择研究策略。
+- `STRAT --> QGEN`：选择策略后，生成研究问题。
+- `QGEN --> EXEC`：生成问题后，执行搜索。
+- `EXEC <--> OLLAMA & LMSTUDIO`：搜索执行器与本地 LLM 提供商 Ollama 和 LM Studio 进行交互。
+- `EXEC <--> OPENAI & ANTHROPIC & GEMINI & OPENROUTER`：搜索执行器与云端 LLM 提供商 OpenAI、Anthropic、Gemini 和 OpenRouter 进行交互。
+- `EXEC <--> SEARXNG & ELASTIC & LIBRARY`：搜索执行器与本地搜索引擎 SearXNG、Elasticsearch 和 Document Library 进行交互。
+- `EXEC <--> TAVILY & BRAVE & DDG`：搜索执行器与 Web 搜索引擎 Tavily、Brave 和 DuckDuckGo 进行交互。
+- `EXEC <--> ARXIV & PUBMED & SEMANTIC`：搜索执行器与学术搜索引擎 ArXiv、PubMed 和 Semantic Scholar 进行交互。
+- `SYNTH --> SQLCIPHER`：报告合成器将结果存储到 SQLCipher 数据库。
+- `LIBRARY <--> VECTORS`：文档库与向量存储进行双向交互。
+- `LIBRARY <--> FILES`：文档库与文件存储进行双向交互。
+- `SYNTH --> MD & PDF & LATEX & QUARTO & RIS`：报告合成器将结果输出为 Markdown、PDF、LaTeX、Quarto 和 RIS/BibTeX 格式，形成汇聚关系。
+
+## 仓库语境与术语解释
+- **Flask Backend**：根据 `docs/architecture.md`，Flask 后端是系统的主要入口点，负责处理用户请求和提供 API 接口。
+- **SQLCipher**：根据 README，SQLCipher 用于对用户数据进行 AES-256 加密，保证数据安全。
+- **Research Engine**：负责执行研究任务的核心组件，包括策略选择、问题生成、搜索执行和报告合成。
+- **LLM Providers**：提供大语言模型服务的提供商，包括本地 LLM（Ollama、LM Studio）和云端 LLM（OpenAI、Anthropic、Gemini、OpenRouter）。
+- **Search Engines**：提供信息检索服务的搜索引擎，包括本地搜索（SearXNG、Elasticsearch、Document Library）、Web 搜索（Tavily、Brave、DuckDuckGo）和学术搜索（ArXiv、PubMed、Semantic Scholar）。
+- **Strategy Selector**：根据 `src/local_deep_research/advanced_search_system/strategies/base_strategy.py`，用于选择不同的研究策略，以适应不同的研究需求。
+- **REST API + WebSocket**：Flask 后端提供的两种通信方式，REST API 用于传统的请求-响应模式，WebSocket 用于实时更新。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `Local Deep Research` 项目的系统架构。用户通过 Web 浏览器与 Flask 后端交互，后端通过 API 接口进行身份验证和路由。研究引擎根据策略选择器选择研究策略，生成研究问题，并通过搜索执行器与 LLM 提供商和搜索引擎进行交互。最终，报告合成器将结果存储到 SQLCipher 数据库，并输出为 Markdown、PDF 等多种格式。其中，SQLCipher 数据库用于数据加密，LLM 提供商和搜索引擎为研究提供信息检索和语言模型能力。

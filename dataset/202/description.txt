@@ -1,0 +1,40 @@
+## 图类型与用途
+这是一个架构图，展示了 Google Fonts 项目中字体处理相关组件的交互关系，特别是 Rust 语言实现的组件（oxidize 项目）。其整体用途是描述字体编译、排版应用以及读写字体数据等功能模块之间的依赖和数据流向。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是字体编译器和排版应用，中间是字体数据读写模块，底部是通用字体数据类型。数据流从上到下，表示字体处理流程。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表不同的功能模块：
+- **Font Compiler**：字体编译器，负责将字体源文件编译成字体文件。
+- **Typesetting Application**：排版应用程序，这里以 Chrome 浏览器为例，代表需要使用字体的应用程序。
+- **Load outlines and metadata**：负责加载字体的轮廓和元数据，供排版引擎使用。
+- **read**：负责读取字体文件，解析字体数据。
+- **write**：负责将字体数据写入字体文件。
+- **common**：定义了字体相关的通用数据类型，供其他组件使用。
+
+## 节点逐项说明
+- **fontc**：字体编译器，负责将字体源文件编译成字体文件。
+- **Chrome**：排版应用程序，这里以 Chrome 浏览器为例，代表需要使用字体的应用程序。
+- **skrifa**：Rust 库，负责加载字体的轮廓和元数据，供排版引擎使用。根据 README，Skrifa 旨在替代 FreeType，用于查询指标、加载轮廓、自动提示和执行提示。
+- **read-fonts**：Rust 库，负责读取字体文件，解析字体数据。根据 README 和 `text/2024-03-19-safe-subsetting.md`，`read-fonts` 提供对字体数据的零拷贝访问。
+- **write-fonts**：Rust 库，负责将字体数据写入字体文件。根据 README 和 `text/2024-03-19-safe-subsetting.md`，`write-fonts` 提供用于修改的自有类型。
+- **font-types**：Rust 库，定义了字体相关的通用数据类型，供其他组件使用。
+
+## 连线、分支与汇聚关系
+- `fontc -> read-fonts`：字体编译器将编译后的字体数据传递给 `read-fonts`。
+- `fontc -> write-fonts`：字体编译器将编译后的字体数据传递给 `write-fonts`。
+- `Chrome -> skrifa`：排版应用程序使用 `skrifa` 库来加载字体数据。
+- `skrifa -> read-fonts`：`skrifa` 依赖于 `read-fonts` 来读取字体文件中的数据。
+- `write-fonts -> read-fonts`：`write-fonts` 写入的数据又可以被 `read-fonts` 读取，形成一个循环，可能用于字体文件的转换或优化。
+- `read-fonts -> font-types`：`read-fonts` 依赖于 `font-types` 中定义的通用字体数据类型。
+
+## 仓库语境与术语解释
+- **oxidize**：该项目旨在将字体处理流程从 Python/C++ 迁移到 Rust，以提高性能和安全性。
+- **fontc**：根据 README，`fontc` 旨在替代 `fontmake`，作为字体编译器。
+- **skrifa**：根据 README，Skrifa 旨在替代 FreeType，用于查询指标、加载轮廓、自动提示和执行提示。
+- **read-fonts** 和 **write-fonts**：根据 `text/2024-03-19-safe-subsetting.md`，这两个 crate 分别提供零拷贝读取和自有类型写入功能，以实现内存安全。
+- **font-types**：根据 `text/0003-font-types.md`，该 crate 旨在提供通用的字体数据类型，并支持 no-std 环境。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该架构图描述了字体处理流程，从字体编译到排版应用。字体编译器 `fontc` 将编译后的数据传递给 `read-fonts` 和 `write-fonts` 进行读写操作。排版应用程序 `Chrome` 通过 `skrifa` 库加载字体数据。`read-fonts` 依赖于 `font-types` 中定义的通用字体数据类型。该图体现了 oxidize 项目使用 Rust 提高字体处理性能和安全性的目标，其中 `read-fonts` 和 `write-fonts` 提供了内存安全的读写操作。

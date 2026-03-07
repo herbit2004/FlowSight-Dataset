@@ -1,0 +1,25 @@
+flowchart TD
+    Start[Client Request] --> Process[Process Request]
+    Process --> Hybrid[Hybrid Matcher]
+
+    subgraph "Primary: Semantic Routing"
+        Hybrid --> Semantic[Semantic Matcher]
+        Semantic --> Embeddings[Query Embeddings]
+        Embeddings --> Tools[Tool Embeddings]
+        Tools --> Compare[Compare via Cosine Similarity]
+        Compare --> Score[Score & Rank Tools]
+        Score --> Confidence{High Confidence?}
+    end
+
+    Confidence -->|Yes| Registry[Tool Registry]
+
+    subgraph "Fallback: Sequential Thinking"
+        Confidence -->|No| Sequential[Sequential Thinking]
+        Sequential --> LLM[LLM Analysis]
+        LLM --> ThoughtChain[Thought Chain]
+        ThoughtChain --> Extraction[Extract Tool Name]
+        Extraction --> Registry
+    end
+
+    Registry --> Executor[Execute Tool]
+    Executor --> Response[Return Response]

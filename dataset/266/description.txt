@@ -1,0 +1,39 @@
+## 图类型与用途
+这是一个流程图，描述了Neva编程语言的编译过程，从源代码到生成机器码或WebAssembly代码。该图在仓库中用于展示Neva编译器的架构。
+
+## 图的整体布局
+图采用从左到右的布局。从左侧的`source_code`开始，经过`compiler`的内部处理，最终生成`machine_code`或`wasm`。
+
+## 分组/子图/阶段说明
+图中有一个名为`compiler`的子图，它内部包含了`parser`、`analyzer`和`backend`三个阶段。
+
+## 节点逐项说明
+- **source_code**：Neva编程语言的源代码，是编译过程的起点。
+- **compiler**：Neva编译器，负责将源代码转换为可执行代码。
+- **parser**：编译器的一部分，负责将源代码解析成抽象语法树或其他中间表示形式。根据`internal/compiler/parser/parser.go`，该组件使用ANTLR4生成。
+- **analyzer**：编译器的一部分，负责对解析后的代码进行语义分析，例如类型检查、变量绑定等。根据`internal/compiler/analyzer/analyzer.go`，该组件执行静态语义分析。
+- **backend**：编译器的一部分，负责将分析后的代码转换为目标代码。
+- **go_code**：编译器后端生成的Go语言代码。
+- **go_compiler**：Go语言的编译器，将Go代码编译成机器码或WebAssembly代码。
+- **machine_code**：直接在计算机硬件上执行的二进制代码。
+- **wasm**：WebAssembly代码，一种可以在Web浏览器或其他环境中运行的二进制指令格式。
+
+## 连线、分支与汇聚关系
+- `source_code -> compiler`：源代码被传递给编译器。
+- `compiler -> go_code`：编译器将源代码编译成Go代码。
+- `go_code -> go_compiler`：Go代码被传递给Go编译器。
+- `go_compiler -> machine_code`：Go编译器将Go代码编译成机器码。
+- `go_compiler -> wasm`：Go编译器将Go代码编译成WebAssembly代码。
+- `parser -> analyzer -> backend`：编译器内部依次经过解析、分析和后端处理三个阶段。
+
+## 仓库语境与术语解释
+- **Neva**: 一种静态类型的、编译型的数据流编程语言，详情见 README.md。
+- **Compiler**: Neva编译器，负责将Neva代码编译成Go代码，然后由Go编译器编译成机器码或WebAssembly。
+- **Parser**: 编译器前端，负责将Neva源代码解析成抽象语法树（AST）。
+- **Analyzer**: 编译器中端，负责对AST进行语义分析和类型检查。
+- **Backend**: 编译器后端，负责将分析后的代码转换为目标代码，例如Go代码。
+- **Go**: 一种编程语言，Neva编译器将Neva代码转换为Go代码，然后使用Go编译器生成最终的可执行文件。
+- **WebAssembly (WASM)**: 一种可以在Web浏览器或其他环境中运行的二进制指令格式。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了Neva编程语言的编译流程。源代码首先被传递给Neva编译器，编译器内部依次经过parser、analyzer和backend处理。编译器将Neva代码转换成Go代码，然后Go编译器将Go代码编译成机器码或WebAssembly代码。最终生成的可执行文件可以是机器码或WebAssembly格式。该流程依赖Go编译器生成最终可执行代码，简化了Neva编译器的开发工作。

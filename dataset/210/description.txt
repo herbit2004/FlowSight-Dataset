@@ -1,0 +1,46 @@
+## 图类型与用途
+这是一个架构图，展示了 Cosmian KMS 服务器与其关键依赖组件之间的关系。它旨在从顶层概括 Cosmian KMS 的内部结构，以及各组件之间的交互方式。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是核心组件 `server`，中间层是访问控制、HSM 抽象和数据库，底部是具体的 HSM 实现。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：核心服务器、中间层支撑组件、底层 HSM 实现。
+
+## 节点逐项说明
+- **server**：KMS 的核心组件，负责处理密钥管理请求和其他操作。
+- **access**：服务器的访问控制层，负责验证和授权用户对 KMS 资源的访问。
+- **base_hsm**：代表硬件安全模块 (HSM) 的抽象层，用于安全地存储和管理加密密钥。`crate/hsm/base_hsm/src/base_hsm.rs` 中定义了 `BaseHsm` 结构体，用于管理 HSM 连接。
+- **server_database**：KMS 使用的数据库，用于存储密钥元数据、配置信息和其他持久化数据。
+- **hsm_loaders**：负责加载和初始化各种类型的 HSM 驱动程序。
+- **smartcardhsm, crypt2pay, proteccio, softhsm2, utimaco, other**：具体的 HSM 实现或驱动程序，代表 KMS 支持的各种 HSM 硬件或软件。README 中提到支持 "CardContact SmartCard, Nitrokey HSM 2, Proteccio, Crypt2pay, Utimaco and other HSMs"。
+- **kmip**：表示 KMS 支持的密钥管理互操作性协议，用于与其他系统进行密钥交换和管理。
+- **crypto**：表示 KMS 内部的加密模块，用于执行加密和解密操作。
+- **interfaces**：表示 KMS 提供的各种接口，例如 API 或 CLI，用于与外部系统进行交互。`crate/interfaces/src/hsm/interface.rs` 定义了 HSM 的接口。
+
+## 连线、分支与汇聚关系
+- `server -> access`：服务器依赖于访问控制层进行身份验证和授权。
+- `server -> base_hsm`：服务器使用基础 HSM 抽象层来与底层 HSM 交互。
+- `server -> server_database`：服务器使用数据库来存储和检索密钥元数据和其他信息。
+- `base_hsm -> hsm_loaders`：基础 HSM 抽象层依赖于 HSM 加载器来加载具体的 HSM 驱动程序。
+- `hsm_loaders -> smartcardhsm`：HSM 加载器加载 smartcardhsm 驱动程序。
+- `hsm_loaders -> crypt2pay`：HSM 加载器加载 crypt2pay 驱动程序。
+- `hsm_loaders -> proteccio`：HSM 加载器加载 proteccio 驱动程序。
+- `hsm_loaders -> softhsm2`：HSM 加载器加载 softhsm2 驱动程序。
+- `hsm_loaders -> utimaco`：HSM 加载器加载 utimaco 驱动程序。
+- `hsm_loaders -> other`：HSM 加载器加载其他 HSM 驱动程序。
+- `server_database -> kmip`：数据库存储与 KMIP 协议相关的信息。
+- `server_database -> crypto`：数据库存储与加密操作相关的信息。
+- `server_database -> interfaces`：数据库存储与 KMS 接口相关的信息。
+
+## 仓库语境与术语解释
+- **KMS (Key Management System)**：Cosmian KMS 是一个高性能、源码可用的 FIPS 140-3 兼容的服务器应用程序，用于管理密钥的生命周期和提供加密服务。
+- **HSM (Hardware Security Module)**：硬件安全模块，用于安全地存储和管理加密密钥。Cosmian KMS 支持多种 HSM，例如 Utimaco、SmartCard-HSM、Proteccio、Crypt2pay 等。
+- **KMIP (Key Management Interoperability Protocol)**：密钥管理互操作性协议，用于与其他系统进行密钥交换和管理。Cosmian KMS 支持 KMIP 1.0-2.1。`crate/kmip/src/kmip_1_4/kmip_messages.rs` 定义了 KMIP 消息结构。
+- **FIPS 140-3**：美国联邦信息处理标准，定义了加密模块的安全要求。Cosmian KMS 默认以 FIPS 140-3 模式运行。
+- **Access Control**：访问控制层，负责验证和授权用户对 KMS 资源的访问。
+- **Cosmian CLI**：Cosmian 提供的命令行界面工具，用于与 KMS 进行交互。README 中提到可以使用 `cosmian` CLI 工具来创建密钥、加密文件和解密文件。
+- **crate/crypto**：该目录包含了 KMS 内部的加密模块，用于执行加密和解密操作。`crate/crypto/src/crypto/mod.rs` 定义了加密系统的接口。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+这张图展示了 Cosmian KMS 的架构，核心是 `server` 组件，它通过 `access` 组件进行访问控制，通过 `base_hsm` 组件与各种 HSM（如 `smartcardhsm`、`crypt2pay` 等）进行交互，并将数据存储在 `server_database` 中。`hsm_loaders` 负责加载不同的 HSM 驱动程序，使得 KMS 可以支持多种 HSM 硬件或软件。KMS 支持 KMIP 协议，并提供了 API 和 CLI 等接口。Cosmian KMS 作为一个密钥管理系统，旨在提供高性能和安全的密钥管理服务。

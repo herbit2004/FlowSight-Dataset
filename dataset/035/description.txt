@@ -1,0 +1,39 @@
+## 图类型与用途
+这是一个架构图，展示了 Proton Authenticator iOS 应用的模块化架构，采用了分层（Clean Architecture）方法。它描述了应用的主要模块/层及其依赖关系，用于概览项目结构。
+
+## 图的整体布局
+图整体采用从上到下的布局，展示了不同层之间的依赖关系。顶层是表示层，底层是模型层和共享模块，数据流向从上到下。
+
+## 分组/子图/阶段说明
+图中包含五个显式子图，分别对应五个主要的模块/层：Models Package（模型层）、Domain Package（领域层）、Data Package（数据层）、Presentation Package（表示层）和 Shared Modules（共享模块）。
+
+## 节点逐项说明
+- **E[Models]**：模型层，包含核心领域模型（数据结构）。根据 README，它定义了应用中使用的数据类型，应该是由简单、与框架无关的不可变值类型（structs）组成。
+- **D1[Repository Protocols]**：领域层的仓库协议，定义了数据访问的接口。根据 README，它定义了数据操作的接口，而不指定具体实现，领域层不应感知网络、持久化等细节。
+- **D2[Use Cases / Interactors]**：领域层的用例，包含具体的业务逻辑。根据 README，它封装了特定的业务操作，并协调各个仓库或领域服务的工作。
+- **DA[Repository Implementations]**：数据层的仓库实现，实现了领域层定义的仓库协议。根据 README，它负责数据如何被获取、存储或更新，可能会与 REST API、数据库或其他外部服务交互。
+- **DB[Networking / Persistence]**：数据层的网络和持久化模块，负责与外部数据源（如 API 和数据库）进行交互。
+- **P1[Views]**：表示层的视图，负责展示用户界面。根据 README，它通常是 SwiftUI views 或 UIKit view controllers。
+- **P2[View Models]**：表示层的视图模型，负责处理视图的逻辑，并为视图提供数据。根据 README，它将 UI 绑定到下层的领域逻辑，调用领域层的用例，并处理视图的状态更新。
+- **S1[Common Utilities]**：共享模块，包含通用的工具类和辅助函数，供所有其他模块使用。根据 README，它提供跨多个包的扩展和实用功能，例如 String、Date 扩展。
+
+## 连线、分支与汇聚关系
+- `D1 --> E`：领域层的仓库协议依赖于模型层，即仓库协议需要使用模型层定义的数据类型。
+- `D2 --> D1`：用例依赖于仓库协议，即用例需要通过仓库协议来访问数据。
+- `DA --> D1`：数据层的仓库实现依赖于领域层的仓库协议，即数据层需要实现领域层定义的接口。
+- `DA --> DB`：数据层的仓库实现依赖于网络和持久化模块，即数据层需要通过网络和持久化模块来访问外部数据源。
+- `P2 --> D2`：表示层的视图模型依赖于领域层的用例，即视图模型需要通过用例来执行业务逻辑。
+- `P1 --> P2`：视图依赖于视图模型，即视图需要从视图模型获取数据并展示。
+- `D1 & D2 & DA & P1 & P2 --> S1`：所有层都可以使用共享模块提供的通用工具类，形成汇聚关系。
+
+## 仓库语境与术语解释
+- **Clean Architecture**：一种软件设计哲学，旨在通过分层来解耦不同的模块，提高代码的可维护性和可测试性。
+- **Models Package**：包含应用的核心数据模型，定义了应用中使用的数据类型。对应 `LocalPackages/Models/Package.swift`。
+- **Domain Package**：包含应用的业务逻辑，独立于外部框架和数据源。对应 `LocalPackages/DomainLayer/Package.swift`。
+- **Data Package**：包含数据操作的具体实现，负责数据的获取、存储和更新。对应 `LocalPackages/DataLayer/Package.swift`。
+- **Presentation Package**：管理与 UI 相关的所有内容，包括视图、视图模型和表示逻辑。对应 `LocalPackages/PresentationLayer/Package.swift`。
+- **Common Utilities**：提供跨多个包的扩展和实用功能。对应 `LocalPackages/CommonUtilities/Package.swift`。
+- **Swift Package Manager**：该项目使用的依赖管理工具。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Proton Authenticator iOS 应用的 Clean Architecture 分层结构。从模型层（Models）开始，领域层（Domain）定义了业务逻辑和数据访问接口，数据层（Data）负责具体的数据访问实现，表示层（Presentation）负责 UI 展示。所有层都依赖于共享模块（Common Utilities）。核心数据流是从视图（Views）到视图模型（View Models），再到用例（Use Cases），最终通过仓库实现（Repository Implementations）访问数据。这种分层结构旨在提高代码的可维护性和可测试性。

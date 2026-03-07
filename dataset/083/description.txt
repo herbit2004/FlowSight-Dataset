@@ -1,0 +1,41 @@
+## 图类型与用途
+这是一个流程图，描述了 Cilium PolicyPilot 如何将网络流量转化为 CiliumNetworkPolicies。它展示了从 Kubernetes 集群收集流量数据，到生成策略 YAML 和 HTML 报告的整个过程。
+
+## 图的整体布局
+图采用从左到右的布局。左侧是 Kubernetes 集群，中间是 PolicyPilot 工具，右侧是输出结果。整体流程从集群内的网络流量开始，经过 PolicyPilot 的处理，最终生成策略文件和报告。
+
+## 分组/子图/阶段说明
+图中包含三个子图/分组：Kubernetes Cluster、PolicyPilot 和 Output。
+- **Kubernetes Cluster**：代表运行 Cilium 的 Kubernetes 集群环境，是流量的源头。
+- **PolicyPilot**：代表 PolicyPilot 工具本身，包含 CLI 工具和处理引擎，负责策略的生成和验证。
+- **Output**：代表 PolicyPilot 的输出结果，包括策略 YAML 文件和 HTML 报告。
+
+## 节点逐项说明
+- **Kubernetes Pods with Cilium**：代表集群中运行的 Pod，这些 Pod 使用 Cilium 进行网络策略管理。
+- **Cilium eBPF Dataplane**：代表 Cilium 的 eBPF 数据平面，负责实际的网络策略执行和流量控制。
+- **Hubble Observability**：代表 Hubble，Cilium 的可观测性工具，用于收集网络流量数据。
+- **CLI Tool**：代表 PolicyPilot 的命令行界面，用户通过它与 PolicyPilot 交互。根据 README，用户可以通过 CLI 工具执行 learn, propose, verify, explain 等命令。
+- **Processing Engine**：代表 PolicyPilot 的核心处理逻辑，负责从 Hubble 数据中学习，生成和验证网络策略。
+- **Policies YAML**：代表生成的 CiliumNetworkPolicies 的 YAML 文件。根据 README，该文件包含了生成的策略，可以被应用到 Kubernetes 集群。
+- **HTML Report**：代表生成的 HTML 格式的报告，包含网络图和统计信息。根据 README，该报告包含统计信息仪表盘、交互式的 Mermaid 网络图、策略列表以及命名空间和协议徽章。
+
+## 连线、分支与汇聚关系
+- `Kubernetes Pods with Cilium -> Cilium eBPF Dataplane`：Kubernetes Pods 通过 Cilium 进行网络通信，产生网络流量。
+- `Cilium eBPF Dataplane -> Hubble Observability`：Cilium 将网络流量数据发送给 Hubble 进行监控和记录。
+- `Hubble Observability -> CLI Tool`：Hubble 将收集到的流量数据导出为 JSON 格式。
+- `CLI Tool -> Processing Engine`：PolicyPilot 的 CLI 工具读取 Hubble 导出的 JSON 数据，并将其传递给处理引擎。
+- `Processing Engine -> Policies YAML`：处理引擎根据流量数据生成 CiliumNetworkPolicies 的 YAML 文件。
+- `Processing Engine -> HTML Report`：处理引擎同时生成包含网络图和统计信息的 HTML 报告。
+- `Policies YAML -.-> Kubernetes Pods with Cilium`：生成的 YAML 策略文件可以被应用到 Kubernetes 集群，从而控制 Pod 之间的网络流量。（虚线箭头表示这是一个可选步骤，即策略的应用）
+
+## 仓库语境与术语解释
+- **CiliumNetworkPolicies**：Cilium 的网络策略，用于控制 Kubernetes 集群中的网络流量。PolicyPilot 的目标是生成这些策略。
+- **Hubble**：Cilium 的可观测性工具，用于收集和监控网络流量数据。PolicyPilot 使用 Hubble 的数据来学习和生成网络策略。
+- **eBPF Dataplane**：Cilium 使用 eBPF 技术来实现高性能的网络策略执行和流量控制。
+- **CLI Tool (cpp)**：PolicyPilot 的命令行界面，通过 `cmd/cpp/main.go` 实现，允许用户执行 learn, propose, verify, explain 等命令。
+- **Policies YAML (out/policy.yaml)**：PolicyPilot 生成的 CiliumNetworkPolicies 的 YAML 文件，存储在 `out/policy.yaml`，包含了策略的具体定义。
+- **HTML Report (out/report.html)**：PolicyPilot 生成的 HTML 报告，存储在 `out/report.html`，包含了网络图和统计信息，帮助用户理解策略的影响。
+- **Flows JSON (out/flows.json)**：包含 Hubble flow 数据的 JSON 文件，作为 PolicyPilot 的输入。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Cilium PolicyPilot 的工作流程，从 Kubernetes Pods 产生网络流量开始，流量数据被 Cilium eBPF Dataplane 收集并发送给 Hubble Observability。Hubble 将数据导出为 JSON 格式，PolicyPilot 的 CLI 工具读取这些数据，并将其传递给 Processing Engine。Processing Engine 生成 CiliumNetworkPolicies 的 YAML 文件和 HTML 报告。生成的 YAML 策略可以被应用回 Kubernetes 集群，从而控制 Pod 之间的网络流量。PolicyPilot 通过分析 Hubble flows 生成最小权限的 CiliumNetworkPolicies，并生成包含网络图和统计信息的 HTML 报告。

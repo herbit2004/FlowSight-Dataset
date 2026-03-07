@@ -1,0 +1,20 @@
+flowchart LR
+  checker[Checker service]
+  manager[Manager service]
+  sheet[Google Sheet]
+  client[Typerighter client]
+  s3[(typerighter-rules.json)]
+  db[(Postgres DB)]
+  owner{{Rule owner role}}
+  user{{Rule user role}}
+
+  sheet--"Get rules"-->manager
+  manager--"Write rules"-->db
+  db--"Read rules"--> manager
+  manager--"Write rule artefact"-->s3
+  checker--"Read rule artefact"-->s3
+  client--"Request matches"-->checker
+
+  owner-."Force manager to re-fetch sheet".->manager
+  user-."Request document check".->client
+  owner-."Edit rules".->sheet

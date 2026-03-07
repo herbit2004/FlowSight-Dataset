@@ -1,0 +1,40 @@
+## 图类型与用途
+这是一个架构图，展示了 `jcode` 项目中工具注册表（Tool Registry）与各种工具集之间的关系。它描述了工具的组织结构，以及如何从中心注册表访问和使用不同的工具。该图位于 `README.md` 的 Architecture 部分，用于概览 jcode 的工具架构。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是中心节点 Tool Registry，底部是各种工具集。箭头方向表示工具集中的工具都注册在 Tool Registry 中，可以通过 Tool Registry 进行访问和管理。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为中心注册表和多个工具集两个阶段。
+
+## 节点逐项说明
+- **Tool Registry**：中心节点，表示一个工具注册表，类型为 `Arc<RwLock<HashMap<String, Arc<dyn Tool>>>>`，是一个线程安全的哈希表，用于存储所有可用的工具。每个工具都通过其名称（String）进行索引，并存储为 `Arc<dyn Tool>`，这意味着工具可以被多个地方安全地共享。
+- **File Tools**：包含用于文件操作的工具，例如 `read`、`write`、`edit`、`multiedit`、`patch`。这些工具对应 `src/tool/mod.rs` 中 `read.rs`、`write.rs`、`edit.rs` 等文件。
+- **Search & Nav**：包含用于搜索和导航代码库的工具，例如 `glob`、`grep`、`ls`、`codesearch`。
+- **Execution**：包含用于执行命令的工具，例如 `bash`、`task`、`batch`、`bg`。
+- **Web**：包含用于网络操作的工具，例如 `webfetch`、`websearch`。`webfetch` 工具对应 `src/tool/webfetch.rs` 文件。
+- **Memory & RAG**：包含用于记忆和检索的工具，例如 `remember`、`session_search`、`conversation_search`。RAG 通常指 Retrieval-Augmented Generation，即检索增强生成。
+- **Meta & Control**：包含用于元数据管理和控制的工具，例如 `todo`、`skill`、`communicate`、`mcp`、`selfdev`。
+- **MCP Tools**：包含通过 Mod Control Protocol 动态注册的工具，这些工具来自外部服务器。
+
+## 连线、分支与汇聚关系
+- `Registry -> FileTools`：表示 File Tools 中的工具注册在 Tool Registry 中。
+- `Registry -> SearchTools`：表示 Search & Nav 中的工具注册在 Tool Registry 中。
+- `Registry -> ExecTools`：表示 Execution 中的工具注册在 Tool Registry 中。
+- `Registry -> WebTools`：表示 Web 中的工具注册在 Tool Registry 中。
+- `Registry -> MemTools`：表示 Memory & RAG 中的工具注册在 Tool Registry 中。
+- `Registry -> MetaTools`：表示 Meta & Control 中的工具注册在 Tool Registry 中。
+- `Registry -> MCPTools`：表示 MCP Tools 中的工具注册在 Tool Registry 中。
+
+## 仓库语境与术语解释
+- **Tool Registry**：充当一个中心化的工具管理中心，如 `README.md` 的 Architecture 部分所述。
+- **File Tools**：提供文件操作相关功能，例如读取、写入、编辑文件。
+- **MCP (Mod Control Protocol)**：用于动态注册来自外部服务器的工具，相关代码位于 `src/mcp/` 目录下。
+- **RAG (Retrieval-Augmented Generation)**：一种检索增强生成技术，用于提升 AI 模型的生成质量。
+- **`read` tool**: 用于读取文件内容，对应 `src/tool/read.rs` 文件。
+- **`write` tool**: 用于写入文件内容，对应 `src/tool/write.rs` 文件。
+- **`edit` tool**: 用于编辑文件内容，对应 `src/tool/edit.rs` 文件。
+- **`webfetch` tool**: 用于从 URL 获取内容，对应 `src/tool/webfetch.rs` 文件。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `jcode` 项目的工具架构，核心是 Tool Registry，它充当一个中心化的工具管理中心。各种工具集（文件、搜索、执行、网络、内存、元数据和 MCP 工具）都注册到 Tool Registry 中，从而可以通过 Tool Registry 进行访问和管理。其中，File Tools 提供了文件读写编辑等功能，MCP Tools 支持动态注册外部工具。该架构体现了 jcode 工具的可扩展性和中心化管理。

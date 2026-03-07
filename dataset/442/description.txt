@@ -1,0 +1,39 @@
+## 图类型与用途
+这是一个流程图，描述了代码变更如何通过 CI/CD 流水线部署到系统中的多个应用程序（App）。它在仓库中的作用是展示代码从开发到部署的自动化流程。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是代码仓库，中间是 CI/CD 流水线，右侧是最终运行的系统。
+
+## 分组/子图/阶段说明
+图中包含两个显式子图：
+- **App 1 Pipelines**：代表应用程序 1 的 CI/CD 流水线，包含基础设施流水线和代码流水线。
+- **App 2 Pipelines**：代表应用程序 2 的 CI/CD 流水线，包含基础设施流水线和代码流水线。
+
+## 节点逐项说明
+- **Working Copy 1/2/3**：开发人员本地的工作副本，用于进行代码修改。
+- **Mainstream**：代码主干，通常是 Git 仓库的 `main` 或 `master` 分支，代表稳定版本的代码。
+- **Infrastructure Pipeline**：基础设施流水线，负责配置和管理应用程序运行所需的基础设施。
+- **Code Pipeline**：代码流水线，负责构建、测试和部署应用程序的代码。
+- **App 1/App 2**：分别代表应用程序 1 和应用程序 2，是最终部署并运行的应用程序。
+
+## 连线、分支与汇聚关系
+- `Working Copy 1 -> Mainstream`：开发人员将代码修改合并到主干。
+- `Working Copy 2 -> Mainstream`：开发人员将代码修改合并到主干。
+- `Working Copy 3 -> Mainstream`：开发人员将代码修改合并到主干。
+- `Mainstream -- App 1 Infrastructure Trigger --> App 1 Infrastructure Pipeline`：主干的代码变更触发应用程序 1 的基础设施流水线。
+- `Mainstream -- App 1 Code Trigger --> App 1 Code Pipeline`：主干的代码变更触发应用程序 1 的代码流水线。
+- `Mainstream -- App 2 Infrastructure Trigger --> App 2 Infrastructure Pipeline`：主干的代码变更触发应用程序 2 的基础设施流水线。
+- `Mainstream -- App 2 Code Trigger --> App 2 Code Pipeline`：主干的代码变更触发应用程序 2 的代码流水线。
+- `App 1 Infrastructure Pipeline -> App 1`：应用程序 1 的基础设施流水线部署应用程序 1。
+- `App 1 Code Pipeline -> App 1`：应用程序 1 的代码流水线部署应用程序 1，与基础设施流水线形成汇聚关系。
+- `App 2 Infrastructure Pipeline -> App 2`：应用程序 2 的基础设施流水线部署应用程序 2。
+- `App 2 Code Pipeline -> App 2`：应用程序 2 的代码流水线部署应用程序 2，与基础设施流水线形成汇聚关系。
+
+## 仓库语境与术语解释
+- **CI/CD**：持续集成/持续部署，是一种软件开发实践，旨在自动化构建、测试和部署应用程序的过程。
+- **Pipeline**：流水线，代表 CI/CD 流水线，用于自动化构建、测试和部署应用程序。
+- **Mainstream**：代码主干，通常是 Git 仓库的 `main` 或 `master` 分支，代表稳定版本的代码。
+- **Infrastructure as Code (IaC)**：在 README 中提到，基础设施即代码，指使用代码来管理和配置基础设施。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了代码从开发到部署的自动化流程。开发人员在各自的工作副本中进行代码修改，然后将修改合并到主干。主干的代码变更会触发相应的流水线，包括基础设施流水线和代码流水线。流水线负责构建、测试和部署应用程序。针对不同的应用程序，有独立的流水线，保证了各个应用程序的独立性和可维护性。整个流程实现了代码变更到应用程序部署的自动化，加速了软件交付过程。

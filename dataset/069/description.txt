@@ -1,0 +1,38 @@
+## 图类型与用途
+这是一个流程图，描述了 `claude-relay` 如何将浏览器客户端与本地运行的 Claude Code 进程连接，并实现实时流传输和推送通知。它在仓库中的作用是展示整体架构和数据流。
+
+## 图的整体布局
+图采用从左到右的布局。左侧是用户浏览器，中间是服务器和项目上下文，右侧是 Claude Code 进程和推送服务。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：客户端连接、服务器端处理、以及 Claude Code 交互与通知。
+
+## 节点逐项说明
+- **Browser (Phone / Desktop)**：用户的浏览器，可以是手机或桌面电脑上的浏览器，作为用户与 Claude Code 交互的界面。
+- **WebSocket (WS)**：WebSocket 连接，用于在浏览器和服务器之间建立持久的双向通信通道，实现实时数据传输。
+- **HTTP Server lib/server.js**：`claude-relay` 的 HTTP 服务器，负责处理 WebSocket 连接请求，并管理项目上下文。`lib/server.js` 指出该服务器的实现位于项目代码的 `lib/server.js` 文件中。
+- **Project Context lib/project.js**：项目上下文，负责管理 Claude Code 项目的状态，例如文件、会话等。`lib/project.js` 指出该组件的实现位于项目代码的 `lib/project.js` 文件中。
+- **Claude Agent SDK**：Claude Agent SDK，用于与本地运行的 Claude Code 进程进行交互。
+- **Claude Code Process**：本地运行的 Claude Code 进程，是实际执行代码编辑和执行的程序。
+- **Push Service**：推送服务，用于向浏览器发送通知，例如需要用户批准的请求。
+
+## 连线、分支与汇聚关系
+- `Browser <--> WebSocket`：浏览器通过 WebSocket 连接与服务器建立实时通信，实现实时流传输。
+- `WebSocket <--> HTTP Server`：WebSocket 连接由 HTTP 服务器管理。
+- `HTTP Server --> Project Context`：服务器根据 URL 中的 slug 路由到对应的项目上下文。
+- `Project Context <--> Claude Agent SDK`：项目上下文通过 Claude Agent SDK 与 Claude Code 进程进行异步迭代式的交互。
+- `Claude Agent SDK <--> Claude Code Process`：Claude Agent SDK 与 Claude Code 进程之间进行 Prompt (提示) 和 Response (响应) 的交互。
+- `Project Context --> Push Service`：当 Claude Code 进程需要用户批准时，项目上下文会向推送服务发送请求。
+- `Push Service --> Browser`：推送服务向浏览器发送通知，提醒用户进行操作。
+
+## 仓库语境与术语解释
+- **Claude Code**：一个本地运行的代码编辑和执行程序，`claude-relay` 旨在通过 Web UI 使其可以远程访问。
+- **WebSocket**：一种在客户端和服务器之间提供全双工通信通道的协议，用于实现实时数据传输。
+- **HTTP Server (lib/server.js)**：负责处理 WebSocket 连接，并根据 URL 中的 slug 路由到对应的项目上下文，其实现位于 `lib/server.js`。
+- **Project Context (lib/project.js)**：管理 Claude Code 项目的状态，例如文件、会话等，其实现位于 `lib/project.js`。
+- **Claude Agent SDK**：用于与本地运行的 Claude Code 进程进行交互，`lib/sdk-bridge.js` 中有相关实现。
+- **Push Service**：用于向浏览器发送通知，例如需要用户批准的请求，相关逻辑在 `lib/push.js` 和 `lib/public/modules/notifications.js` 中。
+- **Slug Routing**：HTTP Server 根据 URL 中的 slug 路由到对应的项目上下文。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `claude-relay` 的核心架构，从浏览器客户端发起，通过 WebSocket 连接到 HTTP Server，服务器根据 slug 路由到 Project Context，再通过 Claude Agent SDK 与本地 Claude Code 进程进行交互。当需要用户批准时，Project Context 会向 Push Service 发送请求，最终 Push Service 向浏览器发送通知。整体流程实现了 Claude Code 进程的远程访问和控制，以及实时流传输和推送通知。

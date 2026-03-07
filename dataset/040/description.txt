@@ -1,0 +1,56 @@
+## 图类型与用途
+这是一个架构图，展示了 NestJS Monorepo 模板的整体架构，特别是应用层（`apps/`）和服务层（`libs/`）的组件以及它们之间的依赖关系。该图在 README.md 中作为架构概览，帮助开发者理解项目结构和模块间的关系。
+
+## 图的整体布局
+图采用从上到下的布局，分为三个主要部分：根目录、应用层和服务层。应用层位于顶部，服务层位于底部，展示了应用层对服务层的依赖关系。
+
+## 分组/子图/阶段说明
+图中包含两个子图：
+- **Apps (apps/ (Independent Services))**：代表应用层，包含多个独立的微服务应用。
+- **Libs (libs/ (Shared Libraries))**：代表服务层，包含多个共享库。
+
+## 节点逐项说明
+- **Root (nestjs-monorepo-template/)**：代表整个 Monorepo 的根目录。
+- **API (api-server)**：主 REST API 服务器，监听 3001 端口，提供 REST API、数据验证和 Swagger 文档。
+- **Worker (worker)**：后台服务，没有 HTTP 服务器，用于执行定时任务和队列任务。
+- **WS (websocket-service)**：WebSocket 服务，监听 3002 端口，提供实时 Socket.IO 连接和事件广播。
+- **Admin (admin)**：管理后台，监听 3003 端口，提供管理面板和 Swagger 文档。
+- **DB (db/)**：数据库抽象层，支持 MongoDB、PostgreSQL 和 MySQL，可以通过环境变量自动切换。
+- **Config (configuration/)**：环境配置，提供类型安全和验证的集中式配置管理。
+- **Common (common/)**：实用工具库，包含日志、错误处理、过滤器和可重用服务。
+- **Security (security/)**：安全中间件，包含 Helmet、速率限制、压缩和日志记录。
+- **Swagger (swagger/)**：API 文档，提供 OpenAPI 和交互式 UI，支持开发和生产环境。
+- **Cache**：图中可见，但仓库上下文未进一步说明。
+
+## 连线、分支与汇聚关系
+- `API --> DB`：API 服务使用数据库抽象层。
+- `API --> Config`：API 服务使用配置管理。
+- `API --> Common`：API 服务使用通用工具库。
+- `API --> Security`：API 服务使用安全中间件。
+- `API --> Swagger`：API 服务使用 Swagger 文档。
+- `API --> Cache`：API 服务使用缓存服务。
+- `Worker --> DB`：Worker 服务使用数据库抽象层。
+- `Worker --> Config`：Worker 服务使用配置管理。
+- `Worker --> Common`：Worker 服务使用通用工具库。
+- `Worker --> Cache`：Worker 服务使用缓存服务。
+- `WS --> DB`：WebSocket 服务使用数据库抽象层。
+- `WS --> Config`：WebSocket 服务使用配置管理。
+- `WS --> Common`：WebSocket 服务使用通用工具库。
+- `Admin --> DB`：Admin 服务使用数据库抽象层。
+- `Admin --> Config`：Admin 服务使用配置管理。
+- `Admin --> Common`：Admin 服务使用通用工具库。
+- `Admin --> Security`：Admin 服务使用安全中间件。
+- `Admin --> Swagger`：Admin 服务使用 Swagger 文档。
+
+## 仓库语境与术语解释
+- **Monorepo**：指在一个代码仓库中管理多个项目。
+- **Microservices Architecture**：一种将应用程序构建为一组小型、自治的服务的方法。
+- **NestJS**：一个用于构建高效、可扩展的 Node.js 服务器端应用程序的框架。
+- **apps/**：包含独立的微服务应用的目录，例如 `api-server`、`worker`、`websocket-service` 和 `admin`。
+- **libs/**：包含共享库的目录，例如 `db`、`configuration`、`common`、`security` 和 `swagger`。
+- **Database Abstraction (db/)**：一个共享库，允许在 MongoDB、PostgreSQL 和 MySQL 之间切换，而无需修改应用程序代码。
+- **Configuration Management (configuration/)**：一个共享库，提供类型安全和验证的集中式配置管理。
+- **Security Middleware (security/)**：一个共享库，提供安全中间件，例如 Helmet、速率限制和压缩。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 NestJS Monorepo 模板的架构，根目录包含应用层（`apps/`）和服务层（`libs/`）。应用层包含 `api-server`、`worker`、`websocket-service` 和 `admin` 四个独立服务，它们分别使用服务层的 `db`、`config`、`common`、`security` 和 `swagger` 等共享库。该架构采用微服务架构，通过共享库实现代码重用和数据库抽象，支持 MongoDB、PostgreSQL 和 MySQL 数据库的切换。`api-server` 监听 3001 端口，提供 REST API 和 Swagger 文档，而 `worker` 作为后台服务没有 HTTP 服务器。

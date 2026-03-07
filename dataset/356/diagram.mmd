@@ -1,0 +1,47 @@
+graph TD
+    %% Phase 1: Setup
+    subgraph Setup [1. Setup Phase]
+        Start([Start]) --> Init[Run init.py]
+        Init --> Mission[Feed BOOTSTRAP_MISSION.md or SETUP_MISSION.md]
+        Mission --> Config[Edit AGENTS.md]
+    end
+
+    %% Phase 2: Definition
+    subgraph Definition [2. Definition Phase]
+        Config --> Spec[Trigger: spec-writer.skill]
+        Spec --> PRD[Artifact: PRD.md]
+        PRD --> Review1{Human Approve?}
+        Review1 -- No --> Spec
+    end
+
+    %% Phase 3: Design
+    subgraph Design [3. Design Phase]
+        Review1 -- Yes --> Plan[Trigger: arch-design.skill]
+        Plan --> Arch[Artifact: PLAN.md + C4]
+        Arch --> Review2{Human Approve?}
+        Review2 -- No --> Plan
+    end
+
+    %% Phase 4: Execution
+    subgraph Execution [4. Execution Loop]
+        Review2 -- Yes --> Tasks[Trigger: Decompose project/TASKS.md]
+        Tasks --> LoopCheck{Tasks Remaining?}
+        LoopCheck -- Yes --> Pick[Pick Task]
+        Pick --> TDD[Trigger: tdd-cycle.skill]
+        TDD --> Red[Test Fails]
+        Red --> Green[Implement Pass]
+        Green --> Refactor[Refactor]
+        Refactor --> Verify[Audit Log]
+        Verify --> LoopCheck
+    end
+
+    %% Phase 5: Delivery
+    subgraph Delivery [5. Delivery Phase]
+        LoopCheck -- No --> Integrity[Trigger: integrity-check.skill]
+        Integrity --> Security[Trigger: security-audit.skill]
+        Security --> HumanRev{Human Review?}
+        HumanRev -- No --> Fix[Fix Issues]
+        Fix --> Integrity
+        HumanRev -- Yes --> Deploy[Deploy]
+        Deploy --> End([Done])
+    end

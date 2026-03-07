@@ -1,0 +1,51 @@
+## 图类型与用途
+这是一个流程图，描述了代码从本地开发环境经过集成环境最终合并到主干分支的持续集成流程。它在仓库中的作用是展示代码集成的标准流程，并强调代码质量保证和自动化测试的重要性。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是开发者的本地环境，中间是代码集成和测试环节，右侧是代码最终合并的主干分支。
+
+## 分组/子图/阶段说明
+图中包含两个显式子图：
+- **Working Copy (工作副本)**：代表开发者本地的工作环境，包含本地环境和代码。
+- **Integration (集成)**：代表代码集成和测试的环境，包含构建、单元测试、代码审查、部署和集成环境。
+图中还有一个子图：
+- **Local Environment (本地环境)**：开发者实际进行编码和测试的环境。
+- **Integration Environment (集成环境)**：用于测试和验证代码集成的环境。
+
+## 节点逐项说明
+- **Code**：开发者编写的源代码。
+- **Unit Testing**：针对代码中的最小单元（函数、类等）进行的测试，验证其功能是否符合预期。
+- **Automated Functional Testing**：通过自动化脚本进行的端到端的功能测试，验证整个功能模块的正确性。
+- **Manual Functional Testing**：由测试人员手动执行的功能测试，用于发现自动化测试难以覆盖的缺陷。
+- **Pull Request**：开发者将本地修改的代码提交到代码仓库，请求合并到主干分支的过程。
+- **Build**：将代码编译、打包成可执行程序的过程。
+- **Code Review**：由其他开发者对提交的代码进行审查，检查代码质量、风格和潜在问题。
+- **Deploy**：将构建好的程序部署到集成环境。
+- **Automated Functional Testing**：在集成环境中运行自动化功能测试，验证整个系统的功能是否正常。
+- **Complete**：代码审查和所有测试都通过，准备合并到主干。
+- **Mainstream**：代表代码仓库的主分支，所有经过验证的代码最终都会合并到这里。
+
+## 连线、分支与汇聚关系
+- `Code -> Unit Testing`：编写代码后进行单元测试。
+- `Unit Testing -> Automated Functional Testing`：单元测试通过后，进行自动化功能测试。
+- `Unit Testing -> Manual Functional Testing`：单元测试通过后，进行手动功能测试。
+- `Automated Functional Testing -> Pull Request`：自动化功能测试通过后，提交拉取请求。
+- `Manual Functional Testing -> Pull Request`：手动功能测试通过后，提交拉取请求。
+- `Pull Request -> Build`：提交拉取请求后，触发构建过程。
+- `Build -> Unit Testing`：构建完成后，再次运行单元测试。
+- `Pull Request -> Code Review`：提交拉取请求后，进行代码审查。
+- `Unit Testing -> Deploy`：单元测试通过后，部署到集成环境。
+- `Deploy -> Automated Functional Testing`：部署完成后，运行自动化功能测试。
+- `Code Review -> Complete`：代码审查通过后，进入完成状态。
+- `Automated Functional Testing -> Complete`：自动化功能测试通过后，进入完成状态。
+- `Complete -> Mainstream`：所有测试和审查通过后，合并到主干。
+
+## 仓库语境与术语解释
+- **Working Copy**：代表开发者本地的工作环境，开发者在此编写、测试代码。
+- **Pull Request**：是代码合并到主干的请求，触发后续的构建、测试和审查流程。
+- **Integration Environment**：用于验证代码集成后的功能是否正常的集成环境。
+- **Mainstream**：代码仓库的主分支，代表稳定和可发布的代码。
+- **Bounded Context**：README 中提到，在定义 Domain Model 区域的组件时，可以使用领域驱动设计（DDD）的 Bounded Context 作为工具。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了一个典型的持续集成流程，从开发者在本地环境编写代码开始，经过单元测试、自动化功能测试和手动功能测试后，提交拉取请求。拉取请求触发构建过程和代码审查，构建后的代码部署到集成环境并进行自动化功能测试。所有测试和审查通过后，代码最终合并到主干分支。其中，拉取请求、代码审查和自动化测试是保证代码质量的关键环节。

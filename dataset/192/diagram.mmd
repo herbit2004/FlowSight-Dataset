@@ -1,0 +1,32 @@
+flowchart TD
+
+    subgraph LLM
+      Provider
+      Credentials
+    end
+    subgraph MCPServer
+      fetch
+    end
+    subgraph Task
+      subgraph ContextWindow
+        direction LR
+        SystemMessage[system:content]
+        UserMessage[user:content]
+        ToolCall-1[assistant:tool_calls]
+        ToolResponse-1[tool:result]
+        AssistantMessage[assistant:content]
+      end
+    end
+    SystemMessage --> UserMessage
+
+    Agent2[Agent]
+
+    UserMessage --> Agent --> LLM
+    Provider --> OpenAI
+    Secret --> Credentials
+    Credentials --> OpenAI
+    OpenAI --> ToolCall-1
+    ToolCall-1 --> Agent2 --> fetch
+    fetch --> ToolResponse-1
+    ToolResponse-1 --> OpenAI2[OpenAI]
+    OpenAI2 --> AssistantMessage[assistant:content]

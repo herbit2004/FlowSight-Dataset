@@ -1,0 +1,19 @@
+graph TB
+    MP["MultiProvider<br><i>Detects credentials, allows runtime switching</i>"]
+
+    MP --> Claude["ClaudeProvider<br>provider/claude.rs"]
+    MP --> Copilot["CopilotProvider<br>provider/copilot.rs"]
+    MP --> OpenAI["OpenAIProvider<br>provider/openai.rs"]
+    MP --> OR["OpenRouterProvider<br>provider/openrouter.rs"]
+
+    Claude --> ClaudeCreds["~/.claude/.credentials.json<br><i>OAuth (Claude Max)</i>"]
+    Claude --> APIKey["ANTHROPIC_API_KEY<br><i>Direct API</i>"]
+    Copilot --> GHCreds["~/.config/github-copilot/<br><i>OAuth (Copilot Pro/Free)</i>"]
+    OpenAI --> CodexCreds["~/.codex/auth.json<br><i>OAuth (ChatGPT Pro)</i>"]
+    OR --> ORKey["OPENROUTER_API_KEY<br><i>200+ models</i>"]
+
+    style MP fill:#8b5cf6,color:#fff
+    style Claude fill:#d97706,color:#fff
+    style Copilot fill:#6366f1,color:#fff
+    style OpenAI fill:#10b981,color:#fff
+    style OR fill:#3b82f6,color:#fff

@@ -1,0 +1,15 @@
+graph TD
+  subgraph "default namespace"
+    wordpress_mysql_service["wordpress-mysql<br>(Service)"]
+    mysql_pv_claim_persistentvolumeclaim["mysql-pv-claim<br>(PersistentVolumeClaim)"]
+    wordpress_mysql_deployment["wordpress-mysql<br>(Deployment)"]
+    mysql_pass_secret["mysql-pass<br>(Secret)"]
+    wordpress_service["wordpress<br>(Service)"]
+    wp_pv_claim_persistentvolumeclaim["wp-pv-claim<br>(PersistentVolumeClaim)"]
+    wordpress_deployment["wordpress<br>(Deployment)"]
+  end
+
+  wordpress_mysql_service --> wordpress_mysql_deployment
+  wordpress_mysql_deployment --> mysql_pass_secret
+  wordpress_service --> wordpress_deployment
+  wordpress_deployment --> mysql_pass_secret

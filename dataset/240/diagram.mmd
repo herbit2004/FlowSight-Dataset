@@ -1,0 +1,42 @@
+flowchart TB
+    subgraph Input
+        mic[🎤 Microphone] --> vad[VAD] --> asr[ASR]
+        text[⌨️ Text Input]
+        tick[⏱️ Timer]
+        cam[📷 Camera]--> vlm[VLM]
+    end
+
+    subgraph Minds["Subagents"]
+        sensors[Sensors]
+        weather[Weather]
+        emotion[Emotion]
+        news[News]
+        memory[Memory]
+    end
+
+    ctx[📋 Context]
+
+    subgraph Core["Main Agent"]
+        llm[🧠 LLM]
+        tts[TTS]
+    end
+
+    subgraph Output
+        speaker[🔊 Speaker]
+        logs[Logs]
+        images[🖼️ Images]
+        motors[⚙️ Animatronics]
+    end
+
+    asr -->|priority| llm
+    text -->|priority| llm
+    vlm --> ctx
+    tick -->|autonomy| llm
+
+    Minds -->|write| ctx
+    ctx -->|read| llm
+    llm --> tts --> speaker
+    llm --> logs
+    llm <-->|MCP| tools[Tools]
+    tools --> images
+    tools --> motors

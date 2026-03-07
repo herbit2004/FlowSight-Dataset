@@ -1,0 +1,16 @@
+graph TD
+    A[GitHub Actions] --> B[Build Docker Images]
+    B --> C[Push to Amazon ECR]
+    C --> D[Terraform Deployment]
+
+    subgraph Terraform Deployment
+        D --> E[Provision ECS Cluster]
+        D --> F[Deploy Containers to ECS]
+        D --> G[Configure CloudWatch Logs]
+        D --> H[Create VPC and Network Resources]
+    end
+
+    I[AWS Infrastructure] --> E
+    I --> F
+    I --> G
+    I --> H

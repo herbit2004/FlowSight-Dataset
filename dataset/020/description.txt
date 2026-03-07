@@ -1,0 +1,35 @@
+## 图类型与用途
+这是一个架构图，展示了 DeepV-Ki 系统的整体架构，描述了用户请求如何通过前端、后端以及各种服务进行处理。该图在 README 中用于概述系统的主要组件及其交互方式。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是用户，随后是前端和后端，底部是三个后端服务组件。数据流从用户开始，向下传递到各个组件。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为用户交互层、后端服务层和数据/服务支撑层三个阶段。
+
+## 节点逐项说明
+- **User (用户)**：代表使用 DeepV-Ki 系统的用户，是整个流程的起点。
+- **Frontend (Next.js 前端)**：代表用户交互的界面，使用 Next.js 框架构建。负责接收用户请求，并将请求传递给后端。根据 README，前端位于 `frontend/` 目录。
+- **Backend (FastAPI 后端)**：代表系统的后端服务，使用 FastAPI 框架构建。负责处理前端发送的请求，协调 LLM 服务、向量数据库和 Git 服务，并将结果返回给前端。根据 README，后端位于 `api/` 目录。
+- **LLM (LLM 服务 OpenAI/Gemini)**：代表大型语言模型服务，例如 OpenAI 或 Gemini。用于代码分析、文档生成、问答等 AI 相关任务。`api/config.py` 中定义了 OpenAI 和 Gemini 的 API 密钥配置。
+- **VectorDB (FAISS 向量库)**：代表向量数据库，使用 FAISS。用于存储代码的向量表示，支持快速相似性搜索，用于 RAG（Retrieval-Augmented Generation）代码问答。
+- **Git (Git 服务 GitHub/GitLab)**：代表代码仓库托管服务，例如 GitHub 或 GitLab。DeepV-Ki 需要访问 Git 仓库的代码来生成 Wiki 文档。`api/config.py` 中定义了 GitLab 的相关配置。
+
+## 连线、分支与汇聚关系
+- `User -> Frontend`：用户通过前端界面与系统进行交互。
+- `Frontend -> Backend`：前端将用户请求发送到后端进行处理。
+- `Backend -> LLM`：后端调用 LLM 服务进行代码分析、文档生成等任务。
+- `Backend -> VectorDB`：后端与向量数据库交互，存储和检索代码的向量表示。
+- `Backend -> Git`：后端从 Git 服务获取代码仓库的数据。
+
+## 仓库语境与术语解释
+- **Next.js**：用于构建前端用户界面的 React 框架。相关代码位于 `frontend/` 目录。
+- **FastAPI**：用于构建后端 API 的 Python 框架。相关代码位于 `api/` 目录。
+- **LLM (Large Language Model)**：大型语言模型，用于代码分析和文档生成。DeepV-Ki 支持 OpenAI 和 Gemini 等多种 LLM，配置信息位于 `api/config.py`。
+- **FAISS**：Facebook AI Similarity Search，用于高效的向量相似度搜索，支持 RAG 代码问答。
+- **RAG (Retrieval-Augmented Generation)**：检索增强生成，一种利用外部知识库来提升生成模型效果的技术。
+- **GitLab OAuth**：DeepV-Ki 支持使用 GitLab OAuth 进行身份验证，相关配置位于 `api/config.py` 和 `docs/GITLAB_OAUTH_SETUP.md`。
+- **Wiki**：DeepV-Ki 的核心功能是将代码仓库转换为 Wiki 文档，相关逻辑位于 `api/wiki_generator.py` 和 `frontend/src/app/wiki/[...projectKey]/page.tsx`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 DeepV-Ki 系统的架构，用户通过 Next.js 前端与系统交互，请求被发送到 FastAPI 后端。后端作为核心，与 LLM 服务（如 OpenAI/Gemini）、FAISS 向量库和 Git 服务（如 GitHub/GitLab）交互，完成代码分析、文档生成和 RAG 代码问答等任务。其中，LLM 负责智能分析，FAISS 用于存储代码向量，Git 提供代码仓库数据，最终结果呈现给用户。

@@ -1,0 +1,52 @@
+graph TB
+  classDef analyzer fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+  classDef generator fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+  classDef manager fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+  classDef service fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+  classDef npm fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+  classDef external fill:#ffebee,stroke:#c62828,stroke-width:2px
+  classDef group fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
+
+  subgraph src["📁 src"]
+    subgraph analyzers["📁 analyzers"]
+      CodeAnalyzer["📦 CodeAnalyzer 🔥"]
+      JavaScriptAnalyzer["📄 JavaScriptAnalyzer ⚡"]
+      TypeScriptAnalyzer["📄 TypeScriptAnalyzer ⚡"]
+      PythonAnalyzer["📄 PythonAnalyzer ⚡"]
+    end
+    
+    subgraph generators["📁 generators"]
+      DiagramGenerator["📦 DiagramGenerator 🔥"]
+    end
+    
+    subgraph exporters["📁 exporters"]
+      DiagramExporter["📄 DiagramExporter ⚡"]
+    end
+    
+    subgraph utils["📁 utils"]
+      GitManager["📄 GitManager ⚡"]
+    end
+  end
+
+  subgraph external_deps["🌐 External Dependencies"]
+    Puppeteer["📦 puppeteer"]
+    Mermaid["📦 mermaid"]
+    FsExtra["📦 fs-extra"]
+  end
+
+  CodeAnalyzer:::analyzer
+  JavaScriptAnalyzer:::analyzer
+  TypeScriptAnalyzer:::analyzer
+  PythonAnalyzer:::analyzer
+  DiagramGenerator:::generator
+  DiagramExporter:::generator
+  GitManager:::manager
+  Puppeteer:::npm
+  Mermaid:::npm
+  FsExtra:::npm
+
+  CodeAnalyzer -->|generates| DiagramGenerator
+  DiagramGenerator -->|exports| DiagramExporter
+  DiagramExporter -->|uses| Puppeteer
+  DiagramGenerator -->|uses| Mermaid
+  GitManager -->|manages| CodeAnalyzer

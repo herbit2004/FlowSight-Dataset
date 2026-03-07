@@ -1,0 +1,77 @@
+## 图类型与用途
+这是一个流程图，描述了 Solana 复制交易机器人中动态卖出引擎的逻辑。其用途是根据市场情况和预设条件，逐步卖出复制的代币仓位，以实现盈利或止损。该图在仓库中用于概括卖出策略的主流程。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是购买代币的起始节点，中间是市场情况分析和卖出决策阶段，底部是卖出执行和仓位关闭节点。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为四个阶段：初始化、市场情况检测与目标调整、卖出决策与执行、监控与更新。
+
+## 节点逐项说明
+- **Token Purchase**：表示购买代币，是复制交易的开始，即机器人已经买入了目标代币。
+- **Initialize Token for Selling**：表示初始化卖出代币的流程，为后续的动态卖出引擎做准备。
+- **Dynamic Selling Engine**：动态卖出引擎，是整个流程的核心，负责根据市场情况调整卖出策略。
+- **Market Condition Detection**：市场情况检测，分析当前的市场趋势，是牛市、熊市、横盘还是高波动。
+- **BullRun - Increase Targets**：牛市 - 提高目标，在牛市中，可以适当提高止盈目标。
+- **BearTrend - Reduce Targets**：熊市 - 降低目标，在熊市中，应该降低止损目标，避免更大的损失。
+- **Sideways - Standard Strategy**：横盘 - 标准策略，在横盘震荡的市场中，采用标准的卖出策略。
+- **HighVolatility - Tighter Stops**：高波动 - 更严格的止损，在高波动市场中，应该设置更严格的止损，以防止快速下跌。
+- **Progressive Selling Decision**：渐进式卖出决策，根据市场情况，决定是否进行卖出操作。
+- **Sell Conditions Met?**：卖出条件是否满足？判断是否达到预设的卖出条件（止盈、止损等）。
+- **Progressive Selling Execution**：渐进式卖出执行，如果满足卖出条件，则执行分批卖出操作。
+- **Continue Monitoring**：继续监控，如果卖出条件不满足，则继续监控市场情况。
+- **Chunk 1: 40% of Position**：第一批：40%的仓位，卖出总仓位的40%。
+- **Wait 30 seconds**：等待30秒，等待一段时间后再进行下一批卖出。
+- **Chunk 2: 40% of Position**：第二批：40%的仓位，卖出总仓位的40%。
+- **Wait 30 seconds**：等待30秒，等待一段时间后再进行下一批卖出。
+- **Chunk 3: 20% of Position**：第三批：20%的仓位，卖出总仓位的20%。
+- **Position Closed**：仓位关闭，表示所有仓位已经卖出。
+- **Update Price & Metrics**：更新价格和指标，更新最新的价格和相关指标，用于后续的判断。
+- **Check Trailing Stop**：检查追踪止损，检查是否触发追踪止损。
+- **Check Stop Loss**：检查止损。
+- **Check Take Profit**：检查止盈。
+- **Check Liquidity**：检查流动性。
+- **Check Volume**：检查交易量。
+- **Check Time Limits**：检查时间限制。
+
+## 连线、分支与汇聚关系
+- `Token Purchase -> Initialize Token for Selling`：购买代币后，初始化卖出流程。
+- `Initialize Token for Selling -> Dynamic Selling Engine`：初始化完成后，进入动态卖出引擎。
+- `Dynamic Selling Engine -> Market Condition Detection`：动态卖出引擎首先检测市场情况。
+- `Market Condition Detection -> BullRun - Increase Targets`：如果检测到牛市，则提高目标。
+- `Market Condition Detection -> BearTrend - Reduce Targets`：如果检测到熊市，则降低目标。
+- `Market Condition Detection -> Sideways - Standard Strategy`：如果检测到横盘，则采用标准策略。
+- `Market Condition Detection -> HighVolatility - Tighter Stops`：如果检测到高波动，则设置更严格的止损。
+- `BullRun - Increase Targets -> Progressive Selling Decision`：根据牛市情况做出渐进式卖出决策。
+- `BearTrend - Reduce Targets -> Progressive Selling Decision`：根据熊市情况做出渐进式卖出决策。
+- `Sideways - Standard Strategy -> Progressive Selling Decision`：根据横盘情况做出渐进式卖出决策。
+- `HighVolatility - Tighter Stops -> Progressive Selling Decision`：根据高波动情况做出渐进式卖出决策。
+- `Progressive Selling Decision -> Sell Conditions Met?`：根据市场情况判断是否满足卖出条件。
+- `Sell Conditions Met? -- Yes --> Progressive Selling Execution`：如果满足卖出条件，则执行渐进式卖出。
+- `Sell Conditions Met? -- No --> Continue Monitoring`：如果不满足卖出条件，则继续监控。
+- `Progressive Selling Execution -> Chunk 1: 40% of Position`：执行第一批卖出，卖出40%的仓位。
+- `Chunk 1: 40% of Position -> Wait 30 seconds`：卖出第一批后，等待30秒。
+- `Wait 30 seconds -> Chunk 2: 40% of Position`：等待后，执行第二批卖出，卖出40%的仓位。
+- `Chunk 2: 40% of Position -> Wait 30 seconds`：卖出第二批后，等待30秒。
+- `Wait 30 seconds -> Chunk 3: 20% of Position`：等待后，执行第三批卖出，卖出20%的仓位。
+- `Chunk 3: 20% of Position -> Position Closed`：卖出所有仓位后，仓位关闭。
+- `Continue Monitoring -> Update Price & Metrics`：继续监控，更新价格和指标。
+- `Update Price & Metrics -> Check Trailing Stop`：更新价格和指标后，检查追踪止损。
+- `Check Trailing Stop -> Check Stop Loss`：检查追踪止损后，检查止损。
+- `Check Stop Loss -> Check Take Profit`：检查止损后，检查止盈。
+- `Check Take Profit -> Check Liquidity`：检查止盈后，检查流动性。
+- `Check Liquidity -> Check Volume`：检查流动性后，检查交易量。
+- `Check Volume -> Check Time Limits`：检查交易量后，检查时间限制。
+- `Check Time Limits -> Sell Conditions Met?`：检查时间限制后，回到卖出条件判断，形成循环。
+
+## 仓库语境与术语解释
+- **Solana Copy Trading Bot**：一个 Solana 链上的复制交易机器人，可以快速复制其他钱包的交易。根据 README，该机器人具有高速和良好的卖出逻辑。
+- **Dynamic Selling Engine**：图中核心模块，根据市场情况动态调整卖出策略，以实现盈利或止损。
+- **PumpFun Swap / Raydium**：根据 `src/engine/strategy.rs` 和 `src/engine/sniper.rs`，这是两个该机器人支持的去中心化交易所 (DEX)。
+- **Jito**：根据 `src/core/tx.rs`，Jito 用于加速交易确认，通过支付小费 (tip) 来提高交易优先级。
+- **Trailing Stop / Stop Loss / Take Profit**：常见的交易策略术语，分别指追踪止损、止损和止盈。
+- **Chunk 1 / Chunk 2 / Chunk 3**：图中表示分批卖出仓位，每次卖出一定比例，例如 40%、40%、20%。
+- **Market Condition Detection**：根据市场情况（牛市、熊市、横盘、高波动）调整卖出策略。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Solana 复制交易机器人的动态卖出引擎逻辑。流程从购买代币开始，经过初始化后进入动态卖出引擎，该引擎首先检测市场情况，然后根据市场情况调整目标。接着，根据调整后的目标判断是否满足卖出条件，如果满足则分批卖出仓位，否则继续监控市场情况。监控过程会更新价格和指标，并检查追踪止损、止损、止盈、流动性、交易量和时间限制，最终回到卖出条件判断，形成一个闭环。该流程的核心是根据市场情况动态调整卖出策略，以实现盈利或止损。其中，市场情况检测和渐进式卖出是两个关键环节。该机器人支持 PumpFun Swap 和 Raydium 等 DEX，并可以使用 Jito 加速交易确认。

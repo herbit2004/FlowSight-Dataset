@@ -1,0 +1,16 @@
+flowchart TD
+    Start[Model Response] --> Check{Has tool_calls?}
+    Check -->|Yes| Skip[Skip Processing]
+    Check -->|No| Extract[Extract JSON Pattern]
+    Extract --> Match{JSON Match?}
+    Match -->|No| Return[Return None]
+    Match -->|Yes| Parse[Parse Tool Name and Args]
+    Parse --> Validate{Tool Valid?}
+    Validate -->|No| Return
+    Validate -->|Yes| Convert[Convert to AIMessage]
+    Convert --> Replace[Replace Last Message]
+    Replace --> Log[Log Success]
+    
+    style Extract fill:#e1f5ff
+    style Convert fill:#d4edda
+    style Replace fill:#d4edda

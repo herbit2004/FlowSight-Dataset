@@ -1,0 +1,60 @@
+## 图类型与用途
+这是一个流程图，展示了 COLA 架构的分层结构和组件之间的交互关系。该图旨在帮助理解 COLA 架构中不同层及其职责，以及数据如何在这些层之间流动。COLA 架构的目标是降低复杂应用场景中的系统熵，提高开发和运维效率，如 README 所述。
+
+## 图的整体布局
+图采用从上到下的分层布局，从 Adapter Layer 开始，依次经过 Application Layer、Domain Layer，最后到达 Infrastructure Layer。数据流从上层向下层传递，展示了请求的处理和数据的访问过程。
+
+## 分组/子图/阶段说明
+图中显式地分为四个子图，分别代表 COLA 架构的四个层：
+- **Adapter Layer**：适配层，作为外部系统与应用的入口。
+- **Application Layer**：应用层，负责业务逻辑的编排和用例的执行。
+- **Domain Layer**：领域层，包含核心业务对象和领域逻辑。
+- **Infrastructure Layer**：基础设施层，负责与外部系统或数据库进行交互。
+
+## 节点逐项说明
+- **Controller (REST Controller)**：接收来自 REST API 的请求，作为外部系统与应用交互的入口。
+- **RpcProvider (RPC Provider)**：接收来自 RPC 调用的请求，同样作为外部系统与应用交互的入口。
+- **Service (Application Service)**：应用服务，负责协调领域对象和执行用例，处理业务逻辑的编排。
+- **CmdExe (Command Executor)**：命令执行器，负责执行修改数据的命令。
+- **QryExe (Query Executor)**：查询执行器，负责执行查询数据的操作。
+- **Assembler (DTO Assembler)**：DTO 组装器，负责将领域对象转换为数据传输对象 (DTO)，以便于在不同层之间传递数据。
+- **Entity (Aggregate Root/Entity)**：聚合根或实体，代表领域模型中的核心业务对象。
+- **ValueObject (Value Object)**：值对象，代表领域模型中不可变的数据对象。
+- **DomainService (Domain Service)**：领域服务，封装不属于任何特定实体或值对象的复杂业务逻辑。
+- **DomainEvent (Domain Event)**：领域事件，代表领域中发生的事件，用于解耦不同的领域组件。
+- **Gateway (Anti-corruption Layer Interface)**：防腐层接口，定义了领域层与基础设施层交互的接口，用于隔离领域模型与外部依赖。
+- **GatewayImpl (Gateway Implementation)**：防腐层接口的实现，负责与外部系统或数据库进行交互。
+- **Mapper (Data Mapper)**：数据映射器，负责将领域对象映射到数据对象，以及将数据对象映射到领域对象。
+- **DataObject (Data Object)**：数据对象，代表数据库中的数据实体。
+- **EventHandler (Event Handler)**：事件处理器，负责处理领域事件，执行相应的操作。
+
+## 连线、分支与汇聚关系
+- `Controller -> Service`：REST Controller 接收请求后转发给 Application Service。
+- `RpcProvider -> Service`：RPC Provider 接收请求后转发给 Application Service。
+- `Service -> CmdExe`：Application Service 将请求分发给 Command Executor。
+- `Service -> QryExe`：Application Service 将请求分发给 Query Executor。
+- `CmdExe -> Entity`：Command Executor 操作 Aggregate Root/Entity。
+- `CmdExe -> DomainService`：Command Executor 调用 Domain Service。
+- `CmdExe -> Gateway`：Command Executor 通过 Gateway 与外部系统交互。
+- `QryExe -> Mapper`：Query Executor 通过 Mapper 从数据库中获取数据。
+- `Entity -> ValueObject`：Aggregate Root/Entity 包含 Value Object。
+- `Entity -> DomainEvent`：Aggregate Root/Entity 触发 Domain Event。
+- `DomainService -> Gateway`：Domain Service 通过 Gateway 与外部系统交互。
+- `GatewayImpl -.-> Gateway`：Gateway Implementation 实现 Anti-corruption Layer Interface，虚线表示实现关系。
+- `GatewayImpl -> Mapper`：Gateway Implementation 使用 Mapper 进行数据映射。
+- `GatewayImpl -> EventHandler`：Gateway Implementation 触发 Event Handler。
+- `Mapper -> DataObject`：Mapper 将领域对象映射到 Data Object。
+- `EventHandler -> DomainEvent`：Event Handler 处理 Domain Event。
+
+## 仓库语境与术语解释
+- **COLA Architecture**：一种清洁的、面向对象的、分层的和适应性强的应用程序架构，旨在降低复杂应用场景中的系统熵，提高开发和运维效率，如 README 所述。
+- **Adapter Layer**：适配层，作为外部系统与应用的入口，对应 `eden-demo-cola-adapter` 模块。
+- **Application Layer**：应用层，负责业务逻辑的编排和用例的执行，对应 `eden-demo-cola-app` 模块。
+- **Domain Layer**：领域层，包含核心业务对象和领域逻辑，对应 `eden-demo-cola-domain` 模块。
+- **Infrastructure Layer**：基础设施层，负责与外部系统或数据库进行交互，对应 `eden-demo-cola-infrastructure` 模块。
+- **API Layer**：API 层，对外提供接口，对应 `eden-demo-cola-client` 模块。
+- **CQRS**：命令查询职责分离，COLA 架构集成了 CQRS 设计原则，Application Layer 负责 CQRS 命令处理。
+- **DDD**：领域驱动设计，COLA 架构集成了 DDD 设计原则，Domain Layer 包含核心业务逻辑。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 COLA 架构的核心分层结构，从 Adapter Layer 的 REST Controller 和 RPC Provider 接收外部请求开始，请求经过 Application Layer 的 Application Service，根据请求类型分发到 Command Executor 或 Query Executor。Command Executor 操作 Domain Layer 的 Aggregate Root/Entity 和 Domain Service，并通过 Gateway 与 Infrastructure Layer 交互。Query Executor 通过 Mapper 从数据库获取数据。Infrastructure Layer 的 Gateway Implementation 实现了 Anti-corruption Layer Interface，并使用 Mapper 进行数据映射。该图清晰地展示了 COLA 架构中请求的处理流程和数据在不同层之间的流动。其中，Adapter Layer 作为入口，Domain Layer 包含核心业务逻辑，Infrastructure Layer 负责与外部系统交互。

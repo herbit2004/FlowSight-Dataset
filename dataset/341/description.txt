@@ -1,0 +1,34 @@
+## 图类型与用途
+这是一个知识图谱，用于描述医疗领域中症状、诊断、药物、治疗和副作用之间的关系。它在仓库中的作用是展示这些医疗概念之间的相互依赖和影响，从而构建一个简单的医疗知识模型，如 README 中所述的“cohesive graph model”。
+
+## 图的整体布局
+图整体采用从左到右的布局。图中节点之间存在循环关系，没有明显的起点和终点。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为症状与诊断、药物与治疗、副作用三个关联关系。
+
+## 节点逐项说明
+- **SY (Symptom)**：症状，患者表现出的身体或心理上的不适或异常。
+- **DX (Diagnosis)**：诊断，医生根据症状和其他检查结果对疾病的判断。
+- **MED (Medication)**：药物，用于治疗疾病或缓解症状的化学物质。
+- **TX (Treatment)**：治疗，包括药物治疗、手术、理疗等，用于改善患者的健康状况。
+- **SE (Side Effect)**：副作用，药物或治疗可能引起的非预期或不良反应。
+
+## 连线、分支与汇聚关系
+- `DX -- HAS_SYMPTOM --> SY`：诊断（DX）包含症状（SY），表示某种诊断通常伴随某些症状。
+- `MED -- TREATS --> DX`：药物（MED）治疗诊断（DX），表示某种药物用于治疗特定的疾病。
+- `SY -- CONTRAINDICATED_FOR --> MED`：症状（SY）是药物（MED）的禁忌症，表示如果患者有某种症状，则不应使用某种药物。
+- `MED -- CONTRAINDICATED_FOR --> MED`：药物（MED）之间存在禁忌症，表示某些药物不能同时使用，形成循环关系。
+- `TX -- TREATS --> DX`：治疗（TX）治疗诊断（DX），表示某种治疗方法用于治疗特定的疾病。
+- `MED -- CAUSES --> SE`：药物（MED）引起副作用（SE），表示某种药物可能引起非预期的不良反应。
+
+## 仓库语境与术语解释
+- **Graph schema**：README 中提到，该项目使用图模式来表示症状、诊断、治疗和药物之间的关系。
+- **OSCAR EMR**：README 中提到，该项目集成了 Dockerized OSCAR EMR 实例，用于电子病历管理。
+- **SurrealDB**：README 中提到，该项目使用 SurrealDB 作为数据库，支持图、关系、文档、键值、全文等多种数据模型。
+- **LLMs**：README 中提到，该项目计划使用 OpenAI 兼容的 LLMs，用于 AI/ML 集成。
+- **ICD diagnostic codes**：README 中提到，该项目使用键值存储来存储 ICD 诊断代码。
+- **Models**：`docs/source/api/models.rst` 文件列出了项目中使用的数据模型，包括 appointment, clinic, conversation, graph, icd, llm_chat, patient, user, user_settings。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图是一个医疗知识图谱，展示了症状、诊断、药物、治疗和副作用之间的关系。诊断包含症状，药物和治疗方法用于治疗诊断，症状和药物之间存在禁忌症，药物可能引起副作用。该图体现了 ArsMedicaTech 项目中“Graph schema for symptoms ↔ diagnoses ↔ treatments ↔ medications”的设计，并与 README 中提到的 OSCAR EMR 和 LLMs 等组件相关联。

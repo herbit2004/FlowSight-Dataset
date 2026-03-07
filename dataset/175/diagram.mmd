@@ -1,0 +1,11 @@
+flowchart LR
+    UP["Artifact<br/>Upload"] --> HASH{"SHA-256<br/>Dedup"}
+    HASH -->|New artifact| T["Trivy<br/>FS Scanner"]
+    HASH -->|New artifact| G["Grype<br/>Dependency Scanner"]
+    HASH -->|Already scanned| CACHE["Cached<br/>Results"]
+    T --> SCORE["Vulnerability<br/>Score A-F"]
+    G --> SCORE
+    CACHE --> SCORE
+    SCORE --> POL{"Policy<br/>Engine"}
+    POL -->|Pass| OK["Stored"]
+    POL -->|Fail| Q["Quarantined"]

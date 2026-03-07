@@ -1,0 +1,19 @@
+graph TB
+    CLI1["npx claude-relay<br/>(Terminal 1)"]
+    CLI2["npx claude-relay<br/>(Terminal 2)"]
+    IPC["Unix Socket<br/>daemon.sock"]
+    Daemon["Daemon Process<br/>lib/daemon.js"]
+    HTTP["HTTP/WS Server<br/>:2633"]
+    P1["Project A"]
+    P2["Project B"]
+    Sessions1["sessions/<br/>*.jsonl"]
+    Sessions2["sessions/<br/>*.jsonl"]
+
+    CLI1 <-->|IPC| IPC
+    CLI2 <-->|IPC| IPC
+    IPC <--> Daemon
+    Daemon --- HTTP
+    HTTP -->|/p/project-a/| P1
+    HTTP -->|/p/project-b/| P2
+    P1 --- Sessions1
+    P2 --- Sessions2

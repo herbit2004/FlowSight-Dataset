@@ -1,0 +1,17 @@
+flowchart LR
+    subgraph Server
+    C(Control Server)
+    R(Relay Server)
+    C -.->|Relay Info| R
+    end
+    subgraph Client Source
+    S[Source] -->|Exchange Direct and Relay Info| C(Control Server)
+    SC(Client) -..-> S
+    end
+    subgraph Client Destination
+    D[Destination] -->|Exchange Direct and Relay Info| C(Control Server)
+    D -..-> DC(Server)
+    end
+    S ---|Direct Connection| D
+    S -->|Relay Connection| R
+    R -->|Relay Connection| D

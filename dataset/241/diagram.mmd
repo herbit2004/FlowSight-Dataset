@@ -1,0 +1,25 @@
+flowchart LR
+    subgraph Capture["Audio Capture"]
+        mic[Microphone<br/>16kHz]
+        vad[Silero VAD<br/>32ms chunks]
+        buffer[Pre-activation<br/>Buffer 800ms]
+    end
+
+    subgraph Recognition["Speech Recognition"]
+        detect[Voice Detected<br/>VAD > 0.8]
+        accumulate[Accumulate<br/>Speech]
+        silence[Silence Detection<br/>640ms pause]
+        asr[Parakeet ASR]
+    end
+
+    subgraph Interruption["Interruption Handling"]
+        speaking{Speaking?}
+        stop[Stop Playback]
+        clip[Clip Response]
+    end
+
+    mic --> vad --> buffer
+    buffer --> detect --> accumulate
+    accumulate --> silence --> asr
+    detect --> speaking
+    speaking -->|Yes| stop --> clip

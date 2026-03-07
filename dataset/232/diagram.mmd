@@ -1,0 +1,14 @@
+flowchart LR
+  ExternalSecret -->|Creates| Secret
+  SealedSecret -->|Creates| Secret
+  Certificate -->|Creates| Secret
+  Secret -->|Watched by| Reloader
+  ConfigMap -->|Watched by| Reloader
+
+  Reloader -->|Triggers Rollout| Deployment
+  Reloader -->|Triggers Rollout| DeploymentConfig
+  Reloader -->|Triggers Rollout| Daemonset
+  Reloader -->|Triggers Rollout| Statefulset
+  Reloader -->|Triggers Rollout| ArgoRollout
+  Reloader -->|Triggers Job| CronJob
+  Reloader -->|Sends Notification| Slack,Teams,Webhook

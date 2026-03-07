@@ -1,0 +1,61 @@
+## 图类型与用途
+这是一个系统架构图，用于展示 Pulumi 系统的主要组件及其相互关系。该图旨在帮助理解 Pulumi 如何与用户、云提供商和版本控制系统等外部系统进行交互，并在 README 中作为 Level 1 的系统架构概览。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是用户，中间是 Pulumi 系统及其内部组件，底部是外部系统。数据流从用户开始，经过 Pulumi 系统，最终与外部系统交互。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表 Pulumi 系统的不同组成部分：
+- **Pulumi System**：包含 Pulumi 系统的核心组件，是整个架构的核心。
+- **SDKs**：包含 Go SDK、Node.js SDK 和 Python SDK，为不同编程语言提供接口。
+- **Core Components**：包含 Engine、Resource Manager、State Manager 和 Config Manager，是 Pulumi 系统的核心逻辑。
+- **Plugins**：包含 Provider Plugins 和 Language Plugins，用于扩展 Pulumi 的功能。
+- **Backend Services**：包含 API Server 和 Storage Service，提供 Pulumi 系统的后端支持。
+- **Data Storage**：包含 State Storage，用于存储 Pulumi 状态。
+- **External Systems**：包含 Cloud Providers 和 Version Control，代表 Pulumi 系统之外的系统。
+
+## 节点逐项说明
+- **User**：使用 Pulumi 的人员，是整个流程的起点。
+- **CLI (Go)**：命令行界面，用户与 Pulumi 交互的主要入口点，用 Go 语言编写。
+- **Go SDK / Node.js SDK / Python SDK**：提供不同编程语言的接口，用于定义基础设施。
+- **Engine (Go)**：负责协调整个 Pulumi 流程，包括资源规划、部署和更新。
+- **Resource Manager (Go)**：管理 Pulumi 资源的状态和生命周期。
+- **State Manager (Go)**：负责管理 Pulumi 状态，即已部署基础设施的当前状态。
+- **Config Manager (Go)**：管理 Pulumi 配置，例如环境变量和参数。
+- **Provider Plugins (Various Languages)**：与特定云提供商（AWS, Azure, GCP 等）交互的插件，用各种语言编写。
+- **Language Plugins (Various Languages)**：支持特定编程语言的插件，用各种语言编写。
+- **API Server (Go)**：提供 Pulumi 系统的 API 接口。
+- **Storage Service (Go)**：提供 Pulumi 系统的存储服务。
+- **State Storage (e.g., S3, Azure Blob)**：实际存储 Pulumi 状态的存储系统，例如 S3 或 Azure Blob。
+- **Cloud Providers (AWS, Azure, GCP, etc.)**：提供云基础设施的云服务提供商。
+- **Version Control (e.g., GitHub, GitLab)**：用于存储 Pulumi 代码的版本控制系统。
+
+## 连线、分支与汇聚关系
+- `User -> CLI`：用户通过 CLI 与 Pulumi 系统交互。
+- `CLI -> GoSDK`：CLI 使用 Go SDK。
+- `CLI -> NodeSDK`：CLI 使用 Node.js SDK。
+- `CLI -> PythonSDK`：CLI 使用 Python SDK。
+- `CLI -> Engine`：CLI 与 Engine 交互。
+- `Engine -> ResourceManager`：Engine 调用 Resource Manager。
+- `Engine -> StateManager`：Engine 调用 State Manager。
+- `Engine -> ConfigManager`：Engine 调用 Config Manager。
+- `ResourceManager -> ProviderPlugins`：Resource Manager 使用 Provider Plugins。
+- `Engine -> LanguagePlugins`：Engine 使用 Language Plugins。
+- `Engine -> APIServer`：Engine 调用 API Server。
+- `StateManager -> StorageService`：State Manager 使用 Storage Service。
+- `StorageService -> StateStorage`：Storage Service 使用 State Storage。
+- `ProviderPlugins -> CloudProviders`：Provider Plugins 与 Cloud Providers 交互。
+- `CLI -> VersionControl`：CLI 与 Version Control 系统交互。
+
+## 仓库语境与术语解释
+- **Pulumi**：一个基础设施即代码 (Infrastructure as Code, IaC) 工具，用于定义和部署云基础设施。
+- **CLI**：Pulumi 的命令行界面，是用户与 Pulumi 系统交互的主要方式。在 `component-architecture/cli/cli.md` 中有更详细的架构图。
+- **SDKs**：软件开发工具包，提供不同编程语言的接口，用于定义基础设施。
+- **Engine**：Pulumi 系统的核心组件，负责协调整个流程。在 `component-architecture/backend/engine.md` 中有更详细的架构图。
+- **Resource Manager**：管理 Pulumi 资源的状态和生命周期。在 `component-architecture/backend/resource-manager.md` 中有更详细的架构图。
+- **State Manager**：负责管理 Pulumi 状态，即已部署基础设施的当前状态。在 `component-architecture/backend/state-manager.md` 中有更详细的架构图。
+- **Config Manager**：管理 Pulumi 配置，例如环境变量和参数。在 `component-architecture/backend/config-manager.md` 中有更详细的架构图。
+- **Provider Plugins**：与特定云提供商交互的插件。在 `component-architecture/shared-components/provider-plugins.md` 中有更详细的架构图。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Pulumi 系统的整体架构，从用户通过 CLI 与系统交互开始，CLI 使用 SDKs 和 Engine 等核心组件，Engine 负责协调 Resource Manager、State Manager 和 Config Manager 等模块，Resource Manager 使用 Provider Plugins 与 Cloud Providers 交互，State Manager 通过 Storage Service 管理 State Storage，CLI 还可以与 Version Control 系统交互。核心流程是“用户 -> CLI -> 核心组件 -> 外部系统”，其中 Engine、Resource Manager 和 State Manager 是关键中间环节。该图在仓库中作为 Level 1 的系统架构概览。

@@ -1,0 +1,40 @@
+flowchart LR
+    subgraph Input["📥 Input"]
+        Query[Query/Pattern]
+        Insight[New Insight]
+    end
+
+    subgraph Processing["⚙️ Processing"]
+        Embed[ONNX Embeddings]
+        Normalize[Normalization]
+        Learn[LearningBridge<br/>SONA + ReasoningBank]
+    end
+
+    subgraph Storage["💾 Storage"]
+        HNSW[(HNSW Index<br/>150x faster)]
+        SQLite[(SQLite Cache)]
+        AgentDB[(AgentDB)]
+        Graph[MemoryGraph<br/>PageRank + Communities]
+    end
+
+    subgraph Retrieval["🔍 Retrieval"]
+        Vector[Vector Search]
+        Semantic[Semantic Match]
+        Rank[Graph-Aware Ranking]
+        Results[Top-K Results]
+    end
+
+    Query --> Embed
+    Embed --> Normalize
+    Normalize --> HNSW
+    Normalize --> SQLite
+    Insight --> Learn
+    Learn --> AgentDB
+    AgentDB --> Graph
+    HNSW --> Vector
+    SQLite --> Vector
+    AgentDB --> Semantic
+    Vector --> Rank
+    Semantic --> Rank
+    Graph --> Rank
+    Rank --> Results

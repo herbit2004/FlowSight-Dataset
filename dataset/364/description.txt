@@ -1,0 +1,47 @@
+## 图类型与用途
+这是一个架构图，描述了 Java 依赖注入框架 Dimension-DI 的工作原理。它展示了 Dimension-DI 如何通过配置、容器和依赖解析，将依赖关系注入到应用程序中，并概括了框架的核心组件和流程。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是配置模块，中间是 DI 容器，然后是依赖解析过程，底部是应用程序的组合根。
+
+## 分组/子图/阶段说明
+图中包含三个显式子图：
+- **⚙️ Configuration JSR-330**：表示使用 JSR-330 标准注解进行配置的部分。
+- **📦 DI Container**：代表 DI 容器，负责扫描、注册和管理依赖。
+- **💉 Dependency Resolution**：代表依赖解析的过程，实现了服务定位器模式。
+
+## 节点逐项说明
+- **@Inject Constructor**：使用 `@Inject` 注解的构造函数，表示该构造函数用于依赖注入。
+- **@Singleton Scope**：使用 `@Singleton` 注解的作用域，表示该组件是单例的。
+- **@Named Qualifier**：使用 `@Named` 注解的限定符，用于区分同一接口的多个实现。
+- **API Scans bytecode via JDK Class-File API**：描述容器通过 JDK Class-File API 扫描字节码。根据 README，Dimension-DI 使用 JDK Class-File API 进行 classpath 扫描，以实现快速启动。
+- **DependencyScanner**：依赖扫描器，负责扫描类路径，查找带有 JSR-330 注解的组件。`DependencyScanner` 类负责扫描 classpath 并查找带有 JSR-330 注解的组件。
+- **Provider Registry**：提供者注册表，用于存储组件的提供者信息。
+- **ServiceLocator**：服务定位器，负责根据请求类型查找并创建组件实例。`ServiceLocator` 类在运行时解析依赖关系。
+- **Implements the Service Locator design pattern**：描述依赖解析实现了服务定位器设计模式。
+- **Request Type**：请求类型，表示需要注入的依赖类型。
+- **Check Cache**：检查缓存，查看是否已经存在该类型的实例。
+- **Create Instance**：创建实例，如果缓存中没有，则创建新的实例。
+- **Return Object**：返回对象，将创建的实例返回给请求者。
+- **🎯 Your App**：代表使用 Dimension-DI 的应用程序。
+- **Composition Root**：应用程序中负责创建和组装所有依赖关系的地方。
+
+## 连线、分支与汇聚关系
+- `Configuration JSR-330 -> DI Container`：配置信息（通过 JSR-330 注解）被 DI 容器分析。
+- `DI Container -> Dependency Resolution`：DI 容器使用依赖解析机制来解析依赖关系。
+- `Dependency Resolution -> Your App`：依赖解析的结果（即创建的对象）被注入到应用程序的组合根中。
+- `API Scans bytecode via JDK Class-File API -> DependencyScanner -> Provider Registry -> ServiceLocator`：描述了 DI 容器内部组件的流程。
+- `Request Type -> Check Cache -> Create Instance -> Return Object`：描述了依赖解析的内部流程。
+
+## 仓库语境与术语解释
+- **JSR-330**：Java 依赖注入的标准注解，Dimension-DI 基于此标准实现依赖注入。
+- **@Inject**：JSR-330 标准注解，用于标记构造函数、字段或方法，表示需要进行依赖注入。
+- **@Singleton**：JSR-330 标准注解，用于标记类，表示该类的实例在容器中是单例的。
+- **@Named**：JSR-330 标准注解，用于指定依赖注入的名称，区分同一接口的多个实现。
+- **Dependency Injection (DI)**：一种设计模式，用于解耦组件之间的依赖关系。
+- **Service Locator**：一种设计模式，用于查找和获取依赖，`ServiceLocator` 类实现了该模式。
+- **Composition Root**：应用程序中负责创建和组装所有依赖关系的地方，通常是应用程序的入口点。
+- **DimensionDI.Builder**：用于配置和初始化 DI 容器的构建器类，README 中有提及。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Dimension-DI 框架的架构，从 JSR-330 配置开始，配置信息被 DI 容器分析。DI 容器通过扫描字节码、依赖扫描、提供者注册和服务定位器来管理依赖关系。依赖解析过程实现了服务定位器模式，接收请求类型，检查缓存，创建实例并返回对象。最终，依赖解析的结果被注入到应用程序的组合根中。`DependencyScanner` 和 `ServiceLocator` 是该框架中的两个关键组件。

@@ -1,0 +1,58 @@
+## 图类型与用途
+这是一个架构图，展示了 ArsMedicaTech 临床平台的整体架构，包括前端、后端、数据库和外部集成组件。该图用于概览平台的主要组成部分及其相互连接方式，体现了数据流向和模块间的依赖关系。
+
+## 图的整体布局
+图采用从上到下的分层布局，将系统划分为四个主要部分：前端、后端、数据库和外部集成。数据流从顶层的前端组件开始，经过后端处理，最终与数据库和外部服务交互。
+
+## 分组/子图/阶段说明
+图中使用 subgraph 显式定义了四个分组：
+- **Frontend**：包含用户界面相关的组件。
+- **Backend**：包含服务器端逻辑和 API 服务。
+- **Database**：包含数据存储相关的组件。
+- **External Integrations**：包含与外部服务的集成。
+
+## 节点逐项说明
+- **React App**：前端的主要应用程序，使用 React 构建。
+- **Search Bar**：前端的搜索栏组件。
+- **Dashboard UI**：前端的仪表盘用户界面。
+- **Messaging UI**：前端的消息传递用户界面。
+- **Flask API**：后端的 API 服务，使用 Flask 框架构建。 根据 `README.md`，Flask 是后端使用的技术之一。
+- **WebSocket Server**：后端的 WebSocket 服务器，用于实时通信。
+- **LLM Interface**：后端的 LLM 接口，用于与 LLM 提供商交互。
+- **SurrealDB**：使用的 SurrealDB 数据库。根据 `README.md`，SurrealDB 支持多模型，包括图、关系、文档、键值和全文搜索。
+- **Graph Schema**：SurrealDB 的图数据库模式。
+- **Relational Schema**：SurrealDB 的关系数据库模式。
+- **Key-Value Store**：SurrealDB 的键值存储。
+- **Vector Store**：SurrealDB 的向量存储，用于存储和检索向量数据，可能与 LLM 相关。
+- **Oscar EMR (Docker)**：运行在 Docker 容器中的 Oscar 电子病历系统。根据 `README.md`，该平台支持 EMR 集成，并使用 Dockerized OSCAR EMR 实例。
+- **LLM Provider (e.g. OpenAI)**：大语言模型提供商，例如 OpenAI。
+- **Prompt Engineering Tool (e.g. Latitude)**：Prompt 工程工具，例如 Latitude，用于优化 LLM 的输入。
+
+## 连线、分支与汇聚关系
+- `A1 (React App) -> B1 (Flask API)`：React App 与 Flask API 通信。
+- `A2 (Search Bar) -> B1 (Flask API)`：Search Bar 与 Flask API 通信。
+- `A3 (Dashboard UI) -> B1 (Flask API)`：Dashboard UI 与 Flask API 通信。
+- `A4 (Messaging UI) -> B2 (WebSocket Server)`：Messaging UI 与 WebSocket Server 通信。
+- `B1 (Flask API) -> C1 (SurrealDB)`：Flask API 与 SurrealDB 数据库交互。
+- `B1 (Flask API) -> D1 (Oscar EMR (Docker))`：Flask API 与 Oscar EMR 集成。
+- `B2 (WebSocket Server) -> C1 (SurrealDB)`：WebSocket Server 与 SurrealDB 数据库交互。
+- `B3 (LLM Interface) -> D2 (LLM Provider (e.g. OpenAI))`：LLM Interface 与 LLM Provider 交互。
+- `B3 (LLM Interface) -> C5 (Vector Store)`：LLM Interface 使用 Vector Store 存储向量数据。
+- `B3 (LLM Interface) -> D3 (Prompt Engineering Tool (e.g. Latitude))`：LLM Interface 与 Prompt Engineering Tool 交互。
+- `C1 (SurrealDB) -> C2 (Graph Schema)`：SurrealDB 使用 Graph Schema 组织数据。
+- `C1 (SurrealDB) -> C3 (Relational Schema)`：SurrealDB 使用 Relational Schema 组织数据。
+- `C1 (SurrealDB) -> C4 (Key-Value Store)`：SurrealDB 使用 Key-Value Store 组织数据。
+- `C1 (SurrealDB) -> C5 (Vector Store)`：SurrealDB 使用 Vector Store 组织数据。
+
+## 仓库语境与术语解释
+- **React App**：前端应用，根据 `README.md`，未来计划转换为 TypeScript。
+- **Flask API**：后端 API 服务，使用 Python 的 Flask 框架构建。
+- **SurrealDB**：多模型数据库，支持图、关系、文档、键值等多种数据模型。
+- **Oscar EMR**：电子病历系统，通过 Docker 容器集成。`README.md` 提到 Dockerized OSCAR EMR 实例。
+- **LLM Interface**：大语言模型接口，用于与 LLM 提供商交互，支持 RAG、微调和 Prompt 工程等功能。
+- **Vector Store**：用于存储向量数据的数据库组件，可能用于 LLM 的 RAG 实现。
+- **Prompt Engineering Tool**：用于优化 LLM 输入的工具，例如 Latitude。
+- **Docker**：用于容器化部署的技术，`README.md` 提到使用 Dockerized 技术栈。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+ArsMedicaTech 平台采用分层架构，前端组件（React App、Search Bar、Dashboard UI、Messaging UI）分别与后端 Flask API 和 WebSocket Server 通信。Flask API 和 WebSocket Server 都与 SurrealDB 数据库交互，Flask API 还与 Oscar EMR 集成。LLM Interface 与 LLM Provider 和 Prompt Engineering Tool 交互，并使用 Vector Store 存储向量数据。SurrealDB 使用 Graph Schema、Relational Schema、Key-Value Store 和 Vector Store 来组织数据。该架构支持 AI 集成和 EMR 互操作性，旨在提供统一的临床平台。

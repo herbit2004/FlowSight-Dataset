@@ -1,0 +1,33 @@
+graph TD
+    subgraph Infrastructure ["Infrastructure (External)"]
+        DB[(Database)]
+        API[API Controllers]
+        UI[Web/Desktop UI]
+    end
+
+    subgraph Adapters ["Interface Adapters"]
+        RepoImpl[Repository Impl]
+        Presenters[Presenters]
+        Gateways[Gateways]
+    end
+
+    subgraph App ["Application (Use Cases)"]
+        Services[Services]
+        Interactors[Interactors]
+        Ports[Input/Output Ports]
+    end
+
+    subgraph Domain ["Domain (Enterprise Rules)"]
+        Entities[Entities]
+        VO[Value Objects]
+        Exceptions[Domain Exceptions]
+    end
+
+    Infrastructure --> Adapters
+    Adapters --> App
+    App --> Domain
+
+    style Domain fill:#f9f,stroke:#333,stroke-width:4px
+    style App fill:#bbf,stroke:#333,stroke-width:2px
+    style Adapters fill:#dfd,stroke:#333,stroke-width:2px
+    style Infrastructure fill:#eee,stroke:#333,stroke-width:2px

@@ -1,0 +1,31 @@
+## 图类型与用途
+这是一个流程图/架构图，展示了 `rpm-ostree` 系统与其依赖的关键组件之间的关系。该图旨在概述 `rpm-ostree` 如何与 `ostree`、`bootc` 和 `libdnf` 协同工作，以实现混合镜像/包管理的功能。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是核心组件 `rpm-ostree`，底部是其依赖的三个组件：`ostree`、`bootc` 和 `libdnf`。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为核心控制层和底层支撑层两个阶段。
+
+## 节点逐项说明
+- **rpm-ostree (daemon + CLI)**：系统的核心组件，包含守护进程和命令行界面，负责状态查询、升级、回滚、包分层以及 `initramfs` 的启用等操作。
+- **bootc (image system)**：一个镜像系统，负责获取可引导的容器镜像，并提供事务性的升级和回滚功能。
+- **ostree (image system)**：也是一个镜像系统，负责获取 `ostree` 仓库，并提供事务性的升级和回滚功能。
+- **libdnf (pkg system)**：一个包管理系统，它将 `libsolv`（SAT求解器）、`librepo`（RPM仓库下载）和 `librpm`（RPM安装）等组件整合在一起。
+
+## 连线、分支与汇聚关系
+- `rpm-ostree -> ostree`：`rpm-ostree` 依赖于 `ostree`。
+- `rpm-ostree -> bootc`：`rpm-ostree` 依赖于 `bootc`。
+- `rpm-ostree -> libdnf`：`rpm-ostree` 依赖于 `libdnf`。
+
+## 仓库语境与术语解释
+- **rpm-ostree**：根据 README，`rpm-ostree` 是一个混合镜像/包管理系统，结合了 `libostree` 作为基础镜像格式，并接受客户端和服务器端的 RPM 包。
+- **ostree**：根据 README，`rpm-ostree` 使用 `libostree` 作为基础镜像格式，提供事务性的升级和回滚功能。
+- **bootc**：根据 README，目前开发重点已转移到 `bootc`，新的主要功能应在该项目中实现。
+- **libdnf**：根据 README，`rpm-ostree` 与 `dnf` 项目共享代码，特别是 `libdnf`，从而结合了两者的优点。
+- **daemon + CLI**：图中可见，`rpm-ostree` 包含守护进程和命令行界面，但仓库上下文未进一步说明二者的具体交互方式。
+- **package layering**：图中可见，`rpm-ostree` 支持包分层，但仓库上下文未提供更多细节。
+- **initramfs --enable**：图中可见，`rpm-ostree` 能够启用 `initramfs`，但仓库上下文未进一步说明。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `rpm-ostree` 系统的架构，它依赖于 `ostree`、`bootc` 和 `libdnf` 三个组件。`rpm-ostree` 作为核心组件，负责状态管理、升级、回滚和包分层等功能，而 `ostree` 和 `bootc` 提供镜像系统的支持，`libdnf` 提供包管理功能。`rpm-ostree` 通过整合这些组件，实现了混合镜像/包管理的目标。

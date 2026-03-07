@@ -1,0 +1,62 @@
+## 图类型与用途
+这是一个架构图，描述了客户端如何通过 `GPTAnon-2API-CFWorker` 将标准 OpenAI API 请求转换为与 `gptanon.com` API 兼容的请求，并最终获得标准 SSE 格式的响应流。该图展示了 Cloudflare Worker 作为“奇美拉综合代理”在不同 AI 模型和客户端之间建立桥梁的作用。
+
+## 图的整体布局
+图采用从左到右的布局，分为客户端生态、GPTAnon-2API Worker 和上游服务三个主要部分。数据流从客户端生态发起，经过 GPTAnon-2API Worker 的处理，最终与上游服务交互，并将结果返回给客户端。
+
+## 分组/子图/阶段说明
+图中包含三个子图，分别代表客户端生态、GPTAnon-2API Worker 和上游服务。
+
+## 节点逐项说明
+- **🤖 LobeChat**：客户端应用程序，使用标准 OpenAI API 发起请求。
+- **🌐 ChatGPT-Next-Web**：客户端应用程序，使用标准 OpenAI API 发起请求。
+- **🐍 Python SDK**：客户端应用程序，使用标准 OpenAI API 发起请求。
+- **🖥️ cURL/终端**：客户端应用程序，使用标准 OpenAI API 发起请求。
+- **🚪 /v1/chat/completions**：`GPTAnon-2API Worker` 暴露的 OpenAI 兼容 API 端点，客户端通过此端点发送聊天完成请求。根据 `worker.js`，该端点会进行认证检查。
+- **请求路由器**：负责根据请求类型（流式请求、模型列表请求、根路径访问）将请求路由到不同的处理模块。
+- **🎯 代理引擎**：核心组件，负责接收流式请求，并根据配置将请求转发到上游服务。
+- **📋 /v1/models**：提供模型列表的 API 端点。
+- **🖥️ 开发者驾驶舱**：一个内置的管理界面，允许用户配置和管理 Worker。README 提到可以通过访问 Worker 根路径进入该界面。
+- **🔧 配置管理 CONFIG + env**：存储 Worker 的配置信息，包括上游 API 地址、认证信息等。这些配置可以通过环境变量 (env) 或配置文件 (CONFIG) 进行管理。
+- **🛡️ 认证中间件**：负责验证客户端请求的身份，确保只有授权的客户端才能访问 API。
+- **🌊 gptanon.com API**：上游服务，提供各种 AI 模型的 API 接口。
+- **🔄 格式转换器 TransformStream**：使用 `TransformStream` 将上游 `gptanon.com` API 返回的自定义 JSON 流转换为 OpenAI 兼容的 SSE 格式。README 提到该组件实现了实时流式转换。
+- **📤 SSE 响应流**：服务器发送事件 (Server-Sent Events) 格式的响应流，用于将 AI 模型的输出实时地传递给客户端。
+
+## 连线、分支与汇聚关系
+- `🤖 LobeChat -> 🚪 /v1/chat/completions`：LobeChat 通过标准 OpenAI API 请求 `/v1/chat/completions` 端点。
+- `🌐 ChatGPT-Next-Web -> 🚪 /v1/chat/completions`：ChatGPT-Next-Web 通过标准 OpenAI API 请求 `/v1/chat/completions` 端点。
+- `🐍 Python SDK -> 🚪 /v1/chat/completions`：Python SDK 通过标准 OpenAI API 请求 `/v1/chat/completions` 端点。
+- `🖥️ cURL/终端 -> 🚪 /v1/chat/completions`：cURL/终端 通过标准 OpenAI API 请求 `/v1/chat/completions` 端点。
+- `🚪 /v1/chat/completions -> 请求路由器`：`/v1/chat/completions` 端点接收到请求后，将其传递给请求路由器。
+- `请求路由器 -- 流式请求 --> 🎯 代理引擎`：请求路由器将流式请求路由到代理引擎。
+- `请求路由器 -- 模型列表请求 --> 📋 /v1/models`：请求路由器将模型列表请求路由到 `/v1/models` 端点。
+- `请求路由器 -- 根路径访问 --> 🖥️ 开发者驾驶舱`：请求路由器将根路径访问路由到开发者驾驶舱。
+- `🎯 代理引擎 -> 🔄 格式转换器 TransformStream`：代理引擎将请求转发到格式转换器。
+- `🌊 gptanon.com API -> 🔄 格式转换器 TransformStream`：上游服务返回自定义 JSON 流到格式转换器。
+- `🔄 格式转换器 TransformStream -> 📤 SSE 响应流`：格式转换器将自定义 JSON 流转换为 OpenAI 兼容的 SSE 格式，并输出 SSE 响应流。
+- `🔧 配置管理 CONFIG + env -> 🎯 代理引擎`：配置管理为代理引擎提供配置信息。
+- `🔧 配置管理 CONFIG + env -> 📋 /v1/models`：配置管理为 `/v1/models` 端点提供配置信息。
+- `🔧 配置管理 CONFIG + env -> 🖥️ 开发者驾驶舱`：配置管理为开发者驾驶舱提供配置信息。
+- `🛡️ 认证中间件 -> 请求路由器`：认证中间件对请求进行认证。
+- `🎯 代理引擎 -> 🌊 gptanon.com API`：代理引擎将转换后的请求发送到上游服务。
+- `📤 SSE 响应流 -> 🤖 LobeChat`：SSE 响应流返回给 LobeChat。
+- `📤 SSE 响应流 -> 🌐 ChatGPT-Next-Web`：SSE 响应流返回给 ChatGPT-Next-Web。
+- `📤 SSE 响应流 -> 🐍 Python SDK`：SSE 响应流返回给 Python SDK。
+- `📤 SSE 响应流 -> 🖥️ cURL/终端`：SSE 响应流返回给 cURL/终端。
+- `/v1/models -> 🤖 LobeChat`：`/v1/models` 端点返回模型列表 JSON 给 LobeChat。
+- `/v1/models -> 🌐 ChatGPT-Next-Web`：`/v1/models` 端点返回模型列表 JSON 给 ChatGPT-Next-Web。
+- `/v1/models -> 🐍 Python SDK`：`/v1/models` 端点返回模型列表 JSON 给 Python SDK。
+
+## 仓库语境与术语解释
+- **GPTAnon-2API-CFWorker**：一个 Cloudflare Worker 代理解决方案，用于解决多样化 AI 模型与标准化 API 接口之间的兼容性问题。
+- **OpenAI API**：一种标准的 API 接口，被广泛应用于各种 AI 客户端。
+- **gptanon.com API**：一个上游服务，提供各种 AI 模型的 API 接口，但其 API 格式可能与 OpenAI API 不兼容。
+- **SSE (Server-Sent Events)**：一种服务器推送技术，允许服务器实时地将数据发送给客户端。
+- **TransformStream**：一种用于转换数据流的 Web API，`GPTAnon-2API-CFWorker` 使用它将上游 API 返回的自定义 JSON 流转换为 OpenAI 兼容的 SSE 格式。
+- **Cloudflare Workers**：一个无服务器计算平台，允许开发者在 Cloudflare 的全球网络上部署和运行代码。
+- **API_MASTER_KEY**：用于保护 API 端点的密钥，建议在 Cloudflare 环境变量中设置。
+- **开发者驾驶舱**：内置的 Web UI，提供 API 测试、健康检查、集成指南等功能。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该架构图展示了 `GPTAnon-2API-CFWorker` 如何将客户端的标准 OpenAI API 请求转换为与 `gptanon.com` API 兼容的请求，并最终返回标准 SSE 格式的响应流。客户端生态中的应用（如 LobeChat、ChatGPT-Next-Web）通过 `/v1/chat/completions` 端点发起请求，请求经过请求路由器分发到代理引擎或 `/v1/models` 端点，代理引擎将请求转发到 `gptanon.com API`，并通过 `TransformStream` 将返回的自定义 JSON 流转换为 OpenAI 兼容的 SSE 格式返回给客户端。配置管理模块为代理引擎、`/v1/models` 端点和开发者驾驶舱提供配置信息，认证中间件负责请求认证。该架构的核心在于将非标准的 AI 流式 API 实时转换为全球通用的 OpenAI 兼容格式，从而可以使用熟悉的工具调用多样化模型。

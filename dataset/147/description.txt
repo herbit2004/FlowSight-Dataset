@@ -1,0 +1,48 @@
+## 图类型与用途
+这是一个架构图，展示了 OpenMCP 系统的核心组件及其在不同应用场景下的部署和交互方式。该图用于概括 OpenMCP 的模块化设计，以及如何在不同平台复用核心组件。
+
+## 图的整体布局
+图整体采用上下布局，上方是四个不同的应用场景，下方是核心组件。箭头指示了不同应用场景与核心组件之间的关系。
+
+## 分组/子图/阶段说明
+图中包含五个子图/分组：
+- **OpenMCP Core Components**：包含 OpenMCP 的核心组件，Renderer 和 OpenMCPService。
+- **OpenMCP Web**：表示 OpenMCP 的 Web 应用场景，使用 Nginx 作为反向代理。
+- **OpenMCP Plugin**：表示 OpenMCP 的 VSCode 插件场景。
+- **OpenMCP App**：表示 OpenMCP 的桌面应用场景，使用 Electron 框架进行打包。
+- **OpenMCP-based QQ Bot**：表示基于 OpenMCP 的 QQ 机器人场景，使用 Lagrange.OneBot 框架进行协议适配。
+
+## 节点逐项说明
+- **Renderer**：负责用户界面的渲染，提供可视化的交互界面。
+- **OpenMCPService**：包含 OpenMCP 的核心业务逻辑，处理 MCP 协议相关的操作和数据。
+- **Nginx**：一个高性能的 HTTP 反向代理服务器，用于在 OpenMCP Web 应用中处理客户端请求，并将请求转发到 OpenMCPService。
+- **VSCode Plugin Code**：OpenMCP 的 VSCode 插件部分，提供在 VSCode IDE 中调试 MCP 服务器的功能。
+- **Electron Code**：OpenMCP 的桌面应用部分，使用 Electron 框架将 Web 应用打包成跨平台的桌面应用。
+- **Lagrange.OneBot**：一个 QQ 机器人框架，用于将 OpenMCP 的功能集成到 QQ 机器人中。
+
+## 连线、分支与汇聚关系
+- `OpenMCP_Web -> Renderer`：通过 "Frontend Rendering" 连接，表示 Web 应用的前端界面由 Renderer 渲染。
+- `OpenMCP_Web -> OpenMCPService`：通过 "Backend Service" 连接，表示 Web 应用的后端服务由 OpenMCPService 提供。
+- `OpenMCP_Web -> Nginx`：通过 "Reverse Proxy" 连接，表示 Nginx 作为反向代理服务器处理 Web 应用的请求。
+- `OpenMCP_Plugin -> Renderer`：通过 "UI Interface" 连接，表示插件的用户界面由 Renderer 渲染。
+- `OpenMCP_Plugin -> OpenMCPService`：通过 "Core Logic" 连接，表示插件的核心逻辑由 OpenMCPService 提供。
+- `OpenMCP_Plugin -> VSCode Plugin Code`：通过 "IDE Integration" 连接，表示插件集成到 VSCode IDE 中。
+- `OpenMCP_App -> Renderer`：通过 "Frontend UI" 连接，表示桌面应用的前端界面由 Renderer 渲染。
+- `OpenMCP_App -> OpenMCPService`：通过 "Local Service" 连接，表示桌面应用的本地服务由 OpenMCPService 提供。
+- `OpenMCP_App -> Electron Code`：通过 "Desktop Packaging" 连接，表示应用使用 Electron 框架进行桌面打包。
+- `QQBot -> Lagrange.OneBot`：通过 "Protocol Adaptation" 连接，表示使用 Lagrange 框架进行协议适配，以便与 QQ 平台交互。
+- `QQBot -> OpenMCPService`：通过 "Business Logic" 连接，表示 QQ 机器人的业务逻辑由 OpenMCPService 提供。
+- `OpenMCP_Web`、`OpenMCP_Plugin`、`OpenMCP_App`、`QQBot`都连接到`OpenMCPService`，形成汇聚关系。
+- `OpenMCP_Web`、`OpenMCP_Plugin`、`OpenMCP_App`都连接到`Renderer`，形成汇聚关系。
+
+## 仓库语境与术语解释
+- **OpenMCP**：一个用于 MCP 服务器调试的 VSCode 插件，根据 README，它集成了 Inspector 和 MCP 客户端的基本功能。
+- **MCP (Minecraft Protocol)**：图中未明确解释，但根据项目描述，OpenMCP 旨在提供一个集成的 MCP 服务器调试环境。
+- **Renderer**：根据 README 和目录树，前端 UI 定义位于 `renderer/` 目录下。
+- **OpenMCPService**：根据 README 和目录树，测试组件位于 `service/` 目录下，包含一个简单的转发层。
+- **VSCode Plugin Code**：根据 README 和目录树，VSCode 插件定义位于 `src/` 目录下。
+- **Electron Code**：用于将 Web 应用打包成跨平台桌面应用。
+- **Lagrange.OneBot**：一个 QQ 机器人框架，用于将 OpenMCP 的功能集成到 QQ 机器人中。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 OpenMCP 系统的模块化设计，核心组件 Renderer 和 OpenMCPService 被多个应用场景（Web 应用、VSCode 插件、桌面应用、QQ 机器人）复用。Web 应用通过 Nginx 作为反向代理与核心组件交互，VSCode 插件集成到 IDE 中，桌面应用使用 Electron 打包，QQ 机器人使用 Lagrange 框架进行协议适配。核心组件 `OpenMCPService` 和 `Renderer` 接收来自不同应用场景的连接，是架构的核心。

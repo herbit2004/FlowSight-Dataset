@@ -1,0 +1,47 @@
+## 图类型与用途
+这是一个流程图，描述了 LLM-TradeBot 的交易决策流程，展示了从选择交易标的到执行交易的完整过程。该图在仓库中用于概括交易决策的主流程，体现了多智能体协作的架构。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是流程的起点，即“Symbol Selector”，底部是流程的终点，即“Execution Engine”。中间部分展示了数据分析、决策和风险控制的各个阶段。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为以下几个阶段：
+- **数据准备阶段**：包括“Symbol Selector”和“DataSync (5m/15m/1h)”，负责选择交易标的和同步多时间周期的数据。
+- **分析与决策阶段**：包括“Quant Analyst”、“Multi-Period Parser”、“Trend / Setup / Trigger (LLM or Local)”和“Reflection (optional)”，负责对数据进行量化分析，并结合 LLM 或本地规则生成交易信号。
+- **风险控制与执行阶段**：包括“Decision Core”、“Risk Audit”和“Execution Engine”，负责整合各方意见，进行风险评估，并最终执行交易。
+
+## 节点逐项说明
+- **🎯 Symbol Selector**：选择交易标的，即确定交易的加密货币对。根据 README 和 `src/agents/symbol_selector_agent.py`，该模块基于动量、交易量和技术指标进行智能单标的选择。
+- **🕵️ DataSync (5m/15m/1h)**：同步 5 分钟、15 分钟和 1 小时三个时间周期的数据。根据 README 和 `src/agents/data_sync_agent.py`，该模块异步并发请求多周期 K 线数据，并进行时间对齐验证。
+- **👨‍🔬 Quant Analyst**：进行量化分析，产生数值信号。根据 README 和 `src/agents/quant_analyst_agent.py`，该模块产生趋势、震荡、情绪和陷阱等信号。
+- **🧭 Multi-Period Parser**：将多时间周期的数据压缩成决策核心的输入。
+- **🔮 Trend / 📊 Setup / ⚡ Trigger (LLM or Local)**：使用 LLM 或本地规则提供可读的推理，生成趋势、设置和触发信号。
+- **🪞 Reflection (optional)**：可选模块，总结交易表现并反馈到决策中。
+- **⚖️ Decision Core**：融合所有启用的智能体输出，形成最终的交易决策。根据 README 和 `src/agents/decision_core_agent.py`，该模块整合各智能体的输出，进行加权投票，并输出最终的交易行为和置信度。
+- **🛡️ Risk Audit**：进行风险审计，可以否决或调整交易决策。根据 README 和 `src/agents/risk_audit_agent.py`，该模块可以进行止损方向修正、资金预演和风险拦截。
+- **🚀 Execution Engine**：执行最终的交易决策。
+
+## 连线、分支与汇聚关系
+- `🎯 Symbol Selector -> 🕵️ DataSync (5m/15m/1h)`：选择交易标的后，同步相关数据。
+- `🕵️ DataSync (5m/15m/1h) -> 👨‍🔬 Quant Analyst`：同步数据后，进行量化分析。
+- `👨‍🔬 Quant Analyst -> 🧭 Multi-Period Parser`：量化分析的结果被传递给多周期解析器。
+- `👨‍🔬 Quant Analyst -> 🔮 Trend / 📊 Setup / ⚡ Trigger (LLM or Local)`：量化分析的结果被传递给趋势/设置/触发模块。
+- `👨‍🔬 Quant Analyst -> 🪞 Reflection (optional)`：量化分析的结果被传递给可选的 Reflection 模块。
+- `🧭 Multi-Period Parser -> ⚖️ Decision Core`：多周期解析器的输出被传递给决策核心。
+- `🔮 Trend / 📊 Setup / ⚡ Trigger (LLM or Local) -> ⚖️ Decision Core`：趋势/设置/触发模块的输出被传递给决策核心。
+- `🪞 Reflection (optional) -> ⚖️ Decision Core`：Reflection 模块的输出被传递给决策核心。
+- `🧭 Multi-Period Parser`、`🔮 Trend / 📊 Setup / ⚡ Trigger (LLM or Local)`、`🪞 Reflection (optional)`汇聚到 `⚖️ Decision Core`，形成汇聚关系。
+- `⚖️ Decision Core -> 🛡️ Risk Audit`：决策核心的输出被传递给风险审计模块。
+- `🛡️ Risk Audit -> 🚀 Execution Engine`：风险审计通过后，执行交易。
+
+## 仓库语境与术语解释
+- **Adversarial Decision Framework (ADF)**：基于对抗的决策框架，是 LLM-TradeBot 的核心架构。
+- **Multi-Agent Collaboration**：多智能体协作，指多个智能体共同参与交易决策的过程。
+- **LLM (Large Language Model)**：大型语言模型，用于生成交易信号和进行风险评估。README 提到支持 DeepSeek, OpenAI, Claude, Qwen, 和 Gemini 等模型。
+- **Quant Analyst**：量化分析师，负责进行技术指标分析和模式识别。
+- **Risk Audit**：风险审计，负责对交易决策进行风险评估和控制。
+- **Binance**：币安，一个中心化加密货币交易所，LLM-TradeBot 支持在该交易所进行交易。
+- **DataSync**：数据同步，负责同步多时间周期的 K 线数据，确保数据的一致性。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 LLM-TradeBot 的交易决策流程，从“Symbol Selector”选择交易标的开始，经过“DataSync”同步多时间周期数据，然后由“Quant Analyst”进行量化分析。分析结果被传递给“Multi-Period Parser”、“Trend / Setup / Trigger (LLM or Local)”和“Reflection (optional)”等模块，最终汇聚到“Decision Core”进行决策。决策结果经过“Risk Audit”进行风险评估后，由“Execution Engine”执行交易。其中，“Symbol Selector”、“DataSync”、“Quant Analyst”、“Decision Core”和“Risk Audit”是关键节点，体现了多智能体协作和风险控制的特点。该流程基于“Adversarial Decision Framework (ADF)”，旨在实现高胜率和低回撤的自动化期货交易。

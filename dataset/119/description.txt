@@ -1,0 +1,32 @@
+## 图类型与用途
+这是一个架构图，展示了后端应用在压力测试下的部署和交互方式。它描述了压力测试工具、负载均衡器、API实例和数据库之间的关系，用于说明应用在高并发请求下的架构。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是压力测试工具，中间是负载均衡器和API实例，底部是数据库。整个架构被包含在一个名为 "Sua Aplicação" 的子图中。
+
+## 分组/子图/阶段说明
+图中有一个名为 "Sua Aplicação" 的子图，它包含了负载均衡器、API实例和数据库。这个子图代表了整个后端应用。
+
+## 节点逐项说明
+- **Stress Test - Gatling**：表示压力测试工具 Gatling，用于模拟大量用户请求。`load-test/user-files/simulations/rinhabackend/RinhaBackendCrebitosSimulation.scala` 文件中定义了 Gatling 模拟的场景，包括借记和贷记。
+- **Load Balancer / porta 9999**：表示负载均衡器，监听 9999 端口，负责将请求分发到不同的 API 实例。
+- **API - instância 01**：表示 API 的第一个实例，负责处理业务逻辑。
+- **API - instância 02**：表示 API 的第二个实例，负责处理业务逻辑。
+- **Database**：表示数据库，用于存储和检索数据。
+
+## 连线、分支与汇聚关系
+- `Stress Test - Gatling -.-> Load Balancer / porta 9999`：压力测试工具 Gatling 发送请求到负载均衡器。
+- `Load Balancer / porta 9999 -.-> API - instância 01`：负载均衡器将一部分请求分发到 API 实例 01。
+- `Load Balancer / porta 9999 -.-> API - instância 02`：负载均衡器将另一部分请求分发到 API 实例 02。
+- `API - instância 01 -.-> Database`：API 实例 01 与数据库进行交互。
+- `API - instância 02 -.-> Database`：API 实例 02 也与数据库进行交互，形成汇聚关系。
+
+## 仓库语境与术语解释
+- **Gatling**：压力测试工具，用于模拟大量用户请求。在 `load-test/user-files/simulations/rinhabackend/RinhaBackendCrebitosSimulation.scala` 中定义了 Gatling 模拟的场景。
+- **Load Balancer**：负载均衡器，负责将请求分发到不同的 API 实例，提高应用的可用性和可扩展性。
+- **API**：后端 API 实例，负责处理业务逻辑，例如处理交易请求和查询账户余额。根据 README，API 需要实现 `/clientes/[id]/transacoes` 和 `/clientes/[id]/extrato` 两个 endpoint。
+- **Database**：用于存储客户信息、账户余额和交易记录。
+- **Transações**：根据 README，API 需要支持两种类型的交易：`c` (crédito) 和 `d` (débito)。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了一个负载均衡的后端应用架构，压力测试工具 Gatling 模拟大量用户请求，这些请求首先到达监听 9999 端口的负载均衡器。负载均衡器将这些请求分发到两个 API 实例。每个 API 实例都连接到同一个数据库，用于处理业务逻辑和存储数据。该架构通过负载均衡提高应用的可用性和可扩展性，以应对高并发请求。压力测试工具 Gatling 的配置位于 `load-test/user-files/simulations/rinhabackend/RinhaBackendCrebitosSimulation.scala`。

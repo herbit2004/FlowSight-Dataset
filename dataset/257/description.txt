@@ -1,0 +1,34 @@
+## 图类型与用途
+这是一个流程图，展示了用户通过 SSH 协议连接到 Linux 服务器的两种方式，以及 OpsCloud Server 在其中的作用。它用于说明通过负载均衡器连接 OpsCloud Server 集群，以及直接连接 SSH-Server 的两种 SSH 连接架构。
+
+## 图的整体布局
+图采用从左到右的布局，分为上下两个分支。上分支展示了通过 SLB 连接 Opscloud Server 的方式，下分支展示了直接连接 SSH-Server 的方式，最终都连接到 Linux 服务器。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为两个独立的 SSH 连接流程：
+1.  通过 SLB 连接 Opscloud Server 集群。
+2.  直接连接 SSH-Server。
+
+## 节点逐项说明
+- **User (A, E)**：代表用户，即发起 SSH 连接请求的客户端。
+- **SLB (B)**：Server Load Balancer（服务器负载均衡器），负责将用户的 SSH 连接请求分发到后端的 OpsCloud Server 实例。
+- **Opscloud Server (C, D)**：代表 OpsCloud Server 的一个实例。负载均衡器会将流量分发到这两个实例上。
+- **SSH-Server (F)**：代表 SSH-Server，用于直接接收用户的 SSH 连接。
+- **Linux (G)**：代表 Linux 服务器，用户最终要连接的目标服务器。
+
+## 连线、分支与汇聚关系
+- `User (A) -> SLB (B)`：用户 A 通过 SSH 协议（端口 22）连接到服务器负载均衡器 B。
+- `SLB (B) -> Opscloud Server (C)`：负载均衡器 B 通过 TCP 协议（端口 2222）将连接请求转发到 OpsCloud Server C。
+- `SLB (B) -> Opscloud Server (D)`：负载均衡器 B 通过 TCP 协议（端口 2222）将连接请求转发到 OpsCloud Server D。
+- `User (E) -> SSH-Server (F)`：用户 E 使用 ssh ed25519 算法连接到 SSH-Server。
+- `SSH-Server (F) -> Linux (G)`：SSH-Server 使用 ssh ed25519 算法连接到 Linux 服务器 G。
+
+## 仓库语境与术语解释
+- **SSH**：Secure Shell，一种加密的网络协议，用于在不安全的网络中安全地执行命令、管理文件和进行其他网络服务。
+- **SLB**：Server Load Balancer，服务器负载均衡器，用于将流量分发到多个后端服务器，提高可用性和性能。
+- **OpsCloud Server**：该仓库提供的云上运维平台的核心组件，用于管理和审计 SSH 连接。
+- **SSH-Server**：OpsCloud 平台提供的 SSH 服务，支持 ED25519 密钥，简化用户登录，自动关联用户 GitLab 账户公钥。README 中提到 "原生SSH协议实现，支持ED25519密钥"。
+- **ed25519**：一种 SSH 密钥算法，提供更高的安全性和性能。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了两种 SSH 连接方式：用户通过 SSH 连接到 SLB，SLB 将请求转发到 OpsCloud Server 集群；或者用户直接通过 ssh ed25519 算法连接到 SSH-Server，然后 SSH-Server 再连接到 Linux 服务器。第一种方式引入了 OpsCloud Server 和负载均衡器，用于集中管理和审计 SSH 连接，第二种方式则更为直接。OpsCloud Server 支持 ED25519 密钥，并能自动关联用户 GitLab 账户公钥。

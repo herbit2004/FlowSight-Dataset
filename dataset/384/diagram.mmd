@@ -1,0 +1,13 @@
+graph TB
+	user("云数据库user类")--"用openid进行登录鉴权"-->stor("前端缓存")
+	his("云数据库history类")--存储历史记录-->user--记载openid-->his
+	user--传送userinfo-->main("主页")--传userinfo-->timer
+	timer("计时器")--时间-->user
+	timer("计时器")--时间-->stor
+	login("登录")--建立集合-->user
+	login--缓存-->stor("前端缓存")
+	sch("云数据库school类")--绑定-->user
+	main--修改绑定-->sch
+	sch--传院校图片等信息-->main
+	cloud("云存储")--存储学校照片-->sch
+	main--访问-->his

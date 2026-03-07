@@ -1,0 +1,46 @@
+## 图类型与用途
+这是一个架构图，描述了 Claude-Gemini Bridge 的工作流程，该桥接器用于将 Claude Code 的代码分析任务委托给 Google Gemini。该图在仓库中用于展示 Claude Code 和 Gemini 如何协同工作，以提升代码分析的效率和准确性。
+
+## 图的整体布局
+图采用从上到下的布局，分为三个主要部分：Claude Code、Claude-Gemini Bridge 和 External APIs。数据流从顶部的 Claude Code 开始，经过中间的 Claude-Gemini Bridge，最终到达底部的 External APIs。
+
+## 分组/子图/阶段说明
+图中包含三个子图，分别代表不同的组件：
+- **Claude Code**：表示 Claude Code 命令行界面和工具调用。
+- **Claude-Gemini Bridge**：表示桥接系统的核心组件，包括钩子系统、路径转换器、决策引擎和缓存层。
+- **External APIs**：表示外部 API，包括 Gemini CLI 和 Gemini API。
+
+## 节点逐项说明
+- **Claude Code CLI (CC)**：Claude Code 命令行界面，是用户与 Claude Code 交互的入口。
+- **Tool Call (TC)**：图中位于 Claude Code 子图中，暗示 Claude Code 内部会产生工具调用。
+- **Hook System (HS)**：Claude-Gemini Bridge 的钩子系统，用于拦截 Claude Code 的请求，并决定是否将其委托给 Gemini。
+- **Path Converter (PC)**：路径转换器，用于转换 Claude Code 和 Gemini 之间可能存在的路径差异。根据 `hooks/lib/path-converter.sh`，它负责将 Claude 的 `@` 符号转换为绝对路径。
+- **Decision Engine (DE)**：决策引擎，根据预定义的规则（例如 token 数量）决定是否将任务委托给 Gemini。
+- **Cache Layer (CH)**：缓存层，用于缓存 Gemini 的分析结果，避免重复调用 API。根据 `hooks/lib/gemini-wrapper.sh`，缓存目录默认为 `${CLAUDE_GEMINI_BRIDGE_DIR:-$HOME/.claude-gemini-bridge}/cache/gemini`。
+- **Gemini CLI (GC)**：Gemini 命令行界面，用于与 Gemini API 交互。
+- **Gemini API (GA)**：Google Gemini API，用于执行代码分析任务。
+
+## 连线、分支与汇聚关系
+- `CC -- PreToolUse Hook --> HS`：Claude Code CLI 通过 `PreToolUse Hook` 将请求发送到 Hook System。
+- `HS -> PC`：Hook System 将请求传递给 Path Converter。
+- `PC -> DE`：Path Converter 将转换后的请求发送给 Decision Engine。
+- `DE -- Delegate? --> CH`：如果 Decision Engine 决定委托任务（`Delegate? - Yes`），则将请求发送到 Cache Layer。
+- `DE -- No --> CC`：如果 Decision Engine 决定不委托任务（`Delegate? - No`），则直接将结果返回给 Claude Code CLI。
+- `CH -- Yes --> GC`：Cache Layer 检查缓存中是否存在结果。如果不存在，则将请求发送到 Gemini CLI。
+- `GC -> GA`：Gemini CLI 调用 Gemini API 进行代码分析。
+- `GA -- Analysis --> CH`：Gemini API 将分析结果返回给 Cache Layer。
+- `CH -- Response --> HS`：Cache Layer 将结果返回给 Hook System。
+- `HS -- Result --> CC`：Hook System 将最终结果返回给 Claude Code CLI。
+
+## 仓库语境与术语解释
+- **Claude Code CLI**：Claude Code 命令行界面，是用户与 Claude Code 交互的入口。
+- **Hook System**：Claude Code 的钩子系统，允许在特定事件发生时执行自定义脚本。Claude-Gemini Bridge 利用此系统拦截请求。
+- **Path Converter**：用于转换 Claude Code 和 Gemini 之间可能存在的路径差异。Claude Code 使用 `@` 符号表示路径，Path Converter 将其转换为绝对路径，如 `hooks/lib/path-converter.sh` 所示。
+- **Decision Engine**：根据 `hooks/config/debug.conf` 中的配置，例如 `MIN_FILES_FOR_GEMINI` 和 `CLAUDE_TOKEN_LIMIT`，决定是否将任务委托给 Gemini。
+- **Cache Layer**：用于缓存 Gemini 的分析结果，避免重复调用 API。缓存时间由 `hooks/config/debug.conf` 中的 `GEMINI_CACHE_TTL` 配置。
+- **Gemini CLI**：Google 提供的命令行工具，用于与 Gemini API 交互。
+- **Gemini API**：Google Gemini API，用于执行代码分析任务。
+- **debug.conf**：`hooks/config/debug.conf` 文件包含用于配置 Claude-Gemini Bridge 的各种参数，例如调试级别、缓存设置和决策标准。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Claude-Gemini Bridge 的架构，从 Claude Code CLI 发起请求开始，通过 `PreToolUse Hook` 进入 Hook System。Hook System 将请求传递给 Path Converter 进行路径转换，然后由 Decision Engine 决定是否委托给 Gemini。如果委托，则通过 Cache Layer 检查缓存，若未命中则调用 Gemini CLI 和 Gemini API 进行分析，并将结果缓存。最终，结果通过 Hook System 返回给 Claude Code CLI。其中，Decision Engine 的决策逻辑和 Cache Layer 的缓存机制是关键环节。该桥接器的核心思想是利用 Claude Code 的钩子系统，智能地将复杂的代码分析任务委托给 Google Gemini，提升代码分析的效率和准确性。

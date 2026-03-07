@@ -1,0 +1,27 @@
+flowchart TD
+    S0[S0: Strategy] -->|Business Case| S1[S1: Specify]
+    
+    subgraph Definition
+        S1 -->|PRD Draft| Ambiguity{Ambiguous?}
+        Ambiguity -- Yes --> Clarify[Clarify Questions]
+        Clarify --> S1
+        Ambiguity -- No --> S2[S2: Plan]
+    end
+
+    subgraph Design
+        S2 -->|PLAN.md + C4| Review1{Approved?}
+        Review1 -- No --> S2
+        Review1 -- Yes --> S3[S3: Tasks]
+    end
+
+    subgraph Execution
+        S3 -->|project/TASKS.md| Decomp{Task < 15m?}
+        Decomp -- No --> S3
+        Decomp -- Yes --> S4[S4: Implement]
+        
+        S4 --> TDD[TDD Cycle]
+        TDD --> RARV[RARV: Reason/Act/Reflect/Verify]
+        RARV --> Audit[Audit Log]
+    end
+
+    Audit --> Done([Feature Complete])

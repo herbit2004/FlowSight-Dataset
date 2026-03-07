@@ -1,0 +1,44 @@
+## 图类型与用途
+这是一个流程图，描述了 AgentDock 框架中 AI Agent 处理用户查询的流程。该图展示了用户输入如何通过 AgentNode 处理，并根据 LLM 的推理结果选择不同的工作流，最终生成响应的逻辑。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是用户查询输入，经过 AgentNode 和 LLM 推理后，根据决策选择不同的工作流，最终汇聚到最终响应。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为三个阶段：用户输入与 Agent 处理、LLM 推理与工作流选择、工作流执行与结果生成。
+
+## 节点逐项说明
+- **Input (User Query)**：用户输入的查询或请求，作为整个流程的起点。
+- **Agent (AgentNode)**：AgentDock 框架中的核心组件，负责接收用户查询并进行初步处理。根据 README，AgentDock 旨在构建具有可配置确定性的 AI Agent。
+- **LLM Reasoning (Non-Deterministic)**：表示使用大型语言模型进行推理的过程，该过程具有不确定性。
+- **FlowChoice (Sub-Workflow Selection)**：一个决策节点，根据 LLM 的推理结果，选择执行哪个子工作流。
+- **Flow1 (Deterministic Workflow 1)**：第一个确定性的工作流，包含一系列预定义的步骤。
+- **Flow2 (Deterministic Workflow 2)**：第二个确定性的工作流，包含一系列预定义的步骤。
+- **DirectResponse (Generate Response)**：一种直接生成响应的路径，不经过特定的工作流。
+- **Flow1Result (Workflow 1 Result)**：第一个工作流执行完毕后的结果。
+- **Flow2Result (Workflow 2 Result)**：第二个工作流执行完毕后的结果。
+- **Response (Final Response)**：最终生成并返回给用户的响应。
+
+## 连线、分支与汇聚关系
+- `Input -> Agent`：用户查询进入 AgentNode 进行处理。
+- `Agent -> FlowChoice`：AgentNode 通过 LLM 进行推理，并将推理结果传递给 FlowChoice 节点。
+- `FlowChoice -- Decision A --> Flow1`：FlowChoice 节点根据 LLM 的推理结果，选择执行 Flow1。
+- `FlowChoice -- Decision B --> Flow2`：FlowChoice 节点根据 LLM 的推理结果，选择执行 Flow2。
+- `FlowChoice -- Decision C --> DirectResponse`：FlowChoice 节点根据 LLM 的推理结果，选择直接生成响应。
+- `Flow1 -> Flow1Result`：Flow1 执行完毕后产生 Flow1Result。
+- `Flow2 -> Flow2Result`：Flow2 执行完毕后产生 Flow2Result。
+- `Flow1Result -> Response`：Flow1Result 的结果汇聚到 Response 节点。
+- `Flow2Result -> Response`：Flow2Result 的结果汇聚到 Response 节点。
+- `DirectResponse -> Response`：DirectResponse 的结果汇聚到 Response 节点。
+- `Flow1Result`, `Flow2Result`, `DirectResponse` 汇聚到 `Response`，形成汇聚关系。
+
+## 仓库语境与术语解释
+- **AgentDock Core**：AgentDock 的核心后端框架，用于构建和部署 AI Agent。
+- **AgentNode**：AgentDock 框架中的核心组件，负责接收用户查询并进行初步处理。`agentdock-core/src/nodes/agent-node.ts` 文件定义了 AgentNode 的具体实现。
+- **LLM (Large Language Model)**：大型语言模型，用于 Agent 的推理和决策。
+- **Configurable Determinism**：AgentDock 的设计原则之一，允许开发者控制 Agent 行为的可预测性。
+- **OrchestrationManager**：用于管理 Agent 的工作流和状态。`agentdock-core/src/orchestration/index.ts` 文件定义了 OrchestrationManager 的实现。
+- **AIOrchestrationState**：用于存储 Agent 的状态信息，包括最近使用的工具和当前步骤。`agentdock-core/src/types/orchestration.ts` 文件定义了 AIOrchestrationState 的结构。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 AgentDock 框架中 AI Agent 处理用户查询的流程。用户查询首先进入 AgentNode，然后通过 LLM 进行推理，根据推理结果选择不同的执行路径，包括确定性工作流 Flow1 和 Flow2，以及直接生成响应 DirectResponse。最终，所有路径的结果都会汇聚生成最终的响应 Response。该流程的关键在于将 LLM 的推理能力与确定性的工作流相结合，从而在保证一定灵活性的同时，也提高了 Agent 的可控性和可预测性。AgentNode 和 LLM Reasoning 是核心中间环节。

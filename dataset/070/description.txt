@@ -1,0 +1,38 @@
+## 图类型与用途
+这是一个流程图，描述了 `claude-relay` 的架构，展示了 CLI 客户端、守护进程、HTTP/WS 服务器以及项目会话之间的关系。它在仓库中的作用是概括系统架构，帮助理解数据流向和组件交互方式。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是两个 CLI 客户端，中间是守护进程和 HTTP/WS 服务器，底部是两个项目及其会话存储。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为四个阶段：CLI 客户端交互、守护进程处理、HTTP/WS 服务器通信、项目会话存储。
+
+## 节点逐项说明
+- **CLI1 ("npx claude-relay (Terminal 1)") 和 CLI2 ("npx claude-relay (Terminal 2)")**：代表用户在终端中运行 `npx claude-relay` 命令的两个实例，即两个不同的终端窗口。
+- **IPC ("Unix Socket daemon.sock")**：代表进程间通信（Inter-Process Communication）机制，具体是通过 Unix Socket 文件 `daemon.sock` 实现的。根据 `lib/ipc.js`，该 Socket 用于 CLI 客户端与守护进程之间的通信。
+- **Daemon ("Daemon Process lib/daemon.js")**：代表一个守护进程，由 `lib/daemon.js` 文件实现。它是 `claude-relay` 的核心组件，负责处理来自 CLI 的请求，并与 HTTP/WS Server 交互。
+- **HTTP ("HTTP/WS Server :2633")**：代表一个 HTTP 和 WebSocket 服务器，监听 2633 端口。它负责接收来自 Web UI 的请求，并将数据传递给 Daemon 进程。
+- **P1 ("Project A") 和 P2 ("Project B")**：代表两个不同的项目，用户可以通过 Web UI 与它们进行交互。
+- **Sessions1 ("sessions/\*.jsonl") 和 Sessions2 ("sessions/\*.jsonl")**：代表存储会话信息的文件，每个项目对应一个或多个 `.jsonl` 文件。根据 `lib/cli-sessions.js`，会话信息以 JSONL 格式存储。
+
+## 连线、分支与汇聚关系
+- `CLI1 <--> IPC`：多个 CLI 实例通过 Unix Socket 与 IPC 组件进行双向通信。
+- `CLI2 <--> IPC`：多个 CLI 实例通过 Unix Socket 与 IPC 组件进行双向通信。
+- `IPC <--> Daemon`：IPC 组件与 Daemon 进程进行双向通信。
+- `Daemon --- HTTP`：Daemon 进程与 HTTP/WS Server 进行通信。
+- `HTTP --> /p/project-a/ --> P1`：HTTP/WS Server 根据 URL 路径 `/p/project-a/` 将请求路由到 Project A。
+- `HTTP --> /p/project-b/ --> P2`：HTTP/WS Server 根据 URL 路径 `/p/project-b/` 将请求路由到 Project B。
+- `P1 --- Sessions1`：Project A 与对应的会话文件 `sessions/*.jsonl` 进行关联。
+- `P2 --- Sessions2`：Project B 与对应的会话文件 `sessions/*.jsonl` 进行关联。
+
+## 仓库语境与术语解释
+- **CLI (Command Line Interface)**：用户通过命令行与 `claude-relay` 交互的界面。
+- **IPC (Inter-Process Communication)**：进程间通信，`claude-relay` 使用 Unix Socket 实现 CLI 客户端与守护进程之间的通信，具体实现位于 `lib/ipc.js`。
+- **Daemon**：一个在后台运行的守护进程，负责处理来自 CLI 客户端的请求，核心逻辑位于 `lib/daemon.js`。
+- **HTTP/WS Server**：HTTP 和 WebSocket 服务器，用于接收来自 Web UI 的请求，并将数据传递给 Daemon 进程，相关代码位于 `lib/server.js`。
+- **Project**：用户通过 `claude-relay` 管理的不同项目，每个项目都有自己的会话文件。
+- **Sessions/\*.jsonl**：存储会话信息的文件，采用 JSONL 格式，位于 `~/.clay/sessions/{encoded-cwd}/{cliSessionId}.jsonl`，相关逻辑位于 `lib/cli-sessions.js`。
+- **npx claude-relay**：用于启动 CLI 客户端的命令。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `claude-relay` 的架构，用户通过运行 `npx claude-relay` 命令启动 CLI 客户端，CLI 客户端通过 Unix Socket 与 Daemon 守护进程进行双向通信。Daemon 进程负责处理来自 CLI 客户端的请求，并通过 HTTP/WS Server 将数据暴露给 Web UI。HTTP/WS Server 根据 URL 路径将请求路由到不同的项目，每个项目都与对应的会话文件相关联，用于存储会话信息。其中，IPC 通信和 Daemon 进程是关键的中间环节，会话信息存储在 `sessions/*.jsonl` 文件中。

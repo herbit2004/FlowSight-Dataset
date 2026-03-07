@@ -1,0 +1,49 @@
+## 图类型与用途
+这是一个流程图，描述了使用 QRemeshify 插件进行网格四边形重拓扑（Remeshing）的流程。该流程图展示了如何将输入的网格模型转换为高质量的四边形网格模型，并利用缓存和对称性进行优化。
+
+## 图的整体布局
+图采用从上到下的布局。流程从顶部的“Start”节点开始，经过一系列处理步骤，最终到达底部的“Add mirror modifier on specified axes for symmetry”节点。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为三个阶段：预处理阶段（包括切割网格、计算锐利特征等）、QuadWild 处理阶段（包括预处理、场计算、场追踪和分割）以及后处理阶段（包括四边形化、光滑处理和添加镜像修改器）。
+
+## 节点逐项说明
+- **Start**：流程的起始点。
+- **B{Use cache?}**：判断是否使用缓存的决策节点。如果使用缓存，则跳过一些预处理步骤。
+- **C[Cut mesh in half on specified axes for symmetry]**：根据指定的对称轴将网格切割成一半，以利用对称性减少计算量。
+- **D([mesh.obj])**：代表输入的原始网格模型文件（OBJ格式）。
+- **E[Calculate sharp features]**：计算网格的锐利特征（例如锐边），这些特征对于保持模型的细节非常重要。
+- **G[[QuadWild built-in preprocessing and field calculation]]**：QuadWild 内置的预处理和场计算步骤，包括生成引导四边形网格方向的向量场。
+- **H([mesh_rem.obj])**：代表经过预处理和场计算后的中间网格模型文件。
+- **I[[QuadWild field tracing and splitting into patches]]**：QuadWild 的场追踪和分割成块（patches）的步骤，根据之前计算的向量场，将网格分割成适合四边形化的区域。
+- **J([mesh_rem_p0.obj])**：代表分割成块后的网格模型文件。
+- **K[[QuadWild quadrangulation and smoothing]]**：QuadWild 的四边形化和光滑处理步骤，将分割后的网格块转化为四边形网格，并进行光滑处理，以获得更好的视觉效果。
+- **L([mesh_rem_p0_0_quadrangulation.obj, mesh_rem_p0_0_quadrangulation_smooth.obj])**：代表四边形化和光滑处理后的网格模型文件，包含四边形化后的版本和光滑后的版本。
+- **M[Add mirror modifier on specified axes for symmetry]**：根据指定的对称轴添加镜像修改器。如果之前切割了网格，则需要通过镜像恢复完整的模型。
+
+## 连线、分支与汇聚关系
+- `Start -> B`：流程从开始节点进入是否使用缓存的判断。
+- `B -- False --> C`：如果不使用缓存，则先切割网格。
+- `C -.-> D`：切割网格后，读取原始网格模型。
+- `D --> E`：读取原始网格模型后，计算锐利特征。
+- `E --> G`：计算锐利特征后，进行 QuadWild 预处理和场计算。
+- `D --> G`：原始网格模型也直接输入到 QuadWild 预处理和场计算步骤。
+- `G -.-> H`：QuadWild 预处理和场计算后，生成中间网格模型。
+- `H --> I`：中间网格模型经过 QuadWild 场追踪和分割成块处理。
+- `I -.-> J`：场追踪和分割后，生成分割后的网格模型文件。
+- `J --> K`：分割后的网格模型进行四边形化和光滑处理。
+- `B -- True --> K`：如果使用缓存，则直接跳到四边形化和光滑处理步骤。
+- `K -.-> L`：四边形化和光滑处理后，生成最终的四边形网格模型文件。
+- `L --> M`：最后，根据对称轴添加镜像修改器。
+
+## 仓库语境与术语解释
+- **QRemeshify**：一个 Blender 扩展，用于输出高质量四边形拓扑的网格重划分器，参见 README。
+- **QuadWild**：QRemeshify 插件基于 QuadWild 算法，用于网格四边形化。
+- **Remeshing**：网格重划分，即将一个网格模型转换为具有不同拓扑结构的新网格模型。
+- **Cache (Use Cache)**：QRemeshify 插件中的一个选项，用于缓存之前计算的结果，避免重复计算，提高效率。
+- **Symmetry**：QRemeshify 插件支持对称性，可以根据指定的对称轴进行网格切割和镜像，减少计算量。
+- **Sharp Features**：网格的锐利特征，例如锐边，对于保持模型的细节非常重要。QRemeshify 插件可以检测和保留这些特征。
+- **Blender**：一个开源的 3D 创作软件，QRemeshify 是一个 Blender 插件。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图描述了 QRemeshify 插件的网格四边形重拓扑流程。流程从“Start”开始，首先判断是否使用缓存。如果不使用缓存，则先切割网格并计算锐利特征，然后进行 QuadWild 预处理、场计算、场追踪和分割；如果使用缓存，则跳过预处理步骤。最后，进行四边形化和光滑处理，并添加镜像修改器。其中，QuadWild 预处理和场计算是核心步骤，对称性处理和缓存机制用于优化流程。QRemeshify 作为一个 Blender 插件，旨在提供高质量的四边形网格重划分功能。

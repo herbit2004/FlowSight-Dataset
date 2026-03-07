@@ -1,0 +1,51 @@
+## 图类型与用途
+这是一个架构图，展示了 Salesforce 动态查询框架的模块化组件架构和数据流。该框架旨在提供一个元数据驱动的 SOQL 执行框架，具备内置的安全机制、批量处理能力和风险评估功能，减少重复的查询代码编写。
+
+## 图的整体布局
+图采用从上到下的分层布局，从顶部的 UI 层开始，依次是控制器层、核心引擎和数据层。数据流从 UI 层经过控制器层和核心引擎，最终访问数据层。
+
+## 分组/子图/阶段说明
+图中包含四个显式子图，分别代表不同的层：
+- **UI Layer - Lightning Web Components**：表示用户界面层，使用 Lightning Web Components 构建。
+- **Controller Layer - Apex**：表示控制器层，使用 Apex 代码实现。
+- **Core Engine**：表示核心引擎，负责数据选择和缓存。
+- **Data Layer**：表示数据层，包含自定义元数据和 Salesforce 数据库。
+
+## 节点逐项说明
+- **QV (jtQueryViewer)**：主协调器，负责整个查询流程的控制和协调。根据 README，该组件是 UI 层中的主要编排者。
+- **CB (jtSearchableCombobox)**：可搜索的下拉框，用于选择查询配置。根据 README，该组件提供实时客户端过滤功能。
+- **EB (jtExecuteButton)**：智能执行按钮，触发查询执行。图中可见，但仓库上下文未进一步说明。
+- **QR (jtQueryResults)**：多视图显示组件，用于展示查询结果。根据 README，该组件支持表格、JSON 和 CSV 格式的显示。
+- **CM (jtCacheModal)**：缓存管理器，用于管理查询缓存。图中可见，但仓库上下文未进一步说明。
+- **QVC (JT_QueryViewerController)**：查询执行控制器，负责实际的查询执行逻辑。图中可见，但仓库上下文未进一步说明。
+- **MC (JT_MetadataCreator)**：元数据创建器，用于管理查询配置的元数据。图中可见，但仓库上下文未进一步说明。
+- **UF (JT_UsageFinder)**：使用情况查找器，用于搜索查询的使用情况。根据 README，该组件可以查找 Apex 类和 Flow 的引用。
+- **DS (JT_DataSelector)**：数据选择器，采用单例模式并具备缓存功能，负责从数据库或元数据中获取数据。图中可见，但仓库上下文未进一步说明。
+- **MD (Custom Metadata)**：自定义元数据，存储查询配置信息。根据 README，查询在 Custom Metadata 中定义，便于管理。
+- **DB (Salesforce DB)**：Salesforce 数据库，存储实际的数据。图中可见，但仓库上下文未进一步说明。
+
+## 连线、分支与汇聚关系
+- `QV -> CB`：主协调器与配置选择器交互。
+- `QV -> EB`：主协调器与执行按钮交互。
+- `QV -> QR`：主协调器与结果显示组件交互。
+- `QV -> CM`：主协调器与缓存管理器交互。
+- `CB -> QVC`：配置选择器触发查询执行控制器。
+- `EB -> QVC`：执行按钮触发查询执行控制器。
+- `CM -> QVC`：缓存管理器触发查询执行控制器。
+- `QVC -> DS`：查询执行控制器依赖数据选择器获取数据。
+- `MC -> MD`：元数据创建器管理自定义元数据。
+- `UF -> DB`：使用情况查找器在数据库中搜索查询的使用情况。
+- `DS -> DB`：数据选择器从数据库获取数据。
+- `DS -> MD`：数据选择器从自定义元数据获取数据。
+
+## 仓库语境与术语解释
+- **SOQL**：Salesforce Object Query Language，用于查询 Salesforce 数据的语言。
+- **Lightning Web Components (LWC)**：Salesforce 的 Web 组件框架，用于构建用户界面。
+- **Apex**：Salesforce 的编程语言，用于编写后端逻辑。
+- **Custom Metadata**：Salesforce 的元数据类型，用于存储配置数据。该框架使用 Custom Metadata 来定义 SOQL 查询，方便管理。
+- **USER_MODE Enforcement**：根据 README，框架强制执行 USER_MODE，尊重 FLS、CRUD 和共享规则，保证安全性。
+- **Run As User**：根据 README，框架支持以其他用户的权限上下文运行查询，方便测试和调试。
+- **Usage Finder**：根据 README，该功能可以查找查询在 Apex 类和 Flow 中的使用情况。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该架构图展示了 Salesforce 动态查询框架的组件和数据流。用户通过 UI 层的 `jtQueryViewer` 组件协调查询流程，通过 `jtSearchableCombobox` 选择查询配置，点击 `jtExecuteButton` 触发查询。查询请求传递到控制器层的 `JT_QueryViewerController`，再由 `JT_DataSelector` 从 `Custom Metadata` 或 `Salesforce DB` 获取数据。`JT_UsageFinder` 用于查找查询的使用情况。该框架的核心是元数据驱动的 SOQL 查询执行，并具备安全机制和批量处理能力。

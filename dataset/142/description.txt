@@ -1,0 +1,52 @@
+## 图类型与用途
+这是一个流程图/架构图，展示了 `bluez-alsa` 项目中各个组件之间的关系和数据流向，以及如何通过 Bluetooth 将音频数据传递到 ALSA 系统。该图在 README 中用于概括 BlueALSA 的基本架构。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是蓝牙适配器和 `bluetoothd` 守护进程，中间是 `bluealsad` 守护进程，底部是 ALSA 组件和应用程序。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为蓝牙连接层、BlueALSA 核心层、ALSA 音频处理层。
+
+## 节点逐项说明
+- **Bluetooth Adapter**：蓝牙适配器，负责物理上的蓝牙连接。
+- **bluetoothd daemon**：BlueZ 蓝牙守护进程，负责管理蓝牙连接和设备。
+- **bluealsad daemon**：`bluez-alsa` 的核心守护进程，负责处理蓝牙音频数据并将其传递给 ALSA。根据 README，`bluealsad` 接口连接 BlueZ 蓝牙守护进程和本地蓝牙适配器，处理 A2DP、HFP 和 HSP 的 profile 连接和配置逻辑，并通过 D-Bus 将生成的音频流提供给应用程序。
+- **bluealsactl**：`bluez-alsa` 提供的命令行工具，用于控制 `bluealsad` 守护进程。
+- **bluealsa-aplay**：`bluez-alsa` 提供的 `aplay` 工具，用于通过蓝牙播放音频。
+- **bluealsa ALSA plug-ins**：`bluez-alsa` 提供的 ALSA 插件，允许 ALSA 应用直接使用蓝牙音频设备。根据 README，这些插件隐藏了所有 D-Bus 细节，并允许应用程序使用 ALSA PCM 和 mixer 接口。
+- **other D-Bus clients**：其他通过 D-Bus 与 `bluealsad` 交互的客户端。
+- **ALSA MIDI sequencer**：ALSA MIDI 音序器。
+- **ALSA libasound**：ALSA 的 libasound 库，提供 ALSA API。
+- **Speakers**：扬声器，音频的最终输出设备。
+- **ALSA applications**：各种 ALSA 应用程序，例如音频播放器。
+- **ALSA MIDI application**：ALSA MIDI 应用程序。
+
+## 连线、分支与汇聚关系
+- `Bluetooth Adapter <--> bluetoothd daemon`：蓝牙适配器与 BlueZ 守护进程之间进行通信，建立蓝牙连接。
+- `Bluetooth Adapter <--> bluealsad daemon`：蓝牙适配器与 `bluealsad` 守护进程之间进行通信，传递音频数据。
+- `bluetoothd daemon <-- dbus --> bluealsad daemon`：BlueZ 守护进程通过 D-Bus 与 `bluealsad` 守护进程通信，传递蓝牙连接信息。
+- `bluealsad daemon <-- dbus --> bluealsactl`：`bluealsactl` 通过 D-Bus 与 `bluealsad` 守护进程通信，发送控制命令。
+- `bluealsad daemon <-- dbus --> bluealsa-aplay`：`bluealsa-aplay` 通过 D-Bus 与 `bluealsad` 守护进程通信，请求播放音频。
+- `bluealsa-aplay --> ALSA libasound`：`bluealsa-aplay` 使用 ALSA libasound 库播放音频。
+- `ALSA libasound --> Speakers`：ALSA libasound 库将音频数据输出到扬声器。
+- `bluealsad daemon <-- dbus --> bluealsa ALSA plug-ins`：`bluealsad` 守护进程通过 D-Bus 与 `bluealsa ALSA plug-ins` 通信。
+- `bluealsa ALSA plug-ins <--> ALSA libasound`：`bluealsa ALSA plug-ins` 使用 ALSA libasound 库。
+- `ALSA libasound <--> ALSA applications`：ALSA libasound 库与 ALSA 应用程序交互。
+- `bluealsad daemon <-- dbus --> other D-Bus clients`：`bluealsad` 守护进程通过 D-Bus 与其他 D-Bus 客户端通信。
+- `bluealsad daemon <--> ALSA MIDI sequencer`：`bluealsad` 守护进程与 ALSA MIDI 音序器通信。
+- `ALSA MIDI sequencer <--> ALSA libasound`：ALSA MIDI 音序器使用 ALSA libasound 库。
+- `ALSA libasound <--> ALSA MIDI application`：ALSA libasound 库与 ALSA MIDI 应用程序交互。
+
+## 仓库语境与术语解释
+- **BlueALSA**：该项目旨在提供 BlueZ 和 ALSA 之间的直接集成，允许通过蓝牙传输音频数据到 ALSA 系统。
+- **BlueZ**：Linux 蓝牙协议栈。BlueALSA 作为 BlueZ 的补充，提供了音频 profile 的支持。
+- **ALSA**：Advanced Linux Sound Architecture，Linux 内核提供的音频接口。
+- **bluetoothd**：BlueZ 蓝牙守护进程，负责管理蓝牙连接和设备。
+- **bluealsad**：BlueALSA 的核心守护进程，负责处理蓝牙音频数据并将其传递给 ALSA。
+- **D-Bus**：进程间通信机制，`bluealsad` 使用 D-Bus 与其他组件进行通信。
+- **bluealsactl**：BlueALSA 提供的命令行工具，用于管理 `bluealsad` 守护进程。
+- **bluealsa-aplay**：BlueALSA 提供的 `aplay` 工具，用于通过蓝牙播放音频。
+- **ALSA plug-ins**：BlueALSA 提供的 ALSA 插件，允许 ALSA 应用直接使用蓝牙音频设备。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 BlueALSA 项目的架构，从蓝牙适配器开始，通过 `bluetoothd` 守护进程建立蓝牙连接，然后 `bluealsad` 守护进程处理音频数据，并通过 D-Bus 与 `bluealsactl`、`bluealsa-aplay`、ALSA 插件和其他 D-Bus 客户端通信。音频数据最终通过 ALSA libasound 库输出到扬声器或 ALSA 应用程序。`bluealsad` 守护进程是整个架构的核心，负责连接蓝牙和 ALSA，并提供 D-Bus 接口。

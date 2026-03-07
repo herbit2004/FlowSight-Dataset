@@ -1,0 +1,40 @@
+## 图类型与用途
+这是一个流程图，用于展示 `dj-rest-auth` 库的架构，以及它在 Django 项目中如何处理用户认证和授权相关的流程。它在仓库中的作用是提供一个架构概览，展示客户端如何与后端交互进行认证和授权。
+
+## 图的整体布局
+图采用从左到右的布局。客户端位于左侧，Django 后端及其组件位于右侧，展示了客户端请求如何流经 `dj-rest-auth` 以及相关的 Django 组件。
+
+## 分组/子图/阶段说明
+图中包含两个子图：
+- **dj-rest-auth**：表示 `dj-rest-auth` 库本身，包含认证、注册和密码重置等功能。
+- **Django**：表示整个 Django 后端框架，包含 Django REST Framework、Django 内置的认证系统、`django-allauth` 和 `simplejwt`。
+
+## 节点逐项说明
+- **Client (React / Vue / Mobile)**：客户端，可以是使用 React、Vue 等框架构建的 Web 应用，或者移动应用。代表用户与系统交互的入口。
+- **Auth (Login / Logout)**：`dj-rest-auth` 子图中的一个组件，处理用户登录和登出的认证逻辑。
+- **Reg (Registration)**：`dj-rest-auth` 子图中的一个组件，处理用户注册的逻辑。
+- **PW (Password Reset)**：`dj-rest-auth` 子图中的一个组件，处理用户密码重置的逻辑。
+- **DRF (Django REST Framework)**：Django REST Framework，用于构建 RESTful API 的框架。`dj-rest-auth` 构建在 DRF 之上。
+- **DJAuth (django.contrib.auth)**：Django 内置的认证系统，提供用户模型、权限管理等功能。
+- **AA (django-allauth)**：`django-allauth` 库，用于处理社交认证（例如，通过 Google、GitHub、Facebook 登录）。
+- **JWT (simplejwt)**：`simplejwt` 库，用于生成和验证 JSON Web Tokens (JWT)，一种流行的无状态认证方式。
+
+## 连线、分支与汇聚关系
+- `Client <--> dj-rest-auth`：客户端与 `dj-rest-auth` 之间进行双向通信，客户端发送认证请求，`dj-rest-auth` 返回认证结果。
+- `Auth --> DRF`：`Auth` 组件依赖于 Django REST Framework 来暴露 API 端点。
+- `Auth --> DJAuth`：`Auth` 组件使用 Django 内置的认证系统进行用户验证和会话管理。
+- `Auth -.-> JWT`：`Auth` 组件可以选择使用 JWT 进行认证，这是一种可选的认证方式，因此使用虚线箭头表示。
+- `Reg -.-> AA`：`Reg` 组件可以选择使用 `django-allauth` 进行社交认证，同样是可选的，使用虚线箭头表示。
+- `PW --> DJAuth`：`PW` 组件依赖于 Django 内置的认证系统来处理密码重置流程。
+
+## 仓库语境与术语解释
+- **dj-rest-auth**：一个为 Django REST Framework 提供的安全、开箱即用的认证端点库，特别适用于单页应用 (SPA) 和移动应用。
+- **Django REST Framework (DRF)**：一个用于构建 Web API 的强大而灵活的工具包。`dj-rest-auth` 依赖于 DRF 来提供 RESTful API 端点。
+- **django.contrib.auth (DJAuth)**：Django 内置的认证系统，提供用户模型、权限管理等功能。`dj-rest-auth` 使用它来进行用户验证和会话管理。
+- **django-allauth (AA)**：一个 Django 库，提供社交认证功能，例如通过 Google、GitHub、Facebook 登录。`dj-rest-auth` 可以选择使用它来实现社交认证。
+- **simplejwt (JWT)**：一个用于生成和验证 JSON Web Tokens (JWT) 的库。`dj-rest-auth` 可以选择使用 JWT 进行认证。
+- **Client**：通常指使用 `dj-rest-auth` 提供的 API 的前端应用，例如 React、Vue 或移动应用。
+- **`/auth/login/` endpoint**: README 中提到，该端点用于获取认证 token。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了客户端如何通过 `dj-rest-auth` 与 Django 后端进行交互以实现用户认证和授权。客户端通过 `dj-rest-auth` 提供的 API 端点进行登录、注册、密码重置等操作。`dj-rest-auth` 内部依赖于 Django REST Framework、Django 内置的认证系统、`django-allauth` (可选，用于社交认证) 和 `simplejwt` (可选，用于 JWT 认证) 来实现这些功能。核心流程是客户端发起请求到 `dj-rest-auth`，然后 `dj-rest-auth` 调用 Django 的相关组件完成认证流程。

@@ -1,0 +1,29 @@
+graph TB
+    subgraph Global["🌐 Global Layer"]
+        DNS["Route 53 DNS<br/>Intelligent Traffic Management"]
+    end
+
+    subgraph Taiwan["🇹🇼 Taiwan Region (ap-east-2)<br/>Primary - 60% Traffic"]
+        TW_APP["EKS Cluster<br/>5 nodes × 3 AZs"]
+        TW_DB["Aurora Global DB<br/>Primary Writer"]
+        TW_CACHE["ElastiCache Global"]
+    end
+
+    subgraph Japan["🇯🇵 Japan Region (ap-northeast-1)<br/>Secondary - 40% Traffic"]
+        JP_APP["EKS Cluster<br/>5 nodes × 3 AZs"]
+        JP_DB["Aurora Global DB<br/>Write Forwarding"]
+        JP_CACHE["ElastiCache Global"]
+    end
+
+    DNS --> TW_APP
+    DNS --> JP_APP
+    TW_APP --> TW_DB
+    TW_APP --> TW_CACHE
+    JP_APP --> JP_DB
+    JP_APP --> JP_CACHE
+    TW_DB -.->|"< 1s Replication"| JP_DB
+    TW_CACHE -.->|"< 1s Replication"| JP_CACHE
+
+    style Global fill:#e1f5ff,stroke:#0066cc,stroke-width:3px
+    style Taiwan fill:#fff4e1,stroke:#ff9900,stroke-width:3px
+    style Japan fill:#f0fff4,stroke:#00cc66,stroke-width:3px

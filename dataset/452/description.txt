@@ -1,0 +1,47 @@
+## 图类型与用途
+这是一个流程图，描述了一个基于 Agentic 的多阶段机器人（Bot）的工作流程，展示了其核心组件和数据流向。它在仓库中的作用是概括 Agentic AI Pipeline 的整体架构，用于研究和对外推广。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是用户输入节点，中间是意图理解、规划、检索和写作等处理阶段，底部是最终的答案和证据输出节点。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分成四个阶段：意图理解与规划、信息检索、内容生成与评估、结果输出。
+
+## 节点逐项说明
+- **U (User)**：用户，是整个流程的起点，负责发起请求或提问。
+- **IR (Intent Router - Flash)**：意图路由器，负责快速理解用户的意图，并将其传递给后续的规划器。`Flash`可能表示快速处理。根据`Agentic-RAG-Pipeline/agents/intent.py`，该模块用于分类用户请求，提取意图、安全策略、紧急程度等信息。
+- **PL (Planner - Pro)**：规划器，根据用户的意图，制定任务执行计划。`Pro`可能表示高级或专业。根据`Agentic-RAG-Pipeline/agents/planner.py`，该模块将任务分解为有序的子目标。
+- **RP (Retrieval Planner - Pro)**：检索规划器，负责规划如何检索相关信息，以支持后续的答案生成。`Pro`可能表示高级或专业。根据`Agentic-RAG-Pipeline/agents/retrieval_planner.py`，该模块为每个子目标生成多个搜索查询。
+- **R1 (VectorRetriever - FAISS)**：向量检索器，使用 FAISS（Facebook AI Similarity Search）库，从向量数据库中检索相关信息。根据`Agentic-RAG-Pipeline/agents/retrievers.py`，该模块使用 FAISS 索引搜索向量数据库。
+- **R2 (WebRetriever - Google CSE + Fetch)**：网络检索器，使用 Google Custom Search Engine (CSE) 和 Fetch 技术，从网络上检索相关信息。根据`Agentic-RAG-Pipeline/agents/retrievers.py`，该模块使用 Google CSE 搜索网络，并抓取页面内容。
+- **W (Writer - Pro)**：写作者，负责根据检索到的信息，生成答案。`Pro`可能表示高级或专业。根据`Agentic-RAG-Pipeline/agents/writer.py`，该模块根据提供的证据撰写答案。
+- **C (Critic - Pro)**：评论者，负责评估答案的质量，并提出改进建议。`Pro`可能表示高级或专业。图中可见，但仓库上下文未进一步说明。
+- **G (Guardrails)**：安全护栏，负责检查答案是否符合安全标准，防止生成有害或不当内容。图中可见，但仓库上下文未进一步说明。
+- **A (Answer + Evidence)**：答案和证据，是流程的最终输出，包含生成的答案和支持该答案的证据。
+- **M (File-backed Memory)**：文件支持的记忆模块，用于存储会话状态和历史信息，以便规划器可以利用上下文信息。图中可见，但仓库上下文未进一步说明。
+
+## 连线、分支与汇聚关系
+- `U -> IR`：用户发起请求，请求首先到达意图路由器。
+- `IR -> PL`：意图路由器将用户意图传递给规划器。
+- `PL -> RP`：规划器制定任务计划，并将其传递给检索规划器。
+- `PL -. session .-> M`：规划器与文件支持的记忆模块进行会话。
+- `RP -> R1`：检索规划器决定使用向量检索器来检索信息。
+- `RP -> R2`：检索规划器决定使用网络检索器来检索信息。
+- `R1 -> W`：向量检索器检索到的信息被传递给写作者。
+- `R2 -> W`：网络检索器检索到的信息被传递给写作者，与来自向量检索器的信息形成汇聚关系。
+- `W -> C`：写作者生成答案，并将答案传递给评论者。
+- `W -> G`：写作者生成答案，并将答案传递给安全护栏。
+- `C ->|follow-ups| RP`：评论者评估答案质量，如果需要改进，则会向检索规划器发送后续请求，以检索更多信息。
+- `G -> A`：安全护栏检查答案是否符合安全标准，并将最终答案和证据输出。
+
+## 仓库语境与术语解释
+- **Agentic AI Pipeline**：一个多阶段、基于 Agent 的聊天机器人，能够进行规划、发现、推理、使用工具和学习。
+- **LangGraph**：用于编排 Agent 的推理和工具使用的框架，该仓库使用 LangGraph 实现状态机。
+- **FAISS (Facebook AI Similarity Search)**：用于高效相似性搜索的库，在此用于向量检索器。
+- **Google CSE (Custom Search Engine)**：Google 定制搜索引擎，在此用于网络检索器。
+- **File-backed Memory**：用于存储会话状态和历史信息的模块，图中可见，但仓库上下文未进一步说明。
+- **Intent Router**：用于理解用户意图并进行分类的模块，对应`Agentic-RAG-Pipeline/agents/intent.py`。
+- **Planner**：用于将任务分解为子目标的模块，对应`Agentic-RAG-Pipeline/agents/planner.py`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了一个 Agentic AI Pipeline 的工作流程，从用户输入开始，经过意图路由器理解用户意图，然后由规划器制定任务计划。检索规划器根据任务计划选择向量检索器（FAISS）或网络检索器（Google CSE + Fetch）来检索信息。写作者根据检索到的信息生成答案，并由评论者和安全护栏进行评估和检查。最终，生成包含答案和证据的输出。其中，意图理解、任务规划和信息检索是关键中间环节。`Agentic-RAG-Pipeline/agents/intent.py`、`Agentic-RAG-Pipeline/agents/planner.py`、`Agentic-RAG-Pipeline/agents/retrievers.py`分别对应意图理解、任务规划和信息检索的实现。

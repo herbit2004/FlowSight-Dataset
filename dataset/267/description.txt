@@ -1,0 +1,47 @@
+## 图类型与用途
+这是一个流程图，描述了 Neva 编程语言的编译流程，从包管理器到最终的 Go 编译器。它在仓库中的作用是展示 Neva 源代码如何转换成可执行代码的各个阶段和组件，位于 `ARCHITECTURE.md` 文件中。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是包管理器，中间是编译器及其子模块，右侧是 Go 编译器。
+
+## 分组/子图/阶段说明
+- **package-manager**：负责处理项目依赖，包括从 Git 仓库拉取代码和访问本地文件系统。
+- **compiler**：编译流程的核心组件，包含解析器、分析器、语法糖去除器、中间代码生成器和后端。
+- **parser**：使用 ANTLR 工具将源代码解析成抽象语法树（AST）。
+- **analyzer**：对 AST 进行语义分析，包括类型检查。
+- **backend**：负责将中间代码转换成目标代码，使用 Go 代码生成器。
+
+## 节点逐项说明
+- **package-manager**：负责处理项目依赖，包括从 Git 仓库拉取代码 (git-client) 和访问本地文件系统 (file-system)。
+- **git-client**：包管理器的一个组件，负责从 Git 仓库拉取代码。
+- **file-system**：包管理器的一个组件，负责访问本地文件系统。
+- **compiler**：编译流程的核心组件，负责将 Neva 源代码转换成可执行代码。
+- **parser**：编译器的一个组件，使用 ANTLR 工具将源代码解析成抽象语法树 (AST)，输出 `parsed-build`。
+- **antlr**：解析器的一个组件，用于生成解析器。
+- **analyzer**：编译器的一个组件，对 AST 进行语义分析，包括类型检查 (typesystem)，输出 `analyzed-build`。
+- **typesystem**：分析器的一个组件，负责类型检查。
+- **desugarer**：编译器的一个组件，移除语法糖，将代码转换成更简单的形式，输出 `desugared-build`。
+- **irgen**：编译器的一个组件，中间代码生成器，将 desugared 代码转换成中间表示 (IR)，输出 `ir`。
+- **backend**：编译器的一个组件，负责将中间代码转换成目标代码。
+- **go-code-generator**：后端的一个组件，将中间代码转换成 Go 代码。
+- **go-compiler**：将 Go 代码编译成最终的可执行代码。
+
+## 连线、分支与汇聚关系
+- `package-manager -> compiler`：包管理器将原始构建信息 (`raw-build`) 传递给编译器。
+- `parser -> analyzer`：解析器将解析后的构建信息 (`parsed-build`) 传递给分析器。
+- `analyzer -> desugarer`：分析器将分析后的构建信息 (`analyzed-build`) 传递给语法糖去除器。
+- `desugarer -> irgen`：语法糖去除器将去除语法糖后的构建信息 (`desugared-build`) 传递给中间代码生成器。
+- `irgen -> backend`：中间代码生成器将中间代码 (`ir`) 传递给后端。
+- `compiler -> go-compiler`：编译器将生成的 Go 代码 (`go-code`) 传递给 Go 编译器。
+
+## 仓库语境与术语解释
+- **package-manager**：负责处理项目依赖，具体实现位于 `internal/builder/builder.go`。
+- **compiler**：编译器的实现位于 `internal/compiler/compiler.go`，包含多个阶段。
+- **parser**：使用 ANTLR 生成的解析器，定义在 `internal/compiler/parser/parser.go` 和 `internal/compiler/parser/generated/` 目录下。
+- **analyzer**：静态语义分析器，位于 `internal/compiler/analyzer/analyzer.go`。
+- **desugarer**：语法糖去除器，位于 `internal/compiler/desugarer/desugarer.go`。
+- **backend**：代码生成后端，其中 Go 后端位于 `internal/compiler/backend/golang/backend.go`。
+- **go-compiler**：将 Go 代码编译成可执行文件的外部工具。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Neva 编译流程，从 `package-manager` 开始，处理项目依赖，然后 `compiler` 接收原始构建信息，依次经过 `parser`、`analyzer`、`desugarer`、`irgen` 和 `backend`，最终生成 Go 代码，并由 `go-compiler` 编译成可执行文件。其中，`parser` 使用 `antlr` 解析源代码，`analyzer` 进行类型检查，`desugarer` 移除语法糖，`irgen` 生成中间代码，`backend` 使用 `go-code-generator` 生成 Go 代码。

@@ -1,0 +1,50 @@
+## 图类型与用途
+这是一个流程图，展示了 BRAID-DSPy 架构的整体流程，该架构将 BRAID 架构集成到 DSPy 框架中，通过 Guided Reasoning Diagrams (GRD) 实现结构化推理。它在仓库中的作用是概括 BRAID-DSPy 的核心工作流程，从问题输入到最终的效率报告。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是规划阶段，中间是执行阶段，底部是分析阶段。整个流程从问题输入开始，经过 GRD 的生成、执行和评估，最终输出效率报告。
+
+## 分组/子图/阶段说明
+图中有三个显式子图，分别代表 BRAID-DSPy 架构的三个阶段：
+- **Phase 1: Planning**：规划阶段，负责根据问题输入生成 GRD。
+- **Phase 2: Execution**：执行阶段，负责根据 GRD 的指示执行任务，并通过条件分支和审查机制来保证执行的正确性和可靠性。
+- **Phase 3: Analysis**：分析阶段，负责通过 PPD 指标和效率报告来评估整个流程的性能。
+
+## 节点逐项说明
+- **A (Problem Input)**：表示问题输入，是整个流程的起点。
+- **B (GRD Generation)**：表示根据问题输入生成 Guided Reasoning Diagram (GRD)，即指导推理图，它是一个机器可读的流程图，描述了解决问题的步骤。根据 README，GRD 是 Mermaid 格式的流程图。
+- **C (Numerical Masking)**：表示对 GRD 进行数值掩码处理，防止答案泄露。根据 README 和 `braid/masking.py`，该步骤用占位符替换数值，以防止模型泄露计算值。
+- **D (Protocol Validation)**：表示验证 GRD 的协议是否符合规范，确保 GRD 的正确性和可执行性。
+- **E (Stateful Engine)**：表示一个有状态的引擎，负责执行 GRD 中定义的步骤。根据 `braid/engine.py`，该引擎支持动态 GRD 遍历，具有条件逻辑和循环。
+- **F (Conditional Branching)**：表示条件分支，根据当前状态决定下一步执行哪个步骤。
+- **G (Model Call)**：表示调用模型来执行具体的任务。
+- **H (Critic Review)**：表示对模型调用结果进行评估和审查。根据 README，这是自验证和自动重试的机制。
+- **I (Final Answer)**：表示最终答案，是整个流程的输出。
+- **J (PPD Metrics)**：表示计算 PPD (Precision, Predictability, and Debuggability) 指标，用于评估整个流程的性能。根据 README 和 `braid/metrics.py`，PPD 指标用于成本优化。
+- **K (Efficiency Report)**：表示生成效率报告，用于分析整个流程的效率。
+
+## 连线、分支与汇聚关系
+- `A -> B`：问题输入后，生成 GRD。
+- `B -> C`：GRD 生成后，进行数值掩码处理。
+- `C -> D`：数值掩码处理后，进行协议验证。
+- `D -> E`：协议验证通过后，进入有状态引擎执行阶段。
+- `E -> F`：有状态引擎执行后，进入条件分支。
+- `F -- Step --> G`：根据 GRD 中的步骤，调用模型。
+- `G -> H`：模型调用后，进行审查。
+- `H -- Retry --> E`：如果审查结果不满意，则返回到有状态引擎重新执行，形成循环。
+- `H -- Success --> F`：如果审查结果满意，则返回到条件分支继续执行下一步。
+- `F -- Done --> I`：如果 GRD 执行完成，则输出最终答案。
+- `I -> J`：输出最终答案后，计算 PPD 指标。
+- `J -> K`：计算 PPD 指标后，生成效率报告。
+
+## 仓库语境与术语解释
+- **BRAID (Bounded Reasoning for Autonomous Inference and Decisions)**：一种架构，旨在提高 AI 系统的可靠性和透明度，通过分离规划和执行阶段实现。
+- **DSPy**：一个框架，用于构建和优化语言模型程序。BRAID-DSPy 将 BRAID 架构集成到 DSPy 框架中。
+- **GRD (Guided Reasoning Diagram)**：一个机器可读的流程图，描述了解决问题的步骤。在 BRAID-DSPy 中，GRD 使用 Mermaid 格式。
+- **Numerical Masking**：一种技术，用于防止模型在生成 GRD 时泄露计算值，通过用占位符替换数值实现。
+- **PPD (Precision, Predictability, and Debuggability) Metrics**：用于评估整个流程的性能，并进行成本优化。
+- **Stateful Engine**：一个有状态的引擎，负责执行 GRD 中定义的步骤，支持动态 GRD 遍历，具有条件逻辑和循环。该组件在 `braid/engine.py` 中实现。
+- **BraidReasoning**：`braid/module.py` 中定义的主要模块，用于编排整个 BRAID-DSPy 生命周期，包括规划、执行和验证阶段。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 BRAID-DSPy 架构的整体流程。流程从问题输入开始，首先通过 GRD Generation 模块生成 Mermaid 格式的 GRD，然后进行 Numerical Masking 防止答案泄露，并通过 Protocol Validation 确保 GRD 的正确性。接下来，Stateful Engine 根据 GRD 执行推理步骤，通过 Conditional Branching 和 Critic Review 实现自验证和自动重试。最终，流程输出 Final Answer，并通过 PPD Metrics 和 Efficiency Report 进行性能评估。BRAID-DSPy 旨在通过分离规划和执行阶段，提高 AI 系统的可靠性和透明度。

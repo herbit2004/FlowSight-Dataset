@@ -1,0 +1,56 @@
+graph TB
+    subgraph "Frontend & Workflows"
+        WEB[Web App<br/>Next.js 16]
+        BLOG[Blog Posts<br/>AI Generated]
+        WORKFLOWS[Data Workflows<br/>Vercel WDK]
+        LLM[Vercel AI SDK<br/>Blog Generation]
+    end
+
+    subgraph "Data Layer"
+        DB[(PostgreSQL<br/>Neon)]
+        REDIS[(Redis Cache<br/>Upstash)]
+    end
+
+    subgraph "External APIs"
+        LTA[LTA DataMall<br/>Gov Data]
+    end
+
+    subgraph "Social Platforms"
+        DISCORD[Discord]
+        LINKEDIN[LinkedIn]
+        TWITTER[Twitter]
+        TELEGRAM[Telegram]
+    end
+
+    subgraph "Infrastructure"
+        VERCEL[Vercel<br/>Edge Network]
+    end
+
+    WEB --> WORKFLOWS
+    WEB --> DB
+    WEB --> REDIS
+
+    WORKFLOWS --> LTA
+    WORKFLOWS --> DB
+    WORKFLOWS --> LLM
+    LLM --> BLOG
+
+    WORKFLOWS --> DISCORD
+    WORKFLOWS --> LINKEDIN
+    WORKFLOWS --> TWITTER
+    WORKFLOWS --> TELEGRAM
+
+    WEB --> VERCEL
+
+    classDef frontend fill:#e1f5fe
+    classDef backend fill:#f3e5f5
+    classDef data fill:#e8f5e8
+    classDef external fill:#fff3e0
+    classDef social fill:#fce4ec
+    classDef infra fill:#f1f8e9
+
+    class WEB,BLOG,WORKFLOWS,LLM frontend
+    class DB,REDIS data
+    class LTA external
+    class DISCORD,LINKEDIN,TWITTER,TELEGRAM social
+    class VERCEL infra

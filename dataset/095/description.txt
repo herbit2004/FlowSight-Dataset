@@ -1,0 +1,48 @@
+## 图类型与用途
+这是一个分层架构图，描述了 CappyChat 应用的前端层、数据层和服务层之间的关系和数据流向。该图在 README 中被用作展示应用整体架构设计的关键组成部分。
+
+## 图的整体布局
+图采用从上到下的分层布局。顶部是前端层，中间是服务层，右侧是数据层。数据层内部采用上下结构，体现数据同步关系。
+
+## 分组/子图/阶段说明
+图中包含三个显式子图：
+- **Frontend Layer**：负责用户界面和用户交互。
+- **Data Layer**：负责数据的存储和同步。
+- **Service Layer**：负责提供各种服务，例如 AI 模型、图像生成、网络搜索和文件存储。
+
+## 节点逐项说明
+- **A[Next.js 15 + React 19]**：前端框架，使用 Next.js 15 和 React 19 构建。
+- **B[TypeScript + TailwindCSS]**：前端开发技术栈，使用 TypeScript 进行类型检查，TailwindCSS 进行样式设计。
+- **C[Zustand State Management]**：前端状态管理方案，使用 Zustand 进行状态管理。
+- **D[IndexedDB Local Storage]**：本地存储，使用 IndexedDB 进行数据存储，提供快速访问。
+- **E[Appwrite Cloud Database]**：云数据库，使用 Appwrite 云数据库进行数据存储，实现数据持久化。
+- **F[Real-time Sync Engine]**：实时同步引擎，负责本地存储和云数据库之间的数据同步，保证数据一致性。
+- **G[OpenRouter AI Models]**：AI 模型服务，使用 OpenRouter 提供的 AI 模型。
+- **H[Google Gemini Image Generation]**：图像生成服务，使用 Google Gemini 进行图像生成。
+- **I[Tavily Web Search]**：网络搜索服务，使用 Tavily 进行网络搜索。
+- **J[Cloudinary File Storage]**：文件存储服务，使用 Cloudinary 进行文件存储。
+
+## 连线、分支与汇聚关系
+- `A --> D`：前端层（Next.js）向本地存储（IndexedDB）写入数据。
+- `D <--> F`：本地存储（IndexedDB）与实时同步引擎（Real-time Sync Engine）进行双向数据同步。
+- `F <--> E`：实时同步引擎（Real-time Sync Engine）与云数据库（Appwrite Cloud Database）进行双向数据同步。
+- `A --> G`：前端层（Next.js）调用 OpenRouter 提供的 AI 模型。
+- `A --> H`：前端层（Next.js）调用 Google Gemini 进行图像生成。
+- `A --> I`：前端层（Next.js）调用 Tavily 进行网络搜索。
+- `A --> J`：前端层（Next.js）调用 Cloudinary 进行文件存储。
+
+## 仓库语境与术语解释
+- **Next.js**：一个 React 框架，用于构建 CappyChat 的前端界面。
+- **TypeScript**：一种 JavaScript 的超集，用于增加代码的可维护性和可读性。
+- **TailwindCSS**：一个 CSS 框架，用于快速构建用户界面。
+- **Zustand**：一个小型、快速、可扩展的状态管理解决方案。
+- **IndexedDB**：一种浏览器提供的本地存储方案，用于存储大量结构化数据。
+- **Appwrite**：一个开源的后端即服务平台，用于提供云数据库等服务。
+- **OpenRouter**：一个 AI 模型提供商，CappyChat 使用其提供的 AI 模型。
+- **Google Gemini**：Google 提供的图像生成服务。
+- **Tavily**：一个网络搜索服务提供商。
+- **Cloudinary**：一个云端文件存储服务提供商。
+- **Plan Mode**：CappyChat v4.1.0 引入的新功能，用于创建交互式图表和可视化，如 README 所示。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+CappyChat 应用采用分层架构，前端层（Next.js）通过本地存储（IndexedDB）和云数据库（Appwrite）实现数据的持久化和同步，实时同步引擎（Real-time Sync Engine）保证数据一致性。前端层还调用 OpenRouter AI 模型、Google Gemini 图像生成、Tavily 网络搜索和 Cloudinary 文件存储等服务。该架构支持 Plan Mode 等高级功能，旨在提供高性能和无缝用户体验。

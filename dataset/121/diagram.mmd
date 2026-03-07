@@ -1,0 +1,23 @@
+flowchart TD
+  Input[User Query] --> Agent[AgentNode]
+  Agent -->|"LLM Reasoning (Non-Deterministic)"| FlowChoice{Sub-Workflow Selection}
+  FlowChoice -->|"Decision A"| Flow1[Deterministic Workflow 1]
+  FlowChoice -->|"Decision B"| Flow2[Deterministic Workflow 2]
+  FlowChoice -->|"Decision C"| DirectResponse[Generate Response]
+  
+  Flow1 --> |"Step 1 → 2 → 3 → ... → 200"| Flow1Result[Workflow 1 Result]
+  Flow2 --> |"Step 1 → 2 → 3 → ... → 100"| Flow2Result[Workflow 2 Result]
+  
+  Flow1Result --> Response[Final Response]
+  Flow2Result --> Response
+  DirectResponse --> Response
+  
+  style Input fill:#f9f9f9,stroke:#333,stroke-width:1px
+  style Agent fill:#ffdfba,stroke:#333,stroke-width:1px
+  style FlowChoice fill:#ffdfba,stroke:#333,stroke-width:1px
+  style Flow1 fill:#c9e4ca,stroke:#333,stroke-width:1px
+  style Flow2 fill:#c9e4ca,stroke:#333,stroke-width:1px
+  style Flow1Result fill:#c9e4ca,stroke:#333,stroke-width:1px
+  style Flow2Result fill:#c9e4ca,stroke:#333,stroke-width:1px
+  style DirectResponse fill:#ffdfba,stroke:#333,stroke-width:1px
+  style Response fill:#f9f9f9,stroke:#333,stroke-width:1px

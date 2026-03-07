@@ -1,0 +1,45 @@
+## 图类型与用途
+这是一个流程图，描述了 `translate_schema` 函数的内部逻辑，该函数将输入模式转换为 jq 查询字符串。此流程图展示了如何自动将任何 JSON 转换为任何模式，是 Jaiqu 项目的核心功能之一，如 README 所述。
+
+## 图的整体布局
+图采用从上到下的布局。流程从顶部的“Start translate_schema”节点开始，经过一系列验证、编译和测试步骤，最终返回 jq 查询字符串或抛出错误。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可分为三个阶段：输入模式验证、jq 过滤器生成与测试、JSON 数据验证。
+
+## 节点逐项说明
+- **Start translate_schema**：流程的起点，表示开始执行 `translate_schema` 函数。
+- **Validate input schema**：验证输入模式是否有效。
+- **For each key, create a jq filter query**：对于输入模式中的每个键，创建一个 jq 过滤器查询。
+- **Throw RuntimeError**：抛出运行时错误，表示输入模式无效或后续流程失败。
+- **Compile and Test jq Filter**：编译并测试 jq 过滤器。
+- **Validate JSON**：验证 JSON 数据是否符合 jq 过滤器的预期。
+- **Retry Create jq Filter**：重新尝试创建 jq 过滤器查询。
+- **Retry Validate JSON**：重新尝试验证 JSON 数据。
+- **Return jq query string**：返回 jq 查询字符串，表示转换成功。
+
+## 连线、分支与汇聚关系
+- `Start translate_schema -> Validate input schema`：流程开始后，首先验证输入模式。
+- `Validate input schema -- Valid --> For each key, create a jq filter query`：如果输入模式有效，则为每个键创建 jq 过滤器查询。
+- `Validate input schema -- Invalid --> Throw RuntimeError`：如果输入模式无效，则抛出运行时错误。
+- `For each key, create a jq filter query -> Compile and Test jq Filter`：创建 jq 过滤器查询后，编译并测试该过滤器。
+- `Compile and Test jq Filter -- Success --> Validate JSON`：如果编译和测试成功，则验证 JSON 数据。
+- `Compile and Test jq Filter -- Fail --> Retry Create jq Filter`：如果编译和测试失败，则重新尝试创建 jq 过滤器查询。
+- `Retry Create jq Filter -- Success --> Compile and Test jq Filter`：如果重新创建 jq 过滤器查询成功，则返回编译和测试步骤。
+- `Retry Create jq Filter -- Fail n times --> Throw RuntimeError`：如果重新创建 jq 过滤器查询失败多次，则抛出运行时错误。
+- `Validate JSON -- Success --> Return jq query string`：如果 JSON 数据验证成功，则返回 jq 查询字符串。
+- `Validate JSON -- Fail --> Retry Validate JSON`：如果 JSON 数据验证失败，则重新尝试验证 JSON 数据。
+- `Retry Validate JSON -- Success --> Return jq query string`：如果重新验证 JSON 数据成功，则返回 jq 查询字符串。
+- `Retry Validate JSON -- Fail n times --> Throw RuntimeError`：如果重新验证 JSON 数据失败多次，则抛出运行时错误。
+
+## 仓库语境与术语解释
+- **jq**：一种轻量级的 JSON 处理器，Jaiqu 的核心功能是生成可重复使用的 jq 查询，用于 JSON 转换。
+- **translate_schema**：`jaiqu/jaiqu.py` 中定义的函数，用于将输入 JSON 模式转换为 jq 过滤查询。
+- **validate_schema**：`jaiqu/jaiqu.py` 中定义的函数，用于验证输入 JSON 是否符合指定的输出模式。
+- **RuntimeError**：当输入模式无效或无法创建有效的 jq 过滤器时，流程会抛出 `RuntimeError`。
+- **openai_api_key**: `translate_schema` 和 `validate_schema` 函数都接受 `openai_api_key` 作为参数，表明 Jaiqu 使用 OpenAI API 来辅助模式转换和验证。
+- **key_hints**: `translate_schema` 和 `validate_schema` 函数都接受 `key_hints` 作为参数，用于在转换和验证过程中提供额外的上下文信息。
+- **samples/schema.json**: 仓库中包含示例 schema 文件，用于定义期望的 JSON 结构。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图描述了 `translate_schema` 函数将输入模式转换为 jq 查询字符串的流程。流程从验证输入模式开始，如果模式有效，则为每个键创建 jq 过滤器查询，并进行编译和测试。如果编译测试失败，则重试创建过滤器。编译测试成功后，验证 JSON 数据，如果验证失败则重试。最终，流程返回 jq 查询字符串或抛出运行时错误。该流程依赖 OpenAI API 和 key hints 来辅助模式转换，旨在自动将任何 JSON 转换为任何模式。

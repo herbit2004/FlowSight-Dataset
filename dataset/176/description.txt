@@ -1,0 +1,58 @@
+## 图类型与用途
+这是一个流程图，描述了使用 Python 脚本在 Oracle Cloud Infrastructure (OCI) 上创建 Free Tier 实例的自动化流程。该图在仓库中用于展示创建 OCI 实例的步骤，旨在简化和自动化实例创建过程。
+
+## 图的整体布局
+图采用从上到下的布局。流程从顶部的“Start”节点开始，经过一系列步骤和判断，最终到达底部的“End”节点。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为以下阶段：
+1. **初始化阶段**：包括加载环境变量和初始化 OCI 客户端。
+2. **实例检查与密钥准备阶段**：检查实例是否存在，如果不存在则生成或读取 SSH 密钥。
+3. **资源收集与启动阶段**：收集 OCI 资源信息并启动实例。
+4. **状态检查与重试阶段**：检查实例启动状态，如果失败则处理错误并重试。
+5. **成功通知阶段**：实例成功启动后，通知用户。
+
+## 节点逐项说明
+- **Start**：流程的起始点。
+- **Load Environment Variables**：加载环境变量，例如 OCI 凭证、区域等。这些变量在 `oci.env` 文件中配置，用于设置脚本运行所需的参数。
+- **Initialize OCI Clients**：初始化 OCI 客户端，用于与 OCI 服务进行交互。
+- **Instance Exists?**：检查是否已存在具有相同配置的实例。这是一个决策节点。
+- **Notify Success**：通知用户实例创建成功。
+- **Generate/Read SSH Key**：生成或读取 SSH 密钥，用于安全地访问实例。
+- **Gather OCI Resources**：收集创建实例所需的 OCI 资源信息，例如可用性域、镜像 ID 等。
+- **Launch Instance**：启动 OCI 实例。
+- **Launch Successful?**：检查实例是否成功启动。这是一个决策节点。
+- **Check Instance State**：检查实例的状态，例如是否正在运行。
+- **Handle Errors**：处理启动实例过程中遇到的错误。
+- **Wait and Retry**：等待一段时间后重试启动实例。
+- **End**：流程的结束点。
+
+## 连线、分支与汇聚关系
+- `Start -> Load Environment Variables`：流程从启动开始，首先加载环境变量。
+- `Load Environment Variables -> Initialize OCI Clients`：加载环境变量后，初始化 OCI 客户端。
+- `Initialize OCI Clients -> Instance Exists?`：初始化 OCI 客户端后，检查实例是否存在。
+- `Instance Exists? -- Yes --> Notify Success`：如果实例已存在，则通知成功。
+- `Instance Exists? -- No --> Generate/Read SSH Key`：如果实例不存在，则生成或读取 SSH 密钥。
+- `Generate/Read SSH Key -> Gather OCI Resources`：生成或读取 SSH 密钥后，收集 OCI 资源。
+- `Gather OCI Resources -> Launch Instance`：收集 OCI 资源后，启动实例。
+- `Launch Instance -> Launch Successful?`：启动实例后，检查启动是否成功。
+- `Launch Successful? -- Yes --> Check Instance State`：如果启动成功，则检查实例状态。
+- `Launch Successful? -- No --> Handle Errors`：如果启动失败，则处理错误。
+- `Handle Errors -> Launch Instance`：处理错误后，返回启动实例步骤，形成循环。
+- `Check Instance State -- Running --> Notify Success`：如果实例正在运行，则通知成功。
+- `Check Instance State -- Not Running --> Wait and Retry`：如果实例未运行，则等待并重试。
+- `Wait and Retry -> Launch Instance`：等待并重试后，返回启动实例步骤，形成循环。
+- `Notify Success -> End`：通知成功后，流程结束。
+
+## 仓库语境与术语解释
+- **OCI (Oracle Cloud Infrastructure)**：Oracle 提供的云计算服务。
+- **Free Tier**：Oracle 提供的免费云资源，例如 ARM 实例和 AMD 实例。
+- **oci.env**：存储 OCI 配置信息和环境变量的文件，例如区域、可用性域、实例名称等。
+- **oci_config**：存储 OCI API 密钥和配置详细信息的文件，用于身份验证。
+- **SSH Key**：用于安全访问 OCI 实例的密钥对。
+- **Availability Domain (AD)**：OCI 区域内的隔离位置，用于提高可用性。`OCT_FREE_AD` 变量在 `oci.env` 中指定了要使用的可用性域。
+- **VM.Standard.A1.Flex**：Oracle Cloud Infrastructure 提供的 ARM 实例的计算配置。
+- **setup_init.sh**：用于安装依赖项和启动 Python 脚本的 shell 脚本。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了在 Oracle Cloud Infrastructure 上使用 Python 脚本自动化创建 Free Tier 实例的流程。流程从“Start”开始，首先加载环境变量和初始化 OCI 客户端，然后检查实例是否存在。如果实例不存在，则生成或读取 SSH 密钥，收集 OCI 资源并启动实例。脚本会循环检查实例状态，并在启动失败时进行重试，直到实例成功启动并运行，最后通知用户并结束流程。`oci.env` 文件用于配置环境变量，`setup_init.sh` 脚本用于安装依赖项和启动主程序 `main.py`。

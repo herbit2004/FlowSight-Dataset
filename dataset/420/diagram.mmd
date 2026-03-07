@@ -1,0 +1,58 @@
+graph TB
+    subgraph SUB["☁️ Azure Subscription (swedencentral)"]
+        direction TB
+
+        subgraph NET["🌐 Networking"]
+            AFD["Azure Front Door<br/><i>CDN + WAF</i>"]
+            DNS["DNS Zone<br/><i>arolariu.ro</i>"]
+        end
+
+        subgraph WEB["🌍 Websites Layer"]
+            S1["arolariu.ro<br/><i>Next.js</i>"]
+            S2["api.arolariu.ro<br/><i>.NET</i>"]
+            S3["docs.arolariu.ro<br/><i>DocFX</i>"]
+            S4["cv.arolariu.ro<br/><i>SvelteKit</i>"]
+        end
+
+        subgraph DAT["📦 Data Layer"]
+            SQL["Azure SQL"]
+            CDB["Cosmos DB"]
+            BLB["Blob Storage"]
+            OAI["Azure OpenAI"]
+        end
+
+        subgraph SEC["🔐 Security & Config"]
+            KV["Key Vault"]
+            AC["App Configuration"]
+            MI["Managed Identities"]
+        end
+
+        subgraph MON["📊 Observability"]
+            LA["Log Analytics"]
+            AI["App Insights"]
+            GR["Grafana"]
+        end
+    end
+
+    AFD --> DNS
+    AFD --> S1
+    AFD --> S2
+    AFD --> S3
+    AFD --> S4
+    S2 --> SQL
+    S2 --> CDB
+    S2 --> BLB
+    S2 --> OAI
+    S2 --> KV
+    S1 --> AC
+    S1 --> AI
+    S2 --> AI
+    MI -.->|authenticates| S1
+    MI -.->|authenticates| S2
+
+    style SUB fill:#f0f9ff,stroke:#0078d4,color:#000
+    style NET fill:#dbeafe,stroke:#3b82f6,color:#000
+    style WEB fill:#dcfce7,stroke:#22c55e,color:#000
+    style DAT fill:#fef3c7,stroke:#f59e0b,color:#000
+    style SEC fill:#fce7f3,stroke:#ec4899,color:#000
+    style MON fill:#f3e8ff,stroke:#a855f7,color:#000

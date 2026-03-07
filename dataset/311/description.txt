@@ -1,0 +1,50 @@
+## 图类型与用途
+这是一个流程图/架构图，展示了 GraphQL Federation 环境中，网关、Schema Registry 以及其他组件之间的交互方式。该图概括了 `graphql-schema-registry` 项目的架构，用于集中式地管理和分发 GraphQL Schema，并进行验证和分析。
+
+## 图的整体布局
+图采用从左到右的布局。左侧是 `federated-gateway`，作为整个流程的起点，右侧是数据库和消息队列等组件，描述了数据流向和组件间的关系。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为以下几个阶段：
+1.  **Schema 注册与存储**：服务将 Schema 注册到 Schema Registry，Schema Registry 将 Schema 存储到数据库和缓存中。
+2.  **Schema 更新与分发**：Schema Registry 将 Schema 更新事件发布到 Kafka 消息队列，网关订阅此主题以获取最新的 Schema。
+3.  **查询分析**：网关将 GraphQL 查询发布到 Kafka 消息队列，查询分析器订阅此主题，分析查询并更新数据库中的 Schema 命中率信息。
+
+## 节点逐项说明
+- **GW (federated-gateway)**：GraphQL Federation 网关，负责接收客户端请求，并将请求路由到相应的后端服务。
+- **SR (schema registry (gql-schema-registry))**：Schema Registry 服务，是核心组件，用于存储、管理和验证 GraphQL Schema。
+- **DB (postgres 18 (gql-schema-registry-db))**：PostgreSQL 数据库，用于持久化存储 GraphQL Schema 和查询分析数据。
+- **R (redis 6 (gql-schema-registry-redis))**：Redis 缓存，用于缓存持久化查询和存储、查询最新的日志信息。
+- **KF1 (kafka (gql-schema-registry-kafka) graphql-schema-updates topic)**：Kafka 消息队列，用于发布 Schema 更新事件，网关订阅此主题以获取最新的 Schema。
+- **KF2 (kafka (gql-schema-registry-kafka) graphql-queries topic)**：Kafka 消息队列，用于发布 GraphQL 查询，供查询分析器使用。
+- **QA (query analyzer (gql-schema-registry-worker))**：查询分析器，负责分析 GraphQL 查询，并更新 Schema 的命中率等信息。
+- **S1 (service A)**：后端服务 A，提供 GraphQL API，并向 Schema Registry 注册 Schema。
+- **S2 (service B)**：后端服务 B，提供 GraphQL API，并向 Schema Registry 注册 Schema。
+
+## 连线、分支与汇聚关系
+- `GW -> S1`：网关将查询路由到服务 A。
+- `GW -> S2`：网关将查询路由到服务 B。
+- `S1 -> SR`：服务 A 在运行时向 Schema Registry 注册 Schema。
+- `S2 -> SR`：服务 B 在运行时向 Schema Registry 注册 Schema。
+- `S2 -. validate schema on commit/cli/CI .-> SR`：服务 B 在提交/CLI/CI 过程中验证 Schema。
+- `GW == poll schema every 10 sec POST /schema/compose ==> SR`：网关每 10 秒轮询 Schema Registry 以获取最新的 Schema。
+- `SR -- store schemas --> DB`：Schema Registry 将 Schema 存储到 PostgreSQL 数据库中。
+- `SR -- cache persisted queries store & query last logs --> R`：Schema Registry 将缓存的持久化查询和最新的日志信息存储到 Redis 中。
+- `SR -- publish schema change --> KF1 -- listen schema updates --> GW`：Schema Registry 将 Schema 更新事件发布到 Kafka 的 `graphql-schema-updates` 主题，网关订阅此主题以获取更新。
+- `GW -- publish queries --> KF2`：网关将 GraphQL 查询发布到 Kafka 的 `graphql-queries` 主题。
+- `KF2 --> QA`：查询分析器订阅 Kafka 的 `graphql-queries` 主题。
+- `QA --update schema hits --> DB`：查询分析器分析查询并更新数据库中的 Schema 命中率信息。
+
+## 仓库语境与术语解释
+- **GraphQL Federation**：一种构建分布式 GraphQL API 的架构，允许将多个 GraphQL 服务组合成一个统一的 GraphQL API。
+- **Schema Registry**：用于存储、管理和验证 GraphQL Schema 的服务。该项目提供了一个 Dockerized on-premise 解决方案。
+- **federated-gateway**：Apollo Server 运行在 federated 模式下，作为 GraphQL Federation 的网关。
+- **gql-schema-registry-db**：PostgreSQL 数据库，用于持久化存储 GraphQL Schema 和其他数据。
+- **gql-schema-registry-redis**：Redis 缓存，用于缓存持久化查询和存储最新的日志信息。
+- **gql-schema-registry-kafka**：Kafka 消息队列，用于发布 Schema 更新事件和 GraphQL 查询。
+- **gql-schema-registry-worker**：查询分析器，负责分析 GraphQL 查询。
+- **src/config.ts**：该文件定义了服务的配置信息，包括数据库、Redis 和 Kafka 的连接信息。
+- **src/kafka/index.ts**：该文件包含了 Kafka 消息队列的初始化和发送消息的逻辑。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `graphql-schema-registry` 项目的架构，从 `federated-gateway` 开始，网关定期从 `schema registry` 拉取 schema，并将查询路由到 `service A` 和 `service B`。服务在运行时向 `schema registry` 注册 schema，`schema registry` 将 schema 存储到 `postgres` 数据库和 `redis` 缓存中，并通过 `kafka` 发布 schema 更新。网关还会将查询发布到 `kafka`，供 `query analyzer` 分析并更新数据库中的 schema 命中率。该图的核心是 schema 的注册、存储、更新和查询分析流程，其中 Kafka 消息队列用于异步 schema 更新和查询分析。

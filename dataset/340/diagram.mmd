@@ -1,0 +1,29 @@
+graph TD
+    subgraph LLM Layer
+        LLM[LLM Core Engine]
+        PROMPT[Prompt Router / Engine]
+        DECISION_TREE[Decision Tree Tool]
+        RAG["RAG / Vector Search (SurrealDB)"]
+    end
+
+    subgraph External Knowledge Sources
+        NCBI[Search NCBI]
+        CLINICAL[Search clinicaltrials.gov]
+        MEDLINE[Search medlineplus.gov]
+    end
+
+    USER[User Prompt or Query] --> PROMPT
+
+    PROMPT -->|Deterministic logic| DECISION_TREE
+    PROMPT -->|Search for literature| NCBI
+    PROMPT -->|Search for trials| CLINICAL
+    PROMPT -->|Search for patient-facing info| MEDLINE
+    PROMPT -->|Search structured records| RAG
+
+    DECISION_TREE --> LLM
+    NCBI --> LLM
+    CLINICAL --> LLM
+    MEDLINE --> LLM
+    RAG --> LLM
+
+    LLM -->|Answer| USER

@@ -1,0 +1,43 @@
+## 图类型与用途
+这是一个流程图，展示了 `OfficeIMO.Word` 组件及其扩展之间的依赖关系。该图用于说明 `OfficeIMO.Word` 库的模块化设计和扩展方式，以及它与其他外部库的依赖关系。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是核心组件 `OfficeIMO.Word`，中间是扩展组件，底部是外部依赖项。
+
+## 分组/子图/阶段说明
+图中有一个名为 "Extensions" 的子图，包含了 `OfficeIMO.Word` 的三个扩展组件：`OfficeIMO.Word.Html`、`OfficeIMO.Word.Markdown` 和 `OfficeIMO.Word.Pdf`。
+
+## 节点逐项说明
+- **OfficeIMO.Word (WCore)**：`OfficeIMO.Word` 组件的核心部分，提供了处理 Word 文档的基本功能。根据 `OfficeIMO.Word/README.md`，它是一个跨平台的 .NET 库，用于创建和编辑 Microsoft Word (.docx) 文档。
+- **Extensions**：一个子图，包含对 `OfficeIMO.Word` 的扩展功能。
+- **OfficeIMO.Word.Html (WHtml)**：`OfficeIMO.Word` 的 HTML 扩展，用于将 Word 文档转换为 HTML 格式或从 HTML 导入内容。根据 `README.md`，它实现了 HTML ↔ Word 的转换。
+- **OfficeIMO.Word.Markdown (WMd)**：`OfficeIMO.Word` 的 Markdown 扩展，用于将 Word 文档转换为 Markdown 格式或从 Markdown 导入内容。根据 `README.md`，它实现了 Markdown ↔ Word 的转换。
+- **OfficeIMO.Word.Pdf (WPdf)**：`OfficeIMO.Word` 的 PDF 扩展，用于将 Word 文档转换为 PDF 格式。根据 `README.md`，它提供了 PDF 导出的功能。
+- **AngleSharp (Angle)**：一个用于解析 HTML 的 .NET 库，是 `OfficeIMO.Word.Html` 扩展的外部依赖项。
+- **AngleSharp.Css (AngleCss)**：AngleSharp 的 CSS 解析器，是 `OfficeIMO.Word.Html` 扩展的外部依赖项。
+- **OfficeIMO.Markdown**：一个独立的 Markdown 处理库，是 `OfficeIMO.Word.Markdown` 扩展的外部依赖项。
+- **QuestPDF (Quest)**：一个用于生成 PDF 文档的 .NET 库，是 `OfficeIMO.Word.Pdf` 扩展的外部依赖项。
+- **SkiaSharp (Skia)**：一个跨平台的 2D 图形引擎，是 `OfficeIMO.Word.Pdf` 扩展的外部依赖项。
+
+## 连线、分支与汇聚关系
+- `OfficeIMO.Word -> OfficeIMO.Word.Html`：表明 `OfficeIMO.Word.Html` 是 `OfficeIMO.Word` 的一个扩展，依赖于 `OfficeIMO.Word` 的核心功能。
+- `OfficeIMO.Word -> OfficeIMO.Word.Markdown`：表明 `OfficeIMO.Word.Markdown` 是 `OfficeIMO.Word` 的一个扩展，依赖于 `OfficeIMO.Word` 的核心功能。
+- `OfficeIMO.Word -> OfficeIMO.Word.Pdf`：表明 `OfficeIMO.Word.Pdf` 是 `OfficeIMO.Word` 的一个扩展，依赖于 `OfficeIMO.Word` 的核心功能。
+- `OfficeIMO.Word.Markdown -> OfficeIMO.Word.Html`：表明 `OfficeIMO.Word.Markdown` 扩展依赖于 `OfficeIMO.Word.Html` 扩展。
+- `OfficeIMO.Word.Html -> AngleSharp`：表明 `OfficeIMO.Word.Html` 扩展依赖于 AngleSharp 库来解析 HTML。
+- `OfficeIMO.Word.Html -> AngleSharp.Css`：表明 `OfficeIMO.Word.Html` 扩展依赖于 AngleSharp.Css 库来解析 CSS。
+- `OfficeIMO.Word.Markdown -> OfficeIMO.Markdown`：表明 `OfficeIMO.Word.Markdown` 扩展依赖于 `OfficeIMO.Markdown` 库来处理 Markdown 格式。
+- `OfficeIMO.Word.Pdf -> QuestPDF`：表明 `OfficeIMO.Word.Pdf` 扩展依赖于 QuestPDF 库来生成 PDF 文档。
+- `OfficeIMO.Word.Pdf -> SkiaSharp`：表明 `OfficeIMO.Word.Pdf` 扩展依赖于 SkiaSharp 库来处理图形。
+
+## 仓库语境与术语解释
+- **OfficeIMO.Word**：根据 `README.md` 和 `OfficeIMO.Word/README.md`，这是一个用于创建和编辑 Microsoft Word (.docx) 文档的 .NET 库。
+- **OfficeIMO.Word.Html**：根据 `README.md` 和 `OfficeIMO.Word.Html/README.md`，这是一个用于在 Word 文档和 HTML 之间进行转换的组件。
+- **OfficeIMO.Word.Markdown**：根据 `README.md` 和 `OfficeIMO.Word.Markdown/README.md`，这是一个用于在 Word 文档和 Markdown 之间进行转换的组件。
+- **OfficeIMO.Word.Pdf**：根据 `README.md` 和 `OfficeIMO.Word.Pdf/README.md`，这是一个用于将 Word 文档导出为 PDF 格式的组件。
+- **AngleSharp**：根据 `README.md`，这是一个用于解析 HTML 的 .NET 库，被 `OfficeIMO.Word.Html` 使用。
+- **QuestPDF**：根据 `README.md`，这是一个用于生成 PDF 文档的 .NET 库，被 `OfficeIMO.Word.Pdf` 使用。
+- **SkiaSharp**：根据 `README.md`，这是一个跨平台的 2D 图形引擎，被 `OfficeIMO.Word.Pdf` 使用。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `OfficeIMO.Word` 及其扩展的依赖关系。`OfficeIMO.Word` 是核心组件，`OfficeIMO.Word.Html`、`OfficeIMO.Word.Markdown` 和 `OfficeIMO.Word.Pdf` 是其扩展，分别用于处理 HTML、Markdown 和 PDF 格式的转换。`OfficeIMO.Word.Html` 依赖于 AngleSharp 和 AngleSharp.Css，`OfficeIMO.Word.Markdown` 依赖于 `OfficeIMO.Markdown`，`OfficeIMO.Word.Pdf` 依赖于 QuestPDF 和 SkiaSharp。`OfficeIMO.Word.Markdown` 依赖于 `OfficeIMO.Word.Html`。

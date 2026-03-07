@@ -1,0 +1,35 @@
+graph TD
+    subgraph Brain ["🧠 The Brain (AI Core)"]
+        Orchestrator["**LangGraph Orchestrator**"]
+        Planner["Planner Node"]
+        Executor["Executor Node"]
+        Reflector["Reflector Node"]
+    end
+
+    subgraph Memory ["🐘 Cognitive Memory"]
+        Postgres[(**Postgres 17**)]
+        Vector[(pgvector)]
+        Graph[(Neo4j - Code Graph)]
+    end
+
+    subgraph Nervous ["📡 Nervous System"]
+        NATS["**NATS JetStream**"]
+    end
+
+    subgraph Body ["🛠️ The Body (Services)"]
+        Git["Git Automation"]
+        Docker["Docker Control"]
+        OneC["1C Integration (OData/RAS)"]
+        Wazuh["Security Monitor"]
+    end
+
+    subgraph Users ["👥 User Interfaces"]
+        Portal["Unified Portal"]
+        IDE["VS Code / EDT (MCP)"]
+    end
+
+    Users <--> NATS
+    NATS <--> Orchestrator
+    Orchestrator <--> Memory
+    Orchestrator <--> Body
+    Body --> NATS

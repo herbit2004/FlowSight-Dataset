@@ -1,0 +1,51 @@
+## 图类型与用途
+这是一个架构图，展示了 ChaosBlade Space Exploration 项目中微服务组件之间的关系和数据流向。该图旨在呈现控制平面和目标命名空间中的组件如何协同工作，以实现混沌工程实验。
+
+## 图的整体布局
+图采用从左到右的布局，左侧是控制平面，右侧是目标命名空间。数据流从左向右，展示了服务之间的交互和数据依赖关系。
+
+## 分组/子图/阶段说明
+图中包含两个子图：
+- **Control Plane**：包含多个微服务，负责混沌实验的编排和管理。
+- **Target Namespace**：包含被混沌实验影响的目标环境。
+
+## 节点逐项说明
+- **svc-task-resource (TR)**：任务资源管理服务，负责管理混沌实验的任务定义。根据 README，该服务使用 Spring MVC 框架。
+- **svc-task-executor (EX)**：任务执行服务，负责执行具体的混沌实验。根据 README，该服务使用 Spring MVC 框架。
+- **svc-fault-scheduler (FS)**：故障注入调度器，负责调度故障注入任务。根据 README，该服务使用 Spring MVC 框架。
+- **svc-reqrsp-proxy (RP)**：请求/响应代理服务，负责代理请求和响应，以便进行故障注入。根据 README，该服务使用 Spring WebFlux 框架。
+- **svc-result-processor (RS)**：结果处理服务，负责处理混沌实验的结果。根据 README，该服务使用 Spring MVC 框架。
+- **svc-topo (TO)**：拓扑感知服务，负责感知服务拓扑结构。根据 README，该服务使用 Spring MVC 框架。
+- **业务Service/Deployment (SvcA)**：目标业务服务，即被注入故障的服务。
+- **Envoy Sidecar (Envoy)**：Envoy 代理，作为 Sidecar 部署在业务服务旁边，用于拦截和修改请求/响应。
+- **Kubernetes API Server (APIS)**：Kubernetes API 服务器，用于与 Kubernetes 集群交互。
+- **Jaeger Query (Jaeger)**：Jaeger 查询服务，用于查询分布式追踪数据。
+- **MySQL (MYSQL)**：MySQL 数据库，用于存储任务资源、执行结果等数据。
+- **Redis (REDIS)**：Redis 缓存，用于存储临时数据，例如故障注入配置。
+
+## 连线、分支与汇聚关系
+- `EX --> RP`：任务执行服务通过 HTTP 协议调用请求/响应代理服务。
+- `TR <--> EX`：任务资源管理服务与任务执行服务之间通过 HTTP 协议进行双向通信。
+- `RS <--> TR`：结果处理服务与任务资源管理服务之间通过 HTTP 协议进行双向通信。
+- `FS --> APIS`：故障注入调度器通过 Kubernetes API 与 Kubernetes API 服务器交互，以创建、更新或删除 Kubernetes 资源，从而实现故障注入。
+- `RP --> APIS`：请求/响应代理服务通过 Kubernetes API 与 Kubernetes API 服务器交互。
+- `TO --> Jaeger`：拓扑感知服务通过 HTTP 协议与 Jaeger 查询服务交互。
+- `TR & EX & RP --> MYSQL`：任务资源管理服务、任务执行服务和请求/响应代理服务通过 JDBC 协议访问 MySQL 数据库，形成汇聚关系。
+- `FS & RP --> REDIS`：故障注入调度器和请求/响应代理服务访问 Redis 缓存，形成汇聚关系。
+- `APIS <--> TargetNS`：Kubernetes API Server 与 Target Namespace 中的服务进行交互。
+
+## 仓库语境与术语解释
+- **Control Plane**：控制平面，包含用于管理和编排混沌工程实验的微服务。
+- **Target Namespace**：目标命名空间，包含被混沌工程实验影响的目标服务和组件。
+- **svc-task-resource**：任务资源管理服务，负责管理混沌实验的任务定义。
+- **svc-task-executor**：任务执行服务，负责执行具体的混沌实验。
+- **svc-fault-scheduler**：故障注入调度器，负责调度故障注入任务，与 Kubernetes API 交互。
+- **svc-reqrsp-proxy**：请求/响应代理服务，负责代理请求和响应，以便进行故障注入，基于 Envoy。
+- **svc-result-processor**：结果处理服务，负责处理混沌实验的结果。
+- **svc-topo**：拓扑感知服务，负责感知服务拓扑结构，与 Jaeger 集成。
+- **Envoy Sidecar**：Envoy 代理，作为 Sidecar 部署在业务服务旁边，用于拦截和修改请求/响应。
+- **Kubernetes API Server**：Kubernetes API 服务器，用于与 Kubernetes 集群交互。
+- **Jaeger**：根据 README 和 `svc-topo/src/main/java/com/chaosblade/svc/topo/config/JaegerConfig.java`，用于分布式追踪数据查询。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 ChaosBlade Space Exploration 项目的微服务架构，从左到右依次是控制平面和目标命名空间。控制平面包含 `svc-task-resource`、`svc-task-executor`、`svc-fault-scheduler`、`svc-reqrsp-proxy`、`svc-result-processor` 和 `svc-topo` 等服务，它们通过 HTTP 或 JDBC 协议进行交互，并依赖 MySQL 和 Redis 数据库。`svc-fault-scheduler` 和 `svc-reqrsp-proxy` 与 Kubernetes API Server 交互，实现故障注入。目标命名空间包含业务服务和 Envoy Sidecar。`svc-topo` 服务与 Jaeger 集成，用于拓扑感知和追踪。该架构图清晰地呈现了控制平面和目标命名空间中的组件如何协同工作，以实现混沌工程实验。

@@ -1,0 +1,20 @@
+flowchart TB
+    subgraph Traditional["Traditional Graph RAG"]
+        direction TB
+        U1["User: What depends on UserService?"]
+        U1 --> LLM1["LLM receives raw graph"]
+        LLM1 --> Q1["Query 1: Find callers"]
+        Q1 --> Q2["Query 2: What files?"]
+        Q2 --> Q3["Query 3: Filter tests?"]
+        Q3 --> Q4["Query 4: High-risk?"]
+        Q4 --> OUT1["Answer after 4+ queries"]
+    end
+
+    subgraph GN["GitNexus Smart Tools"]
+        direction TB
+        U2["User: What depends on UserService?"]
+        U2 --> TOOL["impact UserService upstream"]
+        TOOL --> PRECOMP["Pre-structured response:
+        8 callers, 3 clusters, all 90%+ confidence"]
+        PRECOMP --> OUT2["Complete answer, 1 query"]
+    end

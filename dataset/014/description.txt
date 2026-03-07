@@ -1,0 +1,35 @@
+## 图类型与用途
+这是一个流程图/架构图，展示了在 Kubernetes 集群中部署 WordPress 应用的架构。该图描述了 `default` 命名空间下的 Kubernetes 资源，例如 Service、Deployment、PersistentVolumeClaim 和 Secret，以及它们之间的关系。
+
+## 图的整体布局
+图采用从左到右的布局，展示了 WordPress 应用和 MySQL 数据库的组件及其依赖关系。整体层次从 Service 到 Deployment，再到 Secret 和 PersistentVolumeClaim。
+
+## 分组/子图/阶段说明
+图中包含一个名为 "default namespace" 的显式子图，表示所有组件都部署在 Kubernetes 集群的默认命名空间中。
+
+## 节点逐项说明
+- **wordpress_mysql_service["wordpress-mysql<br>(Service)"]**: 表示名为 "wordpress-mysql" 的 Kubernetes Service，用于暴露 MySQL 数据库服务。根据 `wordpress-manifest.yaml`，该 Service 的作用是定义访问 MySQL Pod 的抽象方法。
+- **mysql_pv_claim_persistentvolumeclaim["mysql-pv-claim<br>(PersistentVolumeClaim)"]**: 表示名为 "mysql-pv-claim" 的 Kubernetes PersistentVolumeClaim，用于请求持久化存储卷，供 MySQL 数据库使用。根据 `wordpress-manifest.yaml`，该 PersistentVolumeClaim 用于声明 MySQL 需要的存储资源。
+- **wordpress_mysql_deployment["wordpress-mysql<br>(Deployment)"]**: 表示名为 "wordpress-mysql" 的 Kubernetes Deployment，用于管理 MySQL 数据库 Pod 的创建和更新。根据 `wordpress-manifest.yaml`，该 Deployment 确保指定数量的 MySQL Pod 副本始终运行。
+- **mysql_pass_secret["mysql-pass<br>(Secret)"]**: 表示名为 "mysql-pass" 的 Kubernetes Secret，用于存储 MySQL 数据库的密码等敏感信息。根据 `wordpress-manifest.yaml`，MySQL Deployment 通过 `valueFrom` 引用该 Secret 来获取密码。
+- **wordpress_service["wordpress<br>(Service)"]**: 表示名为 "wordpress" 的 Kubernetes Service，用于暴露 WordPress 应用服务。根据 `wordpress-manifest.yaml`，该 Service 的作用是定义访问 WordPress Pod 的抽象方法。
+- **wp_pv_claim_persistentvolumeclaim["wp-pv-claim<br>(PersistentVolumeClaim)"]**: 表示名为 "wp-pv-claim" 的 Kubernetes PersistentVolumeClaim，用于请求持久化存储卷，供 WordPress 应用使用。根据 `wordpress-manifest.yaml`，该 PersistentVolumeClaim 用于声明 WordPress 需要的存储资源。
+- **wordpress_deployment["wordpress<br>(Deployment)"]**: 表示名为 "wordpress" 的 Kubernetes Deployment，用于管理 WordPress 应用 Pod 的创建和更新。根据 `wordpress-manifest.yaml`，该 Deployment 确保指定数量的 WordPress Pod 副本始终运行。
+
+## 连线、分支与汇聚关系
+- `wordpress_mysql_service --> wordpress_mysql_deployment`: "wordpress-mysql" Service 指向 "wordpress-mysql" Deployment，意味着 Service 将流量路由到由 Deployment 管理的 MySQL Pod。
+- `wordpress_mysql_deployment --> mysql_pass_secret`: "wordpress-mysql" Deployment 指向 "mysql-pass" Secret，意味着 MySQL Pod 需要从 Secret 中获取密码等信息。
+- `wordpress_service --> wordpress_deployment`: "wordpress" Service 指向 "wordpress" Deployment，意味着 Service 将流量路由到由 Deployment 管理的 WordPress Pod。
+- `wordpress_deployment --> mysql_pass_secret`: "wordpress" Deployment 指向 "mysql-pass" Secret，意味着 WordPress Pod 需要从 Secret 中获取 MySQL 数据库的连接信息。
+
+## 仓库语境与术语解释
+- **Kubernetes (K8s)**: 一个开源的容器编排平台，用于自动化部署、扩展和管理容器化应用程序。
+- **Service**: Kubernetes 中的一种抽象，定义了访问 Pod 集合的策略。
+- **Deployment**: Kubernetes 中的一种资源，用于声明式地更新 Pod 和 ReplicaSet。
+- **PersistentVolumeClaim (PVC)**: 用户对存储的请求。它会消耗 PersistentVolume 资源。
+- **Secret**: Kubernetes 中的一种资源，用于存储敏感信息，例如密码、令牌和密钥。
+- **Namespace**: Kubernetes 中的一种资源，用于在单个集群中创建多个虚拟集群。该图明确展示了 `default` 命名空间。
+- **wordpress-manifest.yaml**: 仓库中包含的 Kubernetes 配置文件，定义了 WordPress 应用和 MySQL 数据库的部署和服务。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Kubernetes 集群中 WordPress 应用的部署架构，所有组件都位于 `default` 命名空间下。WordPress 和 MySQL 分别通过 Deployment 进行管理，并通过 Service 对外暴露。MySQL 的密码存储在 Secret 中，供 WordPress 和 MySQL Pod 安全访问。WordPress Deployment 和 MySQL Deployment 都依赖于 `mysql-pass` 这个 Secret 来获取数据库密码。PersistentVolumeClaim 用于请求持久化存储，为 WordPress 和 MySQL 提供数据存储能力。

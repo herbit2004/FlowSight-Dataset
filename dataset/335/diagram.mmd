@@ -1,0 +1,24 @@
+graph TD
+    QA["기능 QA + 보안 QA"] --> PARSE["FINDINGS 파싱"]
+    PARSE --> CHECK{"CRITICAL/HIGH?"}
+    CHECK -->|"NO"| DONE["루프 종료 ✅"]
+    CHECK -->|"YES"| MAP["Finding→Specialist 매핑"]
+    MAP --> UI["UI → frontend"]
+    MAP --> API["API → backend"]
+    MAP --> DB["DB → supabase"]
+    MAP --> PERF["PERF → optimizer"]
+    MAP --> SEC["SEC → security"]
+    MAP --> BUG["TYPE → bug-fixer"]
+    UI --> BUILD["빌드/타입 검증"]
+    API --> BUILD
+    DB --> BUILD
+    PERF --> BUILD
+    SEC --> BUILD
+    BUG --> BUILD
+    BUILD --> CYCLE{"Cycle < 3?"}
+    CYCLE -->|"YES"| QA
+    CYCLE -->|"NO"| ESC["사용자 에스컬레이션 ⚠️"]
+
+    style QA fill:#6c5ce7,color:#fff
+    style DONE fill:#00b894,color:#fff
+    style ESC fill:#d63031,color:#fff

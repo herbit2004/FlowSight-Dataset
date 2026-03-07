@@ -1,0 +1,32 @@
+graph LR
+    subgraph "Kubernetes Cluster"
+        K8s[Kubernetes Pods<br/>with Cilium]
+        Cilium[Cilium<br/>eBPF Dataplane]
+        HubbleObs[Hubble<br/>Observability]
+    end
+    
+    subgraph "PolicyPilot"
+        CLI2[CLI Tool]
+        Process[Processing Engine]
+    end
+    
+    subgraph "Output"
+        YAML[Policies YAML]
+        HTML[HTML Report]
+    end
+    
+    K8s -->|Network Traffic| Cilium
+    Cilium -->|Flow Data| HubbleObs
+    HubbleObs -->|JSON Export| CLI2
+    CLI2 --> Process
+    Process --> YAML
+    Process --> HTML
+    YAML -.->|Apply| K8s
+    
+    style K8s fill:#326ce5,color:#fff
+    style Cilium fill:#60c6ff,color:#000
+    style HubbleObs fill:#60c6ff,color:#000
+    style CLI2 fill:#e1f5ff
+    style Process fill:#fff4e1
+    style YAML fill:#e8f5e9
+    style HTML fill:#f3e5f5

@@ -1,0 +1,42 @@
+graph TD
+    %% Define Layers
+    subgraph Models [Models Package]
+      E[Models]
+    end
+
+    subgraph Domain [Domain Package]
+      D1[Repository Protocols]
+      D2[Use Cases / Interactors]
+    end
+
+    subgraph Data [Data Package]
+      DA[Repository Implementations]
+      DB[Networking / Persistence]
+    end
+
+    subgraph Presentation [Presentation Package]
+      P1[Views]
+      P2[View Models]
+    end
+    
+    subgraph Shared [Shared Modules]
+      S1[Common Utilities]
+    end
+
+    %% Dependencies between layers
+    D1 --> E         
+    %% Domain uses Models
+    D2 --> D1        
+    %% Use Cases depend on Repository Protocols
+    DA --> D1        
+    %% Data layer implements Domain protocols
+    DA --> DB       
+    %% Data layer handles external data (API, DB)
+    P2 --> D2        
+    %% Presentation layer (View Models) uses Use Cases
+    P1 --> P2        
+    %% Views bind to View Models
+    
+    %% Shared modules dependencies
+    D1 & D2 & DA & P1 & P2 --> S1  
+    %% All layers can use common utilities

@@ -1,0 +1,37 @@
+flowchart TD
+    subgraph CLI [CLI Commands]
+        Setup["gitnexus setup"]
+        Analyze["gitnexus analyze"]
+        Clean["gitnexus clean"]
+        List["gitnexus list"]
+    end
+
+    subgraph Registry ["~/.gitnexus/"]
+        RegFile["registry.json"]
+    end
+
+    subgraph Repos [Project Repos]
+        RepoA[".gitnexus/ in repo A"]
+        RepoB[".gitnexus/ in repo B"]
+    end
+
+    subgraph MCP [MCP Server]
+        Server["server.ts"]
+        Backend["LocalBackend"]
+        Pool["Connection Pool"]
+        ConnA["KuzuDB conn A"]
+        ConnB["KuzuDB conn B"]
+    end
+
+    Setup -->|"writes global MCP config"| CursorConfig["~/.cursor/mcp.json"]
+    Analyze -->|"registers repo"| RegFile
+    Analyze -->|"stores index"| RepoA
+    Clean -->|"unregisters repo"| RegFile
+    List -->|"reads"| RegFile
+    Server -->|"reads registry"| RegFile
+    Server --> Backend
+    Backend --> Pool
+    Pool -->|"lazy open"| ConnA
+    Pool -->|"lazy open"| ConnB
+    ConnA -->|"queries"| RepoA
+    ConnB -->|"queries"| RepoB

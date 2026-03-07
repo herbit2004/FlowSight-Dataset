@@ -1,0 +1,35 @@
+## 图类型与用途
+这是一个流程图，描述了 NanoMD 库中 Markdown 文本从用户输入到实时预览和导出的处理流程。它在仓库中的作用是展示 NanoMD 库的核心架构，即 Markdown 编辑、解析和预览的整体流程。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是用户输入和编辑器，中间是解析器和数据格式，右侧是查看器和实时预览。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为三个阶段：编辑阶段、解析阶段和预览阶段。
+
+## 节点逐项说明
+- **MDEditor**：Markdown 编辑器，用户在此组件中编辑 Markdown 文本。根据 README，它提供实时渲染和分屏预览等功能，对应 `src/model/editor.js`。
+- **MDParser**：Markdown 解析器，接收 MDEditor 传递的 Markdown 文本，并将其解析成 HTML 格式。对应 `src/model/parser.js`。
+- **MDViewer**：Markdown 查看器，接收 MDParser 输出的 HTML，并将其渲染成用户可见的 Markdown 预览效果。对应 `src/model/viewer.js`。
+- **User Input**：代表用户在 MDEditor 中进行的文本输入操作。
+- **Live Preview**：代表用户看到的实时更新的 Markdown 预览效果。
+- **Markdown / HTML**：代表 MDEditor 导出的 Markdown 文本或 MDParser 解析后的 HTML 代码。
+
+## 连线、分支与汇聚关系
+- `User Input -> MDEditor`：用户输入进入 Markdown 编辑器。
+- `MDEditor -- text --> MDParser`：编辑器将 Markdown 文本传递给解析器。
+- `MDParser -- HTML --> MDViewer`：解析器将 HTML 代码传递给查看器。
+- `MDEditor -- sync --> MDViewer`：编辑器直接与查看器同步，可能是为了实现实时预览功能。
+- `MDViewer -> Live Preview`：查看器将渲染后的内容显示为实时预览。
+- `MDEditor -- export --> Markdown / HTML`：编辑器可以导出 Markdown 文本或 HTML 代码。
+
+## 仓库语境与术语解释
+- **MDEditor**：NanoMD 的核心组件，提供 Markdown 编辑功能，具体实现在 `src/model/editor.js` 中。
+- **MDParser**：负责将 Markdown 文本解析为 HTML，实现在 `src/model/parser.js` 中。
+- **MDViewer**：将 HTML 渲染为用户可见的预览效果，实现在 `src/model/viewer.js` 中。
+- **Real-Time Editing with Split-Screen Preview**：README 中提到的 NanoMD 的一个主要特性，允许用户同时编辑和预览 Markdown 内容。
+- **Zero-Dependency Lightweight Design**：README 中强调 NanoMD 不依赖任何框架，使用纯 JavaScript 和 DOM API 构建。
+- **Comprehensive Markdown Syntax Parsing**：NanoMD 支持多种 Markdown 语法，包括标题、粗体、斜体、代码块、表格、列表等。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 NanoMD 的核心架构流程：用户输入首先进入 MDEditor 进行编辑，编辑后的 Markdown 文本通过 MDParser 解析为 HTML，然后由 MDViewer 渲染成 Live Preview。MDEditor 还可以直接与 MDViewer 同步以实现实时预览，并支持将内容导出为 Markdown 或 HTML 格式。该架构体现了 NanoMD 编辑、解析和预览 Markdown 文本的核心功能，其中 MDEditor、MDParser 和 MDViewer 是三个关键组件。

@@ -1,0 +1,97 @@
+graph
+%%graph TD
+
+    %% TODO add links https://mermaid.js.org/syntax/flowchart.html#interaction
+
+    watchAllElements["watchAllElements
+        looks for media elements
+        on the page"]
+    click watchAllElements "https://github.com/WofWca/jumpcutter/blob/890a2b25948f39f1553cb9afb06c4cc10c9d2a19/src/entry-points/content/watchAllElements.ts"
+
+    AllMediaElementsController["AllMediaElementsController
+        the orchestrator,"]
+    click AllMediaElementsController "https://github.com/WofWca/jumpcutter/blob/44fadb1982fbe7dd20c64741ae9e754ba9261042/src/entry-points/content/AllMediaElementsController.ts"
+
+    watchAllElements -->|"onNewMediaElements(...elements)"| AllMediaElementsController
+    AllMediaElementsController -->|original HTMLMediaElement| chooseController{choose
+        appropriate
+        controller}
+    chooseController -->|original HTMLMediaElement| ElementPlaybackControllerCloning & ElementPlaybackControllerStretching
+
+
+    %% ElementPlaybackControllerCloning
+
+    %% subgraph "ElementPlaybackControllerCloning"
+
+    ElementPlaybackControllerCloning["ElementPlaybackControllerCloning
+        controls playbackRate
+        of the original
+        HTMLMediaElement"]
+    click ElementPlaybackControllerCloning "https://github.com/WofWca/jumpcutter/blob/3ff011318dc9af407eaf9f4cc8d33dfafaf0b53e/src/entry-points/content/ElementPlaybackControllerCloning/ElementPlaybackControllerCloning.ts"
+
+    Lookahead["Lookahead
+        plays back the clone element
+        to look for silence ranges"]
+    click Lookahead "https://github.com/WofWca/jumpcutter/blob/988ec301bf2e6c07e6cc328f73a4177f7504f1e1/src/entry-points/content/ElementPlaybackControllerCloning/Lookahead.ts"
+
+    ElementPlaybackControllerCloning --> | original HTMLMediaElement reference| Lookahead
+    Lookahead --> |silence ranges| ElementPlaybackControllerCloning
+
+    createCloneElementWithSameSrc --> |HTMLMediaElement clone| Lookahead
+    Lookahead --> |original HTMLMediaElement reference| createCloneElementWithSameSrc
+    click createCloneElementWithSameSrc "https://github.com/WofWca/jumpcutter/blob/e9daff122f12263a50fb1c4a10e4b13c7fd190cf/src/entry-points/content/ElementPlaybackControllerCloning/createCloneElementWithSameSrc.ts"
+
+    cloneMediaSources["`cloneMediaSources
+        intercepts all MediaSources
+        and holds a clone
+        HTMLMediaElement`"]
+    click cloneMediaSources "https://github.com/WofWca/jumpcutter/blob/5bcfdaf53066c5ac4f664e089b916118afe37ae2/src/entry-points/content/cloneMediaSources/lib.ts"
+
+    cloneMediaSources -->|HTMLMediaElement clone| Lookahead
+    Lookahead -->|getMediaSourceCloneElement| cloneMediaSources
+
+    SilenceDetector1["SilenceDetector
+        utilizes Web Audio API
+        to detect silence"]
+    click SilenceDetector1 "https://github.com/WofWca/jumpcutter/blob/e3283500aeefe994a8be5bb7fdd8f7308e895f4f/src/entry-points/content/SilenceDetector/SilenceDetectorProcessor.ts"
+    Lookahead --> |clone HTMLMediaElement audio| SilenceDetector1
+    SilenceDetector1 --> |
+        SILENCE_END &
+        SILENCE_START events
+        with timestamps
+    | Lookahead
+
+    %% end
+    
+    %% ElementPlaybackControllerStretching
+
+    %% subgraph "ElementPlaybackControllerStretching"
+
+    ElementPlaybackControllerStretching["ElementPlaybackControllerStretching
+        controls playbackRate
+        of the original
+        HTMLMediaElement"]
+    click ElementPlaybackControllerStretching "https://github.com/WofWca/jumpcutter/blob/3ff011318dc9af407eaf9f4cc8d33dfafaf0b53e/src/entry-points/content/ElementPlaybackControllerStretching/ElementPlaybackControllerStretching.ts"
+
+    SilenceDetector2["SilenceDetector
+        utilizes Web Audio API
+        to detect silence"]
+    click SilenceDetector2 "https://github.com/WofWca/jumpcutter/blob/e3283500aeefe994a8be5bb7fdd8f7308e895f4f/src/entry-points/content/SilenceDetector/SilenceDetectorProcessor.ts"
+    ElementPlaybackControllerStretching --> |original HTMLMediaElement audio| SilenceDetector2
+    SilenceDetector2 --> |
+        SILENCE_END &
+        SILENCE_START events
+        with timestamps
+    | ElementPlaybackControllerStretching
+
+    %% end
+
+
+    %% Telemetry
+
+    %% ElementPlaybackControllerCloning & ElementPlaybackControllerStretching --> |telemetry| AllMediaElementsController
+
+    Popup["Popup
+        (UI, chart)"]
+    click Popup "https://github.com/WofWca/jumpcutter/blob/44fadb1982fbe7dd20c64741ae9e754ba9261042/src/entry-points/popup/App.svelte"
+    AllMediaElementsController --> |telemetry| Popup

@@ -1,0 +1,30 @@
+## 图类型与用途
+这是一个流程图，描述了两个 GNB 节点通过 UDP over TCP 隧道在不同网络之间通信的架构。它在仓库中的作用是展示 OpenGNB 如何利用 UDP over TCP 技术实现内网穿透，建立 P2P VPN 连接。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是位于 LAN A 的节点，中间是互联网，右侧是位于 Internet 的节点。数据流从左侧的 `gnb nodeA` 开始，经过隧道传输，最终到达右侧的 `gnb nodeB`。
+
+## 分组/子图/阶段说明
+图中包含两个子图：LAN A 和 Internet。
+- **LAN A**：表示一个局域网，包含 `gnb nodeA` 和 `upd_over_tcp_A` 节点。
+- **Internet**：表示互联网，包含 `upd_over_tcp_B` 和 `gnb nodeB` 节点。
+
+## 节点逐项说明
+- **gnb nodeA**：位于 LAN A 中的 GNB 节点，是数据传输的起点。根据 README，GNB 节点是 OpenGNB 网络的端点，可以理解为位于不同网络中的设备。
+- **upd_over_tcp_A**：位于 LAN A 中的 UDP over TCP 隧道/代理，负责将 UDP 数据包封装到 TCP 连接中。
+- **upd_over_tcp_B**：位于 Internet 中的 UDP over TCP 隧道/代理，负责将 TCP 数据包解封装为 UDP 数据包。
+- **gnb nodeB**：位于 Internet 中的 GNB 节点，是数据传输的终点。
+
+## 连线、分支与汇聚关系
+- `nodeA --UDP payload--- upd_over_tcp_A`：`gnb nodeA` 通过 UDP 协议发送数据负载到 `upd_over_tcp_A`。
+- `upd_over_tcp_A --TCP payload--- upd_over_tcp_B`：`upd_over_tcp_A` 将 UDP 数据负载封装为 TCP 数据负载，并通过 TCP 连接发送到 `upd_over_tcp_B`。
+- `upd_over_tcp_B --UDP payload--- nodeB`：`upd_over_tcp_B` 接收到 TCP 数据负载后，将其解封装为 UDP 数据负载，并发送到 `gnb nodeB`。
+
+## 仓库语境与术语解释
+- **GNB (OpenGNB)**：根据 README，是一个开源 P2P 分布式虚拟网络，具有内网穿透能力。
+- **UDP over TCP**：一种隧道技术，用于将 UDP 数据包封装在 TCP 连接中，以便在网络上传输，绕过某些网络限制。
+- **LAN A / Internet**：分别代表局域网和互联网，用于表示 GNB 节点所处的网络环境。
+- **Payload**：指的是实际传输的数据负载。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 OpenGNB 如何利用 UDP over TCP 技术，使位于不同网络中的两个 GNB 节点能够建立连接。`gnb nodeA` 发送的 UDP 数据包被封装到 TCP 连接中，通过互联网传输到 `gnb nodeB`，`gnb nodeB` 再将 TCP 数据包解封装为 UDP 数据包。核心流程是“`gnb nodeA` (UDP) -> `upd_over_tcp_A` (TCP 封装) -> `upd_over_tcp_B` (TCP 解封装) -> `gnb nodeB` (UDP)”，实现了内网穿透。

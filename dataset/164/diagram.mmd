@@ -1,0 +1,10 @@
+flowchart TD
+  A["Client uploads file(s)"] --> B["Web App Route"]
+  B --> C{"Pre-filters<br/>(ext, size, MIME)"}
+  C -- fail --> X["HTTP 4xx"]
+  C -- pass --> D{"Is ZIP?"}
+  D -- yes --> E["Iterate entries<br/>(limits & scan)"]
+  E --> F{"Verdict?"}
+  D -- no --> F{"Scan bytes"}
+  F -- malicious/suspicious --> Y["HTTP 422 blocked"]
+  F -- clean --> Z["HTTP 200 ok + results"]

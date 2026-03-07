@@ -1,0 +1,19 @@
+flowchart LR
+    A["osquery Agents"] -->|TLS Remote API| T["osctrl-tls"]
+    O["Operators"] -->|Web UI| W["osctrl-admin"]
+    O -->|CLI| C["osctrl-cli"]
+    O -->|REST| P["osctrl-api"]
+
+    W -->|HTTP API| P
+    C -->|HTTP API| P
+
+    T --> S["Shared Packages (pkg/*)"]
+    W --> S
+    P --> S
+    C --> S
+    C -.->|Direct DB mode| D
+
+    S --> D["PostgreSQL Backend"]
+    S --> R["Redis Cache"]
+    S --> L["Log Destinations (DB, file, S3, Elastic, Splunk, Graylog, Kafka, Kinesis, Logstash)"]
+    S --> F["Carve Storage (DB, local, S3)"]

@@ -1,0 +1,49 @@
+## 图类型与用途
+这是一个架构图，描述了数据分析引擎如何通过自然语言查询驱动的智能代理来分析不同类型的数据源，并利用知识图谱进行增强和记忆。它在仓库中的作用是展示数据分析流程的核心组件及其相互关系。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是用户输入和智能代理，中间是分析引擎的处理流程，右侧是知识层，上方是数据层。
+
+## 分组/子图/阶段说明
+图中包含三个子图：
+- **Analytics Engine**：分析引擎，包含自然语言查询、智能代理、查询计划器、查询执行器和结果合成器。
+- **Data Layer**：数据层，包含 PostgreSQL、DuckDB、Neo4j 和 MongoDB 四种数据库。
+- **Knowledge Layer**：知识层，包含知识图谱和团队记忆。
+
+## 节点逐项说明
+- **NLQ (Natural Language Query)**：用户以自然语言提出的查询请求，作为整个流程的起点。
+- **IA (Intelligence Agent)**：负责理解 NLQ，并将其转化为可执行的查询计划。根据 README，IA 使用 AI 代理进行对话式分析。
+- **QP (Query Planner)**：根据 IA 的理解，生成针对特定数据源的查询计划。
+- **QE (Query Executor)**：执行 QP 生成的查询计划，从数据源中获取数据。
+- **RS (Result Synthesizer)**：将从不同数据源获取的结果进行整合和提炼，生成最终的分析结果。
+- **PG (PostgreSQL)**：一种关系型数据库。
+- **DD (DuckDB)**：一种分析型数据库。
+- **N4J (Neo4j)**：一种图数据库。
+- **MDB (MongoDB)**：一种文档数据库。
+- **KG (Knowledge Graph)**：存储领域知识和实体关系的图结构。IA 和 RS 都可以访问 KG，用于增强查询理解和结果合成。
+- **Memory (Team Memory)**：存储团队的知识和经验，KG 可以从中学习和更新。
+
+## 连线、分支与汇聚关系
+- `NLQ -> IA`：用户提交自然语言查询，IA 接收 NLQ。
+- `IA -> QP`：IA 理解查询意图后，传递给 QP。
+- `QP -> QE`：QP 生成查询计划后，传递给 QE。
+- `QE -> PG`：QE 从 PostgreSQL 数据库获取数据。
+- `QE -> DD`：QE 从 DuckDB 数据库获取数据。
+- `QE -> N4J`：QE 从 Neo4j 数据库获取数据。
+- `QE -> MDB`：QE 从 MongoDB 数据库获取数据。
+- `QE -> RS`：QE 将从不同数据库获取的数据传递给 RS，形成汇聚关系。
+- `RS -> KG`：RS 的结果可以更新 KG，从而增强知识图谱。
+- `IA -> KG`：IA 可以访问 KG，用于增强查询理解。
+- `KG -> Memory`：KG 可以从 Memory 中学习和更新知识。
+
+## 仓库语境与术语解释
+- **Analytics Engine**：整个分析流程的核心处理单元，负责接收 NLQ，生成查询计划，执行查询，并合成结果。
+- **Intelligence Agent (IA)**：根据 README，IA 使用 AI 代理进行对话式分析，理解数据库 schema、关系和业务上下文，生成精确的 SQL 查询。
+- **Knowledge Graph (KG)**：根据 README，KG 捕获业务逻辑、指标定义和公司特有的分析模式。
+- **Data Layer**：支持多种数据库，包括 PostgreSQL, DuckDB, Neo4j, 和 MongoDB，根据 README，可以通过统一的 MCP 工具无缝查询这些数据库。
+- **Model Context Protocol (MCP)**：README 提到，Aden MCP Analytics Framework 构建于 MCP 之上，使 AI 代理能够自主导航数据库，执行复杂的分析查询，并通过自然语言提供可操作的业务见解。
+- **MemoryManager**：`packages/mcp-server/src/memory-manager.js` 文件显示，该模块负责管理项目、知识领域和会话的内存，包括创建、获取、更新和删除项目，以及保存和加载内存索引。
+- **PlannerAgent, ExecutorAgent, AnalyzerAgent**: 根据 README 和 `packages/agent-client/src/agents/` 目录下的文件，这些是多代理架构中的关键组件，分别负责分析数据请求并创建执行计划、协调数据库查询和数据检索、以及将查询结果合成为业务见解和建议。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了基于自然语言查询的数据分析流程。用户通过 NLQ 提交查询，IA 利用 KG 理解查询意图，QP 生成查询计划，QE 从 PG、DD、N4J、MDB 等数据库获取数据，RS 整合数据并生成最终结果。KG 增强了查询理解和结果合成，并可从 Memory 中学习和更新。核心流程是“NLQ -> IA -> QP -> QE -> RS”，其中 KG 在 IA 和 RS 环节起关键作用，数据层支持多种数据库。

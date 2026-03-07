@@ -1,0 +1,51 @@
+## 图类型与用途
+这是一个流程图，描述了 Musoq 系统中 SQL 查询的处理流程和架构。它在仓库中的作用是展示 Musoq 如何将 SQL 查询转换为可执行代码并最终产生结果，对应 `docs/architecture.md` 中对系统架构的概述。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是输入节点，中间是各个处理模块，底部是结果输出节点。信息流从上到下依次经过各个模块。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分成三个阶段：解析与转换、评估与编译、执行与输出。
+
+## 节点逐项说明
+- **A (SQL Query Input)**：SQL 查询的输入，代表用户提供的 SQL 语句。
+- **B (Parser Module)**：解析器模块，负责将输入的 SQL 语句解析成计算机可理解的结构。根据 `docs/architecture.md`，该模块负责词法分析、语法分析和错误检测。
+- **C (AST Generation)**：抽象语法树（AST）生成，将解析后的 SQL 语句转换为抽象语法树，这是一种树状结构，表示 SQL 语句的语法结构。
+- **D (Converter Module)**：转换器模块，负责将抽象语法树转换为 Musoq 内部的表示形式，可能进行一些优化和转换。该模块依赖于 Schema System 获取数据源信息。
+- **E (Semantic Analysis)**：语义分析，检查 SQL 语句的语义是否正确，例如验证表名、列名是否存在，数据类型是否匹配等。
+- **F (Code Generation)**：代码生成，将经过语义分析的 SQL 语句生成可执行的代码，可能是中间代码或目标代码。
+- **G (Evaluator Module)**：评估器模块，负责评估和执行生成的代码，从数据源获取数据并进行计算。该模块依赖于 Schema System 和 Plugin System 来获取数据源信息和扩展功能。
+- **H (Compilation)**：编译，将生成的代码编译成可执行的程序。
+- **I (Execution)**：执行，运行编译后的程序，执行 SQL 查询。
+- **J (Results Output)**：结果输出，将查询结果返回给用户。
+- **K (Schema System)**：模式系统，存储了关于数据源的元数据信息，例如表结构、列类型等。
+- **L (Plugin System)**：插件系统，允许用户扩展 Musoq 的功能，例如添加新的数据源或函数。
+
+## 连线、分支与汇聚关系
+- `A -> B`：SQL 查询输入进入解析器模块。
+- `B -> C`：解析器模块生成抽象语法树。
+- `C -> D`：抽象语法树被传递给转换器模块。
+- `D -> E`：转换器模块将转换后的结构传递给语义分析模块。
+- `E -> F`：语义分析模块将结果传递给代码生成模块。
+- `F -> G`：代码生成模块将可执行代码传递给评估器模块。
+- `G -> H`：评估器模块将代码传递给编译模块。
+- `H -> I`：编译模块将代码编译成可执行程序，并传递给执行模块。
+- `I -> J`：执行模块执行查询，并将结果传递给结果输出模块。
+- `K -> D`：转换器模块依赖于模式系统获取数据源信息。
+- `K -> G`：评估器模块依赖于模式系统获取数据源信息。
+- `L -> K`：插件系统扩展模式系统。
+- `L -> G`：评估器模块依赖于插件系统扩展功能。
+
+## 仓库语境与术语解释
+- **SQL Query Input**：用户输入的 SQL 查询语句，Musoq 允许对文件、日志、进程等进行 SQL 查询，无需数据导入或中间存储，如 README 所示。
+- **Parser Module**：负责将 SQL 文本转换为抽象语法树（AST），具体实现位于 `src/dotnet/Musoq.Parser` 目录。
+- **AST Generation**：将 SQL 语句转换为抽象语法树，`src/dotnet/Musoq.Converter/Build/CreateTree.cs` 文件展示了创建 AST 的过程。
+- **Schema System**：提供数据源的抽象，管理类型信息，允许 Musoq 查询不同类型的数据源。
+- **Plugin System**：允许用户扩展 Musoq 的功能，例如添加新的数据源或函数。
+- **Evaluator Module**：编译生成的 C# 代码并执行查询，`src/dotnet/Musoq.Evaluator/EvaluationHelper.cs` 文件可能包含评估器的辅助方法。
+- **Compilation**：将生成的代码编译成可执行程序。
+- **Execution**：运行编译后的程序，执行 SQL 查询。
+- **Results Output**：将查询结果返回给用户。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+这张图描述了 Musoq 处理 SQL 查询的完整流程。从 SQL 查询输入开始，依次经过 Parser Module、AST Generation、Converter Module、Semantic Analysis、Code Generation、Evaluator Module、Compilation 和 Execution 最终输出结果。Schema System 和 Plugin System 为 Converter Module 和 Evaluator Module 提供数据源信息和扩展功能。核心流程是从 SQL 查询到可执行代码的转换，最终将查询结果返回给用户。

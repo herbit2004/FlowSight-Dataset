@@ -1,0 +1,36 @@
+## 图类型与用途
+这是一个架构图，展示了一个分布式计算环境中，客户端主机如何通过 TCP 连接到不同主机上的 GPU 资源。该图在仓库中用于演示如何利用 `gguf-parser-go` 工具分析 GGUF 模型，并在不同 GPU 资源上进行推理。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是客户端主机，底部是多个 GPU 资源主机。客户端通过 TCP 连接到各个 GPU 资源。
+
+## 分组/子图/阶段说明
+图中使用了 subgraph 来表示不同的主机，包括客户端主机和 GPU 资源主机。没有显式的阶段划分，但可以理解为客户端发起请求，然后通过 TCP 连接到不同的 GPU 资源进行计算。
+
+## 节点逐项说明
+- **host4 ("Windows 11 (host4)")**：运行 Windows 11 的客户端主机，拥有 11GiB 的剩余 RAM。
+- **ram40 ("11GiB RAM remaining")**：host4 主机剩余的内存资源。
+- **host3 ("Apple macOS (host3)")**：运行 macOS 的主机，拥有 Apple M1 Max 芯片。
+- **gpu10 ("Apple M1 Max (6GiB VRAM remaining)")**：Apple M1 Max 芯片，代表一个 GPU 资源，剩余 6GiB 的 VRAM。
+- **host2 ("Windows 11 (host2)")**：运行 Windows 11 的主机，拥有 NVIDIA 4090 显卡。
+- **gpu20 ("NVIDIA 4090 (12GiB VRAM remaining)")**：NVIDIA 4090 显卡，代表一个 GPU 资源，剩余 12GiB 的 VRAM。
+- **host1 ("Ubuntu (host1)")**：运行 Ubuntu 的主机，拥有两块 NVIDIA 4080 显卡。
+- **gpu30 ("NVIDIA 4080 0 (8GiB VRAM remaining)")**：NVIDIA 4080 显卡，代表一个 GPU 资源，剩余 8GiB 的 VRAM。
+- **gpu31 ("NVIDIA 4080 1 (10GiB VRAM remaining)")**：NVIDIA 4080 显卡，代表一个 GPU 资源，剩余 10GiB 的 VRAM。
+
+## 连线、分支与汇聚关系
+- `host4 -> gpu10`：host4 通过 TCP 连接到 gpu10。
+- `host4 -> gpu20`：host4 通过 TCP 连接到 gpu20。
+- `host4 -> gpu30`：host4 通过 TCP 连接到 gpu30。
+- `host4 -> gpu31`：host4 通过 TCP 连接到 gpu31。
+
+## 仓库语境与术语解释
+- **GGUF**：一种用于存储模型的文件格式，用于 GGML 和基于 GGML 的执行器进行推理。README 提到 GGUF Parser 可以用来审查和估计 GGUF 文件的使用情况。
+- **GGML**：用于机器学习的 C 库。GGUF 文件格式是为 GGML 设计的。
+- **TCP**：传输控制协议，一种面向连接的、可靠的传输层协议。图中表示客户端主机通过 TCP 连接到远程 GPU 资源。
+- **VRAM**：显存，GPU 上的内存。图中显示了每个 GPU 节点的剩余 VRAM 容量。
+- **RAM**：随机存取存储器，系统内存。图中显示了客户端主机的剩余 RAM 容量。
+- **`gguf-parser-go`**：该仓库提供的工具，用于分析 GGUF 文件并估计内存使用情况。README 说明该工具可以用于审查 GGUF 文件，估计内存使用情况，并提供优化建议。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了一个客户端-服务器架构，其中 Windows 11 主机 (host4) 作为客户端，通过 TCP 连接到运行 macOS (host3)、Windows 11 (host2) 和 Ubuntu (host1) 的主机上的 GPU 资源。客户端主机拥有 11GiB 的 RAM，而 GPU 资源分别拥有 Apple M1 Max (6GiB VRAM)、NVIDIA 4090 (12GiB VRAM) 和两块 NVIDIA 4080 (8GiB 和 10GiB VRAM)。该架构图用于演示如何利用 `gguf-parser-go` 工具分析 GGUF 模型，并在不同的 GPU 资源上进行推理，同时考虑到 GPU 和 RAM 的资源限制。

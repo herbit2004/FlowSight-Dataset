@@ -1,0 +1,77 @@
+## 图类型与用途
+这是一个流程图，描述了 `AutoQA-Agent` 工具中 `plan` 命令的架构和内部流程，以及其他 CLI 命令。它在仓库中的作用是展示该工具如何通过不同的命令和组件，实现自动化测试计划的生成和执行。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是 CLI 入口，中间是命令处理和配置加载，底部是结果输出和工具层。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分成三个阶段：CLI 命令处理、配置加载与探索/生成流程、结果输出。
+
+## 节点逐项说明
+- **autoqa CLI**：`AutoQA-Agent` 的命令行界面，是用户与工具交互的入口。
+- **Plan Commands**：`autoqa` CLI 中的 `plan` 命令，用于生成测试计划。
+- **Run Command**：`autoqa` CLI 中的 `run` 命令，用于执行测试。
+- **Init Command**：`autoqa` CLI 中的 `init` 命令，用于初始化项目。
+- **explore**：`plan` 命令的一个子命令，用于探索 Web 应用程序。
+- **generate**：`plan` 命令的一个子命令，用于生成测试计划。
+- **explore + generate**：`plan` 命令的一个子命令，先探索再生成测试计划。
+- **Configuration Loading**：配置加载模块，负责读取和解析配置信息。
+- **autoqa.config.json**：配置文件，存储工具的配置信息。
+- **CLI Options**：命令行选项，允许用户通过命令行指定配置。
+- **Default Values**：默认值，当配置文件和命令行选项未指定时使用的默认配置。
+- **Browser Creation**：浏览器创建模块，负责启动和管理浏览器实例。
+- **Playwright Engine**：Playwright 引擎，用于控制浏览器。
+- **Explore Agent**：探索代理，负责在 Web 应用程序中进行探索。
+- **Planning Tools**：探索工具集，提供探索过程中所需的各种工具。
+- **Browser Tools**：浏览器工具，提供与浏览器交互的工具。
+- **Planner Tools**：计划工具，提供计划生成所需的工具。
+- **Exploration Artifacts**：探索结果，包括导航图、元素清单和探索记录。
+- **Navigation Graph**：导航图，记录 Web 应用程序的导航结构。
+- **Element Inventory**：元素清单，记录 Web 应用程序中的元素信息。
+- **Exploration Transcript**：探索记录，记录探索过程中的操作和事件。
+- **Plan Agent**：计划代理，负责根据探索结果生成测试计划。
+- **Test Plan Generation**：测试计划生成模块，负责将计划代理的输出转换为测试计划。
+- **Markdown Specs**：测试规范输出，将测试计划转换为 Markdown 文件和 JSON 文件。
+- **\*.md Test Files**：测试规范输出的 Markdown 文件。
+- **test-plan.json**：测试规范输出的 JSON 文件。
+
+## 连线、分支与汇聚关系
+- `autoqa CLI -> Plan Commands`：CLI 通过 Plan Commands 生成测试计划。
+- `autoqa CLI -> Run Command`：CLI 通过 Run Command 执行测试。
+- `autoqa CLI -> Init Command`：CLI 通过 Init Command 初始化项目。
+- `Plan Commands -> explore`：Plan 命令可以执行 explore 子命令。
+- `Plan Commands -> generate`：Plan 命令可以执行 generate 子命令。
+- `Plan Commands -> explore + generate`：Plan 命令可以执行 explore + generate 子命令。
+- `explore -> Configuration Loading`：Explore 子命令需要加载配置。
+- `generate -> Plan Agent`：Generate 子命令使用 Plan Agent。
+- `explore + generate -> Configuration Loading`：Explore + Generate 子命令需要加载配置。
+- `Configuration Loading -> autoqa.config.json`：配置加载模块读取配置文件。
+- `Configuration Loading -> CLI Options`：配置加载模块读取命令行选项。
+- `Configuration Loading -> Default Values`：配置加载模块使用默认值。
+- `Configuration Loading -> Browser Creation`：配置加载模块触发浏览器创建。
+- `Browser Creation -> Playwright Engine`：浏览器创建模块使用 Playwright 引擎。
+- `Browser Creation -> Explore Agent`：浏览器创建模块创建 Explore Agent。
+- `Explore Agent -> Planning Tools`：Explore Agent 使用 Planning Tools。
+- `Planning Tools -> Browser Tools`：Planning Tools 使用 Browser Tools。
+- `Planning Tools -> Planner Tools`：Planning Tools 使用 Planner Tools。
+- `Planning Tools -> Exploration Artifacts`：Planning Tools 生成 Exploration Artifacts。
+- `Plan Agent -> Test Plan Generation`：Plan Agent 触发 Test Plan Generation。
+- `Test Plan Generation -> Markdown Specs`：Test Plan Generation 生成 Markdown Specs。
+- `Markdown Specs -> *.md Test Files`：Markdown Specs 输出 \*.md Test Files。
+- `Markdown Specs -> test-plan.json`：Markdown Specs 输出 test-plan.json。
+- `Exploration Artifacts -> Navigation Graph`：Exploration Artifacts 包含 Navigation Graph。
+- `Exploration Artifacts -> Element Inventory`：Exploration Artifacts 包含 Element Inventory。
+- `Exploration Artifacts -> Exploration Transcript`：Exploration Artifacts 包含 Exploration Transcript。
+- `generate -> Exploration Artifacts`: generate 命令依赖 Exploration Artifacts。
+
+## 仓库语境与术语解释
+- **CLI (Command Line Interface)**：`AutoQA-Agent` 的命令行界面，是用户与工具交互的入口，通过 `src/cli/cli.ts` 实现。
+- **Plan Command**: 用于生成测试计划，其实现位于 `src/cli/commands/plan.ts`。
+- **Run Command**: 用于执行测试计划，其实现位于 `src/cli/commands/run.ts`。
+- **Init Command**: 用于初始化项目，创建默认配置文件和示例，其实现位于 `src/cli/commands/init.ts`。
+- **autoqa.config.json**: 存储工具配置信息的文件，其结构由 `src/config/schema.ts` 定义。
+- **Playwright Engine**: 用于控制浏览器的引擎，`AutoQA-Agent` 基于 Playwright 实现自动化测试。
+- **Markdown Specs**: 测试用例以 Markdown 格式编写，方便非技术人员参与测试编写。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `AutoQA-Agent` 工具的架构，从 `autoqa CLI` 入口开始，用户可以选择 `Plan Commands`、`Run Command` 或 `Init Command`。`Plan Commands` 进一步分为 `explore`、`generate` 和 `explore + generate`。配置加载是核心环节，它读取 `autoqa.config.json`、`CLI Options` 和 `Default Values`。`explore` 命令生成 `Exploration Artifacts`，`generate` 命令则依赖这些 Artifacts 生成 `Markdown Specs`，最终输出 `*.md Test Files` 和 `test-plan.json`。该流程体现了“配置驱动、探索先行、生成测试”的核心思想。

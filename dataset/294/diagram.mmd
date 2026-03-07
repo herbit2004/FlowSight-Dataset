@@ -1,0 +1,82 @@
+flowchart LR
+    subgraph Clients[" "]
+        direction TB
+        DataClient["🔌 Agent/MCP<br>Data Client"]
+        MgmtClient["⚙️ Management<br>Client"]
+    end
+
+    subgraph Gateway["MCP Gateway"]
+        direction TB
+        
+        subgraph Auth1["Authentication & Authorization"]
+            Auth["🔐 Data Plane Auth<br>Bearer Token / RBAC"]
+            Auth2["🔐 Control Plane Auth<br>Bearer Token / RBAC"]
+        end
+        
+        subgraph DataPlane["Data Plane"]
+            Routing["🔀 Adapter Routing<br>/adapters/{name}/mcp"]
+            ToolRouting["🔀 Tool Router Gateway<br>/mcp"]
+        end
+
+        subgraph ControlPlane["Control Plane"]
+            direction LR
+            AdapterMgmt["📦 Adapter Management<br>/adapters CRUD"]
+            ToolMgmt["🔧 Tool Management<br>/tools CRUD"]
+        end
+        
+        subgraph Management["Backend Services"]
+            DeploymentMgmt["☸️ Deployment Manager"]
+            MetadataMgmt["📋 Metadata Manager"]
+        end
+    end
+
+    subgraph Cluster["Kubernetes Cluster"]
+        direction TB
+        
+        subgraph ServerRow[" "]
+            direction LR
+            
+            subgraph MCPServers["MCP Servers"]
+                direction TB
+                PodA["mcp-a-0"]
+                PodA1["mcp-a-1"]
+                PodB["mcp-b-0"]
+            end
+            
+            subgraph ToolRouters["Tool Gateway Routers"]
+                direction TB
+                Router1["toolgateway-0"]
+                Router2["toolgateway-1"]
+            end
+        end
+        
+        subgraph ToolServers["Registered Tool Servers"]
+            direction LR
+            Tool1["tool-1-0"]
+            Tool2["tool-2-0"]
+        end
+    end
+
+    Metadata[("💾 Metadata Store<br>Server & Tool Info")]
+
+    DataClient -->|"MCP Requests"| Auth
+    MgmtClient -->|"API Calls"| Auth2
+    
+    Auth --> Routing
+    Auth --> ToolRouting
+    Auth2 --> AdapterMgmt
+    Auth2 --> ToolMgmt
+    
+    AdapterMgmt & ToolMgmt --> DeploymentMgmt
+    AdapterMgmt & ToolMgmt --> MetadataMgmt
+    
+    Routing -.->|"Session Affinity"| MCPServers
+    ToolRouting -.->|"Session Affinity"| ToolRouters
+    ToolRouters ==>|"Dynamic Routing"| ToolServers
+    
+    DeploymentMgmt -->|"Deploy & Monitor"| Cluster
+    MetadataMgmt <-->|"Read/Write"| Metadata
+
+    style Gateway fill:#e1f5ff
+    style Cluster fill:#fff4e1
+    style Metadata fill:#f0f0f0

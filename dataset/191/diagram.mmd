@@ -1,0 +1,36 @@
+flowchart TD
+    %% User Interface Layer
+    A[Frontend - Next.js] --> B[API Gateway - FastAPI Backend]
+    
+    %% Main Function Modules
+    B --> C[LLM Streaming Backtest Engine]
+    B --> D[Backtest Analysis API]
+    B --> E[Daily Feedback API]
+    
+    %% Data Layer
+    F[Stock Data Service<br/>YFinance] --> C
+    G[SQLite Database<br/>Backtest Logs] --> D
+    G --> E
+    
+    %% LLM Strategy Engine
+    C --> H[LLM Smart Strategy]
+    H --> I[Azure OpenAI<br/>GPT-4]
+    H --> J[Technical Analysis Engine]
+    H --> K[Risk Management Module]
+    
+    %% Backtest Execution Flow
+    C --> L[Trading Signal Generation]
+    L --> M[Performance Calculation]
+    M --> N[Result Recording]
+    N --> G
+    
+    %% Style Definitions
+    classDef frontend fill:#e1f5fe
+    classDef backend fill:#f3e5f5
+    classDef llm fill:#fff3e0
+    classDef data fill:#e8f5e8
+    
+    class A frontend
+    class B,C,D,E backend
+    class H,I,J,K llm
+    class F,G data

@@ -1,0 +1,21 @@
+flowchart LR
+	ClaudeDesktop --> revit-mcp --> SocketService--commandName-->CommandSet--command-->CommandExecute
+	CommandManager --> CommandSet
+	CommandExecute --executeResult--> SocketService
+	CommandProject1 --> CommandManager
+	CommandProject2 --> CommandManager
+	CommandProject... --> CommandManager
+	subgraph ide1 [MCPClient]
+	ClaudeDesktop
+	end
+	subgraph ide2 [MCPServer]
+	revit-mcp
+	end
+	subgraph ide3 [Revit]
+			subgraph ide3.1 [revit-mcp-plugin]
+				SocketService
+				CommandSet
+				CommandManager
+				CommandExecute
+			end
+	end

@@ -1,0 +1,59 @@
+flowchart LR
+    %% Groupings
+    subgraph User["👤 User / App"]
+      Q["Prompt / Task"]
+      CLI["CLI (Typer)"]
+      PY["Python API"]
+    end
+
+    subgraph Agent["🤖 Agent Runtime"]
+      DIR["build_deep_agent()"]
+      PROMPT["prompt.py\n(DEFAULT_SYSTEM_PROMPT)"]
+      subgraph AGRT["Agent Graph"]
+        DA["DeepAgents loop\n(if installed)"]
+        REACT["LangGraph ReAct\n(fallback)"]
+      end
+      LLM["LangChain Model\n(instance or init_chat_model(provider-id))"]
+      TOOLS["LangChain Tools\n(BaseTool[])"]
+    end
+
+    subgraph MCP["🧰 Tooling Layer (MCP)"]
+      LOADER["MCPToolLoader\n(JSON-Schema ➜ Pydantic ➜ BaseTool)"]
+      TOOLWRAP["_FastMCPTool\n(async _arun → client.call_tool)"]
+    end
+
+    subgraph FMCP["🌐 FastMCP Client"]
+      CFG["servers_to_mcp_config()\n(mcpServers dict)"]
+      MULTI["FastMCPMulti\n(fastmcp.Client)"]
+    end
+
+    subgraph SRV["🛠 MCP Servers (HTTP/SSE)"]
+      S1["Server A\n(e.g., math)"]
+      S2["Server B\n(e.g., search)"]
+      S3["Server C\n(e.g., github)"]
+    end
+
+    %% Edges
+    Q -->|query| CLI
+    Q -->|query| PY
+    CLI --> DIR
+    PY --> DIR
+
+    DIR --> PROMPT
+    DIR --> LLM
+    DIR --> LOADER
+    DIR --> AGRT
+
+    LOADER --> MULTI
+    CFG --> MULTI
+    MULTI -->|list_tools| SRV
+    LOADER --> TOOLS
+    TOOLS --> AGRT
+
+    AGRT <-->|messages| LLM
+    AGRT -->|tool calls| TOOLWRAP
+    TOOLWRAP --> MULTI
+    MULTI -->|call_tool| SRV
+
+    SRV -->|tool result| MULTI --> TOOLWRAP --> AGRT -->|final answer| CLI
+    AGRT -->|final answer| PY

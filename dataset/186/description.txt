@@ -1,0 +1,40 @@
+## 图类型与用途
+这是一个流程图，描述了 LLM 联盟系统中核心算法的迭代优化流程。该流程通过多个语言模型协同工作，合成响应并检查置信度，以解决复杂问题。该图在 README 中用于概括核心算法流程。
+
+## 图的整体布局
+图采用从上到下的布局。流程从 "Start" 节点开始，经过一系列处理和判断，最终到达 "Return Final Result" 节点。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为三个阶段：初始响应获取与合成、置信度检查与决策、迭代准备或结果返回。
+
+## 节点逐项说明
+- **A[Start]**：流程的起始点。
+- **B[Get Model Responses]**：从多个语言模型中并行获取响应。根据 README，这是利用多个模型的不同视角和能力的关键步骤。
+- **C[Synthesize Responses]**：将从各个模型获得的响应进行综合，形成一个统一的结果。
+- **D{Check Confidence}**：评估合成后的响应的置信度。置信度代表系统对当前结果的可靠程度的判断。这是一个决策节点。
+- **E[Return Final Result]**：流程的结束点，返回经过迭代优化和合成后的最终结果。
+- **F{Max Iterations Reached?}**：判断是否已经达到最大迭代次数。这是一个决策节点。
+- **G[Prepare Next Iteration]**：根据当前的结果，调整输入参数、模型权重或其他相关设置，为下一次获取模型响应做准备。
+
+## 连线、分支与汇聚关系
+- `A[Start] --> B[Get Model Responses]`：流程从开始节点进入获取模型响应阶段。
+- `B[Get Model Responses] --> C[Synthesize Responses]`：获取模型响应后，进行响应合成。
+- `C[Synthesize Responses] --> D{Check Confidence}`：合成响应后，检查置信度。
+- `D{Check Confidence} -- Confidence ≥ Threshold --> E[Return Final Result]`：如果置信度达到或超过阈值，则返回最终结果。
+- `D{Check Confidence} -- Confidence < Threshold --> F{Max Iterations Reached?}`：如果置信度低于阈值，则判断是否达到最大迭代次数。
+- `F{Max Iterations Reached?} -- No --> G[Prepare Next Iteration]`：如果尚未达到最大迭代次数，则准备进行下一次迭代。
+- `G[Prepare Next Iteration] --> B[Get Model Responses]`：准备好下一次迭代后，流程返回到 "获取模型响应" 步骤，开始新一轮的迭代。
+- `F{Max Iterations Reached?} -- Yes --> E[Return Final Result]`：如果已经达到最大迭代次数，则返回最终结果。
+
+## 仓库语境与术语解释
+- **LLM Consortium**：一个利用多个 LLM 协同解决复杂问题的系统，如 README 所述。
+- **Model**：指用于生成响应的语言模型，可以通过命令行参数 `-m` 指定，如 README 所示。
+- **Arbiter Model**：用于合成和评估多个模型响应的指定模型，可以通过 `--arbiter` 参数指定，如 README 所示。
+- **Confidence Threshold**：判断合成响应是否足够可靠的阈值，可以通过 `--confidence-threshold` 参数调整，如 README 所示。
+- **Max Iterations**：流程迭代的最大次数，可以通过 `--max-iterations` 参数调整，如 README 所示。
+- `llm`：该项目是 `llm` 包的插件，`llm` 本身是一个用于与语言模型交互的工具，如 README 的安装部分所示。
+- `arbiter_prompt.xml`：该文件定义了 arbiter 模型使用的 prompt，用于分析和综合其他模型的响应，如 `llm_consortium/__init__.py` 中 `_read_arbiter_prompt()` 函数所示。
+- `iteration_prompt.txt`：该文件定义了迭代过程中使用的 prompt，用于指导模型在后续迭代中改进响应，如 `llm_consortium/__init__.py` 中 `_read_iteration_prompt()` 函数所示。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图描述了 LLM 联盟系统的核心算法。流程从 "Start" 开始，并行获取多个模型的响应，然后合成这些响应。系统检查合成结果的置信度，如果置信度达到阈值则返回最终结果，否则判断是否达到最大迭代次数。如果未达到最大迭代次数，则准备下一次迭代并重新获取模型响应；如果已达到最大迭代次数，则返回当前结果。该流程利用多个 LLM 协同工作，并通过迭代优化提高问题解决的准确性和可靠性，其中置信度检查和最大迭代次数是两个关键决策点。

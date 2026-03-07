@@ -1,0 +1,7 @@
+flowchart LR
+  A[Browser / SvelteKit UI] -- Upload / SSE --> B(FastAPI Backend)
+  B -- Enqueue --> C[Redis]
+  D[Celery Worker + FFmpeg NVENC] -- Progress / Logs --> C
+  B -- Pub/Sub relay --> A
+  D -- Files --> E[outputs/]
+  A -- Download --> B

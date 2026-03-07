@@ -1,0 +1,76 @@
+graph TB
+    classDef governance fill:#d4f1f9,stroke:#05a,stroke-width:1px
+    classDef security fill:#ffe6cc,stroke:#d79b00,stroke-width:1px
+    classDef regulation fill:#d5e8d4,stroke:#82b366,stroke-width:1px
+    classDef relationship fill:none,stroke:#999,stroke-width:1px,stroke-dasharray: 5 5
+    
+    %% Main Nodes
+    ATLAS[MITRE ATLAS]:::security
+    OWASP[OWASP GenAI Top 10]:::security
+    NIST[NIST AI RMF]:::governance
+    ISO42001[ISO/IEC 42001]:::governance
+    EUAI[EU AI Act]:::regulation
+    
+    %% ATLAS components
+    ATLAS_RECON[Reconnaissance]:::security
+    ATLAS_SUPPLY[ML Supply Chain]:::security
+    ATLAS_EVASION[Model Evasion]:::security
+    ATLAS_IMPACT[Impact]:::security
+    
+    %% OWASP components
+    OWASP --> OWASP_PROMPT[LLM01: Prompt Injection]:::security
+    OWASP --> OWASP_OUTPUT[LLM02: Insecure Output]:::security
+    OWASP --> OWASP_POISON[LLM03: Training Data Poisoning]:::security
+    OWASP --> OWASP_DOS[LLM04: Model DoS]:::security
+    
+    %% NIST breakdown
+    NIST --> NIST_GOV[Govern]:::governance
+    NIST --> NIST_MAP[Map]:::governance
+    NIST --> NIST_MEASURE[Measure]:::governance
+    NIST --> NIST_MANAGE[Manage]:::governance
+    
+    %% ISO breakdown
+    ISO42001 --> ISO_RISK[Risk Management]:::governance
+    ISO42001 --> ISO_LIFECYCLE[AI Lifecycle]:::governance
+    
+    %% EU AI Act breakdown
+    EUAI --> EU_HIGHRISK[High-Risk Requirements]:::regulation
+    EUAI --> EU_GENPURPOSE[General Purpose AI]:::regulation
+    
+    %% Main relationships
+    ATLAS --> NIST
+    OWASP --> NIST
+    ATLAS --> ISO42001
+    OWASP --> ISO42001
+    ATLAS --> EUAI
+    OWASP --> EUAI
+    
+    ATLAS_SUPPLY -.->|Aligns with| OWASP_POISON
+    ATLAS_IMPACT -.->|Relates to| OWASP_DOS
+    ATLAS_EVASION -.->|Complements| OWASP_PROMPT
+    
+    ATLAS_RECON -.->|Informs| NIST_MAP
+    ATLAS_SUPPLY -.->|Supports| NIST_GOVERN
+    OWASP_PROMPT -.->|Addresses| NIST_MANAGE
+    OWASP_OUTPUT -.->|Measured by| NIST_MEASURE
+    
+    ATLAS_SUPPLY -.->|Required by| ISO_LIFECYCLE
+    OWASP_POISON -.->|Managed in| ISO_RISK
+    
+    ATLAS_EVASION -.->|Compliance for| EU_HIGHRISK
+    OWASP_OUTPUT -.->|Required for| EU_GENPURPOSE
+    
+    %% Labels
+    subgraph SecurityFrameworks ["Security Frameworks"]
+        ATLAS
+        OWASP
+    end
+    
+    subgraph GovernanceStandards ["Governance Standards"]
+        NIST
+        ISO42001
+    end
+    
+    subgraph Regulations ["Regulations"]
+        EUAI
+    end

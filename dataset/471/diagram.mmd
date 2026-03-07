@@ -1,0 +1,26 @@
+flowchart LR
+    subgraph "MCP Client/Server"
+        direction TB
+        MP[MCP Protocol Layer]
+        ESM[Extensible Security Middleware]
+        TL[Transport Layer]
+
+        MP -- "MCP Message" --> ESM
+        ESM -- "Processed Message" --> TL
+    end
+
+    subgraph "ESM Internals"
+        direction TB
+        PM[Plugin Manager]
+        subgraph "Security Plugins"
+            SP1[Validation Plugin]
+            SP2[Classification Plugin]
+            SP3[Encryption Plugin]
+            SP4[Custom Plugins...]
+        end
+        PM --> SP1
+        PM --> SP2
+        PM --> SP3
+        PM --> SP4
+    end
+    MC[MCP Client/Server] -- "Config" --> PM

@@ -1,0 +1,36 @@
+## 图类型与用途
+这是一个流程图，描述了 YouTube Success Prediction ML 平台的后端机器学习训练/测试流程和前端代码检查/构建流程如何集成，并最终生成 API 和前端镜像，以及流水线状态报告。它展示了从代码到可部署镜像的 CI/CD 流程。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是后端和前端的构建流程，中间是镜像构建，右侧是状态报告。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为三个阶段：后端与前端构建、镜像生成、状态报告。
+
+## 节点逐项说明
+- **A (Backend + ML Train/Test)**：表示后端机器学习模型的训练和测试流程，包括数据处理、模型训练、模型评估等。
+- **B (Frontend Lint + Build)**：表示前端代码的检查（Lint）和构建流程，包括代码风格检查、编译、打包等。
+- **C (API Image -> GHCR)**：表示 API 镜像的构建，并将镜像推送到 GitHub Container Registry (GHCR)。这代表了后端 API 服务的容器化。
+- **D (Frontend Image -> GHCR)**：表示前端镜像的构建，并将镜像推送到 GitHub Container Registry (GHCR)。这代表了前端应用的容器化。
+- **E (Pipeline Status Report)**：表示流水线状态报告，用于汇总整个构建和部署流程的状态信息。
+
+## 连线、分支与汇聚关系
+- `A -> C`：后端训练/测试流程触发 API 镜像的构建。
+- `B -> C`：前端构建流程触发 API 镜像的构建，形成汇聚关系。
+- `A -> D`：后端训练/测试流程触发前端镜像的构建。
+- `B -> D`：前端构建流程触发前端镜像的构建，形成汇聚关系。
+- `A -> E`：后端训练/测试流程向流水线状态报告提供信息。
+- `B -> E`：前端构建流程向流水线状态报告提供信息。
+- `C -> E`：API 镜像构建流程向流水线状态报告提供信息。
+- `D -> E`：前端镜像构建流程向流水线状态报告提供信息。
+
+## 仓库语境与术语解释
+- **Backend + ML Train/Test**: 后端代码位于 `src/youtube_success_ml` 目录下，负责模型训练和预测。
+- **Frontend Lint + Build**: 前端代码位于 `frontend/` 目录下，使用 Next.js 构建用户界面，具体可参考 `FRONTEND.md`。
+- **GHCR (GitHub Container Registry)**：用于存储构建的 Docker 镜像，相关构建和推送脚本位于 `scripts/ci/build_and_push.sh`，其中定义了 API 和前端镜像的名称。
+- **API Image**: 对应 `docker/Dockerfile.api`，用于构建后端 API 的 Docker 镜像。
+- **Frontend Image**: 对应 `docker/Dockerfile.frontend`，用于构建前端应用的 Docker 镜像。
+- **Pipeline Status Report**: 用于监控整个 CI/CD 流程的状态，具体实现方式图中可见，但仓库上下文未进一步说明。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图展示了 YouTube Success Prediction ML 平台的 CI/CD 流程。后端机器学习训练和前端代码构建并行进行，分别触发 API 镜像和前端镜像的构建并推送到 GHCR。整个流程的状态汇总到流水线状态报告中。核心流程是“后端训练/前端构建 -> 镜像构建 -> 状态报告”，其中镜像推送到 GitHub Container Registry (GHCR) 是关键环节。

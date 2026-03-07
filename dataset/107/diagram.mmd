@@ -1,0 +1,68 @@
+graph TB
+    subgraph Core Services
+        UI[Frontend UI<br/>React + TypeScript]
+        API[Backend API<br/>Go + GraphQL]
+        DB[(Vector Store<br/>PostgreSQL + pgvector)]
+        MQ[Task Queue<br/>Async Processing]
+        Agent[AI Agents<br/>Multi-Agent System]
+    end
+
+    subgraph Knowledge Graph
+        Graphiti[Graphiti<br/>Knowledge Graph API]
+        Neo4j[(Neo4j<br/>Graph Database)]
+    end
+
+    subgraph Monitoring
+        Grafana[Grafana<br/>Dashboards]
+        VictoriaMetrics[VictoriaMetrics<br/>Time-series DB]
+        Jaeger[Jaeger<br/>Distributed Tracing]
+        Loki[Loki<br/>Log Aggregation]
+        OTEL[OpenTelemetry<br/>Data Collection]
+    end
+
+    subgraph Analytics
+        Langfuse[Langfuse<br/>LLM Analytics]
+        ClickHouse[ClickHouse<br/>Analytics DB]
+        Redis[Redis<br/>Cache + Rate Limiter]
+        MinIO[MinIO<br/>S3 Storage]
+    end
+
+    subgraph Security Tools
+        Scraper[Web Scraper<br/>Isolated Browser]
+        PenTest[Security Tools<br/>20+ Pro Tools<br/>Sandboxed Execution]
+    end
+
+    UI --> |HTTP/WS| API
+    API --> |SQL| DB
+    API --> |Events| MQ
+    MQ --> |Tasks| Agent
+    Agent --> |Commands| PenTest
+    Agent --> |Queries| DB
+    Agent --> |Knowledge| Graphiti
+    Graphiti --> |Graph| Neo4j
+
+    API --> |Telemetry| OTEL
+    OTEL --> |Metrics| VictoriaMetrics
+    OTEL --> |Traces| Jaeger
+    OTEL --> |Logs| Loki
+
+    Grafana --> |Query| VictoriaMetrics
+    Grafana --> |Query| Jaeger
+    Grafana --> |Query| Loki
+
+    API --> |Analytics| Langfuse
+    Langfuse --> |Store| ClickHouse
+    Langfuse --> |Cache| Redis
+    Langfuse --> |Files| MinIO
+
+    classDef core fill:#f9f,stroke:#333,stroke-width:2px,color:#000
+    classDef knowledge fill:#ffa,stroke:#333,stroke-width:2px,color:#000
+    classDef monitoring fill:#bbf,stroke:#333,stroke-width:2px,color:#000
+    classDef analytics fill:#bfb,stroke:#333,stroke-width:2px,color:#000
+    classDef tools fill:#fbb,stroke:#333,stroke-width:2px,color:#000
+
+    class UI,API,DB,MQ,Agent core
+    class Graphiti,Neo4j knowledge
+    class Grafana,VictoriaMetrics,Jaeger,Loki,OTEL monitoring
+    class Langfuse,ClickHouse,Redis,MinIO analytics
+    class Scraper,PenTest tools

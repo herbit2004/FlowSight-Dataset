@@ -1,0 +1,46 @@
+## 图类型与用途
+这是一个流程图，描述了处理来自模型（Model）的响应，并根据响应内容决定是否调用工具（Tool）的流程。该图的作用是展示如何解析模型响应，提取工具调用信息，验证工具的有效性，并将工具调用信息转换为特定格式的消息（AIMessage）以便后续处理。
+
+## 图的整体布局
+图采用从上到下的布局。流程从顶部的“Model Response”节点开始，经过一系列判断和处理步骤，最终到达底部的“Log Success”或“Return None”节点。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为三个阶段：初始检查与提取、解析与验证、转换与记录。
+
+## 节点逐项说明
+- **Model Response**：流程的起点，表示模型返回的响应。
+- **Has tool_calls?**：一个判断节点，检查模型响应中是否包含工具调用（tool_calls）。
+- **Skip Processing**：如果模型响应中包含工具调用，则跳过后续处理步骤。
+- **Extract JSON Pattern**：如果模型响应中不包含工具调用，则尝试从响应中提取 JSON 模式。根据 `ARCHITECTURE.md`，这个步骤是 `PhiJSONToToolCallMiddleware` 的一部分，用于将 Phi 模型的 JSON 输出转换为 LangChain 的 tool_calls 格式。
+- **JSON Match?**：一个判断节点，检查是否成功提取到有效的 JSON 模式。
+- **Return None**：如果未能提取到有效的 JSON 模式，或工具验证失败，则返回 None，表示没有可用的工具调用信息。
+- **Parse Tool Name and Args**：如果成功提取到 JSON 模式，则解析 JSON，提取工具名称（Tool Name）和参数（Args）。
+- **Tool Valid?**：一个判断节点，验证提取到的工具名称是否有效。
+- **Convert to AIMessage**：如果工具名称有效，则将工具名称和参数转换为特定格式的 AIMessage。根据 `ARCHITECTURE.md`，这个步骤是 `PhiJSONToToolCallMiddleware` 的一部分。
+- **Replace Last Message**：将转换后的 AIMessage 替换掉之前的消息。
+- **Log Success**：记录成功处理工具调用的日志。
+
+## 连线、分支与汇聚关系
+- `Model Response -> Has tool_calls?`：流程从模型响应开始，进入工具调用检查。
+- `Has tool_calls? -- Yes --> Skip Processing`：如果模型响应包含工具调用，则跳过后续处理。
+- `Has tool_calls? -- No --> Extract JSON Pattern`：如果模型响应不包含工具调用，则尝试提取 JSON 模式。
+- `Extract JSON Pattern -> JSON Match?`：提取 JSON 模式后，检查是否成功提取。
+- `JSON Match? -- No --> Return None`：如果未能提取到有效的 JSON 模式，则返回 None。
+- `JSON Match? -- Yes --> Parse Tool Name and Args`：如果成功提取到 JSON 模式，则解析工具名称和参数。
+- `Parse Tool Name and Args -> Tool Valid?`：解析工具名称和参数后，验证工具是否有效。
+- `Tool Valid? -- No --> Return None`：如果工具无效，则返回 None。
+- `Tool Valid? -- Yes --> Convert to AIMessage`：如果工具有效，则将工具信息转换为 AIMessage。
+- `Convert to AIMessage -> Replace Last Message`：将 AIMessage 替换掉之前的消息。
+- `Replace Last Message -> Log Success`：记录成功处理的日志。
+
+## 仓库语境与术语解释
+- **Model Response**：指来自语言模型（如 Phi-4）的输出。
+- **tool_calls**：LangChain 中用于表示模型建议调用工具的结构化数据。
+- **JSON Pattern**：由于 Phi-4 不具备原生工具调用能力，因此使用 JSON 模式来模拟工具调用。
+- **AIMessage**：LangChain 中表示 AI 消息的对象，包含文本内容和工具调用信息。
+- **PhiJSONToToolCallMiddleware**：自定义中间件，用于将 Phi 模型的 JSON 输出转换为 LangChain 的 tool_calls 格式，详情见 `ARCHITECTURE.md`。
+- **LangChain**：一个用于构建基于语言模型的应用程序的框架。
+- **Foundry Local**：一个本地运行语言模型的服务，`foundry_service.py` 提供了 Foundry Local 的单例模式管理。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图从“Model Response”开始，首先检查响应是否包含 `tool_calls`。如果包含，则跳过处理；否则，尝试提取 JSON 模式。如果成功提取，则解析工具名称和参数，并验证工具的有效性。有效的工具调用信息会被转换为 AIMessage 并替换之前的消息，最后记录成功日志。`PhiJSONToToolCallMiddleware` 用于将 Phi 模型的 JSON 输出转换为 LangChain 的 tool_calls 格式，是流程中的关键组件。

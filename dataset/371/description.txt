@@ -1,0 +1,90 @@
+## 图类型与用途
+这是一个软件架构图，描述了 Aden MCP Analytics Framework 的整体架构和数据流。该框架旨在通过多智能体系统和大型语言模型（LLM）集成，实现对数据库的智能分析，目标是 democratize data analytics through conversational AI。
+
+## 图的整体布局
+图整体采用从上到下的分层布局。顶部是客户端层，中间是多智能体系统、决策与优化层、LLM 集成层和 MCP 服务器层，底部是数据与存储层，左下角和右上角分别有支持组件和 API Server。
+
+## 分组/子图/阶段说明
+- **Client Layer (客户端层)**：包含 CLI 和 API，作为用户与系统交互的入口。
+- **Multi-Agent System (多智能体系统)**：包含 COORD、PLAN、EXEC 和 ANAL，负责编排工作流程、分析用户意图、执行任务和分析结果。
+- **Decision & Optimization Layer (决策与优化层)**：包含 MADEX、FDOPT 和 DCONT，协调智能体、加载数据库模式和管理上下文信息。
+- **LLM Integration Layer (LLM集成层)**：包含 LLMF、CLAUDE、GPT、GEMINI 和 GROQ，负责选择 LLM 提供商和配置模型。
+- **MCP Server Layer (MCP服务器层)**：包含 MCPS、TOOLS、TASK、SEQ 和 LOOP，是系统的核心服务器组件，负责工具管理、任务规划和循环检测。
+- **Data & Storage Layer (数据与存储层)**：包含 NEO4J、MONGO、DUCK 和 FILES，用于存储知识图谱、会话数据、本地分析数据和文件。
+- **Supporting Components (支持组件)**：包含 GOAL、ACTX 和 PERF、CONV，提供任务生成、会话管理、性能日志和对话日志等支持功能。
+
+## 节点逐项说明
+- **CLI (命令行界面)**：允许用户通过命令行与系统交互，位于 `packages/agent-client/src/cli.js`。
+- **API (API服务器)**：提供应用程序编程接口，允许其他程序与系统交互，位于 `packages/api-server`。
+- **COORD (协调器智能体)**：负责编排整个工作流程，管理智能体之间的转换，并控制并行执行。
+- **PLAN (规划器智能体)**：分析用户意图，生成执行计划，并将任务分解为更小的子任务。
+- **EXEC (执行器智能体)**：负责执行任务，协调各种工具，并根据目标生成新的任务。
+- **ANAL (分析器智能体)**：负责综合分析结果，格式化响应，并进行质量保证。
+- **MADEX (多智能体决策执行器)**：协调智能体，加载数据库模式，并管理上下文信息。
+- **FDOPT (快速决策优化器)**：进行单步优化，处理简单查询，并提供熔断机制。
+- **DCONT (决策上下文)**：包含数据库模式上下文、RAG (Retrieval-Augmented Generation) 上下文和会话状态。
+- **LLMF (LLM工厂)**：负责选择合适的 LLM 提供商和配置模型。
+- **CLAUDE (ClaudeLLM)**：使用 Anthropic API，专注于智能分析和子智能体编排。
+- **GPT (OpenAILLM)**：使用 OpenAI 的 GPT 模型，支持函数调用。
+- **GEMINI (GeminiLLM)**：使用 Google AI 的 Gemini 模型，提供分层模型和成本优化。
+- **GROQ (GroqLLM)**：使用 Groq 提供快速推理和开放模型。
+- **MCPS (MCP服务器)**：系统的核心服务器组件，位于 `packages/mcp-server/src/index.js`。
+- **TOOLS (工具管理器)**：负责工具的注册、执行和结果格式化。
+- **TASK (任务规划器)**：管理任务的生命周期，处理依赖关系，并跟踪任务状态。
+- **SEQ (顺序思考器)**：使用 5 阶段分析进行结构化思考。
+- **LOOP (循环检测器)**：检测模式并防止无限循环。
+- **NEO4J (Neo4j Knowledge Graph)**：存储团队范围内的记忆、知识关系和模式集成。
+- **MONGO (MongoDB)**：存储会话持久性数据、对话历史和性能日志。
+- **DUCK (DuckDB)**：提供本地分析、CSV/Parquet 支持和 SQL 查询。
+- **FILES (文件提供器)**：支持本地文件、HTTP 下载和 Aden 平台文件。
+- **GOAL (GoalAwareTaskGenerator)**：进行差距分析、战略规划和验证任务。
+- **ACTX (AgentContext)**：管理会话、文件跟踪和团队上下文。
+- **PERF (PerformanceLogger)**：跟踪延迟、流水线阶段和优化指标。
+- **CONV (ConversationLogger)**：记录会话、工具调用和调试日志。
+
+## 连线、分支与汇聚关系
+- `CLI -> MADEX`：CLI 通过 MADEX 与系统交互。
+- `API -> MADEX`：API 通过 MADEX 与系统交互。
+- `MADEX -> COORD`：MADEX 将任务交给 COORD 进行协调。
+- `MADEX -> FDOPT`：MADEX 将任务交给 FDOPT 进行快速决策优化。
+- `COORD -> PLAN`：COORD 将任务交给 PLAN 进行规划。
+- `COORD -> EXEC`：COORD 将任务交给 EXEC 执行。
+- `COORD -> ANAL`：COORD 将任务交给 ANAL 进行分析。
+- `PLAN -> ACTX`：PLAN 的结果传递给 ACTX。
+- `EXEC -> ACTX`：EXEC 的结果传递给 ACTX。
+- `EXEC -> GOAL`：EXEC 触发 GOAL 进行任务生成。
+- `ANAL -> ACTX`：ANAL 的结果传递给 ACTX。
+- `MADEX -> DCONT`：MADEX 将决策上下文传递给 DCONT。
+- `DCONT -> NEO4J`：DCONT 使用 NEO4J 存储知识图谱。
+- `DCONT -> MONGO`：DCONT 使用 MONGO 存储会话数据。
+- `ACTX -> MCPS`：ACTX 将代理上下文传递给 MCPS。
+- `MCPS -> TOOLS`：MCPS 使用 TOOLS 管理工具。
+- `TOOLS -> TASK`：TOOLS 使用 TASK 进行任务规划。
+- `TOOLS -> SEQ`：TOOLS 使用 SEQ 进行顺序思考。
+- `TOOLS -> LOOP`：TOOLS 使用 LOOP 进行循环检测。
+- `PLAN -> LLMF`：PLAN 使用 LLMF 选择 LLM。
+- `EXEC -> LLMF`：EXEC 使用 LLMF 选择 LLM。
+- `ANAL -> LLMF`：ANAL 使用 LLMF 选择 LLM。
+- `LLMF -> CLAUDE`：LLMF 选择 CLAUDE 作为 LLM。
+- `LLMF -> GPT`：LLMF 选择 GPT 作为 LLM。
+- `LLMF -> GEMINI`：LLMF 选择 GEMINI 作为 LLM。
+- `LLMF -> GROQ`：LLMF 选择 GROQ 作为 LLM。
+- `TOOLS -> DUCK`：TOOLS 使用 DUCK 进行本地分析。
+- `TOOLS -> FILES`：TOOLS 使用 FILES 访问文件。
+- `TOOLS -> NEO4J`：TOOLS 使用 NEO4J 访问知识图谱。
+- `MADEX -> PERF`：MADEX 将性能数据传递给 PERF。
+- `COORD -> PERF`：COORD 将性能数据传递给 PERF。
+- `ACTX -> CONV`：ACTX 将对话数据传递给 CONV。
+
+## 仓库语境与术语解释
+- **Aden MCP Analytics Framework**：是一个开源项目，旨在通过对话式 AI 实现数据分析的民主化，详见 README.md。
+- **Model Context Protocol (MCP)**：是该框架的基础，用于构建 AI 代理，使其能够自主导航数据库、执行复杂的分析查询，并通过自然语言提供可操作的业务见解，详见 README.md。
+- **Multi-Agent System**：由多个智能体组成，每个智能体负责不同的任务，例如规划、执行和分析，协同完成复杂的数据分析任务。
+- **LLMFactory (LLMF)**：负责选择合适的 LLM 提供商和配置模型，支持 Claude、GPT、Gemini 和 Groq 等 LLM。
+- **Neo4j Knowledge Graph**：用于存储团队范围内的记忆、知识关系和模式集成，帮助 AI 代理理解业务上下文。
+- **DuckDB**：提供本地分析、CSV/Parquet 支持和 SQL 查询，用于快速处理本地数据。
+- **packages/agent-client/src/cli.js**：包含 CLI 接口的实现。
+- **packages/mcp-server/src/index.js**：包含 MCP 服务器的实现。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该架构图展示了 Aden MCP Analytics Framework 的整体架构。用户通过 CLI 或 API 与系统交互，请求首先进入 MultiAgentDecisionExecutor (MADEX)，MADEX 协调 CoordinatorAgent (COORD) 进行多智能体协作，包括 PlannerAgent (PLAN)、ExecutorAgent (EXEC) 和 AnalyzerAgent (ANAL)。这些智能体利用 LLMFactory (LLMF) 选择合适的 LLM，并与 Neo4j、MongoDB 和 DuckDB 等数据存储交互，最终生成分析结果。该框架的核心在于通过多智能体系统和 LLM 集成，实现对数据库的智能分析。

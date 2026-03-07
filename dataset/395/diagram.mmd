@@ -1,0 +1,49 @@
+graph TB
+    subgraph "Preprocessing Layer"
+        MAP_DATA[Map Data<br/>OSM, proprietary] --> GRAPH_BUILD[Graph Construction<br/>Nodes = Intersections<br/>Edges = Roads]
+        GRAPH_BUILD --> CH_PREP[Contraction Hierarchies<br/>Preprocessing]
+        GRAPH_BUILD --> ARCFLAGS[Arc Flags<br/>Computation]
+    end
+    
+    subgraph "Query Processing Layer"
+        USER_QUERY[User Query<br/>A → B] --> REGION_CHECK{Same<br/>region?}
+        REGION_CHECK -->|Yes| LOCAL_ALG[Local Dijkstra<br/>Small area]
+        REGION_CHECK -->|No| CH_QUERY[CH Query<br/>Bidirectional]
+        
+        CH_QUERY --> CH_PATH[Path in<br/>CH Graph]
+        CH_PATH --> UNPACK[Unpack<br/>Shortcuts]
+    end
+    
+    subgraph "Real-time Layer"
+        TRAFFIC_DATA[Live Traffic<br/>Sensors, crowd-sourced] --> ML_MODEL[ML Traffic<br/>Prediction]
+        ML_MODEL --> WEIGHT_UPDATE[Edge Weight<br/>Updates]
+        WEIGHT_UPDATE --> RECOMPUTE{Significant<br/>change?}
+        RECOMPUTE -->|Yes| REROUTE[SPFA<br/>Incremental Update]
+        RECOMPUTE -->|No| KEEP[Keep Current<br/>Route]
+    end
+    
+    subgraph "Post-processing Layer"
+        UNPACK --> TURN_COST[Turn Restrictions<br/>Cost Adjustment]
+        TURN_COST --> LANE_GUIDE[Lane Guidance<br/>Generation]
+        LANE_GUIDE --> ETA[ETA Calculation<br/>Historical Data]
+        ETA --> FINAL[Final Route]
+    end
+    
+    subgraph "Fallback Layer"
+        LOCAL_ALG --> TIMEOUT{Timeout?}
+        TIMEOUT -->|Yes| GREEDY[Greedy<br/>Closest Next]
+        TIMEOUT -->|No| SUCCESS[Route Found]
+        
+        CH_QUERY --> FAIL{Failed?}
+        FAIL -->|Yes| STANDARD_DIJ[Standard<br/>Dijkstra]
+    end
+    
+    REROUTE --> FINAL
+    KEEP --> FINAL
+    SUCCESS --> TURN_COST
+    GREEDY --> TURN_COST
+    
+    style CH_PREP fill:#4CAF50
+    style CH_QUERY fill:#2196F3
+    style ML_MODEL fill:#FF9800
+    style REROUTE fill:#9C27B0

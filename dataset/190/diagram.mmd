@@ -1,0 +1,30 @@
+flowchart TD
+    Start([Issue Reported]) --> Reproduce{Can Reproduce?}
+    
+    Reproduce -->|Yes| Logs[Check Logs]
+    Reproduce -->|No| More[Request More Info]
+    
+    Logs --> Level{Debug Level}
+    Level -->|Low| Increase[Set DEBUG_LEVEL=3]
+    Level -->|High| Analyze[Analyze Logs]
+    
+    Increase --> Reproduce
+    Analyze --> Component{Component Issue?}
+    
+    Component -->|Yes| Unit[Run Unit Tests]
+    Component -->|No| Integration[Run Integration Tests]
+    
+    Unit --> Fix[Fix Component]
+    Integration --> System[Check System State]
+    
+    Fix --> Test[Test Fix]
+    System --> Config[Check Configuration]
+    
+    Test --> PR[Submit PR]
+    Config --> Fix
+    
+    More --> Start
+    
+    style Start fill:#e8f5e8
+    style PR fill:#e1f5fe
+    style Fix fill:#fff3e0

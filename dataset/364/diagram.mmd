@@ -1,0 +1,32 @@
+graph TB
+    subgraph config["⚙️ Configuration JSR-330"]
+        direction LR
+        CA["@Inject<br/>Constructor"] --> CB["@Singleton<br/>Scope"] --> CC["@Named<br/>Qualifier"]
+    end
+
+    subgraph container["📦 DI Container"]
+        direction LR
+        ContainerDesc["<large>API Scans bytecode <br/>via JDK Class-File API</large>"] --> D1["DependencyScanner"] --> D2["Provider Registry"] --> D3["ServiceLocator"]
+    end
+
+    subgraph injection["💉 Dependency Resolution"]
+        direction LR
+        InjectionDesc["<large>Implements the Service<br/>Locator design pattern</large>"] --> I1["Request Type"] --> I2["Check Cache"] --> I3["Create Instance"] --> I4["Return Object"]
+    end
+
+    config -->|is analyzed by| container
+    container -->|resolves dependencies via| injection
+    injection -->|provides entrypoint to| APP["🎯 Your App<br/><small>Composition Root</small>"]
+
+%% Styles
+    classDef configClass fill:#e3f2fd,stroke:#90caf9,stroke-width:2px,color:#333
+    classDef containerClass fill:#fff3e0,stroke:#ffcc80,stroke-width:2px,color:#333
+    classDef injectionClass fill:#f3e5f5,stroke:#ce93d8,stroke-width:2px,color:#333
+    classDef appClass fill:#e8f5e9,stroke:#a5d6a7,stroke-width:2px,color:#333
+    classDef descClass fill:none,stroke:none,color:#555,font-size:12px,font-style:italic
+
+    class CA,CB,CC configClass
+    class D1,D2,D3 containerClass
+    class I1,I2,I3,I4 injectionClass
+    class APP appClass
+    class CHeader descClass

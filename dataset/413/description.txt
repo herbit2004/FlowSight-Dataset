@@ -1,0 +1,33 @@
+## 图类型与用途
+这是一个流程图，展示了 FSharp.Azure.Quantum 库的架构，描述了如何通过不同的量子计算后端来解决组合优化问题。该图在 README 中用于概述库的整体结构和组件间的关系。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是高级 API，中间是量子算法和后端接口层，底部是具体的量子计算后端。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：用户接口层、算法层和后端实现层。
+
+## 节点逐项说明
+- **A (.NET API High-level algorithms familiar to normal developers)**：库的顶层 API，为开发者提供易于使用的高级算法。
+- **B (Quantum Algorithms, Ph.D stuff)**：包含具体的量子算法实现，例如 QAOA。这部分需要量子计算理论知识。
+- **C (Backend Interfaces: IQuantumBackend)**：定义了后端接口 `IQuantumBackend`，用于抽象不同的量子计算后端。根据 `src/FSharp.Azure.Quantum/Core/BackendAbstraction.fs`，该接口支持门级和状态级的量子后端。
+- **D (Quantum Gate Backends: LocalSimulator: Ph.D stuff, Azure Quantum as a service)**：实现了基于量子门的后端，包括本地模拟器和 Azure Quantum 云服务。`LocalSimulator` 实现了在本地模拟量子计算过程，具体实现在 `src/FSharp.Azure.Quantum/Backends/LocalBackend.fs` 中。`Azure Quantum as a service` 是微软提供的云服务，允许在云端运行量子算法，相关实现在 `src/FSharp.Azure.Quantum/Backends/AzureQuantumWorkspace.fs` 中。
+- **E (Topological Backend simulator, more Ph.D stuff)**：实现了基于拓扑量子计算的后端模拟器。
+
+## 连线、分支与汇聚关系
+- `A --> B`：顶层 API 调用量子算法。
+- `B --> C`：量子算法通过后端接口与不同的量子计算后端进行交互。
+- `C --> D`：后端接口连接到基于量子门的后端，包括本地模拟器和 Azure Quantum 云服务。
+- `C --> E`：后端接口连接到拓扑量子计算后端模拟器。
+
+## 仓库语境与术语解释
+- **QAOA (Quantum Approximate Optimization Algorithm)**：一种量子近似优化算法，用于解决组合优化问题。README 指出该库使用 QAOA 算法。
+- **IQuantumBackend**：一个统一的量子后端接口，支持门级和状态级的量子操作，定义在 `src/FSharp.Azure.Quantum/Core/BackendAbstraction.fs` 中。
+- **LocalSimulator**：本地量子模拟器，用于在本地环境中模拟量子计算过程，实现在 `src/FSharp.Azure.Quantum/Backends/LocalBackend.fs` 中。
+- **Azure Quantum**：微软提供的量子计算云服务，允许开发者在云端运行量子算法。
+- **Topological Backend**：基于拓扑量子计算的后端模拟器。
+- **.NET API**：库的顶层 API，为开发者提供易于使用的高级算法。
+- **CircuitAbstraction**：`src/FSharp.Azure.Quantum/Core/CircuitAbstraction.fs` 定义了统一的电路抽象，用于支持不同的量子后端。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 FSharp.Azure.Quantum 库的架构，从顶层的 .NET API 开始，调用底层的量子算法，并通过 `IQuantumBackend` 接口与不同的量子计算后端（包括 `LocalSimulator` 和 `Azure Quantum as a service`）进行交互。该架构支持使用高级 API 调用量子算法，并能灵活地部署到不同的量子计算后端。`IQuantumBackend` 接口是连接算法层和后端实现的关键组件。

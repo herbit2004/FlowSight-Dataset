@@ -1,0 +1,21 @@
+flowchart TD
+    A[createRoot called] --> B[Validate Container]
+    B --> C[Create FiberRoot]
+    C --> D[Create HostRoot Fiber]
+    D --> E[Initialize Update Queue]
+    E --> F[Setup Event Delegation]
+    F --> G[Create ReactDOMRoot Instance]
+    G --> H[Mark Container as Root]
+
+    subgraph "FiberRoot Creation Details"
+        C1[Allocate FiberRootNode]
+        C2[Set containerInfo]
+        C3[Initialize pendingLanes]
+        C4[Setup callback queues]
+        C5[Initialize ping cache]
+    end
+
+    C --> C1 --> C2 --> C3 --> C4 --> C5
+
+    style A fill:#61dafb
+    style G fill:#4ecdc4

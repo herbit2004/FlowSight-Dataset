@@ -1,0 +1,40 @@
+## 图类型与用途
+这是一个流程图，展示了 PNNX 工具如何处理和转换不同格式的神经网络模型。它描述了从 PyTorch 模型、TorchScript、ONNX 等格式到 PNNX 优化模型、ncnn 模型和 ONNX-Zero 模型的转换过程。该图在仓库中的作用是概括 PNNX 的核心功能，即模型格式转换和优化。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是各种输入模型格式，中间是 PNNX 转换过程，底部是 PNNX 输出的各种模型格式。
+
+## 分组/子图/阶段说明
+图中包含一个名为 "pnnx" 的子图，该子图包含了 PNNX 工具输出的三种模型格式：优化的 PyTorch 模型（optmodel）、ncnn 模型（ncnnmodel）和 ONNX-Zero 模型（onnxzeromodel）。
+
+## 节点逐项说明
+- **torchmodel**: 原始的 PyTorch 模型，例如 `torchvision.models.resnet18()`。
+- **othermodel**: 其他框架的模型，例如 Caffe, MXNet, Keras, TensorFlow, PaddlePaddle 等。这些模型需要先转换为 ONNX 格式才能被 PNNX 处理。
+- **torchscript**: 通过 `torch.jit.trace` 导出的 TorchScript 文件，例如 `resnet18.pt`。
+- **onnx**: 通过 `torch.onnx.export` 导出的 ONNX 文件，例如 `resnet18.onnx`。
+- **tnn**: 腾讯的 TNN 模型格式，例如 `resnet18.tnnproto/tnnmodel`。
+- **optmodel**: 经过 PNNX 优化后的 PyTorch 模型，例如 `resnet18_pnnx.Model()`。
+- **ncnnmodel**: 转换为 ncnn 框架的模型，例如 `resnet18.ncnn.param/bin`。
+- **onnxzeromodel**: 转换为 onnx-zero 格式的模型，例如 `resnet18.pnnx.onnx`。
+
+## 连线、分支与汇聚关系
+- `torchmodel -- mod = torch.jit.trace(model, x) mod.save('resnet18.pt') --> torchscript`：PyTorch 模型可以通过 `torch.jit.trace` 转换为 TorchScript 文件。
+- `torchmodel -- torch.onnx.export(model, x, 'resnet18.onnx') --> onnx`：PyTorch 模型可以通过 `torch.onnx.export` 导出为 ONNX 文件。
+- `othermodel -- export to onnx --> onnx`：其他框架的模型需要先导出为 ONNX 文件。
+- `torchmodel -- pnnx.export(model, 'resnet18.pt', x) --> pnnx`：PyTorch 模型可以通过 `pnnx.export` 函数转换为 PNNX 格式。
+- `torchscript -- pnnx.convert('resnet18.pt', x) --> pnnx`：TorchScript 文件可以通过 `pnnx.convert` 函数转换为 PNNX 格式。
+- `onnx -- pnnx.convert('resnet18.onnx', x) --> pnnx`：ONNX 文件可以通过 `pnnx.convert` 函数转换为 PNNX 格式。
+- `tnn -- pnnx.convert('resnet18.tnnproto', x) --> pnnx`：TNN 文件可以通过 `pnnx.convert` 函数转换为 PNNX 格式。
+- `torchscript -> pnnx`、`onnx -> pnnx`、`tnn -> pnnx` 形成汇聚关系。
+
+## 仓库语境与术语解释
+- **PNNX (PyTorch Neural Network eXchange)**：一个开放标准，用于 PyTorch 模型互操作性。根据 README，PNNX 提供了一种开放的模型格式，定义了计算图以及与 PyTorch 严格匹配的高级算子。
+- **TorchScript**: 一种 PyTorch 模型的序列化格式，可以使用 `torch.jit.trace` 导出。
+- **ONNX (Open Neural Network Exchange)**：一种开放的模型格式，用于不同深度学习框架之间的互操作性。
+- **ncnn**: 腾讯开源的一个高性能神经网络推理框架。PNNX 可以将模型转换为 ncnn 格式，以便在 ncnn 框架中进行推理。
+- **pnnx.export()**: PNNX 提供的用于导出 PyTorch 模型的函数。
+- **pnnx.convert()**: PNNX 提供的用于转换模型格式的函数。
+- **resnet18**: 图中示例模型，来自 `torchvision.models`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 PNNX 工具在不同模型格式之间进行转换和优化的流程。原始 PyTorch 模型可以通过 `torch.jit.trace` 转换为 TorchScript，或通过 `torch.onnx.export` 导出为 ONNX。其他框架的模型需要先转换为 ONNX 格式。然后，TorchScript、ONNX 和 TNN 文件都可以通过 `pnnx.convert` 函数转换为 PNNX 格式，包括优化的 PyTorch 模型、ncnn 模型和 ONNX-Zero 模型。PNNX 的核心作用是实现 PyTorch 模型与其他框架模型的互操作性，并进行模型优化。根据 README，PNNX 旨在优化模型、减少扩展包依赖，并支持导出为多种便携格式。

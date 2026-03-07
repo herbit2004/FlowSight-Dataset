@@ -1,0 +1,34 @@
+## 图类型与用途
+这是一个流程图，描述了 Agentic Context Engine (ACE) 的整体架构和工作流程。它展示了 AI 代理如何通过与环境交互、分析反馈和管理技能来不断学习和改进。该图在仓库中用于概括 ACE 的核心学习循环。
+
+## 图的整体布局
+图采用从左到右的布局。流程从用户查询开始，经过 Agent、环境、反射器和技能管理器，最终更新技能书，并将其上下文注入到 Agent 中，形成一个闭环。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为四个阶段：任务发起、任务执行与反馈、策略分析与提取、技能管理与更新。
+
+## 节点逐项说明
+- **Start (Query)**：流程的起点，代表用户或系统发起的查询或任务请求。
+- **Agent (Agent Enhanced with Skillbook)**：核心组件，代表 AI 代理。它通过 Skillbook 增强，具备执行任务的能力。根据 README，ACE enables AI agents to learn from their execution feedback and continuously improve。
+- **Environment (Task Environment Evaluates & provides feedback)**：任务环境，代理在其中执行任务。它负责评估代理的执行结果，并提供反馈。
+- **Reflector (Reflector Analyzes traces via sandboxed code execution)**：反射器，负责分析代理执行任务的轨迹（traces），通过沙盒代码执行来提取有用的信息。根据 README，the Reflector analyzes execution traces to extract learnings。
+- **SkillManager (SkillManager Curates strategies)**：技能管理器，负责整理和管理从反射器提取的策略，并将其组织成可用的技能。根据 README，the SkillManager curates the Skillbook: adds new strategies, refines existing ones, and removes outdated patterns based on the Reflector's analysis。
+- **Skillbook (Skillbook Learned Strategies)**：技能书，存储着代理学习到的策略和知识。代理可以从中获取上下文信息，从而更好地完成任务。根据 README，the framework maintains a Skillbook: a living document of strategies that evolves with each task。
+
+## 连线、分支与汇聚关系
+- `Start -> Agent`：用户查询或任务请求被发送到代理。
+- `Agent <--> Environment`：代理在任务环境中执行任务，并与环境进行交互。环境评估代理的执行结果并提供反馈。这是一个双向交互。
+- `Environment -- Feedback --> Reflector`：环境将代理的执行反馈发送给反射器。
+- `Reflector -> SkillManager`：反射器分析执行轨迹，并将提取的策略发送给技能管理器。
+- `SkillManager -- Updates --> Skillbook`：技能管理器整理和管理策略，并更新技能书。
+- `Skillbook -. Injects context .-> Agent`：技能书将学习到的策略（上下文信息）注入到代理中，增强代理的能力。这是一个虚线箭头，表示上下文注入。
+
+## 仓库语境与术语解释
+- **Agentic Context Engine (ACE)**：一个框架，使 AI 代理能够从执行反馈中学习并不断改进。
+- **Skillbook**：ACE 的知识库，包含代理学习到的策略。它是一个动态更新的文档，随着代理执行任务而不断演进。
+- **Reflector**：负责分析代理执行轨迹，提取有用的信息。它使用沙盒代码执行来更深入地分析 traces。
+- **SkillManager**：负责整理和管理从反射器提取的策略，并将其组织成可用的技能。
+- **Traces**：代理执行任务的轨迹，包含执行过程中的各种信息，例如输入、输出、中间状态等。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Agentic Context Engine (ACE) 的核心学习循环。流程从用户查询开始，代理在环境中执行任务并获得反馈。反射器分析反馈并提取策略，技能管理器整理策略并更新技能书。技能书将学习到的策略注入到代理中，形成一个闭环的学习过程。其中，Skillbook 存储了代理学习到的策略，Reflector 负责分析执行轨迹，SkillManager 负责整理和管理策略。

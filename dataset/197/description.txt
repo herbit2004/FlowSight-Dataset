@@ -1,0 +1,49 @@
+## 图类型与用途
+这是一个流程图，描述了客户端用户如何通过非浏览器方式（如 Curl 或 Google Apps Script）访问 Google Apps Script 创建的 Web Apps 的授权流程和可能遇到的情况。它在仓库中的作用是帮助理解不同访问场景下的授权方式。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是客户端用户发起请求，经过一系列判断和授权步骤，最终到达不同的访问情况（Situation 1-5）。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：请求发起与初步判断、权限校验与授权、最终访问场景。
+
+## 节点逐项说明
+- **Client users**：客户端用户，指需要访问 Web Apps 的用户。
+- **Curl, Google Apps Script, etc., not using a browser**：客户端使用的访问工具，例如 Curl 命令行工具或 Google Apps Script 代码，这些工具不通过浏览器直接发起请求。
+- **Using 'Situation 3'?**：一个判断节点，询问是否使用“情况 3”（Situation 3）。根据 README 描述，情况 3 指的是所有者（Owner）使用非浏览器方式访问 Web Apps。
+- **Share Web Apps project with users**：如果不是情况 3，则需要将 Web Apps 项目与用户共享。
+- **Are scopes used in Web App scripts?**：一个判断节点，询问 Web Apps 脚本中是否使用了需要授权的 scopes（权限范围）。
+- **Authorization of scopes using the browser**：如果使用了 scopes，则需要通过浏览器进行授权。
+- **Situation 3**：代表“情况 3”，即所有者通过非浏览器方式访问 Web Apps。
+- **Access token**：访问令牌，用于验证客户端的身份和授权。
+- **Situation 1**：代表“情况 1”，文档中指所有者通过浏览器访问 Web Apps。
+- **Situation 2**：代表“情况 2”，文档中指客户端用户通过浏览器访问 Web Apps。
+- **Situation 4**：代表“情况 4”，文档中指客户端用户通过非浏览器方式访问 Web Apps。
+- **Situation 5**：代表“情况 5”，文档中可能描述了另一种访问场景。
+
+## 连线、分支与汇聚关系
+- `Client users -> Curl, Google Apps Script, etc., not using a browser`：客户端用户使用非浏览器工具访问 Web Apps。
+- `Curl, Google Apps Script, etc., not using a browser -> Using 'Situation 3'?`：判断是否是情况 3。
+- `Using 'Situation 3'? -- No --> Share Web Apps project with users`：如果不是情况 3，则需要将 Web Apps 项目与用户共享。
+- `Using 'Situation 3'? -- Yes --> Are scopes used in Web App scripts?`：如果是情况 3，则直接进入下一步判断。
+- `Share Web Apps project with users -> Are scopes used in Web App scripts?`：共享项目后，判断 Web Apps 脚本是否使用了 scopes。
+- `Are scopes used in Web App scripts? -- Yes --> Authorization of scopes using the browser`：如果使用了 scopes，则需要通过浏览器进行授权。
+- `Are scopes used in Web App scripts? -- No --> Situation 3`：如果没有使用 scopes，则直接进入情况 3。
+- `Authorization of scopes using the browser -> Situation 3`：授权后也会进入情况3。
+- `Authorization of scopes using the browser -> Access token`：授权后获得访问令牌。
+- `Access token -> Situation 1`：根据具体情况（1, 2, 4, 5）进行访问。
+- `Access token -> Situation 2`：根据具体情况（1, 2, 4, 5）进行访问。
+- `Access token -> Situation 4`：根据具体情况（1, 2, 4, 5）进行访问。
+- `Access token -> Situation 5`：根据具体情况（1, 2, 4, 5）进行访问。
+
+## 仓库语境与术语解释
+- **Web Apps**：Google Apps Script 提供的一个功能，可以将服务器端脚本函数转换为可访问的 Web 服务。
+- **Google Apps Script (GAS)**：用于创建 Web Apps 的脚本语言。
+- **Scopes**：Web Apps 脚本中使用的需要授权的权限范围。
+- **Access token**：用于验证客户端身份和授权的令牌。
+- **Situation 1-5**：README 中定义的五种不同的 Web Apps 访问场景，涉及所有者和客户端用户通过浏览器或非浏览器方式访问。
+- **Curl, Google Apps Script, etc.**：客户端使用的非浏览器访问工具。
+- **Share Web Apps project with users**：将 Web Apps 项目与需要访问的用户共享，以便进行授权。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了客户端用户通过非浏览器方式访问 Google Apps Script Web Apps 的授权流程。流程从客户端发起请求开始，首先判断是否为所有者通过非浏览器访问（Situation 3），然后判断是否需要 scopes 授权。如果需要授权，则通过浏览器进行授权，获得 Access token。最终，根据不同的访问情况（Situation 1-5）进行访问。其中，scopes 授权和 Access token 获取是关键中间环节。README 解释了五种访问情况，以及如何共享 Web Apps 项目。

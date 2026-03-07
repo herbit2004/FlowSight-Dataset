@@ -1,0 +1,27 @@
+flowchart LR
+    subgraph trad [Traditional RAG Vector Only]
+        direction TB
+        Query1[Query: What database?]
+        VectorDB1[(Vector DB)]
+        Result1[✅ PostgreSQL memory<br/>❌ No reasoning<br/>❌ No connections]
+
+        Query1 -->|Similarity search| VectorDB1
+        VectorDB1 --> Result1
+    end
+
+    subgraph automem [AutoMem Graph + Vector]
+        direction TB
+        Query2[Query: What database?]
+
+        subgraph hybrid [Hybrid Search]
+            VectorDB2[(Qdrant<br/>Vectors)]
+            GraphDB2[(FalkorDB<br/>Graph)]
+        end
+
+        Result2[✅ PostgreSQL memory<br/>✅ PREFERS_OVER MongoDB<br/>✅ RELATES_TO team expertise<br/>✅ DERIVED_FROM boring tech]
+
+        Query2 --> VectorDB2
+        Query2 --> GraphDB2
+        VectorDB2 --> Result2
+        GraphDB2 --> Result2
+    end

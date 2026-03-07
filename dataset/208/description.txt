@@ -1,0 +1,36 @@
+## 图类型与用途
+这是一个流程图，描述了自动登录系统的核心流程，该系统使用 LLM 来自动登录任何网站。该图展示了系统如何通过分析页面、请求用户输入（如果需要）以及提交输入到浏览器来完成登录。
+
+## 图的整体布局
+图采用从上到下的布局，流程从顶部的“Navigate to login page”节点开始，经过一系列处理步骤，最终到达“Done”节点或循环回到中间步骤。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可分为三个阶段：页面分析与准备、LLM 分类与决策、用户交互与提交。
+
+## 节点逐项说明
+- **Navigate to login page**：流程的起始节点，表示系统导航到目标网站的登录页面。
+- **Take Screenshot + Extract HTML**：表示系统拍摄当前页面的屏幕截图并提取页面的 HTML 代码，为后续的 LLM 分析做准备。
+- **LLM Classifies Screen Type**：表示使用大型语言模型 (LLM) 对屏幕类型进行分类，例如识别登录页面、验证码页面或错误页面。根据 `src/lib/ai-login/prompts.ts`，LLM 需要识别 `credential_login_form`、`choice_screen`、`magic_login_link` 等屏幕类型。
+- **Logged in?**：一个判断节点，用于确定是否已成功登录。
+- **Done**：流程的结束节点，表示已成功登录。
+- **Request Input from User**：如果未登录，则向用户请求输入，例如用户名、密码或验证码。
+- **Submit Input in Browser**：将用户提供的输入提交到浏览器中的相应表单字段。根据 `src/components/credential-form.tsx`，该组件动态渲染 LLM 识别出的输入字段，并将用户输入直接写入浏览器 DOM。
+
+## 连线、分支与汇聚关系
+- `Navigate to login page -> Take Screenshot + Extract HTML`：导航到登录页面后，系统会截取屏幕截图并提取 HTML。
+- `Take Screenshot + Extract HTML -> LLM Classifies Screen Type`：截图和 HTML 被发送到 LLM 进行屏幕类型分类。
+- `LLM Classifies Screen Type -> Logged in?`：LLM 分类结果用于判断是否已登录。
+- `Logged in? -- Yes --> Done`：如果已登录，流程结束。
+- `Logged in? -- No --> Request Input from User`：如果未登录，系统向用户请求输入。
+- `Request Input from User -> Submit Input in Browser`：用户提供的输入被提交到浏览器。
+- `Submit Input in Browser -> Take Screenshot + Extract HTML`：提交输入后，流程返回到截图和 HTML 提取步骤，重新开始循环。
+
+## 仓库语境与术语解释
+- **LLM (Large Language Model)**：用于分析登录页面并确定屏幕类型的 AI 模型。根据 README 和 `src/lib/ai-login/agent.ts`，该系统使用 Claude Sonnet 4.5 模型。
+- **BrowserBase**：一个云浏览器服务，用于提供浏览器实例。根据 README 和 `src/lib/ai-login/browser.ts`，该项目使用 BrowserBase 通过 CDP 协议连接到浏览器。
+- **Playwright**：一个浏览器自动化框架，用于控制浏览器行为，例如导航、截图、提取 HTML 和提交输入。
+- **Credential Isolation**：一种设计原则，确保用户的凭据不会直接传递给 LLM，而是直接输入到浏览器 DOM 中，以避免凭据泄露的风险。
+- **Screen Types**：LLM 将登录页面分类为不同的类型，例如 `credential_login_form`、`choice_screen` 和 `magic_login_link`。每种类型都有不同的处理方式，定义在 `src/lib/ai-login/types.ts` 和 `src/lib/ai-login/prompts.ts` 中。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图描述了一个自动登录循环，从导航到登录页面开始，然后截取屏幕截图并提取 HTML。LLM 分析这些信息以确定屏幕类型，并判断是否已登录。如果未登录，系统会向用户请求必要的输入，并将输入提交到浏览器。这个过程会循环进行，直到成功登录为止。该流程的关键步骤包括 LLM 屏幕类型分类、用户输入请求和凭据的直接 DOM 提交，其中 LLM 的选择和 BrowserBase 的使用是重要的仓库语境。

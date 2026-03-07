@@ -1,0 +1,45 @@
+graph TB
+    subgraph "Layer 1: Manager-Orchestrator"
+        M["Manager opus<br/>계획→분배→검증→QA"]
+    end
+    subgraph "Layer 2: Specialists"
+        S1["architect"]
+        S2["frontend"]
+        S3["backend"]
+        S4["supabase"]
+        S5["test-writer"]
+        S6["reviewer"]
+        S7["qa-tester"]
+        S8["bug-fixer"]
+    end
+    subgraph "Layer 3: Hooks"
+        H1["auto-validate"]
+        H2["no-localStorage"]
+        H3["agent-perm"]
+        H4["sql-injection"]
+        H5["telegram"]
+        H6["context-enrich"]
+    end
+
+    M -->|"task()"| S1
+    M -->|"task()"| S2
+    M -->|"task()"| S3
+    M -->|"task()"| S4
+    M -->|"task()"| S5
+    M -->|"task()"| S6
+    M -->|"task()"| S7
+    M -->|"task()"| S8
+    S2 -.->|"Write"| H1
+    S2 -.->|"Write"| H2
+    S3 -.->|"Write"| H1
+    M -.->|"Write"| H3
+    S4 -.->|"MCP"| H4
+    M -.->|"git push"| H5
+
+    style M fill:#e17055,color:#fff
+    style H1 fill:#fdcb6e
+    style H2 fill:#fdcb6e
+    style H3 fill:#fdcb6e
+    style H4 fill:#fdcb6e
+    style H5 fill:#fdcb6e
+    style H6 fill:#fdcb6e

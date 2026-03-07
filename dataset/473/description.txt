@@ -1,0 +1,37 @@
+## 图类型与用途
+这是一个架构图，描述了 MermaidGenie 应用的整体架构，展示了客户端如何与后端服务、数据库和 AI 服务交互。它在仓库中作为架构概览，帮助理解应用各组件之间的关系。
+
+## 图的整体布局
+图采用从左到右的布局。左侧是客户端，中间是 CDN、API 和 Storage，右侧是数据库和 AI 服务。整体呈现一种分层架构。
+
+## 分组/子图/阶段说明
+图中包含 Client、CDN、Storage、API、DB 和 AI 六个子图，分别代表不同的组件或服务。
+
+## 节点逐项说明
+- **Browser React + SWR**：表示客户端浏览器，使用 React 框架和 SWR 库进行数据获取和状态管理。
+- **CloudFront CDN**：表示 CloudFront 内容分发网络，用于缓存和加速静态资源的传输。
+- **S3 Bucket Static Export**：表示 S3 Bucket，用于存储静态导出的文件。
+- **API Gateway**：表示 API Gateway，负责接收客户端的 API 请求，并将请求路由到相应的后端服务。
+- **Lambda - Express API**：表示 Lambda 函数，使用 Express 框架构建 API，处理业务逻辑。
+- **MongoDB Atlas**：表示 MongoDB Atlas 数据库，用于存储应用的数据，例如用户信息、图表数据等。
+- **OpenAI API**：表示 OpenAI API，用于将文本提示转换为 Mermaid 图表。
+
+## 连线、分支与汇聚关系
+- `Browser React + SWR -> CloudFront CDN`：客户端通过 HTTPS 协议与 CDN 通信，请求静态资源。
+- `CloudFront CDN -> S3 Bucket Static Export`：CDN 将静态资源提供给 S3 Bucket。
+- `Browser React + SWR -> API Gateway`：客户端通过 API 调用与 API Gateway 通信，请求 API 服务。
+- `API Gateway -> Lambda - Express API`：API Gateway 将请求路由到 Lambda 函数。
+- `Lambda - Express API -> MongoDB Atlas`：Lambda 函数与 MongoDB Atlas 交互，进行数据读写操作。
+- `Lambda - Express API -> OpenAI API`：Lambda 函数调用 OpenAI API，将文本提示转换为 Mermaid 图表。
+
+## 仓库语境与术语解释
+- **React + SWR**：前端框架和数据获取库，用于构建用户界面和管理数据。
+- **CloudFront CDN**：AWS 提供的 CDN 服务，用于加速静态资源访问。
+- **S3 Bucket**：AWS 提供的对象存储服务，用于存储静态文件。
+- **API Gateway**：作为应用的前端入口，接收和路由 API 请求。
+- **Lambda - Express API**：使用 Node.js 和 Express 框架构建的无服务器 API，运行在 AWS Lambda 上。
+- **MongoDB Atlas**：云数据库服务，用于存储应用数据。
+- **OpenAI API**：用于生成 Mermaid 图表的 AI 服务。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+MermaidGenie 应用的架构从客户端浏览器开始，通过 HTTPS 从 CloudFront CDN 获取静态资源，并通过 API Gateway 调用 Lambda 函数处理业务逻辑。Lambda 函数与 MongoDB Atlas 交互存储数据，并调用 OpenAI API 实现 AI 图表生成功能。核心流程是“客户端请求 -> CDN 静态资源 -> API Gateway -> Lambda 函数 -> 数据库/AI 服务”，其中 Lambda 函数是核心业务逻辑的处理中心。

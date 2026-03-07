@@ -1,0 +1,36 @@
+flowchart TB
+    classDef person fill:#08427B,stroke:#073B6F,color:#fff
+    classDef system fill:#1168BD,stroke:#0B4884,color:#fff
+    classDef external fill:#666666,stroke:#0B4884,color:#fff
+
+    pentester["👤 Security Engineer
+    (User of the system)"]
+
+    pentagi["✨ PentAGI
+    (Autonomous penetration testing system)"]
+
+    target["🎯 target-system
+    (System under test)"]
+    llm["🧠 llm-provider
+    (OpenAI/Anthropic/Ollama/Bedrock/Gemini/Custom)"]
+    search["🔍 search-systems
+    (Google/DuckDuckGo/Tavily/Traversaal/Perplexity/Sploitus/Searxng)"]
+    langfuse["📊 langfuse-ui
+    (LLM Observability Dashboard)"]
+    grafana["📈 grafana
+    (System Monitoring Dashboard)"]
+
+    pentester --> |Uses HTTPS| pentagi
+    pentester --> |Monitors AI HTTPS| langfuse
+    pentester --> |Monitors System HTTPS| grafana
+    pentagi --> |Tests Various protocols| target
+    pentagi --> |Queries HTTPS| llm
+    pentagi --> |Searches HTTPS| search
+    pentagi --> |Reports HTTPS| langfuse
+    pentagi --> |Reports HTTPS| grafana
+
+    class pentester person
+    class pentagi system
+    class target,llm,search,langfuse,grafana external
+
+    linkStyle default stroke:#ffffff,color:#ffffff

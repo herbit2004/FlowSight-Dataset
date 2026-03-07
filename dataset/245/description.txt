@@ -1,0 +1,41 @@
+## 图类型与用途
+这是一个流程图，描述了 Local Deep Research 执行研究流程的步骤，从接收研究查询开始，到生成带有引用的最终报告结束。该图在 `docs/architecture.md` 中，用于概述研究流程。
+
+## 图的整体布局
+图采用从左到右的布局，分为四个阶段：输入、迭代研究、综合和输出。整个流程从左侧的输入开始，经过中间的迭代和综合阶段，最终到达右侧的输出。
+
+## 分组/子图/阶段说明
+图中包含四个显式子图，分别代表研究流程的四个阶段：
+- **INPUT ("1️⃣ Input")**：代表研究流程的起始阶段，接收用户的研究查询。
+- **ITERATE ("2️⃣ Iterative Research")**：代表迭代研究阶段，包括生成问题、并行搜索和分析结果三个步骤，并可根据需要返回生成问题步骤进行迭代。
+- **SYNTHESIZE ("3️⃣ Synthesis")**：代表综合阶段，包括生成报告和添加引用两个步骤。
+- **OUTPUT ("4️⃣ Output")**：代表输出阶段，生成带有来源的最终报告。
+
+## 节点逐项说明
+- **Research Query**：研究流程的起点，代表用户提出的研究问题或主题。
+- **Generate Questions**：根据当前的研究状态，生成更具体的问题，以便进行更精确的搜索。
+- **Parallel Search**：使用生成的问题，并行地进行搜索，获取相关信息。
+- **Analyze Results**：对搜索结果进行分析，提取关键信息，并评估是否需要进一步的研究。
+- **Generate Report**：根据分析的结果，生成初步的研究报告。
+- **Add Citations**：为报告中的信息添加来源引用，确保报告的可靠性和学术性。`src/local_deep_research/citation_handler.py` 文件定义了 `CitationHandler` 类，用于处理引用的添加。
+- **Final Report with Sources**：研究流程的最终结果，包含研究内容和所有引用的来源。
+
+## 连线、分支与汇聚关系
+- `Research Query -> Generate Questions`：研究查询作为输入，流向生成问题环节。
+- `Generate Questions -> Parallel Search`：生成问题后进行并行搜索。
+- `Parallel Search -> Analyze Results`：并行搜索的结果进入分析环节。
+- `Analyze Results -.-> Generate Questions`：分析结果可以选择性地反馈回生成问题，形成迭代循环，条件是“Need more info?”。
+- `Analyze Results -> Generate Report`：分析结果用于生成报告。
+- `Generate Report -> Add Citations`：生成报告后添加引用。
+- `Add Citations -> Final Report with Sources`：添加引用后生成最终报告。
+
+## 仓库语境与术语解释
+- **Research Query**：用户向 Local Deep Research 提出的研究问题，是整个研究流程的起点。
+- **Parallel Search**：根据 `docs/architecture.md`，Local Deep Research 支持多种搜索引擎，包括本地搜索（SearXNG、Elasticsearch、Document Library）和 Web 搜索（Tavily、Brave、DuckDuckGo），以及学术搜索（ArXiv、PubMed、Semantic Scholar）。
+- **LLM (Large Language Model)**：在 `docs/architecture.md` 中，LLM Providers 包括本地 LLM (Ollama, LM Studio) 和云 LLM (OpenAI, Anthropic, Google Gemini, OpenRouter)。LLM 用于生成问题、分析结果和生成报告。`src/local_deep_research/llm/llm_registry.py` 提供了 LLM 的注册和管理功能。
+- **Citation**：引用，用于确保报告的可靠性和学术性。`src/local_deep_research/citation_handler.py` 文件定义了 `CitationHandler` 类，用于处理引用的添加。
+- **Strategy**：`docs/architecture.md` 提到 Strategy Selector，表明 Local Deep Research 使用不同的研究策略，`src/local_deep_research/advanced_search_system/strategies/base_strategy.py` 定义了 `BaseSearchStrategy` 类，作为所有搜索策略的基类。
+- **Adaptive Query Generator**：`src/local_deep_research/advanced_search_system/query_generation/adaptive_query_generator.py` 定义了 `AdaptiveQueryGenerator` 类，用于生成自适应的搜索查询。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图描述了 Local Deep Research 的研究流程，从用户输入 Research Query 开始，系统通过 Generate Questions、Parallel Search 和 Analyze Results 进行迭代研究，如果需要更多信息，则返回 Generate Questions 步骤。然后，系统进入 Synthesis 阶段，通过 Generate Report 和 Add Citations 生成 Final Report with Sources。其中，LLM 用于生成问题、分析结果和生成报告，Citation 用于确保报告的可靠性，Parallel Search 利用多种搜索引擎。

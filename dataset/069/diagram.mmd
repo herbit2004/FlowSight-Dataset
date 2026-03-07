@@ -1,0 +1,16 @@
+graph LR
+    Browser["Browser<br/>(Phone / Desktop)"]
+    WS["WebSocket"]
+    Server["HTTP Server<br/>lib/server.js"]
+    Project["Project Context<br/>lib/project.js"]
+    SDK["Claude Agent SDK"]
+    Claude["Claude Code<br/>Process"]
+    Push["Push Service"]
+
+    Browser <-->|Real time stream| WS
+    WS <--> Server
+    Server -->|slug routing| Project
+    Project <-->|async iterable| SDK
+    SDK <-->|Prompt / Response| Claude
+    Project -->|Approval request| Push
+    Push -->|Notification| Browser

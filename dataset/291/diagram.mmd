@@ -1,0 +1,10 @@
+graph TD
+ Input([User Input]) -->|Key/Mouse/Tick| Runtime
+ Runtime -->|CassMsg| Update[Model::update]
+ Update -->|Cmd| Runtime
+ Update -->|State Change| View[Model::view]
+ View -->|Frame| DiffEngine[Bayesian Diff]
+ DiffEngine -->|Minimal Writes| Terminal
+
+ Update -->|Cmd::Task| Background[Background Thread]
+ Background -->|Result Msg| Runtime

@@ -1,0 +1,58 @@
+## 图类型与用途
+这是一个流程图，描述了 Easy-AI-CodeReview 项目如何响应代码托管平台的事件，进行代码审查，并发送审查结果或日报的整体流程。它展示了从接收 Webhook 请求到发送 IM 消息的各个环节，是项目原理的概括。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是代码托管平台触发 Webhook 的起点，中间是平台和事件识别、以及针对不同事件类型的处理流程，底部是发送通知或报告的终点。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分成三个阶段：Webhook 触发与识别、Merge Request 处理/Push Request 处理、定时任务与报告生成。
+
+## 节点逐项说明
+- **🎯 GitLab/GitHub/Gitea**：代码托管平台，是整个流程的起点，代表开发者提交代码的平台。
+- **🌐 Webhook API Call**：Webhook API 调用，当代码托管平台发生特定事件时，会触发 Webhook 调用，向 Easy-AI-CodeReview 系统发送请求。
+- **📂 平台识别 Platform = ?**：平台识别，系统接收到请求后，首先识别请求来自哪个代码托管平台。
+- **📂 事件类型 Event = ?**：事件类型识别，系统识别触发 Webhook 的事件类型，例如是 Merge Request 还是 Push。
+- **📌 处理合并请求 handle_merge_request**：处理 Merge Request 的逻辑。
+- **⚙️ 操作类型？ action = open / update?**：判断 Merge Request 的操作类型是打开还是更新。
+- **🧾 获取代码变更 obtain code changes**：获取代码变更的内容。
+- **🤖 大模型 Review LLM review**：使用大语言模型对代码变更进行审查。
+- **📌 处理 Push 请求 handle_push_request**：处理 Push 请求的逻辑。
+- **📝 记录日志 log push**：记录 Push 操作的日志。
+- **🛠️ 启用 Push Review？ push review enabled?**：判断是否启用了 Push Review 功能。
+- **📤 发送 IM 通知 Send IM notice**：发送 IM 通知。
+- **🤖 大模型 Review LLM review**：使用大语言模型对代码变更进行审查。
+- **⏰ 定时任务触发 Scheduled Timer**：定时任务触发器，用于生成开发日报。
+- **📂 读取日志 Read logs**：读取日志信息，用于生成日报。
+- **🧠 大模型总结 LLM summary**：使用大语言模型对日志进行总结，生成日报内容。
+- **📤 发送代码审核 IM/日报 Send CR IM message/Send IM report**：发送代码审查结果或日报的 IM 消息。
+
+## 连线、分支与汇聚关系
+- `🎯 GitLab/GitHub/Gitea -> 🌐 Webhook API Call`：代码托管平台触发 Webhook API 调用。
+- `🌐 Webhook API Call -> 📂 平台识别 Platform = ?`：Webhook API 调用后进行平台识别。
+- `📂 平台识别 Platform = ? -- merge request --> 📌 处理合并请求 handle_merge_request`：如果事件类型是 Merge Request，则进入 Merge Request 处理流程。
+- `📌 处理合并请求 handle_merge_request -> ⚙️ 操作类型？ action = open / update?`：处理 Merge Request 时，判断操作类型。
+- `⚙️ 操作类型？ action = open / update? -- 是 --> 🧾 获取代码变更 obtain code changes`：如果操作类型是 open 或 update，则获取代码变更。
+- `🧾 获取代码变更 obtain code changes -> 🤖 大模型 Review LLM review`：获取代码变更后，进行大模型审查。
+- `🤖 大模型 Review LLM review -> 📤 发送代码审核 IM Send CR IM message`：大模型审查后，发送代码审核 IM 消息。
+- `📂 平台识别 Platform = ? -- push --> 📌 处理 Push 请求 handle_push_request`：如果事件类型是 Push，则进入 Push 请求处理流程。
+- `📌 处理 Push 请求 handle_push_request -> 📝 记录日志 log push`：处理 Push 请求时，记录日志。
+- `📝 记录日志 log push -> 🛠️ 启用 Push Review？ push review enabled?`：记录日志后，判断是否启用 Push Review。
+- `🛠️ 启用 Push Review？ push review enabled? -- 否 --> 📤 发送 IM 通知 Send IM notice`：如果没有启用 Push Review，则发送 IM 通知。
+- `🛠️ 启用 Push Review？ push review enabled? -- 是 --> 🤖 大模型 Review LLM review`：如果启用了 Push Review，则进行大模型审查。
+- `🤖 大模型 Review LLM review -> 📤 发送代码审核 IM Send CR IM message`：大模型审查后，发送代码审核 IM 消息。
+- `⏰ 定时任务触发 Scheduled Timer -> 📂 读取日志 Read logs`：定时任务触发后，读取日志。
+- `📂 读取日志 Read logs -> 🧠 大模型总结 LLM summary`：读取日志后，进行大模型总结。
+- `🧠 大模型总结 LLM summary -> 📤 发送 IM 日报 Send IM report`：大模型总结后，发送 IM 日报。
+- `📝 记录日志 log push -.-> 📂 读取日志 Read logs`：虚线箭头表示日志来源。
+
+## 仓库语境与术语解释
+- **Webhook**：代码托管平台（GitLab/GitHub/Gitea）提供的事件通知机制，当代码仓库发生特定事件时，会自动向预先配置的 URL 发送 HTTP 请求，通知外部系统。
+- **Merge Request/Pull Request**：代码合并请求，是开发者将自己的代码变更合并到主干分支的一种协作方式。
+- **Push**：代码推送，是开发者将本地代码变更上传到远程代码仓库的操作。
+- **LLM (Large Language Model)**：大型语言模型，本项目使用 LLM 对代码变更进行审查，例如 OpenAI、DeepSeek、通义千问等，具体配置见 `src/llm/factory.py`。
+- **IM (Instant Messaging)**：即时通讯，本项目支持将代码审查结果通过钉钉、企业微信、飞书等 IM 工具发送给开发者。
+- **config/prompt_templates.yml**：该文件定义了代码审查的标准化提示词，用于指导 LLM 进行代码审查，可以根据需要进行自定义。
+- **SUPPORTED_EXTENSIONS**：环境变量，定义了哪些文件类型会被审查，配置位置在 `src/gitlab/webhook_handler.py`, `src/github/webhook_handler.py` 和 `src/gitea/webhook_handler.py` 中。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Easy-AI-CodeReview 项目的核心工作流程。流程从代码托管平台（GitLab/GitHub/Gitea）触发 Webhook 开始，系统识别平台和事件类型后，根据事件类型（Merge Request 或 Push）进入不同的处理流程。Merge Request 流程会获取代码变更，并使用大模型进行审查，最后发送代码审核 IM 消息。Push 流程会记录日志，并根据是否启用 Push Review 来决定是否进行大模型审查，最终也可能发送 IM 通知。此外，系统还支持定时任务，用于读取日志并生成开发日报。其中，大模型审查和 IM 消息通知是核心环节。

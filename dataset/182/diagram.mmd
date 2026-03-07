@@ -1,0 +1,18 @@
+flowchart LR
+    nv("Make changes to\nthe application") -- Commit --> n7("Build and test frontend\nand backend")
+    n7 --> nf{"Success?"}
+    nf -- Yes --> n2("Build and test docker\nimage")
+    nf -- No --> n4("Cancel pipeline")
+    n2 --> n5{"Success?"}
+    n5 -- No --> n4
+    n5 -- Yes --> nx("Publish docker image\nto GitHub packages")
+    nx --> nj{"Success?"}
+    nj -- No --> n4
+    nj -- Yes --> nd("Deploy")
+    nd --> nc("Login into VM and copy\ndocker compose file\nfrom repo")
+    nc --> n6{"Success?"}
+    n6 -- Yes --> no("Pull previously pushed Docker image\nand execute most recent\n docker compose file")
+    n6 -- No --> n4
+    no --> na{"Success?"}
+    na -- No --> ng("Better check your\nsystem's health")
+    na -- Yes --> nk("Updates are live")

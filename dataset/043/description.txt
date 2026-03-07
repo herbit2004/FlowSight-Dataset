@@ -1,0 +1,104 @@
+## 图类型与用途
+这是一个流程图/架构图，用于展示一个电商应用的主要模块、组件以及它们之间的交互关系，以及用户在应用中的操作流程。它通过图形化的方式，帮助理解系统的整体架构和关键业务流程，并作为 Noderr 项目的视觉架构图，定义了组件（NodeIDs）及其交互。
+
+## 图的整体布局
+图整体采用从上到下的布局，从用户打开应用开始，经过用户认证、商品浏览、购物车、结账以及搜索功能，最终可能因为错误处理而记录错误日志。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表不同的功能模块：
+- **Authentication System**：用户认证系统，处理用户登录和会话管理。
+- **E-Commerce Flow**：电商流程，包括商品浏览、添加到购物车和结账等功能。
+- **Checkout Processing**：结账处理流程，处理订单创建、库存检查、支付和订单确认。
+- **Error Management**：错误管理流程，处理应用中出现的错误，并记录错误日志。
+- **Product Search**：商品搜索功能，允许用户搜索商品。
+
+## 节点逐项说明
+- **APP_Start((User Opens App))**：用户打开应用，作为整个流程的起点。
+- **AUTH_Check{User Logged In?}**：检查用户是否已登录。
+- **UI_LoginPage[/Login Page/]**：登录页面，用于用户输入用户名和密码。
+- **UI_LoginForm[/Login Form/]**：登录表单，用户在此输入登录信息。
+- **API_Login{{POST /api/auth/login}}**：后端 API 接口，用于验证用户登录信息。
+- **SVC_AuthValidator[[Auth Validator Service]]**：认证验证器服务，用于验证用户凭据。
+- **DB_Users[(Users Database)]**：用户数据库，存储用户信息。
+- **LoginResult{Valid Credentials?}**：判断用户凭据是否有效。
+- **UI_LoginError[/Show Login Error/]**：显示登录错误信息。
+- **SVC_TokenGenerator[[Token Generator]]**：生成用户会话 Token。
+- **STATE_UserSession[["Store User Session"]]**：存储用户会话状态。
+- **UI_Dashboard[/Dashboard/]**：用户登录后的仪表盘页面。
+- **UI_ProductGrid[/Product Grid/]**：商品列表展示页面。
+- **UI_ProductCard[/Product Card/]**：单个商品卡片，展示商品信息。
+- **UI_ProductModal[/Product Details Modal/]**：商品详情模态框，展示商品详细信息。
+- **STATE_CartManager[["Cart State Manager"]]**：购物车状态管理器，管理购物车状态。
+- **UI_CartIcon[/Cart Icon Badge/]**：购物车图标，显示购物车商品数量。
+- **UI_CartDrawer[/Shopping Cart Drawer/]**：购物车抽屉，展示购物车中的商品。
+- **UI_CheckoutFlow[/Checkout Page/]**：结账页面，用户在此确认订单信息并进行支付。
+- **API_CreateOrder{{POST /api/orders}}**：后端 API 接口，用于创建订单。
+- **SVC_OrderProcessor[[Order Processor]]**：订单处理器服务，处理订单创建逻辑。
+- **SVC_InventoryCheck[[Inventory Service]]**：库存检查服务，检查商品库存。
+- **DB_Inventory[(Inventory DB)]**：库存数据库，存储商品库存信息。
+- **StockCheck{Items In Stock?}**：判断商品库存是否充足。
+- **UI_StockError[/Out of Stock Error/]**：显示库存不足错误信息。
+- **SVC_PaymentGateway[[Payment Service]]**：支付服务，处理支付逻辑。
+- **EXT_Stripe{{Stripe API}}**：第三方支付 API，例如 Stripe 支付 API。
+- **PaymentResult{Payment Success?}**：判断支付是否成功。
+- **UI_PaymentError[/Payment Failed/]**：显示支付失败错误信息。
+- **DB_Orders[(Orders Database)]**：订单数据库，存储订单信息。
+- **SVC_EmailService[[Email Service]]**：邮件服务，发送邮件通知。
+- **EXT_SendGrid{{SendGrid API}}**：第三方邮件 API，例如 SendGrid 邮件 API。
+- **UI_OrderSuccess[/Order Confirmation/]**：显示订单确认页面。
+- **UI_ErrorToast[/Error Toast Notification/]**：显示错误提示信息。
+- **SVC_ErrorLogger[[Error Logger]]**：错误日志记录服务，记录错误信息。
+- **DB_ErrorLogs[(Error Logs)]**：错误日志数据库，存储错误日志信息。
+- **UI_SearchBar[/Search Bar/]**：搜索栏，用户在此输入搜索关键词。
+- **SVC_SearchDebounce[[Debounce Service]]**：防抖服务，减少 API 调用次数。
+- **API_Search{{GET /api/search}}**：后端 API 接口，用于搜索商品。
+- **SVC_SearchEngine[[Search Engine]]**：搜索引擎服务，从产品数据库中检索结果。
+- **DB_Products[(Products DB)]**：产品数据库，存储商品信息。
+- **UI_SearchResults[/Search Results Dropdown/]**：搜索结果下拉列表，展示搜索结果。
+
+## 连线、分支与汇聚关系
+- `APP_Start -> AUTH_Check`：用户打开应用后，系统检查用户是否已登录。
+- `AUTH_Check -- No --> UI_LoginPage`：如果用户未登录，则显示登录页面。
+- `UI_LoginPage -> UI_LoginForm`：登录页面包含登录表单。
+- `UI_LoginForm -- Submit --> API_Login`：用户提交登录表单，调用登录 API。
+- `API_Login -> SVC_AuthValidator`：登录 API 调用认证验证器服务。
+- `SVC_AuthValidator -> DB_Users`：认证验证器服务查询用户数据库。
+- `DB_Users -> LoginResult`：用户数据库返回登录结果。
+- `LoginResult -- No --> UI_LoginError`：如果登录失败，则显示登录错误信息。
+- `LoginResult -- Yes --> SVC_TokenGenerator`：如果登录成功，则生成 Token。
+- `UI_LoginError -> UI_LoginForm`：登录错误后返回登录表单。
+- `SVC_TokenGenerator -> API_Login`：Token 生成后返回登录 API。
+- `API_Login -- Success --> STATE_UserSession`：登录 API 成功后存储用户会话。
+- `AUTH_Check -- Yes --> UI_Dashboard`：如果用户已登录，则显示仪表盘。
+- `STATE_UserSession -> UI_Dashboard`：用户会话状态传递到仪表盘。
+- `UI_Dashboard -> UI_ProductGrid`：仪表盘展示商品列表。
+- `UI_ProductGrid -> UI_ProductCard`：商品列表包含商品卡片。
+- `UI_ProductCard -- View Details --> UI_ProductModal`：查看商品详情，显示商品详情模态框。
+- `UI_ProductCard -- Quick Add --> STATE_CartManager`：快速添加到购物车，更新购物车状态管理器。
+- `UI_ProductModal -- Add to Cart --> STATE_CartManager`：添加到购物车，更新购物车状态管理器。
+- `STATE_CartManager -- Update --> UI_CartIcon`：购物车状态管理器更新购物车图标。
+- `UI_CartIcon -- Click --> UI_CartDrawer`：点击购物车图标，显示购物车抽屉。
+- `UI_CartDrawer -- Checkout --> UI_CheckoutFlow`：购物车抽屉点击结账，进入结账页面。
+- `UI_CheckoutFlow -> API_CreateOrder`：结账页面调用创建订单 API。
+- `API_CreateOrder -> SVC_OrderProcessor`：创建订单 API 调用订单处理器服务。
+- `SVC_OrderProcessor -> SVC_InventoryCheck`：订单处理器服务调用库存检查服务。
+- `SVC_InventoryCheck -> DB_Inventory`：库存检查服务查询库存数据库。
+- `DB_Inventory -> StockCheck`：库存数据库返回库存检查结果。
+- `StockCheck -- No --> UI_StockError`：如果库存不足，则显示库存不足错误信息。
+- `StockCheck -- Yes --> SVC_PaymentGateway`：如果库存充足，则调用支付服务。
+- `SVC_PaymentGateway -> EXT_Stripe`：支付服务调用第三方支付 API。
+- `EXT_Stripe -> PaymentResult`：第三方支付 API 返回支付结果。
+- `PaymentResult -- No --> UI_PaymentError`：如果支付失败，则显示支付失败错误信息。
+- `PaymentResult -- Yes --> DB_Orders`：如果支付成功，则更新订单数据库。
+- `DB_Orders -> SVC_EmailService`：订单数据库更新后调用邮件服务。
+- `SVC_EmailService -> EXT_SendGrid`：邮件服务调用第三方邮件 API。
+- `DB_Orders -> UI_OrderSuccess`：订单数据库更新后显示订单确认页面。
+- `API_Login -- Error --> UI_ErrorToast`：登录 API 发生错误，显示错误提示信息。
+- `API_CreateOrder -- Error --> UI_ErrorToast`：创建订单 API 发生错误，显示错误提示信息。
+- `EXT_Stripe -- Error --> UI_ErrorToast`：第三方支付 API 发生错误，显示错误提示信息。
+- `EXT_SendGrid -- Error --> SVC_ErrorLogger`：第三方邮件 API 发生错误，调用错误日志记录服务。
+- `SVC_ErrorLogger -> DB_ErrorLogs`：错误日志记录服务记录错误日志信息。
+- `UI_Dashboard -> UI_SearchBar`：仪表盘包含搜索栏。
+- `UI_SearchBar -- Type --> SVC_SearchDebounce`：用户在搜索栏输入关键词，调用防抖服务。
+- `SVC_SearchDebounce -- 300ms --> API_Search`：防抖服务在 300ms 后调用搜索 API。
+- `API_Search -> SVC_SearchEngine`：搜索 API 调用搜索引擎服务。

@@ -1,0 +1,46 @@
+## 图类型与用途
+这是一个流程图，描述了 Litho (deepwiki-rs) 如何从源代码中提取信息并存储到内存中，为后续的文档生成过程做准备。它在仓库中的作用是展示 Litho 的核心数据处理流程。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是预处理代理，中间是多个信息提取和分析器，底部是存储节点。数据从上到下流动，最终汇聚到内存存储。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为两个阶段：预处理与信息提取、数据存储。
+
+## 节点逐项说明
+- **Preprocessing Agent**：预处理代理，负责对输入数据进行初步处理，为后续的分析做准备。
+- **Structure Extractor**：结构提取器，负责从代码中提取项目结构信息，例如目录结构、文件组织等。该模块对应 `src/generator/preprocess/extractors/structure_extractor.rs`。
+- **Original Document Extractor**：原始文档提取器，负责提取代码中的原始文档材料，例如注释、文档字符串等。该模块对应 `src/generator/preprocess/extractors/original_document_extractor.rs`。
+- **Code Analysis Agent**：代码分析代理，负责对代码进行深入分析，提取核心的代码洞察，例如函数功能、算法逻辑等。该模块对应 `src/generator/preprocess/agents/code_analyze.rs`。
+- **Relationship Analysis Agent**：关系分析代理，负责分析代码之间的依赖关系，例如模块之间的调用、类之间的继承等。该模块对应 `src/generator/preprocess/agents/relationships_analyze.rs`。
+- **Project Structure**：项目结构，Structure Extractor 的输出，表示提取到的项目结构信息。对应 `src/types/project_structure.rs` 中定义的 `ProjectStructure` 结构体。
+- **Original Document Materials**：原始文档材料，Original Document Extractor 的输出，表示提取到的原始文档材料。
+- **Core Code Insights**：核心代码洞察，Code Analysis Agent 的输出，表示提取到的核心代码洞察。
+- **Code Dependencies**：代码依赖，Relationship Analysis Agent 的输出，表示提取到的代码依赖关系。
+- **Store to Memory**：存储到内存，负责将提取到的所有信息存储到内存中，以便后续的文档生成过程使用。
+
+## 连线、分支与汇聚关系
+- `Preprocessing Agent -> Structure Extractor`：预处理代理将数据发送给结构提取器。
+- `Preprocessing Agent -> Original Document Extractor`：预处理代理将数据发送给原始文档提取器。
+- `Preprocessing Agent -> Code Analysis Agent`：预处理代理将数据发送给代码分析代理。
+- `Preprocessing Agent -> Relationship Analysis Agent`：预处理代理将数据发送给关系分析代理。
+- `Structure Extractor -> Project Structure`：结构提取器输出项目结构信息。
+- `Original Document Extractor -> Original Document Materials`：原始文档提取器输出原始文档材料。
+- `Code Analysis Agent -> Core Code Insights`：代码分析代理输出核心代码洞察。
+- `Relationship Analysis Agent -> Code Dependencies`：关系分析代理输出代码依赖关系。
+- `Project Structure -> Store to Memory`：项目结构信息被存储到内存。
+- `Original Document Materials -> Store to Memory`：原始文档材料被存储到内存，形成汇聚关系。
+- `Core Code Insights -> Store to Memory`：核心代码洞察被存储到内存，形成汇聚关系。
+- `Code Dependencies -> Store to Memory`：代码依赖关系被存储到内存，形成汇聚关系。
+
+## 仓库语境与术语解释
+- **Preprocessing Agent**：负责对输入代码进行预处理，为后续分析做准备。
+- **Structure Extractor**：从代码中提取项目结构信息，例如目录结构、文件组织等。
+- **Original Document Extractor**：提取代码中的原始文档材料，例如注释、文档字符串等。
+- **Code Analysis Agent**：对代码进行深入分析，提取核心的代码洞察，例如函数功能、算法逻辑等。
+- **Relationship Analysis Agent**：分析代码之间的依赖关系，例如模块之间的调用、类之间的继承等。
+- **Project Structure, Original Document Materials, Core Code Insights, Code Dependencies**：这些是不同分析代理的输出，分别对应项目结构、原始文档材料、核心代码洞察和代码依赖关系。这些数据结构在 `src/types/` 目录下定义。
+- **Store to Memory**：将提取到的所有信息存储到内存中，为后续的文档生成过程提供数据支持。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Litho 的核心数据处理流程：从预处理代理开始，并行地使用结构提取器、原始文档提取器、代码分析代理和关系分析代理从不同角度分析代码，提取项目结构、原始文档、核心代码洞察和代码依赖关系。最后，将所有提取到的信息存储到内存中，为后续的文档生成过程提供数据支持。其中，`src/types/` 目录下的数据结构定义了各个分析阶段的输出类型。

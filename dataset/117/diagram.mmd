@@ -1,0 +1,23 @@
+flowchart TD
+  A[Start] --> B[Load .env]
+  B --> C[Init RPC, Yellowstone, ZeroSlot, Wallet]
+  C --> D[Start Blockhash Processor]
+  D --> E[Init Token Account Cache]
+  E --> F[Start Cache Maintenance]
+  F --> G[Init Selling Engine]
+  G --> H{Run monitors in parallel}
+  H --> I[Target Wallet Monitoring]
+  H --> J[DEX Monitoring]
+  I --> K[Parse txs/logs]
+  J --> K
+  K --> L{Protocol match}
+  L --> |PumpFun| M[Execute swap]
+  L --> |PumpSwap| N[Notify only]
+  M --> O[Update selling / copy-sell]
+  O --> P[Dynamic trailing / TP / SL]
+  P --> Q[Jupiter sell path]
+  K --> R[Update 20-slot time series]
+  R --> S{Bottom detected?}
+  S --> |Yes| M
+  S --> |No| H
+  N --> Q

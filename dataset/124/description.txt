@@ -1,0 +1,48 @@
+## 图类型与用途
+这是一个流程图，描述了 `fastrender` 渲染引擎的渲染流水线，从 HTML 和 CSS 输入到最终像素输出的过程。该图在仓库中的作用是展示渲染过程的各个阶段及其依赖关系和数据转换，属于 high-level 的 overview。
+
+## 图的整体布局
+图整体采用从左到右的布局。分为四个主要阶段，每个阶段都包含若干处理步骤，最终生成像素图。
+
+## 分组/子图/阶段说明
+图中包含四个显式子图，分别对应渲染流程的四个阶段：
+- **Parse**：解析 HTML 和 CSS 资源。
+- **Style**：将 CSS 样式应用到 DOM 树。
+- **Layout**：根据样式计算结果构建盒模型树。
+- **Paint**：将盒模型树转换为显示列表并最终生成像素图。
+
+## 节点逐项说明
+- **HTML bytes**：原始的 HTML 字节流，作为渲染的起始输入。
+- **DOM tree**：HTML 解析后生成的文档对象模型树，代表了 HTML 的结构化表示。
+- **CSS bytes**：原始的 CSS 字节流，包含样式信息。
+- **Stylesheet collection**：CSS 解析后生成的样式表集合，包含了 CSS 规则。
+- **Styled tree**：经过样式计算后的树，将 CSS 规则应用到 DOM 树上，但尚未计算具体数值。
+- **Computed values**：计算后的样式值，包含了所有元素的最终样式属性值，例如字体大小、颜色、边距等。
+- **Box tree**：盒模型树，根据计算后的样式值，将每个元素转换为一个盒模型对象。根据 README，box tree 与 DOM 不是 1:1 对应。
+- **Fragment tree**：片段树，对盒模型树进行进一步处理，例如处理 `display: contents` 和匿名盒子的创建。
+- **Display list**：显示列表，包含了绘制指令的序列，描述了如何将元素绘制到屏幕上。
+- **Pixmap**：像素图，最终渲染结果，代表了屏幕上的像素数据。
+
+## 连线、分支与汇聚关系
+- `HTML bytes -> DOM tree`：HTML 字节流被解析成 DOM 树。
+- `CSS bytes -> Stylesheet collection`：CSS 字节流被解析成样式表集合。
+- `DOM tree -> Styled tree`：DOM 树作为样式计算的输入。
+- `Stylesheet collection -> Styled tree`：样式表集合作为样式计算的输入。
+- `Styled tree -- cascade + inherit --> Computed values`：通过级联和继承计算出样式值。
+- `Computed values -> Box tree`：计算后的样式值用于构建盒模型树。
+- `Box tree -- anonymous wrappers --> Fragment tree`：盒模型树经过匿名盒子包装等处理，生成片段树。
+- `Fragment tree -> Display list`：片段树被转换为显示列表。
+- `Display list -- stacking order --> Pixmap`：显示列表根据堆叠顺序生成最终的像素图。
+
+## 仓库语境与术语解释
+- **DOM tree**：文档对象模型树，是 HTML 文档的结构化表示，位于 `src/dom.rs`。
+- **CSS**：层叠样式表，用于控制网页的样式和布局，相关代码位于 `src/css/` 目录。
+- **Box tree**：盒模型树，是布局的基础，相关代码位于 `src/tree/box_tree.rs`。
+- **Layout**：布局阶段，负责计算元素在屏幕上的位置和大小，相关代码位于 `src/layout/` 目录。
+- **Paint**：绘制阶段，负责将元素绘制到屏幕上，相关代码位于 `src/paint/` 目录。
+- **Stacking order**：堆叠顺序，决定了元素在 z 轴上的显示顺序，相关代码位于 `src/paint/stacking.rs`。
+- **Cascade**：级联，CSS 规则的应用过程，根据优先级和来源确定最终样式，相关代码位于 `src/style/cascade.rs`。
+- **Immutable tree**：每个阶段都产生一个不可变的树，供下一个阶段使用。这种分离允许缓存，例如只修改 CSS 可以重新级联而无需重新解析 HTML。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+渲染流程从解析 HTML 和 CSS 字节流开始，分别生成 DOM 树和样式表集合。然后，样式系统将 CSS 规则应用到 DOM 树上，计算出每个元素的最终样式值，生成 Styled tree 和 Computed values。接下来，布局阶段根据计算后的样式值构建盒模型树，并进行进一步处理，生成片段树。最后，绘制阶段将片段树转换为显示列表，并根据堆叠顺序生成最终的像素图，完成渲染过程。其中，样式计算（cascade + inherit）和匿名盒子包装是两个关键的中间环节。每个阶段都产生一个不可变的树，这种分离允许缓存。

@@ -1,0 +1,60 @@
+graph LR
+  %% Frontend
+  subgraph Frontend
+    Chat["/chat - Chat UI + charts"]
+    Insights["/insights - Graph tools + calculators"]
+    Map["/map - Leaflet map"]
+  end
+
+  %% Backend
+  subgraph Backend
+    ChatAPI["POST /api/chat"]
+    RateAPI["POST /api/chat/rate"]
+    PropsAPI["GET /api/properties"]
+    ByIdsAPI["GET /api/properties/by-ids"]
+    SimAPI["GET /api/graph/similar/:zpid"]
+    ExplAPI["GET /api/graph/explain"]
+    HoodAPI["GET /api/graph/neighborhood/:name"]
+  end
+
+  %% Services
+  subgraph Services
+    Gemini["Google Gemini"]
+    Pinecone["Pinecone Index"]
+    Neo4j["Neo4j Aura"]
+    Mongo["MongoDB Atlas"]
+    Redis["Redis Cache"]
+    Prom["Prometheus"]
+  end
+
+  %% Ingestion
+  subgraph Ingestion
+    Clean["cleanProperties.ts"]
+    Upsert["upsertProperties.ts"]
+    IngestGraph["ingestNeo4j.ts"]
+  end
+
+  %% Frontend → Backend
+  Chat --> ChatAPI
+  Chat --> RateAPI
+  Insights --> SimAPI
+  Insights --> ExplAPI
+  Insights --> HoodAPI
+  Map --> PropsAPI
+  Map --> ByIdsAPI
+
+  %% Backend → Services
+  ChatAPI --> Gemini
+  ChatAPI --> Pinecone
+  ChatAPI -. optional .-> Neo4j
+  PropsAPI --> Pinecone
+  ByIdsAPI --> Pinecone
+  ByIdsAPI --> Mongo
+  SimAPI --> Neo4j
+  ExplAPI --> Neo4j
+  HoodAPI --> Neo4j
+
+  %% Ingestion → Stores
+  Clean --> Mongo
+  Upsert --> Pinecone
+  IngestGraph --> Neo4j

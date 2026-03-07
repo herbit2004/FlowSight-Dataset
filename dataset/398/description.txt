@@ -1,0 +1,46 @@
+## 图类型与用途
+这是一个流程图，描述了 `feishu-doc-tools` 工具套件的架构设计，特别是关于文档上传和转换的流程。它展示了如何将不同格式的文档转换并上传到飞书平台，以及如何从飞书平台导出文档。该图在 README 中作为“架构设计”的一部分，用于概括系统架构。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是输入层，中间是转换层和 API 层，底部是输出层。流程从输入层开始，经过转换和 API 处理，最终到达输出层。
+
+## 分组/子图/阶段说明
+图中显式地分为四个子图：输入层、转换层、API 层和输出层。
+
+## 节点逐项说明
+- **Markdown 文件**：作为工具的输入，指单个 Markdown 格式的文档文件。
+- **文件夹**：作为工具的输入，指包含多个文档的文件夹，工具可以批量处理这些文件。
+- **Wiki 空间**：作为工具的输入，指飞书 Wiki 知识库空间，工具可以从这里读取内容。
+- **md_to_feishu.py Markdown → Blocks**：Python 脚本，负责将 Markdown 文件转换为飞书文档的 Blocks 格式。Blocks 是飞书文档 API 使用的一种结构化数据格式，用于描述文档的内容和样式。
+- **feishu_md_uploader.py JSON 转换器**：Python 脚本，负责将转换后的 Blocks 格式数据转换为飞书 API 可以接受的 JSON 格式。
+- **feishu_api_client.py 飞书 Open API**：Python 脚本，作为飞书开放 API 的客户端，负责与飞书服务器进行通信，执行文档的创建、更新、下载等操作。根据 `lib/feishu_api_client.py`，该模块提供对飞书 Open API 的直接访问，无需通过 MCP。
+- **wiki_operations.py Wiki 操作库**：Python 脚本，提供针对飞书 Wiki 知识库的特定操作，例如批量上传、下载 Wiki 文档等。根据 `lib/wiki_operations.py`，该模块提供 Wiki 相关脚本的通用操作，例如空间和路径解析。
+- **飞云文档**：工具的输出，指上传到飞书平台的普通文档。
+- **Wiki 知识库**：工具的输出，指上传到飞书 Wiki 知识库的文档。
+- **多维表格**：工具的输出，指通过工具将表格数据转换为飞书的多维表格（Bitable）。
+- **Markdown 文件**：工具的输出，指从飞书文档下载并导出的 Markdown 文件。
+
+## 连线、分支与汇聚关系
+- `Markdown 文件 -> md_to_feishu.py Markdown → Blocks`：单个 Markdown 文件被 `md_to_feishu.py` 脚本处理，转换为飞书 Blocks 格式。
+- `文件夹 -> md_to_feishu.py Markdown → Blocks`：文件夹中的 Markdown 文件被 `md_to_feishu.py` 脚本批量处理，转换为飞书 Blocks 格式。
+- `Wiki 空间 -> wiki_operations.py Wiki 操作库`：Wiki 空间的内容由 `wiki_operations.py` 脚本处理，用于上传或下载 Wiki 文档。
+- `md_to_feishu.py Markdown → Blocks -> feishu_md_uploader.py JSON 转换器`：`md_to_feishu.py` 转换后的 Blocks 格式数据被 `feishu_md_uploader.py` 脚本转换为 JSON 格式。
+- `feishu_md_uploader.py JSON 转换器 -> feishu_api_client.py 飞书 Open API`：JSON 格式的数据通过 `feishu_api_client.py` 脚本与飞书 API 进行交互。
+- `wiki_operations.py Wiki 操作库 -> feishu_api_client.py 飞书 Open API`：Wiki 操作库通过 `feishu_api_client.py` 脚本与飞书 API 进行交互。
+- `feishu_api_client.py 飞书 Open API -> 飞云文档`：通过飞书 API 上传文档到飞云文档。
+- `feishu_api_client.py 飞书 Open API -> Wiki 知识库`：通过飞书 API 上传文档到 Wiki 知识库。
+- `feishu_api_client.py 飞书 Open API -> 多维表格`：通过飞书 API 将数据转换为多维表格。
+- `feishu_api_client.py 飞书 Open API -> Markdown 文件`：通过飞书 API 下载文档为 Markdown 文件。
+
+## 仓库语境与术语解释
+- **Markdown 文件**：一种轻量级标记语言，用于创建格式化的文本。
+- **飞书 Blocks**：飞书文档 API 使用的一种结构化数据格式，用于描述文档的内容和样式。
+- **md_to_feishu.py**：根据 `docs/design/DESIGN.md`，该脚本负责解析 Markdown 文件，并将其映射为飞书 blocks 格式。
+- **feishu_md_uploader.py**：根据 `docs/design/DESIGN.md`，该脚本读取 JSON 结果，准备 MCP 调用参数，并生成 AI 指令文档。
+- **feishu_api_client.py**：飞书 Open API 的客户端，用于与飞书服务器进行通信。根据 `lib/feishu_api_client.py`，该模块支持多种认证模式，包括 tenant 模式和 user 模式。
+- **wiki_operations.py**：提供针对飞书 Wiki 知识库的特定操作的库。
+- **多维表格 (Bitable)**：飞书平台提供的一种表格数据存储和管理方式。
+- **MCP (Managed Content Platform)**：图中未明确提及，但根据 `README.md` 的“功能对比”部分，`feishu-doc-tools` 与 `Feishu-MCP` 是互补的工具，前者专注于批量操作和高性能，后者专注于 AI 辅助编辑和智能内容修改。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 `feishu-doc-tools` 工具套件的架构，展示了如何将 Markdown 文件、文件夹和 Wiki 空间的内容转换为飞书文档、Wiki 知识库和多维表格，以及如何从飞书导出文档。流程从输入层开始，经过 `md_to_feishu.py` 和 `feishu_md_uploader.py` 的转换，再通过 `feishu_api_client.py` 与飞书 API 交互，最终输出到飞书文档、Wiki 知识库和多维表格。`wiki_operations.py` 提供了 Wiki 相关的操作，而 `feishu_api_client.py` 负责与飞书 API 进行通信。该工具套件的核心优势在于零上下文占用和直连 API 模式。

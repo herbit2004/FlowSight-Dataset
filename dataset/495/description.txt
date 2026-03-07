@@ -1,0 +1,54 @@
+## 图类型与用途
+这是一个架构图，展示了 Apache HugeGraph 的整体架构，包括客户端层、服务器层和存储层。该图旨在说明 HugeGraph 的客户端如何通过服务器层与不同的存储后端进行交互，并区分了单机模式、分布式模式和旧版本后端。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是客户端层，中间是服务器层，底部是存储层，存储层又细分为单机模式、分布式模式和旧版本后端。
+
+## 分组/子图/阶段说明
+图中包含 Clients (Client Layer)、Server (HugeGraph Server)、Storage (Storage Layer) 三个主要 subgraph。
+- **Client Layer**：表示客户端层，包含与 HugeGraph 交互的各种客户端工具。
+- **HugeGraph Server**：表示服务器层，包含 REST API、Gremlin Server 和 Cypher Engine。
+- **Storage Layer**：表示存储层，包含单机模式、分布式模式和旧版本后端。
+- **Standalone Mode**：单机模式，使用嵌入式的 RocksDB 数据库。
+- **Distributed Mode**：分布式模式，使用 HugeGraph-PD 和 HugeGraph-Store。
+- **Legacy Backends**：旧版本后端，包括 MySQL、PostgreSQL、Cassandra 和 HBase。
+
+## 节点逐项说明
+- **GC (Gremlin Console)**：Gremlin 控制台，用于与图数据库进行交互。
+- **REST (REST Client)**：REST 客户端，通过 REST API 与图数据库进行交互。
+- **CYPHER (Cypher Client)**：Cypher 客户端，通过 Cypher 查询语言与图数据库进行交互。
+- **SDK (SDK/Tools)**：软件开发工具包和相关工具，用于开发与图数据库交互的应用程序。
+- **API (REST API)**：REST API 接口，基于 Jersey 3 实现。
+- **GS (Gremlin Server)**：Gremlin 服务器，基于 TinkerPop 3.5 实现。
+- **CS (Cypher Engine)**：Cypher 引擎，基于 OpenCypher 实现。
+- **CORE (Graph Engine)**：图引擎，是 HugeGraph 的核心组件，负责图数据的存储和查询。
+- **ROCKS (RocksDB)**：嵌入式的 RocksDB 数据库，用于单机模式下的数据存储。
+- **PD (HugeGraph-PD)**：HugeGraph 的元数据管理服务，基于 Raft 协议实现，端口为 8620/8686。
+- **STORE (HugeGraph-Store)**：HugeGraph 的数据存储服务，基于 Raft 协议和 RocksDB 实现，端口为 8520。
+- **MYSQL (MySQL)**：MySQL 数据库，作为旧版本的存储后端。
+- **PG (PostgreSQL)**：PostgreSQL 数据库，作为旧版本的存储后端。
+- **CASS (Cassandra)**：Cassandra 数据库，作为旧版本的存储后端。
+- **HBASE (HBase, ≤v1.7)**：HBase 数据库，作为旧版本的存储后端（<=v1.7）。
+
+## 连线、分支与汇聚关系
+- `Clients -> Server`：客户端层通过各种客户端与服务器层进行交互。
+- `API -> CORE`：REST API 与核心图引擎进行交互。
+- `GS -> CORE`：Gremlin Server 与核心图引擎进行交互。
+- `CS -> CORE`：Cypher Engine 与核心图引擎进行交互。
+- `CORE -> ROCKS`：在单机模式下，核心图引擎与 RocksDB 进行交互。
+- `CORE -> PD`：在分布式模式下，核心图引擎与 HugeGraph-PD 进行交互。
+- `PD <--> STORE`：HugeGraph-PD 和 HugeGraph-Store 相互交互，形成双向连接。
+- `CORE -.-> Legacy`：核心图引擎与旧版本后端进行交互，虚线表示这是一个可选的连接。
+
+## 仓库语境与术语解释
+- **Client Layer**：客户端层，包含 Gremlin Console、REST Client、Cypher Client 和 SDK/Tools，用于与 HugeGraph 交互。
+- **HugeGraph Server**：服务器层，提供 REST API、Gremlin Server 和 Cypher Engine，是 HugeGraph 的核心组件。
+- **Graph Engine (hugegraph-core)**：HugeGraph 的核心图引擎，负责图数据的存储和查询，参见 `hugegraph-server` 模块。
+- **HugeGraph-PD**：Placement Driver，负责分布式模式下的元数据管理和服务发现，基于 Raft 协议实现，参见 `hugegraph-pd` 模块。
+- **HugeGraph-Store**：分布式存储服务，基于 Raft 协议和 RocksDB 实现，用于分布式模式下的数据存储，参见 `hugegraph-store` 模块。
+- **RocksDB**：嵌入式数据库，用于单机模式下的数据存储。
+- **Gremlin**：一种图遍历语言，用于查询和操作图数据。
+- **Cypher**：另一种图查询语言，用于查询和操作图数据。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Apache HugeGraph 的整体架构，从客户端层开始，客户端通过 REST API、Gremlin Server 或 Cypher Engine 与服务器层的核心图引擎进行交互。存储层根据部署模式选择不同的后端：单机模式下使用 RocksDB，分布式模式下使用 HugeGraph-PD 和 HugeGraph-Store，旧版本则支持 MySQL、PostgreSQL、Cassandra 和 HBase。HugeGraph-PD 负责元数据管理和服务发现，而 HugeGraph-Store 负责实际的数据存储。

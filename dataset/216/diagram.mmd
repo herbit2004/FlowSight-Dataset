@@ -1,0 +1,30 @@
+flowchart TD
+    A[Component Render] --> B{Component Type?}
+
+    B -->|Function Component| C[Setup Hook Context]
+    B -->|Class Component| D[Call Lifecycle Methods]
+
+    C --> E[renderWithHooks]
+    E --> F[Set Current Dispatcher]
+    F --> G[Execute Component Function]
+    G --> H[Process Hook Calls]
+
+    H --> I{Hook Type?}
+    I -->|useState| J[Mount/Update State]
+    I -->|useEffect| K[Schedule Effect]
+    I -->|useCallback| L[Memoize Callback]
+    I -->|useMemo| M[Memoize Value]
+
+    J --> N[Return JSX]
+    K --> N
+    L --> N
+    M --> N
+
+    D --> O[componentDidMount/Update]
+    O --> N
+
+    N --> P[Reconcile Children]
+    P --> Q[Continue Fiber Tree]
+
+    style C fill:#61dafb
+    style H fill:#4ecdc4

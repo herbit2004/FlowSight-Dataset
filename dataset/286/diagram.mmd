@@ -1,0 +1,88 @@
+flowchart LR
+    %% Pipe and stuff nodes within controller subgraphs
+    subgraph sg_n_8b2136e3fe["batch_analyze_cvs_for_job_offer"]
+        subgraph sg_n_91d5d6dc7c["prepare_job_offer"]
+            n_fde22777cb["analyze_job_requirements"]
+            s_f9f703fbb4(["job_requirements<br/>JobRequirements"]):::stuff
+            n_b8469c838f["extract_one_job_offer"]
+            s_d998350046(["job_offer_pages<br/>Page"]):::stuff
+        end
+        subgraph sg_n_f8d5afb7cd["process_cv_batch"]
+            subgraph sg_n_6e53e16369["process_cv"]
+                n_c18aded200["analyze_match"]
+                s_5c911f7e54(["match_analysis<br/>CandidateMatch"]):::stuff
+                n_a7ed00ac24["analyze_one_cv"]
+                s_c5ae714e89(["candidate_profile<br/>CandidateProfile"]):::stuff
+                n_d24f39aa60["extract_one_cv"]
+                s_427beb5195(["cv_pdf<br/>Document"]):::stuff
+                s_f1f80289df(["cv_pages<br/>Page"]):::stuff
+            end
+            subgraph sg_n_2cfb7a32c8["process_cv"]
+                n_f6a25d1769["analyze_match"]
+                s_ea99eee6ed(["match_analysis<br/>CandidateMatch"]):::stuff
+                n_f48b73fbee["analyze_one_cv"]
+                s_e1ffee913e(["candidate_profile<br/>CandidateProfile"]):::stuff
+                n_d16f2fe381["extract_one_cv"]
+                s_041bb18fb4(["cv_pdf<br/>Document"]):::stuff
+                s_5fbba7194a(["cv_pages<br/>Page"]):::stuff
+            end
+            subgraph sg_n_08a7186be9["process_cv"]
+                n_937e750ea4["analyze_match"]
+                s_bb41a103f0(["match_analysis<br/>CandidateMatch"]):::stuff
+                n_786a2969d5["analyze_one_cv"]
+                s_c47fe821d7(["candidate_profile<br/>CandidateProfile"]):::stuff
+                n_38f0cfd11c["extract_one_cv"]
+                s_2634ece93d(["cv_pdf<br/>Document"]):::stuff
+                s_44e253b325(["cv_pages<br/>Page"]):::stuff
+            end
+        end
+    end
+
+    %% Pipeline input stuff nodes (no producer)
+    s_9b7e74ac51(["job_offer_pdf<br/>Document"]):::stuff
+
+    %% Data flow edges: producer -> stuff -> consumer
+    n_a7ed00ac24 --> s_c5ae714e89
+    n_b8469c838f --> s_d998350046
+    n_f48b73fbee --> s_e1ffee913e
+    n_d16f2fe381 --> s_5fbba7194a
+    n_fde22777cb --> s_f9f703fbb4
+    n_d24f39aa60 --> s_f1f80289df
+    n_38f0cfd11c --> s_44e253b325
+    n_786a2969d5 --> s_c47fe821d7
+    n_c18aded200 --> s_5c911f7e54
+    n_f6a25d1769 --> s_ea99eee6ed
+    n_937e750ea4 --> s_bb41a103f0
+    s_c5ae714e89 --> n_c18aded200
+    s_9b7e74ac51 --> n_b8469c838f
+    s_d998350046 --> n_fde22777cb
+    s_e1ffee913e --> n_f6a25d1769
+    s_427beb5195 --> n_d24f39aa60
+    s_041bb18fb4 --> n_d16f2fe381
+    s_2634ece93d --> n_38f0cfd11c
+    s_5fbba7194a --> n_f48b73fbee
+    s_f9f703fbb4 --> n_c18aded200
+    s_f9f703fbb4 --> n_f6a25d1769
+    s_f9f703fbb4 --> n_937e750ea4
+    s_f1f80289df --> n_a7ed00ac24
+    s_44e253b325 --> n_786a2969d5
+    s_c47fe821d7 --> n_937e750ea4
+
+    %% Batch edges: list-item relationships
+    s_52d84618d0(["match_analyses<br/>CandidateMatch"]):::stuff
+    s_5c911f7e54 -."[0]".-> s_52d84618d0
+    s_ea99eee6ed -."[1]".-> s_52d84618d0
+    s_bb41a103f0 -."[2]".-> s_52d84618d0
+
+    %% Style definitions
+    classDef failed fill:#ffcccc,stroke:#cc0000
+    classDef stuff fill:#fff3e6,stroke:#cc6600,stroke-width:2px
+    classDef controller fill:#e6f3ff,stroke:#0066cc
+
+    %% Subgraph depth-based coloring
+    style sg_n_08a7186be9 fill:#fffde6
+    style sg_n_2cfb7a32c8 fill:#fffde6
+    style sg_n_6e53e16369 fill:#fffde6
+    style sg_n_8b2136e3fe fill:#e6f3ff
+    style sg_n_91d5d6dc7c fill:#e6ffe6
+    style sg_n_f8d5afb7cd fill:#e6ffe6

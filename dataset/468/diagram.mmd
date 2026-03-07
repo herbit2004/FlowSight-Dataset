@@ -1,0 +1,28 @@
+flowchart TD
+    subgraph "Tier 0 - Edge"
+        cloudfront([CloudFront CDN])
+    end
+    subgraph "Tier 1 - Ingress"
+        alb([Application Load Balancer])
+    end
+    subgraph "Tier 2 - Compute"
+        ecs_api[API Service]
+        ecs_user[User Service]
+        ecs_order[Order Service]
+        sqs[/SQS Event Queue/]
+    end
+    subgraph "Tier 3 - Data"
+        elasticache[(ElastiCache Redis)]
+        rds[(RDS PostgreSQL)]
+    end
+
+    cloudfront -->|HTTPS| alb
+    alb -->|/api/*| ecs_api
+    alb -->|/users/*| ecs_user
+    alb -->|/orders/*| ecs_order
+    ecs_api --> rds
+    ecs_user --> rds
+    ecs_order --> rds
+    ecs_api --> elasticache
+    ecs_order -->|Publish events| sqs
+    ecs_api -->|Consume events| sqs

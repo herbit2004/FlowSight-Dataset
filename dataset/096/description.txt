@@ -1,0 +1,46 @@
+## 图类型与用途
+这是一个流程图，描述了 CappyChat 应用的多设备同步架构。它展示了用户在客户端的操作如何通过本地存储、同步队列、云数据库和实时事件，最终同步到其他设备或标签页，并更新 UI。该图在 README.md 中用于概括 CappyChat 的关键特性之一：Real-time Sync。
+
+## 图的整体布局
+图整体采用从上到下的布局，分为三个主要层次：Client Layer、Sync Layer 和 Multi-Device。流程从顶部的用户操作开始，经过中间的同步层，最终到达底部的其他设备/标签页的 UI 更新。
+
+## 分组/子图/阶段说明
+图中包含三个显式子图：
+- **Client Layer**：描述客户端的操作和本地存储，包括用户操作、本地存储、UI 立即更新和后台同步队列。
+- **Sync Layer**：描述数据同步到云端的流程，包括 Appwrite 云数据库、实时事件和 WebSocket 广播。
+- **Multi-Device**：描述数据同步到其他设备/标签页的流程，包括其他设备/标签页、本地更新和 UI 刷新。
+
+## 节点逐项说明
+- **User Action**：用户在客户端执行的操作，例如发送消息。
+- **Local Storage - IndexedDB**：客户端本地存储，使用 IndexedDB 数据库。用于缓存用户操作，实现离线可用性和快速响应。根据 `lib/localDB.ts`，IndexedDB 用于快速本地存储，并与 Appwrite 自动同步。
+- **Immediate UI Update**：用户操作后，UI 立即更新，提供即时反馈。
+- **Background Sync Queue**：后台同步队列，用于异步地将本地存储的数据同步到云端。
+- **Appwrite Cloud Database**：Appwrite 云数据库，用于存储用户数据，作为数据同步的中心枢纽。根据 `lib/appwriteDB.ts`，Appwrite 用于集中式数据库服务，实现更好的同步。
+- **Real-time Events**：Appwrite 提供的实时事件机制，当数据库发生更改时，触发事件。根据 `lib/appwriteRealtime.ts`，Appwrite Realtime 用于提供 Appwrite 事件的实时订阅，以实现数据同步。
+- **WebSocket Broadcast**：WebSocket 广播，将实时事件广播到所有连接的客户端。
+- **Other Devices/Tabs**：其他设备或标签页，代表用户在不同设备或浏览器标签页上运行的 CappyChat 应用实例。
+- **Local Update**：其他设备/标签页接收到 WebSocket 广播后，更新本地存储。
+- **UI Refresh**：其他设备/标签页的 UI 根据本地存储的更新进行刷新。
+
+## 连线、分支与汇聚关系
+- `User Action -> Local Storage - IndexedDB`：用户操作后，数据首先存储到本地存储。
+- `Local Storage - IndexedDB -> Immediate UI Update`：本地存储立即更新 UI。
+- `Local Storage - IndexedDB -> Background Sync Queue`：本地存储同时将数据添加到后台同步队列。
+- `Background Sync Queue -> Appwrite Cloud Database`：后台同步队列将数据异步同步到 Appwrite 云数据库。
+- `Appwrite Cloud Database -> Real-time Events`：Appwrite 云数据库的更改触发实时事件。
+- `Real-time Events -> WebSocket Broadcast`：实时事件通过 WebSocket 广播发送到所有连接的客户端。
+- `WebSocket Broadcast -> Other Devices/Tabs`：WebSocket 广播发送到其他设备/标签页。
+- `Other Devices/Tabs -> Local Update`：其他设备/标签页接收到广播后，更新本地存储。
+- `Local Update -> UI Refresh`：本地存储更新触发 UI 刷新。
+
+## 仓库语境与术语解释
+- **CappyChat**：一个 AI 聊天平台，旨在提供高性能、可扩展性和无缝用户体验。
+- **IndexedDB**：客户端本地存储数据库，用于缓存用户操作，实现离线可用性和快速响应。
+- **Appwrite**：一个开源的后端即服务平台，用于存储用户数据和提供实时事件机制。`lib/appwrite.ts` 定义了 Appwrite 客户端和服务初始化。
+- **Real-time Sync**：CappyChat 的关键特性，确保数据在所有设备上实时同步。
+- **WebSocket**：一种通信协议，用于在客户端和服务器之间建立持久连接，实现实时数据传输。
+- **Local-First Architecture**：一种架构模式，用户操作首先在本地进行，提供快速响应和离线可用性。README.md 提到 CappyChat 采用 local-first 架构。
+- **UI (User Interface)**：用户与应用程序交互的界面。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+CappyChat 的多设备同步架构从用户操作开始，数据首先存储在本地 IndexedDB，并立即更新 UI。同时，数据通过后台同步队列异步同步到 Appwrite 云数据库。Appwrite 触发实时事件，通过 WebSocket 广播到其他设备/标签页，更新本地存储并刷新 UI。核心流程是“用户操作 -> 本地存储 -> 云端同步 -> 实时广播 -> 多设备更新”，其中 Appwrite 云数据库和 WebSocket 广播是关键的中间环节，保证了数据在不同设备上的实时同步和 UI 的一致性。

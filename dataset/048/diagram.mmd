@@ -1,0 +1,23 @@
+graph TD
+    subgraph Wave0["🌊 Infra"]
+        subgraph Wave0Stage0["🏗 us-east-1"]
+            StackInfra_us_east_1_Iam["📦 Iam [1]"]
+            StackInfra_us_east_1_Networking["📦 Networking [1]"]
+        end
+        subgraph Wave0Stage1["🏗 eu-west-1"]
+            StackInfra_eu_west_1_Networking["📦 Networking [1]"]
+        end
+    end
+    subgraph Wave1["🌊 Application"]
+        subgraph Wave1Stage0["🏗 us-east-1"]
+            StackApplication_us_east_1_AppA["📦 AppA [1]"]
+            StackApplication_us_east_1_AppB["📦 AppB [2]"]
+        end
+        subgraph Wave1Stage1["🏗 eu-west-1"]
+            StackApplication_eu_west_1_AppA["📦 AppA [1]"]
+            StackApplication_eu_west_1_AppB["📦 AppB [2]"]
+        end
+    end
+    StackApplication_us_east_1_AppA --> StackApplication_us_east_1_AppB
+    StackApplication_eu_west_1_AppA --> StackApplication_eu_west_1_AppB
+    Wave0 --> Wave1

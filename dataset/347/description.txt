@@ -1,0 +1,48 @@
+## 图类型与用途
+这是一个系统架构图，用于展示 SG Cars Trends 项目的整体架构和数据流，描述了各个组件以及它们如何协同工作，以提供新加坡汽车注册统计和 COE 数据的跟踪与分析服务。该图在 README.md 中作为系统概览的一部分。
+
+## 图的整体布局
+图采用从左到右的布局。左侧是前端和工作流，中间是数据层、外部 API 和社交平台，右侧是基础设施。整体呈现一个数据从外部获取，经过处理和分析，最终通过 Web 应用和社交平台展示的流程。
+
+## 分组/子图/阶段说明
+图中包含五个子图，分别代表不同的系统组成部分：
+- **Frontend & Workflows**：包含 Web 应用、博客文章、数据工作流和 AI SDK，负责用户交互、数据处理和内容生成。
+- **Data Layer**：包含 PostgreSQL 数据库和 Redis 缓存，负责数据存储和加速访问。
+- **External APIs**：包含 LTA DataMall，负责从外部数据源获取数据。
+- **Social Platforms**：包含 Discord, LinkedIn, Twitter, Telegram，负责自动发布信息。
+- **Infrastructure**：包含 Vercel，负责部署和托管应用程序。
+
+## 节点逐项说明
+- **WEB (Web App Next.js 16)**：使用 Next.js 16 构建的前端应用，是用户与系统交互的主要界面。根据 README，它还托管数据更新工作流。
+- **BLOG (Blog Posts AI Generated)**：由 AI 生成的博客文章，提供市场洞察。
+- **WORKFLOWS (Data Workflows Vercel WDK)**：基于 Vercel WDK 的数据处理流程，负责从外部数据源获取和处理数据。README 指出，它与 Web 应用程序集成。
+- **LLM (Vercel AI SDK Blog Generation)**：用于生成博客文章的 AI 工具。
+- **DB (PostgreSQL Neon)**：使用 Neon 提供的 PostgreSQL 数据库，用于存储系统数据。
+- **REDIS (Redis Cache Upstash)**：使用 Upstash 提供的 Redis 缓存，用于加速数据访问。
+- **LTA (LTA DataMall Gov Data)**：新加坡陆路交通管理局 (LTA) 的数据 API，提供汽车注册和 COE 数据。
+- **DISCORD, LINKEDIN, TWITTER, TELEGRAM**：用于自动发布信息的社交平台。
+- **VERCEL (Vercel Edge Network)**：用于部署和托管应用程序的基础设施。
+
+## 连线、分支与汇聚关系
+- `WEB --> WORKFLOWS`：Web 应用程序触发数据工作流。
+- `WEB --> DB`：Web 应用程序从 PostgreSQL 数据库读取和写入数据。
+- `WEB --> REDIS`：Web 应用程序使用 Redis 缓存来加速数据访问。
+- `WORKFLOWS --> LTA`：数据工作流从 LTA DataMall 获取数据。
+- `WORKFLOWS --> DB`：数据工作流将处理后的数据存储到 PostgreSQL 数据库。
+- `WORKFLOWS --> LLM`：数据工作流触发 AI 博客文章生成。
+- `LLM --> BLOG`：AI SDK 生成博客文章。
+- `WORKFLOWS --> DISCORD, LINKEDIN, TWITTER, TELEGRAM`：数据工作流将信息发布到社交平台，形成汇聚关系。
+- `WEB --> VERCEL`：Web 应用程序部署在 Vercel 上。
+
+## 仓库语境与术语解释
+- **Next.js 16**：用于构建 Web 应用程序的 React 框架版本。README 指出使用了 Cache Components 和 co-located route components。
+- **Vercel WDK**：Vercel Workflow Definition Kit，用于定义和管理数据工作流。
+- **Vercel AI SDK**：Vercel 提供的 AI 工具包，用于集成 AI 功能，例如博客文章生成。
+- **LTA DataMall**：新加坡陆路交通管理局 (LTA) 的开放数据平台，提供各种交通相关数据。
+- **PostgreSQL (Neon)**：使用 Neon 提供的 Serverless PostgreSQL 数据库服务。
+- **Redis (Upstash)**：使用 Upstash 提供的 Redis 缓存服务。
+- **Data Workflows (apps/web/src/app/api/workflows/)**: 根据 `apps/web/src/app/api/workflows/` 目录，数据工作流通过 API 路由实现，例如 `cars` 和 `coe` 工作流。
+- **Blog Generation (packages/ai/)**: 根据 `packages/ai/CLAUDE.md`，博客生成使用 Vercel AI SDK 和 Google Gemini，并进行结构化输出验证。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+SG Cars Trends 系统架构从 Web 应用开始，通过 Vercel WDK 数据工作流从 LTA DataMall 获取数据，并将数据存储在 PostgreSQL 数据库和 Redis 缓存中。数据工作流还触发 Vercel AI SDK 生成博客文章，并将信息发布到多个社交平台。Web 应用部署在 Vercel 基础设施上。核心流程是“数据获取 -> 数据处理 -> 数据存储 -> 内容生成 -> 信息发布”，其中数据工作流和 AI 博客生成是关键环节。

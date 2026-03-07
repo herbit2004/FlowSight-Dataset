@@ -1,0 +1,39 @@
+flowchart LR
+    subgraph Client
+        A[Browser<br/>React + SWR]
+    end
+
+    subgraph CDN
+        B[CloudFront CDN]
+    end
+
+    subgraph Storage
+        C[S3 Bucket<br/>Static Export]
+    end
+
+    subgraph API
+        D[API Gateway]
+        E[Lambda - Express API]
+    end
+
+    subgraph DB
+        F[MongoDB Atlas]
+    end
+
+    subgraph AI
+        G[OpenAI API]
+    end
+
+    A -->|HTTPS| B
+    B -->|serve static| C
+    A -->|API calls| D
+    D --> E
+    E --> F
+    E --> G
+
+    style Client  fill:#D0E8FF,stroke:#333
+    style CDN     fill:#D0FFD8,stroke:#333
+    style Storage fill:#FFF7D0,stroke:#333
+    style API     fill:#FFD0D8,stroke:#333
+    style DB      fill:#E0E0E0,stroke:#333
+    style AI      fill:#FFD0FF,stroke:#333

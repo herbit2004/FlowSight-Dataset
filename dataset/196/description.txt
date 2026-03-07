@@ -1,0 +1,47 @@
+## 图类型与用途
+这是一个流程图，描述了 Web App 的所有者通过非浏览器方式访问 Google Apps Script 创建的 Web App 时的访问流程。该图旨在帮助开发者理解在非浏览器环境下访问 Web App 时，授权机制的工作方式，对应 README 中 "3. Owner accesses to Web Apps using Curl, Google Apps Script and so on which don't use browser" 的场景。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是流程的起点，底部是流程的终点，中间是判断和处理过程。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：发起访问、权限校验、结果处理。
+
+## 节点逐项说明
+- **Owner**：Web App 的所有者，作为整个流程的起点。
+- **Curl, Google Apps Script, etc., not using a browser**：所有者使用的非浏览器访问方式，例如使用 Curl 命令、Google Apps Script 脚本等。
+- **Are scopes used in Web App scripts?**：一个判断节点，用于判断 Web App 脚本中是否使用了需要授权的 scopes（权限范围）。
+- **Authorization of scopes with the browser**：如果使用了需要授权的 scopes，则需要通过浏览器进行授权。
+- **Situation 3**：对应文档中描述的“情况3”，即所有者通过非浏览器方式访问，且 Web App 脚本中没有使用需要授权的 scopes。
+- **Access token**：授权后获得的访问令牌（Access Token）。
+- **Situation 1**：对应文档中描述的“情况1”。
+- **Situation 2**：对应文档中描述的“情况2”。
+- **Situation 4**：对应文档中描述的“情况4”。
+- **Situation 5**：对应文档中描述的“情况5”。
+
+## 连线、分支与汇聚关系
+- `Owner -> Curl, Google Apps Script, etc., not using a browser`：所有者通过非浏览器方式访问 Web App。
+- `Curl, Google Apps Script, etc., not using a browser -> Are scopes used in Web App scripts?`：判断 Web App 脚本中是否使用了需要授权的 scopes。
+- `Are scopes used in Web App scripts? -- Yes --> Authorization of scopes with the browser`：如果使用了需要授权的 scopes，则需要通过浏览器进行授权。
+- `Are scopes used in Web App scripts? -- No --> Situation 3`：如果没有使用需要授权的 scopes，则直接进入“情况3”。
+- `Authorization of scopes with the browser -> Access token`：授权后获得访问令牌。
+- `Authorization of scopes with the browser -> Situation 3`：图中可见，但仓库上下文未进一步说明。
+- `Access token -> Situation 1`：获得访问令牌后，可能会进入“情况1”。
+- `Access token -> Situation 2`：获得访问令牌后，可能会进入“情况2”。
+- `Access token -> Situation 4`：获得访问令牌后，可能会进入“情况4”。
+- `Access token -> Situation 5`：获得访问令牌后，可能会进入“情况5”。
+- `Situation 3 -> Situation 1`：图中可见，但仓库上下文未进一步说明。
+- `Situation 3 -> Situation 2`：图中可见，但仓库上下文未进一步说明。
+- `Situation 3 -> Situation 4`：图中可见，但仓库上下文未进一步说明。
+- `Situation 3 -> Situation 5`：图中可见，但仓库上下文未进一步说明。
+
+## 仓库语境与术语解释
+- **Web App**：Google Apps Script 提供的一项功能，可以将服务器端脚本函数转换为可访问的 Web 服务。
+- **Google Apps Script (GAS)**：一种基于云的脚本语言，用于自动化 Google Workspace 中的任务。
+- **Scopes**：指 Web App 脚本访问 Google 服务所需的权限范围。
+- **Access Token**：用于授权访问 Web App 的令牌。
+- **Curl, Google Apps Script, etc.**：指非浏览器访问 Web App 的方式，例如使用 curl 命令或 Google Apps Script 脚本。
+- **Situation 1-5**：README 中 "5 situations for Web Apps" 章节描述了这些情况的具体含义。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Web App 所有者通过非浏览器方式访问 Web App 的流程。流程从所有者发起访问开始，首先判断 Web App 脚本是否使用了需要授权的 scopes。如果使用了，则需要通过浏览器进行授权，获得 Access Token；否则，直接进入“情况3”。获得 Access Token 后，根据具体情况，可能会进入“情况1”、“情况2”、“情况4”或“情况5”。该流程的核心在于权限校验，以及根据校验结果进入不同的处理分支，对应 README 中 "3. Owner accesses to Web Apps using Curl, Google Apps Script and so on which don't use browser" 的场景。

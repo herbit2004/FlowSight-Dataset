@@ -1,0 +1,33 @@
+## 图类型与用途
+这是一个流程图，描述了 Chat Relay 系统如何通过 API 中继服务器和浏览器扩展，将客户端请求转发到各种 Web 聊天界面，并获取 AI 响应。它在仓库中的作用是展示 Chat Relay 系统的架构和数据流。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是客户端，中间是 API 中继服务器和浏览器扩展，底部是 AI 聊天界面。数据流从客户端开始，经过各个组件，最终返回到客户端。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：请求发起、中继处理、响应返回。
+
+## 节点逐项说明
+- **Client / RooCode**：代表客户端，例如 Cline 或 RooCode，它们是发起聊天请求的应用程序。
+- **API Relay Server**：代表 API 中继服务器，它实现了与 OpenAI 兼容的 API 接口，并负责接收客户端的请求、与浏览器扩展通信以及格式化响应。根据 README，API Server 实现了 OpenAI-style `/v1/chat/completions` endpoint。
+- **Browser Extension**：代表浏览器扩展，它负责与聊天界面交互，包括输入文本、点击发送按钮以及捕获 AI 的响应。根据 README，Browser Extension 通过 WebSocket 连接到 API server。
+- **Chat Interface (Gemini / AI Studio / ChatGPT / Claude)**：代表各种 AI 聊天界面，例如 Gemini、AI Studio、ChatGPT 和 Claude，它们是实际提供 AI 服务的平台。
+
+## 连线、分支与汇聚关系
+- `Client / RooCode -> API Relay Server`：客户端通过 HTTP POST 请求 `/chat/completions` 将聊天请求发送到 API 中继服务器。
+- `API Relay Server -> Browser Extension`：API 中继服务器通过 WebSocket 将消息发送到浏览器扩展。
+- `Browser Extension -> Chat Interface (Gemini / AI Studio / ChatGPT / Claude)`：浏览器扩展模拟用户输入，将文本输入到聊天界面并点击发送按钮。
+- `Chat Interface (Gemini / AI Studio / ChatGPT / Claude) -> Browser Extension`：AI 聊天界面生成响应，浏览器扩展捕获这个响应。
+- `Browser Extension -> API Relay Server`：浏览器扩展将捕获的响应发送回 API 中继服务器。
+- `API Relay Server -> Client / RooCode`：API 中继服务器将响应格式化为 OpenAI 兼容的 JSON 格式，并将其发送回客户端。
+
+## 仓库语境与术语解释
+- **Cline/RooCode**：是使用 Chat Relay 系统的客户端应用程序示例。
+- **API Relay Server**：实现了 OpenAI 兼容的 API 接口，允许客户端以标准方式与不同的 AI 聊天界面交互。
+- **Browser Extension**：负责与 Web 聊天界面进行交互，模拟用户操作，并捕获 AI 响应。
+- **Gemini / AI Studio / ChatGPT / Claude**：是 Chat Relay 系统支持的 Web 聊天界面示例。这些界面通过浏览器扩展进行交互。
+- **HTTP POST /chat/completions**：客户端向 API Relay Server 发送请求的 API 接口。
+- **WebSocket**：API Relay Server 与 Browser Extension 之间进行实时通信的协议。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Chat Relay 系统的数据流。客户端（Cline/RooCode）通过 HTTP POST 请求 `/chat/completions` 将请求发送到 API Relay Server，API Relay Server 通过 WebSocket 将请求转发到 Browser Extension，Browser Extension 模拟用户在 Chat Interface (Gemini / AI Studio / ChatGPT / Claude) 上的操作，获取 AI 的响应，并将响应通过 API Relay Server 以 OpenAI-format JSON 格式返回给客户端。API Relay Server 和 Browser Extension 是该系统的核心组件，实现了对各种 AI 聊天界面的统一访问。

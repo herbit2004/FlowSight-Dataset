@@ -1,0 +1,52 @@
+flowchart TB
+    %% Style Definitions
+    classDef userLayer fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1,rx:5,ry:5
+    classDef coreLayer fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#bf360c,rx:5,ry:5
+    classDef ioLayer fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20,rx:5,ry:5
+    classDef vizLayer fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c,rx:5,ry:5
+    classDef storage fill:#eceff1,stroke:#455a64,stroke-width:2px,color:#263238,shape:cyl
+
+    subgraph User["👤 User Integration"]
+        direction TB
+        Decorator["@trace / @trace_class"]:::userLayer
+        Middleware["FastAPI Middleware"]:::userLayer
+        Callback["LangChain Callback"]:::userLayer
+    end
+
+    subgraph Core["⚙️ Core Engine"]
+        direction TB
+        Context["ContextVars<br/>(Trace Context)"]:::coreLayer
+        EventBus["Event Bus<br/>(LogContext)"]:::coreLayer
+        Masker["Data Masking<br/>(Sanitizer)"]:::coreLayer
+    end
+
+    subgraph IO["⚡ Async I/O Layer"]
+        direction TB
+        Queue["Async Queue<br/>(Non-blocking)"]:::ioLayer
+        Writer["File Handler<br/>(Rotating/Timed)"]:::ioLayer
+    end
+
+    Storage[(".mmd File")]:::storage
+
+    subgraph Viz["🌐 Visualization"]
+        direction TB
+        Watcher["Watchdog<br/>(File Monitor)"]:::vizLayer
+        Server["FastAPI Server<br/>(SSE Support)"]:::vizLayer
+        Browser["Web Browser<br/>(Mermaid.js + PanZoom)"]:::vizLayer
+    end
+
+    %% Data Flow
+    Decorator --> Context
+    Middleware --> Context
+    Callback --> Context
+    Context --> EventBus
+    EventBus --> Masker
+    Masker --> Queue
+    Queue --> Writer
+    Writer --> Storage
+    Storage -.-> Watcher
+    Watcher --> Server
+    Server == "SSE Push" ==> Browser
+
+    %% Link Styles
+    linkStyle default stroke:#607d8b,stroke-width:2px

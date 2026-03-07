@@ -1,0 +1,45 @@
+## 图类型与用途
+这是一个架构图，描述了 ToolSDK MCP Registry 的整体架构，展示了客户端如何通过 Registry 发现、安全执行 MCP 工具。该图在仓库中用于概括系统的主要组件和它们之间的交互方式。
+
+## 图的整体布局
+图整体采用从上到下的布局，分为客户端、自托管基础设施两大部分。自托管基础设施又分为注册中心核心和运行时环境两个子部分。数据和控制流从客户端流向自托管基础设施。
+
+## 分组/子图/阶段说明
+- **Client Side**：表示客户端，包含 AI Agent/LLM 和 User/Developer 两种类型的客户端。
+- **Self-Hosted Infrastructure**：表示自托管基础设施，包含 Registry Core 和 Runtime Environment 两部分。
+- **Registry Core**：注册中心核心，负责工具的搜索、执行和管理，包含 Registry API、Meilisearch、Registry Data 和 OAuth Proxy。
+- **Runtime Environment**：运行时环境，负责实际执行 MCP 工具，包含 Local Exec、Secure Sandbox 和 MCP Server。
+
+## 节点逐项说明
+- **🤖 AI Agent / LLM**：代表人工智能代理或大型语言模型，它们需要使用 MCP 工具来完成任务。
+- **👤 User / Developer**：代表用户或开发者，他们可能需要搜索和使用 MCP 工具。
+- **🌐 Registry API**：注册中心提供的统一 API 接口，用于工具的搜索、执行和管理。
+- **🔍 Meilisearch**：用于快速搜索 MCP 工具的索引服务。
+- **📚 Registry Data**：存储 MCP 工具的元数据信息，例如工具的描述、输入输出格式等。
+- **🔐 OAuth Proxy**：用于处理身份验证和授权，确保只有授权的用户和 LLM 才能访问和执行 MCP 工具。
+- **💻 Local Exec**：代表本地执行环境，用于直接运行 MCP 工具。
+- **🛡️ Secure Sandbox**：代表安全的沙箱环境，用于隔离和安全地执行 MCP 工具。根据 `README.md`，沙箱提供者可以通过设置环境变量 `MCP_SANDBOX_PROVIDER` 来配置，支持 `SANDOCK`, `DAYTONA`, `E2B`, `LOCAL` 等选项。
+- **⚙️ MCP Server**：代表实际的 MCP 工具服务器，可以是通过 STDIO 运行的本地进程，也可以是通过 StreamableHTTP 访问的远程服务器。
+
+## 连线、分支与汇聚关系
+- `User --> API`：用户通过 Registry API 搜索工具。
+- `LLM --> API`：LLM 通过 Registry API 执行工具。
+- `LLM --> OAuth`：LLM 通过 OAuth Proxy 进行身份验证和授权。
+- `API <--> Search`：Registry API 查询 Meilisearch 索引来查找工具。
+- `API --> DB`：Registry API 从 Registry Data 读取工具的元数据。
+- `API --> Local`：Registry API 将工具执行请求发送到本地执行环境。
+- `API --> Sandbox`：Registry API 将工具执行请求发送到安全沙箱环境。
+- `Local --> MCPServer`：本地执行环境执行 MCP Server。
+- `Sandbox --> MCPServer`：安全沙箱环境执行 MCP Server。
+
+## 仓库语境与术语解释
+- **MCP (Model Context Protocol)**：一种用于描述和执行 AI 模型的协议，ToolSDK MCP Registry 旨在提供一个统一的基础设施来发现、安全地执行 MCP 工具。
+- **Registry API**：根据 `README.md`，Registry API 提供 HTTP API 接口，可以通过 Swagger API Docs 访问 (http://localhost:3003/swagger)。
+- **Meilisearch**：一个快速的全文搜索引擎，用于索引和搜索 MCP 工具。`docker-compose.yml` 文件中定义了 Meilisearch 服务的配置。
+- **OAuth Proxy**：用于处理 OAuth 2.1 认证流程，确保只有授权的用户和 LLM 才能访问和执行 MCP 工具。
+- **Secure Sandbox**：根据 `docs/DEVELOPMENT.md`，支持多种沙箱提供者，包括 Sandock, Daytona, E2B 和 Local。
+- **MCP Server**：实际提供 MCP 工具服务的服务器，可以是本地进程或远程服务器。
+- **packages/**：仓库目录树显示 `packages/` 目录下包含了大量的 MCP Server 的定义，按照功能分类组织，例如 `packages/aggregators/`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该架构图展示了 ToolSDK MCP Registry 如何作为一个中心化的工具注册中心和网关，连接了客户端（LLM 和用户）和 MCP 工具。用户和 LLM 可以通过 Registry API 搜索和执行 MCP 工具，LLM 需要通过 OAuth Proxy 进行认证。Registry API 使用 Meilisearch 进行快速搜索，从 Registry Data 获取工具的元数据，并将工具执行请求发送到本地执行环境或安全沙箱环境，最终由 MCP Server 执行。其中，沙箱环境的选择由环境变量 `MCP_SANDBOX_PROVIDER` 控制，支持多种沙箱提供者。

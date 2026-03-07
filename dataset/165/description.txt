@@ -1,0 +1,42 @@
+## 图类型与用途
+这是一个流程图，展示了 `pompelmi` 项目的核心组件及其与不同 Web 框架/库的集成关系。该图旨在概览 `pompelmi` 的架构，特别是它如何与不同的 Web 框架（如 Express, Koa, Next.js, Fastify, NestJS, Remix, Hapi, SvelteKit）进行集成。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是核心组件，底部是各种框架/库的集成模块。箭头表示 `pompelmi` 核心组件与这些框架/库的集成关系。
+
+## 分组/子图/阶段说明
+图中包含一个名为 "Repo" 的子图，该子图包含了 `pompelmi` 的核心组件以及与不同框架/库的集成模块。
+
+## 节点逐项说明
+- **Repo**：表示 `pompelmi` 仓库内的组件的子图。
+- **core["pompelmi (core)"]**：`pompelmi` 的核心组件，负责核心逻辑。根据 `packages/core/package.json` 中的描述，该组件提供了 `scan()`、`isMalware()`、`ScanOptions` 和 `ScanReport` 等 API，供框架适配器和 CLI 使用。
+- **express["@pompelmi/express-middleware"]**：`pompelmi` 提供的 Express 中间件，用于与 Express 框架集成。根据 `packages/express-middleware/package.json` 中的描述，该中间件用于扫描 Express 上传的文件。
+- **koa["@pompelmi/koa-middleware"]**：`pompelmi` 提供的 Koa 中间件，用于与 Koa 框架集成。
+- **next["@pompelmi/next-upload"]**：`pompelmi` 提供的 Next.js 上传组件，用于与 Next.js 框架集成。
+- **fastify(("fastify-plugin · planned"))**：计划中的 Fastify 插件，表示未来将支持 Fastify 框架。双括号表示这是一个计划中的功能。
+- **nest(("nestjs · planned"))**：计划中的 NestJS 集成，表示未来将支持 NestJS 框架。双括号表示这是一个计划中的功能。
+- **remix(("remix · planned"))**：计划中的 Remix 集成，表示未来将支持 Remix 框架。双括号表示这是一个计划中的功能。
+- **hapi(("hapi-plugin · planned"))**：计划中的 Hapi 插件，表示未来将支持 Hapi 框架。双括号表示这是一个计划中的功能。
+- **svelte(("sveltekit · planned"))**：计划中的 SvelteKit 集成，表示未来将支持 SvelteKit 框架。双括号表示这是一个计划中的功能。
+
+## 连线、分支与汇聚关系
+- `core --> express`：表示 `pompelmi` 的核心组件直接与 Express 中间件集成。
+- `core --> koa`：表示 `pompelmi` 的核心组件直接与 Koa 中间件集成。
+- `core --> next`：表示 `pompelmi` 的核心组件直接与 Next.js 上传组件集成。
+- `core -.-> fastify`：表示 `pompelmi` 的核心组件计划与 Fastify 插件集成（虚线箭头表示计划中）。
+- `core -.-> nest`：表示 `pompelmi` 的核心组件计划与 NestJS 集成（虚线箭头表示计划中）。
+- `core -.-> remix`：表示 `pompelmi` 的核心组件计划与 Remix 集成（虚线箭头表示计划中）。
+- `core -.-> hapi`：表示 `pompelmi` 的核心组件计划与 Hapi 插件集成（虚线箭头表示计划中）。
+- `core -.-> svelte`：表示 `pompelmi` 的核心组件计划与 SvelteKit 集成（虚线箭头表示计划中）。
+
+## 仓库语境与术语解释
+- **pompelmi (core)**：`pompelmi` 的核心模块，提供文件扫描和恶意软件检测功能。
+- **@pompelmi/express-middleware**：用于 Express 框架的中间件，方便在 Express 应用中使用 `pompelmi` 进行文件上传扫描。
+- **@pompelmi/koa-middleware**：用于 Koa 框架的中间件，功能与 Express 中间件类似。
+- **@pompelmi/next-upload**：用于 Next.js 框架的文件上传组件。
+- **YARA**：一种模式匹配工具，`pompelmi` 使用 YARA 规则进行恶意软件检测。
+- **Middleware**：中间件是在应用程序请求处理管道中执行的函数，用于拦截和处理请求。
+- **Planned Features**：图中用双括号和虚线箭头表示的功能是计划中但尚未实现的功能。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `pompelmi` 核心组件与各种 Web 框架/库的集成关系。核心组件 `pompelmi (core)` 通过不同的中间件或插件与 Express, Koa, Next.js 等框架集成，用于文件上传扫描和恶意软件检测。图中还展示了计划中的 Fastify, NestJS, Remix, Hapi, SvelteKit 集成。`@pompelmi/express-middleware` 和 `@pompelmi/koa-middleware` 分别是用于 Express 和 Koa 框架的中间件。

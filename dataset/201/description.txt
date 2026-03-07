@@ -1,0 +1,48 @@
+## 图类型与用途
+这是一个流程图，描述了 MicroGPT 模型训练循环中的数据流动和组件功能。该图在 `README.md` 中被用作架构图，用于解释 GPT 模型的工作原理。
+
+## 图的整体布局
+图采用从左到右的布局。整体流程被包含在一个大的循环 subgraph 中，数据从左侧的输入开始，经过 GPT 模型处理，最终到达右侧的优化器。
+
+## 分组/子图/阶段说明
+- **LOOP (TRAINING LOOP (× num_steps))**：代表整个训练循环，循环次数由 `num_steps` 决定。`num_steps` 是一个 CLI 参数，用于设置训练迭代次数，如 `README.md` 中 CLI Arguments 表格所示。
+- **GPT MODEL**：代表 GPT 模型的核心部分，包含 Token Embedding、Position Embedding 和 Transformer Layer。
+- **TF (Transformer Layer (× n_layer))**：代表 Transformer 层，包含多个 Transformer 块，数量为 `n_layer`。`n_layer` 是一个 CLI 参数，用于设置 Transformer 层的数量，如 `README.md` 中 CLI Arguments 表格所示。
+
+## 节点逐项说明
+- **A ("'emma'")**：输入数据，这里是一个字符串 "emma"，代表一个训练样本（人名）。
+- **Tokenizer**：分词器，将字符串分解成 token 序列。对应代码文件 `Tokenizer.cs`，其作用是将字符转换为数字 ID，如 `README.md` 中 Step 1: Tokenization 所述。
+- **B ("[BOS, e, m, m, a, EOS]")**：分词后的结果，是一个 token 序列，其中 BOS 和 EOS 分别代表句子的开始和结束标记。
+- **C ("Token Embedding + Position Embedding → x")**：将 token 序列转换为 token 嵌入向量，并加上位置嵌入向量，得到输入向量 `x`。如 `README.md` 中 Step 2: Embeddings 所述，token embedding 是一个 learned vector，position embedding 编码 token 在序列中的位置。
+- **E ("RMSNorm → Multi-Head Attention\n(Q·K/√d → softmax → V)\n+ Residual Connection")**：Transformer 块中的多头注意力机制。首先进行 RMSNorm 归一化，然后计算 Query, Key, Value 的点积，除以根号 d 进行缩放，再进行 softmax 运算，最后与 Value 相乘，并加上残差连接。RMSNorm 对应 `NeuralOps.cs` 中的 `RMSNorm` 函数，Multi-Head Attention 对应 `README.md` 中 Step 3: The Transformer Layer 的 Attention 部分。
+- **F ("RMSNorm → MLP\n(expand → ReLU² → compress)\n+ Residual Connection")**：Transformer 块中的前馈神经网络（MLP）。首先进行 RMSNorm 归一化，然后通过一个扩展层，经过两次 ReLU 激活函数，再通过一个压缩层，并加上残差连接。MLP 对应 `README.md` 中 Step 3: The Transformer Layer 的 MLP 部分。
+- **G ("Linear (weight-tied with Token Embedding)")**：线性层，将 Transformer 层的输出映射到词汇表大小的维度，并与 Token Embedding 层共享权重。Linear 对应 `NeuralOps.cs` 中的 `Linear` 函数。
+- **H ("Softmax → Probabilities")**：Softmax 函数，将线性层的输出转换为概率分布。Softmax 对应 `NeuralOps.cs` 中的 `Softmax` 函数，也对应 `README.md` 中 Step 4: Prediction 部分。
+- **I ("Cross-Entropy Loss")**：交叉熵损失函数，用于衡量模型预测的概率分布与真实分布之间的差异。
+- **J ("Backward() ← Value autograd engine\n(chain rule through computation graph)")**：反向传播，使用 `Value` 类的自动求导引擎，通过计算图进行链式法则求导。`Value` 类对应 `Value.cs` 文件，实现了自动梯度追踪。
+- **K ("Adam Optimizer\n(update all parameters)")**：Adam 优化器，用于更新模型的所有参数。
+
+## 连线、分支与汇聚关系
+- `A -> B`：输入数据经过 Tokenizer 分词。
+- `B -> C`：分词后的 token 序列进入 GPT 模型，进行 Token Embedding 和 Position Embedding。
+- `C -> TF`：Embedding 后的向量进入 Transformer Layer。
+- `TF -> G`：Transformer Layer 的输出进入线性层。
+- `G -> H`：线性层的输出经过 Softmax 函数转换为概率分布。
+- `H -> I`：计算交叉熵损失。
+- `I -> J`：进行反向传播，计算梯度。
+- `J -> K`：使用 Adam 优化器更新模型参数。
+
+## 仓库语境与术语解释
+- **GPT (Generative Pre-trained Transformer)**：一种用于生成文本的深度学习模型，`README.md` 中提到该项目是 ChatGPT 背后的算法的精简版本。
+- **Tokenizer**：将文本转换为数字 ID 的组件，对应 `Tokenizer.cs` 文件，如 `README.md` 中 Step 1: Tokenization 所述。
+- **Token Embedding**：将 token 转换为向量表示，对应 `README.md` 中 Step 2: Embeddings 所述。
+- **Position Embedding**：编码 token 在序列中的位置，对应 `README.md` 中 Step 2: Embeddings 所述。
+- **Transformer Layer**：GPT 模型的核心层，包含 Attention 和 MLP 两个子模块，对应 `README.md` 中 Step 3: The Transformer Layer 所述。
+- **RMSNorm**：一种归一化技术，用于稳定训练过程，对应 `NeuralOps.cs` 中的 `RMSNorm` 函数。
+- **Multi-Head Attention**：一种注意力机制，用于让模型关注输入序列的不同部分，对应 `README.md` 中 Step 3: The Transformer Layer 的 Attention 部分。
+- **MLP (Multilayer Perceptron)**：前馈神经网络，用于处理 Attention 模块的输出，对应 `README.md` 中 Step 3: The Transformer Layer 的 MLP 部分。
+- **Value.cs**：实现了自动求导引擎，用于计算梯度，对应图中 "Backward() ← Value autograd engine" 节点。
+- **Adam Optimizer**：一种优化算法，用于更新模型参数。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 MicroGPT 模型的训练循环。从输入数据 "emma" 开始，经过 Tokenizer 分词，得到 token 序列。然后，token 序列进入 GPT 模型，经过 Token Embedding 和 Position Embedding 转换为向量。向量进入 Transformer Layer 进行处理，再经过线性层和 Softmax 函数得到概率分布。最后，计算交叉熵损失，进行反向传播，并使用 Adam 优化器更新模型参数。其中，Tokenizer、Token Embedding、Transformer Layer 和 Adam Optimizer 是关键组件。`Value.cs` 文件实现了自动求导引擎，用于反向传播。`num_steps` 参数控制训练循环的次数。

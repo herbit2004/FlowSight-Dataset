@@ -1,0 +1,29 @@
+graph LR;
+    checkstyle_src("CheckStyle.xml");
+    ci-report-converter(("CI-Report<br>Converter"));
+    github-cli_target("GitHub Actions - CLI");
+    gitlab-json_target("GitLab - JSON");
+    junit_src("JUnit.xml");
+    junit_target("JUnit.xml");
+    phpmd-json_src("PHPmd.json");
+    phpmnd_src("PHPmnd.xml");
+    plain_target("Plain Text");
+    pmd-cpd_src("PmdCpd.xml");
+    psalm-json_src("Psalm.json");
+    tc-inspections_target("TeamCity - Inspections");
+    tc-tests_target("TeamCity - Tests");
+
+    checkstyle_src ==> ci-report-converter;
+    ci-report-converter ==> github-cli_target;
+    ci-report-converter ==> gitlab-json_target;
+    ci-report-converter ==> junit_target;
+    ci-report-converter ==> plain_target;
+    ci-report-converter ==> tc-inspections_target;
+    ci-report-converter ==> tc-tests_target;
+    junit_src ==> ci-report-converter;
+    phpmd-json_src ==> ci-report-converter;
+    phpmnd_src ==> ci-report-converter;
+    pmd-cpd_src ==> ci-report-converter;
+    psalm-json_src ==> ci-report-converter;
+
+linkStyle default interpolate basis;

@@ -1,0 +1,32 @@
+## 图类型与用途
+这是一个网络拓扑图，展示了 EasyTier VPN 网络的简单架构，描述了客户端（iPhone）、两个 EasyTier 节点以及一个子网之间的连接关系。它在 README 中作为“Subnet Proxy”高级功能的示例。
+
+## 图的整体布局
+图采用从左到右的布局。客户端位于左侧，两个 EasyTier 节点位于中间，子网位于右侧。数据流从客户端经过 Node A 和 Node B，最终到达子网。
+
+## 分组/子图/阶段说明
+图中包含两个子图，分别代表 Node A 和 Node B。Node A 子图包含公网 IP 地址，而 Node B 子图没有。
+
+## 节点逐项说明
+- **iPhone WireGuard Installed**：表示安装了 WireGuard 客户端的 iPhone 设备，作为 VPN 客户端。README 中提到 EasyTier 可以作为 WireGuard 服务器，允许 WireGuard 客户端访问 EasyTier 网络。
+- **Node A Public IP 22.1.1.1**：表示一个 EasyTier 节点，公网 IP 地址为 22.1.1.1，内部 IP 地址为 10.144.144.1。
+- **EasyTier 10.144.144.1**：表示 Node A 上的 EasyTier 实例，内部 IP 地址为 10.144.144.1。
+- **Node B**：表示另一个 EasyTier 节点，内部 IP 地址为 10.144.144.2。
+- **EasyTier 10.144.144.2**：表示 Node B 上的 EasyTier 实例，内部 IP 地址为 10.144.144.2。
+- **10.1.1.0/24**：表示一个子网，通过 Node B 连接到 EasyTier 网络。README 中提到，EasyTier 支持 Subnet Proxy，允许节点共享其可访问的子网。
+
+## 连线、分支与汇聚关系
+- `iPhone <--> Node A`：iPhone 通过 WireGuard 协议与 Node A 建立 VPN 连接。连接方式用虚线表示，表明可能不是直接的物理连接，而是逻辑上的 VPN 连接。
+- `Node A <--> Node B`：Node A 和 Node B 之间通过双向箭头连接，表明它们之间存在双向通信。这可能是 EasyTier 节点之间的内部通信，用于路由或者数据传输。
+- `Node B <--> 10.1.1.0/24`：Node B 通过虚线连接到 10.1.1.0/24 子网，表明 Node B 允许 VPN 客户端访问该子网。
+
+## 仓库语境与术语解释
+- **EasyTier**：一个简单、安全、去中心化的虚拟专用网络解决方案，使用 Rust 和 Tokio 构建。
+- **WireGuard**：一种 VPN 协议，EasyTier 可以作为 WireGuard 服务器，允许 WireGuard 客户端接入。`easytier/src/tunnel/wireguard.rs` 文件包含 WireGuard 相关的实现。
+- **Subnet Proxy**：EasyTier 的一项高级功能，允许节点共享其可访问的子网，使其他节点可以访问这些子网。
+- **Node A / Node B**：EasyTier 网络中的两个节点，可以互相通信，并提供 VPN 服务。
+- **10.1.1.0/24**：一个子网，通过 EasyTier 节点 B 共享给其他节点。
+- **VPN**：虚拟专用网络，EasyTier 旨在提供一种简单易用的 VPN 解决方案。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了一个 EasyTier VPN 架构，iPhone 通过 WireGuard 连接到 EasyTier 节点 A，节点 A 和 B 之间可以互相通信，节点 B 允许 VPN 客户端访问 10.1.1.0/24 子网。该图体现了 EasyTier 的 Subnet Proxy 功能，允许 VPN 客户端访问内部网络资源。EasyTier 节点充当 VPN 服务器和网关的角色。

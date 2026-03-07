@@ -1,0 +1,36 @@
+## 图类型与用途
+这是一个流程图，展示了 AutoMem 系统如何处理用户查询并生成结果，侧重于其记忆和推理能力。该图旨在说明 AutoMem 如何结合用户查询、种子记忆和桥接记忆，最终生成更深入、更具上下文理解的结果。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是用户查询的输入节点，中间是种子记忆和桥接记忆的处理阶段，底部是最终结果的输出节点。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为三个阶段：初始回忆、桥接记忆推导、结果生成。
+
+## 节点逐项说明
+- **Query (用户查询): Why boring tech for Kafka?**：代表用户提出的问题，是整个流程的起点。
+- **Seed Memory 1: PostgreSQL migration for operational simplicity**：代表系统预先存在的、与查询相关的第一个记忆片段。
+- **Seed Memory 2: Kafka vs RabbitMQ evaluation**：代表系统预先存在的、与查询相关的第二个记忆片段。
+- **Bridge Memory: Team prefers boring technology proven, debuggable systems**：代表系统通过推理和关联种子记忆而生成的新的记忆片段，将种子记忆连接起来，提供更深层次的理解。
+- **Result: AI understands architectural philosophy, not just isolated choices**：代表系统最终生成的结果，基于用户查询、种子记忆和桥接记忆的综合分析。
+
+## 连线、分支与汇聚关系
+- `Query -> Seed Memory 1`：用户查询触发系统进行初始回忆，检索到第一个相关的种子记忆。
+- `Query -> Seed Memory 2`：用户查询触发系统进行初始回忆，检索到第二个相关的种子记忆。
+- `Seed Memory 1 -.-> Bridge Memory`：种子记忆通过 "DERIVED_FROM" 的关系，推导出桥接记忆。
+- `Seed Memory 2 -.-> Bridge Memory`：种子记忆通过 "DERIVED_FROM" 的关系，推导出桥接记忆。
+- `Bridge Memory -> Result`：桥接记忆作用于结果生成。
+- `Seed Memory 1 -> Result`：种子记忆 1 作用于结果生成。
+- `Seed Memory 2 -> Result`：种子记忆 2 作用于结果生成。桥接记忆和种子记忆共同作用，最终生成结果，形成汇聚关系。
+
+## 仓库语境与术语解释
+- **AutoMem**：一个为 AI 助手设计的生产级长期记忆系统，旨在让 AI 能够记住、连接和演化其理解。
+- **FalkorDB (Graph)**：AutoMem 使用的图数据库，用于存储记忆作为节点，以及节点之间的关系。
+- **Qdrant (Vectors)**：AutoMem 使用的向量数据库，用于通过嵌入实现语义相似性搜索。
+- **Bridge Discovery**：AutoMem 的一项功能，通过图关系发现记忆之间的连接，从而提供更深层次的上下文理解。README 中提到，可以通过设置 `expand_relations=true` 来启用此功能。
+- **Seed Memory**：系统预先存在的、与查询相关的记忆片段。
+- **Bridge Memory**：系统通过推理和关联种子记忆而生成的新的记忆片段。
+- **DERIVED_FROM**：图中可见，但仓库上下文未进一步说明，表示桥接记忆从种子记忆推导而来。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 AutoMem 系统处理用户查询并生成结果的流程。流程从用户查询开始，系统检索相关的种子记忆，然后通过推理和关联这些种子记忆，生成桥接记忆。桥接记忆和种子记忆共同作用，最终生成结果，该结果包含了系统对用户查询的理解和推理。该流程体现了 AutoMem 如何通过结合图数据库和向量数据库，实现更智能的记忆和推理能力，如 README 中所述，AutoMem 结合 FalkorDB 和 Qdrant 来实现长期记忆。

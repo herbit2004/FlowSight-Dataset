@@ -1,0 +1,41 @@
+flowchart TD
+    REQ["HTTP Request"] --> MW["Middleware Pipeline"]
+
+    subgraph MW["Middleware"]
+        direction LR
+        CORS["CORS"] --> AUTH["Auth<br/>JWT · OIDC · LDAP<br/>SAML · API Key"]
+        AUTH --> RL["Rate Limiter"]
+        RL --> TRACE["Tracing<br/>+ Metrics"]
+        TRACE --> DEMO["Demo Mode<br/>Guard"]
+    end
+
+    MW --> ROUTER["Router<br/>50+ route groups"]
+
+    subgraph HANDLERS["Handler Layer"]
+        FMT["Format Handlers<br/>Maven · PyPI · NPM<br/>Docker · 41 more"]
+        CORE["Core Handlers<br/>Repos · Artifacts<br/>Users · Auth"]
+        ADV["Advanced Handlers<br/>Security · Plugins<br/>Peers · Migration"]
+    end
+
+    ROUTER --> HANDLERS
+
+    subgraph SERVICES["Service Layer"]
+        direction LR
+        ART["Artifact<br/>Service"]
+        REPO["Repository<br/>Service"]
+        SCAN["Scanner<br/>Service"]
+        PLUG["Plugin<br/>Service"]
+        SEARCH["Search<br/>Service"]
+    end
+
+    HANDLERS --> SERVICES
+
+    subgraph DATA["Data Layer"]
+        direction LR
+        PG[(PostgreSQL)]
+        FS["Storage<br/>FS / S3"]
+        MS["Meilisearch"]
+        SC["Trivy / Grype / OpenSCAP"]
+    end
+
+    SERVICES --> DATA

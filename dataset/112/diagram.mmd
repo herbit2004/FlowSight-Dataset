@@ -1,0 +1,44 @@
+flowchart TD
+    Start([Start]) --> Init[Initialize context & variables]
+    Init --> CheckBudget{Token budget<br/>exceeded?}
+    CheckBudget -->|No| GetQuestion[Get current question<br/>from gaps]
+    CheckBudget -->|Yes| BeastMode[Enter Beast Mode]
+
+    GetQuestion --> GenPrompt[Generate prompt]
+    GenPrompt --> ModelGen[Generate response<br/>using Gemini]
+    ModelGen --> ActionCheck{Check action<br/>type}
+
+    ActionCheck -->|answer| AnswerCheck{Is original<br/>question?}
+    AnswerCheck -->|Yes| EvalAnswer[Evaluate answer]
+    EvalAnswer --> IsGoodAnswer{Is answer<br/>definitive?}
+    IsGoodAnswer -->|Yes| HasRefs{Has<br/>references?}
+    HasRefs -->|Yes| End([End])
+    HasRefs -->|No| GetQuestion
+    IsGoodAnswer -->|No| StoreBad[Store bad attempt<br/>Reset context]
+    StoreBad --> GetQuestion
+
+    AnswerCheck -->|No| StoreKnowledge[Store as intermediate<br/>knowledge]
+    StoreKnowledge --> GetQuestion
+
+    ActionCheck -->|reflect| ProcessQuestions[Process new<br/>sub-questions]
+    ProcessQuestions --> DedupQuestions{New unique<br/>questions?}
+    DedupQuestions -->|Yes| AddGaps[Add to gaps queue]
+    DedupQuestions -->|No| DisableReflect[Disable reflect<br/>for next step]
+    AddGaps --> GetQuestion
+    DisableReflect --> GetQuestion
+
+    ActionCheck -->|search| SearchQuery[Execute search]
+    SearchQuery --> NewURLs{New URLs<br/>found?}
+    NewURLs -->|Yes| StoreURLs[Store URLs for<br/>future visits]
+    NewURLs -->|No| DisableSearch[Disable search<br/>for next step]
+    StoreURLs --> GetQuestion
+    DisableSearch --> GetQuestion
+
+    ActionCheck -->|visit| VisitURLs[Visit URLs]
+    VisitURLs --> NewContent{New content<br/>found?}
+    NewContent -->|Yes| StoreContent[Store content as<br/>knowledge]
+    NewContent -->|No| DisableVisit[Disable visit<br/>for next step]
+    StoreContent --> GetQuestion
+    DisableVisit --> GetQuestion
+
+    BeastMode --> FinalAnswer[Generate final answer] --> End

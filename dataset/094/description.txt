@@ -1,0 +1,34 @@
+## 图类型与用途
+这是一个流程图，描述了 CappyChat 应用中用户输入数据后的处理流程和数据同步机制。它展示了数据如何在本地存储、UI 更新、云端同步以及设备间广播。
+
+## 图的整体布局
+图采用从左到右的布局。流程从用户输入开始，经过本地存储和处理，最终同步到其他设备。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：本地处理（用户输入到即时 UI 更新）、云端同步（后台同步到云数据库）、实时广播（云数据库到其他设备）。
+
+## 节点逐项说明
+- **User Input**：用户在 CappyChat 应用中进行的任何输入操作，例如发送消息。
+- **Local Storage**：用户设备上的本地存储空间，用于临时存储用户输入的数据。`lib/localDB.ts` 中定义了本地存储相关的操作。
+- **Instant UI Update**：用户输入的数据会立即在用户界面上显示出来，提供快速的反馈。
+- **Background Sync**：在后台运行的数据同步过程，用于将本地存储的数据同步到云数据库。
+- **Cloud Database**：存储用户数据的云端数据库，例如 Appwrite 提供的数据库服务。`lib/appwriteDB.ts` 中定义了与 Appwrite 数据库交互的接口。
+- **Real-time Broadcast**：将云数据库中的数据变化实时广播给其他连接的设备。`lib/appwriteRealtime.ts` 实现了 Appwrite 的实时订阅功能。
+- **Other Devices**：连接到 CappyChat 应用的其他用户设备，例如其他用户的手机或电脑。
+
+## 连线、分支与汇聚关系
+- `User Input -> Local Storage`：用户输入的数据首先被存储到本地存储。
+- `Local Storage -> Instant UI Update`：本地存储中的数据会立即更新用户界面。
+- `Local Storage -> Background Sync`：本地存储中的数据还会通过后台同步机制同步到云数据库，形成分支。
+- `Background Sync -> Cloud Database`：后台同步将数据同步到云数据库。
+- `Cloud Database -> Real-time Broadcast`：云数据库中的数据变化会通过实时广播机制广播给其他设备。
+- `Real-time Broadcast -> Other Devices`：实时广播将数据同步到其他设备。
+
+## 仓库语境与术语解释
+- **Local-First Architecture**：README 提到 CappyChat 采用本地优先架构，提供快速响应，即使在离线或网络不稳定的情况下也能保证用户体验。
+- **Appwrite**：README 和 `lib/appwrite.ts` 表明 CappyChat 使用 Appwrite 作为后端服务，提供数据库和实时同步功能。
+- **Real-time Sync**：README 强调 CappyChat 具有实时同步功能，确保数据在多设备之间保持一致。`lib/appwriteRealtime.ts` 和 `lib/hybridDB.ts` 实现了这一功能。
+- **HybridDB**：`lib/hybridDB.ts` 文件表明 CappyChat 使用混合数据库服务，结合本地存储和 Appwrite 后端同步，以实现快速 UI 更新和数据一致性。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+CappyChat 的数据同步流程从用户输入开始，数据首先存储在本地，并立即更新 UI，然后通过后台同步到 Appwrite 云数据库。云数据库的变化通过实时广播同步到其他设备，实现了本地优先和实时同步的架构。`lib/localDB.ts`、`lib/appwriteDB.ts` 和 `lib/appwriteRealtime.ts` 是实现这一流程的关键模块。

@@ -1,0 +1,47 @@
+## 图类型与用途
+这是一个流程图，描述了一个基于AI的网络流量威胁检测系统的工作流程。它展示了如何从捕获网络流量到检测威胁并采取相应措施的整个过程。该图在 README 中被用作 AI Security Core 的系统架构设计的一部分。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是网络流量的输入节点，中间是数据处理和分析阶段，底部是威胁检测结果和应对措施。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为四个阶段：数据捕获与特征提取、AI 模型分析、威胁评估与分类、威胁响应与报告。
+
+## 节点逐项说明
+- **TRAFFIC (🌐 Live Network Traffic\nTCP / UDP / ICMP Stream)**：代表实时的网络流量，包括TCP、UDP和ICMP数据流。这是整个系统的输入。
+- **CAP (📦 Packet Capture\nScapy · Wireshark)**：代表数据包捕获模块，使用Scapy或Wireshark等工具来捕获网络数据包。
+- **EXTRACT (🔧 Feature Extraction\n• Packet size distribution\n• Flow duration & timing\n• Protocol anomalies\n• Behavioural signatures)**：代表特征提取模块，从捕获的数据包中提取有用的特征，例如数据包大小分布、流持续时间和时间、协议异常和行为签名。
+- **LSTM (🧠 LSTM Classifier\n128 → 64 units\nBidirectional · Dropout 0.2)**：代表一个LSTM（长短期记忆网络）分类器，用于识别恶意流量。它具有128到64个单元，是双向的，并使用0.2的Dropout。
+- **ISO (🔍 Isolation Forest\nContamination: 0.01\nEstimators: 200)**：代表一个隔离森林算法，用于检测异常流量。污染参数设置为0.01，估计器数量为200。
+- **AUTO (📐 AutoEncoder\nEncoder-Decoder\nReconstruction error scoring)**：代表一个自编码器，通过重建误差来评估流量的异常程度。
+- **ENSEMBLE (🗳️ Ensemble Voting\nWeighted majority vote\n+ confidence scoring)**：代表一个集成投票模块，将LSTM、隔离森林和自编码器的结果进行集成，使用加权多数投票和置信度评分。
+- **THREAT (⚠️ THREAT DETECTED\nSeverity: CRITICAL / HIGH / MED\nMITRE ATT&CK Mapping)**：代表检测到威胁，并根据严重程度（CRITICAL、HIGH、MED）进行分类，并映射到MITRE ATT&CK框架。
+- **SAFE (✅ CLEAN TRAFFIC\nPassed all checks\nLogged & archived)**：代表经过检查后确认为安全的流量，会被记录和归档。
+- **BLOCK (🔒 Auto-Block\nFirewall rule push)**：代表自动阻止威胁，通过推送防火墙规则来实现。
+- **REPORT (📊 Threat Report\nIOC extraction)**：代表生成威胁报告，提取IOC（入侵指标）。
+- **NOTIFY (📡 Alert Dispatch\nSIEM · SOAR · Email)**：代表发送警报，可以通过SIEM、SOAR或电子邮件等方式进行通知。
+
+## 连线、分支与汇聚关系
+- `TRAFFIC -> CAP`：网络流量进入数据包捕获模块。
+- `CAP -> EXTRACT`：数据包捕获模块将捕获的数据传递给特征提取模块。
+- `EXTRACT -> LSTM`：特征提取模块将提取的特征输入到LSTM分类器。
+- `EXTRACT -> ISO`：特征提取模块将提取的特征输入到隔离森林算法。
+- `EXTRACT -> AUTO`：特征提取模块将提取的特征输入到自编码器。
+- `LSTM & ISO & AUTO -> ENSEMBLE`：LSTM、隔离森林和自编码器的输出被集成到集成投票模块，形成汇聚关系。
+- `ENSEMBLE -- Score > 0.85 --> THREAT`：如果集成投票模块的评分大于0.85，则判定为威胁。
+- `ENSEMBLE -- Score < 0.15 --> SAFE`：如果集成投票模块的评分小于0.15，则判定为安全流量。
+- `THREAT -> BLOCK`：检测到威胁后，自动阻止威胁。
+- `THREAT -> REPORT`：检测到威胁后，生成威胁报告。
+- `THREAT -> NOTIFY`：检测到威胁后，发送警报。
+
+## 仓库语境与术语解释
+- **Zero-Day AI Threat Detector**：该图描述的系统属于 README 中提到的 "Project 01 — Zero-Day AI Threat Detector"，旨在检测新型、未知的威胁。
+- **LSTM Classifier**：长短期记忆网络，一种循环神经网络，用于处理序列数据，在此用于识别恶意流量。
+- **Isolation Forest**：一种无监督学习算法，用于检测异常值，在此用于检测异常流量。
+- **AutoEncoder**：一种神经网络，用于学习数据的压缩表示，并通过重建误差来评估流量的异常程度。
+- **MITRE ATT&CK Mapping**：将检测到的威胁映射到MITRE ATT&CK框架，以便进行威胁分类和分析。
+- **SIEM / SOAR**：安全信息和事件管理（SIEM）和安全编排、自动化和响应（SOAR）系统，用于集中管理和响应安全事件。
+- **IOC (入侵指标)**：在威胁报告中提取的入侵指标，用于进一步分析和追踪威胁。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了一个AI网络流量威胁检测系统，从捕获网络流量开始，经过特征提取后，分别使用LSTM分类器、隔离森林和自编码器进行分析。这些模型的输出通过集成投票模块进行集成，根据评分将流量分为威胁和安全流量。检测到的威胁会触发自动阻止、威胁报告和警报发送，而安全流量会被记录和归档。该系统旨在实现 "Real-time packet stream classification with bidirectional LSTM" 和 "Isolation Forest for unsupervised zero-day anomaly detection"，如 README 中 "Project 01 — Zero-Day AI Threat Detector" 所述。

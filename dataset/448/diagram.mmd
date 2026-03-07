@@ -1,0 +1,9 @@
+graph TD
+    Client[Client App] -->|POST /auth/login| AuthAPI[Auth API]
+    AuthAPI --> AuthService[Auth Service]
+    AuthService --> UserDB[(User Database)]
+    AuthService --> TokenService[JWT Token Service]
+    AuthService --> OAuthService[OAuth Service]
+    OAuthService -->|OAuth Flow| GoogleAuth[Google OAuth]
+    OAuthService -->|OAuth Flow| GitHubAuth[GitHub OAuth]
+    TokenService --> Redis[(Redis Cache)]

@@ -1,0 +1,28 @@
+flowchart LR
+    subgraph Clients["💬 Chat Platforms"]
+        direction TB
+        F["<b>Feishu</b><br/>WebSocket"]
+        T["<b>Telegram</b><br/>Polling"]
+        D["<b>Discord</b><br/>Gateway"]
+    end
+
+    subgraph Gateway["🐈 nanobot Gateway"]
+        direction TB
+        A["Agent Loop<br/><i>LLM + Tool Calls</i>"]
+    end
+
+    subgraph Engine["🧠 DeepCode Engine"]
+        direction TB
+        P2C["Paper → Code"]
+        C2C["Chat → Code"]
+        TRK["Task Tracking"]
+    end
+
+    F & T & D <-->|"messages"| A
+    A -->|"HTTP API"| P2C & C2C & TRK
+    A -.->|"LLM API"| LLM["☁️ OpenRouter"]
+
+    style Clients fill:#1a1a2e,stroke:#00d9ff,color:#fff
+    style Gateway fill:#1a1a2e,stroke:#4ecdc4,color:#fff
+    style Engine fill:#1a1a2e,stroke:#ff6b6b,color:#fff
+    style LLM fill:#1a1a2e,stroke:#9b59b6,color:#fff

@@ -1,0 +1,15 @@
+flowchart TD
+    SQL[/SQL Query String/] --> Parser
+    
+    subgraph Engine [Core Engine Internal Pipeline]
+        direction TB
+        Parser[Lexer & Parser] --> AST[Abstract Syntax Tree]
+        AST --> Visitors[AST Visitors & Rewriters]
+        Visitors --> Semantic[Type Inference & Semantic Analysis]
+        Semantic --> Compiler[C# Code Generator & Compiler]
+        Compiler --> Runtime[Execution Runtime VM]
+    end
+    
+    Registry[(Plugin / Schema Registry)] -.->|Injects types & methods| Semantic
+    Runtime <-->|Streams Data Row-by-Row| DataSource[(Data Source Plugin)]
+    Runtime ===> Results[/Tabular Result Set/]

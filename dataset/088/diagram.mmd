@@ -1,0 +1,35 @@
+graph TB
+    subgraph "Claude Code"
+        CC[Claude Code CLI]
+    end
+
+    subgraph "Hook System"
+        HS[Hook Runner<br/>Python]
+        CTX[Context Parser<br/>stdin JSON]
+    end
+
+    subgraph "Output Channels"
+        AF[Audio Files<br/>MP3s]
+        DN[Desktop Notifications<br/>osascript/notify-send]
+        TTS[Text-to-Speech<br/>say/espeak/SAPI]
+    end
+
+    subgraph "User"
+        U[User Terminal]
+    end
+
+    CC -->|Triggers + JSON| HS
+    HS -->|Parses| CTX
+    CTX -->|Plays| AF
+    CTX -->|Shows| DN
+    CTX -->|Speaks| TTS
+    AF -->|Alerts| U
+    DN -->|Alerts| U
+    TTS -->|Alerts| U
+
+    style CC fill:#4A90E2
+    style HS fill:#7ED321
+    style CTX fill:#BD10E0
+    style AF fill:#F5A623
+    style DN fill:#50E3C2
+    style TTS fill:#9013FE

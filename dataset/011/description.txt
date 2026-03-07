@@ -1,0 +1,39 @@
+## 图类型与用途
+这是一个流程图/架构图，展示了 MoAI-ADK 如何通过 MoAI Orchestrator 协调不同的角色（Manager、Expert、Builder 和 Team）来处理用户请求。该图用于概括 MoAI-ADK 的核心组件及其交互方式，以响应用户请求。
+
+## 图的整体布局
+图采用从左到右的布局。起点是用户请求，经过 MoAI Orchestrator 后，分发给不同的角色。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为三个阶段：用户请求、请求编排、角色处理。
+
+## 节点逐项说明
+- **👤 User Request**：用户发起的请求，是整个流程的起点。
+- **🗿 MoAI Orchestrator**：MoAI 编排器，是系统的核心组件，负责接收用户请求，并将其分配给合适的角色进行处理。
+- **📋 Manager (8)**：管理者角色，负责项目管理、质量控制、文档编写、战略规划、Git 管理等方面的工作。
+- **spec · ddd · tdd · docs quality · project · strategy · git**：Manager 负责的具体领域，包括规范、领域驱动设计、测试驱动开发、文档、质量、项目、战略、Git 版本控制。
+- **⚡ Expert (9)**：专家角色，负责特定技术领域的专业工作，例如后端、前端、安全、DevOps、性能优化、调试、测试、重构以及 Chrome 扩展开发。
+- **backend · frontend · security · devops performance · debug · testing · refactoring · chrome-ext**：Expert 负责的具体领域，包括后端、前端、安全、DevOps、性能优化、调试、测试、重构、Chrome 扩展。
+- **🔧 Builder (3)**：构建者角色，负责构建 Agent、Skill 和 Plugin。
+- **agent · skill · plugin**：Builder 负责的具体领域，包括智能体、技能、插件。
+- **👥 Team (8)**：团队角色，包含多种专业人员，例如研究员、分析师、架构师、设计师、后端开发人员、前端开发人员、测试人员和质量保证人员。
+- **researcher · analyst · architect · designer backend-dev · frontend-dev tester · quality**：Team 包含的具体角色，包括研究员、分析师、架构师、设计师、后端开发、前端开发、测试员、质量。
+
+## 连线、分支与汇聚关系
+- `U -> M`：用户发起 User Request，MoAI Orchestrator 接收 User Request。
+- `M -> MG`：MoAI Orchestrator 将 User Request 分配给 Manager 角色。
+- `M -> EX`：MoAI Orchestrator 将 User Request 分配给 Expert 角色。
+- `M -> BL`：MoAI Orchestrator 将 User Request 分配给 Builder 角色。
+- `M -> TM`：MoAI Orchestrator 将 User Request 分配给 Team 角色。
+
+## 仓库语境与术语解释
+- **MoAI-ADK**：Agentic Development Kit for Claude Code，是一个高性能 AI 开发环境，旨在通过协调多个 AI 代理来提高代码质量。
+- **MoAI Orchestrator**：MoAI-ADK 的核心组件，负责接收用户请求，并将其分配给合适的角色进行处理。
+- **Manager**：负责项目管理、质量控制、文档编写等工作，与 `.claude/agents/moai/manager-ddd.md` 等文件相关。
+- **Expert**：负责特定技术领域的专业工作，与 `.claude/agents/moai/expert-backend.md` 等文件相关。
+- **Builder**：负责构建 Agent、Skill 和 Plugin，与 `.claude/agents/moai/builder-agent.md` 文件相关。
+- **Team**：包含多种专业人员，共同完成用户请求。
+- **Skill**：MoAI-ADK 中可复用的功能模块，例如 `.claude/skills/moai/SKILL.md` 中定义了 MoAI super agent。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 MoAI-ADK 如何响应用户请求。用户请求首先被 MoAI Orchestrator 接收，然后 Orchestrator 将请求分发给 Manager、Expert、Builder 和 Team 四个角色。每个角色负责其特定的专业领域，共同完成用户请求。这种架构旨在利用不同角色的专业知识，高效地完成各种任务。其中，MoAI Orchestrator 是核心组件，负责请求的编排和分发。

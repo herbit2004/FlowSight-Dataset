@@ -1,0 +1,44 @@
+## 图类型与用途
+这是一个架构图，展示了 AGI-Alpha-Agent-v0 项目中多智能体系统如何协同工作。该图描述了 Orchestrator、World-Model、Vector-Graph Memory 和 Data Lake 等组件之间的关系，以及 Agents 子图中各个智能体的角色。
+
+## 图的整体布局
+图采用从左到右的布局。Orchestrator 作为起点，位于左侧，Agents 子图位于中间，World-Model 和 Vector-Graph Memory 位于右侧，Data Lake 位于下方。
+
+## 分组/子图/阶段说明
+- **Agents**：一个子图，包含多个智能体，每个智能体代表一个特定的领域或功能。这些智能体包括 FIN (💰), BIO (🧬), MFG (⚙️), POL (📜), ENE (🔋), SUP (📦), RET (🛍️), CYB (🛡️), CLM (🌎), DRG (💊), SCT (⛓️), TAL (🧑‍💻)。
+
+## 节点逐项说明
+- **Orchestrator (ORC)**：协调器，负责协调和管理各个智能体的活动。在 `alpha_factory_v1/backend/orchestrator.py` 中，可以看到 Orchestrator 负责 Agent 的调度和管理。
+- **World-Model (WM)**：世界模型，代表系统对外部世界的理解和建模。它接收来自各个智能体的经验，并将其整合到自身的模型中。`alpha_factory_v1/backend/world_model.py` 文件定义了 World-Model 的相关功能。
+- **Vector-Graph Memory (MEM)**：向量图记忆，用于存储和检索信息。世界模型将信息以向量嵌入的形式存储在这里，以便后续查询和推理。
+- **FIN (💰)**：财务智能体。
+- **BIO (🧬)**：生物智能体。
+- **MFG (⚙️)**：制造智能体。
+- **POL (📜)**：政治智能体。
+- **ENE (🔋)**：能源智能体。
+- **SUP (📦)**：供应链智能体。
+- **RET (🛍️)**：零售智能体。
+- **CYB (🛡️)**：网络安全智能体。
+- **CLM (🌎)**：气候智能体。
+- **DRG (💊)**：药物智能体。
+- **SCT (⛓️)**：安全智能体。
+- **TAL (🧑‍💻)**：人才智能体。
+- **Data Lake (DL)**：数据湖，用于存储来自 Orchestrator 的数据。
+
+## 连线、分支与汇聚关系
+- `ORC -- A2A --> Agents`：协调器将指令或任务（A2A，Agent-to-Agent）分发给各个智能体。
+- `Agents -- experience --> WM`：各个智能体根据其领域的知识和经验，向世界模型提供信息。
+- `WM -- embeddings --> MEM`：世界模型将信息转化为向量嵌入，并存储到向量图记忆中。
+- `ORC -- Kafka --> DL`：协调器通过 Kafka 消息队列将数据发送到数据湖进行存储。
+
+## 仓库语境与术语解释
+- **Orchestrator**：在 `alpha_factory_v1/backend/orchestrator.py` 中，Orchestrator 负责 Agent 的调度和管理，是整个系统的核心协调组件。
+- **World-Model**：`alpha_factory_v1/backend/world_model.py` 文件定义了 World-Model 的相关功能，包括环境模拟和规划。
+- **Agents**：Agents 子图中的每个智能体代表一个特定的领域或功能，例如财务、生物、制造等。`alpha_factory_v1/backend/agents/base.py` 定义了 Agent 的基类。
+- **A2A (Agent-to-Agent)**：图中表示 Orchestrator 与 Agents 之间的通信方式。
+- **Kafka**：图中表示 Orchestrator 通过 Kafka 消息队列将数据发送到 Data Lake。`alpha_factory_v1/backend/orchestrator.py` 中可以看到 Kafka 的相关配置。
+- **Data Lake**：用于存储来自 Orchestrator 的数据。
+- **Vector-Graph Memory**：用于存储和检索信息，是 World-Model 的一部分。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 AGI-Alpha-Agent-v0 的多智能体系统架构。Orchestrator 作为系统的起点，通过 A2A 协议与 Agents 子图中的各个智能体进行通信。Agents 将经验传递给 World-Model，World-Model 将信息转化为向量嵌入并存储到 Vector-Graph Memory 中。同时，Orchestrator 通过 Kafka 消息队列将数据发送到 Data Lake 进行存储。其中，Orchestrator 和 World-Model 是系统的核心组件，Agents 子图中的各个智能体代表不同的领域或功能。`alpha_factory_v1/backend/orchestrator.py` 和 `alpha_factory_v1/backend/world_model.py` 文件分别定义了 Orchestrator 和 World-Model 的相关功能。

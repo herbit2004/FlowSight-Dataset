@@ -1,0 +1,110 @@
+graph TD
+    %% --- Legend ---
+    subgraph Legend
+        direction TB
+        L_IDConv[NodeID Convention: TYPE_DescriptiveName]
+        L_UI[/UI Component/] --- L_UIDesc(User Interface)
+        L_API{{API Endpoint}} --- L_APIDesc(REST API Routes)
+        L_SVC[[Service Layer]] --- L_SvcDesc(Business Logic)
+        L_DB[(Database)] --- L_DBDesc(Data Operations)
+        L_Decision{Decision} --- L_DecDesc(Conditional Flow)
+        L_State[["State Manager"]] --- L_StateDesc(Client State)
+        L_External{{External API}} --- L_ExtDesc(3rd Party Service)
+    end
+
+    %% --- Entry Flow ---
+    APP_Start((User Opens App)):::./noderr/specs/APP_Start.md --> AUTH_Check{User Logged In?}:::./noderr/specs/AUTH_Check.md
+    
+    %% --- Authentication Subgraph ---
+    subgraph "Authentication System"
+        AUTH_Check -->|No| UI_LoginPage[/Login Page/]:::./noderr/specs/UI_LoginPage.md
+        UI_LoginPage --> UI_LoginForm[/Login Form/]:::./noderr/specs/UI_LoginForm.md
+        UI_LoginForm -->|Submit| API_Login{{POST /api/auth/login}}:::./noderr/specs/API_Login.md
+        
+        API_Login --> SVC_AuthValidator[[Auth Validator Service]]:::./noderr/specs/SVC_AuthValidator.md
+        SVC_AuthValidator --> DB_Users[(Users Database)]:::./noderr/specs/DB_Users.md
+        
+        DB_Users --> LoginResult{Valid Credentials?}:::./noderr/specs/LoginResult.md
+        LoginResult -->|No| UI_LoginError[/Show Login Error/]:::./noderr/specs/UI_LoginError.md
+        LoginResult -->|Yes| SVC_TokenGenerator[[Token Generator]]:::./noderr/specs/SVC_TokenGenerator.md
+        
+        UI_LoginError --> UI_LoginForm
+        SVC_TokenGenerator --> API_Login
+        API_Login -->|Success| STATE_UserSession[["Store User Session"]]:::./noderr/specs/STATE_UserSession.md
+    end
+    
+    %% --- Main Application ---
+    AUTH_Check -->|Yes| UI_Dashboard[/Dashboard/]:::./noderr/specs/UI_Dashboard.md
+    STATE_UserSession --> UI_Dashboard
+    
+    subgraph "E-Commerce Flow"
+        UI_Dashboard --> UI_ProductGrid[/Product Grid/]:::./noderr/specs/UI_ProductGrid.md
+        UI_ProductGrid --> UI_ProductCard[/Product Card/]:::./noderr/specs/UI_ProductCard.md
+        
+        UI_ProductCard -->|View Details| UI_ProductModal[/Product Details Modal/]:::./noderr/specs/UI_ProductModal.md
+        UI_ProductCard -->|Quick Add| STATE_CartManager[["Cart State Manager"]]:::./noderr/specs/STATE_CartManager.md
+        
+        UI_ProductModal -->|Add to Cart| STATE_CartManager
+        STATE_CartManager -->|Update| UI_CartIcon[/Cart Icon Badge/]:::./noderr/specs/UI_CartIcon.md
+        
+        UI_CartIcon -->|Click| UI_CartDrawer[/Shopping Cart Drawer/]:::./noderr/specs/UI_CartDrawer.md
+        UI_CartDrawer -->|Checkout| UI_CheckoutFlow[/Checkout Page/]:::./noderr/specs/UI_CheckoutFlow.md
+    end
+    
+    subgraph "Checkout Processing"
+        UI_CheckoutFlow --> API_CreateOrder{{POST /api/orders}}:::./noderr/specs/API_CreateOrder.md
+        API_CreateOrder --> SVC_OrderProcessor[[Order Processor]]:::./noderr/specs/SVC_OrderProcessor.md
+        
+        SVC_OrderProcessor --> SVC_InventoryCheck[[Inventory Service]]:::./noderr/specs/SVC_InventoryCheck.md
+        SVC_InventoryCheck --> DB_Inventory[(Inventory DB)]:::./noderr/specs/DB_Inventory.md
+        
+        DB_Inventory --> StockCheck{Items In Stock?}:::./noderr/specs/StockCheck.md
+        StockCheck -->|No| UI_StockError[/Out of Stock Error/]:::./noderr/specs/UI_StockError.md
+        StockCheck -->|Yes| SVC_PaymentGateway[[Payment Service]]:::./noderr/specs/SVC_PaymentGateway.md
+        
+        SVC_PaymentGateway --> EXT_Stripe{{Stripe API}}:::./noderr/specs/EXT_Stripe.md
+        EXT_Stripe --> PaymentResult{Payment Success?}:::./noderr/specs/PaymentResult.md
+        
+        PaymentResult -->|No| UI_PaymentError[/Payment Failed/]:::./noderr/specs/UI_PaymentError.md
+        PaymentResult -->|Yes| DB_Orders[(Orders Database)]:::./noderr/specs/DB_Orders.md
+        
+        DB_Orders --> SVC_EmailService[[Email Service]]:::./noderr/specs/SVC_EmailService.md
+        SVC_EmailService --> EXT_SendGrid{{SendGrid API}}:::./noderr/specs/EXT_SendGrid.md
+        
+        DB_Orders --> UI_OrderSuccess[/Order Confirmation/]:::./noderr/specs/UI_OrderSuccess.md
+    end
+    
+    %% --- Error Handling Flow ---
+    subgraph "Error Management"
+        API_Login -->|Error| UI_ErrorToast[/Error Toast Notification/]:::./noderr/specs/UI_ErrorToast.md
+        API_CreateOrder -->|Error| UI_ErrorToast
+        EXT_Stripe -->|Error| UI_ErrorToast
+        EXT_SendGrid -->|Error| SVC_ErrorLogger[[Error Logger]]:::./noderr/specs/SVC_ErrorLogger.md
+        SVC_ErrorLogger --> DB_ErrorLogs[(Error Logs)]:::./noderr/specs/DB_ErrorLogs.md
+    end
+    
+    %% --- Search Feature ---
+    subgraph "Product Search"
+        UI_Dashboard --> UI_SearchBar[/Search Bar/]:::./noderr/specs/UI_SearchBar.md
+        UI_SearchBar -->|Type| SVC_SearchDebounce[[Debounce Service]]:::./noderr/specs/SVC_SearchDebounce.md
+        SVC_SearchDebounce -->|300ms| API_Search{{GET /api/search}}:::./noderr/specs/API_Search.md
+        API_Search --> SVC_SearchEngine[[Search Engine]]:::./noderr/specs/SVC_SearchEngine.md
+        SVC_SearchEngine --> DB_Products[(Products DB)]:::./noderr/specs/DB_Products.md
+        DB_Products --> UI_SearchResults[/Search Results Dropdown/]:::./noderr/specs/UI_SearchResults.md
+        UI_SearchResults -->|Select| UI_ProductModal
+    end
+    
+    %% --- Visual Highlighting for Change Impact ---
+    style SVC_PaymentGateway fill:#ff9999,stroke:#ff0000,stroke-width:3px
+    style API_CreateOrder fill:#ffcccc
+    style UI_CheckoutFlow fill:#ffcccc
+    style EXT_Stripe fill:#ffcccc
+    
+    %% --- Classification ---
+    classDef critical fill:#ff6b6b,color:#fff
+    classDef complex fill:#4ecdc4,color:#fff
+    classDef standard fill:#45b7d1,color:#fff
+    
+    class AUTH_Check,SVC_PaymentGateway,DB_Orders critical
+    class STATE_CartManager,SVC_OrderProcessor,SVC_SearchEngine complex
+    class UI_ProductCard,UI_SearchBar,API_Search standard

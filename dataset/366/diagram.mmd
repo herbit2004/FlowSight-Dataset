@@ -1,0 +1,42 @@
+graph TB
+    subgraph "客户端生态"
+        A[🤖 LobeChat] -->|标准 OpenAI API 请求| B
+        C[🌐 ChatGPT-Next-Web] -->|标准 OpenAI API 请求| B
+        D[🐍 Python SDK] -->|标准 OpenAI API 请求| B
+        E[🖥️ cURL/终端] -->|标准 OpenAI API 请求| B
+    end
+    
+    subgraph "GPTAnon-2API Worker"
+        B[🚪 /v1/chat/completions] --> F{请求路由器}
+        F -->|流式请求| G[🎯 代理引擎]
+        F -->|模型列表请求| H[📋 /v1/models]
+        F -->|根路径访问| I[🖥️ 开发者驾驶舱]
+        
+        G --> J[🔄 格式转换器<br/>TransformStream]
+        J -->|转换后| K[📤 SSE 响应流]
+        
+        L[🔧 配置管理<br/>CONFIG + env] --> G
+        L --> H
+        L --> I
+        
+        M[🛡️ 认证中间件] --> F
+    end
+    
+    subgraph "上游服务"
+        G -->|转换后请求| N[🌊 gptanon.com API]
+        N -->|自定义 JSON 流| J
+    end
+    
+    K -->|标准 SSE 格式| A
+    K -->|标准 SSE 格式| C
+    K -->|标准 SSE 格式| D
+    K -->|标准 SSE 格式| E
+    
+    H -->|模型列表 JSON| A
+    H -->|模型列表 JSON| C
+    H -->|模型列表 JSON| D
+    
+    style B fill:#4CAF50,stroke:#388E3C
+    style G fill:#2196F3,stroke:#1976D2
+    style J fill:#FF9800,stroke:#F57C00
+    style I fill:#9C27B0,stroke:#7B1FA2

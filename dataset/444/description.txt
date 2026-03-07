@@ -1,0 +1,66 @@
+## 图类型与用途
+这是一个架构图，描述 MCP (Module Context Provider) 系统的整体架构和数据流。它展示了 AI 客户端如何与 MCP 系统的核心功能交互，以及 MCP 系统中各个组件之间的关系。该图在 `ARCHITECTURE.md` 中被用作系统架构的概览。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是 AI 客户端，中间是 MCP 服务器的各个组件，底部是基础设施层。数据流从客户端开始，经过服务器的各个模块，最终到达基础设施层。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表不同的组件或层级：
+- **AI Clients**：表示与 MCP 系统交互的各种 AI 客户端。
+- **MCP Server - Entry Points**：表示 MCP 服务器的入口点，包括 JavaScript 和 TypeScript 两种。
+- **Module Loader v1.6.2**：表示模块加载器，负责加载系统中的各种模块。
+- **Core Modules**：表示核心模块，包括代码库分析器和规范文档生成器。
+- **MCP Infrastructure**：表示 MCP 基础设施，包括协议处理器、工具注册表和会话管理器。
+- **Application Layer**：表示应用层，包括工作流引擎、需求澄清模块和指导文档模块。
+- **Domain Layer**：表示领域层，包含业务逻辑、工作流状态机和质量门。
+- **Infrastructure**：表示基础设施层，包括文件系统端口、日志端口和插件管理器。
+
+## 节点逐项说明
+- **Claude Code**：Claude 模型的代码客户端。
+- **Cursor IDE**：Cursor 集成开发环境。
+- **Other MCP Clients**：其他 MCP 客户端，代表未来可能接入的更多客户端。
+- **mcp-server.js Legacy Entry**：传统的 JavaScript 入口点。
+- **dist/index.js TypeScript Entry**：使用 TypeScript 构建的入口点。
+- **moduleLoader.ts Unified Loader**：统一的模块加载器，负责加载系统中的各种模块。该文件位于 `src/utils/moduleLoader.ts`。
+- **Path 1: ./utils/*.js npm start, node dist/**：通过 `npm start` 或 `node dist/` 启动时使用的模块加载路径。
+- **Path 2: ../utils/*.js npm run dev**：通过 `npm run dev` 启动时使用的模块加载路径。
+- **Path 3: ./*.js npx context**：通过 `npx context` 启动时使用的模块加载路径。
+- **Path 4: ../*.js Alternative npx**：通过另一种 `npx` 命令启动时使用的模块加载路径。
+- **documentGenerator Codebase Analysis**：代码库分析器，用于生成文档。
+- **specGenerator Spec Documents**：规范文档生成器。
+- **MCPServer Protocol Handler**：MCP 服务器，负责处理客户端请求的协议。该文件位于 `src/infrastructure/mcp/MCPServer.ts`。
+- **ToolRegistry Tool Management**：工具注册表，用于管理系统中的各种工具。该文件位于 `src/infrastructure/mcp/ToolRegistry.ts`。
+- **SessionManager State Management**：会话管理器，负责管理客户端会话的状态。
+- **WorkflowEngine Phase Management**：工作流引擎，负责管理工作流的各个阶段。
+- **RequirementsClarification Interactive Q&A**：需求澄清模块，提供交互式的问答功能。
+- **SteeringDocuments Context Generation**：指导文档模块，用于生成上下文信息。
+- **ProjectContext Business Logic**：项目上下文，包含业务逻辑。
+- **WorkflowStateMachine FSM**：工作流状态机，用于管理工作流的状态。
+- **QualityGate Validation**：质量门，用于验证代码质量。
+- **FileSystemPort I/O Abstraction**：文件系统端口，提供 I/O 抽象。
+- **LoggerPort Logging**：日志端口，提供日志功能。
+- **PluginManager Extensibility**：插件管理器，提供插件扩展功能。
+
+## 连线、分支与汇聚关系
+- `AI Clients -> MCP Server - Entry Points`：AI 客户端连接到 MCP 服务器的入口点。
+- `MCP Server - Entry Points -> Module Loader v1.6.2`：MCP 服务器的入口点使用模块加载器加载模块。
+- `Module Loader v1.6.2 -> Path 1 & Path 2 & Path 3 & Path 4`：模块加载器尝试不同的路径来加载模块。
+- `Path 1 & Path 2 & Path 3 & Path 4 -> Core Modules`：不同的加载路径最终加载核心模块。形成汇聚关系。
+- `MCP Server - Entry Points -> MCPServer`：MCP 服务器的入口点连接到 MCPServer 实例。
+- `MCPServer -> ToolRegistry & SessionManager`：MCPServer 使用 ToolRegistry 和 SessionManager。
+- `ToolRegistry -> Application Layer`：工具注册表与应用层交互。
+- `Application Layer -> Domain Layer`：应用层与领域层交互。
+- `Domain Layer -> Infrastructure`：领域层与基础设施层交互。
+
+## 仓库语境与术语解释
+- **MCP (Model Context Protocol)**：一种协议，用于 AI 客户端与服务器之间的通信。
+- **SDD (Spec-Driven Development)**：一种软件开发方法，强调规范和文档的重要性。
+- **Module Loader**：用于解决不同执行环境下的模块加载问题，具体实现在 `src/utils/moduleLoader.ts` 中。
+- **ToolRegistry**：用于管理和注册 MCP 工具，具体实现在 `src/infrastructure/mcp/ToolRegistry.ts` 中。
+- **MCPServer**：MCP 服务器的核心组件，负责处理客户端请求，具体实现在 `src/infrastructure/mcp/MCPServer.ts` 中。
+- **AI Clients**：例如 Claude Code 和 Cursor IDE，它们通过 MCP 协议与服务器交互。
+- **.spec 目录**：用于存储项目规范和配置，例如 `.spec/specs/{feature-name}/spec.json` 存储工作流状态。
+- **Skills**：在 v1.9.0 版本引入，用于模板/指导性操作，例如 `/sdd-requirements` skill。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 MCP 系统的整体架构，从 AI 客户端发起请求，经过 MCP 服务器的入口点，通过 Module Loader 加载核心模块，再经过 MCP Infrastructure、Application Layer 和 Domain Layer，最终到达 Infrastructure 层。其中，Module Loader 解决了跨环境的模块加载问题，ToolRegistry 负责管理 MCP 工具，MCPServer 负责处理客户端请求。AI Clients 通过 MCP 协议与服务器交互，`.spec` 目录用于存储项目规范和配置。

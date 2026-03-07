@@ -1,0 +1,81 @@
+flowchart TB
+    subgraph USER["👤 User Layer"]
+        U[User]
+    end
+
+    subgraph ENTRY["🚪 Entry Layer"]
+        CLI[CLI / MCP Server]
+        AID[AIDefence Security]
+    end
+
+    subgraph ROUTING["🧭 Routing Layer"]
+        QL[Q-Learning Router]
+        MOE[MoE - 8 Experts]
+        SK[Skills - 42+]
+        HK[Hooks - 17]
+    end
+
+    subgraph SWARM["🐝 Swarm Coordination"]
+        TOPO[Topologies<br/>mesh/hier/ring/star]
+        CONS[Consensus<br/>Raft/BFT/Gossip/CRDT]
+        CLM[Claims<br/>Human-Agent Coord]
+    end
+
+    subgraph AGENTS["🤖 60+ Agents"]
+        AG1[coder]
+        AG2[tester]
+        AG3[reviewer]
+        AG4[architect]
+        AG5[security]
+        AG6[...]
+    end
+
+    subgraph RESOURCES["📦 Resources"]
+        MEM[(Memory<br/>AgentDB)]
+        PROV[Providers<br/>Claude/GPT/Gemini/Ollama]
+        WORK[Workers - 12<br/>ultralearn/audit/optimize]
+    end
+
+    subgraph RUVECTOR["🧠 RuVector Intelligence Layer"]
+        direction TB
+        subgraph ROW1[" "]
+            SONA[SONA<br/>Self-Optimize<br/>&lt;0.05ms]
+            EWC[EWC++<br/>No Forgetting]
+            FLASH[Flash Attention<br/>2.49-7.47x]
+        end
+        subgraph ROW2[" "]
+            HNSW[HNSW<br/>150x-12,500x faster]
+            RB[ReasoningBank<br/>Pattern Store]
+            HYP[Hyperbolic<br/>Poincaré]
+        end
+        subgraph ROW3[" "]
+            LORA[LoRA/Micro<br/>128x compress]
+            QUANT[Int8 Quant<br/>3.92x memory]
+            RL[9 RL Algos<br/>Q/SARSA/PPO/DQN]
+        end
+    end
+
+    subgraph LEARNING["🔄 Learning Loop"]
+        L1[RETRIEVE] --> L2[JUDGE] --> L3[DISTILL] --> L4[CONSOLIDATE] --> L5[ROUTE]
+    end
+
+    U --> CLI
+    CLI --> AID
+    AID --> QL & MOE & SK & HK
+    QL & MOE & SK & HK --> TOPO & CONS & CLM
+    TOPO & CONS & CLM --> AG1 & AG2 & AG3 & AG4 & AG5 & AG6
+    AG1 & AG2 & AG3 & AG4 & AG5 & AG6 --> MEM & PROV & WORK
+    MEM --> SONA & EWC & FLASH
+    SONA & EWC & FLASH --> HNSW & RB & HYP
+    HNSW & RB & HYP --> LORA & QUANT & RL
+    LORA & QUANT & RL --> L1
+    L5 -.->|loops back| QL
+
+    style RUVECTOR fill:#1a1a2e,stroke:#e94560,stroke-width:2px
+    style LEARNING fill:#0f3460,stroke:#e94560,stroke-width:2px
+    style USER fill:#16213e,stroke:#0f3460
+    style ENTRY fill:#1a1a2e,stroke:#0f3460
+    style ROUTING fill:#1a1a2e,stroke:#0f3460
+    style SWARM fill:#1a1a2e,stroke:#0f3460
+    style AGENTS fill:#1a1a2e,stroke:#0f3460
+    style RESOURCES fill:#1a1a2e,stroke:#0f3460

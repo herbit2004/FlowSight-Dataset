@@ -1,0 +1,55 @@
+flowchart TD
+    %% Main CLI Layer
+    CLI["autoqa CLI"] --> Plan["Plan Commands"]
+    CLI --> Run["Run Command"]
+    CLI --> Init["Init Command"]
+    
+    %% Plan Command Architecture
+    Plan --> Explore["explore"]
+    Plan --> Generate["generate"]
+    Plan --> Full["explore + generate"]
+    
+    %% Exploration Flow
+    Explore --> Config["Configuration Loading"]
+    Config --> Browser["Browser Creation"]
+    Browser --> ExploreAgent["Explore Agent"]
+    ExploreAgent --> ExploreTools["Planning Tools"]
+    ExploreTools --> ExploreOutput["Exploration Artifacts"]
+    
+    %% Generation Flow
+    Generate --> ExploreOutput
+    Generate --> PlanAgent["Plan Agent"]
+    PlanAgent --> TestPlan["Test Plan Generation"]
+    TestPlan --> SpecOutput["Markdown Specs"]
+    
+    %% Configuration Layer
+    Config --> ConfigFile["autoqa.config.json"]
+    Config --> CliOptions["CLI Options"]
+    Config --> Defaults["Default Values"]
+    
+    %% Browser & Tools Layer
+    Browser --> Playwright["Playwright Engine"]
+    ExploreTools --> BrowserTools["Browser Tools"]
+    ExploreTools --> PlannerTools["Planner Tools"]
+    
+    %% Output Layer
+    ExploreOutput --> ExploreGraph["Navigation Graph"]
+    ExploreOutput --> Elements["Element Inventory"]
+    ExploreOutput --> Transcript["Exploration Transcript"]
+    
+    SpecOutput --> MarkdownFiles["*.md Test Files"]
+    SpecOutput --> TestPlanJson["test-plan.json"]
+    
+    %% Styling
+    style CLI fill:#e3f2fd,stroke:#2196f3,color:#0d47a1
+    style Plan fill:#f3e5f5,stroke:#9c27b0,color:#4a148c
+    style Run fill:#e8f5e9,stroke:#4caf50,color:#1b5e20
+    style Init fill:#fff3e0,stroke:#ff9800,color:#e65100
+    style Explore fill:#e8eaf6,stroke:#3f51b5,color:#1a237e
+    style Generate fill:#f1f8e9,stroke:#7cb342,color:#33691e
+    style Config fill:#fce4ec,stroke:#e91e63,color:#880e4f
+    style Browser fill:#e0f7fa,stroke:#00acc1,color:#004d40
+    style ExploreAgent fill:#fff8e1,stroke:#ffc107,color:#f57c00
+    style PlanAgent fill:#f9fbe7,stroke:#cddc39,color:#827717
+    style ExploreOutput fill:#f3e5f5,stroke:#9c27b0,color:#4a148c
+    style SpecOutput fill:#e8f5e9,stroke:#4caf50,color:#1b5e20

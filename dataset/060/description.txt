@@ -1,0 +1,40 @@
+## 图类型与用途
+这是一个流程图，展示了 FastAPI 应用的核心架构和请求处理流程。它描述了应用核心组件之间的关系和数据流向，用于帮助开发者理解应用的整体结构。
+
+## 图的整体布局
+图采用从左到右的布局。左侧是请求的起点，中间是请求处理的各个组件，右侧是响应处理和 API 文档生成。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为请求接收与预处理、路由与处理、响应处理与文档生成三个阶段。
+
+## 节点逐项说明
+- **Application Core**：代表应用程序的核心逻辑，接收外部请求并启动处理流程。
+- **Middleware**：负责在请求到达路由之前和响应返回之前执行预处理和后处理操作，例如身份验证、日志记录等。
+- **Routing**：根据请求的 URL 将请求分发到相应的处理函数。
+- **Request Handling & Validation**：负责解析和验证传入的请求数据，确保数据的有效性和安全性。
+- **Dependency Injection**：负责管理应用程序的依赖关系，并将其注入到需要它们的组件中，提高代码的可测试性和可维护性。
+- **Security**：负责处理应用程序的安全相关事务，例如身份验证、授权等。
+- **Response Handling**：负责将处理结果格式化为合适的响应格式，并返回给客户端。
+- **API Documentation**：负责生成和维护 API 文档，方便开发者了解和使用 API。
+
+## 连线、分支与汇聚关系
+- `Application Core -> Middleware`：Application Core 发送请求到 Middleware。
+- `Middleware -> Routing`：Middleware 将请求转发到 Routing。
+- `Routing -> Request Handling & Validation`：Routing 使用 Request Handling & Validation 进行请求处理和验证。
+- `Routing -> Dependency Injection`：Routing 使用 Dependency Injection 来获取依赖。
+- `Routing -> Response Handling`：Routing 为 Response Handling 提供数据。
+- `Dependency Injection -> Security`：Dependency Injection 启用 Security 功能。
+- `Response Handling -> Middleware`：Response Handling 将响应发送回 Middleware。
+- `API Documentation -> Routing`：API Documentation 检查 Routing，以生成准确的文档。
+- `API Documentation -> Request Handling & Validation`：API Documentation 检查 Request Handling & Validation，以生成准确的文档。
+
+## 仓库语境与术语解释
+- **FastAPI**：一个现代、快速（高性能）的 Web 框架，用于构建 API。
+- **Middleware**：在请求到达路由处理函数之前或之后执行的代码，常用于身份验证、日志记录等。
+- **Dependency Injection**：一种设计模式，用于解耦组件之间的依赖关系，提高代码的可测试性和可维护性。
+- **API Documentation**：使用 OpenAPI 等规范生成的 API 文档，方便开发者了解和使用 API。
+- **Routing**：根据请求的 URL 将请求分发到相应的处理函数。
+- **Application Core**：根据 README 和图，是应用接收外部请求并启动处理流程的核心模块。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了一个 FastAPI 应用的请求处理流程：Application Core 接收请求后，通过 Middleware 进行预处理，然后 Routing 根据请求的 URL 将其分发到相应的处理函数。在处理过程中，Request Handling & Validation 负责验证请求数据，Dependency Injection 负责管理依赖关系，Security 负责处理安全相关事务。最后，Response Handling 将处理结果格式化为响应并返回，Middleware 进行后处理。API Documentation 通过检查 Routing 和 Request Handling & Validation 来生成 API 文档。

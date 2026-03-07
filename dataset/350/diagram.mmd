@@ -1,0 +1,43 @@
+graph TB
+    subgraph "Client Layer"
+        UI[React UI Components]
+        Chat[Chat Interface]
+        Input[User Input]
+    end
+
+    subgraph "Next.js Application Layer"
+        API[API Routes]
+        Route[api/chat/route.ts]
+    end
+
+    subgraph "Business Logic Layer"
+        IM[Intention Module]
+        RM[Response Module]
+        SM[Streaming Module]
+    end
+
+    subgraph "AI Providers Layer"
+        OpenAI[OpenAI API]
+        Anthropic[Anthropic API]
+        Fireworks[Fireworks API]
+    end
+
+    subgraph "Vector Database Layer"
+        Pinecone[Pinecone Index]
+        Embeddings[Vector Embeddings]
+    end
+
+    UI --> Chat
+    Chat --> Input
+    Input --> API
+    API --> Route
+    Route --> IM
+    IM --> OpenAI
+    Route --> RM
+    RM --> SM
+    RM --> OpenAI
+    RM --> Anthropic
+    RM --> Fireworks
+    RM --> Pinecone
+    Pinecone --> Embeddings
+    SM --> UI

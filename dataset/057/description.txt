@@ -1,0 +1,45 @@
+## 图类型与用途
+这是一个流程图，描述了 `eralchemy` 工具如何将不同类型的输入转换为中间表示，并最终生成多种输出格式。它在仓库中的作用是展示 `eralchemy` 的整体架构和数据转换流程，便于理解其核心功能。
+
+## 图的整体布局
+图采用从左到右的布局。左侧是输入源，中间是核心转换节点，右侧是输出格式。整体流程是从多种输入汇聚到中间表示，再由中间表示发散到多种输出。
+
+## 分组/子图/阶段说明
+图中包含两个显式子图：
+- **Inputs**：表示 `eralchemy` 支持的各种输入源。
+- **Outputs**：表示 `eralchemy` 可以生成的各种输出格式。
+图中逻辑上可分为三个阶段：输入、转换、输出。
+
+## 节点逐项说明
+- **A[Markdown representation]**：表示以 Markdown 格式描述的实体关系。
+- **B[SQLAlchemy Schema]**：表示 SQLAlchemy 模型的定义。`eralchemy` 可以从 SQLAlchemy 模型生成 ER 图，如 README 所示。
+- **C[Existing database]**：表示现有的数据库。`eralchemy` 可以直接从数据库生成 ER 图，如 README 所示。
+- **D[Other ORM ?]**：表示可能支持的其他 ORM（对象关系映射器）。图中可见，但仓库上下文未进一步说明。
+- **E[Intermediary representation]**：表示中间表示层，`eralchemy` 将所有输入源转换为统一的内部格式。
+- **F[Markdown representation]**：表示以 Markdown 格式输出的实体关系描述。
+- **G[Graphviz code]**：表示生成的 Graphviz 代码，用于生成图形。
+- **H[Drawing]**：表示最终生成的图形图像（例如，PNG, SVG, PDF）。
+
+## 连线、分支与汇聚关系
+- `A --> E`：Markdown 格式的输入被转换为中间表示。
+- `B --> E`：SQLAlchemy Schema 被转换为中间表示。
+- `C --> E`：现有数据库被转换为中间表示。
+- `D --> E`：其他 ORM 的模型被转换为中间表示。
+- `A, B, C, D` 汇聚到 `E`，形成汇聚关系。
+- `E --> F`：中间表示可以被转换回 Markdown 格式。
+- `E --> G`：中间表示可以被转换为 Graphviz 代码。
+- `E --> H`：中间表示可以被转换为最终的图形图像。
+- `E` 发散到 `F, G, H`，形成分支关系。
+
+## 仓库语境与术语解释
+- **ERAlchemy**：该工具用于生成实体关系图（ERD），如 README 所示。
+- **SQLAlchemy**：一个 Python SQL 工具包和 ORM，`eralchemy` 支持从 SQLAlchemy 模型生成 ER 图。
+- **Graphviz**：一个图形可视化软件，`eralchemy` 可以生成 Graphviz 代码，用于生成图形。
+- **Intermediary representation**：中间表示层，是 `eralchemy` 的核心，用于统一处理不同格式的输入。
+- **Markdown representation**：`eralchemy` 支持 Markdown 格式的输入和输出，用于描述实体关系。
+- **ORM (Object-Relational Mapping)**：对象关系映射，用于实现面向对象编程语言里不同类型系统的数据之间的转换。
+- `eralchemy/main.py`: 包含命令行接口 `cli` 函数，用于执行 `eralchemy` 工具。
+- `eralchemy/models.py`: 定义了 `Column`, `Table`, `Relation` 等数据模型，用于表示 ER 图的元素。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `eralchemy` 工具的整体架构，从 Markdown、SQLAlchemy Schema、现有数据库等多种输入源开始，统一转换为中间表示，然后生成 Markdown、Graphviz 代码、图形图像等多种输出格式。核心流程是将不同格式的输入统一转换成中间表示，再由中间表示生成各种输出，其中 SQLAlchemy Schema 和 Graphviz 是两个关键的仓库语境锚点。

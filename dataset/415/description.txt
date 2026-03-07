@@ -1,0 +1,51 @@
+## 图类型与用途
+这是一个软件架构图，展示了 Diagrammer 项目中各个模块之间的关系和依赖。它描述了项目内部的组件以及它们与外部依赖的关系，提供了一个高层次的架构概览，在 README 中作为示例架构图展示。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是 `src` 目录下的各个子模块，中间是图表生成的核心模块，底部是外部依赖。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表不同的目录或模块分组：
+- **src**：代表项目的源代码目录，是整个系统的核心。
+- **analyzers**：`src` 目录下的子目录，包含各种代码分析器。
+- **generators**：`src` 目录下的子目录，包含图表生成器。
+- **exporters**：`src` 目录下的子目录，包含图表导出器。
+- **utils**：`src` 目录下的子目录，包含实用工具。
+- **external_deps**：代表项目依赖的外部库。
+
+## 节点逐项说明
+- **src**：源代码目录，是整个系统的核心。
+- **analyzers**：`src` 目录下的子目录，包含各种代码分析器。
+- **CodeAnalyzer**：基础代码分析器，可能是所有分析器的基类或抽象类。
+- **JavaScriptAnalyzer**：用于分析 JavaScript 代码的分析器。
+- **TypeScriptAnalyzer**：用于分析 TypeScript 代码的分析器。
+- **PythonAnalyzer**：用于分析 Python 代码的分析器。
+- **generators**：`src` 目录下的子目录，包含图表生成器。
+- **DiagramGenerator**：负责生成图表的组件。
+- **exporters**：`src` 目录下的子目录，包含图表导出器。
+- **DiagramExporter**：负责将生成的图表导出为特定格式（如 PNG 或 SVG）的组件。
+- **utils**：`src` 目录下的子目录，包含实用工具。
+- **GitManager**：用于管理 Git 仓库的组件，可能用于获取代码历史或提交图表更新。
+- **external_deps**：代表项目依赖的外部库。
+- **Puppeteer**：一个 Node.js 库，提供控制 Chrome 或 Chromium 的 API，可能用于生成图表的截图。
+- **Mermaid**：一个 JavaScript 图表绘制库，用于生成各种类型的图表。
+- **FsExtra**：一个 Node.js 库，提供额外的文件系统操作功能。
+
+## 连线、分支与汇聚关系
+- `CodeAnalyzer -> DiagramGenerator`：代码分析器负责分析代码，并将分析结果传递给图表生成器。
+- `DiagramGenerator -> DiagramExporter`：图表生成器将生成的图表传递给图表导出器。
+- `DiagramExporter -> Puppeteer`：图表导出器使用 Puppeteer 库生成图表的截图。
+- `DiagramGenerator -> Mermaid`：图表生成器使用 Mermaid 库生成各种类型的图表。
+- `GitManager -> CodeAnalyzer`：GitManager 用于管理 CodeAnalyzer，可能用于获取代码历史或提交图表更新。
+
+## 仓库语境与术语解释
+- **CodeAnalyzer**：位于 `src/analyzers/codeAnalyzer.js`，负责代码分析，支持 JavaScript, TypeScript, Python 等语言。
+- **DiagramGenerator**：位于 `src/generators/diagramGenerator.js`，负责根据代码分析结果生成图表。
+- **DiagramExporter**：位于 `src/exporters/diagramExporter.js`，负责将生成的图表导出为 PNG 或 SVG 格式。
+- **Puppeteer**：一个 Node.js 库，用于控制 Chrome 或 Chromium，用于生成图表的截图，在 `DiagramExporter` 中被使用。
+- **Mermaid**：一个 JavaScript 图表绘制库，用于生成各种类型的图表，在 `DiagramGenerator` 中被使用。
+- **GitManager**：位于 `src/utils/gitManager.js`，用于管理 Git 仓库，可能用于获取代码历史或提交图表更新。
+- **.diagrammer.yml**：配置文件，用于自定义分析和输出，例如可以配置 `maxNodesPerDiagram` 和 `maxDependenciesPerDiagram` 来限制图的复杂度。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Diagrammer 项目的架构概览。从 `src` 目录下的 `analyzers` 子模块中的 `CodeAnalyzer` 开始，代码分析结果被传递给 `generators` 子模块中的 `DiagramGenerator`，然后由 `exporters` 子模块中的 `DiagramExporter` 导出为 PNG 或 SVG 格式，其中 `DiagramGenerator` 使用 `Mermaid` 库，`DiagramExporter` 使用 `Puppeteer` 库。`GitManager` 用于管理 `CodeAnalyzer`。整体流程是从代码分析到图表生成和导出，依赖外部库 `Puppeteer` 和 `Mermaid`。

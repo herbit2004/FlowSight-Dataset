@@ -1,0 +1,53 @@
+## 图类型与用途
+这是一个架构图，描述了 `visualgpt-2api` 项目如何接收用户请求，通过 FastAPI 服务器处理，并与 VisualGPT 官方 API 和阿里云 OSS 进行交互，最终将处理结果返回给用户。它展示了请求处理的整体流程和组件间的关系。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是用户请求的入口，中间是 FastAPI 服务器的处理流程，底部是与 VisualGPT API 和阿里云 OSS 的交互，最终返回处理结果。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为三个阶段：请求接收与认证、请求路由与处理、结果获取与返回。
+
+## 节点逐项说明
+- **用户请求**：代表来自用户的 API 请求，例如图像编辑请求。
+- **Web UI / ComfyUI / SD WebUI**：表示项目支持的多种用户界面或集成方式，它们都可以发送请求到 FastAPI 服务器。README 提到 ComfyUI 和 Stable Diffusion WebUI 的集成教程。
+- **FastAPI 服务器**：作为整个系统的入口点，接收用户请求，并负责路由和处理。根据 `main.py`，它基于 Starlette 和 Pydantic，提供异步高性能支持。
+- **认证验证**：检查用户请求是否包含有效的 API 密钥（`API_MASTER_KEY`）。
+- **路由分发**：根据请求的内容，将请求路由到相应的处理模块。
+- **返回 401 错误**：如果认证失败，服务器返回 401 错误，拒绝访问。
+- **VisualGPT 提供商**：这是一个抽象的节点，代表与 VisualGPT 官方 API 交互的模块。
+- **Cloudscraper 模块**：用于绕过 Cloudflare 的 JavaScript 挑战和验证，确保可以正常访问 VisualGPT 官方 API。根据 README，它内置于项目中，自动处理 Cloudflare 的 JavaScript 挑战和验证。
+- **VisualGPT 官方 API**：VisualGPT 提供的图像处理 API，例如 Nano Banana, Seedream 4.0 等。
+- **OSS 上传器**：用于将用户上传的图片上传到阿里云 OSS。
+- **阿里云 OSS**：阿里云对象存储服务，用于存储用户上传的图片。
+- **处理结果**：VisualGPT 官方 API 处理后的结果，包括编辑后的图像或其他数据。
+- **返回用户**：将处理结果返回给用户。
+
+## 连线、分支与汇聚关系
+- `用户请求 -> FastAPI 服务器`：用户请求首先到达 FastAPI 服务器。
+- `Web UI -> FastAPI 服务器`：Web UI 发送请求到 FastAPI 服务器。
+- `ComfyUI -> FastAPI 服务器`：ComfyUI 发送请求到 FastAPI 服务器。
+- `SD WebUI -> FastAPI 服务器`：SD WebUI 发送请求到 FastAPI 服务器。
+- `FastAPI 服务器 -> 认证验证`：FastAPI 服务器对请求进行认证验证。
+- `认证验证 -- 通过 --> 路由分发`：如果认证通过，请求被路由分发。
+- `认证验证 -- 失败 --> 返回 401 错误`：如果认证失败，返回 401 错误。
+- `路由分发 -> VisualGPT 提供商`：请求被路由分发到 VisualGPT 提供商。
+- `VisualGPT 提供商 -> Cloudscraper 模块`：VisualGPT 提供商使用 Cloudscraper 模块。
+- `Cloudscraper 模块 -> VisualGPT 官方 API`：Cloudscraper 模块访问 VisualGPT 官方 API。
+- `VisualGPT 提供商 -> OSS 上传器`：VisualGPT 提供商使用 OSS 上传器。
+- `OSS 上传器 -> 阿里云 OSS`：OSS 上传器将图片上传到阿里云 OSS。
+- `VisualGPT 官方 API -> 处理结果`：VisualGPT 官方 API 返回处理结果。
+- `阿里云 OSS -> 处理结果`：阿里云 OSS 上的图片也作为处理结果的一部分。形成汇聚关系。
+- `处理结果 -> 返回用户`：处理结果返回给用户。
+
+## 仓库语境与术语解释
+- **FastAPI**：项目使用的 Web 框架，用于构建 API 服务。根据 README，它基于 Starlette 和 Pydantic，提供异步高性能支持。
+- **Cloudscraper**：用于绕过 Cloudflare 验证的模块。根据 README，它内置于项目中，自动处理 Cloudflare 的 JavaScript 挑战和验证。
+- **阿里云 OSS**：阿里云对象存储服务，用于存储用户上传的图片。`app/utils/oss_uploader.py` 文件实现了上传逻辑。
+- **API_MASTER_KEY**：用于认证用户请求的 API 密钥。在 `.env` 文件中配置。
+- **VisualGPT 官方 API**：VisualGPT 提供的图像处理 API，例如 Nano Banana, Seedream 4.0 等。`app/providers/visualgpt_provider.py` 文件实现了与该 API 的交互。
+- **Web UI**：项目自带的 Web UI 测试面板，用户可以通过它发送请求到 FastAPI 服务器。`main.py` 中挂载了静态文件目录，提供了 Web UI 界面。
+- **ComfyUI / SD WebUI**：第三方图像处理工具，可以通过 API 发送请求到 FastAPI 服务器。README 提供了集成教程。
+- **nginx.conf**：Nginx 的配置文件，用于反向代理和负载均衡。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `visualgpt-2api` 项目的核心架构。用户请求（来自 Web UI, ComfyUI, SD WebUI 等）首先到达 FastAPI 服务器，经过 API 密钥认证后，请求被路由到 VisualGPT 提供商。VisualGPT 提供商通过 Cloudscraper 模块绕过 Cloudflare 验证，访问 VisualGPT 官方 API，同时使用 OSS 上传器将图片上传到阿里云 OSS。最终，VisualGPT API 的处理结果和阿里云 OSS 上的图片汇聚成最终结果返回给用户。其中，FastAPI 服务器、Cloudscraper 模块和阿里云 OSS 是关键组件。

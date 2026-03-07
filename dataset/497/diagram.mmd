@@ -1,0 +1,19 @@
+graph LR
+    Client[Client<br/>Browser/CLI/Git] -->|Port 28080| Nginx[Nginx Container<br/>hub-ui:80]
+
+    Nginx -->|"Static Files<br/>(/, *.html, *.js)"| Static[Vue Frontend<br/>Static Files]
+    Nginx -->|"/api/*"| API[FastAPI Container<br/>hub-api:48888]
+    Nginx -->|"/org/*"| API
+    Nginx -->|"/{ns}/{repo}.git/*"| API
+    Nginx -->|"/resolve/*"| API
+    Nginx -->|"/admin/*"| API
+
+    API -->|REST API| LakeFS[LakeFS Container<br/>lakefs:28000]
+    API -->|S3 API| MinIO[MinIO Container<br/>minio:9000]
+    API -->|SQL| Postgres[PostgreSQL Container<br/>postgres:5432]
+
+    LakeFS -->|Store Objects| MinIO
+
+    Static -->|Response| Client
+    API -->|JSON Response| Nginx
+    Nginx -->|Response| Client

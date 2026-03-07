@@ -1,0 +1,23 @@
+flowchart TD
+    torchmodel["torch model<br>torchvision.models.resnet18()"]
+    othermodel["caffe, mxnet<br>keras, tensorflow<br>paddlepaddle, etc."]
+    torchscript["torchscript file<br>resnet18.pt"]
+    onnx["onnx file<br>resnet18.onnx"]
+    tnn["tnn file<br>resnet18.tnnproto/tnnmodel"]
+    optmodel["optimized torch model<br>resnet18_pnnx.Model()"]
+    ncnnmodel["ncnn model<br>resnet18.ncnn.param/bin"]
+    onnxzeromodel["onnx-zero model<br>resnet18.pnnx.onnx"]
+
+    subgraph pnnx
+        optmodel
+        ncnnmodel
+        onnxzeromodel
+    end
+
+    torchmodel -->|"mod = torch.jit.trace(model, x)<br>mod.save('resnet18.pt')"| torchscript
+    torchmodel -->|"torch.onnx.export(model, x, 'resnet18.onnx')"| onnx
+    othermodel -->|"export to onnx"| onnx
+    torchmodel -->|"pnnx.export(model, 'resnet18.pt', x)"| pnnx
+    torchscript -->|"pnnx.convert('resnet18.pt', x)"| pnnx
+    onnx -->|"pnnx.convert('resnet18.onnx', x)"| pnnx
+    tnn -->|"pnnx.convert('resnet18.tnnproto', x)"| pnnx

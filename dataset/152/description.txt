@@ -1,0 +1,42 @@
+## 图类型与用途
+这是一个流程图/架构图，展示了 Meme 搜索引擎的各个组件及其相互关系，以及数据流向。它描述了用户如何通过 Rails 应用与系统交互，以及 Rails 应用如何与数据库和 Python 服务交互，以实现 Meme 的搜索和描述生成。该图在仓库中用于清晰地呈现整个系统的架构设计，方便理解和部署。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是用户和 Docker 编排，中间是 Rails 应用、Python 服务和数据库，底部是共享 Meme 文件。数据流从用户开始，经过 Rails 应用，与数据库和 Python 服务交互，最终涉及共享 Meme 文件。
+
+## 分组/子图/阶段说明
+图中包含一个名为 "Shared Meme Files" 的子图，用于表示共享的 Meme 文件卷。该子图包含两个节点：
+- **Public Memes**：Rails 应用可以访问的公共 Meme 文件目录。
+- **Meme Directory**：Python 服务可以访问的 Meme 文件目录。
+
+## 节点逐项说明
+- **User**：代表使用 Meme 搜索引擎的用户。
+- **Docker & Compose Orchestration**：表示使用 Docker 和 Docker Compose 进行容器的编排和管理。根据 `docker-compose.yml` 文件，Docker 用于编排 Rails 应用、Python 服务和数据库。
+- **Rails Meme Search Application**：使用 Rails 框架构建的 Meme 搜索应用程序，负责接收用户请求、展示搜索结果、与数据库和 Python 服务交互。根据 `meme_search/meme_search_app` 目录结构，该应用是整个系统的核心。
+- **Image-to-Text Generator (Python)**：一个 Python 服务，用于从 Meme 图片中提取文本信息，可能是通过 OCR 或其他图像识别技术。根据 `meme_search/image_to_text_generator` 目录结构，该服务负责图像到文本的转换。
+- **PostgreSQL Database (with pgvector)**：使用 PostgreSQL 数据库存储 Meme 的元数据和文本信息，pgvector 扩展用于支持向量相似度搜索，用于语义搜索。根据 `meme_search/meme_search_app/config/database.yml` 文件，PostgreSQL 是用于存储 Meme 数据的数据库。
+- **Public Memes**：Rails 应用可以访问的公共 Meme 文件目录。根据 `docker-compose.yml` 文件，该目录挂载到 Rails 应用的 `/rails/public/memes` 目录下。
+- **Meme Directory**：Python 服务可以访问的 Meme 文件目录。根据 `docker-compose.yml` 文件，该目录挂载到 Python 服务的 `/app/public/memes` 目录下。
+
+## 连线、分支与汇聚关系
+- `User -> Rails`：用户通过与 Rails 应用交互来使用搜索引擎。
+- `Rails -> DB`：Rails 应用向数据库发送查询和更新请求（DBQueryUpdate）。
+- `Rails -> Python`：Rails 应用向 Python 服务发送 API 请求（APIRequest），请求提取图像中的文本。
+- `Python -> Rails`：Python 服务将提取的文本信息作为 API 响应（APIResponse）返回给 Rails 应用。
+- `Rails --- PublicMemes`：Rails 应用可以访问公共 Meme 文件。
+- `Python --- MemeDir`：Python 服务可以访问 Meme 目录。
+- `Docker --- Rails`：Docker 负责编排和管理 Rails 应用。
+- `Docker --- Python`：Docker 负责编排和管理 Python 服务。
+- `Docker --- DB`：Docker 负责编排和管理数据库。
+
+## 仓库语境与术语解释
+- **Rails Meme Search Application**：这是一个使用 Ruby on Rails 框架构建的 Web 应用程序，负责处理用户请求、搜索 Meme，并与数据库和图像到文本生成器服务交互。
+- **Image-to-Text Generator (Python)**：这是一个 Python 服务，使用机器学习模型从图像中提取文本。根据 `meme_search/image_to_text_generator/README.md`，该服务使用 Docker 容器化部署。
+- **PostgreSQL Database (with pgvector)**：这是一个 PostgreSQL 数据库，使用 pgvector 扩展来存储和索引 Meme 的向量嵌入，从而实现语义搜索。
+- **Docker & Compose Orchestration**：Docker 和 Docker Compose 用于容器化和编排整个系统，确保各个组件可以协同工作。`docker-compose.yml` 文件定义了各个服务的配置和依赖关系。
+- **Public Memes & Meme Directory**：这两个目录用于存储 Meme 文件，分别供 Rails 应用和 Python 服务访问。根据 `docker-compose.yml` 文件，这些目录通过 Docker 卷挂载实现共享。
+- **APIRequest & APIResponse**：Rails 应用通过 API 请求与 Python 服务通信，请求提取图像中的文本，并接收 Python 服务的 API 响应。
+- **DBQueryUpdate**：Rails 应用向 PostgreSQL 数据库发送查询和更新请求。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了一个基于 Docker 容器编排的 Meme 搜索引擎架构。用户通过 Rails 应用发起搜索请求，Rails 应用将请求发送给 Python 服务，Python 服务从 Meme 图片中提取文本，然后 Rails 应用将提取的文本和 Meme 元数据存储到 PostgreSQL 数据库中，利用 pgvector 进行语义搜索，并将结果返回给用户。Docker 用于容器化和编排整个系统，Rails 应用和 Python 服务共享 Meme 文件，其中 `docker-compose.yml` 定义了各个服务的配置和依赖关系。

@@ -1,0 +1,42 @@
+flowchart TD
+    Start[What type of data?] --> Spatial{Spatial<br/>coordinates?}
+    Start --> Modal{Multi-modal?}
+
+    %% Spatial branch
+    Spatial -->|Yes| SpatialRes{Resolution?}
+    SpatialRes -->|Single-cell| Inflow[Inflow Score]
+    SpatialRes -->|Spot-based| SpatialType{Analysis type?}
+    SpatialType -->|Bivariate| LocalQ{Local<br/>interactions?}
+    LocalQ -->|Yes| Local[Local Bivariate Metrics]
+    LocalQ -->|No| Global[Global Bivariate Metrics]
+    SpatialType -->|Unsupervised| MISTy[Multi-view Learning]
+
+    %% Non-spatial branch
+    Spatial -->|No| Compare{Compare across<br/>samples?}
+    Compare -->|Yes| Contrast{Specific<br/>contrast?}
+    Contrast -->|Yes| Targeted[Differential Contrasts]
+    Contrast -->|No| MOFA[MOFA+]
+    Contrast -->|No| Tensor[Tensor-cell2cell]
+    Tensor --> TensorExt[Extended Tutorials]
+    Compare -->|No| Steady[Steady-state LR Inference]
+
+    %% Multi-modal branch
+    Modal -->|Spatial| SMA[Multi-Modal Spatial]
+    Modal -->|Non-Spatial| SCMulti[Multi-Modal Single-Cell]
+
+    %% Metabolite sub-branch
+    SCMulti --> Metab[Metabolite-mediated CCC]
+
+    %% Links (click events)
+    click Inflow "https://liana-py.readthedocs.io/en/latest/notebooks/inflow_score.html"
+    click Local "https://liana-py.readthedocs.io/en/latest/notebooks/bivariate.html"
+    click Global "https://liana-py.readthedocs.io/en/latest/notebooks/bivariate.html"
+    click MISTy "https://liana-py.readthedocs.io/en/latest/notebooks/misty.html"
+    click Targeted "https://liana-py.readthedocs.io/en/latest/notebooks/targeted.html"
+    click MOFA "https://liana-py.readthedocs.io/en/latest/notebooks/mofatalk.html"
+    click Tensor "https://liana-py.readthedocs.io/en/latest/notebooks/liana_c2c.html"
+    click TensorExt "https://ccc-protocols.readthedocs.io/en/latest/"
+    click Steady "https://liana-py.readthedocs.io/en/latest/notebooks/basic_usage.html"
+    click SMA "https://liana-py.readthedocs.io/en/latest/notebooks/sma.html"
+    click SCMulti "https://liana-py.readthedocs.io/en/latest/notebooks/sc_multi.html"
+    click Metab "https://liana-py.readthedocs.io/en/latest/notebooks/sc_multi.html#metabolite-mediated-ccc-from-transcriptomics-data"

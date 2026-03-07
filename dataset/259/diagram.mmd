@@ -1,0 +1,30 @@
+flowchart LR
+  subgraph Liquid Haskell
+
+    subgraph Inputs
+      direction TB
+      LiftedDeps[
+        Dependencies of A
+        LifttedSpecs
+        ]
+      CoreBinds[CoreBinds]
+      Bare[BarseSpec]
+    end
+
+    subgraph Outputs
+      direction TB
+      T[TargetSpec] --> Constraints[Verification
+                                    Constraints]
+      L[LiftedSpec]
+    end
+
+    Inputs --> Outputs
+
+  end
+
+  A>DepsOfA_LHAssumptions] --> LiftedDeps
+  Deps>DepsOfA.hi] --> LiftedDeps
+  Mod(A.hs) --> CoreBinds & Bare
+  Constraints -->|checked by| fixpoint([liquid-fixpoint])
+  L ---> |if verified:
+           serialize| File>A.hi]

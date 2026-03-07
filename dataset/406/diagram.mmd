@@ -1,0 +1,26 @@
+graph TB
+    subgraph "SSB Signal Extraction System"
+        IN[Input Signal] --> PEAK[Peak Detection]
+        PEAK --> EVENT[Event Processing]
+        EVENT --> FIFO[Peak FIFO]
+        FIFO --> BUFFER[Circular Buffer]
+        BUFFER --> EXTRACT[SSB Extraction]
+        EXTRACT --> OUT[Output Signal]
+    end
+    
+    subgraph "FIFO Size Impact"
+        FIFO2[FIFO: 2 entries] --> BRAM_SUCCESS[✅ BRAM Success]
+        FIFO16[FIFO: 16 entries] --> BRAM_FAIL[❌ BRAM Failure]
+    end
+    
+    subgraph "Resource Impact"
+        BRAM_SUCCESS --> EFFICIENT[~900 Flip-Flops<br/>BRAM Tiles Used]
+        BRAM_FAIL --> INEFFICIENT[67,389+ Flip-Flops<br/>No BRAM Tiles]
+    end
+    
+    style FIFO2 fill:#4ecdc4
+    style FIFO16 fill:#ff6b6b
+    style BRAM_SUCCESS fill:#4ecdc4
+    style BRAM_FAIL fill:#ff6b6b
+    style EFFICIENT fill:#4ecdc4
+    style INEFFICIENT fill:#ff6b6b

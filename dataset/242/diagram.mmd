@@ -1,0 +1,22 @@
+flowchart TB
+    subgraph Sources["Context Sources"]
+        sys[System Prompt<br/>Personality]
+        slots[Task Slots<br/>Weather, News, etc.]
+        prefs[User Preferences]
+        const[Constitutional<br/>Modifiers]
+        mcp[MCP Resources]
+        vision[Vision State]
+    end
+
+    subgraph Builder["Context Builder"]
+        merge[Priority-Sorted<br/>Merge]
+    end
+
+    subgraph Final["LLM Request"]
+        messages[System Messages]
+        history[Conversation<br/>History]
+        user[User Message]
+    end
+
+    Sources --> merge --> messages
+    messages --> history --> user

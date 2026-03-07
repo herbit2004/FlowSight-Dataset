@@ -1,0 +1,37 @@
+## 图类型与用途
+这是一个流程图，描述了 Tweazy 应用中用户向 AI 服务提问并支付的流程。它在仓库中的作用是展示如何通过 x402 支付网关，实现按次付费的 AI 服务，用户需要支付 0.01 USDC 才能获得 AI 响应。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是用户提问的起始节点，底部是 AI 返回响应的结束节点。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：提问与 x402 响应、支付流程、重试请求与接收响应。
+
+## 节点逐项说明
+- **User asks question**：用户通过 Tweazy 应用的界面，向 AI 服务提出问题。
+- **AI service returns x402**：AI 服务收到用户的问题后，由于用户未支付，返回 HTTP 402 Payment Required 错误，表示需要支付才能获得服务。根据 `src/lib/x402.ts`，该错误包含支付所需的金额和接收者信息。
+- **Payment modal appears**：应用检测到 402 错误，弹出支付模态框，提示用户支付 0.01 USDC。对应 `components/PaymentModal.tsx` 组件。
+- **User approves 0.01 USDC payment**：用户在支付模态框中批准支付 0.01 USDC。
+- **Transaction confirmed on blockchain**：用户的支付交易在区块链上得到确认。
+- **Request retried with payment proof**：应用在区块链确认支付后，重新向 AI 服务发送请求，这次请求中包含支付证明。
+- **AI response delivered**：AI 服务验证支付证明后，将 AI 生成的回复返回给用户。
+
+## 连线、分支与汇聚关系
+- `A -> B`：用户提问 (A) 触发 AI 服务 (B) 返回 x402 错误。
+- `B -> C`：x402 错误导致支付模态框 (C) 出现。
+- `C -> D`：用户批准支付 (D)。
+- `D -> E`：交易在区块链上确认 (E)。
+- `E -> F`：交易确认后，应用重试请求，并附带支付证明 (F)。
+- `F -> G`：AI 服务返回响应 (G) 给用户。
+
+## 仓库语境与术语解释
+- **x402 Payment Required**：一种 HTTP 状态码，表示需要支付才能访问资源。在 Tweazy 应用中，用于实现按次付费的 AI 服务。相关代码见 `src/lib/x402.ts`。
+- **USDC**：一种稳定币，价值与美元挂钩。Tweazy 应用使用 USDC 作为支付货币，每次查询需要支付 0.01 USDC。
+- **Payment Modal**：支付模态框，用于提示用户支付并处理支付流程。对应 `components/PaymentModal.tsx` 组件。
+- **Smart Wallet**：一种智能合约钱包，支持 passkey 认证和 gas 费赞助。Tweazy 应用支持 Smart Wallet 和非托管钱包两种钱包类型。相关代码见 `src/lib/smart-wallet.ts`。
+- **Paymaster**：一种服务，用于赞助 Smart Wallet 用户的 gas 费。Tweazy 应用使用 Paymaster 实现 gas-free 交易。相关代码见 `src/lib/payment.ts`。
+- **Tambo AI**：一个 AI 服务提供商，Tweazy 应用集成了 Tambo AI 的服务。需要在 `.env.local` 文件中配置 `NEXT_PUBLIC_TAMBO_API_KEY`。
+- **MCP (Model Context Protocol)**：一种协议，用于扩展 AI 功能。Tweazy 应用支持 MCP 协议。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Tweazy 应用中用户提问到获得 AI 响应的完整支付流程。用户首先提问，AI 服务返回 x402 错误，应用弹出支付模态框，用户支付 0.01 USDC 后，交易在区块链上确认，应用重试请求并附带支付证明，最终 AI 服务返回响应。其中 x402 错误和支付模态框是关键中间环节，确保了 AI 服务的按次付费。该流程依赖于 `src/lib/x402.ts` 中的 x402 支付网关实现。

@@ -1,0 +1,47 @@
+graph TB
+    subgraph "User Space"
+        User[User]
+    end
+
+    subgraph "Claude Code Layer"
+        CC[Claude Code IDE]
+        CLAUDE[CLAUDE.md System Prompt]
+    end
+
+    subgraph "Project Cornelius"
+        CONFIG[.claude Config]
+        AGENTS[Sub-Agents]
+        SKILLS[Skills]
+        SEARCH[Local Brain Search]
+    end
+
+    subgraph "Memory Engine"
+        INTENT[Intent Classifier]
+        SPREAD[Spreading Activation]
+        LEARN[Q-Value Learning]
+    end
+
+    subgraph "Knowledge Layer"
+        BRAIN[Brain / Obsidian Vault]
+        FAISS[FAISS Index]
+        GRAPH[Knowledge Graph]
+    end
+
+    User --> CC
+    CC --> CLAUDE
+    CLAUDE --> CONFIG
+    CONFIG --> AGENTS
+    CONFIG --> SKILLS
+    AGENTS --> SEARCH
+    SKILLS --> SEARCH
+    SEARCH --> INTENT
+    INTENT --> SPREAD
+    SPREAD --> FAISS
+    SPREAD --> GRAPH
+    LEARN --> SPREAD
+    FAISS --> BRAIN
+    GRAPH --> BRAIN
+
+    style BRAIN fill:#e1f5e1
+    style FAISS fill:#ffd700
+    style SPREAD fill:#e6e6fa

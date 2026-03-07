@@ -1,0 +1,44 @@
+## 图类型与用途
+这是一个流程图，描述了使用 Kubricate 构建 Kubernetes 基础设施的步骤。它展示了核心流程和可选的 Secrets 管理流程，旨在帮助用户理解 Kubricate 的使用方式。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是初始配置步骤，中间是应用栈定义和项目配置，底部是生成 YAML 和 Secrets 管理步骤。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为三个阶段：基础配置、应用定义与配置、以及可选的 Secrets 管理。
+
+## 节点逐项说明
+- **Step1: Register Connectors**：注册用于连接 Kubernetes 集群的连接器。根据 README，Connectors 用于从系统读取/写入 secrets。
+- **Step2: Register at Least One Provider**：注册至少一个云服务提供商。根据 README，Providers 用于将 secrets 转换为 Kubernetes 原生资源。
+- **Step3: Set a Default Connector**：设置默认使用的 Kubernetes 连接器。
+- **Step4: Declare Secrets**：声明 Kubernetes Secrets。根据 README，这是使用 `addSecret({ name })` 进行类型安全 secret 声明的步骤。
+- **Step6: Define Your Application Stack**：定义你的应用程序栈，例如 Deployment、Service 等。根据 README，Kubricate 使用 Stacks 来管理 Kubernetes 资源。
+- **Step7: Configure the Project**：配置 Kubricate 项目。
+- **Step8: CLI: Generate YAML**：使用 Kubricate CLI 生成 Kubernetes YAML 文件。根据 README，这是通过运行 `kubricate generate` 命令实现的。
+- **Step5: Define a Hydration Plan (Optional)**：定义一个用于填充 Secrets 的 Hydration Plan。图中可见，但仓库上下文未进一步说明。
+- **Step9: CLI: Plan & Hydrate Secrets (Optional)**：使用 Kubricate CLI 计划和填充 Secrets。图中可见，但仓库上下文未进一步说明。
+- **Step10: CLI: Validate & Apply Secrets (Optional)**：使用 Kubricate CLI 验证和应用 Secrets。根据 README，这是通过运行 `kubricate secrets apply` 命令实现的。
+
+## 连线、分支与汇聚关系
+- `Step1 -> Step2`：注册连接器后注册 Provider。
+- `Step2 -> Step3`：注册 Provider 后设置默认连接器。
+- `Step3 -> Step4`：设置默认连接器后声明 Secrets。
+- `Step4 -> Step6`：声明 Secrets 后定义应用栈。
+- `Step6 -> Step7`：定义应用栈后配置项目。
+- `Step7 -> Step8`：配置项目后生成 YAML 文件。
+- `Step4 -.-> Step5`：声明 Secrets 后可以选择定义 Hydration Plan。虚线箭头表示可选步骤。
+- `Step5 -> Step9`：定义 Hydration Plan 后使用 CLI 计划和填充 Secrets。
+- `Step4 -.-> Step10`：声明 Secrets 后可以选择直接验证和应用 Secrets，跳过 Hydration Plan。虚线箭头表示可选步骤。
+- `Step9 -> Step10`：计划和填充 Secrets 后验证和应用 Secrets。
+
+## 仓库语境与术语解释
+- **Kubricate CLI**：Kubricate 的命令行工具，用于生成 YAML 文件和管理 Secrets。
+- **Connectors**：用于从外部系统（如 .env 文件、Azure Key Vault）读取 secrets 的组件。
+- **Providers**：用于将 secrets 转换为 Kubernetes 原生资源（如 Secret、ConfigMap）的组件。
+- **Stacks**：用于组织和管理 Kubernetes 资源的可重用组件。
+- **Hydration Plan**：用于定义 secrets 的来源和去向，实现 secrets 的同步和管理。
+- **YAML**：Kubernetes 的资源定义文件格式。Kubricate 的目标之一是减少手动编写 YAML 的需求。
+- `kubricate.config.ts`：Kubricate 的配置文件，用于定义 Connectors、Providers 和 Stacks。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了使用 Kubricate 构建 Kubernetes 基础设施的流程。从注册 Connectors 和 Providers 开始，然后设置默认连接器并声明 Secrets。核心流程是定义应用栈、配置项目，并最终使用 Kubricate CLI 生成 YAML 文件。可选的 Secrets 管理流程包括定义 Hydration Plan，使用 CLI 计划、填充、验证和应用 Secrets。Kubricate 旨在简化 Kubernetes 基础设施的构建和管理，并提供类型安全和可重用的组件。

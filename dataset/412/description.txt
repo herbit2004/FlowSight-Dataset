@@ -1,0 +1,65 @@
+## 图类型与用途
+这是一个关系图，用于描述 BBOT OSINT 持续监控系统中不同实体之间的关系。它在仓库中的作用是展示数据模型，描述系统如何组织和关联从 OSINT 扫描中提取的不同类型的信息，对应于 `docs/DATA_MODEL.md` 中 Mermaid overview 的内容。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是包含所有实体的子图，底部是 `DOMAIN` 节点，其他节点根据与 `HOST` 和 `DOMAIN` 的关系进行排列。
+
+## 分组/子图/阶段说明
+图中有一个名为 "Entities" 的子图，它包含了所有被监控和分析的实体类型。
+
+## 节点逐项说明
+- **DOMAIN**：代表一个域名。
+- **HOST**：代表一个主机，通常与 IP 地址相关联。
+- **DNS_NAME**：代表一个 DNS 记录。
+- **OPEN_TCP_PORT**：代表主机上开放的 TCP 端口。
+- **URL**：代表一个 URL 地址。
+- **URL_UNVERIFIED**：代表一个未验证的 URL 地址。
+- **EMAIL_ADDRESS**：代表一个电子邮件地址。
+- **MOBILE_APP**：代表一个移动应用程序。
+- **TECHNOLOGY**：代表主机或域名使用的技术。
+- **ASN**：代表一个自治系统号。
+- **FINDING**：代表一个安全发现或漏洞。
+- **STORAGE_BUCKET**：代表一个云存储桶。
+- **SOCIAL**：代表一个社交媒体账号或页面。
+- **CODE_REPOSITORY**：代表一个代码仓库（例如 GitHub, GitLab）。
+- **IP_ADDRESS**：代表一个 IP 地址。
+- **SCAN**：代表一次扫描活动。
+- **EVENT**：代表一次事件。
+
+## 连线、分支与汇聚关系
+- `SCAN -- TARGETS --> DOMAIN`：扫描以域名为目标。
+- `EVENT -- ABOUT --> SCAN`：事件是关于扫描的。
+- `DNS_NAME -- ON_HOST --> HOST`：DNS 名称位于主机上。
+- `OPEN_TCP_PORT -- ON_HOST --> HOST`：开放的 TCP 端口位于主机上。
+- `URL -- ON_HOST --> HOST`：URL 位于主机上。
+- `EMAIL_ADDRESS -- ON_HOST --> HOST`：电子邮件地址位于主机上。
+- `STORAGE_BUCKET -- ON_HOST --> HOST`：存储桶位于主机上。
+- `FINDING -- ON_HOST --> HOST`：发现位于主机上。
+- `HOST -- PART_OF --> DOMAIN`：主机是域名的一部分。
+- `HOST -- USES_TECH --> TECHNOLOGY`：主机使用某种技术。
+- `URL -- RESOLVES_TO --> IP_ADDRESS`：URL 解析到 IP 地址。
+- `OPEN_TCP_PORT -- RESOLVES_TO --> IP_ADDRESS`：开放的 TCP 端口解析到 IP 地址。
+- `HOST -- RESOLVES_TO --> IP_ADDRESS`：主机解析到 IP 地址。
+- `FINDING -- RELATED_URL --> URL`：发现与 URL 相关。
+- `STORAGE_BUCKET -- EXPOSED_AT --> URL`：存储桶暴露于 URL。
+- `MOBILE_APP -- OF_DOMAIN --> DOMAIN`：移动应用属于该域名。
+- `URL -- OF_DOMAIN --> DOMAIN`：URL 属于该域名。
+- `FINDING -- OF_DOMAIN --> DOMAIN`：发现属于该域名。
+- `STORAGE_BUCKET -- OF_DOMAIN --> DOMAIN`：存储桶属于该域名。
+- `SOCIAL -- OF_DOMAIN --> DOMAIN`：社交媒体账号属于该域名。
+- `CODE_REPOSITORY -- OF_DOMAIN --> DOMAIN`：代码仓库属于该域名。
+- `ASN -- OF_DOMAIN --> DOMAIN`：ASN 属于该域名。
+- `IP_ADDRESS -- OF_DOMAIN --> DOMAIN`：IP 地址属于该域名。
+- `URL_UNVERIFIED -- OF_DOMAIN --> DOMAIN`：未验证的 URL 属于该域名。
+
+## 仓库语境与术语解释
+- **BBOT**：Black Lantern OSINT (开源情报) 工具，用于执行各种 OSINT 扫描任务。
+- **Neo4j**：图数据库，用于存储 BBOT 扫描结果，如 README 所述。
+- **DOMAIN**：代表被监控的目标域名，配置在 `init_config.json` 的 `targets` 列表中。
+- **HOST**：代表与域名相关的服务器或主机，包含端口、状态等信息，对应 `docs/DATA_MODEL.md` 中的定义。
+- **SCAN**：代表一次扫描活动，通过 `init_config.json` 配置扫描参数。
+- **EVENT**：代表扫描过程中产生的事件，例如发现新的子域名或漏洞。
+- **MCP (Cursor MCP)**：用于查询数据的接口，README 中提到 Cursor 可以通过 MCP 查询数据。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 BBOT OSINT 系统的数据模型，描述了扫描（SCAN）如何以域名（DOMAIN）为目标，以及事件（EVENT）如何与扫描相关联。主机（HOST）是域名的一部分，并使用技术（TECHNOLOGY）。URL、开放 TCP 端口和主机都可以解析到 IP 地址。发现（FINDING）与 URL 相关。该图体现了 OSINT 数据之间的复杂关系，例如主机与域名、IP 地址、开放端口和技术的关联。该图对应于 `docs/DATA_MODEL.md` 中 Mermaid overview 的内容，用于描述 Neo4j 数据库中存储的数据关系。

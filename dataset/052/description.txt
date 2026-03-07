@@ -1,0 +1,52 @@
+## 图类型与用途
+这是一个架构图，描述了一个多智能体保险支持系统的架构。该图展示了用户查询如何被路由到不同的智能体，以及这些智能体如何与数据库交互，最终生成回复或转交给人工处理的流程。该图在 README 中被用作架构说明。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是用户查询的入口节点，中间是监督者智能体和多个专业智能体，底部是数据库和对话结束节点。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为用户查询、智能体处理、数据访问和结果输出四个阶段。
+
+## 节点逐项说明
+- **User Query**：用户发起的保险相关查询，作为整个流程的起点。
+- **Supervisor Agent**：监督者智能体，负责接收用户查询，并根据查询内容将其路由到合适的专业智能体。根据 README，它相当于一个调度中心，并且具有“clarification-aware”能力，可以在委派工作之前请求缺失的上下文。
+- **Policy Agent**：保单智能体，专门处理与保单相关的问题，例如保单条款、保单状态等。根据 README，它使用结构化工具调用从 SQLite 数据库获取信息。
+- **Billing Agent**：账单智能体，负责处理与账单相关的问题，例如账单查询、支付方式等。根据 README，它使用结构化工具调用从 SQLite 数据库获取信息。
+- **Claims Agent**：理赔智能体，负责处理与理赔相关的问题，例如理赔申请、理赔进度等。根据 README，它使用结构化工具调用从 SQLite 数据库获取信息。
+- **General Help Agent**：通用帮助智能体，处理不属于其他专业智能体负责的常见问题。根据 README，它从 ChromaDB 向量数据库检索 FAQ 信息。
+- **Human Escalation Agent**：人工介入智能体，当系统无法自动解决问题时，将问题转交给人工客服处理。根据 README，它负责记录升级原因。
+- **Final Answer Agent**：最终答案智能体，负责将专业智能体提供的答案整理成用户友好的格式，并生成最终回复。根据 README，它将专家的信息改写成客户易于理解的回复。
+- **SQLite DB**：SQLite 数据库，存储保单、账单、理赔等结构化数据。Policy、Billing 和 Claims 智能体需要访问该数据库获取相关信息。根据 README，它包含 1000 个客户，1500 个保单以及相关的账单、支付和理赔表。
+- **ChromaDB**：ChromaDB 向量数据库，存储通用知识库，用于支持 General Help Agent 回答常见问题。根据 README，它存储从 Hugging Face 数据集 `deccan-ai/insuranceQA-v2` 导入并嵌入的 FAQ 数据。
+- **Conversation Complete**：对话结束，表示用户的问题已得到解决或已转交给人工处理。
+
+## 连线、分支与汇聚关系
+- `User Query -> Supervisor Agent`：用户发起查询，查询首先被发送到监督者智能体。
+- `Supervisor Agent -> Policy Agent`：监督者智能体将查询路由到保单智能体。
+- `Supervisor Agent -> Billing Agent`：监督者智能体将查询路由到账单智能体。
+- `Supervisor Agent -> Claims Agent`：监督者智能体将查询路由到理赔智能体。
+- `Supervisor Agent -> General Help Agent`：监督者智能体将查询路由到通用帮助智能体。
+- `Supervisor Agent -> Human Escalation Agent`：监督者智能体将查询路由到人工介入智能体。
+- `Supervisor Agent -> Final Answer Agent`：监督者智能体将查询路由到最终答案智能体。
+- `Policy Agent -> SQLite DB`：保单智能体访问 SQLite 数据库获取相关信息。
+- `Billing Agent -> SQLite DB`：账单智能体访问 SQLite 数据库获取相关信息。
+- `Claims Agent -> SQLite DB`：理赔智能体访问 SQLite 数据库获取相关信息。
+- `General Help Agent -> ChromaDB`：通用帮助智能体访问 ChromaDB 向量数据库获取相关信息。
+- `Policy Agent -> Supervisor Agent`：保单智能体处理完问题后，将结果返回给监督者智能体。形成汇聚关系。
+- `Billing Agent -> Supervisor Agent`：账单智能体处理完问题后，将结果返回给监督者智能体。形成汇聚关系。
+- `Claims Agent -> Supervisor Agent`：理赔智能体处理完问题后，将结果返回给监督者智能体。形成汇聚关系。
+- `General Help Agent -> Supervisor Agent`：通用帮助智能体处理完问题后，将结果返回给监督者智能体。形成汇聚关系。
+- `Final Answer Agent -> Conversation Complete`：最终答案智能体生成用户友好的回复，对话结束。
+- `Human Escalation Agent -> Conversation Complete`：如果问题需要人工处理，则转交给人工介入智能体，对话结束。
+
+## 仓库语境与术语解释
+- **LangGraph**：用于多智能体工作流编排的框架，如 README 所述。
+- **RAG (Retrieval-Augmented Generation)**：一种结合检索和生成模型的技术，用于增强语言模型的知识和生成能力。
+- **SQLite**：用于存储结构化数据的关系型数据库，用于存储保单、账单和理赔数据。
+- **ChromaDB**：用于存储向量嵌入的向量数据库，用于存储 FAQ 数据。
+- **Phoenix**：用于追踪和调试的工具，用于监控智能体的运行情况。README 提到每个 agent function 都被 OpenTelemetry span 封装，以便在 Arize Phoenix 中重放决策。
+- **Supervisor Agent (Router)**：根据 README，该智能体使用 OpenAI 函数调用来请求缺失的上下文，然后再委派工作。
+- **Final Answer Agent**：根据 README，该智能体将专家的信息改写成客户易于理解的回复。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了一个多智能体保险支持系统的架构，从用户发起查询开始，查询被发送到监督者智能体，然后监督者智能体将查询路由到不同的专业智能体（保单、账单、理赔、通用帮助或人工介入）。专业智能体访问 SQLite 数据库或 ChromaDB 向量数据库获取相关信息，并将结果返回给监督者智能体。最终答案智能体将专业智能体的结果整理成用户友好的格式，对话结束。该架构使用了 LangGraph 进行多智能体工作流编排，并使用 Phoenix 进行追踪和调试。

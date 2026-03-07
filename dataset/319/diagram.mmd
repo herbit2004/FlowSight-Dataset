@@ -1,0 +1,23 @@
+flowchart LR
+  D[dev branch\nFast iteration]
+  S[staging branch\nSoak & integration]
+  R[release/x.y branch optional]
+  P[Production stable tag]
+
+  D --> S
+  S -->|create tag stable| P
+  S --> R
+  S -->|merge fixes| R
+  R -->|tag stable| P
+
+  subgraph Clusters
+    C1[dev-01\ntracks dev]
+    C2[stag-01\ntracks staging]
+    C3[prod-01\ntracks stable]
+    C4[ops-01\ntracks stable]
+  end
+
+  D --> C1
+  S --> C2
+  P --> C3
+  P --> C4

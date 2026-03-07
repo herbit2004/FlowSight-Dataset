@@ -1,0 +1,89 @@
+## 图类型与用途
+这是一个架构图，展示了 RedAmon 系统的整体架构，包括用户层、前端层、后端层、MCP 工具层、扫描层、数据层和 LLM 提供商等多个组件及其交互方式。该图旨在清晰地呈现系统的整体架构和数据流向。
+
+## 图的整体布局
+图采用从上到下的分层布局。顶部是用户层和前端层，中间是后端层和 MCP 工具层，底部是扫描层、数据层和 LLM 提供商。数据流从用户层开始，经过各层组件，最终影响目标系统和数据存储。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表不同的层级：
+- **User Layer (用户层)**：用户与系统交互的入口，包括 Web 浏览器和命令行界面。
+- **Frontend Layer (前端层)**：使用 Next.js 构建的 Web 应用程序，作为用户与后端交互的界面。
+- **Backend Layer (后端层)**：包含 AI Agent Orchestrator 和 Recon Orchestrator，负责协调和控制整个系统的行为。
+- **MCP Tools Layer (MCP 工具层)**：包含多个安全工具服务器，如 Network Recon Server、Nuclei Server、Metasploit Server 和 Nmap Server。
+- **Scanning Layer (扫描层)**：包含 Recon Pipeline、GVM/OpenVAS Scanner 和 GitHub Secret Hunter，负责执行扫描任务。
+- **Data Layer (数据层)**：包含 Neo4j 图数据库和 PostgreSQL 数据库，用于存储和管理系统数据。
+- **LLM Providers (LLM 提供商)**：包含 OpenAI、Anthropic、Local Models、OpenRouter 和 AWS Bedrock，为 AI Agent 提供语言模型服务。
+- **External APIs (外部 APIs)**：包含 GitHub API，用于访问 GitHub 上的仓库和代码。
+- **Target Layer (目标层)**：包含 Target Systems 和 Guinea Pigs (Test VMs)，表示渗透测试的目标。
+
+## 节点逐项说明
+- **Browser (Web Browser)**：用户通过 Web 浏览器与系统交互。
+- **CLI (Terminal/CLI)**：用户通过命令行界面与系统交互。
+- **Webapp (Next.js Webapp :3000)**：使用 Next.js 构建的 Web 应用程序，运行在 3000 端口，作为用户与后端交互的界面。
+- **Agent (AI Agent Orchestrator FastAPI + LangGraph :8090)**：AI 代理编排器，使用 FastAPI 和 LangGraph 构建，运行在 8090 端口，负责协调和控制整个系统的行为。
+- **ReconOrch (Recon Orchestrator FastAPI + Docker SDK :8010)**：侦察编排器，使用 FastAPI 和 Docker SDK 构建，运行在 8010 端口，负责管理和执行侦察任务。
+- **NetworkRecon (Network Recon Server Curl + Naabu :8000)**：使用 Curl 和 Naabu 进行网络侦察，运行在 8000 端口。
+- **Nuclei (Nuclei Server :8002)**：运行 Nuclei 漏洞扫描工具，运行在 8002 端口。
+- **Metasploit (Metasploit Server :8003)**：运行 Metasploit 渗透测试框架，运行在 8003 端口。
+- **Nmap (Nmap Server :8004)**：运行 Nmap 端口扫描工具，运行在 8004 端口。
+- **Recon (Recon Pipeline Docker Container)**：运行在 Docker 容器中的侦察流程。
+- **GVM (GVM/OpenVAS Scanner Network Vuln Assessment)**：网络漏洞评估工具。
+- **GHHunt (GitHub Secret Hunter Credential Scanning)**：用于在 GitHub 上扫描敏感信息的工具。
+- **Neo4j (Neo4j Graph DB :7474/:7687)**：用于存储和管理系统中的图数据，运行在 7474 和 7687 端口。
+- **Postgres (PostgreSQL Project Settings :5432)**：用于存储项目设置，运行在 5432 端口。
+- **OpenAI**：OpenAI 的 API。
+- **Anthropic**：Anthropic 的 API。
+- **LocalLLM (Local Models Ollama · vLLM · LM Studio)**：本地运行的 LLM 模型，例如 Ollama, vLLM, LM Studio。
+- **OpenRouter (OpenRouter 300+ Models)**：通过 OpenRouter 访问 300+ 模型。
+- **Bedrock (AWS Bedrock)**：AWS Bedrock 的 API。
+- **GitHubAPI (GitHub API Repos & Code Search)**：用于访问 GitHub 仓库和代码搜索的 API。
+- **Target (Target Systems)**：渗透测试的目标系统。
+- **GuineaPigs (Guinea Pigs Test VMs)**：用于测试的虚拟机。
+
+## 连线、分支与汇聚关系
+- `Browser --> Webapp`：用户通过浏览器访问 Web 应用程序。
+- `CLI --> Recon`：用户通过命令行界面触发侦察流程。
+- `Webapp <--> Agent`：Web 应用程序与 AI Agent Orchestrator 通过 WebSocket 进行双向通信。
+- `Webapp --> ReconOrch`：Web 应用程序通过 REST + SSE 与 Recon Orchestrator 通信。
+- `Webapp --> Neo4j`：Web 应用程序访问 Neo4j 图数据库。
+- `Webapp --> Postgres`：Web 应用程序访问 PostgreSQL 数据库。
+- `ReconOrch --> Recon`：Recon Orchestrator 通过 Docker SDK 启动 Recon Pipeline。
+- `ReconOrch --> GVM`：Recon Orchestrator 通过 Docker SDK 启动 GVM/OpenVAS Scanner。
+- `ReconOrch --> GHHunt`：Recon Orchestrator 通过 Docker SDK 启动 GitHub Secret Hunter。
+- `Recon --> Webapp`：Recon Pipeline 从 Web 应用程序获取设置。
+- `GHHunt --> GitHubAPI`：GitHub Secret Hunter 使用 GitHub API。
+- `Agent --> OpenAI`：AI Agent Orchestrator 使用 OpenAI API。
+- `Agent --> Anthropic`：AI Agent Orchestrator 使用 Anthropic API。
+- `Agent --> LocalLLM`：AI Agent Orchestrator 使用本地 LLM 模型。
+- `Agent --> OpenRouter`：AI Agent Orchestrator 使用 OpenRouter API。
+- `Agent --> Bedrock`：AI Agent Orchestrator 使用 AWS Bedrock API。
+- `Agent --> Neo4j`：AI Agent Orchestrator 访问 Neo4j 图数据库。
+- `Agent --> NetworkRecon`：AI Agent Orchestrator 通过 MCP 协议与 Network Recon Server 通信。
+- `Agent --> Nuclei`：AI Agent Orchestrator 通过 MCP 协议与 Nuclei Server 通信。
+- `Agent --> Metasploit`：AI Agent Orchestrator 通过 MCP 协议与 Metasploit Server 通信。
+- `Agent --> Nmap`：AI Agent Orchestrator 通过 MCP 协议与 Nmap Server 通信。
+- `Recon --> Neo4j`：Recon Pipeline 将结果存储到 Neo4j 图数据库。
+- `GVM --> Recon`：GVM/OpenVAS Scanner 读取 Recon Pipeline 的输出。
+- `GVM --> Neo4j`：GVM/OpenVAS Scanner 将结果存储到 Neo4j 图数据库。
+- `GVM --> Target`：GVM/OpenVAS Scanner 扫描目标系统。
+- `GVM --> GuineaPigs`：GVM/OpenVAS Scanner 扫描测试虚拟机。
+- `NetworkRecon --> Target`：Network Recon Server 扫描目标系统。
+- `Nuclei --> Target`：Nuclei Server 扫描目标系统。
+- `Metasploit --> Target`：Metasploit Server 攻击目标系统。
+- `Nmap --> Target`：Nmap Server 扫描目标系统。
+- `NetworkRecon --> GuineaPigs`：Network Recon Server 扫描测试虚拟机。
+- `Nuclei --> GuineaPigs`：Nuclei Server 扫描测试虚拟机。
+- `Metasploit --> GuineaPigs`：Metasploit Server 攻击测试虚拟机。
+- `Nmap --> GuineaPigs`：Nmap Server 扫描测试虚拟机。
+
+## 仓库语境与术语解释
+- **AI Agent Orchestrator**：使用 FastAPI 和 LangGraph 构建的 AI 代理编排器，负责协调和控制整个系统的行为。 对应 `agentic/api.py` 文件。
+- **Recon Orchestrator**：使用 FastAPI 和 Docker SDK 构建的侦察编排器，负责管理和执行侦察任务。 对应 `recon_orchestrator/api.py` 文件。
+- **MCP (Metasploit Compatible Protocol)**：一种用于 AI Agent Orchestrator 与安全工具服务器通信的协议，图中可见，但仓库上下文未进一步说明。
+- **Neo4j Graph DB**：用于存储和管理系统中的图数据，例如漏洞信息、网络拓扑等。 对应 `graph_db/neo4j_client.py` 文件。
+- **GVM/OpenVAS Scanner**：网络漏洞评估工具，用于扫描目标系统中的漏洞。 对应 `gvm_scan/gvm_scanner.py` 文件。
+- **GitHub Secret Hunter**：用于在 GitHub 上扫描敏感信息的工具，例如 API 密钥、密码等。 对应 `github_secret_hunt/github_secret_hunt.py` 文件。
+- **Next.js Webapp**：使用 Next.js 构建的 Web 应用程序，作为用户与后端交互的界面。 对应 `webapp/` 目录。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+RedAmon 系统架构从用户层（Browser/CLI）发起，通过 Next.js Webapp 与后端进行交互。核心组件是 AI Agent Orchestrator，它通过 WebSocket 与 Webapp 通信，并使用多种 LLM Providers (OpenAI, Anthropic, LocalLLM

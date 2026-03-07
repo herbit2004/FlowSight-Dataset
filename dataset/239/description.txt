@@ -1,0 +1,39 @@
+## 图类型与用途
+这是一个流程图，描述了 PraisonAI 框架中，输入如何经过 LLM 调用路由，被分配给多个 LLM 进行处理，最终由合成器整合输出的架构。其用途是展示多 LLM 协同处理和结果整合的流程。
+
+## 图的整体布局
+图采用从左到右的布局。输入节点位于最左侧，经过 LLM 调用路由后，并行调用多个 LLM，最后汇聚到合成器，输出最终结果。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：输入与路由、LLM 并行处理、结果合成与输出。
+
+## 节点逐项说明
+- **In**：代表系统的输入，可能是用户的查询、指令或其他需要处理的数据，作为整个流程的起点。
+- **LLM Call Router**：负责将输入路由到不同的 LLM 进行处理，决定哪个或哪些 LLM 应该接收输入。根据 `examples/python/agents/router-agent-cost-optimization.py`，路由策略可以基于成本优化，为不同复杂度的任务选择不同的模型。
+- **LLM Call 1**：代表一个 LLM 模型，接收到输入后，会独立地进行处理并生成自己的输出。
+- **LLM Call 2**：代表另一个 LLM 模型，与 LLM Call 1 并行处理输入，并将各自的输出传递给 `Synthesizer`。
+- **LLM Call 3**：代表第三个 LLM 模型，与 LLM Call 1 和 LLM Call 2 并行处理输入，并将各自的输出传递给 `Synthesizer`。
+- **Synthesizer**：负责接收来自不同 LLM 的输出，并将它们整合为一个统一的输出。整合的方式可能包括选择最佳结果、合并信息、或进行更复杂的处理。
+- **Out**：代表系统的最终输出，是合成器整合后的结果。
+
+## 连线、分支与汇聚关系
+- `In -> LLM Call Router`：输入首先传递给 LLM 调用路由。
+- `LLM Call Router -> LLM Call 1`：LLM 调用路由将输入传递给 LLM Call 1。
+- `LLM Call Router -> LLM Call 2`：LLM 调用路由将输入传递给 LLM Call 2。
+- `LLM Call Router -> LLM Call 3`：LLM 调用路由将输入传递给 LLM Call 3。
+- `LLM Call 1 -> Synthesizer`：LLM Call 1 处理后的输出传递给 Synthesizer。
+- `LLM Call 2 -> Synthesizer`：LLM Call 2 处理后的输出传递给 Synthesizer。
+- `LLM Call 3 -> Synthesizer`：LLM Call 3 处理后的输出传递给 Synthesizer。LLM Call 1、LLM Call 2 和 LLM Call 3 的输出汇聚到 Synthesizer，形成汇聚关系。
+- `Synthesizer -> Out`：Synthesizer 将整合后的输出传递给 Out。
+
+## 仓库语境与术语解释
+- **LLM (Large Language Model)**：大型语言模型，用于处理和生成文本。
+- **LLM Call Router**：根据 `examples/python/agents/router-agent.py`，`RouterAgent` 可以根据关键词将请求路由到专门的 Agent。
+- **Synthesizer**：将多个 LLM 的输出整合为一个统一的输出，具体的整合方式未在图中明确说明，但仓库上下文表明可能涉及选择、合并或更复杂的处理。
+- **PraisonAI**：一个生产就绪的多智能体框架，具有自我反思能力，旨在创建 AI 智能体来自动化和解决从简单任务到复杂挑战的各种问题，如 README 所述。
+- **Agent**：PraisonAI 中的核心概念，可以理解为具有特定角色和目标的 AI 智能体。
+- **Tool**：Agent 可以使用的工具，例如 `duckduckgo` 搜索引擎，用于辅助完成任务。
+- **Task**：Agent 需要完成的具体任务，可以定义输入、输出和执行逻辑。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 PraisonAI 框架中多 LLM 协同处理的流程。流程从输入 `In` 开始，经过 `LLM Call Router` 将输入分发给 `LLM Call 1`、`LLM Call 2` 和 `LLM Call 3` 并行处理，然后将它们的输出传递给 `Synthesizer` 进行整合，最终产生输出 `Out`。`LLM Call Router` 的路由策略可以基于成本优化，为不同复杂度的任务选择不同的模型，而 `Synthesizer` 则负责将来自不同 LLM 的信息进行整合，从而产生更全面、更准确的输出。

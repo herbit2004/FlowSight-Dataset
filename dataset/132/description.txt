@@ -1,0 +1,74 @@
+## 图类型与用途
+这是一个流程图，描述了 AutoTS 模型自动寻找最佳时间序列预测模型的流程。它展示了 AutoTS 如何通过遗传算法自动搜索、评估和选择最佳模型，以实现自动化时间序列建模。
+
+## 图的整体布局
+图整体采用从上到下的布局。流程从顶部开始，经过数据处理、模型训练与评估，最终到达底部的结果输出。存在循环结构，体现了遗传算法的迭代优化过程。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为以下几个阶段：
+- **初始化与数据准备**：包括启动模型、导入模板、加载数据和分割数据。
+- **初始模型训练与评估**：运行初始模板模型，评估准确性指标，并生成评分。
+- **遗传算法优化**：通过遗传算法结合最佳结果和新的随机参数生成新的模板，并进行评估。
+- **验证与集成**：选择最佳模型进行验证，评估验证结果，并决定是否创建集成模型。
+- **结果输出**：导出最佳模型模板，选择单个最佳模型，生成未来时间序列预测，并可视化结果。
+
+## 节点逐项说明
+- **Initiate AutoTS Model**：启动 AutoTS 模型，标志着流程的开始。
+- **Import Template**：导入模板，模板包含模型、预处理步骤和参数的配置。根据 `autots/templates/general.py`，模板定义了模型类型、模型参数和转换参数。
+- **Load Data**：加载时间序列数据。根据 README，AutoTS 接受 *long* 或 *wide* 格式的 Pandas DataFrame 作为输入数据。
+- **Split Data Into Initial Train/Test Holdout**：将数据分割成初始训练集和测试集（留出集）。
+- **Run Initial Template Models**：运行初始模板中指定的模型，在训练集上训练，并在测试集上进行预测。
+- **Evaluate Accuracy Metrics on Results**：评估预测结果的准确性指标，例如均方误差、平均绝对误差等。
+- **Generate Score from Accuracy Metrics**：根据准确性指标生成一个评分，用于评估模型的性能。
+- **Max Generations Reached or Timeout?**：判断是否达到最大迭代次数或超时。这是遗传算法的停止条件。
+- **Evaluate All Previous Templates**：评估所有之前生成的模板。
+- **Genetic Algorithm Combines Best Results and New Random Parameters into New Template**：遗传算法将最佳结果和新的随机参数组合成新的模板。这是遗传算法的核心步骤，通过交叉和变异产生新的模型配置。
+- **Run New Template Models and Evaluate**：运行新的模板模型并评估其性能。
+- **Select Best Models by Score for Validation Template**：根据评分选择最佳模型，用于验证模板。
+- **Run Validation Template on Additional Holdouts**：在额外的留出集上运行验证模板。
+- **Evaluate and Score Validation Results**：评估并评分验证结果。
+- **Create Ensembles?**：决定是否创建集成模型。
+- **Generate Ensembles from Validation Results**：从验证结果生成集成模型。
+- **Run Ensembles Through Validation**：通过验证运行集成模型。
+- **Export Best Models Template**：导出最佳模型模板。
+- **Select Single Best Model**：选择单个最佳模型。
+- **Generate Future Time Forecast**：生成未来时间序列的预测。
+- **Visualize Results**：可视化结果。
+
+## 连线、分支与汇聚关系
+- `Initiate AutoTS Model -> Import Template`：启动 AutoTS 模型后，导入模板。
+- `Import Template -> Load Data`：导入模板后，加载数据。
+- `Load Data -> Split Data Into Initial Train/Test Holdout`：加载数据后，将数据分割成训练集和测试集。
+- `Split Data Into Initial Train/Test Holdout -> Run Initial Template Models`：分割数据后，运行初始模板模型。
+- `Run Initial Template Models -> Evaluate Accuracy Metrics on Results`：运行模型后，评估准确性指标。
+- `Evaluate Accuracy Metrics on Results -> Generate Score from Accuracy Metrics`：评估指标后，生成评分。
+- `Generate Score from Accuracy Metrics -> Max Generations Reached or Timeout?`：生成评分后，判断是否达到最大迭代次数或超时。
+- `Max Generations Reached or Timeout? -- No --> Evaluate All Previous Templates`：如果未达到最大迭代次数或超时，则评估所有之前的模板。
+- `Evaluate All Previous Templates -> Genetic Algorithm Combines Best Results and New Random Parameters into New Template`：评估所有之前的模板后，遗传算法结合最佳结果和新的随机参数生成新的模板。
+- `Genetic Algorithm Combines Best Results and New Random Parameters into New Template -> Run New Template Models and Evaluate`：生成新的模板后，运行新的模板模型并评估其性能。
+- `Run New Template Models and Evaluate -> Generate Score from Accuracy Metrics`：运行新的模板模型并评估后，生成评分，形成循环。
+- `Max Generations Reached or Timeout? -- Yes --> Select Best Models by Score for Validation Template`：如果达到最大迭代次数或超时，则根据评分选择最佳模型。
+- `Select Best Models by Score for Validation Template -> Run Validation Template on Additional Holdouts`：选择最佳模型后，在额外的留出集上运行验证模板。
+- `Run Validation Template on Additional Holdouts -> Evaluate and Score Validation Results`：运行验证模板后，评估并评分验证结果。
+- `Evaluate and Score Validation Results -> Create Ensembles?`：评估验证结果后，决定是否创建集成模型。
+- `Create Ensembles? -- Yes --> Generate Ensembles from Validation Results`：如果创建集成模型，则从验证结果生成集成模型。
+- `Generate Ensembles from Validation Results -> Run Ensembles Through Validation`：生成集成模型后，通过验证运行集成模型。
+- `Run Ensembles Through Validation -> Evaluate and Score Validation Results`：通过验证运行集成模型后，评估并评分验证结果，形成循环。
+- `Create Ensembles? -- No --> Export Best Models Template`：如果不创建集成模型，则导出最佳模型模板。
+- `Export Best Models Template -> Select Single Best Model`：导出最佳模型模板后，选择单个最佳模型。
+- `Select Single Best Model -> Generate Future Time Forecast`：选择单个最佳模型后，生成未来时间序列的预测。
+- `Generate Future Time Forecast -> Visualize Results`：生成预测后，可视化结果。
+- `Export Best Models Template -> Import Template`：导出最佳模型模板后，可以重新导入模板，形成循环。
+
+## 仓库语境与术语解释
+- **AutoTS**：一个用于自动化时间序列建模的 Python 包，旨在快速部署高精度预测。
+- **Template**：包含模型、预处理步骤和参数的配置。`autots/templates/general.py` 中定义了一些通用模板。
+- **Genetic Algorithm**：遗传算法，用于自动搜索最佳模型、预处理和集成方法。
+- **Ensemble**：集成模型，通过组合多个模型的预测结果来提高预测准确性。README 提到 "Horizontal and mosaic style ensembles are the flagship ensembling types"。
+- **Validation**：验证，用于评估模型的性能。`autots/evaluator/validation.py` 包含验证相关的函数。
+- **Model List**：模型列表，包含 AutoTS 中可用的各种时间序列预测模型。`autots/models/model_list.py` 定义了不同的模型列表，例如 `superfast`、`fast` 和 `scalable`。
+- **Forecast Length**：预测长度，即预测未来时间序列的期间数。
+- **Frequency**：频率，时间序列数据的时间间隔。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图描述了 AutoTS 模型自动寻找最佳时间序列预测模型的过程。流程从启动模型并导入模板开始，加载数据并分割成训练集和测试集。然后，通过遗传算法迭代优化模型，包括运行模型、评估指标、生成评分、选择最佳模型等步骤。在达到最大迭代次数或超时后，选择最佳模型进行验证，并决定是否创建集成模型。最后，导出最佳模型模板，选择单个最佳模型，生成未来时间序列预测，并可视化结果。遗传算法优化和模型验证是核心环节，AutoTS 通过模板来定义模型和预处理步骤。

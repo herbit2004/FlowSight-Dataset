@@ -1,0 +1,53 @@
+## 图类型与用途
+这是一个架构图，展示了一个典型的基于 AWS 云服务的 Web 应用架构。它描述了用户请求如何通过不同的 AWS 服务最终到达应用服务器，以及监控告警的流程。该图在仓库中用于概括 AWS Labs 的整体架构。
+
+## 图的整体布局
+图整体采用从上到下的布局。用户请求作为起点，经过一系列 AWS 服务，最终到达应用服务器和数据库。监控告警流程从所有组件开始，向上汇聚到 CloudWatch，再到 SNS Alerts。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为以下几个阶段：
+- **用户请求入口**：用户发起请求，通过 CloudFront CDN。
+- **负载均衡与自动伸缩**：请求到达负载均衡器，并分发到自动伸缩组。
+- **应用服务**：自动伸缩组中的 EC2 实例或 ECS Fargate 容器运行应用服务。
+- **数据存储**：应用服务访问 RDS 数据库、DynamoDB 数据库或 ElastiCache Redis 缓存。
+- **监控告警**：所有组件的监控数据汇聚到 CloudWatch，并通过 SNS 发送告警通知。
+
+## 节点逐项说明
+- **User**：发起请求的最终用户。
+- **CF (CloudFront CDN)**：AWS 的内容分发网络，用于缓存静态资源，加速内容传输，并提供 DDoS 保护。
+- **LB (ALB/NLB)**：负载均衡器，可以是应用负载均衡器 (ALB) 或网络负载均衡器 (NLB)。用于将流量分发到后端服务器。
+- **ASG (Auto Scaling Group)**：自动伸缩组，用于根据负载自动调整 EC2 实例的数量，保证应用的可用性和性能。
+- **EC2 (EC2 Instances)**：运行在 AWS 云上的虚拟机实例，用于运行应用服务器。
+- **ECS (ECS Fargate)**：AWS 的容器服务，使用 Fargate 启动类型，无需管理底层 EC2 实例。用于运行容器化的应用。
+- **RDS (RDS Multi-AZ)**：AWS 的关系型数据库服务，配置为多可用区 (Multi-AZ)，提供高可用性和容错能力。
+- **Dynamo (DynamoDB)**：AWS 的 NoSQL 数据库服务。
+- **Cache (ElastiCache Redis)**：AWS 的内存数据库服务，使用 Redis 作为缓存，加速数据访问。
+- **CW (CloudWatch Monitoring)**：AWS 的监控服务，用于收集和监控各种指标，例如 CPU 使用率、内存使用率、网络流量等。
+- **SNS (SNS Alerts)**：AWS 的简单通知服务，用于发送告警通知，例如通过邮件或短信。
+- **All**：代表所有组件，用于说明所有组件都会被 CloudWatch 监控。
+
+## 连线、分支与汇聚关系
+- `User -> CF`：用户的请求首先到达 CloudFront CDN。
+- `CF -> LB`：CloudFront 将请求转发到负载均衡器 (ALB/NLB)。
+- `LB -> ASG`：负载均衡器将请求分发到自动伸缩组 (ASG)。
+- `ASG -> EC2 & ECS`：自动伸缩组包含 EC2 实例和 ECS Fargate 容器。请求被分发到这些实例或容器上，形成分支关系。
+- `EC2 -> RDS`：EC2 实例上的应用服务器可能需要访问 RDS 数据库。
+- `ECS -> Dynamo`：ECS Fargate 容器中的应用服务器可能需要访问 DynamoDB 数据库。
+- `RDS -> Cache`：RDS 数据库的数据可以被缓存到 ElastiCache Redis 中，以提高读取性能。
+- `All -> CW`：所有组件（包括 CloudFront、负载均衡器、EC2 实例、ECS Fargate 容器、RDS 数据库、DynamoDB 数据库、ElastiCache Redis）都会被 CloudWatch 监控。
+- `CW -> SNS`：CloudWatch 会根据监控指标触发告警，并通过 SNS 发送告警通知。
+
+## 仓库语境与术语解释
+- **CloudFront CDN**：AWS 的内容分发网络，用于缓存静态资源，加速内容传输，并提供 DDoS 保护。
+- **ALB/NLB**：应用负载均衡器或网络负载均衡器，用于将流量分发到后端服务器。`aws-labs/12-alb.md` 描述了如何配置 ALB。
+- **Auto Scaling Group**：自动伸缩组，用于根据负载自动调整 EC2 实例的数量，保证应用的可用性和性能。
+- **EC2 Instances**：运行在 AWS 云上的虚拟机实例，用于运行应用服务器。
+- **ECS Fargate**：AWS 的容器服务，使用 Fargate 启动类型，无需管理底层 EC2 实例。`aws-labs/13-ecs-cluster.md` 描述了如何创建 ECS 集群。
+- **RDS Multi-AZ**：AWS 的关系型数据库服务，配置为多可用区 (Multi-AZ)，提供高可用性和容错能力。
+- **DynamoDB**：AWS 的 NoSQL 数据库服务。
+- **ElastiCache Redis**：AWS 的内存数据库服务，使用 Redis 作为缓存，加速数据访问。
+- **CloudWatch Monitoring**：AWS 的监控服务，用于收集和监控各种指标。
+- **SNS Alerts**：AWS 的简单通知服务，用于发送告警通知。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了用户请求从 User 端开始，经过 CloudFront CDN 加速，通过 ALB/NLB 负载均衡到 Auto Scaling Group 管理的 EC2 或 ECS Fargate 实例上，应用服务可以访问 RDS、DynamoDB 或 ElastiCache Redis 进行数据存储。所有组件的监控数据都汇聚到 CloudWatch，并通过 SNS 发送告警。整体架构体现了 AWS 云服务在 Web 应用中的典型应用，其中 ALB/NLB、Auto Scaling Group 和 CloudWatch 是关键组件。该图与 `aws-labs/README.md` 中描述的 AWS Labs 实践相关。

@@ -1,0 +1,46 @@
+## 图类型与用途
+这是一个流程图，展示了 `oh-my-ag` 项目中多智能体协作的架构。该图描述了工作流如何协调和编排领域智能体和质量保证智能体，最终完成代码提交。该图在 README 中作为项目架构的概览。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是工作流，然后是编排层、领域智能体层和质量保证层，最终指向代码提交。
+
+## 分组/子图/阶段说明
+图中包含四个显式子图：
+- **Workflows**：包含预定义的工作流程，用于触发和引导多智能体协作过程。
+- **Orchestration**：负责协调和管理不同的智能体。
+- **Domain Agents**：负责特定领域的任务。
+- **Quality**：负责代码质量的保证。
+
+## 节点逐项说明
+- **W1["/coordinate"]**：协调工作流。
+- **W2["/orchestrate"]**：编排工作流。
+- **W3["/plan"]**：规划工作流。
+- **W4["/review"]**：审查工作流。
+- **W5["/debug"]**：调试工作流。
+- **PM[pm-agent]**：项目经理智能体，负责需求分析、任务分解和架构设计。根据 `.agent/skills/pm-agent/SKILL.md`，PM Agent 用于将复杂功能请求分解为任务，确定技术可行性，并规划 sprints。
+- **WF[workflow-guide]**：工作流引导智能体，负责协调复杂的多智能体项目。根据 README，Workflow Guide 负责协调复杂的多智能体项目。
+- **ORC[orchestrator]**：编排器，负责整体的智能体调度和流程控制。根据 README，Orchestrator 基于 CLI 并行执行 agent，并使用 Serena Memory。
+- **FE[frontend-agent]**：前端智能体，负责前端开发。根据 `.agent/skills/frontend-agent/SKILL.md`，Frontend Agent 是 UI/UX 专家，负责构建用户界面和组件，进行客户端逻辑和状态管理。
+- **BE[backend-agent]**：后端智能体，负责后端开发。根据 `.agent/skills/backend-agent/SKILL.md`，Backend Agent 是 API & Server 专家，负责构建 REST APIs 或 GraphQL endpoints，进行数据库设计和迁移。
+- **MB[mobile-agent]**：移动端智能体，负责移动端开发。根据 `.agent/skills/mobile-agent/SKILL.md`，Mobile Agent 是跨平台移动专家，负责构建原生移动应用。
+- **QA[qa-agent]**：质量保证智能体，负责测试和质量评估。根据 `.agent/skills/qa-agent/SKILL.md`，QA Agent 是质量保证专家，负责安全、性能、可访问性和综合测试。
+- **DBG[debug-agent]**：调试智能体，负责代码调试和问题修复。根据 README，Debug Agent 负责 Bug 诊断、根本原因分析和回归测试。
+- **CMT([commit])**：代表最终的代码提交。根据 README，Commit 使用符合项目特定规则的 Conventional Commits。
+
+## 连线、分支与汇聚关系
+- `Workflows --> Orchestration`：工作流触发编排过程，选择合适的工作流来启动多智能体协作。
+- `Orchestration --> Domain`：编排器根据工作流的需要，调用相应的领域智能体来执行具体的开发任务。
+- `Domain --> Quality`：领域智能体完成开发任务后，将代码交给质量保证智能体进行测试和调试。
+- `Quality --> CMT([commit])`：经过质量保证后，最终的代码被提交。
+
+## 仓库语境与术语解释
+- **Workflows**：预定义的工作流程，例如 `/coordinate`, `/orchestrate`, `/plan`, `/review`, `/debug`，用于启动多智能体协作。
+- **Orchestration**：负责协调和管理不同的智能体，包括 `pm-agent`、`workflow-guide` 和 `orchestrator`。
+- **Domain Agents**：负责特定领域的任务，包括 `frontend-agent`、`backend-agent` 和 `mobile-agent`。
+- **Quality**：负责代码质量的保证，包括 `qa-agent` 和 `debug-agent`。
+- **Serena Memory**：用于在智能体之间共享信息的内存机制，README 中提到通过 Serena Memory 协调领域智能体。
+- **Conventional Commits**：一种代码提交规范，用于自动化生成发布说明和版本控制。
+- **Antigravity Skills**: README 中提到，该项目是一系列 Antigravity Skills，用于实现协作式多智能体开发。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `oh-my-ag` 项目的多智能体协作架构。流程从 Workflows 子图开始，通过 Orchestration 子图协调 Domain Agents 子图，再由 Quality 子图进行质量保证，最终完成代码提交。其中，PM Agent 负责需求分析和任务分解，Workflow Guide 负责协调复杂项目，Orchestrator 负责智能体调度，Frontend/Backend/Mobile Agents 负责领域开发，QA/Debug Agents 负责质量保证。整个流程旨在通过多智能体的协作，提高软件开发的效率和质量。

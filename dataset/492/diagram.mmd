@@ -1,0 +1,18 @@
+flowchart LR
+    Input[User Input] --> Agent[LangChain Agent]
+    Agent --> Phi[Phi-4-generic-gpu]
+    Phi --> JSON[JSON Output]
+    JSON --> MW1[PhiJSONToToolCallMiddleware]
+    MW1 --> ToolCall[tool_calls Format]
+    ToolCall --> Execute[Execute Tool]
+    Execute --> ToolResult[Tool Results]
+    ToolResult --> MW2[PhiToolResultMiddleware]
+    MW2 --> Trim[Trimmed + Reminder]
+    Trim --> Phi
+    Phi --> Answer[Final Answer]
+    
+    style Phi fill:#d4edda
+    style MW1 fill:#fff3cd
+    style MW2 fill:#fff3cd
+    style JSON fill:#f8d7da
+    style ToolCall fill:#d1ecf1

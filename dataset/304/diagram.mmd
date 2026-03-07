@@ -1,0 +1,34 @@
+flowchart TB
+    subgraph MASTER["主服务器 (Master Server)"]
+        direction TB
+        
+        REDIS["Redis 负载缓存"]
+        
+        subgraph SCHEDULER["任务调度器 (Task Distributor)"]
+            direction TB
+            SUBMIT["接收扫描任务"]
+            SELECT["负载感知选择"]
+            DISPATCH["智能分发"]
+            
+            SUBMIT --> SELECT
+            SELECT --> DISPATCH
+        end
+        
+        REDIS -.负载数据.-> SELECT
+    end
+    
+    subgraph WORKERS["Worker 节点集群"]
+        direction TB
+        
+        W1["Worker 1 (本地)<br/>CPU: 45% | MEM: 60%"]
+        W2["Worker 2 (远程)<br/>CPU: 30% | MEM: 40%"]
+        W3["Worker N (远程)<br/>CPU: 90% | MEM: 85%"]
+    end
+    
+    DISPATCH -->|任务分发| W1
+    DISPATCH -->|任务分发| W2
+    DISPATCH -->|高负载跳过| W3
+    
+    W1 -.心跳上报.-> REDIS
+    W2 -.心跳上报.-> REDIS
+    W3 -.心跳上报.-> REDIS

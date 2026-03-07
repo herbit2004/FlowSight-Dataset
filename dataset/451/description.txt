@@ -1,0 +1,90 @@
+## 图类型与用途
+这是一个流程图/架构图，描述了一个 Agentic 多阶段 Bot 的架构，用于研究和外联。它展示了用户输入如何被处理，以及 Bot 如何进行推理、规划和执行任务，最终生成结果并保存相关信息。
+
+## 图的整体布局
+图整体采用从左到右的布局，分为体验层、记忆层、推理和规划层以及工具和 API 层。数据流从用户输入开始，经过各个层次的处理，最终输出结果。
+
+## 分组/子图/阶段说明
+图中包含四个子图，分别对应 Agentic 架构的四个层次：
+- **Experience Layer FastAPI SSE**：体验层，负责接收用户输入、进行速率限制检查，并将令牌流式传输给用户，同时接收用户反馈。
+- **Memory and Feedback**：记忆层，负责存储对话消息历史、知识库和引用的信息。
+- **Reasoning and Planning LangGraph**：推理和规划层，使用 LangGraph 编排推理和工具使用，负责创建计划、决定下一步动作、绑定工具、执行调用和反思状态。
+- **Tool and API Layer**：工具和 API 层，为推理和规划层提供各种工具和 API，例如网络搜索、网页抓取、知识库搜索/添加、计算器、文件写入和邮件发送。
+
+## 节点逐项说明
+- **IN[User prompt]**：用户输入的提示或指令，作为整个流程的起点。
+- **RL{Rate limit check}**：速率限制检查，防止滥用。
+- **STREAM[Token stream SSE]**：通过服务器发送事件（SSE）将令牌流式传输给用户。
+- **FB[Feedback API]**：接收用户反馈的 API。
+- **SQL[(SQLite messages)]**：使用 SQLite 数据库存储对话消息历史。
+- **VEC[(Chroma vector KB)]**：使用 Chroma 向量数据库存储知识库，用于语义搜索。
+- **CIT[Citations store]**：存储引用的信息。
+- **START((START))**：LangGraph 流程的起始节点。
+- **PLAN[PLAN create plan]**：创建任务执行计划，会考虑知识库上下文。
+- **DECIDE{DECIDE next action}**：决定下一步要执行的动作，例如搜索、抓取、知识库搜索、计算、写入文件、发送邮件或完成任务。
+- **ACT[ACT bind tool emit call]**：绑定工具并发出调用。
+- **TOOLS((ToolNode executes call))**：执行工具调用的节点。
+- **REFLECT[REFLECT briefing or next]**：反思当前状态，决定下一步是完成任务还是继续规划。
+- **FINALIZE([FINALIZE result])**：最终结果的输出节点。
+- **HALT[Backoff and retry]**：速率限制触发时，暂停并重试。
+- **TSEARCH[web search]**：网络搜索工具。
+- **TFETCH[web fetch]**：网页抓取工具。
+- **TKBS[kb search]**：知识库搜索工具。
+- **TKBADD[kb add]**：知识库添加工具。
+- **TCALC[calculator]**：计算器工具。
+- **TWRITE[file write]**：文件写入工具。
+- **TEMAIL[emailer]**：邮件发送工具。
+
+## 连线、分支与汇聚关系
+- `IN -> RL`：用户输入首先经过速率限制检查。
+- `RL -- ok --> START`：如果通过速率限制检查，则进入推理和规划层。
+- `RL -- 429 --> HALT`：如果超过速率限制，则暂停并重试。
+- `START -> PLAN`：流程从起始节点开始，创建任务执行计划。
+- `PLAN -> DECIDE`：创建计划后，决定下一步要执行的动作。
+- `DECIDE -- search --> ACT`：如果决定进行搜索，则绑定网络搜索工具并发出调用。
+- `DECIDE -- fetch --> ACT`：如果决定抓取网页，则绑定网页抓取工具并发出调用。
+- `DECIDE -- kb_search --> ACT`：如果决定进行知识库搜索，则绑定知识库搜索工具并发出调用。
+- `DECIDE -- calculate --> ACT`：如果决定进行计算，则绑定计算器工具并发出调用。
+- `DECIDE -- write_file --> ACT`：如果决定写入文件，则绑定文件写入工具并发出调用。
+- `DECIDE -- draft_email --> ACT`：如果决定发送邮件，则绑定邮件发送工具并发出调用。
+- `DECIDE -- otherwise --> REFLECT`：如果需要反思，则进入反思节点。
+- `DECIDE -- finalize --> FINALIZE`：如果决定完成任务，则进入最终结果输出节点。
+- `ACT -> TOOLS`：绑定工具后，执行工具调用。
+- `TOOLS -- query --> TSEARCH`：工具节点调用网络搜索工具。
+- `TOOLS -- url --> TFETCH`：工具节点调用网页抓取工具。
+- `TOOLS -- semantic --> TKBS`：工具节点调用知识库搜索工具。
+- `TOOLS -- ingest --> TKBADD`：工具节点调用知识库添加工具。
+- `TOOLS -- expr --> TCALC`：工具节点调用计算器工具。
+- `TOOLS -- path content --> TWRITE`：工具节点调用文件写入工具。
+- `TOOLS -- to subject body --> TEMAIL`：工具节点调用邮件发送工具。
+- `REFLECT -- done --> FINALIZE`：如果反思后决定完成任务，则进入最终结果输出节点。
+- `REFLECT -- not done --> DECIDE`：如果反思后决定继续规划，则返回决策节点。
+- `TKBS -- results --> PLAN`：知识库搜索工具返回结果，用于创建计划。
+- `TKBADD -> VEC`：知识库添加工具将内容添加到向量数据库。
+- `TSEARCH -> TFETCH`：网络搜索工具的结果用于网页抓取工具。
+- `TFETCH -- text --> PLAN`：网页抓取工具返回文本，用于创建计划。
+- `TFETCH -> CIT`：网页抓取工具的结果用于存储引用信息。
+- `TWRITE -- artifact path --> PLAN`：文件写入工具返回文件路径，用于创建计划。
+- `TEMAIL -- eml path --> PLAN`：邮件发送工具返回邮件路径，用于创建计划。
+- `PLAN -. use kb hits .-> VEC`：创建计划时使用知识库的搜索结果。
+- `PLAN -.-> STREAM`：计划信息流式传输给用户。
+- `DECIDE -.-> STREAM`：决策信息流式传输给用户。
+- `REFLECT -.-> STREAM`：反思信息流式传输给用户。
+- `FINALIZE -.-> STREAM`：最终结果流式传输给用户。
+- `IN -- save user --> SQL`：用户输入保存到 SQLite 数据库。
+- `FINALIZE -- save assistant --> SQL`：最终结果保存到 SQLite 数据库。
+- `FB -- save feedback --> SQL`：用户反馈保存到 SQLite 数据库。
+
+## 仓库语境与术语解释
+- **Agentic Multi-Stage Bot**：一个多阶段、具有自主能力的聊天机器人，能够进行计划、发现、推理、使用工具和学习。
+- **LangGraph**：用于编排推理和工具使用的框架，以状态机的形式驱动 LLM 和工具。如 README 所述，Agent Graph 使用 LangGraph 来协调推理和工具的使用，重点是每个步骤的单个原子操作。
+- **Experience Layer**：体验层，负责与用户交互，接收用户输入和提供输出。对应 `src/agentic_ai/app.py` 和 `web/` 目录。
+- **Memory Layer**：记忆层，负责存储对话历史和知识库，对应 `src/agentic_ai/memory/*` 和 `layers/memory.py`。
+- **Reasoning and Planning Layer**：推理和规划层，负责制定计划、选择工具和执行任务，对应 `src/agentic_ai/layers/reasoning.py` 和 `graph.py`。
+- **Tool and API Layer**：工具和 API 层，提供各种工具和 API 供 Agent 使用，对应 `src/agentic_ai/tools/*` 和 `layers/tools.py`。
+- **SQLite messages**：使用 SQLite 数据库存储对话消息历史，具体实现位于 `src/agentic_ai/memory/sql_store.py`。
+- **Chroma vector KB**：使用 Chroma 向量数据库存储知识库，用于语义搜索，具体实现位于 `src/agentic_ai/memory/vector_store.py`。
+- **Rate limiting**：速率限制，用于防止滥用，具体实现位于 `src/agentic_ai/infra/rate_limit.py`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了一个 Agentic 多阶段 Bot 的架构，从用户输入开始，经过速率限制检查后，进入推理和规划层。推理和规划层使用 LangGraph 编排，首先创建任务执行计划，然后决定下一步动作，绑定工具并执行调用。工具调用完成后，进行反思，决定是完成任务还是继续规划。最终结果输出后，保存到 SQLite 数据库。该架构包含体验层、记忆层、推理和规划层以及工具和 API 层，其中推理和规划层是核心，负责制定计划和执行任务。知识库（Chroma vector KB）用于提供上下文信息，速率限制用于防止滥用。

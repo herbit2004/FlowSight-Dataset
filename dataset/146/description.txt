@@ -1,0 +1,46 @@
+## 图类型与用途
+这是一个流程图，描述了 Pure.DI 框架的编译时依赖注入代码生成流程。它展示了从分析依赖注入设置到最终成功编译的整个过程，以及可能出现的错误处理路径。该图在仓库中的作用是概括 Pure.DI 的编译时依赖注入流程。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是流程的起点，中间是依赖注入设置分析、类型分析、依赖图处理和代码生成阶段，底部是编译结果的终点。
+
+## 分组/子图/阶段说明
+图中包含一个名为“Dependency graph”的子图，该子图描述了依赖关系的处理过程，包括选择下一个依赖集合、创建依赖图变体和验证。
+
+## 节点逐项说明
+- **Start**：流程的起点。
+- **DI setups analysis**：分析项目中的依赖注入设置。
+- **Types analysis**：分析项目中的类型，包括构造函数、方法、属性和字段。
+- **Selecting a next dependency set**：从可用的依赖项中选择一个集合进行处理。
+- **Creating a dependency graph variant**：基于选定的依赖集合，创建一个依赖图的变体。
+- **Verification**：验证创建的依赖图变体是否正确。
+- **Code generation**：根据验证通过的依赖图，生成依赖注入的代码。
+- **Compilation**：编译生成的代码。
+- **Compilation failed**：编译过程失败的终点。
+- **Success**：编译过程成功的终点。
+
+## 连线、分支与汇聚关系
+- `Start -> DI setups analysis`：流程从开始进入依赖注入设置分析阶段。
+- `DI setups analysis -- Has problems --> Compilation failed`：如果依赖注入设置分析发现问题，流程直接到编译失败终点。
+- `DI setups analysis -> Types analysis`：如果依赖注入设置分析没有问题，流程进入类型分析阶段。
+- `Types analysis -- Has problems --> Compilation failed`：如果类型分析发现问题，流程直接到编译失败终点。
+- `Types analysis -> Selecting a next dependency set`：如果类型分析没有问题，流程进入选择下一个依赖集合阶段。
+- `Selecting a next dependency set -> Creating a dependency graph variant`：选择下一个依赖集合后，创建依赖图变体。
+- `Selecting a next dependency set -- There are no other options --> Compilation failed`：如果没有其他依赖集合可供选择，流程直接到编译失败终点。
+- `Creating a dependency graph variant -> Verification`：创建依赖图变体后，进行验证。
+- `Verification -- Has problems --> Selecting a next dependency set`：如果验证发现问题，流程返回选择下一个依赖集合阶段。
+- `Verification -- Correct --> Code generation`：如果验证通过，流程进入代码生成阶段。
+- `Code generation -> Compilation`：代码生成后，进行编译。
+- `Compilation -- Has problems --> Compilation failed`：如果编译失败，流程进入编译失败终点。
+- `Compilation -> Success`：如果编译成功，流程进入成功终点。
+
+## 仓库语境与术语解释
+- **Pure.DI**：一个 .NET 编译时依赖注入代码生成器，参见 README.md。
+- **DI setups analysis**：分析项目中的依赖注入设置，为后续的依赖图构建提供基础信息。
+- **Types analysis**：分析项目中的类型信息，包括构造函数、方法、属性和字段，为依赖注入提供类型信息。
+- **Dependency graph**：表示依赖关系的数据结构，用于代码生成。
+- **Code generation**：根据依赖图生成实际的依赖注入代码。根据 README.md，Pure.DI 生成的代码避免了反射和动态实例化。
+- **Compilation**：编译生成的代码，生成可执行文件或库。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Pure.DI 的编译时依赖注入流程，从 Start 开始，依次进行 DI setups analysis 和 Types analysis，若分析无误则进入 Dependency graph 子图进行迭代式的依赖集合选择、依赖图变体创建和验证，验证通过后进行 Code generation 和 Compilation，最终到达 Success 终点；若在 DI setups analysis、Types analysis 或 Compilation 阶段出现问题，或 Dependency graph 中没有其他依赖集合可供选择，则流程会进入 Compilation failed 终点。该流程的核心在于依赖图的构建和验证，最终生成高效的依赖注入代码。

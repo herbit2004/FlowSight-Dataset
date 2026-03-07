@@ -1,0 +1,35 @@
+graph TB
+    subgraph "Client Layer"
+        A[Cursor IDE<br/>MCP Query Only]
+        B[Monitoring Dashboard]
+        C[API Client/Script]
+    end
+    
+    subgraph "VPS Server"
+        D[Caddy Reverse Proxy<br/>Port 80/443<br/>Let's Encrypt TLS]
+        
+        subgraph "Internal Network"
+            E[FastAPI Service<br/>Port 8000<br/>+ Continuous Scanner]
+            F[Neo4j Database<br/>Port 7687]
+            
+            E -->|Ingest Data| F
+            E -->|Auto Scan Loop| E
+        end
+        
+        D --> E
+    end
+    
+    subgraph "External Services"
+        G[BBOT Modules<br/>SecurityTrails, Shodan,<br/>VirusTotal, etc.]
+        H[Telegram Bot API]
+    end
+    
+    A -->|MCP Query HTTPS| D
+    B -->|HTTPS API| D
+    C -->|HTTPS API| D
+    E -->|Continuous Scan| G
+    E -->|Cycle Complete Notify| H
+    
+    style D fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#bbf,stroke:#333,stroke-width:2px
+    style F fill:#bfb,stroke:#333,stroke-width:2px

@@ -1,0 +1,76 @@
+## 图类型与用途
+这是一个流程图，描述了 Tor Guard Relay 容器的整个生命周期，从启动到关闭。它展示了容器如何初始化、选择中继模式、运行以及提供诊断工具。该图在仓库中用于概括容器的架构和运行流程。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是容器启动的入口，中间是初始化、模式选择和运行阶段，底部是操作工具和关闭流程。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表不同的阶段：
+- **INITIALIZATION**：负责配置文件的检查和生成。
+- **RELAY MODE SELECTION**：根据环境变量选择不同的中继模式。
+- **OPERATIONS**：提供一系列操作工具，用于诊断和监控。
+- **GRACEFUL SHUTDOWN**：描述容器的优雅关闭流程。
+
+## 节点逐项说明
+- **Start (\[🐳 docker run])**：容器启动的入口点，表示使用 Docker 运行容器。
+- **Check{"📄 Config File at /etc/tor/torrc?}"}**：检查是否存在挂载的配置文件。
+- **Mount["📁 Use Mounted Config Full Tor Control"]**：使用挂载的配置文件，允许完全控制 Tor 的配置。
+- **Env{"🌐 ENV Variables? NICKNAME + CONTACT\_INFO"}**：检查是否设置了环境变量，用于自动生成配置文件。
+- **Generate["⚙️ Auto-Generate torrc from ENV Variables"]**：从环境变量自动生成 `torrc` 配置文件。
+- **Validate["🧪 Validate Config tor --verify-config"]**：验证配置文件的有效性。
+- **Error["❌ ERROR No Configuration Found"]**：错误状态，表示没有找到有效的配置。
+- **Mode{TOR\_RELAY\_MODE}**：根据环境变量 `TOR_RELAY_MODE` 的值选择中继模式。
+- **Guard["🛡️ GUARD/MIDDLE Routes Traffic ExitRelay 0 DirPort Disabled"]**：配置为 Guard 或 Middle 中继，负责路由流量，禁用 ExitRelay 和 DirPort。
+- **Exit["🚪 EXIT RELAY Last Hop to Internet ExitRelay 1 Custom Exit Policy"]**：配置为 Exit 中继，作为流量的最后一跳，允许自定义退出策略。
+- **Bridge["🌉 BRIDGE + obfs4 Censorship Resistant BridgeRelay 1 Lyrebird Transport"]**：配置为 Bridge 中继，使用 obfs4 传输协议，抵抗审查。
+- **Running(["🟢 TOR RELAY RUNNING"])**：Tor 中继正在运行的状态。
+- **Tools["🔧 Diagnostic Tools via docker exec"]**：通过 `docker exec` 提供的诊断工具。
+- **Status["📊 status Full Health Report Bootstrap Progress Reachability Status"]**：提供完整的健康报告、引导进度和可达性状态。
+- **Health["💚 health JSON Health API For Monitoring Systems"]**：提供 JSON 格式的健康 API，用于监控系统。
+- **Finger["🆔 fingerprint Show Relay Identity Tor Metrics URL"]**：显示中继的身份指纹。
+- **BLine["🌉 bridge-line Get obfs4 Bridge Line Share with Users"]**：获取 obfs4 桥接线路，用于与用户分享。图中可见，但仓库上下文未进一步说明。
+- **GenAuth["🔑 gen-auth Generate Control Port Auth Data"]**：生成控制端口的身份验证数据。图中可见，但仓库上下文未进一步说明。
+- **GenFamily["👨‍👩‍👧 gen-family Happy Family Key Generation & Import"]**：生成并导入 Happy Family 密钥。图中可见，但仓库上下文未进一步说明。
+- **Graceful["Close Circuits Cleanly Notify Directory Authorities Save State to Disk Exit Gracefully"]**: 优雅关闭 Tor 中继，执行清理操作。
+- **End([⛔ Container Exits])**: 容器退出，通常是由于配置错误。
+- **End2([✅ Clean Stop])**: 容器正常停止。
+
+## 连线、分支与汇聚关系
+- `Start -> Init`：容器启动后进入初始化阶段。
+- `Check -- ✅ Mounted --> Mount`：如果存在挂载的配置文件，则使用挂载的配置。
+- `Check -- ❌ No File --> Env`：如果没有挂载的配置文件，则检查环境变量。
+- `Env -- ✅ Set --> Generate`：如果设置了环境变量，则从环境变量自动生成配置文件。
+- `Env -- ❌ Missing --> Error`：如果没有设置环境变量，则进入错误状态。
+- `Mount -> Validate`：使用挂载的配置后，验证配置文件的有效性。
+- `Generate -> Validate`：自动生成配置文件后，验证配置文件的有效性。
+- `Validate -- ✅ Valid Config --> ModeSelect`：如果配置文件有效，则进入中继模式选择阶段。
+- `Validate -- ❌ Invalid --> Error`：如果配置文件无效，则进入错误状态。
+- `Mode -- guard --> Guard`：如果 `TOR_RELAY_MODE` 为 guard，则配置为 Guard 中继。
+- `Mode -- exit --> Exit`：如果 `TOR_RELAY_MODE` 为 exit，则配置为 Exit 中继。
+- `Mode -- bridge --> Bridge`：如果 `TOR_RELAY_MODE` 为 bridge，则配置为 Bridge 中继。
+- `Guard -> Running`：配置为 Guard 中继后，进入运行状态。
+- `Exit -> Running`：配置为 Exit 中继后，进入运行状态。
+- `Bridge -> Running`：配置为 Bridge 中继后，进入运行状态。
+- `Running -> Ops`：Tor 中继运行后，提供操作工具。
+- `Tools -> Status`：通过 `docker exec` 运行 status 工具。
+- `Tools -> Health`：通过 `docker exec` 运行 health 工具。
+- `Tools -> Finger`：通过 `docker exec` 运行 fingerprint 工具。
+- `Tools -> BLine`：通过 `docker exec` 运行 bridge-line 工具。
+- `Tools -> GenAuth`：通过 `docker exec` 运行 gen-auth 工具。
+- `Tools -> GenFamily`：通过 `docker exec` 运行 gen-family 工具。
+- `Running -> Shutdown`：收到 `docker stop SIGTERM` 信号后，进入优雅关闭阶段。
+- `Error -> End`：如果出现错误，则容器退出。
+- `Shutdown -> End2`：优雅关闭完成后，容器停止。
+
+## 仓库语境与术语解释
+- **Tor Guard Relay**：一个用于运行 Tor 中继的 Docker 容器，旨在安全有效地为 Tor 网络做出贡献。
+- **TOR_RELAY_MODE**：一个环境变量，用于配置 Tor 中继的模式，可以是 guard、exit 或 bridge。参考 `docs/MULTI-MODE.md`。
+- **ORPort**：Tor 中继用于接收连接的端口，默认为 9001。参考 `README.md`。
+- **DirPort**：Tor 中继用于提供目录信息的端口，默认禁用。参考 `README.md`。
+- **obfs4**：一种可插拔传输协议，用于使 Tor 流量看起来随机，以帮助用户绕过审查。参考 `README.md` 和 `docs/MULTI-MODE.md`。
+- **docker exec**：一个 Docker 命令，用于在运行的容器中执行命令，这里用于运行诊断工具。参考 `README.md`。
+- **docker-entrypoint.sh**：容器启动时执行的脚本，负责初始化和配置 Tor 中继。参考 `Dockerfile`。
+- **tools/status**：一个诊断工具，用于提供 Tor 中继的完整健康报告、引导进度和可达性状态。参考 `Dockerfile` 和 `tools/status`。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Tor Guard Relay 容器的生命周期。容器启动后，首先进行初始化，检查配置文件或环境变量，然后根据 `TOR_RELAY_MODE` 选择中继模式（guard、exit 或 bridge）。配置完成后，Tor 中继进入运行状态，并提供一系列诊断工具，如 status、health 和 fingerprint，这些工具通过 `docker exec` 运行。收到 `docker stop SIGTERM` 信号后，容器进入优雅关闭阶段，清理资源后停止。如果初始化过程中出现错误，容器将直接退出。

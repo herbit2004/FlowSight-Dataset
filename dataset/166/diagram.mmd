@@ -1,0 +1,39 @@
+flowchart TD
+    A[开始] --> B{检测系统}
+    B -->|Linux| C[询问代理配置]
+    B -->|macOS/Windows| Z1[显示替代方案提示并退出]
+
+    C --> D{用户输入代理地址}
+    D -->|跳过| Z2[退出脚本]
+    D -->|输入代理| E[解析并校验代理格式]
+
+    E --> E1[配置 graftcp-local 端口]
+    E1 --> E2[选择 DNS 解析策略]
+    E2 --> F[轻量级代理探测]
+    F -->|成功| G1[导出 HTTP_PROXY 等环境变量]
+    F -->|失败/超时| G2[继续使用镜像下载策略]
+
+    G1 --> H[检查/安装依赖]
+    G2 --> H
+
+    H --> I{GRAFTCP_DIR 环境变量?}
+    I -->|已设置且有效| J1[跳过编译，使用现有 graftcp]
+    I -->|未设置| J2{本地已有 graftcp?}
+
+    J2 -->|是| J1
+    J2 -->|否| K[克隆 graftcp 仓库]
+
+    K --> L[编译 graftcp]
+    L -->|成功| M[查找 language_server]
+    L -->|失败| Z3[显示手动安装指引并退出]
+
+    J1 --> M
+    M --> N[备份原始文件并生成 wrapper]
+    N --> O[测试代理连通性]
+    O --> P[配置完成 🎉]
+
+    style A fill:#e1f5fe
+    style P fill:#c8e6c9
+    style Z1 fill:#fff3e0
+    style Z2 fill:#fff3e0
+    style Z3 fill:#ffebee

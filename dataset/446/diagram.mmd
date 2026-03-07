@@ -1,0 +1,21 @@
+graph TD
+    A[Handler Function Needs Module] --> B[loadDocumentGenerator OR loadSpecGenerator]
+    
+    B --> C{Try Path 1<br/>./utils/*.js}
+    C -->|Success| Z[Return Module]
+    C -->|Fail| D{Try Path 2<br/>../utils/*.js}
+    
+    D -->|Success| Z
+    D -->|Fail| E{Try Path 3<br/>./*.js}
+    
+    E -->|Success| Z
+    E -->|Fail| F{Try Path 4<br/>../*.js}
+    
+    F -->|Success| Z
+    F -->|Fail| G[Throw Error<br/>with all attempted paths]
+    
+    Z --> H[Log Success Path<br/>console.error SDD-DEBUG]
+    
+    style Z fill:#c8e6c9
+    style G fill:#ffcdd2
+    style H fill:#fff9c4

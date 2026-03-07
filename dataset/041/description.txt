@@ -1,0 +1,48 @@
+## 图类型与用途
+这是一个流程图/架构图，用于展示 NestJS Monorepo 模板的整体架构，特别是应用程序层（`apps/`）和库层（`libs/`）的组件及其依赖关系。该图在 `README.md` 中作为架构概览展示。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是 Monorepo 的根目录，包含应用程序层，中间是库层，底部是根目录下的配置文件。
+
+## 分组/子图/阶段说明
+图中包含两个子图：
+- **Apps (apps/)**：代表应用程序层，包含多个独立的微服务应用。
+- **Libs (libs/)**：代表库层，包含多个共享的可复用代码库。
+
+## 节点逐项说明
+- **Root (nestjs-monorepo-template/)**：代表整个 Monorepo 的根目录，是所有组件的容器。
+- **API (api-server)**：主 REST API 服务，监听 3001 端口，负责处理客户端请求，提供 REST API，进行数据验证和健康检查。根据 `README.md`，可以通过 `API_SERVER_PORT` 环境变量配置端口。
+- **Worker (worker)**：后台服务，不监听 HTTP 端口，负责执行计划任务和后台作业。
+- **WS (websocket-service)**：WebSocket 服务，监听 3002 端口，提供实时通信功能，使用 Socket.IO。根据 `README.md`，可以通过 `WEBSOCKET_PORT` 环境变量配置端口。
+- **Admin (admin)**：管理后台，监听 3003 端口，提供管理面板和管理功能。根据 `README.md`，可以通过 `ADMIN_PORT` 环境变量配置端口。
+- **DB (db/)**：数据库抽象层，支持 MongoDB、PostgreSQL 和 MySQL 等多种数据库。根据 `README.md` 和 `libs/db/src/db.module.ts`，可以通过 `DB_TYPE` 环境变量切换数据库。
+- **Config (configuration/)**：环境配置库，提供类型安全和验证的环境配置管理。
+- **Common (common/)**：通用工具库，包含日志记录、错误处理和过滤器等通用功能。
+- **RootFiles**：根目录下的文件，包括 `package.json`、`tsconfig.json`、`nest-cli.json` 和 `.env` 等配置文件。
+
+## 连线、分支与汇聚关系
+- `API --> DB`：API 服务导入并使用 DB 库。
+- `API --> Config`：API 服务导入并使用 Config 库。
+- `API --> Common`：API 服务导入并使用 Common 库。
+- `Worker --> DB`：Worker 服务导入并使用 DB 库。
+- `Worker --> Config`：Worker 服务导入并使用 Config 库。
+- `Worker --> Common`：Worker 服务导入并使用 Common 库。
+- `WS --> DB`：WebSocket 服务导入并使用 DB 库。
+- `WS --> Config`：WebSocket 服务导入并使用 Config 库。
+- `WS --> Common`：WebSocket 服务导入并使用 Common 库。
+- `Admin --> DB`：Admin 服务导入并使用 DB 库。
+- `Admin --> Config`：Admin 服务导入并使用 Config 库。
+- `Admin --> Common`：Admin 服务导入并使用 Common 库。
+所有应用程序都依赖于库层，形成汇聚关系。
+
+## 仓库语境与术语解释
+- **Monorepo**：指在一个代码仓库中管理多个项目。
+- **Microservices Architecture**：一种软件架构模式，将应用程序构建为一组小型、独立的服务。
+- **NestJS**：一个用于构建高效、可扩展的 Node.js 服务器端应用程序的框架。
+- **apps/**：存放独立应用程序的目录，每个应用可以独立部署和扩展。
+- **libs/**：存放共享的可复用代码库的目录，提高了代码复用性，降低了维护成本。
+- **DB Module**：数据库抽象层，允许在 MongoDB、PostgreSQL 和 MySQL 之间切换，无需修改代码。
+- **Configuration Module**：集中管理应用程序配置，支持类型安全和验证。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 NestJS Monorepo 模板的架构，根目录包含 `apps/` 和 `libs/` 两个主要目录。`apps/` 目录下包含 `api-server`、`worker`、`websocket-service` 和 `admin` 四个独立的微服务应用，它们分别依赖于 `libs/` 目录下的 `db`、`configuration` 和 `common` 等共享库。该架构采用微服务架构模式，提高了代码复用性，并允许独立扩展各个服务。`DB_TYPE` 环境变量用于切换数据库类型，`API_SERVER_PORT`、`WEBSOCKET_PORT` 和 `ADMIN_PORT` 环境变量分别用于配置各个应用的端口。

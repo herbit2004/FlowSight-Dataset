@@ -1,0 +1,41 @@
+## 图类型与用途
+这是一个流程图，描述了 `zeromd` 工具如何自动同步本地 Obsidian vault 到 GitHub 仓库。它在仓库中的作用是展示自动同步的核心流程。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是触发器和检查节点，中间是同步流程，底部是同步完成或出错的节点。
+
+## 分组/子图/阶段说明
+图中包含两个子图：
+- **trigger**：表示触发同步的机制，每 5 分钟由 `launchd` 触发一次。
+- **sync**：表示实际的同步流程，包含 `git add`、`git commit`、`git pull --rebase` 和 `git push` 等步骤。
+
+## 节点逐项说明
+- **trigger**：一个子图，表示同步流程的触发机制，每 5 分钟由 `launchd` 触发。`launchd` 是 macOS 的系统服务管理守护进程。
+- **check**：检查本地 Obsidian vault 是否有任何更改。
+- **skip**：表示如果没有检测到更改，则跳过同步流程，进入睡眠状态。
+- **stage**：将所有更改添加到 Git 暂存区，对应命令 `git add -A`。
+- **commit**：提交暂存区的更改，创建一个新的 Git commit，对应命令 `git commit`。
+- **pull**：从 GitHub 仓库拉取最新的更改，并使用 rebase 合并到本地分支，对应命令 `git pull --rebase`。
+- **push**：将本地的 commit 推送到 GitHub 仓库，对应命令 `git push`。
+- **done**：表示成功同步到 GitHub。
+- **err**：表示在 `git pull` 过程中发生冲突，需要手动解决。`gmd doctor` 是 `zeromd` 工具自带的诊断工具，用于帮助用户解决冲突。
+
+## 连线、分支与汇聚关系
+- `check -- No --> skip`：如果没有检测到更改，则跳过同步流程。
+- `check -- Yes --> stage`：如果检测到更改，则进入同步流程。
+- `stage -> commit -> pull -> push`：同步流程依次执行 `stage`、`commit`、`pull` 和 `push` 节点。
+- `push -> done`：同步成功后，流程进入 `done` 节点。
+- `pull -- conflict --> err`：如果在 `pull` 节点发生冲突，则流程进入 `err` 节点。
+
+## 仓库语境与术语解释
+- **launchd**：macOS 的系统服务管理守护进程，用于定时触发同步脚本。
+- **sync.sh**：实际执行同步操作的 shell 脚本，位于 `scripts/sync.sh`。
+- **gmd doctor**：`zeromd` 工具自带的诊断工具，用于帮助用户解决同步冲突，对应命令 `scripts/zeromd doctor`。
+- **git add -A**：将所有更改添加到 Git 暂存区，是同步流程的第一步。
+- **git commit**：提交暂存区的更改，创建一个新的 Git commit。
+- **git pull --rebase**：从 GitHub 仓库拉取最新的更改，并使用 rebase 合并到本地分支，避免产生 merge commit。
+- **git push**：将本地的 commit 推送到 GitHub 仓库。
+- **com.zeromd.sync.plist**：`launchd` 的配置文件，定义了同步任务的触发频率（默认为每 5 分钟），位于仓库根目录。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 `zeromd` 工具的自动同步流程，从 `launchd` 每 5 分钟触发检查开始，若检测到本地 Obsidian vault 有更改，则依次执行 `git add`、`git commit`、`git pull --rebase` 和 `git push` 等 Git 命令，将更改同步到 GitHub 仓库。如果在 `git pull` 过程中发生冲突，则提示用户使用 `gmd doctor` 工具手动解决。该流程的核心是使用 Git 命令将本地更改同步到远程仓库，并使用 `launchd` 定时触发同步脚本 `scripts/sync.sh`。

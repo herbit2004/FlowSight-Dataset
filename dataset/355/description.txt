@@ -1,0 +1,43 @@
+## 图类型与用途
+这是一个流程图，描述了 MaterialX 材质图如何连接到表面材质的过程。它展示了两种不同的材质图通过标准表面着色器最终影响表面材质的流程，用于说明 MaterialX 图形到表面材质的连接方式。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是两个独立的材质图，中间是标准表面着色器，底部是最终的表面材质。
+
+## 分组/子图/阶段说明
+- **splittb_graph**：一个材质图子图，可以理解为一种纹理生成方式。
+- **checker_graph**：另一个材质图子图，可以理解为另一种纹理生成方式。
+
+## 节点逐项说明
+- **splittb_graph_texcoord_vector3**：`splittb_graph` 子图中的纹理坐标输入，值为 0。
+- **splittb_graph_splittb_color4**：`splittb_graph` 子图中的颜色计算或纹理生成节点。
+- **splittb_graph_output_color4**：`splittb_graph` 子图的输出颜色节点。蓝色背景表示这是一个输出节点。
+- **checker_graph_texcoord_vector3**：`checker_graph` 子图中的纹理坐标输入，值为 0。
+- **checker_graph_checkerboard_color4**：`checker_graph` 子图中的棋盘格纹理生成节点。
+- **checker_graph_output_color5**：`checker_graph` 子图的输出颜色节点。蓝色背景表示这是一个输出节点。
+- **standard_surface_surfaceshader1**：标准表面着色器，用于定义材质的渲染属性。
+- **standard_surface_surfaceshader2**：另一个标准表面着色器，用于定义材质的渲染属性。
+- **surfacematerial_material1**：最终的表面材质，代表了应用到模型表面的材质实例。绿色背景表示这是一个材质节点。
+- **surfacematerial_material2**：另一个最终的表面材质，代表了应用到模型表面的材质实例。绿色背景表示这是一个材质节点。
+
+## 连线、分支与汇聚关系
+- `splittb_graph_splittb_color4 -> splittb_graph_output_color4`：`splittb_color4` 的结果输出到 `splittb_graph_output_color4`。
+- `splittb_graph_texcoord_vector3 -- texcoord --> splittb_graph_splittb_color4`：纹理坐标作为输入，驱动 `splittb_color4` 生成纹理。
+- `checker_graph_checkerboard_color4 -> checker_graph_output_color5`：`checkerboard_color4` 的结果输出到 `checker_graph_output_color5`。
+- `checker_graph_texcoord_vector3 -- texcoord --> checker_graph_checkerboard_color4`：纹理坐标作为输入，驱动 `checkerboard_color4` 生成纹理。
+- `splittb_graph_output_color4 -- base_color --> standard_surface_surfaceshader1`：`splittb_graph_output_color4` 的颜色输出作为 `standard_surface_surfaceshader1` 的 `base_color` 输入。
+- `standard_surface_surfaceshader1 -- surfaceshader --> surfacematerial_material1`：`standard_surface_surfaceshader1` 的着色器输出连接到 `surfacematerial_material1`，定义了最终的表面材质。
+- `standard_surface_surfaceshader2 -- surfaceshader --> surfacematerial_material2`：`standard_surface_surfaceshader2` 的着色器输出连接到 `surfacematerial_material2`，定义了最终的表面材质。
+- `checker_graph_output_color5 -- base_color --> standard_surface_surfaceshader2`：`checker_graph_output_color5` 的颜色输出作为 `standard_surface_surfaceshader2` 的 `base_color` 输入。
+
+## 仓库语境与术语解释
+- **MaterialX**：根据 README，该仓库支持 MaterialX 材质图和 glTF Procedural Textures 扩展之间的双向转换。
+- **glTF**：根据 README，glTF Procedural Textures 扩展用于在 glTF 资源中定义程序纹理。
+- **surfacematerial**：根据 `tests/data/checkerboard_graph.mtlx`，`surfacematerial` 节点定义了最终的材质，它连接到表面着色器。
+- **gltf_pbr**：根据 `tests/data/checkerboard_graph.mtlx`，`gltf_pbr` 节点是一个表面着色器，用于定义材质的 PBR（Physically Based Rendering）属性。
+- **base_color**：表面着色器的一个输入属性，用于指定材质的基础颜色。
+- **surfaceshader**：材质的一个输入属性，用于指定用于渲染表面的着色器。
+- **KHR_texture_procedurals**：根据 README 和 `source/gltf_materialx_converter/converter.py`，这是 Khronos 官方的 glTF 扩展，用于支持程序纹理。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 MaterialX 材质图到表面材质的连接流程。从 `splittb_graph` 和 `checker_graph` 两个子图开始，它们的纹理坐标经过颜色计算后输出颜色值，分别作为 `standard_surface_surfaceshader1` 和 `standard_surface_surfaceshader2` 的 `base_color` 输入，最终通过 `surfaceshader` 连接到 `surfacematerial_material1` 和 `surfacematerial_material2`，定义了最终的表面材质。该图展示了 MaterialX 材质图如何通过表面着色器影响 glTF 模型的渲染效果，与仓库中 MaterialX 和 glTF 之间的转换功能相关。

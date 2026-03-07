@@ -1,0 +1,67 @@
+flowchart TB
+    subgraph "Deployment Models"
+        direction LR
+
+        subgraph "Embedded Model"
+            direction TB
+            HC[Host Process]
+
+            subgraph "Client Side"
+                MCC[MCP Client]
+                GC[GUARDRAIL Client Module]
+
+                MCC --> GC
+            end
+
+            subgraph "Server Side"
+                MCS[MCP Server]
+                GS[GUARDRAIL Server Module]
+
+                GS --> MCS
+            end
+
+            GC <---> GS
+        end
+
+        subgraph "Gateway Model"
+            direction TB
+            CL[Client]
+            GW[GUARDRAIL Gateway]
+            SV[Server]
+
+            CL <---> GW
+            GW <---> SV
+        end
+
+        subgraph "Service Mesh Model"
+            direction TB
+
+            subgraph "Client Pod"
+                CP[Client Container]
+                CS[GUARDRAIL Sidecar]
+
+                CP <---> CS
+            end
+
+            subgraph "Server Pod"
+                SP[Server Container]
+                SS[GUARDRAIL Sidecar]
+
+                SS <---> SP
+            end
+
+            subgraph "Control Plane"
+                PS[Policy Server]
+                IS[Identity Service]
+                AS[Audit Collector]
+            end
+
+            CS <---> SS
+            CS <-..-> PS
+            CS <-..-> IS
+            CS <-..-> AS
+            SS <-..-> PS
+            SS <-..-> IS
+            SS <-..-> AS
+        end
+    end

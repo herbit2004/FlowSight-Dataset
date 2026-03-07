@@ -1,0 +1,57 @@
+## 图类型与用途
+这是一个流程图，展示了 WiFi-3D-Fusion 项目中从数据源到最终输出的多个处理流程。它描述了如何利用不同的 WiFi 数据源提取信息，经过信号处理、检测和可视化等步骤，最终实现 3D 可视化、人员跟踪和活动记录等功能。该图在 README.md 中作为架构图展示。
+
+## 图的整体布局
+图整体采用从上到下的布局，分为四列，每一列代表一个独立的数据处理流程，从数据源开始，经过一系列处理，最终输出可视化结果或活动记录。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为四个并行的处理流程，分别对应不同的数据源和处理方法：
+- **CSI Data Source流程**：从原始信道状态信息数据源到 3D 可视化。
+- **ESP32/Nexmon流程**：从 ESP32/Nexmon 捕获的信号到 Three.js Web UI 的 3D 可视化。
+- **UDP/PCap流程**：从 UDP/PCap 数据包到骨骼渲染。
+- **Config YAML流程**：从配置文件到活动日志记录。
+
+## 节点逐项说明
+- **CSI Data Source**：信道状态信息数据源，代表原始的 WiFi 信号数据。
+- **Signal Processing**：信号处理模块，负责对原始 WiFi 信号进行预处理，提取有用的特征。
+- **Neural Detection**：神经检测模块，利用神经网络对处理后的信号进行分析，识别和检测运动或人员。
+- **3D Visualization**：3D 可视化模块，将检测到的运动或人员信息以 3D 形式呈现出来。
+- **ESP32/Nexmon**：具体的 WiFi 数据源，可能是 ESP32 微控制器或 Nexmon 工具，用于捕获 WiFi 信号。根据 README，项目支持从 ESP32 通过 UDP 接收 CSI 数据，或者使用 Nexmon 工具从支持的网卡捕获 CSI 数据。
+- **Amplitude/Phase**：幅度/相位信息，从 ESP32/Nexmon 捕获的信号中提取的特征。
+- **CNN Classifier**：卷积神经网络分类器，用于根据幅度和相位信息识别运动模式。
+- **Three.js Web UI**：使用 Three.js 库构建的 Web 用户界面，用于显示 3D 可视化结果。
+- **UDP/PCap**：另一种 WiFi 数据源，可能是通过 UDP 协议或 PCap 文件捕获的数据包。
+- **Movement Detection**：运动检测模块，用于从 UDP/PCap 数据中检测运动。`src/pipeline/realtime_detector.py` 实现了运动检测功能，通过分析 CSI 数据的幅度方差来判断是否存在运动。
+- **Person Tracking**：人员跟踪模块，用于跟踪检测到的人员的位置和运动轨迹。
+- **Skeleton Rendering**：骨骼渲染模块，用于将跟踪到的人员信息以骨骼形式呈现出来。
+- **Config YAML**：配置文件，用于配置系统的参数和设置。`configs/fusion.yaml` 是一个示例配置文件，定义了场景边界、RF 分辨率、运动阈值等参数。
+- **Adaptive Thresholding**：自适应阈值处理模块，用于根据配置文件的参数动态调整阈值。
+- **ReID System**：身份重识别系统，用于识别和跟踪不同时间段出现的同一个人。
+- **Activity Logging**：活动日志记录模块，用于记录检测到的活动信息。
+
+## 连线、分支与汇聚关系
+- `CSI Data Source -> Signal Processing`：从原始 CSI 数据源进行信号处理。
+- `Signal Processing -> Neural Detection`：信号处理后进行神经检测。
+- `Neural Detection -> 3D Visualization`：神经检测结果用于 3D 可视化。
+- `ESP32/Nexmon -> Amplitude/Phase`：从 ESP32/Nexmon 获取信号的幅度和相位信息。
+- `Amplitude/Phase -> CNN Classifier`：幅度和相位信息输入到 CNN 分类器。
+- `CNN Classifier -> Three.js Web UI`：CNN 分类器的结果用于 Three.js Web UI 的显示。
+- `UDP/PCap -> Movement Detection`：从 UDP/PCap 数据中进行运动检测。
+- `Movement Detection -> Person Tracking`：检测到运动后进行人员跟踪。
+- `Person Tracking -> Skeleton Rendering`：人员跟踪结果用于骨骼渲染。
+- `Config YAML -> Adaptive Thresholding`：从配置文件中读取参数进行自适应阈值处理。
+- `Adaptive Thresholding -> ReID System`：自适应阈值处理的结果用于 ReID 系统。
+- `ReID System -> Activity Logging`：ReID 系统的结果用于活动日志记录。
+
+## 仓库语境与术语解释
+- **CSI (Channel State Information)**：信道状态信息，描述了无线信道的各种属性，例如信号强度、相位和延迟。
+- **ESP32**：一款低成本、低功耗的微控制器，常用于物联网应用。项目中使用 ESP32 采集 CSI 数据。
+- **Nexmon**：一个用于修改博通无线芯片固件的工具，可以用于提取 CSI 数据。
+- **UDP (User Datagram Protocol)**：一种无连接的传输协议，项目中使用 UDP 接收 ESP32 发送的 CSI 数据。
+- **PCap (Packet Capture)**：一种数据包捕获文件格式，项目中使用 PCap 文件作为 CSI 数据源。
+- **Three.js**：一个 JavaScript 3D 库，用于在 Web 浏览器中创建和显示 3D 图形。
+- **ReID (Person Re-Identification)**：人员重识别，用于在不同的时间和地点识别同一个人。`configs/fusion.yaml` 中配置了 ReID 相关的参数，如 checkpoint 文件路径。
+- **Config YAML**：YAML 格式的配置文件，用于配置系统的各种参数。`configs/fusion.yaml` 是一个示例配置文件。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图展示了 WiFi-3D-Fusion 系统的整体架构，从 CSI Data Source、ESP32/Nexmon、UDP/PCap 和 Config YAML 四个不同的数据源开始，分别经过信号处理、神经检测、运动检测和自适应阈值处理等步骤，最终输出 3D 可视化结果、骨骼渲染和活动日志。其中，ESP32/Nexmon 作为 WiFi 信号的采集设备，通过 UDP 或 PCap 文件提供数据，而 ReID 系统则用于人员身份的重识别和跟踪。`configs/fusion.yaml` 文件用于配置系统的参数，例如运动阈值和 ReID 模型的 checkpoint 路径。

@@ -1,0 +1,43 @@
+## 图类型与用途
+这是一个架构图，描述了 Artifact Keeper 系统的整体架构，展示了客户端、后端、数据库、存储以及安全扫描等组件之间的关系。该图在 README 中用于概览系统的主要组成部分和数据流向。
+
+## 图的整体布局
+图采用从左到右的布局。客户端位于左侧，后端服务位于中间，数据库、存储、搜索和安全扫描等组件位于右侧。对等实例位于图的右下角。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为客户端层、后端服务层、数据存储层、安全扫描层和对等实例层。
+
+## 节点逐项说明
+- **Client ("CLI / Package Manager / Frontend")**：客户端，代表用户与 Artifact Keeper 交互的各种方式，包括命令行界面 (CLI)、包管理器和前端界面。
+- **Backend ("Backend Rust · Axum 45+ format handlers")**：后端服务，使用 Rust 语言和 Axum 框架构建，负责处理来自客户端的请求，并支持 45 种以上的包格式。根据 README，后端采用分层架构，并使用中间件管道处理每个请求。
+- **DB (PostgreSQL 16)**：数据库，使用 PostgreSQL 16 存储元数据和其他相关信息。根据 README，PostgreSQL 使用 JSONB 存储元数据。
+- **Storage ("Storage Filesystem / S3")**：存储，用于存储实际的制品文件，支持本地文件系统和 S3 对象存储。
+- **Meili ("Meilisearch Full-text search")**：Meilisearch，用于提供全文搜索功能，方便用户查找制品。README 提到 Artifact Keeper 使用 Meilisearch 提供跨仓库和制品的全文搜索。
+- **Trivy ("Trivy Container & FS scanning")**：Trivy，用于扫描容器镜像和文件系统，检测其中的安全漏洞。README 提到 Trivy 用于自动化漏洞检测。
+- **Grype ("Grype Dependency scanning")**：Grype，用于扫描依赖关系，检测依赖项中的安全漏洞。README 提到 Grype 用于依赖树的分析。
+- **OpenSCAP ("OpenSCAP Compliance scanning")**：OpenSCAP，用于进行合规性扫描。
+- **Peer1 ("Peer Instance") 和 Peer2 ("Peer Instance")**：对等实例，代表 Artifact Keeper 的其他实例，用于实现分布式部署和数据同步。README 提到 Borg Replication 用于递归对等网格，实现制品分发和 P2P 传输。
+
+## 连线、分支与汇聚关系
+- `Client --> Backend`：客户端向后端服务发送请求。
+- `Backend --> DB`：后端服务与数据库进行交互，存储和检索元数据。
+- `Backend --> Storage`：后端服务与存储进行交互，存储和检索制品文件。
+- `Backend --> Meili`：后端服务将数据同步到 Meilisearch，用于全文搜索。
+- `Backend --> Trivy`：后端服务调用 Trivy 进行容器和文件系统扫描。
+- `Backend --> Grype`：后端服务调用 Grype 进行依赖扫描。
+- `Backend --> OpenSCAP`：后端服务调用 OpenSCAP 进行合规性扫描。
+- `Backend <-->|Borg Replication| Peer1` 和 `Backend <-->|Borg Replication| Peer2`：后端服务通过 Borg Replication 与其他对等实例进行数据同步。
+- `Peer1 <-->|P2P Mesh| Peer2`：对等实例之间通过 P2P Mesh 网络进行通信。
+
+## 仓库语境与术语解释
+- **Artifact Keeper**：一个企业级的、开源的制品仓库，支持超过 45 种包格式，使用 Rust 构建。
+- **Axum**：一个 Rust Web 框架，Artifact Keeper 的后端服务使用 Axum 构建。
+- **PostgreSQL**：一个开源的关系型数据库，Artifact Keeper 使用 PostgreSQL 存储元数据。
+- **S3**：一种对象存储服务，Artifact Keeper 支持使用 S3 存储制品文件。
+- **Borg Replication**：一种递归对等复制技术，用于在 Artifact Keeper 实例之间同步数据。
+- **P2P Mesh**：一种对等网络拓扑，用于在 Artifact Keeper 对等实例之间进行通信。
+- **Trivy 和 Grype**：两种安全扫描工具，用于检测 Artifact Keeper 中的漏洞。
+- **45+ Package Formats**：Artifact Keeper 支持超过 45 种包格式，包括 Maven, PyPI, NPM, Docker/OCI, Cargo, Go, Helm 等。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+Artifact Keeper 的架构图展示了客户端通过 CLI、包管理器或前端与后端服务交互，后端服务使用 Rust 和 Axum 构建，并与 PostgreSQL 数据库和文件系统/S3 存储进行交互。后端服务还集成了 Meilisearch 用于全文搜索，Trivy 和 Grype 用于安全扫描，并通过 Borg Replication 与对等实例同步数据，对等实例之间通过 P2P Mesh 网络通信。该架构支持超过 45 种包格式，并提供企业级的制品仓库功能。

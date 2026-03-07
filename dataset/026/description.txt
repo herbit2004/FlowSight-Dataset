@@ -1,0 +1,37 @@
+## 图类型与用途
+这是一个流程图，描述了对 Atlassian 的 `acli` 二进制文件进行逆向工程的分析流程和结果。它展示了如何从二进制文件提取出关键组件，包括 Python 代码、MCP 库和系统提示，这些组件构成了 Rovo Dev AI agent 的核心。
+
+## 图的整体布局
+图采用从左到右的布局。流程从 `acli binary` 开始，经过一系列分析步骤，最终提取出三个关键组件。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为三个阶段：二进制文件分析、运行时环境识别、嵌入式档案提取。
+
+## 节点逐项说明
+- **acli binary**：流程的起点，代表 Atlassian 提供的名为 `acli` 的二进制文件。根据 README，该二进制文件包含了 Rovo Dev AI agent 的完整源代码。
+- **Mach-O arm64**：表示通过分析发现 `acli` 二进制文件是 Mach-O 格式的 arm64 可执行文件，表明它为 Apple Silicon 架构编译。
+- **Go Runtime**：表示通过分析发现该二进制文件使用了 Go 运行时环境，暗示该程序可能使用 Go 语言编写。README 提到，Go runtime symbols 证实了这一点。
+- **Embedded Archives**：表示在二进制文件中发现了嵌入式档案，这些档案包含了重要的内容。`extract_embedded.py` 脚本用于定位和提取这些档案。
+- **Python Code**：表示从嵌入式档案中提取出了 Python 代码，这是 Rovo Dev AI agent 的核心实现。README 指出，成功提取了 100+ Python 源代码文件。
+- **MCP Libraries**：表示从嵌入式档案中提取出了 MCP (Model Context Protocol) 库，表明 Rovo Dev 使用了 MCP 协议。`lib/atlassian_cli_rovodev/src/rovodev/modules/mcp_utils.py` 文件与 MCP 协议相关。
+- **System Prompts**：表示从嵌入式档案中提取出了系统提示，这些提示用于指导 Rovo Dev AI agent 的行为。`lib/atlassian_cli_rovodev/src/rovodev/modules/instructions/instructions.yml` 文件定义了 AI agent 的指令。
+
+## 连线、分支与汇聚关系
+- `acli binary -> Mach-O arm64`：对 `acli` 二进制文件进行分析，确定其文件类型和架构。
+- `Mach-O arm64 -> Go Runtime`：通过分析发现该二进制文件使用了 Go 运行时环境。
+- `Go Runtime -> Embedded Archives`：Go 运行时环境与嵌入式档案相关联，暗示这些档案可能包含 Go 程序所需的数据或资源。
+- `Embedded Archives -> Python Code`：从嵌入式档案中提取出了 Python 代码。
+- `Embedded Archives -> MCP Libraries`：从嵌入式档案中提取出了 MCP 库。
+- `Embedded Archives -> System Prompts`：从嵌入式档案中提取出了系统提示。
+
+## 仓库语境与术语解释
+- **acli**：Atlassian 提供的命令行界面工具，其中嵌入了 Rovo Dev AI agent 的功能。
+- **Mach-O**：一种用于可执行文件、目标代码、动态库和内核转储的文件格式，常用于 macOS 系统。
+- **Go Runtime**：Go 语言的运行时环境，提供了垃圾回收、并发处理等功能。
+- **Embedded Archives**：嵌入在 `acli` 二进制文件中的 ZIP 档案，包含了 Python 源代码、MCP 库和系统提示等资源。
+- **MCP (Model Context Protocol)**：一种用于 AI 模型通信的协议，Rovo Dev 使用 MCP 与 AI 模型进行交互。`lib/atlassian_cli_rovodev/src/rovodev/modules/mcp_utils.py` 实现了 MCP 协议相关功能。
+- **System Prompts**：用于指导 AI agent 行为的指令模板，定义了 AI agent 在不同任务中的行为方式。`lib/atlassian_cli_rovodev/src/rovodev/modules/instructions/instructions.yml` 文件定义了这些指令。
+- **extract_embedded.py**：用于从 `acli` 二进制文件中提取嵌入式档案的 Python 脚本。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了对 `acli` 二进制文件进行逆向工程的过程，从识别文件类型和架构（Mach-O arm64）开始，到确定使用了 Go 运行时环境，再到提取嵌入式档案。这些档案包含了 Rovo Dev AI agent 的关键组件，包括 Python 代码、MCP 库和系统提示。`extract_embedded.py` 脚本用于提取这些组件，而 MCP 库和系统提示则分别与 `lib/atlassian_cli_rovodev/src/rovodev/modules/mcp_utils.py` 和 `lib/atlassian_cli_rovodev/src/rovodev/modules/instructions/instructions.yml` 文件相关。

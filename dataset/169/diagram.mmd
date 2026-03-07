@@ -1,0 +1,33 @@
+flowchart TD
+    USER((User)) -->|message| LEAD
+
+    subgraph TEAM["Agent Team"]
+        LEAD["Lead Agent<br/>(orchestrator)"]
+        A1["Specialist A"]
+        A2["Specialist B"]
+        A3["Specialist C"]
+    end
+
+    subgraph BOARD["Shared Task Board"]
+        T1["Task 1: pending"]
+        T2["Task 2: in_progress<br/>owner: A1"]
+        T3["Task 3: blocked_by T2"]
+    end
+
+    subgraph MAIL["Team Mailbox"]
+        M1["A1 → LEAD: status update"]
+        M2["LEAD → ALL: broadcast"]
+    end
+
+    LEAD -->|"create tasks"| BOARD
+    A1 -->|"claim"| T2
+    T2 -.->|"auto-unblocks"| T3
+    A1 -->|"send message"| MAIL
+    LEAD -->|"broadcast"| MAIL
+    LEAD -->|final answer| USER
+
+    style USER fill:#e1f5fe
+    style LEAD fill:#fff3e0
+    style A1 fill:#e8f5e9
+    style A2 fill:#e8f5e9
+    style A3 fill:#e8f5e9

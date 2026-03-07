@@ -1,0 +1,19 @@
+graph TD
+    req[Request File/Data] --> kv{Check KV Cache}
+    
+    kv -->|Hit| checkComp{Compressed?}
+    checkComp -->|Yes| decomp[Decompress with Gunzip]
+    checkComp -->|No| ret1[Return Data]
+    decomp --> ret1
+    
+    kv -->|Miss| gh[Fetch from GitHub API]
+    gh --> checkSize{Size > 2MB?}
+    
+    checkSize -->|Yes| skip[Skip Caching]
+    checkSize -->|No| comp[Compress with Gzip]
+    
+    comp --> store[Store in KV with gz: prefix]
+    store --> ret2[Return Data]
+    skip --> ret2
+    
+    ret2 --> req

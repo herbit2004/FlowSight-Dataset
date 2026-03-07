@@ -1,0 +1,123 @@
+## 图类型与用途
+这是一个架构图，描述了 Adnify 代码编辑器的内部组件及其交互方式，旨在展示其整体架构，包括用户界面、渲染进程、主进程以及外部服务之间的关系，突出 AI Agent 在其中的作用。该图在 README 中被用作架构设计的说明。
+
+## 图的整体布局
+图采用从上到下的分层结构布局。顶部是用户界面层，中间是渲染进程和 IPC 通信层，底部是主进程和外部服务。
+
+## 分组/子图/阶段说明
+图中包含多个子图，分别代表不同的组件或层级：
+- **用户界面层 UI Layer**：包含用户界面相关的组件。
+- **渲染进程 Renderer Process**：包含 AI Agent 核心、状态管理、前端服务、Agent 子系统和 Web Workers 线程池。
+- **IPC 通信层 IPC Bridge**：负责进程间通信。
+- **主进程 Main Process**：包含安全层、核心服务、索引系统、Node.js Worker Threads、LSP 生态和 MCP 生态。
+- **外部服务 External Services**：集成的外部 AI 服务。
+
+## 节点逐项说明
+- **UI (React Components)**：使用 React 构建的用户界面组件。
+- **Monaco Editor**：代码编辑器组件。
+- **XTerm Terminal**：集成终端。
+- **Chat Panel**：与 AI Agent 交互的聊天界面。
+- **Agent Core**：AI Agent 的核心逻辑，协调消息流、工具执行、上下文管理。根据 `src/renderer/agent/core/Agent.ts`，它提供统一的公共 API 并管理 Agent 生命周期。
+- **Event Bus**：事件总线，用于组件间的通信。
+- **Tool Registry**：工具注册表，管理 AI Agent 可以使用的工具。根据 `src/renderer/agent/tools/registry.ts`，它负责注册工具执行器、验证工具参数和执行工具。
+- **Tool Executors**：工具执行器，负责执行注册的工具。
+- **Agent Store**：AI Agent 的状态管理。
+- **Editor Store**：编辑器状态管理。
+- **UI Store**：用户界面状态管理。
+- **Terminal Manager**：终端管理器。
+- **LSP Client**：语言服务器协议客户端，用于代码补全、语法检查等。
+- **Workspace Manager**：工作区管理器，管理项目文件。
+- **Completion Service**：代码补全服务。
+- **Context Manager**：上下文管理器，维护 AI Agent 的上下文信息。
+- **Compression Manager**：压缩管理器，用于压缩数据。
+- **Memory Service**：内存服务，存储 AI Agent 的记忆。
+- **Session Service**：会话服务，管理用户会话。
+- **Emotion System**：情绪系统，感知用户情绪。
+- **Compute Worker Pool**：计算工作线程池，用于执行计算密集型任务。
+- **Monaco Language Workers**：Monaco 编辑器使用的语言工作线程。
+- **TSWorker**：TypeScript 工作线程。
+- **JSONWorker**：JSON 工作线程。
+- **CSSWorker**：CSS 工作线程。
+- **HTMLWorker**：HTML 工作线程。
+- **Type-Safe IPC Handlers**：类型安全的进程间通信处理器。
+- **Security Module**：安全模块，工作区隔离、路径验证、命令白名单、审计日志。根据 `src/main/security/securityModule.ts`，它负责安全相关的任务。
+- **File Watcher**：文件监听器。
+- **Audit Logger**：审计日志记录器。
+- **LSP Manager**：语言服务器管理器，智能检测项目根目录，支持 10+ 语言。根据 `src/main/lspManager.ts`，它负责管理语言服务器。
+- **Indexing Service**：代码库索引服务，Tree-sitter 解析、语义分块、向量存储。根据 `src/main/indexing/indexService.ts`，它负责代码库的索引。
+- **MCP Manager**：MCP 协议管理器，支持外部工具、OAuth 认证、配置热重载。
+- **LLM Proxy**：LLM 代理层，统一多家 AI 服务商接口，流式响应处理。
+- **Code Chunker**：代码分块器。
+- **Embedder**：嵌入器。
+- **LanceDB**：向量数据库。
+- **Indexer Worker**：索引器工作线程。
+- **TypeScript**：TypeScript 语言服务器。
+- **Python**：Python 语言服务器 (Pyright)。
+- **Go**：Go 语言服务器 (Gopls)。
+- **10+ Languages**：其他语言服务器。
+- **MCP Client**：MCP 客户端。
+- **OAuth Provider**：OAuth 认证提供者。
+- **External MCP Servers**：外部 MCP 服务器。
+- **OpenAI**：OpenAI 外部服务。
+- **Anthropic**：Anthropic 外部服务 (Claude)。
+- **Google**：Google 外部服务 (Gemini)。
+- **DeepSeek**：DeepSeek 外部服务。
+- **Ollama**：Ollama 外部服务。
+
+## 连线、分支与汇聚关系
+- `UI -> AgentStore`：用户界面与 Agent 状态管理关联。
+- `Monaco -> EditorStore`：Monaco 编辑器与编辑器状态管理关联。
+- `Monaco -> MonacoWorkers`：Monaco 编辑器使用 Monaco 语言工作线程。
+- `XTerm -> TermMgr`：XTerm 终端与终端管理器关联。
+- `ChatUI -> AgentCore`：聊天界面与 AI Agent 核心关联。
+- `AgentCore -> ToolRegistry`：AI Agent 核心使用工具注册表。
+- `ToolRegistry -> ToolExecutors`：工具注册表调用工具执行器。
+- `AgentCore -> Context`：AI Agent 核心使用上下文管理器。
+- `AgentCore -> EventBus`：AI Agent 核心使用事件总线。
+- `Context -> Compression`：上下文管理器使用压缩管理器。
+- `AgentCore -> Memory`：AI Agent 核心使用内存服务。
+- `AgentCore -> Session`：AI Agent 核心使用会话服务。
+- `MonacoWorkers -> TSWorker`：Monaco 语言工作线程包含 TypeScript 工作线程。
+- `MonacoWorkers -> JSONWorker`：Monaco 语言工作线程包含 JSON 工作线程。
+- `MonacoWorkers -> CSSWorker`：Monaco 语言工作线程包含 CSS 工作线程。
+- `MonacoWorkers -> HTMLWorker`：Monaco 语言工作线程包含 HTML 工作线程。
+- `Context -> ComputeWorker`：上下文管理器使用计算工作线程池。
+- `Compression -> ComputeWorker`：压缩管理器使用计算工作线程池。
+- `AgentStore -> AgentCore`：Agent 状态管理与 AI Agent 核心关联。
+- `ToolExecutors -> IPC`：工具执行器通过 IPC 通信。
+- `LSPClient -> IPC`：LSP 客户端通过 IPC 通信。
+- `TermMgr -> IPC`：终端管理器通过 IPC 通信。
+- `WorkspaceMgr -> IPC`：工作区管理器通过 IPC 通信。
+- `CompletionSvc -> IPC`：代码补全服务通过 IPC 通信。
+- `IPC -> Security`：IPC 通信连接到安全模块。
+- `Security -> LSPMgr`：安全模块连接到 LSP 管理器。
+- `Security -> IndexSvc`：安全模块连接到索引服务。
+- `Security -> FileWatcher`：安全模块连接到文件监听器。
+- `Security -> AuditLog`：安全模块连接到审计日志记录器。
+- `IPC -> MCPMgr`：IPC 通信连接到 MCP 管理器。
+- `IPC -> LLMProxy`：IPC 通信连接到 LLM 代理。
+- `IndexSvc -> IndexWorker`：索引服务使用索引器工作线程。
+- `IndexWorker -> Chunker`：索引器工作线程使用代码分块器。
+- `IndexWorker -> Embedder`：索引器工作线程使用嵌入器。
+- `Embedder -> VectorDB`：嵌入器连接到向量数据库。
+- `LSPMgr -> TSServer`：LSP 管理器管理 TypeScript 语言服务器。
+- `LSPMgr -> Pyright`：LSP 管理器管理 Python 语言服务器。
+- `LSPMgr -> Gopls`：LSP 管理器管理 Go 语言服务器。
+- `LSPMgr -> OtherLSP`：LSP 管理器管理其他语言服务器。
+- `MCPMgr -> MCPClient`：MCP 管理器管理 MCP 客户端。
+- `MCPMgr -> MCPAuth`：MCP 管理器管理 OAuth 认证提供者。
+- `MCPClient -> MCPServers`：MCP 客户端连接到外部 MCP 服务器。
+- `LLMProxy -> OpenAI`：LLM 代理连接到 OpenAI 外部服务。
+- `LLMProxy -> Claude`：LLM 代理连接到 Anthropic 外部服务。
+- `LLMProxy -> Gemini`：LLM 代理连接到 Google 外部服务。
+- `LLMProxy -> DeepSeek`：LLM 代理连接到 DeepSeek 外部服务。
+- `LLMProxy -> Ollama`：LLM 代理连接到 Ollama 外部服务。
+
+## 仓库语境与术语解释
+- **Electron**：Adnify 采用 Electron 多进程架构，如 README 所述。
+- **多进程架构**：Adnify 采用 Electron 多进程架构，结合 Web Worker 和 Node.js Worker Threads 实现高性能并发处理。
+- **Web Worker**：用于处理前端计算密集型任务，如 Diff 计算、文本搜索。
+- **Node.js Worker Threads**：用于处理代码索引，支持大型项目。
+- **LSP (Language Server Protocol)**：用于代码补全、跳转定义、查找引用等功能。`src/main/lspManager.ts` 负责管理 LSP 服务器。
+- **MCP (Model Context Protocol)**：用于集成外部工具和服务，支持社区插件。
+- **LLM (

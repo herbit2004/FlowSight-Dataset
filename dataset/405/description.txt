@@ -1,0 +1,40 @@
+## 图类型与用途
+这是一个对比图，用于展示对 "HDL_v2" 设计进行修复前后，资源使用情况的对比。该图旨在突出显示修复对 Flip-Flops、BRAM Tiles 和 Registers 使用量的影响，从而体现资源优化效果。该图在仓库中用于直观地展示修复前后的资源使用差异。
+
+## 图的整体布局
+图整体采用从左到右的布局。左侧是修复前的设计，右侧是修复后的设计。资源使用情况从左向右对比。
+
+## 分组/子图/阶段说明
+图中包含一个名为 "Pre-Fix vs Post-Fix Comparison" 的子图，用于将修复前后的资源使用情况进行对比。子图内部逻辑上可分为“修复前”和“修复后”两个阶段。
+
+## 节点逐项说明
+- **A [HDL_v2 Before Fix]**：代表修复前的 "HDL_v2" 设计。
+- **A1 [67,389 Flip-Flops]**：代表修复前 "HDL_v2" 设计使用的 Flip-Flops 数量。
+- **A2 [0 BRAM Tiles]**：代表修复前 "HDL_v2" 设计使用的 BRAM Tiles 数量。
+- **A3 [4,195 Registers]**：代表修复前 "HDL_v2" 设计使用的 Registers 数量。
+- **B [HDL_v2 After Fix]**：代表修复后的 "HDL_v2" 设计。
+- **B1 [527 Flip-Flops]**：代表修复后 "HDL_v2" 设计使用的 Flip-Flops 数量。
+- **B2 [2 BRAM Tiles]**：代表修复后 "HDL_v2" 设计使用的 BRAM Tiles 数量。
+- **B3 [121 Registers]**：代表修复后 "HDL_v2" 设计使用的 Registers 数量。
+
+## 连线、分支与汇聚关系
+- `A -> A1`：表示修复前的 "HDL_v2" 设计对应着特定的 Flip-Flops 使用量。
+- `A -> A2`：表示修复前的 "HDL_v2" 设计对应着特定的 BRAM Tiles 使用量。
+- `A -> A3`：表示修复前的 "HDL_v2" 设计对应着特定的 Registers 使用量。
+- `B -> B1`：表示修复后的 "HDL_v2" 设计对应着特定的 Flip-Flops 使用量。
+- `B -> B2`：表示修复后的 "HDL_v2" 设计对应着特定的 BRAM Tiles 使用量。
+- `B -> B3`：表示修复后的 "HDL_v2" 设计对应着特定的 Registers 使用量。
+- `A1 -.-> B1`：虚线箭头表示修复前后 Flip-Flops 使用量的比较关系。
+- `A2 -.-> B2`：虚线箭头表示修复前后 BRAM Tiles 使用量的比较关系。
+- `A3 -.-> B3`：虚线箭头表示修复前后 Registers 使用量的比较关系。
+
+## 仓库语境与术语解释
+- **HDL_v2**：是仓库中一个目录名，代表一个使用 MATLAB HDL Coder 生成 HDL 代码的设计版本。
+- **Flip-Flops**：触发器，数字电路中用于存储一位二进制数据的基本单元。
+- **BRAM Tiles**：Block RAM，FPGA 中的块状存储器资源。根据 README，该仓库旨在分析 FIFO 大小对 BRAM 推断的影响。
+- **Registers**：寄存器，用于存储数据的硬件电路。
+- **MATLAB HDL Coder**：MATLAB 的一个工具箱，用于从 MATLAB 算法生成可综合的 HDL 代码。
+- **FIFO**：First-In, First-Out，一种数据结构，用于缓冲数据流。根据 README，FIFO 的大小会影响 BRAM 的推断。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图对比了 "HDL_v2" 设计在修复前后的资源使用情况。修复前，设计使用了大量的 Flip-Flops (67,389) 和 Registers (4,195)，但没有使用 BRAM Tiles。修复后，Flip-Flops (527) 和 Registers (121) 的使用量显著降低，并成功推断出了 BRAM Tiles (2)。该图旨在展示通过修复，设计能够更有效地利用硬件资源，这与 README 中提到的 FIFO 大小对 BRAM 推断的影响有关。

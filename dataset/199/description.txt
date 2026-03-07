@@ -1,0 +1,30 @@
+## 图类型与用途
+这是一个流程图，描述了 Kinectron 应用的架构，展示了 Azure Kinect 硬件数据如何通过 Kinectron 应用流向 Web 客户端。它在仓库中的作用是概括整体架构，方便开发者理解数据流向。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是 Kinectron App 子图，底部是 Web Clients 子图，数据从 Azure Kinect 硬件流向 Web 应用程序。
+
+## 分组/子图/阶段说明
+- **Kinectron App**：表示 Kinectron 应用程序本身，是数据流的核心处理单元。
+- **Web Clients**：表示使用 Kinectron 数据的 Web 客户端。
+
+## 节点逐项说明
+- **Azure Kinect Hardware**：代表微软 Azure Kinect 硬件设备，是数据的源头，负责采集深度、颜色等数据。
+- **WebRTC Connection**：代表 WebRTC 连接管理器，负责建立和维护 Kinectron 应用与 Web 客户端之间的 WebRTC 连接，实现数据的实时传输。
+- **Kinectron Client API**：代表 Kinectron 客户端 API，是 Web 应用程序与 Kinectron 应用通信的接口，提供访问 Kinect 数据流的函数和方法。根据 `client/src/kinectron.js`，该 API 负责处理来自服务器的数据事件。
+- **Your Web Application**：代表用户开发的 Web 应用程序，它使用 Kinectron Client API 来获取和处理 Kinect 数据，用于各种创意应用、交互设计或研究。
+
+## 连线、分支与汇聚关系
+- `Azure Kinect Hardware -> WebRTC Connection`：Azure Kinect 硬件设备采集到的数据被发送到 Kinectron 应用中的 WebRTC 连接管理器。
+- `WebRTC Connection <--> Kinectron Client API`：WebRTC 连接管理器与 Web 客户端的 Kinectron Client API 之间建立双向的 WebRTC 连接，实现数据的实时传输。
+- `Kinectron Client API -> Your Web Application`：Kinectron Client API 将接收到的 Kinect 数据提供给用户开发的 Web 应用程序。
+
+## 仓库语境与术语解释
+- **Kinectron**：是一个基于 Electron 的应用程序，它使用 WebRTC 将 Microsoft Azure Kinect 数据实时流式传输到 Web 浏览器。
+- **Azure Kinect Hardware**：微软的深度相机，Kinectron 通过 `kinect-azure` 这个 npm 包来控制它，具体实现在 `app/main/kinectController.js`。
+- **WebRTC**：一种实时通信技术，用于在 Kinectron 应用和 Web 客户端之间建立连接。
+- **Kinectron Client API**：客户端 JavaScript 库，允许 Web 应用程序连接到 Kinectron 服务器并访问数据流。
+- **PeerConnectionManager**：在 `app/main/managers/peerConnectionManager.js` 中定义，负责管理 WebRTC 连接。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Kinectron 的数据流架构：Azure Kinect 硬件采集数据，通过 Kinectron 应用中的 WebRTC 连接传输到 Web 客户端。Web 客户端通过 Kinectron Client API 接收数据，并将其用于 Web 应用程序。核心路径是“硬件 -> WebRTC -> 客户端 API -> Web 应用”，其中 WebRTC 连接是关键的中间环节，实现了数据的实时传输。`app/main/kinectController.js` 负责控制 Azure Kinect 硬件，而 `client/src/kinectron.js` 提供了客户端 API。

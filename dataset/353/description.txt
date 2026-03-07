@@ -1,0 +1,30 @@
+## 图类型与用途
+这是一个流程图，描述了 glTF Procedural Textures 扩展中材质的结构，展示了如何使用程序纹理来定义材质的颜色。它在仓库中的作用是展示 MaterialX 材质图转换为 glTF 程序纹理时，材质系统中各个组件之间的关系和数据流向。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是程序纹理子图，中间是 glTF PBR 着色器，底部是 glTF 材质。
+
+## 分组/子图/阶段说明
+- **gltf_procedural**：这是一个子图，代表 glTF 的程序纹理（Procedural Texture）扩展。它包含定义程序纹理的节点，例如常量颜色节点和输出节点。
+
+## 节点逐项说明
+- **gltf_Material([surfacematerial:material])**：代表 glTF 中的一个材质（Material）节点。`surfacematerial` 表示这是一个表面材质。
+- **gltf_Shader[gltf_pbr:surfaceshader]**：代表 glTF 中的一个着色器（Shader）节点。`gltf_pbr` 指的是 PBR（Physically Based Rendering，基于物理的渲染）着色器，`surfaceshader` 表示这是一个表面着色器。
+- **gltf_procedural_output_color4([output:color3])**：代表程序纹理的输出节点。`output:color3` 表示它输出一个 RGB 颜色值。
+- **gltf_procedural_constant_color4([constant:color3:1,1,1])**：代表程序纹理中的一个常量颜色节点。`constant:color3:1,1,1` 表示它是一个 RGB 颜色常量，值为 (1, 1, 1)，即白色。
+
+## 连线、分支与汇聚关系
+- `gltf_Shader --"surfaceshader"--> gltf_Material`：着色器节点（`gltf_Shader`）通过 `surfaceshader` 属性连接到材质节点（`gltf_Material`）。这意味着材质使用这个着色器来渲染表面。
+- `gltf_procedural_constant_color4 --> gltf_procedural_output_color4`：常量颜色节点（`gltf_procedural_constant_color4`）连接到程序纹理的输出节点（`gltf_procedural_output_color4`）。这意味着常量颜色值被用作程序纹理的输入。
+- `gltf_procedural_output_color4 --"base_color"--> gltf_Shader`：程序纹理的输出节点（`gltf_procedural_output_color4`）通过 `base_color` 属性连接到着色器节点（`gltf_Shader`）。这意味着程序纹理的输出颜色被用作着色器的基础颜色。
+
+## 仓库语境与术语解释
+- **glTF Procedural Textures extension**：该扩展允许在 glTF 材质中使用程序生成的纹理，而不是静态图像。
+- **MaterialX**：一种开放标准，用于描述材质和外观。该仓库支持 MaterialX 材质图和 glTF 程序纹理之间的双向转换。
+- **PBR (Physically Based Rendering)**：一种基于物理原理的渲染方法，用于创建更逼真的材质。
+- **gltf_pbr**：在 MaterialX 中，`gltf_pbr` 节点表示一个 PBR 着色器，用于定义材质的表面属性，例如颜色、粗糙度和金属度。
+- **surfaceshader**：表面着色器，用于计算表面的颜色和光照。
+- **base_color**：基础颜色，是 PBR 着色器的一个输入属性，用于定义材质的基本颜色。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 glTF 材质如何使用程序纹理来定义其基础颜色。材质（`gltf_Material`）使用一个 PBR 着色器（`gltf_Shader`）进行渲染。程序纹理扩展（`gltf_procedural`）生成一个颜色值，这个颜色值通过 `base_color` 属性被用作 PBR 着色器的基础颜色。程序纹理子图内部，常量颜色节点 `gltf_procedural_constant_color4` 连接到输出节点 `gltf_procedural_output_color4`。该图体现了 MaterialX 材质图转换为 glTF 程序纹理时的数据流向。

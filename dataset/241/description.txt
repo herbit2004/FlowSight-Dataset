@@ -1,0 +1,42 @@
+## 图类型与用途
+这是一个流程图，描述了 GLaDOS 语音交互系统的音频处理流程，从音频捕获到语音识别，并处理语音中断。它在仓库中的作用是展示 GLaDOS 如何实时处理用户的语音输入并做出响应。
+
+## 图的整体布局
+图整体采用从左到右的布局。从左侧的音频捕获开始，经过语音识别，最后到右侧的中断处理。
+
+## 分组/子图/阶段说明
+图中包含三个子图：
+- **Audio Capture**：负责捕获和预处理音频。
+- **Speech Recognition**：负责将音频转换为文本。
+- **Interruption Handling**：负责处理语音交互过程中的中断情况。
+
+## 节点逐项说明
+- **Microphone 16kHz**：捕获用户的语音，采样率为 16kHz。
+- **Silero VAD 32ms chunks**：使用 Silero VAD 模型，将音频分割成 32ms 的小块，用于检测语音活动。根据 `src/glados/audio_io/vad.py`，该模型只支持 16000 Hz 音频。
+- **Pre-activation Buffer 800ms**：在语音活动检测之前，缓冲 800ms 的音频数据，确保不会丢失语音的起始部分。
+- **Voice Detected VAD > 0.8**：基于 VAD 的输出，当 VAD 值大于 0.8 时，认为检测到语音。
+- **Accumulate Speech**：累积检测到的语音片段，形成完整的语音输入。
+- **Silence Detection 640ms pause**：检测语音中的静音，当静音持续 640ms 时，认为语音输入结束。
+- **Parakeet ASR**：使用 Parakeet ASR 模型，将累积的语音转换为文本。根据 `src/glados/ASR/__init__.py`，Parakeet ASR 有 CTC 和 TDT 两种模型。
+- **Speaking?**：判断 GLaDOS 是否正在播放语音。
+- **Stop Playback**：如果 GLaDOS 正在播放语音，则停止播放。
+- **Clip Response**：裁剪或调整 GLaDOS 的响应，以适应中断的情况。
+
+## 连线、分支与汇聚关系
+- `mic -> vad -> buffer`：麦克风捕获的音频流向 Silero VAD，再流向预激活缓冲区。
+- `buffer -> detect -> accumulate`：预激活缓冲区的输出流向语音检测，再流向累积语音。
+- `accumulate -> silence -> asr`：累积语音的输出流向静音检测，再流向 Parakeet ASR。
+- `detect -> speaking`：语音检测的结果流向“正在说话？”判断节点。
+- `speaking -- Yes --> stop -> clip`：如果“正在说话？”判断节点的结果为“是”，则触发停止播放，然后裁剪响应。
+
+## 仓库语境与术语解释
+- **Silero VAD**：用于语音活动检测，将音频分割成小块进行分析。
+- **Parakeet ASR**：用于将语音转换为文本的自动语音识别模型。根据 `src/glados/ASR/__init__.py`，可以选择 CTC 或 TDT 模型。
+- **Audio Capture**：音频捕获阶段，包括麦克风输入、VAD 处理和预激活缓冲。
+- **Speech Recognition**：语音识别阶段，包括语音检测、语音累积、静音检测和 ASR 模型。
+- **Interruption Handling**：中断处理阶段，用于处理 GLaDOS 正在说话时用户输入语音的情况。
+- **16kHz**：麦克风的采样率，根据 `src/glados/audio_io/vad.py`，Silero VAD 模型只支持 16kHz 音频。
+- **SpeechListener**：根据 `src/glados/core/speech_listener.py`，该类负责管理音频输入和语音处理，包括 VAD、ASR 等。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 GLaDOS 语音交互系统的音频处理流程。从麦克风捕获 16kHz 音频开始，经过 Silero VAD 进行语音活动检测，并使用预激活缓冲区保留语音起始部分。检测到语音后，累积语音片段，通过静音检测判断语音结束，然后使用 Parakeet ASR 模型将语音转换为文本。如果在语音识别过程中 GLaDOS 正在说话，则停止播放并裁剪响应，以实现中断处理。其中，Silero VAD 和 Parakeet ASR 是两个关键组件，分别负责语音活动检测和语音识别。`src/glados/core/speech_listener.py` 中的 `SpeechListener` 类负责协调整个流程。

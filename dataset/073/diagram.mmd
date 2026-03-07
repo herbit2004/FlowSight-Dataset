@@ -1,0 +1,20 @@
+graph LR
+
+  %% Ingestion Pipeline
+  subgraph Ingestion
+    A[<b>Track and Commit Files</b><br>Supports Profiles] --> B[<b>Ingest Files</b><br>Automatic OCR Strategy<br>Image Entity Extraction]
+    B --> C[<b>Semantic Chunking</b><br>with Context Headers<br>Lines per Block: 100<br>Words per Chunk: 200]
+    C --> D[<b>Embed Chunks</b><br>Model: text-embedding-3-large<br>Vector Size: 3072]
+    D --> E[<b>Store Chunks</b><br>Local Qdrant database]
+  end
+
+  %% Query Pipeline
+  subgraph Query
+    F[<b>Ask Question</b>] --> G[<b>Embed Question</b><br>Model: text-embedding-3-large]
+    G --> H[<b>Retrieve Nearest Chunks</b><br>Score Min: 0.1<br>Chunks Max: 30]
+    E --> H
+    H --> I[<b>Rerank by Relevance</b><br>Chunks Max: 8]
+    I --> J[<b>Expand Context</b><br>Chunks Radius: 1]
+    J --> K[<b>Generate Answer</b>]
+    K --> L[<b>Get Answer</b><br>in CLI, GUI, MCP]
+  end

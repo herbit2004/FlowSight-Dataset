@@ -1,0 +1,61 @@
+## 图类型与用途
+这是一个流程图，描述了从 `acli` 二进制文件中提取 Rovo Dev AI 代理源代码的逆向工程流程。该图在仓库中的作用是概括逆向工程的主流程，展示各个阶段及其依赖关系。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是二进制文件分析和字符串提取等初始阶段，中间是 ZIP 压缩包发现和 Python 提取脚本阶段，底部是源代码分析和技术文档编写阶段。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分成三个阶段：二进制文件分析与信息提取、压缩包提取与验证、源代码分析与文档生成。
+
+## 节点逐项说明
+- **Binary Analysis**：二进制文件分析阶段，使用各种工具来确定二进制文件的类型、架构、编程语言和依赖项。根据 README，此阶段使用 `file`、`hexdump` 和 `otool` 等工具。
+- **String Extraction**：字符串提取阶段，从二进制文件中提取所有可读字符串，并搜索与 "rovo" 和 "mcp" 相关的字符串。根据 README，此阶段使用 `strings` 和 `grep` 命令。
+- **ZIP Archive Discovery**：ZIP 压缩包发现阶段，在提取的字符串中搜索 ZIP 压缩包的签名，并分析 ZIP 压缩包的结构，以确定嵌入式压缩包的位置。
+- **Python Extraction Script**：Python 提取脚本阶段，编写 Python 脚本，使用 `zipfile` 模块从二进制文件的指定偏移量提取 ZIP 压缩包，并验证提取结果。根据 README，仓库中提供了 `extract_embedded.py` 脚本用于此阶段。
+- **Source Code Analysis**：源代码分析阶段，对提取的 Python 源代码进行分析，理解 Rovo Dev AI 代理的实现细节。
+- **System Prompt Discovery**：系统提示发现阶段，从源代码中提取系统提示，了解 Rovo Dev AI 代理的指令和目标。
+- **Technical Documentation**：技术文档编写阶段，将逆向工程的结果整理成技术文档，包括源代码、系统提示和实现细节。
+- **file command**：用于二进制文件分析的 `file` 命令。
+- **hexdump analysis**：用于二进制文件分析的十六进制转储分析。
+- **otool examination**：用于二进制文件分析的 `otool` 工具检查。
+- **strings command**：用于字符串提取的 `strings` 命令。
+- **grep for 'rovo'**：用于字符串提取的 `grep` 命令，搜索 "rovo"。
+- **grep for 'mcp'**：用于字符串提取的 `grep` 命令，搜索 "mcp"。
+- **PK signature search**：用于 ZIP 压缩包发现的 PK 签名搜索。
+- **ZIP structure analysis**：用于 ZIP 压缩包发现的 ZIP 结构分析。
+- **Embedded archive location**：嵌入式压缩包位置的确定。
+- **Python zipfile module**：用于 Python 提取脚本的 `zipfile` 模块。
+- **Binary offset calculation**：二进制文件偏移量计算。
+- **Extraction validation**：提取验证。
+
+## 连线、分支与汇聚关系
+- `Binary Analysis -> String Extraction`：二进制文件分析的结果作为字符串提取的输入。
+- `String Extraction -> ZIP Archive Discovery`：字符串提取的结果作为 ZIP 压缩包发现的输入。
+- `ZIP Archive Discovery -> Python Extraction Script`：ZIP 压缩包发现的结果作为 Python 提取脚本的输入。
+- `Python Extraction Script -> Source Code Analysis`：Python 提取脚本的结果作为源代码分析的输入。
+- `Source Code Analysis -> System Prompt Discovery`：源代码分析的结果作为系统提示发现的输入。
+- `System Prompt Discovery -> Technical Documentation`：系统提示发现的结果作为技术文档编写的输入。
+- `file command -> Binary Analysis`：`file command` 的结果用于 `Binary Analysis`。
+- `hexdump analysis -> Binary Analysis`：`hexdump analysis` 的结果用于 `Binary Analysis`。
+- `otool examination -> Binary Analysis`：`otool examination` 的结果用于 `Binary Analysis`。
+- `strings command -> String Extraction`：`strings command` 的结果用于 `String Extraction`。
+- `grep for 'rovo' -> String Extraction`：`grep for 'rovo'` 的结果用于 `String Extraction`。
+- `grep for 'mcp' -> String Extraction`：`grep for 'mcp'` 的结果用于 `String Extraction`。
+- `PK signature search -> ZIP Archive Discovery`：`PK signature search` 的结果用于 `ZIP Archive Discovery`。
+- `ZIP structure analysis -> ZIP Archive Discovery`：`ZIP structure analysis` 的结果用于 `ZIP Archive Discovery`。
+- `Embedded archive location -> ZIP Archive Discovery`：`Embedded archive location` 的结果用于 `ZIP Archive Discovery`。
+- `Python zipfile module -> Python Extraction Script`：`Python zipfile module` 用于 `Python Extraction Script`。
+- `Binary offset calculation -> Python Extraction Script`：`Binary offset calculation` 用于 `Python Extraction Script`。
+- `Extraction validation -> Python Extraction Script`：`Extraction validation` 用于 `Python Extraction Script`。
+
+## 仓库语境与术语解释
+- **acli**：Atlassian 的命令行界面，该二进制文件包含了 Rovo Dev AI 代理的功能。
+- **Rovo Dev**：一个 AI 编码代理系统，集成了 MCP (Model Context Protocol) 服务器。根据 `acli_analysis.md`，Rovo Dev 的源代码位于 `lib/atlassian_cli_rovodev/src/rovodev/` 目录下。
+- **MCP (Model Context Protocol)**：用于 AI 模型通信的协议。`acli_analysis.md` 指出该二进制文件包含完整的 MCP 1.9.2 实现。`lib/atlassian_cli_rovodev/src/rovodev/modules/mcp_utils.py` 文件包含了运行 MCP 服务器和处理相关错误的函数。
+- **extract_embedded.py**：用于从 `acli` 二进制文件中提取嵌入的 Python 源代码的 Python 脚本。该脚本通过查找 ZIP 压缩包的签名和结构来定位和提取文件。
+- **System Prompts**：AI 代理使用的指令模板，用于指导其行为。根据 `acli_analysis.md`，这些模板用于代码创建、文档改进、问题总结等任务。
+- **Binary Analysis Tools**：包括 `file`、`hexdump` 和 `otool` 等工具，用于分析二进制文件的类型、架构和依赖项。
+- **String Extraction Tools**：包括 `strings` 和 `grep` 命令，用于从二进制文件中提取字符串并搜索特定模式。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图描述了从 `acli` 二进制文件中提取 Rovo Dev AI 代理源代码的逆向工程过程。流程从二进制文件分析开始，接着进行字符串提取，然后是 ZIP 压缩包发现和 Python 提取脚本的编写与执行。提取出的源代码随后被分析，从中发现系统提示，最终整理成技术文档。`extract_embedded.py` 脚本是提取嵌入式 Python 代码的关键工具，而 Rovo Dev 和 MCP 则是该二进制文件中包含的核心功能模块。

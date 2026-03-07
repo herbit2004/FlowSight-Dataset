@@ -1,0 +1,35 @@
+## 图类型与用途
+这是一个系统架构图，展示了 ProDocs Desktop 应用的内部组件及其相互关系。该图旨在说明 ProDocs 如何利用前端界面、后端 API、MCP 服务和 JSON 文件存储来与 Claude Code 和 Cursor 等 AI 工具集成，从而实现 AI 驱动的项目知识库系统。该图在 README.md 中被用作“系统架构”的示例。
+
+## 图的整体布局
+图采用从上到下的布局，整体分为三个层次。顶层是 ProDocs Desktop 应用，中间层是前端界面、后端 API 和 MCP 服务，底层是 Claude Code、Cursor 和 JSON 文件存储。
+
+## 分组/子图/阶段说明
+图中有一个名为 "Desktop" 的 subgraph，代表 ProDocs Desktop (Electron) 应用。该 subgraph 内部包含了前端界面、后端 API 和 MCP 服务三个组件。
+
+## 节点逐项说明
+- **🖥️ ProDocs Desktop (Electron)**：整个应用的容器，基于 Electron 框架构建的桌面应用程序。
+- **前端界面 React 19 + Ant Design**：用户交互界面，使用 React 19 和 Ant Design 组件库构建。
+- **后端 API Express + TypeScript**：提供 API 接口，处理前端请求，并与 MCP 服务和存储交互，使用 Express 框架和 TypeScript 语言。
+- **MCP 服务 Claude AI 集成**：MCP (Message Communication Protocol) 服务，负责与 Claude Code 和 Cursor 等 AI 工具进行通信和集成。
+- **💾 JSON 文件存储 (无需数据库)**：使用 JSON 文件存储数据，无需依赖数据库。
+- **🤖 Claude Code**：Anthropic 公司的 Claude 代码生成 AI 模型。
+- **🤖 Cursor**：一种 AI 辅助的代码编辑器。
+
+## 连线、分支与汇聚关系
+- `Frontend <--> Backend`：前端界面与后端 API 之间双向通信，前端发送请求到后端，后端返回数据给前端。
+- `Backend <--> MCP`：后端 API 与 MCP 服务之间双向通信，后端将请求转发给 MCP 服务，MCP 服务调用 AI 工具后将结果返回给后端。
+- `Backend <--> Storage`：后端 API 与 JSON 文件存储之间双向通信，后端从存储读取数据，并将数据写入存储。
+- `MCP <--> Claude`：MCP 服务与 Claude Code 之间双向通信，MCP 服务调用 Claude Code 的 API，并接收 Claude Code 的响应。
+- `MCP <--> Cursor`：MCP 服务与 Cursor 之间双向通信，MCP 服务与 Cursor 进行集成，可能是通过 Cursor 的 API 或插件机制。
+
+## 仓库语境与术语解释
+- **ProDocs Desktop (Electron)**：基于 Electron 框架构建的桌面应用程序，作为整个应用系统的容器。
+- **MCP (Message Communication Protocol)**：一种消息通信协议，用于连接 ProDocs 和外部 AI 工具，相关代码位于 `backend/src/controllers/mcpController.ts`。
+- **Claude Code & Cursor**：集成的 AI 工具，用于辅助代码生成和编辑。
+- **JSON 文件存储**：ProDocs 使用 JSON 文件存储数据，简化了部署和维护，相关配置可能位于 `backend/src/config/jsonStore.ts`。
+- **Frontend (React 19 + Ant Design)**：前端界面使用 React 19 和 Ant Design 组件库构建，相关代码位于 `frontend/src` 目录下。
+- **Backend (Express + TypeScript)**：后端 API 使用 Express 框架和 TypeScript 语言，相关代码位于 `backend/src` 目录下。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+ProDocs Desktop 应用采用前后端分离的架构，前端界面负责用户交互，后端 API 负责处理业务逻辑和数据存储。MCP 服务作为桥梁，连接后端 API 和 AI 工具 (Claude Code 和 Cursor)。用户通过前端界面发起请求，请求经过后端 API 处理后，通过 MCP 服务调用 AI 工具，AI 工具返回结果给 MCP 服务，MCP 服务将结果返回给后端 API，后端 API 将结果返回给前端界面，最终呈现给用户。数据存储在 JSON 文件中。该架构图展示了 ProDocs 如何通过 MCP 协议与 Claude Code 和 Cursor 等 AI 工具集成，实现 AI 驱动的项目知识库系统。

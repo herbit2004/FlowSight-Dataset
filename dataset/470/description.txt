@@ -1,0 +1,59 @@
+## 图类型与用途
+这是一个流程图，展示了 GUARDRAIL 框架的三种部署模型：嵌入式模型、网关模型和服务网格模型。该图旨在说明 GUARDRAIL 如何在不同的部署架构中集成和工作，为理解 GUARDRAIL 的部署方式提供概览。
+
+## 图的整体布局
+图整体采用从上到下的布局，将三种部署模型并列展示。每个模型内部也采用从上到下的结构，展示了组件之间的交互关系。
+
+## 分组/子图/阶段说明
+图中有三个显式的子图，分别代表三种部署模型：
+- **Embedded Model (嵌入式模型)**：展示了 GUARDRAIL 客户端模块和服务器模块如何嵌入到现有应用程序中。
+- **Gateway Model (网关模型)**：展示了 GUARDRAIL 网关如何作为客户端和服务器之间的中介，执行安全策略。
+- **Service Mesh Model (服务网格模型)**：展示了 GUARDRAIL Sidecar 如何与客户端和服务器容器并排运行，通过控制平面进行策略管理。
+
+## 节点逐项说明
+- **Host Process (HC)**：主机进程，代表应用程序运行的宿主环境。图中可见，但仓库上下文未进一步说明。
+- **MCP Client (MCC)**：MCP 客户端，可能是一个消息传递或配置协议的客户端。图中可见，但仓库上下文未进一步说明。
+- **GUARDRAIL Client Module (GC)**：GUARDRAIL 客户端模块，负责在客户端执行安全策略。
+- **MCP Server (MCS)**：MCP 服务器，与 MCP 客户端对应。图中可见，但仓库上下文未进一步说明。
+- **GUARDRAIL Server Module (GS)**：GUARDRAIL 服务器模块，负责在服务器端执行安全策略。
+- **Client (CL)**：客户端，发起请求的应用程序。
+- **GUARDRAIL Gateway (GW)**：GUARDRAIL 网关，作为客户端和服务器之间的中介，负责执行安全策略。
+- **Server (SV)**：服务器，处理客户端请求的应用程序。
+- **Client Pod**：Kubernetes 中的客户端容器组。
+- **Client Container (CP)**：客户端容器，运行客户端应用程序。
+- **GUARDRAIL Sidecar (CS)**：GUARDRAIL Sidecar，与客户端容器并排运行，负责执行客户端的安全策略。
+- **Server Pod**：Kubernetes 中的服务器容器组。
+- **Server Container (SP)**：服务器容器，运行服务器应用程序。
+- **GUARDRAIL Sidecar (SS)**：GUARDRAIL Sidecar，与服务器容器并排运行，负责执行服务器端的安全策略。
+- **Control Plane**：控制平面，负责管理和配置服务网格。
+- **Policy Server (PS)**：策略服务器，存储和管理安全策略。
+- **Identity Service (IS)**：身份服务，负责身份验证和授权。
+- **Audit Collector (AS)**：审计收集器，收集安全审计日志。
+
+## 连线、分支与汇聚关系
+- `MCC --> GC`：MCP 客户端调用 GUARDRAIL 客户端模块。
+- `GS --> MCS`：GUARDRAIL 服务器模块调用 MCP 服务器。
+- `GC <---> GS`：GUARDRAIL 客户端模块和服务器模块之间双向通信。
+- `CL <---> GW`：客户端和 GUARDRAIL 网关之间双向通信。
+- `GW <---> SV`：GUARDRAIL 网关和服务器之间双向通信。
+- `CP <---> CS`：客户端容器和 GUARDRAIL Sidecar 之间双向通信。
+- `SS <---> SP`：服务器容器和 GUARDRAIL Sidecar 之间双向通信。
+- `CS <---> SS`：客户端 Sidecar 和服务器 Sidecar 之间双向通信。
+- `CS <-..-> PS`：客户端 Sidecar 连接到策略服务器。
+- `CS <-..-> IS`：客户端 Sidecar 连接到身份服务。
+- `CS <-..-> AS`：客户端 Sidecar 连接到审计收集器。
+- `SS <-..-> PS`：服务器 Sidecar 连接到策略服务器。
+- `SS <-..-> IS`：服务器 Sidecar 连接到身份服务。
+- `SS <-..-> AS`：服务器 Sidecar 连接到审计收集器。
+
+## 仓库语境与术语解释
+- **GUARDRAIL**：根据 README，GUARDRAIL 是一个针对大型语言模型（LLM）应用程序的安全框架。
+- **Model Context Protocol (MCP)**：根据 2-technical-spec.md，MCP 用于在 LLM 应用生态系统中实现信息流安全。
+- **Sidecar**：在服务网格模型中，Sidecar 模式是指将辅助功能（如安全策略执行）与主应用程序容器并排部署。
+- **Control Plane**：在服务网格模型中，控制平面负责管理和配置整个服务网格，包括策略下发、身份验证和审计等功能。
+- **Embedded Model**：一种部署模型，其中 GUARDRAIL 的安全模块直接嵌入到应用程序中。
+- **Gateway Model**：一种部署模型，其中 GUARDRAIL 网关作为客户端和服务器之间的中介，执行安全策略。
+- **Service Mesh Model**：一种部署模型，其中 GUARDRAIL Sidecar 与应用程序容器并排运行，通过控制平面进行策略管理。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 GUARDRAIL 框架的三种部署模型：嵌入式模型、网关模型和服务网格模型。嵌入式模型将 GUARDRAIL 模块嵌入到应用程序中，网关模型使用 GUARDRAIL 网关作为中介，服务网格模型则通过 Sidecar 模式和控制平面实现安全策略。服务网格模型中，客户端和服务端的 Sidecar 都与策略服务器、身份服务和审计收集器相连，以便进行策略管理和安全审计。该图体现了 GUARDRAIL 在不同架构中的集成方式，以及如何通过不同的组件实现安全策略。

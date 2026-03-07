@@ -1,0 +1,41 @@
+## 图类型与用途
+这是一个流程图，描述了 KohakuHub 的架构，展示了客户端如何通过 Nginx 访问后端服务，并与 LakeFS、MinIO 和 PostgreSQL 等组件交互。它在 `docs/deployment.md` 中用于说明部署架构。
+
+## 图的整体布局
+图采用从左到右的布局。客户端作为起始节点，通过 Nginx 路由到不同的后端服务，最终与数据存储组件交互。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为客户端接入层、反向代理层、API 服务层和数据存储层四个阶段。
+
+## 节点逐项说明
+- **Client (客户端 Browser/CLI/Git)**：代表用户，可以通过浏览器、命令行界面 (CLI) 或 Git 等方式与 KohakuHub 交互。
+- **Nginx Container hub-ui:80**：作为一个反向代理服务器，接收客户端的请求，并根据请求的 URL 将其路由到不同的后端服务。它监听 28080 端口，并将流量转发到内部的 hub-ui 容器的 80 端口。
+- **Static Vue Frontend Static Files**：存储 Vue 前端应用的静态文件（HTML, JavaScript 等）。
+- **FastAPI Container hub-api:48888**：运行 FastAPI 应用的容器，处理 API 请求，监听 48888 端口。
+- **LakeFS Container lakefs:28000**：运行 LakeFS 服务的容器，提供数据湖管理功能，监听 28000 端口。
+- **MinIO Container minio:9000**：运行 MinIO 对象存储服务的容器，用于存储对象数据，监听 9000 端口。
+- **PostgreSQL Container postgres:5432**：运行 PostgreSQL 数据库的容器，用于存储元数据和其他关系型数据，监听 5432 端口。
+
+## 连线、分支与汇聚关系
+- `Client -> Nginx Container`：客户端通过 28080 端口向 Nginx 发送请求。
+- `Nginx Container -> Static`：对于根路径 `/`、HTML 文件 (`*.html`) 和 JavaScript 文件 (`*.js`) 的请求，Nginx 直接提供静态文件。
+- `Nginx Container -> FastAPI Container`：对于 `/api/*`, `/org/*`, `/{ns}/{repo}.git/*`, `/resolve/*`, 和 `/admin/*` 等 API 请求，Nginx 将请求转发到 FastAPI 容器。
+- `FastAPI Container -> LakeFS Container`：FastAPI 容器通过 REST API 与 LakeFS 容器交互。
+- `FastAPI Container -> MinIO Container`：FastAPI 容器通过 S3 API 与 MinIO 容器交互。
+- `FastAPI Container -> PostgreSQL Container`：FastAPI 容器通过 SQL 与 PostgreSQL 容器交互。
+- `LakeFS Container -> MinIO Container`：LakeFS 容器将对象存储在 MinIO 容器中。
+- `Static -> Client`：静态文件响应返回给客户端。
+- `FastAPI Container -> Nginx Container`：FastAPI 容器将 JSON 响应返回给 Nginx。
+- `Nginx Container -> Client`：Nginx 将响应返回给客户端。
+
+## 仓库语境与术语解释
+- **Nginx**：用作反向代理，根据 URL 路由请求到不同的后端服务，配置位于 `docker/nginx/default.conf`。
+- **FastAPI**：后端 API 服务，与 LakeFS、MinIO 和 PostgreSQL 交互，代码位于 `src/kohakuhub/main.py`。
+- **LakeFS**：提供 Git-like 版本控制的数据湖管理服务。
+- **MinIO**：对象存储服务，用于存储模型和数据集文件。
+- **PostgreSQL**：关系型数据库，用于存储元数据。
+- **docker-compose.yml**：用于定义和运行多容器 Docker 应用程序，示例配置位于 `docker-compose.example.yml`。
+- **KOHAKU_HUB_BASE_URL**：环境变量，用于配置 KohakuHub 的公共 URL，在 `docker-compose.example.yml` 中配置。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 KohakuHub 的架构，客户端请求通过 Nginx 反向代理路由到 Vue 前端静态文件或 FastAPI 后端服务。FastAPI 服务与 LakeFS、MinIO 和 PostgreSQL 交互，实现数据湖管理和存储。Nginx 的配置决定了请求的路由方式，而 `docker-compose.yml` 文件定义了各个容器的配置和依赖关系。

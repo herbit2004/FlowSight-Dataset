@@ -1,0 +1,38 @@
+## 图类型与用途
+这是一个流程图，描述了在 Claude Code 中使用基于规范驱动开发（Spec-Driven Development）的工作流程。该流程旨在通过一系列规范定义、审批和实施步骤，来结构化地开发新功能，确保在开始编码之前明确需求、设计和任务。
+
+## 图的整体布局
+图整体采用从左到右的布局，呈现一个线性的流程，从创建新规范开始，到代码实施结束。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为四个阶段：规范创建、需求定义与审批、设计与审批、任务分解与审批，以及最终的实施阶段。
+
+## 节点逐项说明
+- **A["/spec:new"]**: 表示创建新的规范，是流程的起点。根据 README 和 `.claude/commands/spec/new.md`，这是一个用于初始化新功能规范的 Claude Code 自定义斜杠命令。
+- **B["/spec:requirements"]**: 表示定义需求的阶段，明确“需要构建什么”。根据 README 和 `.claude/commands/spec/requirements.md`，`/spec:requirements` 用于创建或编辑需求规范。
+- **C["/spec:approve requirements"]**: 表示需求审批阶段，需求规范需要经过评审和批准。根据 README 和 `.claude/commands/spec/approve.md`，`/spec:approve requirements` 用于批准需求规范，创建 `.requirements-approved` 文件。
+- **D["/spec:design"]**: 表示设计阶段，确定“如何构建”之前定义的需求。根据 README 和 `.claude/commands/spec/design.md`，`/spec:design` 用于创建或编辑设计规范。
+- **E["/spec:approve design"]**: 表示设计审批阶段，设计规范需要经过评审和批准。根据 README 和 `.claude/commands/spec/approve.md`，`/spec:approve design` 用于批准设计规范，创建 `.design-approved` 文件。
+- **F["/spec:tasks"]**: 表示任务分解阶段，计划“何时”以及“以什么顺序”执行任务。根据 README 和 `.claude/commands/spec/tasks.md`，`/spec:tasks` 用于创建或编辑任务列表。
+- **G["/spec:approve tasks"]**: 表示任务审批阶段，任务列表需要经过评审和批准。根据 README 和 `.claude/commands/spec/approve.md`，`/spec:approve tasks` 用于批准任务列表，创建 `.tasks-approved` 文件。
+- **H["/spec:implement"]**: 表示实施阶段，根据之前批准的任务列表执行代码实现。根据 README，`/spec:implement` 用于启动或跟踪实施过程。
+
+## 连线、分支与汇聚关系
+- `A["/spec:new"] --> B["/spec:requirements"]`: 创建新规范后，进入需求定义阶段。
+- `B --> C["/spec:approve requirements"]`: 定义需求后，需要进行需求审批。
+- `C --> D["/spec:design"]`: 需求审批通过后，进入设计阶段。
+- `D --> E["/spec:approve design"]`: 完成设计后，需要进行设计审批。
+- `E --> F["/spec:tasks"]`: 设计审批通过后，进入任务分解阶段。
+- `F --> G["/spec:approve tasks"]`: 完成任务分解后，需要进行任务审批。
+- `G --> H["/spec:implement"]`: 任务审批通过后，进入代码实施阶段。
+
+## 仓库语境与术语解释
+- **Spec-Driven Development (SDD)**：一种软件开发方法，强调在编码之前明确需求、设计和任务，并通过审批环节确保每个阶段的质量。
+- **Claude Code**: 仓库上下文表明，这是一个使用自定义斜杠命令的开发环境，用于执行和跟踪 SDD 流程中的每个步骤。
+- **`/spec:new`**: 用于初始化新功能规范的 Claude Code 自定义斜杠命令，会在 `spec/` 目录下创建一个新的规范目录，并更新 `spec/.current-spec` 文件。
+- **`/spec:approve`**: 用于批准规范的特定阶段（requirements, design, tasks），会在对应的规范目录下创建 `.requirements-approved`、`.design-approved` 或 `.tasks-approved` 文件。
+- **`.current-spec`**: 一个文件，用于存储当前激活的规范目录名，例如 `001-user-authentication`。
+- **requirements.md, design.md, tasks.md**: 分别用于记录需求、设计和任务的文件，存储在每个规范目录下。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图描述了 Claude Code 中基于规范驱动开发的工作流程。从使用 `/spec:new` 创建新规范开始，依次经过 `/spec:requirements` 定义需求、`/spec:approve requirements` 审批需求、`/spec:design` 进行设计、`/spec:approve design` 审批设计、`/spec:tasks` 分解任务、`/spec:approve tasks` 审批任务，最终进入 `/spec:implement` 代码实施阶段。该流程强调在编码前明确需求、设计和任务，并通过审批确保质量，其中 `/spec:new` 和 `/spec:approve` 命令是关键环节。

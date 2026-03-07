@@ -1,0 +1,50 @@
+## 图类型与用途
+这是一个依赖关系图，展示了 `Microsoft.Data.SqlClient` 组件及其依赖的 .NET 库之间的关系。该图由 Chisel 工具生成，用于可视化 `Microsoft.Data.SqlClient` 的依赖树，并突出显示可以通过 Chisel 工具移除的依赖项，从而减小应用程序的体积。
+
+## 图的整体布局
+图采用从左到右的布局。根节点 `Microsoft.Data.SqlClient` 位于左侧，其依赖项向右侧展开，形成一个依赖关系树。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为三个阶段：核心依赖、Azure 依赖和通用依赖。核心依赖是 `Microsoft.Data.SqlClient` 正常运行所必需的，Azure 依赖是与云身份验证相关的，通用依赖是其他一些常用的 .NET 库。
+
+## 节点逐项说明
+- **Microsoft.Data.SqlClient**：.NET 数据提供程序，用于连接 Microsoft SQL Server 数据库。它是整个依赖关系图的根节点，也是 Chisel 分析的中心组件。
+- **Azure.Core**：Azure SDK 的核心库，提供共享的基元和抽象。图中可见，`Microsoft.Data.SqlClient` 依赖于它。
+- **Azure.Identity**：Azure SDK 的身份验证库，用于对 Azure 服务进行身份验证。图中可见，`Microsoft.Data.SqlClient` 依赖于它，并且可以通过 Chisel 工具移除。
+- **Microsoft.Bcl.Cryptography**：提供密码学相关功能的库。图中可见，`Microsoft.Data.SqlClient` 依赖于它。
+- **Microsoft.Extensions.Caching.Memory**：提供内存缓存功能的库。图中可见，`Microsoft.Data.SqlClient` 依赖于它。
+- **Microsoft.IdentityModel.JsonWebTokens**：处理 JSON Web Tokens (JWT) 的库。图中可见，`Microsoft.Data.SqlClient` 依赖于它，并且可以通过 Chisel 工具移除。
+- **Microsoft.SqlServer.Server**：提供 SQL Server 服务器端功能的库。图中可见，`Microsoft.Data.SqlClient` 依赖于它。
+- **System.Configuration.ConfigurationManager**：提供访问配置文件的功能的库。图中可见，`Microsoft.Data.SqlClient` 依赖于它。
+- **System.Security.Cryptography.Pkcs**：提供 PKCS#7 签名和加密功能的库。图中可见，`Microsoft.Data.SqlClient` 依赖于它。
+- **System.Text.Json**：提供 JSON 序列化和反序列化功能的库。图中可见，`Microsoft.Data.SqlClient` 依赖于它。
+
+## 连线、分支与汇聚关系
+- `Azure.Core -> Microsoft.Bcl.AsyncInterfaces`：`Azure.Core` 依赖于 `Microsoft.Bcl.AsyncInterfaces`。
+- `Azure.Core -> System.ClientModel`：`Azure.Core` 依赖于 `System.ClientModel`。
+- `Azure.Core -> System.Memory.Data`：`Azure.Core` 依赖于 `System.Memory.Data`。
+- `Azure.Identity -> Azure.Core`：`Azure.Identity` 依赖于 `Azure.Core`。
+- `Azure.Identity -> Microsoft.Identity.Client`：`Azure.Identity` 依赖于 `Microsoft.Identity.Client`。
+- `Azure.Identity -> Microsoft.Identity.Client.Extensions.Msal`：`Azure.Identity` 依赖于 `Microsoft.Identity.Client.Extensions.Msal`。
+- `Microsoft.Data.SqlClient -> Azure.Core`：`Microsoft.Data.SqlClient` 依赖于 `Azure.Core`。
+- `Microsoft.Data.SqlClient -> Azure.Identity`：`Microsoft.Data.SqlClient` 依赖于 `Azure.Identity`。
+- `Microsoft.Data.SqlClient -> Microsoft.Bcl.Cryptography`：`Microsoft.Data.SqlClient` 依赖于 `Microsoft.Bcl.Cryptography`。
+- `Microsoft.Data.SqlClient -> Microsoft.Extensions.Caching.Memory`：`Microsoft.Data.SqlClient` 依赖于 `Microsoft.Extensions.Caching.Memory`。
+- `Microsoft.Data.SqlClient -> Microsoft.IdentityModel.JsonWebTokens`：`Microsoft.Data.SqlClient` 依赖于 `Microsoft.IdentityModel.JsonWebTokens`。
+- `Microsoft.Data.SqlClient -> Microsoft.IdentityModel.Protocols.OpenIdConnect`：`Microsoft.Data.SqlClient` 依赖于 `Microsoft.IdentityModel.Protocols.OpenIdConnect`。
+- `Microsoft.Data.SqlClient -> Microsoft.SqlServer.Server`：`Microsoft.Data.SqlClient` 依赖于 `Microsoft.SqlServer.Server`。
+- `Microsoft.Data.SqlClient -> System.Configuration.ConfigurationManager`：`Microsoft.Data.SqlClient` 依赖于 `System.Configuration.ConfigurationManager`。
+- `Microsoft.Data.SqlClient -> System.Security.Cryptography.Pkcs`：`Microsoft.Data.SqlClient` 依赖于 `System.Security.Cryptography.Pkcs`。
+- `Microsoft.Data.SqlClient -> System.Text.Json`：`Microsoft.Data.SqlClient` 依赖于 `System.Text.Json`。
+
+## 仓库语境与术语解释
+- **Chisel**：一个 .NET 工具，用于从项目中移除不需要的依赖项，特别是那些与云身份验证相关的依赖项，例如 Azure SDK。
+- **Microsoft.Data.SqlClient**：Microsoft SQL Server 的 .NET 数据提供程序。根据 README，即使在本地使用 SQL Server 时，它也可能依赖于 Azure SDK。
+- **Azure SDK**：用于访问 Azure 服务的 .NET 库集合。Chisel 可以用来移除 `Microsoft.Data.SqlClient` 对 Azure SDK 的不必要依赖。
+- **packages.lock.json**：一个文件，用于记录项目中所有依赖项的版本信息。Chisel 使用此文件来分析依赖关系。
+- **IntermediateOutputPath**：MSBuild 属性，指定中间输出文件的路径，Chisel 生成的依赖关系图会保存在此目录下。
+- **ChiselGraphName**：MSBuild 属性，指定 Chisel 生成的依赖关系图的文件名。如果文件名以 `.mmd` 或 `.mermaid` 结尾，则生成 Mermaid 格式的图，否则生成 Graphviz 格式的图。
+- **ChiselPackage**：MSBuild item，用于指定要从项目中移除的 NuGet 包。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 `Microsoft.Data.SqlClient` 及其依赖项的依赖关系图，由 Chisel 工具生成。`Microsoft.Data.SqlClient` 作为根节点，依赖于多个 .NET 库，包括 Azure SDK 的相关库（如 `Azure.Core` 和 `Azure.Identity`）。Chisel 的作用是移除这些不必要的 Azure 依赖，从而减小应用程序的体积。图中标记为 "removed" 类的节点表示可以通过 Chisel 工具移除的依赖项。该图帮助开发者理解 `Microsoft.Data.SqlClient` 的依赖关系，并了解 Chisel 工具如何帮助他们移除不必要的依赖项。

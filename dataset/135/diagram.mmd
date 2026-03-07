@@ -1,0 +1,12 @@
+flowchart LR
+  subgraph Capture
+    A1(ESP32 UDP JSON):::node -->|csi_batch| B[esp32_udp.py]
+    A2(Nexmon + tcpdump):::node -->|pcap| C[nexmon_pcap.py]
+    A3(Monitor Radiotap):::node -->|RSSI stream| D[monitor_radiotap.py]
+  end
+
+  B & C & D --> E[realtime_detector.py]
+  E --> F[fusion rf/rssi]
+  F --> G[Open3D live viewer]
+
+  classDef node fill:#0b7285,stroke:#083344,color:#fff;

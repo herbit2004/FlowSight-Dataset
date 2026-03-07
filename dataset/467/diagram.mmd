@@ -1,0 +1,38 @@
+flowchart LR
+    subgraph Input
+        nl(["Natural language"])
+        tpl(["16 templates"])
+        imp(["Import TF / CFN"])
+    end
+
+    spec["ArchSpec (YAML)"]
+
+    subgraph Analyze
+        cost["Cost estimation"]
+        lint["Lint 10 rules"]
+        score["Score 5 dimensions"]
+        blast["Blast radius / SPOF"]
+    end
+
+    subgraph Validate
+        comply["6 compliance frameworks"]
+        policy["Policy engine"]
+        drift["Drift detection"]
+    end
+
+    subgraph Export
+        iac["Terraform / CloudFormation"]
+        diagram["Mermaid / D2"]
+        sbom["SBOM / AIBOM"]
+        diff["Arch diff"]
+    end
+
+    nl -- design / chat --> spec
+    tpl -- init --> spec
+    imp -- import --> spec
+
+    spec --> cost & lint & score & blast
+    spec --> comply & policy & drift
+    spec --> iac & diagram & sbom & diff
+
+    style spec fill:#1a3a5c,stroke:#1a3a5c,color:#fff

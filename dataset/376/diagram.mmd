@@ -1,0 +1,55 @@
+graph TB
+    subgraph "客户端层"
+        A[🌐 AI客户端<br/>Cherry/NextChat/LobeChat] --> B[📡 API请求]
+    end
+    
+    subgraph "网关层 - Cloudflare Worker"
+        B --> C{🔄 路由分发器}
+        C -->|"/v1/models"| D[📋 模型列表服务]
+        C -->|"/v1/chat/completions"| E{🔀 模式选择器}
+        
+        E -->|Persona模式| F[🎭 Persona引擎]
+        E -->|Proxy模式| G[⚡ 代理引擎]
+        
+        F --> H[🔐 身份认证]
+        H --> I[🔄 Session创建]
+        I --> J[🚀 消息发送]
+        
+        G --> K[🌉 直接代理]
+    end
+    
+    subgraph "上游服务层"
+        J --> L[🎯 theoldllm API]
+        K --> L
+        
+        subgraph "支持的服务"
+            M[🧠 GPT-5系列]
+            N[⚡ o1/o3模型]
+            O[🎭 Claude 4.5]
+            P[🌟 Gemini 3]
+        end
+        
+        L --> M
+        L --> N
+        L --> O
+        L --> P
+    end
+    
+    subgraph "数据流层"
+        Q[📥 原始响应] --> R[⚙️ 流式处理器]
+        R --> S[🎨 格式转换器]
+        S --> T[📤 标准化输出]
+    end
+    
+    L --> Q
+    T --> U[✨ 客户端响应]
+    
+    subgraph "监控与UI层"
+        V[📊 实时日志]
+        W[🖥️ 开发者驾驶舱]
+        X[⚡ 性能监控]
+    end
+    
+    U --> V
+    V --> W
+    W --> X

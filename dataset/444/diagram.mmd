@@ -1,0 +1,58 @@
+graph TB
+    subgraph "AI Clients"
+        A1[Claude Code]
+        A2[Cursor IDE]
+        A3[Other MCP Clients]
+    end
+
+    subgraph "MCP Server - Entry Points"
+        B1[mcp-server.js<br/>Legacy Entry]
+        B2[dist/index.js<br/>TypeScript Entry]
+    end
+
+    subgraph "Module Loader v1.6.2"
+        ML[moduleLoader.ts<br/>Unified Loader]
+        ML1[Path 1: ./utils/*.js<br/>npm start, node dist/]
+        ML2[Path 2: ../utils/*.js<br/>npm run dev]
+        ML3[Path 3: ./*.js<br/>npx context]
+        ML4[Path 4: ../*.js<br/>Alternative npx]
+    end
+
+    subgraph "Core Modules"
+        C1[documentGenerator<br/>Codebase Analysis]
+        C2[specGenerator<br/>Spec Documents]
+    end
+
+    subgraph "MCP Infrastructure"
+        D1[MCPServer<br/>Protocol Handler]
+        D2[ToolRegistry<br/>Tool Management]
+        D3[SessionManager<br/>State Management]
+    end
+
+    subgraph "Application Layer"
+        E1[WorkflowEngine<br/>Phase Management]
+        E2[RequirementsClarification<br/>Interactive Q&A]
+        E3[SteeringDocuments<br/>Context Generation]
+    end
+
+    subgraph "Domain Layer"
+        F1[ProjectContext<br/>Business Logic]
+        F2[WorkflowStateMachine<br/>FSM]
+        F3[QualityGate<br/>Validation]
+    end
+
+    subgraph "Infrastructure"
+        G1[FileSystemPort<br/>I/O Abstraction]
+        G2[LoggerPort<br/>Logging]
+        G3[PluginManager<br/>Extensibility]
+    end
+
+    A1 & A2 & A3 --> B1 & B2
+    B2 --> ML
+    ML --> ML1 & ML2 & ML3 & ML4
+    ML1 & ML2 & ML3 & ML4 --> C1 & C2
+    B1 & B2 --> D1
+    D1 --> D2 & D3
+    D2 --> E1 & E2 & E3
+    E1 & E2 & E3 --> F1 & F2 & F3
+    F1 & F2 & F3 --> G1 & G2 & G3

@@ -1,0 +1,24 @@
+flowchart TD
+    Start[vibe command] --> Detect{First Run?}
+    Detect -->|Yes| Setup[Setup Wizard]
+    Detect -->|No| Parse[Parse Arguments]
+    
+    Setup --> Config[Save Configuration]
+    Config --> Parse
+    
+    Parse --> Mode{Mode?}
+    Mode -->|--interactive| REPL[Interactive REPL]
+    Mode -->|"message"| CLI[CLI Execution]
+    Mode -->|none| MCP[MCP Server]
+    Mode -->|--setup| Setup
+    
+    REPL --> Session[Session Management]
+    Session --> Chat[Chat Interface]
+    Chat --> Tools[Tool Execution]
+    
+    CLI --> Router[Hybrid Router]
+    Router --> Tools
+    
+    MCP --> Transport{Transport?}
+    Transport -->|stdio| Stdio[Stdio Server]
+    Transport -->|sse| SSE[SSE Server]

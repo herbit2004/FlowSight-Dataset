@@ -1,0 +1,60 @@
+flowchart LR
+ classDef pastel fill:#f4f2ff,stroke:#c2b5ff,color:#2e2963;
+ classDef pastel2 fill:#e6f7ff,stroke:#9bd5f5,color:#0f3a4d;
+ classDef pastel3 fill:#e8fff3,stroke:#9fe3c5,color:#0f3d28;
+ classDef pastel4 fill:#fff7e6,stroke:#f2c27f,color:#4d350f;
+ classDef pastel5 fill:#ffeef2,stroke:#f5b0c2,color:#4d1f2c;
+
+ subgraph Sources["Local Sources"]
+ A1[Codex]:::pastel
+ A2[Cline]:::pastel
+ A3[Gemini]:::pastel
+ A4[Claude]:::pastel
+ A5[OpenCode]:::pastel
+ A6[Amp]:::pastel
+ A7[Cursor]:::pastel
+ A8[ChatGPT]:::pastel
+ A9[Aider]:::pastel
+ A10[Pi-Agent]:::pastel
+ A11[Factory]:::pastel
+ end
+
+ subgraph Remote["Remote Sources"]
+ R1["sources.toml"]:::pastel
+ R2["SSH/rsync\nSync Engine"]:::pastel2
+ R3["remotes/\nSynced Data"]:::pastel3
+ end
+
+ subgraph "Ingestion Layer"
+ C1["franken_agent_detection\nAuto-Discover & Scan\nNormalize & Dedupe"]:::pastel2
+ end
+
+ subgraph "Dual Storage"
+ S1["frankensqlite (WAL)\nSource of Truth\nBEGIN CONCURRENT\nMigrations"]:::pastel3
+ T1["frankensearch\nBM25 + Semantic\nRRF Fusion\nReranking"]:::pastel4
+ end
+
+ subgraph "Presentation"
+ U1["TUI (FrankenTUI)\nElm Architecture\nAnalytics Dashboard\nAsync Search"]:::pastel5
+ U2["CLI / Robot\nJSON Output\nAutomation"]:::pastel5
+ end
+
+ A1 --> C1
+ A2 --> C1
+ A3 --> C1
+ A4 --> C1
+ A5 --> C1
+ A6 --> C1
+ A7 --> C1
+ A8 --> C1
+ A9 --> C1
+ A10 --> C1
+ A11 --> C1
+ R1 --> R2
+ R2 --> R3
+ R3 --> C1
+ C1 -->|Persist| S1
+ C1 -->|Index| T1
+ S1 -.->|Rebuild| T1
+ T1 -->|Query| U1
+ T1 -->|Query| U2

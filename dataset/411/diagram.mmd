@@ -1,0 +1,41 @@
+graph LR
+    subgraph "BBOT Events"
+        E1[DNS_NAME]
+        E2[OPEN_TCP_PORT]
+        E3[TECHNOLOGY]
+        E4[URL]
+        E5[EMAIL]
+    end
+    
+    subgraph "Neo4j Nodes"
+        N1[Host]
+        N2[Domain]
+        N3[DNS_NAME]
+        N4[OPEN_TCP_PORT]
+        N5[TECHNOLOGY]
+        N6[IP]
+        N7[URL]
+        N8[Email]
+        N9[Module]
+        N10[Event]
+    end
+    
+    E1 --> N3
+    E2 --> N4
+    E3 --> N5
+    E4 --> N7
+    E5 --> N8
+    
+    N1 -->|PART_OF| N2
+    N3 -->|RESOLVES_TO| N1
+    N4 -->|ON_HOST| N1
+    N1 -->|USES_TECH| N5
+    N10 -->|ABOUT| N1
+    N10 -->|ABOUT| N2
+    N10 -->|EMITTED_BY| N9
+    
+    style N1 fill:#bbf,stroke:#333,stroke-width:2px
+    style N2 fill:#bfb,stroke:#333,stroke-width:2px
+    style N3 fill:#fbb,stroke:#333,stroke-width:2px
+    style N4 fill:#fbf,stroke:#333,stroke-width:2px
+    style N5 fill:#ffb,stroke:#333,stroke-width:2px

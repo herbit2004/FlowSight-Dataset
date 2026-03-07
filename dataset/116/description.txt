@@ -1,0 +1,45 @@
+## 图类型与用途
+这是一个流程图，展示了 Helix Toolkit 及其子模块的架构和依赖关系。该图用于描述 Helix Toolkit 的核心组件以及它们如何与其他组件和引擎交互。
+
+## 图的整体布局
+图整体采用从上到下的布局，展示了组件之间的依赖关系。顶部是核心组件，底部是基于不同引擎的实现。
+
+## 分组/子图/阶段说明
+图中包含两个子图：
+- **DirectX 11 Engine (s1)**：该子图包含基于 SharpDX (DirectX 11) 的自定义 3D 引擎和场景图的相关组件。
+- **WPF 3D Engine (s2)**：该子图包含传统的 WPF 3D 引擎的相关组件。
+
+## 节点逐项说明
+- **HelixToolkit (hx)**：Helix Toolkit 的核心组件，包含跨项目的共享代码。根据 README，该组件是跨不同项目的核心共享组件。
+- **HelixToolkit.Maths (n1)**：一个数学库，用于支持 3D 计算。根据 README，该组件是修改后的数学库，用于支持 `System.Numerics` 库。
+- **HelixToolkit.Geometry (n2)**：一个几何体构建库，用于创建常见的 3D 形状。根据 README，该组件是用于支持常见形状的几何体构建库。
+- **HelixToolkit.SharpDX (n6)**：基于 SharpDX (DirectX 11) 的自定义 3D 引擎和场景图。根据 README，该组件是基于 SharpDX 的自定义 3D 引擎和场景图。
+- **HelixToolkit.SharpDX.Assimp (n7)**：SharpAssimp 的 3D 模型导入/导出支持，用于 `HelixToolkit.SharpDX` 组件。根据 README，该组件为 `HelixToolkit.SharpDX` 组件提供 SharpAssimp 的 3D 模型导入/导出支持。
+- **HelixToolkit.Wpf.SharpDX (n8)**：XAML/MVVM 兼容的场景图，用于支持基于 `HelixToolkit.SharpDX` 的 WPF。根据 README，该组件是用于支持基于 `HelixToolkit.SharpDX` 的 WPF 的 XAML/MVVM 兼容场景图。
+- **HelixToolkit.WinUI.SharpDX (n9)**：XAML/MVVM 兼容的场景图，用于支持基于 `HelixToolkit.SharpDX` 的 WinUI。根据 README，该组件是用于支持基于 `HelixToolkit.SharpDX` 的 WinUI 的 XAML/MVVM 兼容场景图。
+- **HelixToolkit.Avallonia.SharpDX (n10)**：XAML/MVVM 兼容的场景图，用于支持基于 `HelixToolkit.SharpDX` 的 AvaloniaUI。根据 README，该组件是用于支持基于 `HelixToolkit.SharpDX` 的 AvaloniaUI 的 XAML/MVVM 兼容场景图。
+- **HelixToolkit.Wpf (n11)**：传统的 WPF 3D 引擎。根据 README，该组件在内部 WPF 3D 模型（Media3D 命名空间）之上添加了各种功能/模型。
+- **HelixToolkit.Wpf.TDxInput (n12)**：WPF 3D 引擎的 TDxInput 支持。图中可见，但仓库上下文未进一步说明。
+
+## 连线、分支与汇聚关系
+- `HelixToolkit (hx) -> HelixToolkit.Maths (n1)`：HelixToolkit 依赖于 HelixToolkit.Maths。
+- `HelixToolkit.Maths (n1) -> HelixToolkit.Geometry (n2)`：HelixToolkit.Maths 依赖于 HelixToolkit.Geometry。
+- `HelixToolkit.Geometry (n2) -> DirectX 11 Engine (s1)`：HelixToolkit.Geometry 为 DirectX 11 Engine 提供支持。
+- `HelixToolkit.Geometry (n2) -> WPF 3D Engine (s2)`：HelixToolkit.Geometry 为 WPF 3D Engine 提供支持。
+- `HelixToolkit.SharpDX (n6) -> HelixToolkit.SharpDX.Assimp (n7)`：HelixToolkit.SharpDX 被 HelixToolkit.SharpDX.Assimp 使用。
+- `HelixToolkit.SharpDX (n6) -> HelixToolkit.Wpf.SharpDX (n8)`：HelixToolkit.SharpDX 被 HelixToolkit.Wpf.SharpDX 使用。
+- `HelixToolkit.SharpDX (n6) -> HelixToolkit.WinUI.SharpDX (n9)`：HelixToolkit.SharpDX 被 HelixToolkit.WinUI.SharpDX 使用。
+- `HelixToolkit.SharpDX (n6) -> HelixToolkit.Avallonia.SharpDX (n10)`：HelixToolkit.SharpDX 被 HelixToolkit.Avallonia.SharpDX 使用。
+- `HelixToolkit.Wpf (n11) -> HelixToolkit.Wpf.TDxInput (n12)`：HelixToolkit.Wpf 依赖于 HelixToolkit.Wpf.TDxInput。
+
+## 仓库语境与术语解释
+- **Helix Toolkit**：一个 .NET Framework 的 3D 组件集合。
+- **SharpDX**：一个 .NET 的 DirectX 封装库，用于访问 DirectX API。
+- **WPF (Windows Presentation Foundation)**：一个用于构建 Windows 桌面应用程序的 UI 框架。
+- **WinUI (Windows UI Library)**：一个用于构建 Windows 应用程序的 UI 框架。
+- **AvaloniaUI**：一个跨平台的 UI 框架。
+- **XAML/MVVM**：XAML 是一种标记语言，用于描述 UI 元素；MVVM 是一种设计模式，用于分离 UI、业务逻辑和数据。
+- **TDxInput**：图中可见，但仓库上下文未进一步说明。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Helix Toolkit 的架构，从核心组件 HelixToolkit 开始，依赖于 HelixToolkit.Maths 和 HelixToolkit.Geometry。HelixToolkit.Geometry 同时为 DirectX 11 Engine 和 WPF 3D Engine 提供支持。DirectX 11 Engine 基于 SharpDX，包含 HelixToolkit.SharpDX 及其相关组件（如 HelixToolkit.SharpDX.Assimp, HelixToolkit.Wpf.SharpDX, HelixToolkit.WinUI.SharpDX, HelixToolkit.Avallonia.SharpDX）。WPF 3D Engine 包含 HelixToolkit.Wpf 和 HelixToolkit.Wpf.TDxInput。该图清晰地展示了 Helix Toolkit 的核心组件以及它们如何与其他组件和引擎交互，体现了“核心组件 -> 数学/几何库 -> 不同渲染引擎支持”的架构模式。

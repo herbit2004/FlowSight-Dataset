@@ -1,0 +1,70 @@
+## 图类型与用途
+这是一个架构图，描述了 Etienne 系统中各个组件之间的关系和数据流向，特别是事件处理、规则引擎、Agent Bus、决策支持系统和有状态工作流引擎之间的交互。该图在仓库中的作用是展示系统的高层架构和组件间的通信方式。
+
+## 图的整体布局
+图整体采用从上到下的布局。顶部是外部事件源，中间是条件监控系统和 Agent Bus，底部是决策支持系统和有状态工作流引擎。数据流从外部事件源开始，经过各个组件处理，最终影响决策支持和工作流状态。
+
+## 分组/子图/阶段说明
+图中包含五个子图，分别代表系统的不同功能模块：
+- **External Event Sources**：表示系统接收外部事件的各种入口，包括 IMAP、MQTT、Webhooks、File System 和 TIMER。
+- **CMS — Condition Monitoring System**：负责对外部事件进行初步处理，根据预定义的规则触发相应的动作。
+- **Agent Bus**：是整个系统的核心通信枢纽，负责连接各个组件，传递事件和消息。
+- **DSS — Decision Support System**：负责存储和管理知识，为决策提供支持。
+- **SWE — Stateful Workflow Engine**：使用 XState v5 实现有状态工作流。
+
+## 节点逐项说明
+- **IMAP (Email / IMAP)**：接收来自电子邮件/IMAP 服务器的事件。
+- **MQTT (MQTT Devices)**：接收来自 MQTT 设备的事件。
+- **WH (Webhooks)**：接收来自 Webhooks 的事件。
+- **FS (File System)**：监控文件系统的变化，产生事件。
+- **TIMER (Schedulers)**：根据预定的时间表触发事件。
+- **ER (EventRouterService)**：事件路由服务，负责将接收到的事件路由到相应的处理组件。
+- **RE (RuleEngineService)**：规则引擎服务，根据预定义的规则对事件进行评估。
+- **RAE (RuleActionExecutorService)**：规则动作执行服务，当规则匹配时，执行相应的动作。
+- **EB (EventBusService<br/>ZeroMQ PUB/SUB)**：事件总线服务，使用 ZeroMQ 的发布/订阅模式，用于组件之间的异步通信。根据 `backend/src/agent-bus/event-bus.service.ts`，该服务负责发布和订阅消息，实现组件间的解耦。
+- **IR (IntentRouterService)**：意图路由服务，负责将 Agent 的意图路由到相应的处理组件。根据 `backend/src/agent-bus/intent-router.service.ts`，该服务订阅 `agent/intent` 主题，并将意图映射到工作流触发器。
+- **DQA (DssQueryAdapterService)**：决策支持系统查询适配器服务，负责将查询请求适配到决策支持系统。
+- **CI (ContextInjectorService)**：上下文注入服务，负责将上下文信息注入到事件中，以便后续处理。
+- **BL (BusLoggerService)**：总线日志服务，负责记录总线上的事件。
+- **DSS (DecisionSupportService)**：决策支持服务，提供决策支持功能。
+- **KG (KnowledgeGraphService<br/>Quadstore RDF)**：知识图谱服务，使用 Quadstore RDF 存储和管理知识图谱。根据 `backend/src/knowledge-graph/knowledge-graph.service.ts`，该服务负责添加实体和关系到知识图谱。
+- **VS (VectorStoreService<br/>ChromaDB)**：向量存储服务，使用 ChromaDB 存储和检索向量数据。根据 `backend/src/knowledge-graph/vector-store/vector-store.service.ts`，该服务负责添加和搜索向量文档。
+- **SWS (StatefulWorkflowsService<br/>XState v5)**：有状态工作流服务，使用 XState v5 实现有状态工作流。根据 `backend/src/stateful-workflows/stateful-workflows.service.ts`，该服务管理工作流的创建、执行和状态转换。
+- **WEA (WorkflowEntryActionService)**：工作流入口动作执行服务，执行工作流状态入口时定义的动作。
+- **LLM (Claude LLM)**：Claude 大语言模型，用于生成 prompt action 和 prompt/script。
+
+## 连线、分支与汇聚关系
+- `IMAP & MQTT & WH & FS & TIMER --> ER`：来自不同外部事件源的事件汇聚到 EventRouterService。
+- `ER -->|"events/raw/*"| EB`：EventRouterService 将原始事件发布到 EventBusService 的 `events/raw/*` 主题。
+- `ER --> RE`：EventRouterService 将事件发送到 RuleEngineService 进行规则评估。
+- `RE -->|rule matched| RAE`：当规则匹配时，RuleEngineService 触发 RuleActionExecutorService。
+- `RAE -->|"agent/intent"| EB`：RuleActionExecutorService 将 Agent 的意图发布到 EventBusService 的 `agent/intent` 主题。
+- `RAE -->|"prompt action"| LLM`：RuleActionExecutorService 将 prompt action 发送到 Claude LLM。
+- `RAE -->|"workflow_event"| SWS`：RuleActionExecutorService 触发 StatefulWorkflowsService 的工作流事件。
+- `EB -->|"agent/intent"| IR`：EventBusService 将 Agent 的意图发送到 IntentRouterService。
+- `IR -->|"workflow/trigger"| EB`：IntentRouterService 将工作流触发事件发布到 EventBusService 的 `workflow/trigger` 主题。
+- `EB -->|"workflow/trigger"| SWS`：EventBusService 将工作流触发事件发送到 StatefulWorkflowsService。
+- `SWS -->|"workflow/status/*"| EB`：StatefulWorkflowsService 将工作流状态更新发布到 EventBusService 的 `workflow/status/*` 主题。
+- `SWS --> WEA`：StatefulWorkflowsService 触发 WorkflowEntryActionService。
+- `WEA -->|prompt/script| LLM`：WorkflowEntryActionService 将 prompt/script 发送到 Claude LLM。
+- `DQA --> DSS`：DssQueryAdapterService 向 DecisionSupportService 发送查询请求。
+- `CI --> DQA`：ContextInjectorService 将上下文信息注入到 DssQueryAdapterService。
+- `RAE -.->|enrich| CI`：RuleActionExecutorService 丰富 ContextInjectorService 的上下文信息。
+- `WEA -.->|context| CI`：WorkflowEntryActionService 提供上下文信息给 ContextInjectorService。
+- `DSS --> KG`：DecisionSupportService 使用 KnowledgeGraphService 存储和管理知识图谱。
+- `DSS --> VS`：DecisionSupportService 使用 VectorStoreService 存储和检索向量数据。
+- `EB -->|"dss/update"| DSS`：EventBusService 将 `dss/update` 事件发送到 DecisionSupportService。
+- `EB -->|"dss/query"| DQA`：EventBusService 将 `dss/query` 事件发送到 DssQueryAdapterService。
+- `EB --> BL`：EventBusService 将事件发送到 BusLoggerService 进行日志记录。
+
+## 仓库语境与术语解释
+- **Etienne**：是一个围绕编码 harness 的集成 harness，用于构建用户友好的 Agent 交互界面。
+- **Agent Bus**：使用 ZeroMQ 实现的事件总线，用于组件之间的异步通信。
+- **Knowledge Graph**：使用 Quadstore RDF 存储和管理的知识图谱，用于支持决策。
+- **Vector Store**：使用 ChromaDB 存储和检索的向量数据，用于相似性搜索。
+- **Stateful Workflow Engine**：使用 XState v5 实现的有状态工作流引擎，用于管理复杂的工作流程。
+- **Claude LLM**：一个大语言模型，用于生成 prompt action 和 prompt/script。
+- **Event Router Service**: 根据 `backend/src/event-handling/core/event-router.service.ts`，该服务负责接收、路由和发布事件，是事件处理的核心组件。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了 Etienne 系统的核心架构，从外部事件源（如 Email/IMAP, MQTT, Webhooks, File System, Schedulers）开始，事件经过 EventRouterService 路由，然后通过 RuleEngineService 进行规则匹配，触发 RuleActionExecutorService。Agent 的意图通过 EventBusService 传递，IntentRouterService 将意图映射到工作流触发器，最终影响 StatefulWorkflowsService 的状态。DecisionSupportService 依赖 KnowledgeGraphService 和 VectorStoreService 提供决策支持，整个过程中的事件都被 BusLoggerService 记录。Claude LLM 用于生成 prompt action 和 prompt/script，驱动工作流的执行。

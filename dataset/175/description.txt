@@ -1,0 +1,45 @@
+## 图类型与用途
+这是一个流程图，描述了 Artifact Keeper 如何处理上传的制品，进行去重、漏洞扫描、策略评估，并最终决定存储或隔离制品。该图在仓库中的作用是展示 Artifact Keeper 的安全扫描流程。
+
+## 图的整体布局
+图整体采用从左到右的布局。起点是 Artifact Upload 节点，终点是 Stored 或 Quarantined 节点。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为三个阶段：上传与去重、漏洞扫描与评分、策略评估与处置。
+
+## 节点逐项说明
+- **UP["Artifact<br/>Upload"]**：表示制品上传的入口，用户或系统在此上传制品。
+- **HASH{"SHA-256<br/>Dedup"}**：表示使用 SHA-256 哈希算法进行去重操作，判断上传的制品是否已存在。
+- **T["Trivy<br/>FS Scanner"]**：表示使用 Trivy 文件系统扫描器进行漏洞扫描。根据 README，Trivy 用于容器和文件系统扫描。
+- **G["Grype<br/>Dependency Scanner"]**：表示使用 Grype 依赖扫描器进行漏洞扫描。根据 README，Grype 用于依赖树扫描。
+- **CACHE["Cached<br/>Results"]**：表示缓存的扫描结果，用于避免重复扫描。
+- **SCORE["Vulnerability<br/>Score A-F"]**：表示漏洞评分系统，汇总扫描结果并给出 A-F 的漏洞评分。
+- **POL{"Policy<br/>Engine"}**：表示策略引擎，根据漏洞评分和其他策略规则，决定制品是否可以存储或需要隔离。根据 README，策略引擎用于配置规则，以阻止或隔离制品。
+- **OK["Stored"]**：表示制品通过了策略评估，可以安全地存储在系统中。
+- **Q["Quarantined"]**：表示制品未能通过策略评估，需要被隔离。
+
+## 连线、分支与汇聚关系
+- `UP -> HASH`：用户上传制品后，系统进行 SHA-256 去重检查。
+- `HASH -- New artifact --> T`：如果制品是新的，则发送给 Trivy FS Scanner 进行漏洞扫描。
+- `HASH -- New artifact --> G`：如果制品是新的，则发送给 Grype Dependency Scanner 进行漏洞扫描。
+- `HASH -- Already scanned --> CACHE`：如果制品已经扫描过，则从 Cached Results 获取扫描结果。
+- `T -> SCORE`：Trivy FS Scanner 完成扫描后，将结果发送给 Vulnerability Score 节点。
+- `G -> SCORE`：Grype Dependency Scanner 完成扫描后，将结果发送给 Vulnerability Score 节点。
+- `CACHE -> SCORE`：Cached Results 将缓存的扫描结果发送给 Vulnerability Score 节点。
+- `T、G、CACHE -> SCORE`：形成汇聚关系，Vulnerability Score 节点汇总来自 Trivy、Grype 和缓存的扫描结果。
+- `SCORE -> POL`：Vulnerability Score 节点将漏洞评分发送给 Policy Engine。
+- `POL -- Pass --> OK`：如果制品通过了策略评估，则存储到 Stored 区域。
+- `POL -- Fail --> Q`：如果制品未能通过策略评估，则隔离到 Quarantined 区域。
+
+## 仓库语境与术语解释
+- **Artifact Keeper**：一个企业级的开源制品仓库，支持 45+ 种包格式。
+- **SHA-256 Dedup**：使用 SHA-256 算法对上传的制品进行去重，避免重复扫描和存储。
+- **Trivy**：一个容器和文件系统漏洞扫描器，用于检测制品中的已知漏洞。
+- **Grype**：一个依赖扫描器，用于扫描制品中的依赖项，查找已知的漏洞。
+- **Policy Engine**：根据漏洞评分和其他策略规则，决定制品是否可以存储或需要隔离。
+- **Stored**：通过策略评估的制品被安全地存储在系统中。
+- **Quarantined**：未能通过策略评估的制品被隔离，防止潜在的安全风险。
+- **Security Scanning Pipeline**: README 提到，Artifact Keeper 会自动扫描每个上传的制品，检测已知漏洞。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 Artifact Keeper 的安全扫描流程：从 Artifact Upload 开始，首先进行 SHA-256 去重，如果是新制品，则分别使用 Trivy 和 Grype 进行漏洞扫描；如果是已扫描制品，则从缓存获取结果。扫描结果汇聚到 Vulnerability Score 节点进行评分，然后由 Policy Engine 根据评分决定制品是 Stored 还是 Quarantined。其中，Trivy 和 Grype 是两个关键的漏洞扫描工具，Policy Engine 决定了制品的最终命运。

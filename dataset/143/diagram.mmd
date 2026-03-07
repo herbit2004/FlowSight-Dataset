@@ -1,0 +1,16 @@
+flowchart TD
+    Start --> B{Use cache?}
+    B -->|False| C[Cut mesh in half on specified axes for symmetry]
+    C -.-> D([mesh.obj])
+    D --> E[Calculate sharp features]
+    E --> G[[QuadWild built-in preprocessing and field calculation]]
+    D --> G
+    G -.-> H([mesh_rem.obj])
+    H --> I[[QuadWild field tracing and splitting into patches]]
+    I -.-> J([mesh_rem_p0.obj])
+
+    J --> K[[QuadWild quadrangulation and smoothing]]
+    B -->|True| K
+
+    K -.-> L([mesh_rem_p0_0_quadrangulation.obj, mesh_rem_p0_0_quadrangulation_smooth.obj])
+    L --> M[Add mirror modifier on specified axes for symmetry]

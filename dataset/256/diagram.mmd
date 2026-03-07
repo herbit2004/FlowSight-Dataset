@@ -1,0 +1,15 @@
+graph TD
+subgraph "PostgreSQL Database"
+PG[(Postgres DB)]
+PG -->|Logical Decoding WAL|WAL[Replication Slot/WAL]
+PG -->|Triggers| TG[pg_notify]
+end
+
+SP[pgsync] -->| poll | WAL
+TG --> | notify | SP
+
+SP -->|JSON with SQLAlchemy | QB[Query Builder]
+QB -->|Fetch Docs| DOC[JSON Documents]
+
+DOC -->|Bulk Index| ES[(Elasticsearch/OpenSearch)]
+SP -->|Checkpoint & Locking| REDIS[(Redis/Valkey)]

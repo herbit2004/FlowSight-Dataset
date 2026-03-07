@@ -1,0 +1,19 @@
+flowchart TD
+    User([User])
+    subgraph CodeGPT
+      GeminiClient([Gemini Provider])
+    end
+    subgraph Google
+      GeminiAPI([Gemini API])
+      VertexAI([VertexAI Gemini])
+    end
+
+    User -->|Completion / GetSummaryPrefix| GeminiClient
+
+    GeminiClient -- BackendGeminiAPI --> GeminiAPI
+    GeminiAPI -- Response (text, usage) --> GeminiClient
+
+    GeminiClient -- BackendVertexAI --> VertexAI
+    VertexAI -- Response (text, usage) --> GeminiClient
+
+    GeminiClient --> User

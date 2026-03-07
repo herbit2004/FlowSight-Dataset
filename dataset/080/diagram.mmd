@@ -1,0 +1,23 @@
+graph LR
+    U --> |1|C[Gaia-X Client]
+    C-->|2|API[Admin Center]
+    API-->|3|LLM[LLM API]
+    LLM-->|4|API[Admin Center]
+    API-->|5|C[Gaia-X Client]
+    C-->|6|B{Function Call?}
+    B -- No -->U[User]
+    B -- Yes --> MCP[MCP Servers]
+    MCP -->|8a. Call| H[Tool 1]
+    MCP -->|8b. Call| I[Tool 2]
+    H-->|8.1|C[Gaia-X Client]
+    I-->|8.1|C[Gaia-X Client]
+    C-->|8.2|API[Admin Center]
+    API-->|8.3|LLM[LLM API]
+    LLM-->|8.4|API[Admin Center]
+    API-->|8.5|C[Gaia-X Client]
+    C-->|8.6|U[User]
+   
+    subgraph Possible Nested/Iterative Calls
+    H
+    I
+    end

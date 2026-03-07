@@ -1,0 +1,89 @@
+graph TB
+    subgraph "Client Layer"
+        CLI[CLI Interface<br/>packages/agent-client/src/cli.js]
+        API[API Server<br/>packages/api-server]
+    end
+
+    subgraph "Multi-Agent System"
+        COORD[CoordinatorAgent<br/>• Orchestrates workflow<br/>• Manages agent transitions<br/>• Parallel execution control]
+        PLAN[PlannerAgent<br/>• Intent analysis<br/>• Plan generation<br/>• Task breakdown]
+        EXEC[ExecutorAgent<br/>• Task execution<br/>• Tool orchestration<br/>• Goal-aware task generation]
+        ANAL[AnalyzerAgent<br/>• Result synthesis<br/>• Response formatting<br/>• Quality assurance]
+    end
+
+    subgraph "Decision & Optimization Layer"
+        MADEX[MultiAgentDecisionExecutor<br/>• Agent coordination<br/>• Schema loading<br/>• Context management]
+        FDOPT[FastDecisionOptimizer<br/>• Single-step optimization<br/>• Simple query handling<br/>• Circuit breaker]
+        DCONT[DecisionContext<br/>• Schema context<br/>• RAG context<br/>• Session state]
+    end
+
+    subgraph "LLM Integration Layer"
+        LLMF[LLMFactory<br/>• Provider selection<br/>• Model configuration]
+        CLAUDE[ClaudeLLM<br/>• Anthropic API<br/>• Intelligent analytics<br/>• Subagent orchestration]
+        GPT[OpenAILLM<br/>• GPT models<br/>• Function calling]
+        GEMINI[GeminiLLM<br/>• Google AI<br/>• Tiered models<br/>• Cost optimization]
+        GROQ[GroqLLM<br/>• Fast inference<br/>• Open models]
+    end
+
+    subgraph "MCP Server Layer"
+        MCPS[MCP Server<br/>packages/mcp-server/src/index.js]
+        TOOLS[Tool Manager<br/>• Tool registration<br/>• Tool execution<br/>• Result formatting]
+        TASK[TaskPlanner<br/>• Task lifecycle<br/>• Dependency management<br/>• Status tracking]
+        SEQ[SequentialThinker<br/>• 5-phase analysis<br/>• Structured thinking]
+        LOOP[LoopDetector<br/>• Pattern detection<br/>• Infinite loop prevention]
+    end
+
+    subgraph "Data & Storage Layer"
+        NEO4J[Neo4j Knowledge Graph<br/>• Team-scoped memory<br/>• Knowledge relationships<br/>• Schema integration]
+        MONGO[MongoDB<br/>• Session persistence<br/>• Conversation history<br/>• Performance logs]
+        DUCK[DuckDB<br/>• Local analytics<br/>• CSV/Parquet support<br/>• SQL queries]
+        FILES[File Providers<br/>• Local files<br/>• HTTP downloads<br/>• Aden platform files]
+    end
+
+    subgraph "Supporting Components"
+        GOAL[GoalAwareTaskGenerator<br/>• Gap analysis<br/>• Strategic planning<br/>• Verification tasks]
+        ACTX[AgentContext<br/>• Session management<br/>• File tracking<br/>• Team context]
+        PERF[PerformanceLogger<br/>• Latency tracking<br/>• Pipeline stages<br/>• Optimization metrics]
+        CONV[ConversationLogger<br/>• Session recording<br/>• Tool call tracking<br/>• Debug logging]
+    end
+
+    CLI --> MADEX
+    API --> MADEX
+    MADEX --> COORD
+    MADEX --> FDOPT
+
+    COORD --> PLAN
+    COORD --> EXEC
+    COORD --> ANAL
+
+    PLAN --> ACTX
+    EXEC --> ACTX
+    EXEC --> GOAL
+    ANAL --> ACTX
+
+    MADEX --> DCONT
+    DCONT --> NEO4J
+    DCONT --> MONGO
+
+    ACTX --> MCPS
+    MCPS --> TOOLS
+    TOOLS --> TASK
+    TOOLS --> SEQ
+    TOOLS --> LOOP
+
+    PLAN --> LLMF
+    EXEC --> LLMF
+    ANAL --> LLMF
+
+    LLMF --> CLAUDE
+    LLMF --> GPT
+    LLMF --> GEMINI
+    LLMF --> GROQ
+
+    TOOLS --> DUCK
+    TOOLS --> FILES
+    TOOLS --> NEO4J
+
+    MADEX --> PERF
+    COORD --> PERF
+    ACTX --> CONV

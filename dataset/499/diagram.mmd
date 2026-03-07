@@ -1,0 +1,18 @@
+flowchart TB
+    subgraph CDN["CloudFront CDN"]
+        CF["openrepowiki.xyz, api.*"]
+    end
+    
+    CF --> S3F["S3 (Frontend)"]
+    CF --> APIGW["API Gateway"]
+    
+    APIGW --> JobsLambda["Lambda: Jobs Handler"]
+    APIGW --> ReposLambda["Lambda: Repos Handler"]
+    APIGW --> AuthLambda["Lambda: Authorizer"]
+    
+    JobsLambda --> SFN["Step Functions"]
+    SFN --> ECS["ECS Fargate (Processor)"]
+    
+    ECS --> DDB["DynamoDB"]
+    ECS --> S3A["S3 (Artifacts)"]
+    ECS --> SM["Secrets Manager"]
