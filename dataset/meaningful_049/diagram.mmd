@@ -1,0 +1,21 @@
+graph TD
+    subgraph 服务网格
+        A[服务A实例] --> B(服务发现代理)
+        C[服务B实例] --> B
+        B --> D{选择实例}
+        D -- 健康实例 --> E[目标服务实例]
+    end
+
+    subgraph 健康检查中心
+        F[健康检查代理] --> G(健康检查服务器)
+        H[服务A实例] --> F
+        I[服务B实例] --> F
+        G --> D
+        G --> J[健康状态数据库]
+    end
+
+    E -- 提供服务 --> 用户;
+    用户[用户请求];
+
+    classDef microservice fill:#f9f,stroke:#333,stroke-width:2px
+    class A,C,H,I microservice

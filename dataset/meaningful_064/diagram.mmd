@@ -1,0 +1,32 @@
+graph TD
+    subgraph 设备端
+        A[设备启动] --> B{心跳间隔到达?};
+        B -- 是 --> C[构造心跳包];
+        C --> D[发送心跳包至心跳服务];
+        B -- 否 --> B;
+        D --> E{心跳成功?};
+        E -- 是 --> B;
+        E -- 否 --> F[重试心跳];
+        F --> G{重试次数超限?};
+        G -- 是 --> H[进入离线状态];
+        G -- 否 --> E;
+        H --> I(停止心跳);
+    end
+
+    subgraph 心跳服务
+        J[接收心跳包] --> K[更新设备最后活跃时间];
+        K --> L{最后活跃时间 > 阈值?};
+        L -- 是 --> M[标记设备为离线];
+        L -- 否 --> N(等待下一个心跳包);
+        N --> J;
+    end
+
+    I --> O[上报设备离线事件];
+    M --> O;
+    O --> P[业务系统处理离线事件];
+
+    classDef online fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef offline fill:#fcc,stroke:#333,stroke-width:2px;
+
+    class A,B,C,D,E,F,G,J,K,L,N online;
+    class H,I,M,O,P offline;

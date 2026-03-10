@@ -1,0 +1,27 @@
+graph TD
+    A[数据接入层];
+    B{判断数据冷热};
+    C[热数据存储 - 高性能数据库];
+    D[冷数据存储 - 低成本存储];
+    E[数据查询服务];
+    F[热数据查询];
+    G[冷数据查询];
+    H[数据聚合/分析];
+
+    A --> B;
+    B -- 热数据 --> C;
+    B -- 冷数据 --> D;
+
+    C --> F;
+    D --> G;
+
+    F --> E;
+    G --> E;
+
+    E --> H;
+
+    classDef hot fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef cold fill:#ccf,stroke:#333,stroke-width:2px;
+
+    class C,F hot;
+    class D,G cold;

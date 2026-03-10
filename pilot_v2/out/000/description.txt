@@ -1,0 +1,65 @@
+## 图类型与用途
+这是一个流程图，描述了 DeepWiki-Open 如何将 GitHub、GitLab 或 Bitbucket 仓库转换为交互式 Wiki 的过程。它展示了从用户输入仓库地址开始，到最终生成可交互 DeepWiki 的完整流程。
+
+## 图的整体布局
+图采用从上到下的布局。流程从用户输入仓库信息开始，经过一系列分析、生成和组织步骤，最终生成交互式 DeepWiki。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为四个阶段：
+- **仓库信息获取与克隆**：用户输入仓库信息，判断是否为私有仓库，并进行克隆。
+- **代码分析与嵌入**：分析代码结构，创建代码嵌入。
+- **文档与图表生成**：选择模型提供商，生成文档，并创建可视化图表。
+- **Wiki 组织与输出**：将文档和图表组织成 Wiki，生成交互式 DeepWiki。
+
+## 节点逐项说明
+- **A[User inputs GitHub/GitLab/Bitbucket repo]**：用户输入 GitHub、GitLab 或 Bitbucket 仓库的地址，作为流程的起点。
+- **AA{Private repo?}**：判断用户输入的仓库是否为私有仓库。
+- **AB[Add access token]**：如果仓库是私有的，用户需要添加访问令牌（access token）以允许 DeepWiki-Open 访问。
+- **B[Clone Repository]**：克隆（复制）用户指定的仓库到本地。
+- **C[Analyze Code Structure]**：分析仓库的代码结构。
+- **D[Create Code Embeddings]**：基于代码结构创建代码嵌入（Code Embeddings），用于后续的文档生成。
+- **M{Select Model Provider}**：选择用于生成文档的模型提供商。根据 README 和 `api/config/generator.json`，支持 Google Gemini, OpenAI, OpenRouter, Local Ollama, Azure 等。
+- **E1[Generate with Gemini]**：使用 Google Gemini 模型生成文档。
+- **E2[Generate with OpenAI]**：使用 OpenAI 模型生成文档。
+- **E3[Generate with OpenRouter]**：使用 OpenRouter 模型生成文档。
+- **E4[Generate with Ollama]**：使用本地 Ollama 模型生成文档。
+- **E5[Generate with Azure]**：使用 Azure 模型生成文档。
+- **E[Generate Documentation]**：基于代码嵌入和选定的模型生成文档。
+- **F[Create Visual Diagrams]**：创建可视化图表，以更直观地展示代码结构和关系。
+- **G[Organize as Wiki]**：将生成的文档和图表组织成 Wiki 的形式。
+- **H[Interactive DeepWiki]**：生成最终的交互式 DeepWiki，用户可以浏览和探索仓库的文档和结构。
+
+## 连线、分支与汇聚关系
+- `A -> AA`：用户输入仓库地址后，进入私有仓库判断。
+- `AA -- Yes --> AB`：如果仓库是私有仓库，则需要添加访问令牌。
+- `AA -- No --> B`：如果仓库不是私有仓库，则直接克隆仓库。
+- `AB -> B`：添加访问令牌后，克隆仓库。
+- `B -> C`：克隆仓库后，分析代码结构。
+- `C -> D`：分析代码结构后，创建代码嵌入。
+- `D -> M`：创建代码嵌入后，选择模型提供商。
+- `M --> E1`：选择 Google Gemini 模型。
+- `M --> E2`：选择 OpenAI 模型。
+- `M --> E3`：选择 OpenRouter 模型。
+- `M --> E4`：选择 Local Ollama 模型。
+- `M --> E5`：选择 Azure 模型。
+- `E1 -> E`：使用 Google Gemini 模型生成文档。
+- `E2 -> E`：使用 OpenAI 模型生成文档。
+- `E3 -> E`：使用 OpenRouter 模型生成文档。
+- `E4 -> E`：使用 Local Ollama 模型生成文档。
+- `E5 -> E`：使用 Azure 模型生成文档。
+- `D -> F`：创建代码嵌入后，创建可视化图表。
+- `E -> G`：生成文档后，组织成 Wiki。
+- `F -> G`：创建可视化图表后，组织成 Wiki，形成汇聚关系。
+- `G -> H`：将文档和图表组织成 Wiki 后，生成交互式 DeepWiki。
+
+## 仓库语境与术语解释
+- **GitHub/GitLab/Bitbucket repo**：指代码仓库的 URL，DeepWiki-Open 支持从这三个平台导入仓库。
+- **Access Token**：访问令牌，用于访问私有仓库，需要在 `api/.env` 文件中配置。
+- **Code Embeddings**：代码嵌入，将代码转换为向量表示，用于后续的文档生成和检索。根据 `api/config/embedder.json`，可以使用 OpenAI, Google AI, 或 local Ollama embeddings。
+- **Model Provider**：模型提供商，用于生成文档的 AI 模型，支持 Google Gemini, OpenAI, OpenRouter, Azure OpenAI, 和 local Ollama models。
+- **Interactive DeepWiki**：最终生成的交互式文档站点，用户可以在其中浏览和探索代码仓库的结构和文档。
+- **generator.json**：配置文件，用于配置文本生成模型，定义了可用的模型提供商和模型。
+- **embedder.json**：配置文件，用于配置嵌入模型和文本处理，定义了用于向量存储的嵌入模型。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 DeepWiki-Open 的核心流程：从用户输入 GitHub/GitLab/Bitbucket 仓库地址开始，判断是否为私有仓库，克隆仓库后分析代码结构并创建代码嵌入。然后选择模型提供商（如 Google Gemini, OpenAI, OpenRouter, Local Ollama, Azure）生成文档，同时创建可视化图表。最后，将生成的文档和图表组织成 Wiki，生成交互式 DeepWiki。其中，模型选择和代码嵌入是关键的中间环节，最终目的是生成易于导航和探索的交互式文档站点。

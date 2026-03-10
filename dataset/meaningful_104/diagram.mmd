@@ -1,0 +1,36 @@
+graph TD
+    subgraph 数据源
+        A(应用服务器) --> B(日志文件);
+        C(数据库) --> D(审计日志);
+        E(消息队列) --> F(消息体);
+    end
+
+    B --> G{LogCollector A};
+    D --> H{LogCollector B};
+    F --> I{LogCollector C};
+
+    subgraph LogCollector
+        G --> J(解析/过滤);
+        H --> J;
+        I --> J;
+    end
+
+    J --> K{数据格式化};
+    K --> L(Ingest Node);
+
+
+    subgraph 集群
+        L --> M[数据分片];
+        M --> N(存储节点 1);
+        M --> O(存储节点 2);
+        M --> P(存储节点 N);
+    end
+
+    N --> Q(索引构建);
+    O --> Q;
+    P --> Q;
+
+    Q --> R(查询服务);
+
+    style A,C,E fill:#f9f,stroke:#333,stroke-width:2px
+    style N,O,P fill:#ccf,stroke:#333,stroke-width:2px

@@ -1,0 +1,26 @@
+graph TD
+    subgraph 配置中心
+        A[Admin 控制台] --> B{配置变更};
+        B --> C((配置存储));
+        C --> D(发布事件);
+    end
+
+    subgraph 网关集群
+        D --> E[消息队列];
+    end
+
+    subgraph 应用集群
+        E --> F{消息消费者:配置更新事件};
+        F --> G[本地配置缓存];
+        G --> H{配置校验};
+        H -- 校验通过 --> I[应用逻辑];
+        H -- 校验失败 --> J[告警/熔断];
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style C fill:#ccf,stroke:#333,stroke-width:2px
+
+    classDef event fill:#e2f7ff,stroke:#333,stroke-width:2px
+    class D event
+    class E event
+    class F event

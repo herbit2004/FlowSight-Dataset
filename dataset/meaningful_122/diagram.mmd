@@ -1,0 +1,46 @@
+graph TD
+    subgraph 订单服务
+    A[下单请求] --> B(创建订单);
+    B --> C{扣减库存?};
+    end
+
+    C -- 成功 --> D[锁定库存];
+    C -- 失败 --> E[订单创建失败];
+
+    D --> F(调用积分服务);
+
+    subgraph 积分服务
+    F --> G{增加用户积分?};
+    G -- 成功 --> H[增加积分];
+    G -- 失败 --> I[补偿：回滚库存];
+    end
+
+    H --> J(调用支付服务);
+
+    subgraph 支付服务
+    J --> K{生成支付单?};
+    K -- 成功 --> L[创建支付单];
+    K -- 失败 --> M[补偿：回滚积分&库存];
+    end
+
+    L --> N{用户支付?};
+    N -- 成功 --> O[支付成功];
+    N -- 失败 --> P[补偿：取消支付单&回滚积分&库存];
+
+    O --> Q[订单完成];
+
+    I --> R[释放库存];
+    M --> S[回滚积分];
+    S --> R;
+    P --> T[取消支付单];
+    T --> S;
+    R --> U[订单取消];
+
+    classDef success fill:#90EE90,stroke:#333,stroke-width:2px;
+    class O,Q success
+
+    classDef failed fill:#F08080,stroke:#333,stroke-width:2px;
+    class E,U failed
+
+    classDef compensate fill:#FFFFE0,stroke:#333,stroke-width:2px;
+    class I,M,P compensate

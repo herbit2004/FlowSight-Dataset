@@ -1,0 +1,57 @@
+graph TD
+    subgraph 应用服务
+        A[用户请求] --> B(路由层: 读写分离);
+    end
+
+    subgraph 读写分离中间件
+        B --> C{判断: 读操作?};
+        C -- 是 --> D[读库选择器];
+        C -- 否 --> E[写库选择器];
+        D --> F(读库1);
+        D --> G(读库2);
+        D --> H(读库N);
+        E --> I(写库);
+        F -- 执行查询 --> J[(读库)];
+        G -- 执行查询 --> J;
+        H -- 执行查询 --> J;
+        I -- 执行写入 --> K[(写库)];
+    end
+
+    subgraph 数据存储
+        J --> L{查询结果};
+        K --> M{写入成功};
+    end
+
+    subgraph 缓存服务
+        L --> N{缓存命中?};
+        N -- 是 --> O[返回缓存数据];
+        N -- 否 --> P[更新缓存];
+        P --> O;
+        L --> P;
+        M --> Q[缓存失效通知];
+        Q --> R(缓存服务);
+    end
+
+    subgraph 监控与告警
+        S[性能指标监控];
+        S --> B;
+        S --> D;
+        S --> E;
+        S --> R;
+        S --> T{阈值告警};
+    end
+
+    B --> O;
+    O --> U[返回数据];
+    I --> V[Binlog同步];
+    V --> F;
+    V --> G;
+    V --> H;
+    K --> V;
+    U --> 应用服务;
+    T --> W[运维人员];
+
+   classDef primary fill:#f9f,stroke:#333,stroke-width:2px
+   classDef secondary fill:#ccf,stroke:#333,stroke-width:2px
+   class D,E,I primary
+   class F,G,H,J,K secondary

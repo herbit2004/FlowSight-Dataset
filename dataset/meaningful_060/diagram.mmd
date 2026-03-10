@@ -1,0 +1,19 @@
+graph TD
+    subgraph 区域A
+        A[数据源头] --> B(消息队列A);
+        B --> C{分区处理};
+        C -- 分区Key1 --> D[同步队列A1];
+        C -- 分区Key2 --> E[同步队列A2];
+    end
+
+    subgraph 区域B
+        F[同步队列B1] --> G{数据转换};
+        H[同步队列B2] --> G;
+        G --> I[目标数据库];
+    end
+
+    D -- 跨区域同步 --> F;
+    E -- 跨区域同步 --> H;
+
+    classDef queue fill:#f9f,stroke:#333,stroke-width:2px
+    class D,E,F,H queue

@@ -1,0 +1,22 @@
+graph TD
+    subgraph API网关核心流程
+        A[客户端请求] --> B{路由匹配器};
+        B -- 匹配成功 --> C[请求预处理];
+        B -- 匹配失败 --> D[返回 404];
+        C --> E{鉴权管理器};
+        E -- 鉴权通过 --> F[流量控制器];
+        E -- 鉴权失败 --> G[返回 401];
+        F --> H[请求转发至后端服务];
+        H --> I[后端服务响应];
+        I --> J[响应后处理];
+        J --> K[客户端响应];
+    end
+
+    subgraph 路由规则管理
+        L[路由规则变更] --> M[路由规则持久化];
+        M --> N[路由规则加载至路由匹配器];
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style K fill:#f9f,stroke:#333,stroke-width:2px
+    style L fill:#ccf,stroke:#333,stroke-width:2px

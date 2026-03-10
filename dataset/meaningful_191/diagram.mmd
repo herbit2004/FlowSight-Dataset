@@ -1,0 +1,34 @@
+graph TD
+    subgraph 环境发布门禁系统
+    A[发布请求] --> B{环境预检};
+    B -- 资源占用? --> C[暂停发布];
+    B -- 资源空闲 --> D[环境锁定];
+    D --> E{配置校验};
+    E -- 配置错误? --> F[回滚锁定];
+    E -- 配置正确 --> G[数据库Schema检查];
+    G -- Schema不兼容? --> F;
+    G -- Schema兼容 --> H[依赖服务健康检查];
+    H -- 服务异常? --> F;
+    H -- 服务正常 --> I[代码包部署];
+    I --> J{金丝雀发布?};
+    J -- 是 --> K[金丝雀环境部署];
+    J -- 否 --> L[全量环境部署];
+    K --> M[金丝雀验证];
+    L --> N[冒烟测试];
+    M -- 验证失败? --> O[回滚金丝雀];
+    M -- 验证成功 --> P[流量切换];
+    N -- 测试失败? --> Q[停止发布];
+    N -- 测试成功 --> R[发布完成];
+    P --> R;
+    O --> Q;
+    R --> S[解锁环境];
+    F --> Q;
+    Q --> S;
+    S --> T[发布结果通知];
+    T --> U[发布完成];
+    end
+
+    classDef failed fill:#f9f,stroke:#333,stroke-width:2px
+    classDef warning fill:#FCF75E,stroke:#333,stroke-width:2px
+    class A,B,E,G,H,I,J,K,L,M,N,P,R,S,T fill:#f9f9f9,stroke:#333,stroke-width:2px
+    class C,F,O,Q failed

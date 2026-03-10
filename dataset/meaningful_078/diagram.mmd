@@ -1,0 +1,31 @@
+graph TD
+    subgraph 数据准备
+        A[提取交易数据] --> B(转换数据格式);
+        B --> C{数据校验};
+        C -- 校验通过 --> D[生成对账文件];
+        C -- 校验失败 --> E[异常处理];
+    end
+
+    subgraph 对账处理
+        D --> F[获取三方对账文件];
+        F --> G{文件格式一致?};
+        G -- Yes --> H[执行对账];
+        G -- No --> I[格式转换或人工介入];
+        I --> H;
+        H --> J{对账结果一致?};
+        J -- Yes --> K[生成结算单];
+        J -- No --> L[差异分析与调整];
+        L --> H;
+    end
+
+    subgraph 结算与清算
+        K --> M[提交结算单];
+        M --> N[财务审核];
+        N --> O{审核通过?};
+        O -- Yes --> P[执行清算];
+        O -- No --> Q[结算单修改];
+        Q --> N;
+    end
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q process

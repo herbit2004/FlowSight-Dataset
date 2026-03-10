@@ -1,0 +1,24 @@
+graph TD
+    A[用户请求] --> B(数据库);
+    B --> C{数据存在?};
+    C -- Yes --> D[写缓存];
+    C -- No --> E[API 网关];
+    E --> F{需要认证?};
+    F -- Yes --> G[鉴权];
+    F -- No --> H[认证];
+    G --> H;
+    H --> I[支付服务];
+    I --> J(消息队列);
+    J --> K[风控系统];
+    K --> L{风控通过?};
+    L -- Yes --> M[生成订单];
+    L -- No --> N[取消订单];
+    M --> B;
+    N --> O[通知用户];
+    O --> A;
+    D --> P[返回数据];
+    P --> A;
+    E --> Q[下游服务];
+    Q --> P;
+    style B fill:#f9f,stroke:#333,stroke-width:2px
+    style D fill:#ccf,stroke:#333,stroke-width:2px

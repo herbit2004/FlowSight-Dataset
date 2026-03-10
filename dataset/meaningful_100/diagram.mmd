@@ -1,0 +1,44 @@
+graph TD
+    subgraph 数据生产者
+        A[数据源头] --> B(数据预处理);
+        B --> C{数据校验};
+        C -- 校验通过 --> D[消息序列化];
+        C -- 校验失败 --> E[告警系统];
+        D --> F(路由策略);
+        F --> G((消息队列));
+    end
+
+    subgraph 消息队列
+        G --> H{消息持久化};
+        H -- 持久化成功 --> I[消息就绪];
+        H -- 持久化失败 --> J[重试队列];
+        I --> K(消息分发);
+    end
+
+    subgraph 数据消费者
+        K --> L{订阅过滤};
+        L -- 匹配 --> M[消息反序列化];
+        L -- 不匹配 --> N[丢弃消息];
+        M --> O(数据转换);
+        O --> P{业务规则引擎};
+        P -- 规则通过 --> Q[数据存储];
+        P -- 规则失败 --> R[数据清洗];
+        R --> Q;
+        Q --> S[下游服务];
+        I --> Z[死信队列];
+    end
+
+    subgraph 监控告警
+        E --> Y[监控系统];
+        J --> Y;
+        Z --> Y;
+        Y --> X[通知服务];
+    end
+
+    classDef queue fill:#f9f;
+    classDef process fill:#ccf;
+    classDef decision fill:#afa;
+    class G,H,I,J,Z queue;
+    class B,D,F,M,O process;
+    class C,L,P decision;
+    class A,E,K,N,Q,R,S,Y,X 数据源头,告警系统,消息分发,丢弃消息,数据存储,数据清洗,下游服务,监控系统,通知服务;

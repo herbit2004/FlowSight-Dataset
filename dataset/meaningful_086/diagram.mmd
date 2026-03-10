@@ -1,0 +1,49 @@
+graph TD
+    subgraph 客户端
+        A[用户发起退换货申请] --> B{平台风控校验};
+    end
+
+    B -- 通过 --> C[生成退换货单];
+    B -- 风险 --> Z[风控拦截];
+
+    C --> D{商家是否同意};
+
+    subgraph 商家端
+        D -- 同意 --> E[商家确认收货地址];
+        D -- 拒绝 --> F[商家拒绝申请];
+    end
+
+    E --> G[通知用户寄回];
+
+    subgraph 客户端
+        G --> H[用户寄回商品];
+    end
+
+    H --> I[物流信息同步];
+    I --> J[商家签收包裹];
+
+    J --> K{验货};
+    K -- 通过 --> L[财务退款/换货处理];
+    K -- 异常 --> M[发起争议];
+
+    L --> N[退款完成/换货发出];
+
+    F --> O[退回用户申请];
+    O --> A;
+
+    M --> P[平台介入仲裁];
+    P --> Q{仲裁结果};
+    Q -- 支持用户 --> L;
+    Q -- 支持商家 --> R[结束申请];
+
+    N --> S[退换货完成];
+    R --> S;
+    Z --> S;
+
+    classDef step fill:#f9f,stroke:#333,stroke-width:2px
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px
+    class A,C,E,G,H,I,J,K,L,N,O,P,R,S step
+    class B,D,Q decision
+    class Z step
+    class M step
+    class F step

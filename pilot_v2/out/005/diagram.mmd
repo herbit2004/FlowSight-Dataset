@@ -1,0 +1,18 @@
+graph TD
+        subgraph Kubernetes Pod
+            direction LR
+            AppContainer[Main Application Container]
+            SidecarContainer[Sidecar Container]
+            AppContainer -- localhost --> SidecarContainer
+            SidecarContainer -- localhost --> AppContainer
+            subgraph Shared Resources
+                Network[Shared Network Namespace]
+                Volumes[Shared Volumes]
+            end
+            AppContainer --> Network
+            SidecarContainer --> Network
+            AppContainer --> Volumes
+            SidecarContainer --> Volumes
+        end
+        ExternalTraffic --> Network
+        Network --> ExternalServices

@@ -1,0 +1,46 @@
+graph TD
+    subgraph 设备端
+        A[设备初始化] --> B{设备状态检查};
+        B -- 正常 --> C[采集数据];
+        B -- 异常 --> Z[设备告警];
+        C --> D[数据预处理];
+        D --> E[数据加密];
+        E --> F[MQTT连接];
+        F -- 连接成功 --> G[上报数据];
+        F -- 连接失败 --> H[重试连接];
+        H --> F;
+        G --> I{收到确认};
+        I -- 确认 --> C;
+        I -- 超时 --> J[重新上报];
+        J --> G;
+    end
+
+    subgraph 云平台
+        U[接收数据];
+        U --> V[数据校验];
+        V -- 通过 --> W[数据存储];
+        V -- 失败 --> X[错误日志];
+        W --> Y[指令处理];
+        Y --> Z;
+        subgraph 指令下发
+            AA[用户发起指令];
+            AA --> BB[指令校验];
+            BB -- 通过 --> CC[指令封装];
+            BB -- 失败 --> EE[返回错误];
+            CC --> DD[MQTT推送];
+            DD --> EE;
+        end
+    end
+
+    Z[告警处理];
+    DD -- 设备已连接 --> FF[发送指令];
+    DD -- 设备离线 --> GG[指令缓存];
+    FF --> HH[指令确认];
+    GG --> FF;
+
+    HH --> EE;
+
+    classDef online fill:#f9f,stroke:#333,stroke-width:2px
+    classDef offline fill:#ccf,stroke:#333,stroke-width:2px
+    class A,C,D,E,G,U,V,W,Y,AA,BB,CC,DD online
+    class B,F,H,I,J offline

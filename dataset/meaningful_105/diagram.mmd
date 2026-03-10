@@ -1,0 +1,57 @@
+graph TD
+    subgraph 数据源
+        A[用户行为数据];
+        B[系统性能数据];
+        C[业务订单数据];
+    end
+
+    A --> D(数据清洗与预处理);
+    B --> D;
+    C --> D;
+
+    D --> E{指标计算引擎};
+    E --> F[核心指标存储];
+
+    subgraph 配置中心
+        G[告警规则配置];
+        H[指标阈值配置];
+        I[通知策略配置];
+    end
+
+    F --> J{告警规则评估引擎};
+    G --> J;
+    H --> J;
+
+    J -- 指标超阈值 --> K[生成告警事件];
+    J -- 指标正常 --> L[状态更新/无动作];
+
+    K --> M{告警事件优先级判断};
+    M -- 高优先级 --> N[触发实时告警通知];
+    M -- 中/低优先级 --> O[告警事件存储];
+
+    N --> P((通知中心));
+    O --> Q[告警聚合与抑制];
+    Q --> P;
+
+    P -- 短信/邮件/Webhook --> R{通知分发};
+    R -- 接收者A --> S[接收者A收到告警];
+    R -- 接收者B --> T[接收者B收到告警];
+
+    subgraph 监控大盘
+        U[Dashboard展示];
+    end
+
+    F --> U;
+    O --> U;
+
+    classDef dataNode fill:#f9f,stroke:#333,stroke-width:2px
+    classDef processNode fill:#ccf,stroke:#333,stroke-width:2px
+    classDef decisionNode fill:#fc0,stroke:#333,stroke-width:2px
+    classDef storageNode fill:#fff,stroke:#333,stroke-width:2px
+    class A,B,C dataNode;
+    class D,E,J,M,Q,R processNode;
+    class F,O storageNode;
+    class G,H,I dataNode;
+    class K decisionNode;
+    class N,P,U processNode;
+    class S,T dataNode;

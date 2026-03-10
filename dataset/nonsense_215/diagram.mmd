@@ -1,0 +1,45 @@
+graph TD
+    subgraph 用户端
+        A[用户请求] --> B(支付网关);
+    end
+
+    subgraph 后端系统
+        B --> C{风控系统};
+        C -- Yes --> D[生成订单];
+        C -- No --> E[返回支付失败];
+        D --> F[消息队列];
+        F --> G(库存服务);
+        G --> H{库存充足?};
+        H -- Yes --> I[更新库存];
+        H -- No --> J[取消订单];
+        I --> K[数据库写入];
+        K --> L[发送支付成功通知];
+        L --> M[读缓存];
+        M --> N{缓存命中?};
+        N -- Yes --> O[返回订单数据];
+        N -- No --> P[数据库读取];
+        P --> Q[写缓存];
+        Q --> O;
+        J --> R[用户请求];
+        E --> S[用户请求];
+    end
+
+    subgraph 安全与监控
+        T[认证服务] --> U[鉴权服务];
+        U --> T;
+        V[日志服务] --> W[监控告警];
+        W --> V;
+    end
+
+    subgraph 第三方服务
+        X[支付渠道] --> B;
+        L --> Y[短信服务];
+    end
+
+    subgraph 分析与报表
+       Z[数据仓库] --> AA[报表服务];
+       K --> Z;
+    end
+
+    style R fill:#f9f,stroke:#333,stroke-width:2px
+    style S fill:#f9f,stroke:#333,stroke-width:2px

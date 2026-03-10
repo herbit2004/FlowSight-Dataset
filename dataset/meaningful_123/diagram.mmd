@@ -1,0 +1,16 @@
+graph TD
+    subgraph 客户端
+        A[用户操作] --> B{事件生产者};
+    end
+
+    B --> C[事件总线];
+    C --> D{事件处理器};
+
+    subgraph 服务端
+        D --> E[事件存储];
+        E --> F{状态重建器};
+        F --> G[聚合根];
+    end
+
+    classDef 服务 style fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,D 服务

@@ -1,0 +1,46 @@
+graph TD
+    subgraph "应用服务"
+        A[业务请求入口] --> B{缓存查询？};
+    end
+
+    subgraph "缓存层"
+        C[分布式缓存集群]
+    end
+
+    subgraph "持久层"
+        D[数据存储服务]
+    end
+
+    B -- 是 --> E[缓存命中];
+    E --> F[返回缓存数据];
+    F --> G[业务响应];
+
+    B -- 否 --> H[缓存未命中];
+    H --> I[请求数据存储服务];
+    I --> D;
+    D --> J[返回数据];
+    J --> K[构建缓存数据];
+    K --> L[写入缓存];
+    L --> C;
+    L --> M[设置过期时间];
+    M --> N[返回数据];
+    N --> G[业务响应];
+
+    C --> P{缓存淘汰策略};
+    P -- 达到上限 --> Q[触发缓存淘汰];
+    Q --> R[选择淘汰数据];
+    R --> S[移除缓存数据];
+
+    subgraph "缓存清理服务"
+        T[数据变更事件] --> U[接收事件];
+        U --> V{是否需要清理缓存？};
+        V -- 是 --> W[删除缓存];
+        W --> C;
+        V -- 否 --> X[忽略];
+    end
+
+    classDef cacheHit fill:#f9f,stroke:#333,stroke-width:2px
+    class E,F cacheHit
+
+    classDef cacheMiss fill:#fcc,stroke:#333,stroke-width:2px
+    class H,I,J,K,L cacheMiss

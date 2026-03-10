@@ -1,0 +1,33 @@
+graph TD
+    subgraph 用户请求流程
+        A[用户浏览器] --> B{CDN 节点};
+        B -- 命中缓存 --> G[返回内容给用户];
+        B -- 未命中缓存 --> C{边缘节点回源判定};
+    end
+
+    subgraph 回源策略
+        C -- 动态内容/特殊策略 --> D[动态回源集群];
+        C -- 静态内容 --> E[静态存储];
+    end
+
+    subgraph 动态回源处理
+        D --> F{源站反向代理};
+        F --> H{源站服务器};
+        H --> I[生成/获取动态内容];
+        I --> F;
+        F --> B;
+    end
+
+    subgraph 静态存储处理
+        E --> J[对象存储OSS];
+        J --> B;
+    end
+
+    subgraph 后续流程
+        B --> K[更新 CDN 缓存];
+        K --> G;
+        G --> L[用户接收内容];
+    end
+
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px;
+    class B,E,F highlight

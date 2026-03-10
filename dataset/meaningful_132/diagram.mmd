@@ -1,0 +1,58 @@
+graph TD
+    subgraph 用户行为触发
+        A[用户触发事件] --> B{判断是否需要推送通知};
+    end
+
+    B -- 是 --> C[获取用户偏好设置];
+    B -- 否 --> Z[结束];
+
+    C --> D{判断是否在免打扰时段};
+
+    D -- 是 --> E[进入延迟队列];
+    D -- 否 --> F[计算推送优先级];
+
+    E --> H[延迟队列扫描];
+    H --> F;
+
+    F --> G{判断是否超过推送频率限制};
+
+    G -- 是 --> I[降低推送优先级];
+    G -- 否 --> J[进入消息内容生成];
+
+    I --> J;
+
+    J --> K[个性化内容优化];
+    K --> L[消息内容审核];
+
+    L --> M{审核结果};
+
+    M -- 通过 --> N[选择推送通道];
+    M -- 拒绝 --> O[通知失败，记录日志];
+    O --> Z;
+
+    N --> P{通道状态检测};
+
+    P -- 可用 --> Q[发送推送通知];
+    P -- 不可用 --> R[切换备用通道];
+    R --> P;
+
+    Q --> S[记录推送日志];
+    S --> T[用户行为追踪];
+
+    T --> U{用户是否点击通知};
+
+    U -- 是 --> V[跳转到应用内对应页面];
+    U -- 否 --> W[更新用户偏好数据];
+
+    V --> X[结束];
+    W --> X;
+
+    X --> Z;
+
+    classDef important fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef success fill:#ccffcc,stroke:#333,stroke-width:1px;
+    classDef fail fill:#ffcccc,stroke:#333,stroke-width:1px;
+
+    class A,B important;
+    class Q success;
+    class O fail;

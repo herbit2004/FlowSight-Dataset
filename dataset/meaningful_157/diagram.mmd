@@ -1,0 +1,28 @@
+graph TD
+    A[用户请求] --> B{负载均衡器};
+    B -- 主集群可用 --> C[主集群入口];
+    B -- 主集群不可用 --> D[故障检测];
+    D -- 确认故障 --> E[流量切换];
+    D -- 未确认故障 --> B;
+    E --> F[备集群入口];
+    C --> G{数据校验};
+    F --> H{数据校验};
+    G -- 通过 --> I[主集群处理];
+    G -- 失败 --> J[告警/数据修复];
+    H -- 通过 --> K[备集群处理];
+    H -- 失败 --> L[告警/数据修复];
+    I --> M[主集群数据库];
+    K --> N[备集群数据库];
+    M --> O[返回响应];
+    N --> O;
+    O --> P[用户];
+    E --> Q[配置中心更新];
+    Q --> B;
+
+    classDef primary fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef secondary fill:#ccf,stroke:#333,stroke-width:2px;
+    classDef alert fill:#fbb,stroke:#333,stroke-width:2px;
+
+    class C,I,M primary;
+    class F,K,N secondary;
+    class J,L,D,E alert;

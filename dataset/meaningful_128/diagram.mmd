@@ -1,0 +1,54 @@
+graph TD
+    subgraph 客服工单流转
+    A[用户提交工单] --> B{智能初筛};
+    B -- 高优先级 --> C[自动升级];
+    B -- 低优先级 --> D[分配至客服组];
+    C --> D;
+    D --> E{客服组长审核};
+    E -- 批准 --> F[客服专员处理];
+    E -- 拒绝 --> G[退回用户];
+    G --> A;
+    F --> H{问题类型判断};
+    H -- 技术问题 --> I[转技术支持];
+    H -- 业务咨询 --> J[转业务部门];
+    H -- 其它问题 --> K[自助知识库];
+    I --> L[技术支持处理];
+    J --> M[业务部门处理];
+    K --> N{自助解决?};
+    N -- 是 --> O[工单完结];
+    N -- 否 --> F;
+    L --> P{技术支持反馈};
+    M --> Q{业务部门反馈};
+    P --> R[客服专员跟进];
+    Q --> R;
+    R --> S{问题解决?};
+    S -- 是 --> O;
+    S -- 否 --> T[升级至高级工程师];
+    T --> U[高级工程师处理];
+    U --> V{高级工程师反馈};
+    V --> R;
+    O --> W[用户满意度调查];
+    W --> X[工单归档];
+
+    subgraph 监控与管理
+    X --> Y[数据统计与分析];
+    Y --> Z[工单积压预警];
+    Z --> AA[优化流程];
+    end
+
+    subgraph 权限控制
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style G fill:#f9f,stroke:#333,stroke-width:2px
+    end
+
+    subgraph 数据流
+    style I fill:#ccf,stroke:#333,stroke-width:2px
+    style J fill:#ccf,stroke:#333,stroke-width:2px
+    end
+
+    classDef high_priority fill:#f00,stroke:#333,stroke-width:2px
+    class C,T high_priority
+    classDef solved fill:#afa,stroke:#333,stroke-width:2px
+    class O solved
+
+    end

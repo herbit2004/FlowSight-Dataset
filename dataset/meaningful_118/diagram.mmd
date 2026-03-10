@@ -1,0 +1,34 @@
+graph TD
+    subgraph 订单服务
+        A[接收订单请求] --> B{订单参数校验};
+        B -- 成功 --> C[生成订单记录];
+        B -- 失败 --> H[返回错误];
+        C --> D[调用支付服务];
+    end
+
+    subgraph 支付服务
+        D -- 请求 --> E{首次支付尝试};
+        E --> F{支付网关};
+        F -- 成功 --> G[更新订单状态为已支付];
+        F -- 失败 --> I[重试计数器+1];
+        I --> J{重试次数 < 最大重试次数};
+        J -- 是 --> K[等待策略];
+        K --> F;
+        J -- 否 --> L{熔断器开启};
+        L --> M[触发告警];
+        end
+
+    subgraph 订单服务
+    G --> N[发布订单支付成功事件];
+    N --> O[返回成功];
+    end
+
+    H --> O;
+    M --> H;
+
+    classDef success fill:#e6ffe6,stroke:#339933,stroke-width:2px;
+    classDef fail fill:#ffe6e6,stroke:#cc3333,stroke-width:2px;
+    class G,N,O success;
+    class H,M fail;
+    classDef normal fill:#f9f,stroke:#333,stroke-width:2px;
+    class A,B,C,D,E,F,I,J,K,L normal;

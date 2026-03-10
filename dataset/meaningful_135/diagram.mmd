@@ -1,0 +1,36 @@
+graph TD
+    subgraph 数据准备
+        A[原始数据源] --> B(特征提取);
+        B --> C{缺失值处理};
+        C -- 填充/删除 --> D(异常值检测);
+        D --> E{数据标准化};
+        E -- Z-score/MinMax --> F(数据转换);
+    end
+
+    subgraph 特征选择
+        F --> G[特征评估];
+        G --> H{特征重要性排序};
+        H --> I{选择 Top-N 特征};
+    end
+
+    subgraph 特征衍生
+        I --> J(特征组合);
+        J --> K(多项式特征);
+        K --> L(特征交叉);
+    end
+
+    subgraph 特征验证
+        L --> M[模型训练];
+        M --> N{性能评估};
+        N -- 合格 --> O(特征集发布);
+        N -- 不合格 --> P{回溯分析};
+        P --> G;
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style O fill:#ccf,stroke:#333,stroke-width:2px
+
+    classDef process fill:#ffffff,stroke:#333,stroke-width:1px
+    classDef decision fill:#e2e2e2,stroke:#333,stroke-width:1px
+    class A,B,C,D,E,F,G,H,I,J,K,L process
+    class N,P decision

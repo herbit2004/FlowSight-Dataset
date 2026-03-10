@@ -1,0 +1,41 @@
+graph TD
+    subgraph 知识库检索
+        A[用户提交工单];
+        B[智能解析工单内容];
+        C[检索知识库];
+        D{匹配相关知识};
+    end
+
+    subgraph 自动分配引擎
+        E[优先级计算];
+        F[技能匹配];
+        G[负载均衡评估];
+        H{分配决策};
+    end
+
+    subgraph 工单流转
+        I[分配至工程师/团队];
+        J[工程师处理工单];
+        K{问题解决?};
+        L[关闭工单];
+        M[需要进一步支持];
+    end
+
+    A --> B;
+    B --> C;
+    C --> D;
+    D -- 找到知识 --> E;
+    D -- 未找到知识 --> E;
+    E --> F;
+    F --> G;
+    G --> H;
+    H -- 分配至团队 --> I;
+    H -- 分配至个人 --> I;
+    I --> J;
+    J --> K;
+    K -- 是 --> L;
+    K -- 否 --> M;
+    M --> I;
+
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M default

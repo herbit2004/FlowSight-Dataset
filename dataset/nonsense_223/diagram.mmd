@@ -1,0 +1,59 @@
+graph TD
+    A[用户请求] --> B{鉴权通过?}
+    B -- Yes --> C[写缓存]
+    B -- No --> D[返回错误]
+    C --> E[API 网关]
+    E --> F[消息队列]
+    F --> G[支付服务]
+    G  --> H{支付成功?}
+    H -- Yes --> I[数据库读取]
+    H -- No --> J[生成退款请求]
+    J --> F
+    I --> A
+    K[定时任务] --> L[清理缓存]
+    L --> M[用户画像服务]
+    M --> N[日志服务]
+    N --> O[监控告警系统]
+    O --> P[数据库写入]
+    P --> K
+    Q[第三方服务] --> R[数据分析服务]
+    R --> S[风控系统]
+    S --> B
+    T[文件存储] --> U[备份服务]
+    U --> V[消息队列]
+    V --> T
+    W[登录] --> X[认证服务]
+    X --> Y[数据库查询]
+    Y --> Z{用户存在?}
+    Z -- Yes --> AA[返回用户信息]
+    Z -- No --> AB[创建用户]
+    AB --> Y
+    AA --> A
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+    style D fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#ccf,stroke:#333,stroke-width:2px
+    style F fill:#f9f,stroke:#333,stroke-width:2px
+    style G fill:#ccf,stroke:#333,stroke-width:2px
+    style H fill:#f9f,stroke:#333,stroke-width:2px
+    style I fill:#f9f,stroke:#333,stroke-width:2px
+    style J fill:#f9f,stroke:#333,stroke-width:2px
+    style K fill:#f9f,stroke:#333,stroke-width:2px
+    style L fill:#ccf,stroke:#333,stroke-width:2px
+    style M fill:#f9f,stroke:#333,stroke-width:2px
+    style N fill:#f9f,stroke:#333,stroke-width:2px
+    style O fill:#ccf,stroke:#333,stroke-width:2px
+    style P fill:#f9f,stroke:#333,stroke-width:2px
+    style Q fill:#f9f,stroke:#333,stroke-width:2px
+    style R fill:#ccf,stroke:#333,stroke-width:2px
+    style S fill:#f9f,stroke:#333,stroke-width:2px
+    style T fill:#f9f,stroke:#333,stroke-width:2px
+    style U fill:#ccf,stroke:#333,stroke-width:2px
+    style V fill:#f9f,stroke:#333,stroke-width:2px
+    style W fill:#f9f,stroke:#333,stroke-width:2px
+    style X fill:#ccf,stroke:#333,stroke-width:2px
+    style Y fill:#f9f,stroke:#333,stroke-width:2px
+    style Z fill:#ccf,stroke:#333,stroke-width:2px
+    style AA fill:#f9f,stroke:#333,stroke-width:2px
+    style AB fill:#f9f,stroke:#333,stroke-width:2px

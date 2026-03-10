@@ -1,0 +1,38 @@
+graph TD
+    A[用户请求] --> B{身份验证};
+    B -- Yes --> C[鉴权];
+    B -- No --> D[返回 401];
+    C --> E[写入缓存];
+    E --> F[API 网关];
+    F --> G{黑名单检查};
+    G -- No --> H[请求路由];
+    G -- Yes --> I[返回 403];
+    H --> J[消息队列];
+    J --> K[订单服务];
+    K --> L[支付服务];
+    L --> M{支付成功?};
+    M -- Yes --> N[更新数据库];
+    M -- No --> O[退款服务];
+    N --> A;  
+    O --> N; 
+    N --> P[发送通知];
+    P --> Q[用户];
+    I --> Q;
+    D --> Q;
+    style O fill:#f9f,stroke:#333,stroke-width:2px
+    style N fill:#ccf,stroke:#333,stroke-width:2px
+    style A fill:#ccf,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style C fill:#ccf,stroke:#333,stroke-width:2px
+    style D fill:#ccf,stroke:#333,stroke-width:2px
+    style E fill:#ccf,stroke:#333,stroke-width:2px
+    style F fill:#ccf,stroke:#333,stroke-width:2px
+    style G fill:#ccf,stroke:#333,stroke-width:2px
+    style H fill:#ccf,stroke:#333,stroke-width:2px
+    style I fill:#ccf,stroke:#333,stroke-width:2px
+    style J fill:#ccf,stroke:#333,stroke-width:2px
+    style K fill:#ccf,stroke:#333,stroke-width:2px
+    style L fill:#ccf,stroke:#333,stroke-width:2px
+    style M fill:#ccf,stroke:#333,stroke-width:2px
+    style P fill:#ccf,stroke:#333,stroke-width:2px
+    style Q fill:#ccf,stroke:#333,stroke-width:2px

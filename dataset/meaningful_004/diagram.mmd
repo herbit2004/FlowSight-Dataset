@@ -1,0 +1,27 @@
+graph TD
+    subgraph 消息生成流程
+        A[用户服务] --> B(订单创建事件);
+        B --> C{消息路由规则};
+        C -- 订单类型A --> D[订单消息队列];
+        C -- 订单类型B --> E[特殊订单队列];
+    end
+
+    subgraph 消息消费流程
+        F[订单消息队列] --> G(订单处理服务);
+        E[特殊订单队列] --> H(高优先级订单处理服务);
+
+        G --> I{风控检查};
+        H --> I
+
+        I -- 通过 --> J[订单数据更新];
+        I -- 拒绝 --> K[异常订单记录];
+
+        J --> L(通知服务);
+        K --> L
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B,C,D,E,F,G,H,I,J,K,L fill:#ccf,stroke:#333,stroke-width:2px
+
+    classDef queue fill:#bbf,stroke:#f66,stroke-width:2px,color:#333
+    class D,E queue

@@ -1,0 +1,41 @@
+graph TD
+    subgraph "构建环境"
+        A[开发者代码提交];
+        B[触发构建流水线];
+        C[拉取基础镜像];
+        D[执行构建脚本];
+        E[单元测试];
+        F{测试通过？};
+    end
+
+    subgraph "镜像仓库"
+        G[推送中间镜像];
+        H[最终镜像打包];
+        I[推送到生产镜像仓库];
+        J[镜像标签更新];
+    end
+
+    subgraph "发布环境"
+        K[触发发布流程];
+        L[拉取最新镜像];
+        M[滚动更新部署];
+        N[监控与回滚];
+    end
+
+    A --> B;
+    B --> C;
+    C --> D;
+    D --> E;
+    E --> F;
+    F -- Yes --> G;
+    F -- No --> B;
+    G --> H;
+    H --> I;
+    I --> J;
+    J --> K;
+    K --> L;
+    L --> M;
+    M --> N;
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N process

@@ -1,0 +1,35 @@
+graph TD
+    subgraph 生产者
+        A[消息队列客户端] --> B(消息编码器);
+        B --> C{注入追踪头};
+        C -- 有父Span --> D[消息发送];
+        C -- 无父Span --> E[创建根Span];
+        E --> D;
+
+    end
+
+    subgraph 消息队列
+        D --> F(消息队列);
+    end
+
+    subgraph 消费者
+        F --> G[消息接收];
+        G --> H{提取追踪头};
+        H -- 有追踪头 --> I(创建子Span);
+        H -- 无追踪头 --> J(创建根Span);
+        I --> K[业务逻辑处理];
+        J --> K;
+        K --> L(结果数据);
+    end
+
+    subgraph 追踪系统
+        M[数据上报] --> N(数据预处理);
+        N --> O(存储);
+        O --> P(查询/分析);
+        I --> M;
+        J --> M;
+        L --> M;
+    end
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P process

@@ -1,0 +1,27 @@
+graph TD
+    A[工单创建] --> B{SLA 规则匹配?};
+    B -- 是 --> C[设置 SLA 目标];
+    B -- 否 --> D[默认 SLA 设置];
+    C --> E(SLA 计时开始);
+    D --> E;
+    E --> F{SLA 是否超时?};
+    F -- 否 --> G[等待处理];
+    G --> H{处理完成?};
+    H -- 是 --> I[SLA 计时停止];
+    I --> J[工单关闭];
+    H -- 否 --> F;
+    F -- 是 --> K[SLA 超时处理];
+    K --> L{自动升级规则?};
+    L -- 是 --> M[自动升级];
+    M --> N[通知升级后负责人];
+    L -- 否 --> O[通知当前负责人];
+    O --> P[手动升级判断];
+    P --> Q{是否升级?};
+    Q -- 是 --> M;
+    Q -- 否 --> R[继续等待处理];
+    R --> H;
+    N --> H;
+    classDef sla_ok fill:#ccffcc,stroke:#333,stroke-width:2px;
+    classDef sla_fail fill:#ffcccc,stroke:#333,stroke-width:2px;
+    class E,G,H,I sla_ok;
+    class K,L,M,N,O,P,Q,R sla_fail;

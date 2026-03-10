@@ -1,0 +1,48 @@
+graph TD
+    subgraph 前端服务
+        A[用户请求] --> B{API Gateway};
+        B -- 认证授权 --> C[流量控制];
+        C --> D[路由转发];
+    end
+
+    subgraph 后端服务集群
+        D --> E1[服务A: 用户画像];
+        D --> E2[服务B: 订单管理];
+        D --> E3[服务C: 库存管理];
+
+        E1 --> F1[数据查询];
+        E2 --> F2[创建订单];
+        E3 --> F3[检查库存];
+
+        F1 --> G1[数据库A];
+        F2 --> G2[数据库B];
+        F3 --> G3[数据库C];
+    end
+
+    subgraph 链路追踪系统
+        H[Agent: 埋点SDK]
+        H -- 上报Span --> I[Collector: 数据采集];
+        I --> J[Storage: 数据存储];
+        J --> K[Query: 查询服务];
+        K --> L[UI: 可视化界面];
+    end
+
+    A -- traceId生成 --> H;
+    E1 -- SpanContext传递 --> E2;
+    E2 -- SpanContext传递 --> E3;
+
+    E1 -- 上报Span --> H;
+    E2 -- 上报Span --> H;
+    E3 -- 上报Span --> H;
+    G1 -- 上报Span --> H;
+    G2 -- 上报Span --> H;
+    G3 -- 上报Span --> H;
+
+    classDef backend fill:#f9f,stroke:#333,stroke-width:2px
+    class E1,E2,E3,F1,F2,F3,G1,G2,G3 backend
+
+    classDef frontend fill:#ccf,stroke:#333,stroke-width:2px
+    class A,B,C,D frontend
+
+    classDef tracing fill:#ffc,stroke:#333,stroke-width:2px
+    class H,I,J,K,L tracing

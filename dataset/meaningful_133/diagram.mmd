@@ -1,0 +1,17 @@
+graph TD
+    A[用户行为触发] --> B{埋点SDK初始化};
+    B -- 初始化成功 --> C[生成唯一Session ID];
+    B -- 初始化失败 --> E[上报初始化失败日志];
+    C --> D{数据预处理};
+    D -- 符合采样规则 --> F[构建埋点数据包];
+    D -- 不符合采样规则 --> G[丢弃数据];
+    F --> H[数据压缩 & 加密];
+    H --> I[选择上报策略];
+    I -- 实时上报 --> J[Server端点接收];
+    I -- 批量上报 --> K[本地缓存];
+    K --> L[定时任务触发上报];
+    L --> J;
+    J --> M[数据清洗 & 入库];
+
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px
+    class A,F,H highlight

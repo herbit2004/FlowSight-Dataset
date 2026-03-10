@@ -1,0 +1,25 @@
+graph TD
+    subgraph 数据准备阶段
+        A[报表请求]-->B(数据权限校验);
+        B-- 权限通过 -->C{数据源选择};
+        C-- 数据源1 -->D1[数据提取 & 转换];
+        C-- 数据源2 -->D2[数据提取 & 转换];
+        D1-->E(数据合并);
+        D2-->E;
+    end
+    subgraph 报表生成阶段
+        E-->F{报表类型判断};
+        F-- 复杂报表 -->G[模板渲染引擎];
+        F-- 简单报表 -->H[预定义报表逻辑];
+        G-->I(生成报表);
+        H-->I;
+    end
+    subgraph 报表导出阶段
+        I-->J{导出格式选择};
+        J-- PDF -->K[PDF 生成器];
+        J-- Excel -->L[Excel 生成器];
+        K-->M[报表存储 & 下载链接生成];
+        L-->M;
+    end
+    classDef green fill:#90EE90,stroke:#333,stroke-width:2px;
+    class A,B,C,D1,D2,E,F,G,H,I,J,K,L,M green

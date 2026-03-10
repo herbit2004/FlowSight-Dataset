@@ -1,0 +1,34 @@
+graph TD
+    subgraph 可信环境
+        A[用户请求] --> B(鉴权服务);
+        B --> C{权限校验};
+        C -- 允许 --> D(水印服务);
+        C -- 拒绝 --> E[返回错误];
+        D --> F{生成水印};
+        F -- 水印成功 --> G(保存水印元数据);
+        G --> H[返回带水印资源];
+    end
+
+    subgraph 不可信环境
+        H --> I[资源访问];
+        I --> J{水印检测};
+        J -- 检测到水印 --> K(提取水印元数据);
+        J -- 未检测到水印 --> L[可疑行为];
+        K --> M(验证水印元数据);
+        M -- 验证成功 --> N[允许访问];
+        M -- 验证失败 --> L;
+        L --> O[记录日志/报警];
+        N --> P[资源访问完成];
+    end
+    L --> P;
+
+    classDef auth fill:#f9f,stroke:#333,stroke-width:2px;
+    class B,C,M auth;
+    classDef watermarking fill:#ccf,stroke:#333,stroke-width:2px;
+    class D,F,G,J,K watermarking;
+
+    style A fill:#fff,stroke:#333,stroke-width:1px
+    style I fill:#fff,stroke:#333,stroke-width:1px
+    style P fill:#fff,stroke:#333,stroke-width:1px
+    style E fill:#fcc,stroke:#333,stroke-width:1px
+    style O fill:#fcc,stroke:#333,stroke-width:1px

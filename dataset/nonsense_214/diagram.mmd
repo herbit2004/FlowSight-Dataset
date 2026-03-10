@@ -1,0 +1,16 @@
+graph TD
+    A[用户请求] --> B{权限校验};
+    B -- Yes --> C[消息队列];
+    B -- No --> D[返回错误];
+    C --> E[数据库写入];
+    E --> F[网关];
+    F --> G[写缓存];
+    G --> H[API服务];
+    H --> I{支付};
+    I -- Yes --> J[完成订单];
+    I -- No --> K[失败订单];
+    J --> A;
+    K --> L[用户请求];
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style D fill:#f9f,stroke:#333,stroke-width:2px
+    style K fill:#f9f,stroke:#333,stroke-width:2px

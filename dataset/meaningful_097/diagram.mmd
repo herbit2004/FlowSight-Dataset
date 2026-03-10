@@ -1,0 +1,64 @@
+graph TD
+    subgraph 用户端
+        A[用户操作: 添加商品至购物车] --> B{购物车状态校验}
+        B -- 购物车为空 --> A
+        B -- 购物车非空 --> C[用户确认订单]
+        C --> D[提交订单]
+    end
+
+    subgraph 订单服务
+        D --> E{订单创建预处理}
+        E --> F{库存预扣}
+        F -- 成功 --> G[生成待支付订单]
+        F -- 失败 --> H[库存不足提示]
+        G --> I[消息队列: 订单创建事件]
+        H --> J[返回下单失败信息]
+
+        subgraph 库存服务
+            F
+        end
+    end
+
+    subgraph 支付服务
+        I --> K{订单状态确认}
+        K --> L{支付渠道选择}
+        L --> M[发起支付请求]
+        M --> N[支付网关]
+    end
+
+    subgraph 支付网关
+        N --> O{第三方支付平台}
+        O -- 支付成功 --> P[支付结果通知]
+        O -- 支付失败 --> Q[支付失败通知]
+    end
+
+    subgraph 回调处理
+        P --> R[支付结果处理]
+        Q --> S[支付结果处理]
+        R --> T{订单状态更新}
+        S --> T
+
+        T -- 支付成功 --> U[生成支付流水]
+        T -- 支付失败 --> V[记录支付失败日志]
+
+        U --> W[消息队列: 支付成功事件]
+        V --> X[监控告警系统]
+
+    end
+
+    subgraph 消息消费端
+        W --> Y{积分服务处理}
+        W --> Z{营销活动服务处理}
+        Y --> AA[积分增加]
+        Z --> BB[发放优惠券/礼品]
+    end
+
+    J --> C
+    AA --> CC[订单完成提示]
+    BB --> CC
+    CC --> end_node[订单创建与支付完成]
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px
+    class A,C,D,G,M,P,Q,R,U,AA,BB,CC process
+    class B,E,K,T decision

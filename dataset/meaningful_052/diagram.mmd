@@ -1,0 +1,37 @@
+graph TD
+    subgraph 数据准备
+        A[数据源查询] --> B{数据清洗与转换};
+        B -- 数据有效 --> C[数据聚合];
+        B -- 数据无效 --> X[异常数据记录];
+        C --> D[计算指标];
+    end
+
+    subgraph 报表生成
+        D --> E[报表模板加载];
+        E --> F{选择导出格式};
+        F -- Excel --> G1[Excel 报表渲染];
+        F -- PDF --> G2[PDF 报表渲染];
+        F -- CSV --> G3[CSV 数据导出];
+    end
+
+    subgraph 导出与分发
+        G1 --> H1[Excel 文件生成];
+        G2 --> H2[PDF 文件生成];
+        G3 --> H3[CSV 文件生成];
+        H1 --> I[文件存储/上传];
+        H2 --> I;
+        H3 --> I;
+        I --> J{分发方式选择};
+        J -- 邮件 --> K[邮件发送服务];
+        J -- API --> L[API 接口调用];
+        J -- FTP --> M[FTP 服务器上传];
+    end
+    
+    X --> N[数据质量监控];
+    N --> Z[告警通知];
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px;
+    class A,B,C,D,E,G1,G2,G3,H1,H2,H3,I,K,L,M,N process;
+    class F,J decision;
+    class X,Z process;

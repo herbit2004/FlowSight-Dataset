@@ -1,0 +1,31 @@
+graph TD
+    subgraph 数据准备
+        A[数据源抽取与清洗] --> B(特征工程与预处理);
+        B --> C{数据质量检查};
+        C -- 通过 --> D[样本划分];
+        C -- 失败 --> E[数据回溯与修复];
+        E --> B;
+        D --> F[生成训练/验证/测试集];
+    end
+
+    subgraph 模型训练
+        F --> G(模型选择与配置);
+        G --> H{超参数调优策略};
+        H -- 基于网格搜索 --> I[Grid Search];
+        H -- 基于贝叶斯优化 --> J[Bayesian Optimization];
+        I --> K[训练模型];
+        J --> K;
+        K --> L{模型评估};
+        L -- 满足要求 --> M[模型持久化];
+        L -- 不满足要求 --> H;
+    end
+
+    subgraph 模型部署
+        M --> N[模型转换/压缩];
+        N --> O(部署环境准备);
+        O --> P[在线服务部署];
+        P --> Q{监控与反馈};
+    end
+
+    classDef subprocess fill:#f9f,stroke:#333,stroke-width:2px
+    class 数据准备,模型训练,模型部署 subprocess

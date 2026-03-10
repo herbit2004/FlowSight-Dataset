@@ -1,0 +1,20 @@
+graph TD
+    subgraph 用户行为触发
+        A[用户行为发生: 浏览商品/点击广告等] --> B{是否满足活动触发条件?}
+    end
+
+    B -- 是 --> C[检查用户是否已参与活动]
+    B -- 否 --> D[结束流程]
+
+    C -- 是 --> E{是否允许重复参与?}
+    C -- 否 --> D
+
+    E -- 是 --> F[应用活动规则: 计算折扣/赠品]
+    E -- 否 --> D
+
+    F --> G[生成活动权益]
+    G --> H[记录活动参与日志]
+    H --> I[完成流程]
+
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,E highlight

@@ -1,0 +1,27 @@
+graph TD
+    subgraph 用户请求处理流程
+        A[用户请求] --> B{流量入口};
+        B --> C{预检限流};
+        C -- 超过阈值 --> D[返回429 Too Many Requests];
+        C -- 未超阈值 --> E{会话校验};
+        E --> F{熔断器};
+        F -- 熔断开启 --> G[返回 503 Service Unavailable];
+        F -- 熔断关闭 --> H{业务处理};
+        H --> I{后置限流};
+        I -- 超过阈值 --> J[记录日志并降级处理];
+        I -- 未超阈值 --> K[返回业务响应];
+        J --> K;
+        K --> L[用户响应];
+    end
+
+    subgraph 熔断状态监控
+        M[监控服务] --> N{收集指标};
+        N --> O{计算错误率};
+        O --> P{熔断策略评估};
+        P -- 满足熔断条件 --> Q[开启熔断];
+        P -- 不满足熔断条件 --> R[保持当前状态];
+        Q --> F;
+    end
+    style D fill:#f9f,stroke:#333,stroke-width:2px
+    style G fill:#f9f,stroke:#333,stroke-width:2px
+    style J fill:#f9f,stroke:#333,stroke-width:2px

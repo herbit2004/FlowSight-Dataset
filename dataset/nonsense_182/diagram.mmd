@@ -1,0 +1,24 @@
+graph TD
+    A[用户请求] --> B(支付网关)
+    B --> C{风控系统};
+    C -- Yes --> D[数据库写入];
+    C -- No --> E[拒绝请求];
+    D --> A
+    B --> F[API 网关]
+    F --> G{读缓存};
+    G -- Yes --> H[返回数据];
+    G -- No --> I[数据库读取];
+    I --> J[写缓存];
+    J --> K{登录};
+    K --> L[登出系统];
+    L --> H
+    H --> M(消息队列)
+    M --> N[用户通知];
+    N --> O{鉴权};
+    O --> P[认证];
+    P --> Q[外部服务];
+    Q --> B;
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style F fill:#ccf,stroke:#333,stroke-width:2px
+    style M fill:#ccf,stroke:#333,stroke-width:2px

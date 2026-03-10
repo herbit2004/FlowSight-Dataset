@@ -1,0 +1,14 @@
+graph TD
+    A[发起对账请求] --> B{生成对账文件};
+    B -- 成功 --> C[上传至数据仓库];
+    B -- 失败 --> E[记录异常日志];
+    C --> D{初次核对};
+    D -- 一致 --> F[生成结算单];
+    D -- 不一致 --> G[人工介入排查];
+    G --> H[调整账单];
+    H --> D;
+    F --> I[财务审核];
+    I --> J[完成结算];
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J process

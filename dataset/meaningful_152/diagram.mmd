@@ -1,0 +1,30 @@
+graph TD
+    subgraph 构建触发
+        A[代码仓库变更] --> B{Webhook 触发};
+        B --> C[构建任务队列];
+    end
+
+    C --> D[任务调度器];
+    D --> E[选择构建节点];
+    E --> F[拉取构建上下文];
+
+    subgraph 镜像构建
+        F --> G{Dockerfile 解析};
+        G -- 无缓存 --> H[构建镜像层];
+        G -- 有缓存 --> I[复用缓存镜像层];
+        H --> J[合并镜像层];
+        I --> J;
+        J --> K[镜像扫描];
+    end
+
+    K --> L{扫描结果分析};
+    L -- 安全漏洞 --> M[中断构建];
+    L -- 通过 --> N[镜像推送];
+
+    subgraph 镜像发布
+        N --> O[镜像仓库];
+        O --> P[发布元数据更新];
+    end
+
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P highlight

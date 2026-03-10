@@ -1,0 +1,16 @@
+graph TD
+    A[客户端请求] --> B{转码/截图请求类型判断};
+    B -- 转码请求 --> C[转码任务调度];
+    B -- 截图请求 --> D[截图任务调度];
+    C --> E[转码队列];
+    D --> F[截图队列];
+    E --> G[转码Worker池];
+    F --> H[截图Worker池];
+    G --> I[输出：转码后视频];
+    H --> J[输出：截图];
+    I --> K[上传至对象存储];
+    J --> K;
+    K --> L[通知客户端];
+
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px
+    class C,D,G,H highlight

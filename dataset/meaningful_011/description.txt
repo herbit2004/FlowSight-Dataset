@@ -1,0 +1,55 @@
+## 图类型与用途
+该图是流程图，描述了分布式系统中 RedLock 的加锁流程和领导者选举流程。RedLock 用于在 Redis 集群中实现分布式锁，领导者选举用于在多个节点中选出一个 Leader 来执行任务。该图展示了客户端如何通过 RedLock Manager 向 Redis 集群请求锁，以及节点如何通过选举成为 Leader。
+
+## 图的整体布局
+该图采用从上到下的布局，分为两个主要的子图：集群共识层和领导者选举。集群共识层描述了客户端获取锁的流程，领导者选举描述了节点选举 Leader 的流程。整个流程的起点是应用客户端和节点启动时，终点是锁成功或失败，以及 Leader 执行任务。
+
+## 分组/子图/阶段说明
+图中包含两个子图：
+- **集群共识层**：描述了应用客户端通过 RedLock Manager 向 Redis 集群请求锁，并根据加锁结果进行后续操作的流程。
+- **领导者选举**：描述了节点在启动时尝试成为 Candidate，发起选举投票，最终选出 Leader 的流程。
+
+## 节点逐项说明
+- **A (应用客户端)**：发起锁请求的客户端。
+- **B (RedLock Manager)**：负责管理 RedLock 锁的组件。
+- **C (Redis 集群)**：存储锁信息的 Redis 集群。
+- **D (锁成功)**：多数 Redis 节点加锁成功，表示锁获取成功。
+- **E (锁失败)**：部分 Redis 节点加锁失败，表示锁获取失败。
+- **F (启动时)**：节点启动时。
+- **G (尝试成为 Candidate)**：节点尝试成为 Leader 的候选者。
+- **H (发起选举投票)**：Candidate 节点发起选举投票。
+- **I (其他 Candidate/Leader)**：其他参与选举的 Candidate 或已存在的 Leader 节点。
+- **J (投票失败)**：投票未达到 Quorum，选举失败。
+- **K (成为 Leader)**：节点成功当选为 Leader。
+- **L (执行 Leader 任务)**：Leader 节点执行任务。
+- **M (发送心跳)**：Leader 节点定期发送心跳，维持 Leader 状态。
+
+## 连线、分支与汇聚关系
+- A -> B：应用客户端向 RedLock Manager 发起获取锁请求。
+- B -> C：RedLock Manager 向 Redis 集群发送加锁请求。
+- C -- 多数节点加锁成功 --> D：多数 Redis 节点加锁成功。
+- C -- 部分节点加锁失败 --> E：部分 Redis 节点加锁失败。
+- D -> L：锁有效，允许执行 Leader 任务。
+- E -> A：锁失败，返回应用客户端。
+- F -> G：节点启动时，尝试成为 Candidate。
+- G -> H：成为 Candidate 后，发起选举投票。
+- H -> I：向其他 Candidate/Leader 发送投票请求。
+- I -- 同意投票 --> H：其他节点同意投票，返回投票。
+- I -- 拒绝投票 --> J：其他节点拒绝投票。
+- H -> K：达到 Quorum，成为 Leader。
+- K -> L：成为 Leader 后，执行 Leader 任务。
+- L -> M：Leader 执行任务后，发送心跳。
+- M -> K：心跳维持 Leader 状态。
+- J -> G：投票失败，重新尝试成为 Candidate。
+
+## 仓库语境与术语解释
+本图为合成数据，无真实仓库。
+- **RedLock**：一种基于 Redis 的分布式锁算法，通过在多个 Redis 节点上加锁来保证锁的可靠性。
+- **Quorum**：法定人数，指达成一致意见所需的最小节点数。在 RedLock 中，通常指超过半数的 Redis 节点。
+- **Candidate**：候选者，指参与 Leader 选举的节点。
+- **Leader**：领导者，指在分布式系统中被选出来负责协调和管理其他节点的节点。
+- **心跳**：一种周期性的信号，用于检测节点是否存活。Leader 节点通过发送心跳来维持其 Leader 状态。
+- **Redis 集群**：由多个 Redis 节点组成的集群，用于存储数据和提供服务。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+应用客户端发起锁请求，RedLock Manager 向 Redis 集群请求加锁。如果多数节点加锁成功，则锁有效，允许执行 Leader 任务；否则锁失败，返回应用客户端。节点启动时尝试成为 Candidate，发起选举投票，与其他 Candidate/Leader 交互，达到 Quorum 后成为 Leader，执行 Leader 任务并发送心跳维持状态。投票失败则重新尝试成为 Candidate。

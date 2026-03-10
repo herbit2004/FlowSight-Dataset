@@ -1,0 +1,33 @@
+graph TD
+    subgraph 模型训练流程
+        A[数据准备];
+        B[特征工程];
+        C[模型选择与配置];
+        D[模型训练];
+        E[模型评估];
+        F{模型性能达标?};
+        G[超参数调优];
+        H[模型保存];
+    end
+
+    subgraph 模型部署流程
+        I[加载模型];
+        J[在线推理服务];
+        K[离线批量推理];
+        L[监控与报警];
+        M[模型更新策略];
+    end
+
+    A --> B --> C --> D --> E --> F;
+    F -- 是 --> H;
+    F -- 否 --> G --> D;
+    H --> I;
+    I --> J & K;
+    J --> L;
+    K --> L;
+    L --> M;
+    M --> I;
+
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,G,H,I,J,K,L,M process

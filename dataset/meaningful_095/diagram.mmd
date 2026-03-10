@@ -1,0 +1,24 @@
+graph TD
+    subgraph 环境发布门禁系统
+    A[发布请求];
+    B{代码质量检查};
+    C{安全漏洞扫描};
+    D{环境依赖检查};
+    E{人工审批};
+    F[自动部署];
+    G[已发布环境];
+
+    A --> B;
+    B -- 通过 --> C;
+    B -- 失败 --> H[拒绝发布];
+    C -- 通过 --> D;
+    C -- 发现漏洞 --> I[拒绝发布];
+    D -- 满足 --> E;
+    D -- 缺少依赖 --> J[等待依赖];
+    E -- 批准 --> F;
+    E -- 拒绝 --> K[拒绝发布];
+    F --> G;
+    end
+
+    classDef reject fill:#f9f,stroke:#333,stroke-width:2px
+    class H,I,K reject

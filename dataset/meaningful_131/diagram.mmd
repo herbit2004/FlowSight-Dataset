@@ -1,0 +1,28 @@
+graph TD
+    subgraph 用户交互与积分事件
+        A[用户行为触发] --> B(积分事件监听);
+        B --> C{事件类型判断};
+        C -- 签到 --> D[签到积分发放];
+        C -- 消费 --> E[消费积分计算];
+        C -- 推广 --> F[推广积分奖励];
+    end
+
+    subgraph 积分处理与等级晋升
+        D --> G(积分增加);
+        E --> G;
+        F --> G;
+        G --> H{是否满足晋升条件?};
+        H -- 是 --> I[等级晋升];
+        H -- 否 --> J[积分记录];
+        I --> J;
+        J --> K(积分变更记录);
+    end
+
+    K --> L{通知用户};
+
+    classDef eventFill fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F eventFill
+    classDef processFill fill:#ccf,stroke:#333,stroke-width:2px
+    class G,H,I,J,K processFill
+    classDef notifyFill fill:#afa,stroke:#333,stroke-width:2px
+    class L notifyFill

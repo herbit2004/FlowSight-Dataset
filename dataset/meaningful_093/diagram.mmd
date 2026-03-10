@@ -1,0 +1,37 @@
+graph TD
+    subgraph 初始状态
+        A[开始：提交依赖清单] --> B(初步扫描：识别直接依赖);
+    end
+
+    B --> C{是否找到直接依赖？};
+    C -- 是 --> D(递归扫描：解析传递依赖);
+    C -- 否 --> E(生成初始许可报告);
+
+    D --> F(依赖图构建);
+    F --> G(漏洞扫描：已知漏洞库比对);
+    G --> H{发现漏洞？};
+    H -- 是 --> I[生成漏洞预警报告];
+    H -- 否 --> J(许可类型识别：SPDX 数据库);
+
+    J --> K{识别出所有许可类型？};
+    K -- 是 --> L(许可合规性检查：企业策略);
+    K -- 否 --> M(人工审查：未知许可类型);
+    M --> N(记录审查结果);
+    N --> L;
+
+    L --> O{合规性满足？};
+    O -- 是 --> P(生成最终许可报告);
+    O -- 否 --> Q(生成违规报告);
+
+    P --> R(批准发布：CI/CD 系统);
+    Q --> S(中止发布：通知相关人员);
+
+    R --> T[完成：发布成功];
+    S --> U[完成：发布失败];
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style T fill:#f9f,stroke:#333,stroke-width:2px
+    style U fill:#f9f,stroke:#333,stroke-width:2px
+
+    classDef important fill:#f96,stroke:#333,stroke-width:2px;
+    class I,Q important;

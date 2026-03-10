@@ -1,0 +1,23 @@
+graph TD
+    A[数据源接入] --> B{数据清洗与预处理};
+    B -- 数据质量评估 --> C{数据质量阈值?};
+    C -- 是 --> D[数据过滤与转换];
+    C -- 否 --> E[数据质量问题反馈];
+    D --> F[实体识别与关系抽取];
+    F --> G{规则库匹配?};
+    G -- 是 --> H[知识融合];
+    G -- 否 --> I[人工审核与校正];
+    I --> H;
+    H --> J[schema对齐与映射];
+    J --> K[图谱存储];
+    K --> L[图谱查询与分析];
+    L --> M[应用服务];
+    A --> N[元数据管理];
+    N --> B;
+    F --> O[实体消歧];
+    O --> H;
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style K fill:#ccf,stroke:#333,stroke-width:2px
+
+    classDef process fill:#fff,stroke:#333,stroke-width:1px;
+    class A,B,D,F,H,J,L,O process

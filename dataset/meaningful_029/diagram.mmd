@@ -1,0 +1,17 @@
+graph TD
+    A[数据源: 实时日志流];
+    B{预处理 & 数据清洗};
+    C[窗口划分: 基于事件时间];
+    D{聚合计算: TopN};
+    E[状态管理: 窗口状态];
+    F[结果输出: 告警/报表];
+
+    A --> B;
+    B --> C;
+    C --> D;
+    C --> E;
+    D --> F;
+    E -- 窗口触发 --> D;
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    class B,D process

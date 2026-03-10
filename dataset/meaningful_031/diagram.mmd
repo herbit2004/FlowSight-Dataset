@@ -1,0 +1,15 @@
+graph TD
+    A[数据源] --> B(摄取层);
+    B --> C{数据清洗 & 转换};
+    C -- 数据质量高 --> D[可信数据层];
+    C -- 数据质量低 --> E[隔离层];
+    D --> F(业务建模层);
+    F --> G{数据治理策略};
+    G -- 符合策略 --> H[数据服务层];
+    G -- 不符合策略 --> I[增强/修复流程];
+    I --> F;
+    E --> J(数据归档层);
+    H --> K[下游应用];
+
+    classDef layerFill fill:#f9f,stroke:#333,stroke-width:2px
+    class B,D,F,H,J layerFill

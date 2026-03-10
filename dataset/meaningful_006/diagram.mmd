@@ -1,0 +1,27 @@
+graph TD
+    subgraph 客户端请求
+        A[Client App] --> B{API Gateway}
+    end
+
+    B --> C{路由决策引擎};
+    C -- 路由规则匹配 --> D[目标服务发现];
+    D --> E{服务注册中心};
+    E --> F[后端服务实例];
+
+    subgraph 身份验证与授权
+    C -- 未匹配路由 --> Z[404 Not Found];
+    C -- 鉴权 --> G{IAM服务};
+    G -- 权限校验 --> H{权限策略};
+    H -- 允许 --> I[生成临时令牌];
+    H -- 拒绝 --> J[403 Forbidden];
+    I --> F;
+    end
+
+    F --> K[后端服务处理];
+    K --> L[响应结果];
+    L --> B;
+    B --> A;
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    Z:::error
+    J:::error

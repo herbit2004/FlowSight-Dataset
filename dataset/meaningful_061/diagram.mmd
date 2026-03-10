@@ -1,0 +1,32 @@
+graph TD
+    subgraph 区域1
+        A[用户请求] --> B{负载均衡器};
+        B -- 健康检查通过 --> C[应用实例-1];
+        B -- 健康检查失败 --> D[故障转移模块];
+    end
+
+    subgraph 区域2
+        E[应用实例-2];
+    end
+
+    subgraph 区域3
+        F[数据库-1];
+        G[数据库-2];
+    end
+
+    D --> H{决策：切换区域?};
+    H -- 是 --> I[DNS切换];
+    H -- 否 --> K[告警系统];
+
+    I --> L[用户请求切换至区域2];
+    L --> E;
+
+    C --> F;
+    E --> G;
+
+    classDef online fill:#f9f,stroke:#333,stroke-width:2px
+    classDef offline fill:#fcc,stroke:#333,stroke-width:2px
+
+    class C,E online
+    class F,G online
+    class D,K offline

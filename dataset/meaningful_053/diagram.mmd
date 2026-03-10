@@ -1,0 +1,29 @@
+graph TD
+    subgraph 数据来源
+        A[实时业务系统] --> B(消息队列 - Kafka);
+        C[离线数据集] --> D(数据湖 - Hudi);
+    end
+
+    B --> E{流式计算引擎 - Flink};
+    D --> E;
+
+    E --> F[数据清洗 & 转换];
+    F --> G{维度关联 & 聚合};
+    G --> H[时序数据库 - TSDB];
+
+    subgraph 数据服务
+        H --> I(指标计算服务);
+        I --> J[多维分析引擎];
+        J --> K{预警规则引擎};
+    end
+
+    K -- 异常指标 --> L[告警系统];
+
+    subgraph 大屏展示
+        I --> M(数据 API);
+        M --> N[前端可视化组件];
+        N --> O[大屏展示];
+    end
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N process

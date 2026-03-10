@@ -1,0 +1,91 @@
+graph TD
+    subgraph 库存服务
+        A[API: 接收扣减请求] --> B{校验请求参数}
+        B -- 参数有效 --> C[查询商品库存]
+        B -- 参数无效 --> E[返回错误响应]
+
+        C --> D{库存是否充足}
+        D -- 充足 --> F[创建扣减事务]
+        D -- 不足 --> G[返回库存不足]
+
+        F --> H[锁定库存];
+        H --> I[生成扣减凭证];
+        I --> J[发送MQ消息: 扣减事件];
+        J --> K[等待事务提交/回滚];
+
+        subgraph 事务管理器
+            K -- 提交 --> L[提交库存扣减];
+            K -- 回滚 --> M[回滚库存扣减];
+        end
+
+        L --> N[更新Redis缓存];
+        N --> O[删除扣减凭证];
+        O --> P[返回成功响应];
+
+        M --> Q[释放锁定库存];
+        Q --> R[删除扣减凭证];
+        R --> S[返回回滚成功];
+
+        E --> T[记录错误日志];
+        G --> U[记录错误日志];
+        S --> V[记录回滚日志];
+        P --> W[记录扣减日志];
+
+        style A fill:#f9f,stroke:#333,stroke-width:2px
+        style B fill:#fff,stroke:#333,stroke-width:1px
+        style C fill:#fff,stroke:#333,stroke-width:1px
+        style D fill:#fff,stroke:#333,stroke-width:1px,shape:diamond
+        style E fill:#fcc,stroke:#333,stroke-width:1px
+        style F fill:#fff,stroke:#333,stroke-width:1px
+        style G fill:#fcc,stroke:#333,stroke-width:1px
+        style H fill:#fff,stroke:#333,stroke-width:1px
+        style I fill:#fff,stroke:#333,stroke-width:1px
+        style J fill:#fff,stroke:#333,stroke-width:1px
+        style K fill:#fff,stroke:#333,stroke-width:1px
+        style L fill:#fff,stroke:#333,stroke-width:1px
+        style M fill:#fff,stroke:#333,stroke-width:1px
+        style N fill:#fff,stroke:#333,stroke-width:1px
+        style O fill:#fff,stroke:#333,stroke-width:1px
+        style P fill:#cfc,stroke:#333,stroke-width:1px
+        style Q fill:#fff,stroke:#333,stroke-width:1px
+        style R fill:#fff,stroke:#333,stroke-width:1px
+        style S fill:#cfc,stroke:#333,stroke-width:1px
+        style T fill:#fcc,stroke:#333,stroke-width:1px
+        style U fill:#fcc,stroke:#333,stroke-width:1px
+        style V fill:#cfc,stroke:#333,stroke-width:1px
+        style W fill:#cfc,stroke:#333,stroke-width:1px
+
+        classDef success fill:#e2ffe2,stroke:#333,stroke-width:1px
+        classDef error fill:#ffeeee,stroke:#333,stroke-width:1px
+
+        class P,S,W success
+        class E,G,T,U error
+
+    end
+
+    subgraph 异步扣减补偿服务
+        X[监听MQ消息: 扣减失败补偿] --> Y{检查扣减凭证状态};
+        Y -- 有效，未处理 --> Z[查询库存锁定记录];
+        Y -- 无效或已处理 --> AA[忽略消息];
+
+        Z --> BB{锁定记录存在};
+        BB -- 存在 --> CC[释放锁定库存];
+        BB -- 不存在 --> DD[记录异常日志];
+
+        CC --> EE[删除扣减凭证];
+        EE --> FF[记录补偿日志];
+
+        style X fill:#f9f,stroke:#333,stroke-width:2px
+        style Y fill:#fff,stroke:#333,stroke-width:1px,shape:diamond
+        style Z fill:#fff,stroke:#333,stroke-width:1px
+        style AA fill:#eee,stroke:#333,stroke-width:1px
+        style BB fill:#fff,stroke:#333,stroke-width:1px,shape:diamond
+        style CC fill:#fff,stroke:#333,stroke-width:1px
+        style DD fill:#fcc,stroke:#333,stroke-width:1px
+        style EE fill:#fff,stroke:#333,stroke-width:1px
+        style FF fill:#cfc,stroke:#333,stroke-width:1px
+
+        classDef compensated fill:#FFFFCC,stroke:#333,stroke-width:1px
+
+        class FF compensated
+    end

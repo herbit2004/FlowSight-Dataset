@@ -1,0 +1,39 @@
+graph TD
+    subgraph 数据准备阶段
+        A[数据源接入] --> B(数据清洗与预处理);
+        B --> C{文本数据？};
+        C -- Yes --> D[实体识别NER];
+        C -- No --> E[结构化数据转换];
+        D --> F[关系抽取];
+        E --> F;
+    end
+
+    subgraph 图谱构建阶段
+        F --> G[知识融合];
+        G --> H[实体消歧];
+        H --> I[构建初始图谱];
+    end
+
+    subgraph 图谱优化阶段
+        I --> J[图谱存储];
+        J --> K[查询与检索];
+        K --> L{结果不满意？};
+        L -- Yes --> M[规则推理补充];
+        M --> I;
+        L -- No --> N[应用服务];
+    end
+
+    subgraph 知识服务
+        N --> O[智能问答];
+        N --> P[推荐系统];
+        N --> Q[可视化分析];
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q fill:#ccf,stroke:#333,stroke-width:1px
+
+    classDef stepFill fill:#fcf
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q stepFill
+
+    classDef subFill fill:#eef,stroke:#333,stroke-width:1px
+    classDef subLine stroke:#333,stroke-width:1px

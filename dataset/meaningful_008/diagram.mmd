@@ -1,0 +1,32 @@
+graph TD
+    subgraph Agent端
+        A[日志生成 --> 应用系统];
+        B(采集适配器);
+        C(数据预处理);
+        D(压缩 & 加密);
+        E(批量上传);
+    end
+
+    subgraph 中心化日志平台
+        F(消息队列 Kafka);
+        G(流式处理引擎 Flink);
+        H{结构化存储 ClickHouse};
+        I(索引服务);
+        J(查询分析);
+        K(告警通知);
+    end
+
+    A --> B;
+    B --> C;
+    C --> D;
+    D --> E;
+    E --> F;
+    F --> G;
+    G --> H;
+    G --> I;
+    I --> J;
+    H --> J;
+    J --> K;
+
+    classDef tech fill:#f9f,stroke:#333,stroke-width:2px
+    class B,C,D,E,F,G,H,I,J,K tech

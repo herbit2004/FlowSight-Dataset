@@ -1,0 +1,29 @@
+graph TD
+    subgraph 入库流程
+        A[供应商收货];
+        B{质检};
+        C[合格入库];
+        D[不合格处理];
+    end
+    subgraph 出库流程
+        E[订单接收];
+        F[库存检查];
+        G{库存充足?};
+        H[拣货];
+        I[复核出库];
+        J[缺货处理];
+    end
+
+    A --> B;
+    B -- 合格 --> C;
+    B -- 不合格 --> D;
+    E --> F;
+    F --> G;
+    G -- 是 --> H;
+    H --> I;
+    G -- 否 --> J;
+    I --> K[物流发货]
+    J --> L[通知采购补货]
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L process

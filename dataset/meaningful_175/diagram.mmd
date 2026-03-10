@@ -1,0 +1,50 @@
+graph TD
+    subgraph 账户数据准备
+        A1[客户账户信息查询] --> A2{账户状态判断};
+        A2 -- 正常账户 --> A3[合约信息获取];
+        A2 -- 异常账户 --> A4[账户冻结流程];
+        A3 --> A5[计费规则查询];
+        A5 --> A6[历史账单查询];
+    end
+
+    subgraph 费用计算
+        B1[获取当期用量数据];
+        B1 --> B2[应用计费规则];
+        B2 --> B3[计算费用金额];
+        B3 --> B4[优惠券/折扣计算];
+        B4 --> B5[生成费用明细];
+    end
+
+    subgraph 账单生成与校验
+        C1[费用明细汇总];
+        C1 --> C2[生成账单草稿];
+        C2 --> C3{账单数据校验};
+        C3 -- 校验通过 --> C4[生成正式账单];
+        C3 -- 校验失败 --> C5[问题账单标记];
+        C5 --> C6[人工干预/修复];
+        C6 --> C2;
+    end
+
+    subgraph 账单推送与归档
+        D1[账单数据持久化];
+        D1 --> D2[推送渠道选择];
+        D2 -- 短信/邮件 --> D3[生成推送内容];
+        D2 -- 账单中心 --> D4[账单数据同步];
+        D3 --> D5[账单推送服务];
+        D4 --> D5;
+        D5 --> D6[账单推送结果记录];
+
+        style D6 fill:#f9f,stroke:#333,stroke-width:2px
+    end
+
+    A6 --> B1;
+    B5 --> C1;
+    C4 --> D1;
+
+    style A1 fill:#ccf,stroke:#333,stroke-width:2px
+    style B1 fill:#ccf,stroke:#333,stroke-width:2px
+    style C1 fill:#ccf,stroke:#333,stroke-width:2px
+    style D1 fill:#ccf,stroke:#333,stroke-width:2px
+
+    classDef process fill:#fff,stroke:#333,stroke-width:2px;
+    class A2,A3,A4,A5,B2,B3,B4,B5,C2,C3,C4,C5,C6,D2,D3,D4,D5 process

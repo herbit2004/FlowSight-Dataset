@@ -1,0 +1,48 @@
+graph TD
+    subgraph 用户端
+        A[用户发起兑换];
+        B[选择商品/权益];
+        C[确认兑换信息];
+    end
+
+    subgraph 后端服务
+        D[请求校验服务];
+        E{校验通过？};
+        F[锁定积分];
+        G[创建兑换订单];
+        H[异步处理队列];
+        I[调用商品/权益服务];
+        J{处理结果？};
+        K[扣减积分];
+        L[更新订单状态];
+        M[发送兑换成功消息];
+        N[释放锁定积分];
+        O[记录兑换日志];
+    end
+
+    A --> B --> C --> D;
+    D --> E;
+    E -- Yes --> F --> G --> H;
+    E -- No --> Q[返回失败信息给用户端];
+    H --> I;
+    I --> J;
+    J -- Success --> K --> L --> M --> O;
+    J -- Fail --> N --> L;
+    F --> N;
+    L --> O;
+    G --> O;
+
+    subgraph 补偿流程
+        P[回滚订单];
+        R[返还积分];
+    end
+
+    J -- Fail --> P;
+    P --> R --> N;
+    N --> O;
+
+
+    classDef success fill:#afa,stroke:#333,stroke-width:2px;
+    classDef fail fill:#faa,stroke:#333,stroke-width:2px;
+    class K,L,M success;
+    class N,P,R fail;

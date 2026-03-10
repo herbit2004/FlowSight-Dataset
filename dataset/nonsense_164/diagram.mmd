@@ -1,0 +1,90 @@
+graph TD
+    A[用户请求] --> B{缓存命中?}
+    B -- Yes --> C[返回缓存数据]
+    B -- No --> D[数据库写入]
+    D --> A
+
+    C --> E[日志记录]
+    E --> F[消息队列]
+
+    F --> L{支付成功?}
+    L -- Yes --> M[发送通知]
+    L -- No --> N[退款处理]
+    M --> O[API 网关]
+    N --> O
+
+    O --> P[负载均衡]
+    P --> Q[认证服务]
+    Q --> R[鉴权服务]
+    R --> S[业务服务]
+    S --> T[数据校验]
+    T --> U{校验通过?}
+    U -- Yes --> V[更新配置]
+    U -- No --> W[错误处理]
+    W --> X[生成响应]
+    V --> X
+    X --> Y[返回用户]
+
+    Q --> Z[用户注册]
+    Z --> Q
+    R --> AA[风控系统]
+    AA --> R
+
+    P --> BB[安全审计]
+    BB --> CC[数据加密]
+    CC --> P
+
+    S --> DD[订单服务]
+    DD --> EE[库存服务]
+    EE --> FF[物流服务]
+    FF --> GG[积分服务]
+    GG --> HH[推荐服务]
+    HH --> II[搜索服务]
+    II --> JJ[广告服务]
+    JJ --> KK[报表服务]
+    KK --> DD
+
+    subgraph 核心流程
+    A --> B
+    B --> C
+    B --> D
+    C --> E
+    E --> F
+    end
+
+    subgraph 支付流程
+    F --> L
+    L --> M
+    L --> N
+    M --> O
+    N --> O
+    end
+
+    subgraph API Gateway
+    O --> P
+    P --> Q
+    Q --> R
+    R --> S
+    S --> T
+    T --> U
+    U --> V
+    U --> W
+    W --> X
+    V --> X
+    X --> Y
+    end
+
+    subgraph 附加服务
+    Q --> Z
+    R --> AA
+    P --> BB
+    BB --> CC
+    S --> DD
+    DD --> EE
+    EE --> FF
+    FF --> GG
+    GG --> HH
+    HH --> II
+    II --> JJ
+    JJ --> KK
+    end

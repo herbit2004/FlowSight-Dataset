@@ -1,0 +1,16 @@
+graph TD
+    subgraph 工作流状态机 - 财务报销
+        A[提交报销申请] --> B{审批人审批};
+        B -- 同意 --> C[财务审核];
+        B -- 拒绝 --> D[申请人修改];
+        C -- 通过 --> E[出纳打款];
+        C -- 驳回 --> F[财务修改];
+        F --> C;
+        D --> B;
+        E --> G[完成];
+        G --> H{归档};
+        H -- 自动归档 --> I[归档完成];
+    end
+
+    classDef approved fill:#afa,stroke:#333,stroke-width:2px;
+    class C,E approved;

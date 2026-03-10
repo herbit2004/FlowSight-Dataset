@@ -1,0 +1,24 @@
+graph TD
+    A[用户请求] --> B(缓存查询);
+    B -- 缓存命中 --> C{缓存数据};
+    B -- 缓存未命中 --> D[数据库写入];
+    D --> E[数据处理];
+    E --> A;
+    C --> F{权限认证};
+    F -- Yes --> G[API 网关];
+    F -- No --> H[拒绝访问];
+    G --> I[支付系统];
+    I --> J{支付成功};
+    J -- Yes --> K[发送消息到队列];
+    J -- No --> L[订单取消];
+    K --> M[更新用户状态];
+    L --> M;
+    M --> N[日志记录];
+    N --> O(生成报表);
+    O --> G;
+    H --> P[返回错误信息];
+    P --> A;
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style H fill:#f9f,stroke:#333,stroke-width:2px
+    style L fill:#f9f,stroke:#333,stroke-width:2px
+    style O fill:#f9f,stroke:#333,stroke-width:2px

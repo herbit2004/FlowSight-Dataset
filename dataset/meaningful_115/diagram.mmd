@@ -1,0 +1,45 @@
+graph TD
+    A[用户请求] --> B{流量网关};
+    B --> C[请求预处理];
+    C --> D{用户画像服务};
+    D --> E[上下文特征];
+    C --> F[召回服务];
+    F --> G[候选集];
+    E & G --> H[多路召回融合];
+    H --> I[粗排模型];
+    I --> J[初筛候选集];
+    J --> K{排序服务};
+
+    K --> L[特征工程];
+    L --> M[精排模型];
+    M --> N[排序结果];
+
+    N --> O{重排序策略};
+    O --> P[业务规则过滤];
+    P --> Q[多样性打散];
+    Q --> R[最终排序列表];
+
+    R --> S[展示给用户];
+    S --> T[用户行为日志];
+    T --> U[离线数据处理];
+    U --> V[模型训练];
+    V --> W{模型更新系统};
+    W --> M;
+    W --> I;
+
+    B --> X[AB测试分流];
+    X -- A组 --> C;
+    X -- B组 --> K;
+    X -- 控制组 --> Y[兜底排序];
+    Y --> S;
+
+    classDef service fill:#f9f,stroke:#333,stroke-width:2px
+    classDef data fill:#ccf,stroke:#333,stroke-width:2px
+    classDef model fill:#cfc,stroke:#333,stroke-width:2px
+    class B,D,F,K,W service
+    class E,G,N data
+    class I,M model
+    class A,C,H,J,L,O,P,Q,R,S,T,U,V,X,Y fill:#fff,stroke:#333,stroke-width:2px
+
+    style A fill:#fff,stroke:#333,stroke-width:2px
+    style S fill:#fff,stroke:#333,stroke-width:2px

@@ -1,0 +1,64 @@
+graph TD
+    A[用户请求] --> B(支付网关);
+    B --> C{风控系统};
+    C -- Yes --> D[消息队列];
+    C -- No --> E[拒绝支付];
+    D --> F(订单服务);
+    F --> G[支付服务];
+    G --> H{支付成功?};
+    H -- Yes --> I[用户通知];
+    H -- No --> J[退款服务];
+    J --> K[数据库: 订单状态更新];
+    I --> L[日志服务];
+    L --> A;  
+    G --> M[缓存服务: 用户信息];
+    M --> N[数据库: 用户信息];
+    N --> O(认证服务);
+    O --> P{用户已登录?};
+    P -- Yes --> Q[鉴权服务];
+    P -- No --> R[登录];
+    R --> S[数据库: 用户认证];
+    S --> T{认证成功?};
+    T -- Yes --> U[生成Token];
+    T -- No --> V[返回登录失败];
+    U --> Q;
+    Q --> B;
+    I --> W[积分服务];
+    W --> X[礼品兑换];
+    X --> Y[物流服务];
+    Y --> D;
+    E --> Z[财务服务];
+    Z --> AA[数据库: 财务记录];
+    AA --> BB[清算服务];
+    BB --> CC[结算服务];
+    CC --> Z;
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style C fill:#fcc,stroke:#333,stroke-width:2px
+    style D fill:#cfc,stroke:#333,stroke-width:2px
+    style E fill:#faa,stroke:#333,stroke-width:2px
+    style F fill:#ccf,stroke:#333,stroke-width:2px
+    style G fill:#ccf,stroke:#333,stroke-width:2px
+    style H fill:#fcc,stroke:#333,stroke-width:2px
+    style I fill:#cfc,stroke:#333,stroke-width:2px
+    style J fill:#ccf,stroke:#333,stroke-width:2px
+    style K fill:#ddd,stroke:#333,stroke-width:2px
+    style L fill:#cfc,stroke:#333,stroke-width:2px
+    style M fill:#ccf,stroke:#333,stroke-width:2px
+    style N fill:#ddd,stroke:#333,stroke-width:2px
+    style O fill:#ccf,stroke:#333,stroke-width:2px
+    style P fill:#fcc,stroke:#333,stroke-width:2px
+    style Q fill:#ccf,stroke:#333,stroke-width:2px
+    style R fill:#ccf,stroke:#333,stroke-width:2px
+    style S fill:#ddd,stroke:#333,stroke-width:2px
+    style T fill:#fcc,stroke:#333,stroke-width:2px
+    style U fill:#cfc,stroke:#333,stroke-width:2px
+    style V fill:#faa,stroke:#333,stroke-width:2px
+    style W fill:#ccf,stroke:#333,stroke-width:2px
+    style X fill:#ccf,stroke:#333,stroke-width:2px
+    style Y fill:#ccf,stroke:#333,stroke-width:2px
+    style Z fill:#ccf,stroke:#333,stroke-width:2px
+    style AA fill:#ddd,stroke:#333,stroke-width:2px
+    style BB fill:#ccf,stroke:#333,stroke-width:2px
+    style CC fill:#ccf,stroke:#333,stroke-width:2px

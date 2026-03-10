@@ -1,0 +1,44 @@
+graph TD
+    subgraph 用户触发
+        A[用户行为日志] --> B(实时行为提取与加工)
+        C[历史行为特征库] --> B
+    end
+
+    B --> D{触发条件判断};
+    D -- 满足条件 --> E(召回服务);
+    D -- 不满足条件 --> H[结束];
+
+    subgraph 召回服务
+        E --> F[多路召回];
+        F --> G(粗排模型);
+    end
+
+    subgraph 粗排与精排
+        G --> I{截断TopN};
+        I -- 是 --> J(精排模型);
+        I -- 否 --> H[结束];
+        J --> K(重排序);
+    end
+
+    subgraph 后处理与展示
+        K --> L{流量分桶};
+        L -- 桶A --> M[AB实验A];
+        L -- 桶B --> N[AB实验B];
+        M --> O(结果融合与过滤);
+        N --> O;
+        O --> P[最终展示];
+        P --> H;
+    end
+
+    subgraph 特征工程
+        X[用户画像特征] --> Y(特征拼接);
+        Z[Item特征] --> Y;
+        W[上下文特征] --> Y;
+        Y --> G;
+        Y --> J;
+    end
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px
+    class A,B,F,G,J,K,M,N,O,Y process
+    class D,I,L decision

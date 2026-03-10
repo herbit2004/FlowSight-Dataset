@@ -1,0 +1,51 @@
+graph TD
+    subgraph 初始状态
+        A[服务器数据变更];
+    end
+
+    subgraph 备份流程
+        B{检查备份策略};
+        C[触发备份任务];
+        D[应用一致性快照];
+        E[数据增量备份];
+        F[数据压缩];
+        G[备份数据加密];
+        H[上传至备份仓库];
+        I[验证备份完整性];
+    end
+
+    subgraph 恢复流程
+        J{选择恢复点};
+        K[下载备份数据];
+        L[解密备份数据];
+        M[数据解压];
+        N[数据校验];
+        O[数据恢复至目标];
+        P[启动后校验];
+    end
+
+    subgraph 最终状态
+        Q[服务器数据恢复完成];
+    end
+
+    A --> B
+    B -- 满足条件 --> C
+    B -- 不满足 --> A
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    H --> I
+    I -- 成功 --> J
+    I -- 失败 --> C
+    J --> K
+    K --> L
+    L --> M
+    M --> N
+    N --> O
+    O --> P
+    P --> Q
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P process

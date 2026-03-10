@@ -1,0 +1,41 @@
+graph TD
+    subgraph 配置中心
+        A[配置变更事件] --> B(通知监听器);
+        B --> C{监听器类型};
+        C -- 类型A --> D[消息队列A];
+        C -- 类型B --> E[消息队列B];
+        D --> F(配置数据);
+        E --> G(配置数据);
+        F --> H(版本控制);
+        G --> H;
+        H --> I{灰度发布策略};
+        I -- 灰度 --> J[灰度集群];
+        I -- 全量 --> K[生产集群];
+    end
+
+    subgraph 灰度集群
+        J --> L(配置拉取);
+        L --> M{权限校验};
+        M -- 成功 --> N(应用服务1);
+        M -- 失败 --> O[告警系统];
+    end
+
+    subgraph 生产集群
+        K --> P(配置拉取);
+        P --> Q{权限校验};
+        Q -- 成功 --> R(应用服务2);
+        Q -- 失败 --> O;
+
+    end
+
+    subgraph 其他服务
+        S[管理控制台] --> A;
+        subgraph 告警系统
+        O --> T[发送告警];
+        end
+    end
+
+    classDef grey fill:#f9f,stroke:#333,stroke-width:2px
+    class J,N grey
+    classDef prod fill:#ccf,stroke:#333,stroke-width:2px
+    class K,R prod

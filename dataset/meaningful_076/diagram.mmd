@@ -1,0 +1,35 @@
+graph TD
+    subgraph 发票申请流程
+        A[申请人提交发票申请] --> B{审批人审批};
+        B -- 审批通过 --> C[财务复核];
+        B -- 审批拒绝 --> Z[结束: 申请驳回];
+        C -- 复核通过 --> D{是否自动开票?};
+        C -- 复核拒绝 --> Z;
+        D -- 是 --> E[自动开票系统];
+        D -- 否 --> F[人工开票];
+        E --> G[生成电子发票];
+        F --> G;
+        G --> H{是否需要邮寄?};
+        H -- 是 --> I[邮寄发票];
+        H -- 否 --> J[发送电子发票];
+        I --> K[更新发票状态];
+        J --> K;
+        K --> Z;
+    end
+
+    subgraph 自动开票系统
+    subgraph 自动开票系统内部
+        AA[接收开票请求] --> BB[校验开票信息];
+        BB -- 信息正确 --> CC[调用税务接口];
+        BB -- 信息错误 --> DD[记录错误日志];
+        CC --> EE[接收税务响应];
+        EE -- 开票成功 --> FF[生成PDF发票];
+        EE -- 开票失败 --> DD;
+        FF --> GG[保存发票数据];
+
+    end
+    end
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K process
+    class AA,BB,CC,EE,FF,GG,DD process

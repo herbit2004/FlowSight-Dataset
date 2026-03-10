@@ -1,0 +1,26 @@
+graph TD
+    subgraph 代码评审与合并流程
+        A[提交代码变更] --> B{代码质量检查};
+        B -- 通过 --> C[评审人分配];
+        B -- 失败 --> A;
+        C --> D{指定评审人};
+        D --> E[评审人A评审];
+        E -- 通过 --> F[评审人B评审];
+        E -- 需修改 --> G[提交修改];
+        G --> A;
+        F -- 通过 --> H[代码合并];
+        F -- 需修改 --> G;
+        H --> I[自动化构建与测试];
+        I -- 通过 --> J[部署到预发布环境];
+        I -- 失败 --> G;
+        J --> K{预发布环境验证};
+        K -- 通过 --> L[合并到主分支];
+        K -- 发现问题 --> G;
+        L --> M[完成];
+    end
+
+    classDef passed fill:#90EE90,stroke:#333,stroke-width:2px;
+    classDef failed fill:#F08080,stroke:#333,stroke-width:2px;
+
+    class 通过 passed
+    class 失败 failed

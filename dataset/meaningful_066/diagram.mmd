@@ -1,0 +1,33 @@
+graph TD
+    subgraph 规则引擎核心流程
+        A[接收事件];
+        B[事件预处理];
+        C{规则集检索};
+        D[命中规则集];
+        E[加载规则集];
+        F{规则判定};
+        G[规则匹配];
+        H{全部规则匹配?};
+        I[执行动作编排];
+        J[动作执行器];
+        K[输出执行结果];
+    end
+
+    A --> B;
+    B --> C;
+    C -- 未命中 --> L[默认动作];
+    C -- 命中 --> D;
+    D --> E;
+    E --> F;
+    F --> G;
+    G -- 匹配 --> H;
+    H -- Yes --> I;
+    H -- No --> F;
+    I --> J;
+    J --> K;
+    L --> J;
+    K --> M[事件后处理];
+    M --> N[推送结果通知];
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N process

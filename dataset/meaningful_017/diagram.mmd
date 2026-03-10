@@ -1,0 +1,40 @@
+graph TD
+    subgraph 支付回调流程
+        A[用户发起支付] --> B{支付平台};
+        B -- 发起支付请求 --> C[支付平台处理];
+        C -- 支付成功 --> D{支付回调通知};
+        D -- 通知支付系统 --> E[回调处理服务] ;
+        E -- 验证签名/参数 --> F{签名/参数校验};
+        F -- 校验成功 --> G[更新订单状态为已支付];
+        F -- 校验失败 --> H[记录异常/告警];
+        G --> I[通知业务系统];
+        I --> J[业务系统处理];
+        J --> K[返回处理结果];
+        K --> E;
+        D -- 通知失败 (重试) --> D;
+        style D fill:#f9f,stroke:#333,stroke-width:2px
+    end
+
+    subgraph 对账流程
+        L[每日定时任务] --> M[拉取支付平台账单];
+        M --> N[拉取支付系统交易记录];
+        N --> O{数据比对};
+        O -- 一致 --> P[生成对账报告];
+        O -- 不一致 --> Q[生成差异报告];
+        Q --> R[人工介入/异常处理];
+        R --> P;
+        P --> S[发送对账结果通知];
+        S --> T[存储对账报告];
+    end
+
+    subgraph 差异处理流程
+        Q --> U{差异类型判断};
+        U -- 金额差异 --> V[财务复核];
+        U -- 订单差异 --> W[技术排查];
+        V --> R;
+        W --> R;
+    end
+
+    style L fill:#ccf,stroke:#333,stroke-width:2px
+    style M fill:#ccf,stroke:#333,stroke-width:2px
+    style N fill:#ccf,stroke:#333,stroke-width:2px

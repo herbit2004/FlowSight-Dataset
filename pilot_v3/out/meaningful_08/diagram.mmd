@@ -1,0 +1,30 @@
+graph TD
+    subgraph 初始状态
+        A[用户请求] --> B(流量入口);
+    end
+
+    B --> C{灰度策略判断};
+    C -- 满足灰度条件 --> D[灰度环境服务];
+    C -- 不满足灰度条件 --> E[正式环境服务];
+
+    D --> F{特性开关检查};
+    F -- 特性开启 --> G[新特性处理];
+    F -- 特性关闭 --> E;
+
+    G --> H[数据存储/更新];
+    H --> I(响应用户);
+
+    E --> I;
+
+    subgraph 流量切换
+        I --> J{监控与评估};
+        J -- 评估通过 --> K[逐步增加灰度流量];
+        J -- 评估不通过 --> L[回滚至正式环境];
+        K --> C;
+        L --> E;
+    end
+
+    classDef success fill:#90EE90,stroke:#333,stroke-width:2px;
+    classDef rollback fill:#FFC0CB,stroke:#333,stroke-width:2px;
+    class J success
+    class L rollback

@@ -1,0 +1,51 @@
+graph TD
+    subgraph 用户请求处理流程
+        A[用户请求] --> B{特征提取};
+        B --> C{流量染色};
+        C --> D{AB实验平台};
+        D --> E1[实验组];
+        D --> E2[对照组];
+        E1 --> F1[策略A逻辑];
+        E2 --> F2[策略B逻辑];
+        F1 --> G[结果聚合];
+        F2 --> G;
+        G --> H[返回结果];
+    end
+
+    subgraph AB实验平台内部流程
+        D --> D1[实验配置读取];
+        D1 --> D2{是否命中白名单};
+        D2 -- 是 --> D3[直接进入实验组];
+        D2 -- 否 --> D4[实验分流逻辑];
+        D3 --> E1;
+        D4 --> D5{是否命中实验};
+        D5 -- 是 --> E1;
+        D5 -- 否 --> E2;
+    end
+
+    subgraph 策略A/B逻辑细节
+        F1 --> F11[特征进一步处理];
+        F11 --> F12[模型A预测];
+        F2 --> F21[特征进一步处理];
+        F21 --> F22[模型B预测];
+        F12 --> F13{后处理};
+        F22 --> F23{后处理};
+        F13 --> G;
+        F23 --> G;
+    end
+
+    subgraph 监控与日志
+        H --> I[埋点上报];
+        I --> J[数据收集];
+        J --> K[指标计算];
+        K --> L[实验效果分析];
+        L --> M[调整实验配置];
+        M --> D1;
+    end
+
+    classDef normal fill:#f9f,stroke:#333,stroke-width:2px
+    classDef important fill:#ccf,stroke:#333,stroke-width:2px
+
+    class A,B,C,D,E1,E2,F1,F2,G,H,I,J,K,L,M normal
+    class D1,D2,D3,D4,D5,F11,F12,F21,F22,F13,F23 normal
+    class D important

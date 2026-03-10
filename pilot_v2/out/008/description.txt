@@ -1,0 +1,28 @@
+## 图类型与用途
+这是一个流程图，展示了 Beads issue tracker 中 issue 之间的依赖关系。它用于可视化不同 issue 的状态以及它们之间的关联，帮助团队成员理解 issue 之间的依赖关系，从而更好地规划和执行任务。Beads issue tracker 是一种任务管理系统，`bv` 是其终端界面。
+
+## 图的整体布局
+图采用从上到下的布局。顶部是 issue A，中间是 issue C，底部是 issue B。箭头表示 issue 之间的依赖关系。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可以分为三个阶段：核心 issue (A)、依赖 issue (B 和 C) 以及潜在影响 (C 对 B)。
+
+## 节点逐项说明
+- **A ("CORE-123 Refactor Login")**: 代表一个 issue，编号为 CORE-123，标题为 "Refactor Login"，状态为 "open"（绿色背景）。
+- **B ("UI-456 Login Page")**: 代表一个 issue，编号为 UI-456，标题为 "Login Page"，状态为 "blocked"（红色背景）。
+- **C ("API-789 Auth Endpoint")**: 代表一个 issue，编号为 API-789，标题为 "Auth Endpoint"，状态为 "inProgress"（橙色背景）。
+
+## 连线、分支与汇聚关系
+- `A --> B`：表示 issue A (CORE-123 Refactor Login) 依赖于 issue B (UI-456 Login Page)。实线箭头表示强依赖关系。
+- `A --> C`：表示 issue A (CORE-123 Refactor Login) 依赖于 issue C (API-789 Auth Endpoint)。实线箭头表示强依赖关系。
+- `C -.-> B`：表示 issue C (API-789 Auth Endpoint) *可能* 影响 issue B (UI-456 Login Page)。虚线箭头表示弱依赖关系或潜在影响。
+
+## 仓库语境与术语解释
+- **Beads**: 指的是 Beads issue tracker，该工具用于跟踪和管理项目中的任务和问题。
+- **Issue**: 在 Beads issue tracker 中，Issue 代表一个需要完成的任务、bug 或其他类型的工作项。
+- **Status**: Issue 的状态，例如 "open"、"inProgress"、"blocked" 或 "closed"。不同的状态用不同的颜色表示。
+- **Dependency**: Issue 之间的依赖关系，表明一个 Issue 的完成可能依赖于另一个 Issue 的完成。
+- **Mermaid**: 一种使用文本描述生成图表的工具，用于可视化 Issue 之间的依赖关系。`pkg/export/mermaid_generator.go` 文件用于生成 Mermaid 格式的图表。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图展示了一个简化的 issue 依赖关系图，核心 issue "CORE-123 Refactor Login" 依赖于 "UI-456 Login Page" 和 "API-789 Auth Endpoint"。 "API-789 Auth Endpoint" 的进展可能会影响 "UI-456 Login Page"。 整体逻辑是 "Refactor Login" 的完成需要 "Login Page" 和 "Auth Endpoint" 的支持，并且 "Auth Endpoint" 的开发状态可能会对 "Login Page" 产生影响。该图使用 Mermaid 语法描述，用于在 Beads Viewer 中可视化 issue 之间的依赖关系。

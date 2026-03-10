@@ -1,0 +1,24 @@
+graph TD
+    subgraph 消息中心
+        A[消息接收] --> B{消息分类}
+        B -- 业务消息 --> C[业务处理模块]
+        B -- 系统消息 --> D[系统通知服务]
+        C --> E[业务数据存储]
+        D --> F[用户通知通道]
+        F -- 短信 --> G[短信网关]
+        F -- APP推送 --> H[推送服务器]
+        F -- 站内信 --> I[站内信存储]
+        E --> J{是否需要通知}
+        J -- 是 --> D
+        J -- 否 --> K[结束]
+        G --> L[短信发送成功]
+        H --> M[推送成功]
+        I --> N[存储成功]
+        L --> O[消息发送报告]
+        M --> O
+        N --> O
+        O --> P[消息记录数据库]
+    end
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    classDef default fill:#ccf,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P default

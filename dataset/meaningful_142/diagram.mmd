@@ -1,0 +1,76 @@
+graph TD
+    subgraph 系统审计流程
+        A[开始审计] --> B{事件类型判断}
+        B -- 用户操作 --> C[用户行为审计];
+        B -- 系统事件 --> D[系统事件审计];
+
+        C --> E{权限验证通过?};
+        E -- 是 --> F[记录用户操作审计日志];
+        E -- 否 --> G[记录用户操作审计失败日志];
+
+        D --> H{事件级别判断};
+        H -- 警告 --> I[记录系统警告审计日志];
+        H -- 错误 --> J[记录系统错误审计日志];
+        H -- 信息 --> K[记录系统信息审计日志];
+
+        F --> L{日志存储策略};
+        G --> L;
+        I --> L;
+        J --> L;
+        K --> L;
+
+        L -- 实时存储 --> M[写入实时数据库];
+        L -- 异步存储 --> N[写入消息队列];
+
+        M --> O[实时告警模块];
+        N --> P[离线分析模块];
+
+        O --> Q[告警规则匹配];
+        P --> R[生成审计报表];
+
+        Q -- 匹配成功 --> S[触发告警通知];
+        Q -- 匹配失败 --> T[忽略];
+
+        S --> U[发送告警邮件/短信];
+        R --> V[审计报告存储];
+
+        U --> W[告警处理流程];
+        V --> X[报告归档];
+
+        W --> Y[问题解决];
+        X --> Z[审计数据生命周期管理];
+
+        Y --> AA[更新审计策略];
+        AA --> A;
+        Z --> A;
+
+        T --> A;
+
+        subgraph 实时告警模块
+            OA[接收实时数据] --> OB[告警规则引擎];
+            OB --> QC[告警触发判定];
+            QC -- 触发 --> SD[发送告警];
+            QC -- 未触发 --> OE[忽略];
+            SD --> OF[告警通知服务];
+            OF --> U;
+            OE --> T;
+        end
+
+        subgraph 离线分析模块
+            PA[消费消息队列数据] --> PB[数据清洗与转换];
+            PB --> PC[数据分析与挖掘];
+            PC --> RD[报表生成器];
+            RD --> V;
+        end
+
+    end
+
+    classDef eventFill fill:#f9f,stroke:#333,stroke-width:2px
+    classDef decisionFill fill:#ccf,stroke:#333,stroke-width:2px
+    classDef logFill fill:#ffc,stroke:#333,stroke-width:2px
+    class A eventFill
+    class B,E,H decisionFill
+    class F,G,I,J,K logFill
+    class L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,AA eventFill
+    class OA,OB,QC,SD,OE,OF eventFill
+    class PA,PB,PC,RD eventFill

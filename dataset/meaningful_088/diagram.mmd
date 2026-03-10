@@ -1,0 +1,76 @@
+graph TD
+    subgraph 会员系统核心流程
+        A[用户行为触发] --> B{等级评估器};
+        B -- 满足升级条件 --> C[等级提升];
+        B -- 不满足升级条件 --> D[维持等级];
+        C --> E[权益激活];
+        D --> F[权益维持];
+        E --> G[通知模块];
+        F --> G;
+        G --> H{权益中心};
+        H --> I[展示权益信息];
+        I --> J[用户体验];
+
+        subgraph 等级评估维度
+            K[消费金额];
+            L[活跃天数];
+            M[互动行为];
+            N[特殊活动参与];
+        end
+
+        K --> B;
+        L --> B;
+        M --> B;
+        N --> B;
+
+        subgraph 权益激活方式
+            O[自动激活];
+            P[手动领取];
+        end
+
+        E --> O;
+        E --> P;
+
+        subgraph 通知模块支持
+            Q[站内消息];
+            R[短信通知];
+            S[邮件通知];
+        end
+
+        G --> Q;
+        G --> R;
+        G --> S;
+
+        subgraph 等级权益类型
+            T[专属折扣];
+            U[生日礼包];
+            V[优先服务];
+            W[定制化推荐];
+        end
+
+        H --> T;
+        H --> U;
+        H --> V;
+        H --> W;
+
+    end
+
+    subgraph 数据存储
+        X[用户行为日志];
+        Y[等级规则配置];
+        Z[权益配置信息];
+        AA[用户等级信息];
+    end
+
+    A --> X;
+    Y --> B;
+    Z --> H;
+    C --> AA;
+    D --> AA;
+    AA --> I;
+
+
+    classDef level1 fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef level2 fill:#ccf,stroke:#333,stroke-width:2px;
+    classDef level3 fill:#bbf,stroke:#333,stroke-width:2px;
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,AA level1

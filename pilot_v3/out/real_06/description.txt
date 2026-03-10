@@ -1,0 +1,52 @@
+## 图类型与用途
+这是一个流程图，用于指导用户选择合适的 BigDL 库。它通过一系列问题，根据用户的需求将他们导向最适合的 BigDL 组件。该图在 README 中用于帮助用户快速找到满足其需求的 BigDL 库。
+
+## 图的整体布局
+图整体采用从左到右的布局。流程从左侧的起始问题开始，根据用户的回答逐步向右推进，最终到达推荐的 BigDL 库。
+
+## 分组/子图/阶段说明
+图中没有显式子图/分组，但逻辑上可分为以下阶段：
+1.  硬件安全需求判断
+2.  编程语言选择
+3.  应用类型选择
+4.  应用领域选择
+每个阶段都根据用户的选择，将流程导向不同的 BigDL 库。
+
+## 节点逐项说明
+- **Feature1 (HW Secured Big Data & AI?)**：第一个问题，询问用户是否需要硬件安全的大数据和 AI 功能。
+- **Feature2 (Python vs. Scala/Java?)**：如果不需要硬件安全，则询问用户使用的编程语言是 Python 还是 Scala/Java。
+- **Feature3 (What type of application?)**：如果编程语言是 Python，则询问用户的应用类型。
+- **Feature4 (Domain?)**：如果是 High Level App Framework，则询问应用领域。
+- **ReferLLM (LLM)**：指向 LLM 库，用于优化 Intel CPU 和 GPU 上的大型语言模型。README 中声明该库已弃用，请使用 IPEX-LLM。
+- **ReferOrca (Orca)**：指向 Orca 库，用于在 Spark 和 Ray 上构建分布式大数据和 AI (TensorFlow/PyTorch) 流水线。
+- **ReferNano (Nano)**：指向 Nano 库，用于透明地加速 Intel CPU/GPU 上的 TensorFlow 和 PyTorch 程序。
+- **ReferDLlib (DLlib)**：指向 DLlib 库，相当于 Spark MLlib 的深度学习版本。
+- **ReferChronos (Chronos)**：指向 Chronos 库，用于可扩展的时间序列分析，使用 AutoML。
+- **ReferFriesian (Friesian)**：指向 Friesian 库，用于端到端的推荐系统。
+- **ReferPPML (PPML)**：指向 PPML 库，用于安全的大数据和 AI，使用 SGX/TDX 硬件安全。
+
+## 连线、分支与汇聚关系
+- `Feature1 -- No --> Feature2`：如果用户不需要硬件安全的大数据和 AI 功能，则进入编程语言选择阶段。
+- `Feature1 -- "Yes" --> ReferPPML`：如果用户需要硬件安全的大数据和 AI 功能，则推荐使用 PPML 库。
+- `Feature2 -- Python --> Feature3`：如果用户使用的编程语言是 Python，则进入应用类型选择阶段。
+- `Feature2 -- Scala/Java --> ReferDLlib`：如果用户使用的编程语言是 Scala/Java，则推荐使用 DLlib 库。
+- `Feature3 -- "Large Language Model" --> ReferLLM`：如果用户的应用类型是 Large Language Model，则推荐使用 LLM 库。
+- `Feature3 -- "Big Data + AI (TF/PyTorch)" --> ReferOrca`：如果用户的应用类型是 Big Data + AI (TF/PyTorch)，则推荐使用 Orca 库。
+- `Feature3 -- Accelerate TensorFlow / PyTorch --> ReferNano`：如果用户的应用类型是 Accelerate TensorFlow / PyTorch，则推荐使用 Nano 库。
+- `Feature3 -- DL for Spark MLlib --> ReferDLlib2`：如果用户的应用类型是 DL for Spark MLlib，则推荐使用 DLlib 库。
+- `Feature3 -- High Level App Framework --> Feature4`：如果用户的应用类型是 High Level App Framework，则进入应用领域选择阶段。
+- `Feature4 -- Time Series --> ReferChronos`：如果用户的应用领域是 Time Series，则推荐使用 Chronos 库。
+- `Feature4 -- Recommender System --> ReferFriesian`：如果用户的应用领域是 Recommender System，则推荐使用 Friesian 库。
+
+## 仓库语境与术语解释
+- **BigDL**: 是一个可以无缝地将数据分析和 AI 应用从笔记本电脑扩展到云端的库集合。
+- **LLM**: 优化了在 Intel CPU 和 GPU 上的大型语言模型库。根据 README，该库已被弃用，建议使用 IPEX-LLM。
+- **Orca**: 用于在 Spark 和 Ray 上构建分布式大数据和 AI (TensorFlow/PyTorch) 流水线的库。
+- **Nano**: 用于透明地加速 Intel CPU/GPU 上的 TensorFlow 和 PyTorch 程序的库。
+- **DLlib**: 相当于 Spark MLlib 的深度学习版本。
+- **Chronos**: 使用 AutoML 的可扩展时间序列分析库。
+- **Friesian**: 用于端到端的推荐系统的库。
+- **PPML**: 使用 SGX/TDX 硬件安全的安全大数据和 AI 库。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该流程图旨在帮助用户选择合适的 BigDL 库。流程从询问用户是否需要硬件安全的大数据和 AI 功能开始，如果需要，则推荐使用 PPML 库。否则，询问用户使用的编程语言，如果是 Python，则进一步询问应用类型，根据应用类型推荐 LLM、Orca、Nano 或 DLlib 库；如果是 High Level App Framework，则询问应用领域，根据应用领域推荐 Chronos 或 Friesian 库。如果编程语言是 Scala/Java，则推荐使用 DLlib 库。其中，LLM 库已被弃用，建议使用 IPEX-LLM。

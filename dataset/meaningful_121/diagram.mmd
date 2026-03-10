@@ -1,0 +1,53 @@
+graph TD
+    subgraph 存储层
+        DB1[物理库1];
+        DB2[物理库2];
+        DB3[物理库3];
+        DB4[物理库4];
+    end
+
+    subgraph 业务应用
+        A[请求入口];
+    end
+
+    subgraph 路由层
+        B[路由组件];
+    end
+
+    A --> B;
+
+    B -- 分片键计算 --> C{分片规则};
+    C -- 规则1 --> D1[范围路由];
+    C -- 规则2 --> D2[哈希路由];
+    C -- 规则3 --> D3[枚举路由];
+
+    D1 --> E1(计算目标库);
+    D2 --> E2(计算目标库);
+    D3 --> E3(计算目标库);
+
+    E1 --> F[数据源选择];
+    E2 --> F;
+    E3 --> F;
+
+    F -- DB1的选择 --> DB1;
+    F -- DB2的选择 --> DB2;
+    F -- DB3的选择 --> DB3;
+    F -- DB4的选择 --> DB4;
+
+    DB1 --> G[数据访问];
+    DB2 --> G;
+    DB3 --> G;
+    DB4 --> G;
+
+    G --> H[返回结果];
+    H --> A;
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style C fill:#ccf,stroke:#333,stroke-width:2px
+    style F fill:#ccf,stroke:#333,stroke-width:2px
+    style G fill:#ccf,stroke:#333,stroke-width:2px
+    style H fill:#f9f,stroke:#333,stroke-width:2px
+
+    classDef database fill:#eef,stroke:#333,stroke-width:2px
+    class DB1,DB2,DB3,DB4 database

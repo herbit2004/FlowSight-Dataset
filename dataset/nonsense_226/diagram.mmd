@@ -1,0 +1,26 @@
+graph TD
+    A[用户请求] --> B(数据库);
+    B --> C{数据校验};
+    C -- Yes --> D[API 网关];
+    C -- No --> E[错误处理];
+    D --> F(身份认证);
+    F --> G[鉴权];
+    G --> H{访问控制};
+    H -- Yes --> I(缓存写入);
+    H -- No --> J[返回 403];
+    I --> K[支付系统];
+    K --> L{支付成功?};
+    L -- Yes --> M[发送消息到消息队列];
+    L -- No --> N[退款流程];
+    N --> K;
+    M --> O(更新用户状态);
+    O --> P[读缓存];
+    P --> A;
+    J --> A;
+    E --> A;
+    G --> Q(日志记录);
+    Q --> F;
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style J fill:#f9f,stroke:#333,stroke-width:2px
+    style N fill:#f9f,stroke:#333,stroke-width:2px
+    style P fill:#f9f,stroke:#333,stroke-width:2px

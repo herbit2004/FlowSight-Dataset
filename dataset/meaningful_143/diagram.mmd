@@ -1,0 +1,15 @@
+graph TD
+    A[数据源接入] --> B{敏感数据识别};
+    B -- 是 --> C[脱敏策略选择];
+    B -- 否 --> E[数据透传];
+    C --> D{是否可逆脱敏?};
+    D -- 是 --> F[数据加密];
+    D -- 否 --> G[数据泛化/替换];
+    F --> H[密钥管理];
+    G --> I[数据一致性校验];
+    H --> J[加密数据存储];
+    I --> J;
+    J --> K[下游系统访问];
+    E --> K;
+    classDef plain fill:#f9f,stroke:#333,stroke-width:2px
+    class A,E,K plain

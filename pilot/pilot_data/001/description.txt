@@ -1,0 +1,71 @@
+## 图类型与用途
+这是一个流程图，描述了 OpenDeepWiki 如何将代码仓库转化为知识库的详细流程。它展示了从克隆代码仓库到最终将项目信息保存到数据库的各个步骤，体现了 AI 在代码分析和文档生成中的应用。
+
+## 图的整体布局
+图采用从上到下的布局。流程从克隆代码仓库开始，经过一系列处理步骤，最终将信息保存到数据库。图中包含一个判断节点，根据文件数量选择不同的处理分支。
+
+## 分组/子图/阶段说明
+图中没有显式子图，但逻辑上可以分为以下几个阶段：
+1. **代码获取与预处理**：包括克隆代码仓库、读取 `.gitignore` 配置、递归扫描目录等。
+2. **目录结构分析与过滤**：根据文件数量是否超过阈值，选择直接返回目录结构或调用 AI 模型进行智能过滤。
+3. **信息生成与保存**：包括生成或更新 `README.md`、调用 AI 模型生成仓库分类信息和项目概览信息、清理项目分析标签内容、保存项目概览到数据库。
+4. **文档目录生成**：调用 AI 生成目录任务列表，递归处理目录任务生成文档目录，并将目录结构保存到数据库。
+5. **更新日志生成**：判断仓库类型是否为 Git，如果是则清理旧的提交记录，调用 AI 生成更新日志并保存到数据库。
+
+## 节点逐项说明
+- **Clone code repository**：克隆代码仓库，作为流程的起点。表示从远程仓库下载代码到本地。
+- **Read .gitignore configuration to ignore files**：读取 `.gitignore` 配置文件，用于排除不需要分析的文件和目录。`src/OpenDeepWiki/Agents/Tools/GitIgnoreRule.cs` 文件定义了 `.gitignore` 规则的处理逻辑。
+- **Recursively scan directories to get all files and directories**：递归扫描目录，获取所有文件和目录的列表。
+- **Does file count exceed threshold?**：判断文件数量是否超过预设的阈值。这是一个决策节点，根据文件数量选择不同的处理方式。
+- **Directly return directory structure**：如果文件数量未超过阈值，则直接返回目录结构。
+- **Call AI model for intelligent directory structure filtering**：如果文件数量超过阈值，则调用 AI 模型进行智能目录结构过滤，减少需要处理的文件数量。
+- **Parse AI-returned directory JSON data**：解析 AI 模型返回的目录 JSON 数据。
+- **Generate or update README.md**：生成或更新 `README.md` 文件，可能是根据代码内容自动生成或更新项目描述。
+- **Call AI model to generate repository classification information**：调用 AI 模型生成仓库分类信息，例如编程语言、项目类型等。
+- **Call AI model to generate project overview information**：调用 AI 模型生成项目概览信息，例如项目简介、功能特性等。
+- **Clean project analysis tag content**：清理项目分析标签内容，可能是为了避免重复分析或更新标签。
+- **Save project overview to database**：将项目概览信息保存到数据库。
+- **Call AI to generate thinking directory task list**：调用 AI 生成目录任务列表，用于后续的文档生成。
+- **Recursively process directory tasks to generate DocumentCatalog**：递归处理目录任务，生成文档目录。`src/OpenDeepWiki/Entities/Repositories/DocCatalog.cs` 定义了文档目录的结构。
+- **Save directory structure to database**：将目录结构保存到数据库。
+- **Process incomplete document tasks**：处理未完成的文档任务。
+- **Is repository type Git?**：判断仓库类型是否为 Git。
+- **Clean old commit records**：清理旧的提交记录。
+- **Call AI to generate update log**：调用 AI 生成更新日志。
+- **Save update log to database**：将更新日志保存到数据库。
+
+## 连线、分支与汇聚关系
+- `Clone code repository -> Read .gitignore configuration to ignore files`：克隆代码仓库后，读取 `.gitignore` 配置。
+- `Read .gitignore configuration to ignore files -> Recursively scan directories to get all files and directories`：读取 `.gitignore` 配置后，扫描目录结构。
+- `Recursively scan directories to get all files and directories -> Does file count exceed threshold?`：扫描目录结构后，判断文件数量是否超过阈值。
+- `Does file count exceed threshold? -- No --> Directly return directory structure`：如果文件数量未超过阈值，则直接返回目录结构。
+- `Does file count exceed threshold? -- Yes --> Call AI model for intelligent directory structure filtering`：如果文件数量超过阈值，则调用 AI 模型进行智能目录结构过滤。
+- `Directly return directory structure -> Parse AI-returned directory JSON data`：直接返回目录结构后，解析 AI 返回的目录 JSON 数据。
+- `Call AI model for intelligent directory structure filtering -> Parse AI-returned directory JSON data`：调用 AI 模型过滤后，解析 AI 返回的目录 JSON 数据。
+- `Parse AI-returned directory JSON data -> Generate or update README.md`：解析 JSON 数据后，生成或更新 `README.md`。
+- `Generate or update README.md -> Call AI model to generate repository classification information`：生成或更新 `README.md` 后，调用 AI 模型生成仓库分类信息。
+- `Call AI model to generate repository classification information -> Call AI model to generate project overview information`：生成仓库分类信息后，调用 AI 模型生成项目概览信息。
+- `Call AI model to generate project overview information -> Clean project analysis tag content`：生成项目概览信息后，清理项目分析标签内容。
+- `Clean project analysis tag content -> Save project overview to database`：清理标签内容后，保存项目概览到数据库。
+- `Save project overview to database -> Call AI to generate thinking directory task list`：保存项目概览后，调用 AI 生成目录任务列表。
+- `Call AI to generate thinking directory task list -> Recursively process directory tasks to generate DocumentCatalog`：生成目录任务列表后，递归处理目录任务生成文档目录。
+- `Recursively process directory tasks to generate DocumentCatalog -> Save directory structure to database`：生成文档目录后，将目录结构保存到数据库。
+- `Save directory structure to database -> Process incomplete document tasks`：保存目录结构后，处理未完成的文档任务。
+- `Process incomplete document tasks -> Is repository type Git?`：处理文档任务后，判断仓库类型是否为 Git。
+- `Is repository type Git? -- Yes --> Clean old commit records`：如果是 Git 仓库，则清理旧的提交记录。
+- `Clean old commit records -> Call AI to generate update log`：清理提交记录后，调用 AI 生成更新日志。
+- `Call AI to generate update log -> Save update log to database`：生成更新日志后，保存更新日志到数据库。
+- `Is repository type Git? -- No --> Save update log to database`：如果不是 Git 仓库，则直接保存更新日志到数据库，形成汇聚关系。
+
+## 仓库语境与术语解释
+- **OpenDeepWiki**：一个开源项目，旨在帮助开发者更好地理解和利用代码仓库，提供代码分析、文档生成和知识图谱构建等功能。
+- **.gitignore**：用于指定 Git 仓库中应该被忽略的文件和目录，避免将不必要的文件纳入版本控制。
+- **AI Model**：用于代码分析、文档生成等任务的人工智能模型。`src/OpenDeepWiki/Services/Wiki/WikiGenerator.cs` 中使用了 AI 模型来生成文档目录和内容。
+- **README.md**：项目的说明文档，通常包含项目简介、安装方法、使用说明等信息。
+- **DocumentCatalog**：文档目录，用于组织和索引代码仓库中的文档。`src/OpenDeepWiki/Entities/Repositories/DocCatalog.cs` 定义了文档目录的结构。
+- **Git**：一种分布式版本控制系统，用于跟踪代码的修改历史。
+- **Database**：用于存储项目信息、文档目录、更新日志等数据的数据库。README 中提到支持 SQLite, PostgreSQL, SqlServer, MySQL 等多种数据库。
+- **RepositoryAnalyzerOptions**: `src/OpenDeepWiki/Services/Repositories/RepositoryAnalyzer.cs` 中定义的仓库分析器选项，包括仓库存储目录、清理选项、重试次数等。
+
+## 可作为 QA Ground Truth 的高信息密度摘要
+该图描述了 OpenDeepWiki 将代码仓库转化为知识库的完整流程。流程从克隆代码仓库开始，读取 `.gitignore` 配置并扫描目录结构。根据文件数量是否超过阈值，选择不同的目录结构处理方式。随后，系统生成或更新 `README.md`，并调用 AI 模型生成仓库分类信息和项目概览。接着，生成文档目录并保存到数据库。如果仓库是 Git 仓库，还会清理旧的提交记录并生成更新日志。整个流程的关键环节包括 `.gitignore` 处理、AI 模型调用、文档目录生成和数据库存储。`src/OpenDeepWiki/Services/Wiki/WikiGenerator.cs` 和 `src/OpenDeepWiki/Entities/Repositories/DocCatalog.cs` 是理解该流程的关键代码文件。

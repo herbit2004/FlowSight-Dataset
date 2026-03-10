@@ -1,0 +1,20 @@
+graph TD
+    subgraph 身份验证流程
+        A[用户请求API] --> B{检查token有效性};
+        B -- 有效 --> C[获取用户角色];
+        B -- 无效 --> E[返回401];
+    end
+
+    C --> D{角色权限校验};
+    D -- 有权限 --> F[执行API操作];
+    D -- 无权限 --> G[返回403];
+
+    F --> H[返回数据];
+    E --> I[返回错误信息];
+    G --> J[返回错误信息];
+    H --> K[结束];
+    I --> K;
+    J --> K;
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class E,G,I,J error
