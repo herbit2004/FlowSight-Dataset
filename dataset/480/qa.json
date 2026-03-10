@@ -1,0 +1,74 @@
+[
+  {
+    "question": "如果 COBOL 源文件超过 3,000 行，流程会首先进入哪个节点？",
+    "options": [
+      "A. Single-File Processing",
+      "B. Smart Chunking Required",
+      "C. TokenHelper.EstimateCobolTokens",
+      "D. Complexity Score Calculation"
+    ],
+    "correct_index": 1,
+    "type": "factual",
+    "difficulty": "easy"
+  },
+  {
+    "question": "在确定最终 maxOutputTokens 之前，clamp 函数的作用是什么？",
+    "options": [
+      "A. 估计输入 Token 数量",
+      "B. 计算复杂性得分",
+      "C. 将估计的输出 Token 数量限制在最小和最大 Token 范围内",
+      "D. 识别 COBOL 代码中的语义单元"
+    ],
+    "correct_index": 2,
+    "type": "factual",
+    "difficulty": "medium"
+  },
+  {
+    "question": "以下哪个环节不是在 'RECONCILE' 阶段中执行的？",
+    "options": [
+      "A. Merge Results",
+      "B. Resolve forward references",
+      "C. Deduplicate imports",
+      "D. Complexity Score Calculation"
+    ],
+    "correct_index": 3,
+    "type": "negation",
+    "difficulty": "medium"
+  },
+  {
+    "question": "如果文件大小检查后需要进行智能分块，且在分块决策时发现既没有语义单元，又存在超大单元，那么下一步会进入哪个节点？",
+    "options": [
+      "A. Semantic Boundary Split",
+      "B. Line-Based Fallback",
+      "C. Single Chunk",
+      "D. ChunkContextManager"
+    ],
+    "correct_index": 1,
+    "type": "reasoning",
+    "difficulty": "medium"
+  },
+  {
+    "question": "从 'COBOL Source File' 节点开始，如果文件大小小于等于 3,000 行，且复杂性评分为 'MEDIUM'，最终会经过以下哪个节点序列？",
+    "options": [
+      "A. Single-File Processing -> TokenHelper.EstimateCobolTokens -> Complexity Score Calculation -> Score Threshold -> 🟡 MEDIUM -> estimatedOutput = input × multiplier -> clamp(estimated, minTokens, maxTokens)",
+      "B. Smart Chunking Required -> TokenHelper.EstimateCobolTokens -> Complexity Score Calculation -> Score Threshold -> 🟡 MEDIUM -> estimatedOutput = input × multiplier -> clamp(estimated, minTokens, maxTokens)",
+      "C. Single-File Processing -> TokenHelper.EstimateCobolTokens -> Complexity Score Calculation -> Score Threshold -> 🟢 LOW -> estimatedOutput = input × multiplier -> clamp(estimated, minTokens, maxTokens)",
+      "D. Smart Chunking Required -> CobolAdapter.IdentifySemanticUnits -> Divisions / Sections / Paragraphs -> SemanticUnitChunker.ChunkFileAsync -> Chunking Decision"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "hard"
+  },
+  {
+    "question": "在 'API CALL + ESCALATION' 阶段，如果 Azure OpenAI API 返回 'Reasoning Exhaustion' 且重试次数未达到上限，下一步会回到哪个节点？如果所有重试均失败，下一步又会进入哪个节点？",
+    "options": [
+      "A. Azure OpenAI Responses API; Adaptive Re-Chunking",
+      "B. Exponential Backoff; Adaptive Re-Chunking",
+      "C. Adaptive Re-Chunking; Azure OpenAI Responses API",
+      "D. Azure OpenAI Responses API; Exponential Backoff"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "hard"
+  }
+]

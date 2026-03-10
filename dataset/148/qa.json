@@ -1,0 +1,74 @@
+[
+  {
+    "question": "如果请求与 schema 无关，流程会直接跳过哪个步骤？",
+    "options": [
+      "A. Fetch from GitHub",
+      "B. Set Response Content-Type header",
+      "C. Send success metric",
+      "D. Was requesting a .json file?"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "medium"
+  },
+  {
+    "question": "以下哪个环节不是在处理与 schema 相关的 .json 文件请求时可能发生的？",
+    "options": [
+      "A. Fetch from GitHub",
+      "B. Set Response Content-Type header to application/schema+json",
+      "C. Let the original request go through",
+      "D. Send error metric"
+    ],
+    "correct_index": 2,
+    "type": "negation",
+    "difficulty": "medium"
+  },
+  {
+    "question": "从“Request”节点到“Response”节点，如果请求与 schema 相关且成功获取 .json 文件（2xx 状态码），必须经过以下哪个节点？",
+    "options": [
+      "A. req_no_schemas",
+      "B. response_cached",
+      "C. set_headers",
+      "D. send_metric_error"
+    ],
+    "correct_index": 2,
+    "type": "reasoning",
+    "difficulty": "hard"
+  },
+  {
+    "question": "如果从 GitHub 获取 schema 文件的响应状态码是 304，会发生以下哪个步骤？",
+    "options": [
+      "A. 设置 Content-Type header",
+      "B. 发送错误指标",
+      "C. 使用缓存",
+      "D. 重新请求"
+    ],
+    "correct_index": 2,
+    "type": "factual",
+    "difficulty": "easy"
+  },
+  {
+    "question": "在成功获取 .json schema 文件后，哪个步骤紧随“Set Response Content-Type header to application/schema+json”之后？",
+    "options": [
+      "A. Response",
+      "B. Send error metric",
+      "C. Send success metric",
+      "D. Response Status?"
+    ],
+    "correct_index": 2,
+    "type": "reasoning",
+    "difficulty": "medium"
+  },
+  {
+    "question": "以下哪条路径最长（包含节点最多）？",
+    "options": [
+      "A. Request -> schema-related -> req_no_schemas -> Response",
+      "B. Request -> schema-related -> req_schemas -> req_json -> Response",
+      "C. Request -> schema-related -> req_schemas -> req_json -> response_status -> response_ok -> set_headers -> send_metric_success -> Response",
+      "D. Request -> schema-related -> req_schemas -> req_json -> response_status -> response_ko -> send_metric_error -> Response"
+    ],
+    "correct_index": 2,
+    "type": "reasoning",
+    "difficulty": "hard"
+  }
+]

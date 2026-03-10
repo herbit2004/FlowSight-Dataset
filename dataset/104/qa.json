@@ -1,0 +1,74 @@
+[
+  {
+    "question": "在 GitNexus 架构中，`gitnexus analyze` 命令主要完成哪两项数据存储操作？",
+    "options": [
+      "A. 将仓库注册信息写入 `registry.json`，并将索引数据存储在项目仓库的 `.gitnexus/` 目录中。",
+      "B. 将仓库配置信息写入 `~/.cursor/mcp.json`，并将索引数据存储在 MCP Server 的 `LocalBackend` 中。",
+      "C. 将仓库注册信息写入 `~/.gitnexus/config.json`，并将索引数据存储在项目仓库的根目录下。",
+      "D. 将仓库配置信息写入 `~/.gitnexus/registry.json`，并将索引数据存储在 MCP Server 的 `Connection Pool` 中。"
+    ],
+    "correct_index": 0,
+    "type": "factual",
+    "difficulty": "medium"
+  },
+  {
+    "question": "如果需要列出所有已注册的 GitNexus 项目仓库，应该执行哪个 CLI 命令？",
+    "options": [
+      "A. gitnexus setup",
+      "B. gitnexus analyze",
+      "C. gitnexus clean",
+      "D. gitnexus list"
+    ],
+    "correct_index": 3,
+    "type": "factual",
+    "difficulty": "easy"
+  },
+  {
+    "question": "以下哪个环节不是 MCP Server 查询项目仓库 A 的索引数据所必需的？",
+    "options": [
+      "A. 读取 `~/.gitnexus/registry.json`",
+      "B. 使用 `LocalBackend`",
+      "C. 通过 `Connection Pool` 建立与 `KuzuDB conn A` 的连接",
+      "D. 调用 `gitnexus analyze` 命令"
+    ],
+    "correct_index": 3,
+    "type": "negation",
+    "difficulty": "medium"
+  },
+  {
+    "question": "从 `gitnexus analyze` 命令开始，到 `KuzuDB conn B` 查询 `.gitnexus/ in repo B`，必须经过以下哪个节点？",
+    "options": [
+      "A. `~/.cursor/mcp.json`",
+      "B. `MCP Server/server.ts`",
+      "C. `MCP Server/Connection Pool`",
+      "D. `gitnexus clean`"
+    ],
+    "correct_index": 2,
+    "type": "reasoning",
+    "difficulty": "medium"
+  },
+  {
+    "question": "在 GitNexus 架构中，如果需要清理项目仓库 A 的索引数据并取消注册，应该执行 `gitnexus clean` 命令。该命令会影响以下哪些节点？",
+    "options": [
+      "A. `~/.gitnexus/registry.json` 和 `.gitnexus/ in repo A`",
+      "B. `~/.cursor/mcp.json` 和 `.gitnexus/ in repo A`",
+      "C. `~/.gitnexus/registry.json` 和 `MCP Server/LocalBackend`",
+      "D. `MCP Server/Connection Pool` 和 `.gitnexus/ in repo A`"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "hard"
+  },
+  {
+    "question": "假设已经执行了 `gitnexus analyze` 命令并成功注册了仓库 A 和仓库 B。现在 MCP Server 正在运行，并且需要查询两个仓库的数据。以下哪两个步骤可以并行进行？",
+    "options": [
+      "A. `KuzuDB conn A` 查询 `.gitnexus/ in repo A` 和 `KuzuDB conn B` 查询 `.gitnexus/ in repo B`",
+      "B. `gitnexus analyze` 注册仓库 A 和 `gitnexus analyze` 注册仓库 B",
+      "C. `MCP Server/server.ts` 读取 `~/.gitnexus/registry.json` 和 `gitnexus clean` 清理仓库 A",
+      "D. `LocalBackend` 连接 `Connection Pool` 和 `gitnexus setup` 写入 `~/.cursor/mcp.json`"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "hard"
+  }
+]

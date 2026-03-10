@@ -1,0 +1,74 @@
+[
+  {
+    "question": "如果库存充足且扣减库存成功，在发送扣减成功事件之前，系统会执行以下哪个步骤？",
+    "options": [
+      "A. 生成预扣减记录: Redis",
+      "B. 订单服务: 继续后续流程",
+      "C. 监听取消订单事件",
+      "D. 回滚库存: 库存服务"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "medium"
+  },
+  {
+    "question": "以下哪个环节不是在库存不足时会直接触发的流程？",
+    "options": [
+      "A. 返回错误",
+      "B. 订单服务: 关闭订单",
+      "C. 通知用户",
+      "D. 生成预扣减记录: Redis"
+    ],
+    "correct_index": 3,
+    "type": "negation",
+    "difficulty": "medium"
+  },
+  {
+    "question": "从订单服务接收请求开始，到订单服务继续后续流程，按顺序会经过以下哪组节点？",
+    "options": [
+      "A. B -> C -> D -> E -> F -> G",
+      "B. B -> C -> I -> R -> S",
+      "C. B -> C -> D -> E -> J -> K",
+      "D. B -> C -> D -> E -> F -> H"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "hard"
+  },
+  {
+    "question": "在订单取消/支付失败后，且Redis中存在预扣减记录的情况下，回滚库存之前需要执行哪个步骤？",
+    "options": [
+      "A. 监听取消订单事件",
+      "B. 查询预扣减记录: Redis",
+      "C. 删除预扣减记录: Redis",
+      "D. 发送回滚成功事件"
+    ],
+    "correct_index": 1,
+    "type": "reasoning",
+    "difficulty": "medium"
+  },
+  {
+    "question": "如果预扣减记录不存在，系统会判定为以下哪种情况？",
+    "options": [
+      "A. 业务异常",
+      "B. 库存不足",
+      "C. 系统异常: 人工介入",
+      "D. 扣减失败"
+    ],
+    "correct_index": 2,
+    "type": "factual",
+    "difficulty": "easy"
+  },
+  {
+    "question": "以下哪个流程环节与“请求到达: 订单服务”在流程图上的距离最远（经过的节点数最多）？",
+    "options": [
+      "A. 尝试扣减库存: 库存服务",
+      "B. 回滚成功: 发送回滚成功事件",
+      "C. 库存不足: 返回错误",
+      "D. 订单服务: 继续后续流程"
+    ],
+    "correct_index": 1,
+    "type": "reasoning",
+    "difficulty": "hard"
+  }
+]
