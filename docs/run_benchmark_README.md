@@ -16,7 +16,7 @@ FlowSight 全量评测脚本：在分层抽样的 500 条数据上，用 10 个�
 ## 二、环境与依赖
 
 - Python 3，需安装 `requests`。
-- **API Key**：设置环境变量 `OPENROUTER_API_KEY`，或在项目根目录的 `build_dataset.py` 里写 key（脚本会尝试读取）。
+- **API Key**：在项目根目录复制 `.env.example` 为 `.env`，填写 `OPENROUTER_API_KEY`（`.env` 已被 gitignore，不会提交）；或直接设置环境变量 `OPENROUTER_API_KEY`。
 - **数据集**：`dataset/metadata.json`（真实样本 id）、`dataset/synthetic_metadata.json`（meaningful / chaos / misleading），且每个样本目录下有 `diagram.png` 和 `qa.json`。
 
 ---

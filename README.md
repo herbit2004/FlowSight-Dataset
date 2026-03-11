@@ -55,14 +55,15 @@ FlowSight 是一个面向**多模态流程图/架构图理解与生成**的评�
 
 ```bash
 # 在 FlowSight-Dataset 目录下
-pip install requests
-python build_dataset.py
+uv sync
+cp .env.example .env   # 填 OPENROUTER_API_KEY（可选填 GITHUB_TOKEN）
+uv run python build_dataset.py
 ```
 
 - **首次运行**：从零采集，目标条数由脚本内 `TARGET_COUNT` 控制（默认 100）。  
 - **续采**：若已存在 `dataset/metadata.json`，则在其基础上继续采集；目标条数 = 当前条数 + 环境变量 `ADD_MORE`（默认 100），例如：  
   `ADD_MORE=200 python build_dataset.py`  
-- **可选**：设置环境变量 `GITHUB_TOKEN` 可提高 GitHub API 限额；OpenRouter API Key 需在脚本内配置。
+- **可选**：设置 `GITHUB_TOKEN` 可提高 GitHub API 限额（可写在 `.env` 或环境变量中）。
 
 构建日志写入 `dataset/build.log`。
 
