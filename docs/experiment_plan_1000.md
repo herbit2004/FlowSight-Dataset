@@ -87,3 +87,70 @@
 **风格**：全量只保留一种风格（如 default），不保留「每条多风格 × 多模型」；若需要风格结论，用「约 100 条 × 2 风格 × 2 模型」的小实验即可。
 
 这样你主对比的是 **不同模型** 和 **不同来源数据**，风格退居为可选的小规模验证，成本可控、结论仍然完整。
+
+---
+#
+## 六、模型选型与实验分组记录
+
+### 6.1 本次固定使用的模型列表
+
+- **Qwen3‑VL 系列（开源，多模态，主线）**
+  - `qwen/qwen3-vl-8b-instruct`
+  - `qwen/qwen3-vl-30b-a3b-instruct`
+  - `qwen/qwen3-vl-235b-a22b-instruct`
+  - `qwen/qwen3-vl-8b-thinking`
+  - `qwen/qwen3-vl-30b-a3b-thinking`
+  - `qwen/qwen3-vl-235b-a22b-thinking`
+
+- **Gemini 2.5 系列（闭源，多模态，价格相对便宜）**
+  - `google/gemini-2.5-flash-lite`
+  - `google/gemini-2.5-flash`
+
+- **其他大厂代表模型**
+  - `bytedance-seed/seed-2.0-mini`
+  - `openai/gpt-4o-mini`
+
+合计 **10 个模型**，既覆盖开源/闭源、多家厂商，又保证都支持图像输入，且整体价格仍在可控范围内（相对于 GPT‑5 / Claude 4.x 这类更贵的模型）。
+
+### 6.2 围绕模型的几个主要实验维度
+
+- **维度 A：参数规模消融（同一系列内，单变量）**
+  - 只看 Qwen3‑VL instruct：  
+    - 小：`qwen3-vl-8b-instruct`  
+    - 中：`qwen3-vl-30b-a3b-instruct`  
+    - 大：`qwen3-vl-235b-a22b-instruct`  
+  - 目的：在相同架构和训练家族下，分析参数量增加对流程图理解和推理性能的边际收益。
+
+- **维度 B：thinking 模式消融（同一规模内，单变量）**
+  - 三组一一配对：  
+    - 8B：`instruct` vs `thinking`  
+    - 30B：`instruct` vs `thinking`  
+    - 235B：`instruct` vs `thinking`  
+  - 目的：在不同规模下比较「是否启用 thinking / reasoning」带来的准确率提升与额外成本，回答小模型是否更依赖 thinking、大模型 thinking 是否仍有收益。
+
+- **维度 C：开源 vs 闭源，在相近成本下对比**
+  - 小档（轻量、低成本，多模态）：  
+    - 开源：`qwen3-vl-8b-instruct`  
+    - 闭源：`google/gemini-2.5-flash-lite`、`bytedance-seed/seed-2.0-mini`、`openai/gpt-4o-mini`  
+  - 中档：  
+    - 开源：`qwen3-vl-30b-a3b-instruct`  
+    - 闭源：`google/gemini-2.5-flash`  
+  - 目的：在「大致相同 token 花费」前提下，比较开源 Qwen3‑VL 与几家主流闭源模型在同一数据集上的表现差距。
+
+- **维度 D：模型家族 / 架构差异（固定成本带宽下）**
+  - 比较不同家族在类似预算下的表现：  
+    - Qwen3‑VL（native VL，Qwen3 tokenizer）  
+    - Gemini 2.5（统一多模态 backbone，长上下文）  
+    - Seed 2.0 Mini（轻量 VL，强调低延迟与多档 reasoning effort）  
+    - GPT‑4o Mini（OpenAI 通用多模态模型）  
+  - 目的：在控制住输入分布和大致成本的情况下，讨论「不同模型家族/架构」在流程图理解任务上的整体风格与优劣。
+
+### 6.3 与上文实验设计的对应关系
+
+- **实验 1（模型 × 数据来源）**：在上述 10 个模型上统一跑 1000 条（或子集），主表格直接反映「不同模型」在 real / synthetic / nonsense 三种来源上的差异。  
+- **实验 2（按 QA 类型分层）**：在同一批结果上，进一步对比各模型在 factual / reasoning 等题型上的差异。  
+- **实验 3（风格效应，小规模）**：只选其中 2–3 个有代表性的模型（如一个 Qwen3‑VL + 一个闭源模型）做 100 条 × 2 风格的小实验。  
+- **实验 4（无意义子类型）**：观察不同模型家族对 chaos / misleading 两类无意义图的敏感度差异。  
+
+这一节主要用于记录「本次论文版本实际采用的模型清单和对照逻辑」，方便后续实现与撰写时保持一致。
+
