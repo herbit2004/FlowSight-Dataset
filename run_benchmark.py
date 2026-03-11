@@ -129,17 +129,8 @@ def log(out_dir: Path, msg: str) -> None:
 
 
 def get_api_key() -> str:
-    key = os.environ.get("OPENROUTER_API_KEY", "").strip()
-    if key:
-        return key
-    try:
-        txt = (PROJECT_ROOT / "build_dataset.py").read_text(encoding="utf-8")
-        m = re.search(r'OPENROUTER_API_KEY\s*=\s*["\']([^"\']+)["\']', txt)
-        if m:
-            return m.group(1).strip()
-    except Exception:
-        pass
-    return ""
+    from env_config import get_openrouter_api_key
+    return get_openrouter_api_key()
 
 
 def image_to_data_url(path: Path) -> str:
@@ -225,6 +216,19 @@ def ensure_required_files(sample_dir: Path) -> bool:
     return (sample_dir / "diagram.png").exists() and (sample_dir / "qa.json").exists()
 
 
+def sample_dir_path(sample_id: str) -> str:
+    """样本目录相对 PROJECT_ROOT 的路径，用于持久化，避免绝对路径."""
+    return f"dataset/{sample_id}"
+
+
+def resolve_sample_dir(sample: dict) -> Path:
+    """从 state 中的 sample 解析出样本目录的绝对路径（兼容已持久化的绝对路径）."""
+    raw = sample["path"]
+    if Path(raw).is_absolute():
+        return DATASET_DIR / sample["sample_id"]
+    return PROJECT_ROOT / raw
+
+
 def normalize_real_id(v: Any) -> str:
     return f"{int(v):03d}"
 
@@ -246,7 +250,7 @@ def build_candidates() -> dict[str, list[SampleItem]]:
             SampleItem(
                 sample_id=sid,
                 data_type="real",
-                path=str(sample_dir),
+                path=sample_dir_path(sid),
                 source="real",
             )
         )
@@ -266,7 +270,7 @@ def build_candidates() -> dict[str, list[SampleItem]]:
                 SampleItem(
                     sample_id=sid,
                     data_type="meaningful",
-                    path=str(sample_dir),
+                    path=sample_dir_path(sid),
                     source="synthetic_realistic",
                 )
             )
@@ -276,7 +280,7 @@ def build_candidates() -> dict[str, list[SampleItem]]:
                     SampleItem(
                         sample_id=sid,
                         data_type="chaos",
-                        path=str(sample_dir),
+                        path=sample_dir_path(sid),
                         source="synthetic_nonsense",
                         nonsense_subtype="chaos",
                     )
@@ -286,7 +290,7 @@ def build_candidates() -> dict[str, list[SampleItem]]:
                     SampleItem(
                         sample_id=sid,
                         data_type="misleading",
-                        path=str(sample_dir),
+                        path=sample_dir_path(sid),
                         source="synthetic_nonsense",
                         nonsense_subtype="misleading",
                     )
@@ -413,7 +417,12 @@ def save_state(out_dir: Path, state: dict) -> None:
 
 
 def load_state(out_dir: Path) -> dict:
-    return load_json(out_dir / STATE_FILE)
+    state = load_json(out_dir / STATE_FILE)
+    # 将已持久化的绝对路径规范为相对路径
+    for s in state.get("samples", {}).values():
+        if Path(s["path"]).is_absolute():
+            s["path"] = sample_dir_path(s["sample_id"])
+    return state
 
 
 def probe_one_model(model: str, img_path: Path, api_key: str) -> tuple[bool, str]:
@@ -448,7 +457,7 @@ def probe_one_model(model: str, img_path: Path, api_key: str) -> tuple[bool, str
 
 def run_probe(out_dir: Path, state: dict, strict: bool, api_key: str) -> tuple[list[str], list[str]]:
     sample_any = next(iter(state["samples"].values()))
-    img_path = Path(sample_any["path"]) / "diagram.png"
+    img_path = resolve_sample_dir(sample_any) / "diagram.png"
     passed, failed = [], []
     log(out_dir, "开始模型预检（每次 run 前强制执行）...")
     for model in state["models"]:
@@ -737,7 +746,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     state = load_state(out_dir)
     api_key = get_api_key()
     if not api_key:
-        print("未找到 OPENROUTER_API_KEY（环境变量或 build_dataset.py）")
+        print("未找到 OPENROUTER_API_KEY（请设置环境变量或在项目根目录 .env 中配置，参考 .env.example）")
         return 2
 
     if (out_dir / PAUSE_FILE).exists():
@@ -787,7 +796,7 @@ def cmd_run(args: argparse.Namespace) -> int:
                 t["status"] = "pending"
 
             sample = state["samples"][t["sample_id"]]
-            sample_dir = Path(sample["path"])
+            sample_dir = resolve_sample_dir(sample)
             qa_path = sample_dir / "qa.json"
             img_path = sample_dir / "diagram.png"
             if not qa_path.exists() or not img_path.exists():

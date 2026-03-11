@@ -19,7 +19,15 @@ from pathlib import Path
 import requests
 
 # 使用项目根目录下的 dataset，与 build_dataset 一致
+import sys
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+from env_config import load_env, get_openrouter_api_key
+
+load_env()
+OPENROUTER_API_KEY = get_openrouter_api_key()
+
 DATASET_DIR = PROJECT_ROOT / "dataset"
 PILOT_DIR = PROJECT_ROOT / "pilot" / "pilot_data"
 PILOT_SIZE = 10
@@ -33,22 +41,6 @@ STYLES = [
     ("forest", "绿色系"),
     ("neutral", "黑白中性"),
 ]
-
-# 从环境或 build_dataset 同源读取（不写死 key 到仓库）
-def _get_api_key() -> str:
-    key = os.environ.get("OPENROUTER_API_KEY")
-    if key:
-        return key
-    try:
-        with open(PROJECT_ROOT / "build_dataset.py", encoding="utf-8") as f:
-            m = re.search(r'OPENROUTER_API_KEY\s*=\s*["\']([^"\']+)["\']', f.read())
-            if m:
-                return m.group(1)
-    except Exception:
-        pass
-    return ""
-
-OPENROUTER_API_KEY = _get_api_key()
 
 VISION_MODELS = [
     "google/gemini-2.0-flash-001",

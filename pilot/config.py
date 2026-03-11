@@ -17,7 +17,7 @@ STYLES = [
 
 # OpenRouter 多模态模型（均支持 image 输入）
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
-OPENROUTER_API_KEY = None  # 由 run_pilot 从环境或 build_dataset 同源读取
+OPENROUTER_API_KEY = None  # 由 run_pilot 从项目根目录 .env 环境配置读取
 
 VISION_MODELS = [
     "google/gemini-2.0-flash-001",

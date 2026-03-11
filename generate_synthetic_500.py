@@ -23,7 +23,10 @@ from threading import Lock
 
 import requests
 
+from env_config import load_env, get_openrouter_api_key
+
 PROJECT_ROOT = Path(__file__).resolve().parent
+load_env()
 DATASET_DIR = PROJECT_ROOT / "dataset"
 REAL_METADATA = DATASET_DIR / "metadata.json"
 SYNTHETIC_METADATA = DATASET_DIR / "synthetic_metadata.json"
@@ -92,19 +95,7 @@ def _append_synthetic_meta(meta: dict) -> None:
         SYNTHETIC_METADATA.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
-def _get_api_key() -> str:
-    """优先从 build_dataset.py 读取 OPENROUTER_API_KEY，其次用环境变量。"""
-    try:
-        with open(PROJECT_ROOT / "build_dataset.py", encoding="utf-8") as f:
-            m = re.search(r'OPENROUTER_API_KEY\s*=\s*["\']([^"\']+)["\']', f.read())
-            if m:
-                return m.group(1).strip()
-    except Exception:
-        pass
-    return os.environ.get("OPENROUTER_API_KEY", "").strip()
-
-
-API_KEY = _get_api_key()
+API_KEY = get_openrouter_api_key()
 
 
 def log(msg: str) -> None:
@@ -497,7 +488,7 @@ def run_retry_missing() -> None:
         return
     log("补全 %d 条缺失: %s" % (len(missing), missing))
     if not API_KEY:
-        log("错误: 未设置 OPENROUTER_API_KEY，退出。")
+        log("错误: 未设置 OPENROUTER_API_KEY，退出。请在项目根目录 .env 中配置，参考 .env.example。")
         return
     seed = os.environ.get("SEED")
     random.seed(int(seed) if seed is not None else int(time.time()))
@@ -547,7 +538,7 @@ def main() -> None:
         min(_target_lines), max(_target_lines), _target_lines[:20],
     ))
     if not API_KEY:
-        log("错误: 未设置 OPENROUTER_API_KEY，退出。请设置环境变量或在 build_dataset.py 中配置。")
+        log("错误: 未设置 OPENROUTER_API_KEY，退出。请在项目根目录 .env 中配置，参考 .env.example。")
         return
     log("API Key 已配置，开始顺序生成...")
     total_ok, total_fail = run_all_sequential()

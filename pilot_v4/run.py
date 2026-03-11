@@ -22,7 +22,15 @@ from pathlib import Path
 
 import requests
 
+import sys
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+from env_config import load_env, get_openrouter_api_key
+
+load_env()
+API_KEY = get_openrouter_api_key()
+
 PILOT_V3_OUT = PROJECT_ROOT / "pilot_v3" / "out"
 OUT_DIR = PROJECT_ROOT / "pilot_v4" / "out"
 
@@ -42,23 +50,6 @@ MODELS = [
 ]
 
 DATA_TYPES = ("real", "meaningful", "chaos", "misleading")
-
-
-def _get_api_key() -> str:
-    key = os.environ.get("OPENROUTER_API_KEY")
-    if key:
-        return key
-    try:
-        with open(PROJECT_ROOT / "build_dataset.py", encoding="utf-8") as f:
-            m = re.search(r'OPENROUTER_API_KEY\s*=\s*["\']([^"\']+)["\']', f.read())
-            if m:
-                return m.group(1).strip()
-    except Exception:
-        pass
-    return ""
-
-
-API_KEY = _get_api_key()
 LOG_PATH = OUT_DIR.parent / "pilot_v4.log"
 MANIFEST_PATH = PILOT_V3_OUT / "manifest.json"
 EVAL_JSONL_PATH = OUT_DIR / "eval_results.jsonl"

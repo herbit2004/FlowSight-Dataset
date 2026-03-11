@@ -22,7 +22,12 @@ from pathlib import Path
 
 import requests
 
+from env_config import load_env, get_openrouter_api_key
+
 PROJECT_ROOT = Path(__file__).resolve().parent
+load_env()
+API_KEY = get_openrouter_api_key()
+
 DATASET_DIR = PROJECT_ROOT / "dataset"
 REAL_METADATA = DATASET_DIR / "metadata.json"
 SYNTHETIC_METADATA = DATASET_DIR / "synthetic_metadata.json"
@@ -33,23 +38,6 @@ OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 QA_TYPES = ("factual", "reasoning", "negation")
 QA_DIFFICULTIES = ("easy", "medium", "hard")
 QA_PER_SAMPLE = 6
-
-
-def _get_api_key() -> str:
-    key = os.environ.get("OPENROUTER_API_KEY")
-    if key:
-        return key
-    try:
-        with open(PROJECT_ROOT / "build_dataset.py", encoding="utf-8") as f:
-            m = re.search(r'OPENROUTER_API_KEY\s*=\s*["\']([^"\']+)["\']', f.read())
-            if m:
-                return m.group(1).strip()
-    except Exception:
-        pass
-    return ""
-
-
-API_KEY = _get_api_key()
 
 
 def log(msg: str) -> None:
@@ -246,7 +234,7 @@ def main() -> None:
         return
 
     if not API_KEY:
-        log("错误: 未设置 OPENROUTER_API_KEY")
+        log("错误: 未设置 OPENROUTER_API_KEY（请在项目根目录 .env 中配置，参考 .env.example）")
         return
 
     done = 0

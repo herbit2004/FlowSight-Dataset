@@ -21,10 +21,13 @@ from pathlib import Path
 
 import requests
 
-# ── 配置 ──────────────────────────────────────────────────────────────────────
-OPENROUTER_API_KEY = "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"
-GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
+from env_config import load_env, get_openrouter_api_key, get_github_token
 
+load_env()
+OPENROUTER_API_KEY = get_openrouter_api_key()
+GITHUB_TOKEN = get_github_token()
+
+# ── 配置 ──────────────────────────────────────────────────────────────────────
 _SCRIPT_DIR = Path(__file__).resolve().parent
 OUTPUT_DIR = _SCRIPT_DIR / "dataset"
 LOG_FILE = OUTPUT_DIR / "build.log"
@@ -85,7 +88,7 @@ if GITHUB_TOKEN:
     GH_HEADERS["Authorization"] = f"token {GITHUB_TOKEN}"
 
 OR_HEADERS = {
-    "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+    "Authorization": f"Bearer {OPENROUTER_API_KEY or ''}",
     "Content-Type": "application/json",
     "HTTP-Referer": "https://github.com/dataset-builder",
     "X-Title": "FlowSight Dataset Build",
