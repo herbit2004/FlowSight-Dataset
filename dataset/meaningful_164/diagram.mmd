@@ -1,0 +1,51 @@
+graph TD
+    subgraph Ingest Tier
+        A[Media Encoder: RTMP Push] --> B(Load Balancer: Ingest);
+        B --> C{Ingest Servers: HAProxy};
+        C --> D[Ingest Server 1: Nginx RTMP Module];
+        C --> E[Ingest Server 2: Nginx RTMP Module];
+        D --> F{Stream Validator};
+        E --> G{Stream Validator};
+    end
+
+    subgraph Processing Tier
+        F -- Valid Stream --> H(Transcoder: FFmpeg Cluster);
+        G -- Valid Stream --> H;
+        H --> I[Adaptive Bitrate Packaging: HLS/DASH];
+    end
+
+    subgraph Storage Tier
+        I --> J{Origin Server: CDN};
+        J --> K[Object Storage: S3-Compatible];
+    end
+
+    subgraph Delivery Tier
+        L[CDN Edge Servers] --> M(Viewer Request);
+    end
+
+    subgraph Monitoring Tier
+        N[Prometheus] -- Scrape metrics from --> C;
+        N -- Scrape metrics from --> H;
+        N -- Scrape metrics from --> J;
+        N --> O[Alertmanager]
+        O --> P[PagerDuty]
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style M fill:#ccf,stroke:#333,stroke-width:2px
+
+    F -- Invalid Stream --> Q[Drop Stream];
+    G -- Invalid Stream --> R[Drop Stream];
+
+    B -- Health Check Failed --> S[Failover to Backup Encoder];
+    S --> A
+
+    M -- HLS Manifest Request --> L;
+    M -- Video Segment Request --> L;
+
+    J -- Cache Miss --> K;
+    K -- Returns Object --> J;
+    J -- Cache Hit --> L;
+
+    classDef important fill:#f9f,stroke:#333,stroke-width:2px;
+    class A,M important;

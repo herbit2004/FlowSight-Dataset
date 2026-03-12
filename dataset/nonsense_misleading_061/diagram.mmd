@@ -1,0 +1,21 @@
+graph TD
+    A[User Submits Order] --> B{Payment Successful?};
+    B -- Yes --> C[Inventory Check];
+    B -- No --> H[Send Order Confirmation];
+    C --> D{Sufficient Stock?};
+    D -- No --> E[Notify User of Delay];
+
+    E --> F[Request Stock Replenishment];
+    F --> G[Wait for Stock];
+    G --> D;
+
+    D -- Yes --> K[Pack Order];
+    K --> L[Generate Shipping Label];
+    L --> M[Dispatch Order];
+    M --> N{Delivery Successful?};
+    N -- Yes --> H;
+    N -- No --> O[Investigate Delivery Failure];
+    O --> M;
+
+    H --> P[Update Order Status: Complete];
+    P --> A;

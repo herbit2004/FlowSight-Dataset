@@ -1,0 +1,14 @@
+graph TD
+    A[Order Received] --> B{Payment Successful?};
+    B -- No --> C[Cancel Order];
+    B -- Yes --> D[Shipping Label Printed];
+    D --> E[Item Picked & Packed];
+    E --> F{Shipping Confirmation Sent?};
+    F -- No --> G[Return to Step E];
+    F -- Yes --> H[Item Delivered];
+    H --> A;
+    E --> I[Update Inventory];
+    I --> C;
+    C --> J[Refund Processed];
+    J --> K[Order Completed];
+    H --> K;

@@ -1,0 +1,121 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the shipment tracking and delivery system. It illustrates the end-to-end process from order placement to delivery completion, including inventory checks, address verification, route optimization, and handling of delivery exceptions. The diagram serves as a visual representation of the system's workflow, aiding in understanding and optimizing the delivery process.
+
+## Overall Layout
+The diagram flows primarily from left to right, with some vertical elements. It starts with "Order Placement" on the left and ends with "Close Shipment Record" on the right. The diagram does not have a strict hierarchical structure, but rather a sequential flow with decision points that can loop back or branch out.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Placement & Inventory, Pre-Dispatch, In Transit, Delivery Attempt, and Completion.
+
+## Node-by-Node Description
+- **Order Placement**: Represents the initial step where a customer places an order.
+  visible in diagram; no further repository context available.
+- **Inventory Check**: A decision point to determine if the ordered items are in stock.
+  visible in diagram; no further repository context available.
+- **Backorder Placement**: Indicates that the order cannot be fulfilled immediately due to insufficient inventory.
+  visible in diagram; no further repository context available.
+- **Inventory Replenishment**: The process of restocking the inventory to fulfill backordered items.
+  visible in diagram; no further repository context available.
+- **Create Shipment Record**: A record is created for the shipment.
+  visible in diagram; no further repository context available.
+- **Shipping Address Valid?**: A decision point to verify the accuracy and validity of the shipping address.
+  visible in diagram; no further repository context available.
+- **Address Verification**: The process of correcting or confirming an invalid shipping address.
+  visible in diagram; no further repository context available.
+- **Customer Contact**: Contacting the customer to resolve address issues.
+  visible in diagram; no further repository context available.
+- **Order Cancellation**: The order is cancelled due to unresolved address issues.
+  visible in diagram; no further repository context available.
+- **Route Optimization**: Optimizing the delivery route for efficiency.
+  visible in diagram; no further repository context available.
+- **Delivery Vehicle Assignment**: Assigning a delivery vehicle to the optimized route.
+  visible in diagram; no further repository context available.
+- **Loading and Dispatch**: Loading the shipment onto the assigned vehicle and dispatching it.
+  visible in diagram; no further repository context available.
+- **In Transit**: The shipment is currently being transported to its destination.
+  visible in diagram; no further repository context available.
+- **Location Update Received?**: A decision point to check if location updates are being received for the shipment.
+  visible in diagram; no further repository context available.
+- **Update Shipment Location**: Updating the shipment's current location in the tracking system.
+  visible in diagram; no further repository context available.
+- **Timeout - Check Vehicle Status**: Checking the vehicle status due to a timeout in receiving location updates.
+  visible in diagram; no further repository context available.
+- **Communication System Check**: Checking the communication system for failures.
+  visible in diagram; no further repository context available.
+- **Alert System Administrator**: Alerting the system administrator about communication system failures.
+  visible in diagram; no further repository context available.
+- **Delivery Zone Arrival**: A decision point to determine if the delivery vehicle has arrived in the delivery zone.
+  visible in diagram; no further repository context available.
+- **Delivery Attempt**: Attempting to deliver the shipment to the customer.
+  visible in diagram; no further repository context available.
+- **Delivery Successful?**: A decision point to determine if the delivery was successful.
+  visible in diagram; no further repository context available.
+- **Customer Available?**: A decision point to determine if the customer is available to receive the delivery.
+  visible in diagram; no further repository context available.
+- **Reschedule Delivery**: Rescheduling the delivery for a later time.
+  visible in diagram; no further repository context available.
+- **Delivery to Holding Location**: Delivering the shipment to a holding location if the customer is unavailable.
+  visible in diagram; no further repository context available.
+- **Update Shipment Status to Delivered**: Updating the shipment status to "Delivered".
+  visible in diagram; no further repository context available.
+- **Payment Confirmation**: Confirming payment for the order.
+  visible in diagram; no further repository context available.
+- **Order Completion**: Marking the order as complete.
+  visible in diagram; no further repository context available.
+- **Generate Delivery Report**: Generating a report summarizing the delivery details.
+  visible in diagram; no further repository context available.
+- **Close Shipment Record**: Closing the shipment record in the system.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Order Placement --> Inventory Check`: The order is sent for inventory verification.
+- `Inventory Check -- Available --> Create Shipment Record`: If the inventory is available, a shipment record is created.
+- `Inventory Check -- Out of Stock --> Backorder Placement`: If the inventory is out of stock, a backorder is placed.
+- `Backorder Placement --> Inventory Replenishment`: Backorder triggers inventory replenishment.
+- `Inventory Replenishment --> Inventory Check`: After replenishment, inventory is checked again.
+- `Create Shipment Record --> Shipping Address Valid?`: The shipping address is validated.
+- `Shipping Address Valid? -- Yes --> Route Optimization`: If the address is valid, the delivery route is optimized.
+- `Shipping Address Valid? -- No --> Address Verification`: If the address is invalid, it is sent for verification.
+- `Address Verification --> Customer Contact`: Customer is contacted for address verification.
+- `Customer Contact -- Address Confirmed --> Shipping Address Valid?`: If the address is confirmed, it is validated again.
+- `Customer Contact -- Address Invalid --> Order Cancellation`: If the address is invalid, the order is cancelled.
+- `Route Optimization --> Delivery Vehicle Assignment`: An optimized route is assigned to a delivery vehicle.
+- `Delivery Vehicle Assignment --> Loading and Dispatch`: The shipment is loaded and dispatched.
+- `Loading and Dispatch --> In Transit`: The shipment is in transit.
+- `In Transit --> Location Update Received?`: The system checks for location updates.
+- `Location Update Received? -- Yes --> Update Shipment Location`: If location updates are received, the shipment location is updated.
+- `Location Update Received? -- No --> Timeout - Check Vehicle Status`: If no location updates are received, the vehicle status is checked.
+- `Update Shipment Location --> In Transit`: The updated location is fed back into the in-transit process.
+- `Timeout - Check Vehicle Status --> Communication System Check`: The communication system is checked.
+- `Communication System Check -- OK --> In Transit`: If the communication system is OK, the process returns to in transit.
+- `Communication System Check -- Failure --> Alert System Administrator`: If the communication system fails, the system administrator is alerted.
+- `In Transit --> Delivery Zone Arrival`: The system checks if the delivery vehicle has arrived in the delivery zone.
+- `Delivery Zone Arrival -- Yes --> Delivery Attempt`: If the vehicle has arrived, a delivery attempt is made.
+- `Delivery Zone Arrival -- No --> In Transit`: If the vehicle has not arrived, the process returns to in transit.
+- `Delivery Attempt --> Delivery Successful?`: The system checks if the delivery was successful.
+- `Delivery Successful? -- Yes --> Update Shipment Status to Delivered`: If the delivery was successful, the shipment status is updated.
+- `Delivery Successful? -- No --> Customer Available?`: If the delivery was unsuccessful, the system checks if the customer is available.
+- `Customer Available? -- Yes --> Reschedule Delivery`: If the customer is available, the delivery is rescheduled.
+- `Customer Available? -- No --> Delivery to Holding Location`: If the customer is not available, the shipment is delivered to a holding location.
+- `Reschedule Delivery --> Loading and Dispatch`: Rescheduled delivery returns to loading and dispatch.
+- `Delivery to Holding Location --> Update Shipment Status to Delivered`: Delivery to holding location leads to updating the shipment status.
+- `Update Shipment Status to Delivered --> Payment Confirmation`: The payment is confirmed.
+- `Payment Confirmation --> Order Completion`: The order is completed.
+- `Order Cancellation --> Order Completion`: Order cancellation leads to order completion.
+- `Order Completion --> Generate Delivery Report`: A delivery report is generated.
+- `Generate Delivery Report --> Close Shipment Record`: The shipment record is closed.
+
+## Repository Context & Terminology
+- **Order Placement**: The initial action of a customer placing an order for goods or services.
+- **Inventory Check**: Verifying the availability of items in stock to fulfill an order.
+- **Backorder**: An order that cannot be fulfilled immediately due to insufficient stock and will be fulfilled when the items become available.
+- **Shipment Record**: A record containing all the details of a shipment, including origin, destination, items, and tracking information.
+- **Route Optimization**: The process of finding the most efficient route for delivery vehicles to minimize time and cost.
+- **Delivery Vehicle Assignment**: Assigning a specific vehicle to a delivery route based on factors like capacity and location.
+- **In Transit**: The state of a shipment while it is being transported from the origin to the destination.
+- **Delivery Attempt**: The act of trying to deliver a shipment to the customer's address.
+- **Holding Location**: A secure location where a shipment can be temporarily stored if the customer is unavailable for delivery.
+- **Shipment Status**: The current state of a shipment, such as "In Transit," "Delivered," or "Delayed."
+
+## High-Density QA Ground Truth Summary
+The shipment tracking and delivery system begins with **Order Placement**, which triggers an **Inventory Check**. If the items are **Available**, a **Shipment Record** is created; otherwise, a **Backorder Placement** initiates **Inventory Replenishment**, eventually looping back to the **Inventory Check**. A key decision point is **Shipping Address Valid?**: a "No" branch leads to **Address Verification** and potential **Customer Contact**, looping back until the address is valid or the order is cancelled via **Order Cancellation**. A "Yes" branch leads to **Route Optimization** and **Delivery Vehicle Assignment**, followed by **Loading and Dispatch** and the **In Transit** stage. During transit, the system checks **Location Update Received?**; a "No" triggers a **Timeout - Check Vehicle Status** and **Communication System Check**, potentially alerting the **Alert System Administrator**. Upon arrival in the **Delivery Zone**, a **Delivery Attempt** is made. If **Delivery Successful?** is "No", the system checks **Customer Available?**, potentially leading to **Reschedule Delivery** or **Delivery to Holding Location**. Finally, the system proceeds to **Update Shipment Status to Delivered**, **Payment Confirmation**, **Order Completion**, **Generate Delivery Report**, and **Close Shipment Record**. The "In Transit" stage is crucial, as it involves continuous location updates and communication checks to ensure timely and accurate delivery.

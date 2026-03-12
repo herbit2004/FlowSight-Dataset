@@ -1,0 +1,39 @@
+graph TD
+    subgraph Membership Tier and Benefits System
+    A[User Action: Select Tier] --> B{Tier Selected?};
+    B -- Yes --> C[Validate Selection];
+    B -- No --> A;
+    C --> D{Eligible for Tier?};
+    D -- Yes --> E[Update User Profile];
+    D -- No --> F[Display Eligibility Error];
+    E --> G[Activate Tier Benefits];
+    G --> H[Log Tier Activation Event];
+    H --> I[Send Welcome Email];
+    I --> J[Trigger Benefit Sync Process];
+    J --> K[Sync: Access Control Lists];
+    J --> L[Sync: Discount Coupons];
+    J --> M[Sync: Content Visibility];
+    K --> N{ACL Sync Success?};
+    L --> O{Coupon Sync Success?};
+    M --> P{Content Sync Success?};
+    N -- Yes --> Q[Update User Benefits Database];
+    N -- No --> R[Log ACL Sync Failure];
+    O -- Yes --> Q;
+    O -- No --> S[Log Coupon Sync Failure];
+    P -- Yes --> Q;
+    P -- No --> T[Log Content Sync Failure];
+    Q --> U[Display Confirmation to User];
+    F --> U;
+    R --> U;
+    S --> U;
+    T --> U;
+    U --> V[End User Action];
+    end
+
+    classDef syncFailed fill:#f9f,stroke:#333,stroke-width:2px
+    classDef validationError fill:#fbb,stroke:#333,stroke-width:2px
+    classDef successFill fill:#ccf,stroke:#333,stroke-width:2px
+
+    class R,S,T syncFailed
+    class F validationError
+    class Q,U successFill

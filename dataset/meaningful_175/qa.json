@@ -1,0 +1,74 @@
+[
+  {
+    "question": "What is the destination node if the 'Order Accepted?' decision is 'No'?",
+    "options": [
+      "A. Sampling Service API",
+      "B. Reject, Log Error",
+      "C. Kafka Topic: order.events",
+      "D. Met sampling criteria?"
+    ],
+    "correct_index": 1,
+    "type": "factual",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Starting from 'Order System Event', what is the complete sequence of nodes if 'Order Accepted?' is 'Yes' and 'Met sampling criteria?' is 'Yes'?",
+    "options": [
+      "A. Kafka Topic: order.events, Sampling Service API, Create Review Task, Task Queue: Review Assignments",
+      "B. Kafka Topic: order.events, Sampling Service API, Met sampling criteria?, Create Review Task, Task Queue: Review Assignments",
+      "C. Kafka Topic: order.events, Reject, Log Error",
+      "D. Kafka Topic: order.events, Sampling Service API, Met sampling criteria?, Skip Review"
+    ],
+    "correct_index": 1,
+    "type": "reasoning",
+    "difficulty": "medium"
+  },
+  {
+    "question": "If the 'Reviewer Claims Task' decision is 'No', which node will the process return to?",
+    "options": [
+      "A. Review Task API",
+      "B. Task Queue: Review Assignments",
+      "C. Reviewer Input",
+      "D. Populate Review Form"
+    ],
+    "correct_index": 1,
+    "type": "factual",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which of the following is NOT a possible path segment in the diagram?",
+    "options": [
+      "A. Review Score Calculation --> Store in Review DB",
+      "B. Initiate Escalation --> Escalation Workflow",
+      "C. Sampling Service API --> Task Queue: Review Assignments",
+      "D. Update Order Status --> Kafka Topic: order.updates"
+    ],
+    "correct_index": 2,
+    "type": "negation",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Starting from 'Order System Event', if 'Order Accepted?' is 'Yes', 'Met sampling criteria?' is 'No', 'Reviewer Claims Task' is 'Yes', and 'Pass/Fail Criteria Met?' is 'Pass', how many nodes will be traversed before reaching 'Order System'?",
+    "options": [
+      "A. 8",
+      "B. 9",
+      "C. 10",
+      "D. 11"
+    ],
+    "correct_index": 3,
+    "type": "reasoning",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which of the following paths is followed if an order is accepted, does not meet sampling criteria, a reviewer does not claim the task, and the reviewer eventually claims the task?",
+    "options": [
+      "A. Order System Event -> Kafka Topic: order.events -> Order Accepted? -> Sampling Service API -> Met sampling criteria? -> Skip Review -> Task Queue: Review Assignments -> Review Task API -> Reviewer Claims Task",
+      "B. Order System Event -> Kafka Topic: order.events -> Order Accepted? -> Reject, Log Error",
+      "C. Order System Event -> Kafka Topic: order.events -> Order Accepted? -> Sampling Service API -> Met sampling criteria? -> Skip Review -> Task Queue: Review Assignments -> Review Task API -> Reviewer Claims Task -> Populate Review Form",
+      "D. Order System Event -> Kafka Topic: order.events -> Order Accepted? -> Sampling Service API -> Met sampling criteria? -> Skip Review -> Task Queue: Review Assignments -> Review Task API -> Reviewer Claims Task -> Task Queue: Review Assignments"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "hard"
+  }
+]

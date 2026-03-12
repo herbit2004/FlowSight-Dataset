@@ -1,0 +1,61 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the risk rule engine and post-processing steps for an incoming transaction. It depicts the flow of a transaction through various risk assessment and fraud detection stages, outlining the actions taken based on rule matches and fraud detection results. The diagram serves as a visual representation of the transaction processing logic.
+
+## Overall Layout
+The diagram flows from top to bottom (TB). It is divided into two subgraphs: "Risk Rule Engine" and "Post Processing". The start node is "Incoming Transaction" and the end node is "Initiate Settlement".
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Risk Rule Engine**: This subgraph encompasses the initial risk assessment and rule evaluation stages.
+- **Post Processing**: This subgraph handles fraud detection and subsequent actions based on the fraud assessment.
+
+## Node-by-Node Description
+- **A / Incoming Transaction**: Represents the initial entry point of a transaction into the system. visible in diagram; no further repository context available.
+- **B / Risk Assessment?**: A decision point where the transaction undergoes risk assessment. visible in diagram; no further repository context available.
+- **C / Rule Evaluation Module**: Module responsible for evaluating the transaction against defined rules. visible in diagram; no further repository context available.
+- **D / Match Rule 1?**: A decision point to determine if the transaction matches Rule 1. visible in diagram; no further repository context available.
+- **E / Apply Rule 1 Actions**: Actions to be taken if the transaction matches Rule 1. visible in diagram; no further repository context available.
+- **F / Match Rule 2?**: A decision point to determine if the transaction matches Rule 2. visible in diagram; no further repository context available.
+- **G / Apply Rule 2 Actions**: Actions to be taken if the transaction matches Rule 2. visible in diagram; no further repository context available.
+- **H / Default Handling**: Default actions to be taken if no rules are matched. visible in diagram; no further repository context available.
+- **J / Audit Logging**: Logging of transaction details for auditing purposes. visible in diagram; no further repository context available.
+- **I / Route to Processing**: The transaction is routed for further processing. visible in diagram; no further repository context available.
+- **K / Fraudulent?**: A decision point to determine if the transaction is fraudulent. visible in diagram; no further repository context available.
+- **L / Escalate to Analyst**: The transaction is escalated to an analyst for review. visible in diagram; no further repository context available.
+- **N / Case Management System**: The transaction is entered into a case management system. visible in diagram; no further repository context available.
+- **P / Await Review**: The transaction awaits review. visible in diagram; no further repository context available.
+- **M / Transaction Approved**: The transaction is approved. visible in diagram; no further repository context available.
+- **O / Initiate Settlement**: The settlement process is initiated for the transaction. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: An incoming transaction is sent for risk assessment.
+- `B -- Yes --> C`: If the risk assessment is positive, the transaction proceeds to the rule evaluation module.
+- `B -- No --> I`: If the risk assessment is negative, the transaction is routed to processing.
+- `C --> D`: The transaction is evaluated against Rule 1.
+- `D -- Yes --> E`: If the transaction matches Rule 1, Rule 1 actions are applied.
+- `D -- No --> F`: If the transaction does not match Rule 1, the transaction is evaluated against Rule 2.
+- `F -- Yes --> G`: If the transaction matches Rule 2, Rule 2 actions are applied.
+- `F -- No --> H`: If the transaction does not match Rule 2, default handling is applied.
+- `E --> J`: After applying Rule 1 actions, the transaction details are logged for auditing.
+- `G --> J`: After applying Rule 2 actions, the transaction details are logged for auditing.
+- `H --> J`: After default handling, the transaction details are logged for auditing.
+- `J --> I`: After audit logging, the transaction is routed to processing.
+- `I --> K`: The transaction undergoes fraud detection.
+- `K -- Yes --> L`: If the transaction is flagged as fraudulent, it is escalated to an analyst.
+- `K -- No --> M`: If the transaction is not flagged as fraudulent, it is approved.
+- `L --> N`: The fraudulent transaction is entered into a case management system.
+- `N --> P`: The case awaits review.
+- `P --> O`: After review, settlement is initiated.
+- `M --> O`: If the transaction is approved, settlement is initiated.
+
+## Repository Context & Terminology
+- **Risk Rule Engine**: A system that evaluates transactions against predefined rules to assess risk.
+- **Rule Evaluation Module**: A component responsible for matching transactions against specific rules.
+- **Audit Logging**: The process of recording transaction details for tracking and compliance purposes.
+- **Post Processing**: Actions performed after the initial risk assessment and rule evaluation.
+- **Fraudulent**: Indicating that a transaction is suspected of being fraudulent.
+- **Case Management System**: A system used to manage and track cases, often related to fraud or suspicious activity.
+- **Initiate Settlement**: The process of finalizing and completing a transaction.
+
+## High-Density QA Ground Truth Summary
+The process begins with an "Incoming Transaction" entering the "Risk Rule Engine". The first step is a "Risk Assessment?". If the assessment is negative ("No"), the transaction is immediately routed to "Route to Processing". If the assessment is positive ("Yes"), the transaction proceeds to the "Rule Evaluation Module". Here, the transaction is checked against "Match Rule 1?". If it matches ("Yes"), "Apply Rule 1 Actions" are executed, followed by "Audit Logging". If it doesn't match ("No"), the transaction is checked against "Match Rule 2?". A match ("Yes") leads to "Apply Rule 2 Actions" and "Audit Logging"; otherwise ("No"), "Default Handling" is applied, also followed by "Audit Logging". All paths converge at "Route to Processing", which leads to the "Post Processing" stage. Here, the transaction is evaluated for "Fraudulent?". If deemed fraudulent ("Yes"), it's "Escalate to Analyst", then enters the "Case Management System" and "Await Review" before finally reaching "Initiate Settlement". If not fraudulent ("No"), the transaction is "Transaction Approved" and proceeds to "Initiate Settlement". The "Risk Rule Engine" is a critical component for identifying and mitigating potential risks associated with incoming transactions, ensuring that appropriate actions are taken based on predefined rules.

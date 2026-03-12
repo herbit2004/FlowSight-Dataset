@@ -1,0 +1,28 @@
+graph TD
+    A[Start: Initiating CoreSync Protocol] --> B{VaultNode Handshake Request};
+    B -- Valid SpectraKey? --> C[ZenithGate Auth Layer: Authorize Request];
+    B -- Invalid SpectraKey --> D[Error: SpectraKey Rejection];
+    D --> E[ArcLane Distributor: Log Rejection Event];
+    E --> F[Terminate CoreSync Protocol];
+    C -- Authentication Success --> G[FluxBridge Router: Route Request];
+    C -- Authentication Failure --> H[Error: Authentication Failure];
+    H --> E;
+    G --> I[SpectraQueue Flush: Allocate Buffer];
+    I --> J{Buffer Allocation Successful?};
+    J -- Yes --> K[CoreSync Validation: Validate Payload];
+    J -- No --> L[Error: Insufficient Buffer Space];
+    L --> E;
+    K -- Payload Valid --> M[ArcLane Distributor: Forward to Target Node];
+    K -- Payload Invalid --> N[Error: Payload Validation Failed];
+    N --> E;
+    M --> O[Target Node: Execute Data Transformation];
+    O --> P[VaultNode Handshake Response: Acknowledge Completion];
+    P --> Q[SpectraQueue Flush: Deallocate Buffer];
+    Q --> R[FluxBridge Router: Route Acknowledgement];
+    R --> S[CoreSync Validation: Verify Acknowledgement];
+    S -- Verification Success --> T[Update CoreSync Metadata];
+    S -- Verification Failure --> U[Error: Acknowledgement Verification Failure];
+    U --> E;
+    T --> V[Finalize CoreSync Protocol];
+    V --> Z[End: CoreSync Protocol Completed];
+    F --> Z;

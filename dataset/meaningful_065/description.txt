@@ -1,0 +1,62 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the firmware update process for a device. It outlines the steps involved in checking for new firmware, downloading and verifying the image, staging it in a secondary bank, and rebooting to apply the update. The diagram serves as a visual representation of the firmware update logic.
+
+## Overall Layout
+The diagram's primary direction is left to right (LR). It consists of a single subgraph named "Device" encompassing the entire process. The start node is "Firmware Version Check," and the end nodes are "Firmware Update Complete," "Error: Invalid Manifest," "Error: Corrupted Image," and "Error: Rollback Failed."
+
+## Subgraphs / Stages
+The diagram contains one subgraph:
+- **Device**: This subgraph encapsulates the entire firmware update process, from initial version check to final update or error state.
+
+## Node-by-Node Description
+- **A / Firmware Version Check**: Initiates the process by checking the current firmware version. visible in diagram; no further repository context available.
+- **B / New Firmware Available?**: A decision point to determine if a new firmware version is available. visible in diagram; no further repository context available.
+- **C / Request Update Manifest**: Requests the update manifest file. visible in diagram; no further repository context available.
+- **D / Idle**: The device remains idle if no new firmware is available. visible in diagram; no further repository context available.
+- **E / Manifest Received**: Indicates that the update manifest has been successfully received. visible in diagram; no further repository context available.
+- **F / Manifest Valid?**: A decision point to validate the received manifest. visible in diagram; no further repository context available.
+- **G / Download Firmware Image**: Downloads the new firmware image. visible in diagram; no further repository context available.
+- **H / Error: Invalid Manifest**: Indicates an error due to an invalid manifest. visible in diagram; no further repository context available.
+- **I / Image Downloaded**: Indicates that the firmware image has been successfully downloaded. visible in diagram; no further repository context available.
+- **J / Image Integrity Check**: Performs an integrity check on the downloaded firmware image. visible in diagram; no further repository context available.
+- **K / Stage Firmware in Secondary Bank**: Stages the downloaded firmware in the secondary bank. visible in diagram; no further repository context available.
+- **L / Error: Corrupted Image**: Indicates an error due to a corrupted firmware image. visible in diagram; no further repository context available.
+- **M / Scheduled Reboot**: Schedules a reboot to apply the firmware update. visible in diagram; no further repository context available.
+- **N / Reboot to Secondary Bank**: Reboots the device to the secondary bank. visible in diagram; no further repository context available.
+- **O / Bootloader: Verify Primary Bank Failed?**: Checks if the primary bank verification failed during bootloader. visible in diagram; no further repository context available.
+- **P / Boot to Staged Firmware**: Boots the device to the staged firmware. visible in diagram; no further repository context available.
+- **Q / Boot to Primary Bank**: Boots the device to the primary bank. visible in diagram; no further repository context available.
+- **R / Firmware Update Complete**: Indicates that the firmware update has been successfully completed. visible in diagram; no further repository context available.
+- **S / Error: Rollback Failed**: Indicates an error during the rollback process. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Firmware version check initiates the process.
+- `B -- Yes --> C`: If a new firmware is available, request the update manifest.
+- `B -- No --> D`: If no new firmware is available, the device remains idle.
+- `C --> E`: The update manifest is received.
+- `E --> F`: The received manifest is validated.
+- `F -- Yes --> G`: If the manifest is valid, download the firmware image.
+- `F -- No --> H`: If the manifest is invalid, an error is indicated.
+- `G --> I`: The firmware image is downloaded.
+- `I --> J`: An integrity check is performed on the downloaded image.
+- `J -- Pass --> K`: If the integrity check passes, stage the firmware in the secondary bank.
+- `J -- Fail --> L`: If the integrity check fails, an error is indicated.
+- `K --> M`: A reboot is scheduled to apply the update.
+- `M --> N`: The device reboots to the secondary bank.
+- `N --> O`: The bootloader verifies if the primary bank failed.
+- `O -- Yes --> P`: If the primary bank verification failed, boot to the staged firmware.
+- `O -- No --> Q`: If the primary bank verification did not fail, boot to the primary bank.
+- `P --> R`: The firmware update is completed.
+- `Q --> S`: An error is indicated during the rollback process.
+
+## Repository Context & Terminology
+- **Firmware**: Software embedded in hardware devices that provides low-level control and functionality.
+- **Update Manifest**: A file containing metadata about the firmware update, including version information, checksums, and dependencies.
+- **Image Integrity Check**: A process to verify that the downloaded firmware image has not been corrupted during transmission.
+- **Secondary Bank**: A separate storage location on the device used to stage the new firmware before applying the update. This allows for rollback in case of failure.
+- **Bootloader**: A small program that runs when the device is powered on, responsible for initializing the hardware and loading the operating system or firmware.
+- **Rollback**: The process of reverting to a previous firmware version in case the update fails or causes issues.
+- **Primary Bank**: The main storage location on the device where the currently active firmware resides.
+
+## High-Density QA Ground Truth Summary
+The firmware update process begins with a "Firmware Version Check" to determine if a "New Firmware Available?". If available (`Yes` branch), the system "Request Update Manifest" and proceeds to "Manifest Received," followed by a "Manifest Valid?" check. An invalid manifest (`No` branch) leads to an "Error: Invalid Manifest" end state. A valid manifest (`Yes` branch) triggers "Download Firmware Image," resulting in "Image Downloaded," which is then subjected to an "Image Integrity Check." A failed integrity check (`Fail` branch) results in an "Error: Corrupted Image" end state. A successful integrity check (`Pass` branch) leads to "Stage Firmware in Secondary Bank," followed by "Scheduled Reboot" and "Reboot to Secondary Bank." The system then checks "Bootloader: Verify Primary Bank Failed?". If the primary bank verification fails (`Yes` branch), the system executes "Boot to Staged Firmware" and concludes with "Firmware Update Complete." If the primary bank verification does not fail (`No` branch), the system executes "Boot to Primary Bank," potentially leading to an "Error: Rollback Failed" end state if issues arise during the boot process. The use of a "Secondary Bank" for staging the firmware update allows for a safe rollback mechanism, ensuring device functionality even if the update process encounters problems.

@@ -1,0 +1,37 @@
+graph TD
+    subgraph External
+        Client[Client App]
+    end
+
+    subgraph Internal
+        API_Gateway[API Gateway]
+        Authentication_Service[Authentication Service]
+        Authorization_Service[Authorization Service]
+        Rate_Limiter[Rate Limiter]
+        User_Profile_Service[User Profile Service]
+        Order_Service[Order Service]
+        Payment_Service[Payment Service]
+    end
+
+    Client -- Request --> API_Gateway
+    API_Gateway -- Verify API Key? --> Rate_Limiter
+    Rate_Limiter -- Quota Exceeded? --> Client
+    Rate_Limiter -- No --> API_Gateway
+    API_Gateway -- Has JWT? --> Authentication_Service
+    Authentication_Service -- JWT Valid? --> Authorization_Service
+    Authorization_Service -- Yes --> API_Gateway
+    Authorization_Service -- No --> Client
+    Authentication_Service -- No --> Client
+    API_Gateway -- Route Order Request --> Order_Service
+    API_Gateway -- Route Payment Request --> Payment_Service
+    API_Gateway -- Route User Profile Request --> User_Profile_Service
+    Order_Service -- Process Order --> Database((Order DB))
+    Payment_Service -- Process Payment --> Payment_Gateway((Payment Gateway))
+    User_Profile_Service -- Get/Update Profile --> User_DB((User DB))
+    Payment_Service -- Success --> API_Gateway
+    Order_Service -- Success --> API_Gateway
+    User_Profile_Service -- Success --> API_Gateway
+    API_Gateway -- Response --> Client
+
+    classDef external fill:#f9f,stroke:#333,stroke-width:2px
+    class Client external

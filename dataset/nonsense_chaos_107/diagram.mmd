@@ -1,0 +1,17 @@
+graph TD
+    A[Start: CoreSync Handshake Initiation] --> B{VaultNode Presence Check};
+    B -- VaultNode Online? (true) --> C[SpectraQueue Flush Attempt];
+    B -- VaultNode Online? (false) --> D[ArcLane Distributor Broadcast];
+    D --> E{ArcLane Ack Received?};
+    E -- Ack Received? (true) --> C;
+    E -- Ack Received? (false) --> F[FluxBridge Router Re-Initialization];
+    F --> D;
+    C --> G{ZenithGate Auth Layer Verification};
+    G -- ZenithGate Valid? (true) --> H[DeltaWave Data Serialization];
+    G -- ZenithGate Valid? (false) --> I[Revoke CoreSync Session];
+    I --> J[End: CoreSync Validation Failure];
+    H --> K[TemporalBuffer Allocation];
+    K --> L[VaultNode Handshake Completion];
+    L --> M{CoreSync Validation Success};
+    M -- Success --> N[End: CoreSync Validation Success];
+    M -- Failure --> J;

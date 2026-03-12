@@ -1,0 +1,66 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of a notification system. It depicts the steps a user takes to set up and receive personalized notifications from various platforms. The diagram serves as a visual guide for understanding the configuration and operational flow of the notification system.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It starts with the user initiating the process and ends with the user receiving personalized notifications. The flow progresses linearly with a loop for refining the notification preferences based on user satisfaction.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages:
+1. Initial setup (User start, Fork project, Choose notification method).
+2. Configuration (GitHub Secrets, Keyword configuration, Run mode selection).
+3. Execution (Automated run, Platform data retrieval, Keyword filtering).
+4. Delivery (Notification to phone, Result review).
+5. Feedback and refinement (Satisfaction check, Continuous push).
+
+## Node-by-Node Description
+- **A / 👤 用户开始**: The starting point of the workflow, representing the user initiating the notification setup process. visible in diagram; no further repository context available.
+- **B / 🍴 Fork 项目**: The user forks the project repository. visible in diagram; no further repository context available.
+- **C / ⚙️ 选择通知方式**: The user selects their preferred notification method. visible in diagram; no further repository context available.
+- **D1 / 📱 企业微信群机器人 最简单快速**: Option to use a WeChat group bot for notifications, noted as the simplest and fastest. visible in diagram; no further repository context available.
+- **D2 / 💬 飞书机器人 显示效果最佳**: Option to use a Feishu (Lark) bot for notifications, noted as having the best display effects. visible in diagram; no further repository context available.
+- **D3 / 🔔 钉钉机器人**: Option to use a DingTalk bot for notifications. visible in diagram; no further repository context available.
+- **D4 / 📟 Telegram Bot**: Option to use a Telegram bot for notifications. visible in diagram; no further repository context available.
+- **E / 🔑 配置 GitHub Secrets 填入机器人 Webhook 地址**: The user configures GitHub Secrets with the bot's webhook address. visible in diagram; no further repository context available.
+- **F / 📝 编辑关键词配置 config/frequency_words.txt 添加你关心的词汇**: The user edits the keyword configuration file (`config/frequency_words.txt`) to add relevant keywords. In the repository this corresponds to the configuration file where users can specify keywords of interest.
+- **G / 🎯 选择运行模式 config/config.yaml daily/current/incremental**: The user selects the run mode from the `config/config.yaml` file, choosing between daily, current, or incremental modes. In the repository this corresponds to the main configuration file where the run mode is defined.
+- **H / ✅ 配置完成**: Configuration is complete. visible in diagram; no further repository context available.
+- **I / 🤖 系统根据设定时间自动运行**: The system automatically runs according to the configured schedule. visible in diagram; no further repository context available.
+- **J / 📊 爬取各大平台热点**: The system scrapes hot topics from various platforms. visible in diagram; no further repository context available.
+- **K / 🔍 根据关键词筛选**: The system filters the scraped data based on the configured keywords. visible in diagram; no further repository context available.
+- **L / 📱 推送到你的手机**: Notifications are pushed to the user's phone. visible in diagram; no further repository context available.
+- **M / 📈 查看推送结果**: The user reviews the received notifications. visible in diagram; no further repository context available.
+- **N / 满意效果?**: A decision point where the user evaluates the effectiveness of the notifications. visible in diagram; no further repository context available.
+- **O / 🎉 持续接收精准推送**: The user continues to receive personalized notifications. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User starts the process by forking the project.
+- `B --> C`: User proceeds to choose a notification method after forking the project.
+- `C --> D1`: User selects WeChat group bot as the notification method.
+- `C --> D2`: User selects Feishu bot as the notification method.
+- `C --> D3`: User selects DingTalk bot as the notification method.
+- `C --> D4`: User selects Telegram bot as the notification method.
+- `D1 --> E`: WeChat bot selection leads to GitHub Secrets configuration.
+- `D2 --> E`: Feishu bot selection leads to GitHub Secrets configuration.
+- `D3 --> E`: DingTalk bot selection leads to GitHub Secrets configuration.
+- `D4 --> E`: Telegram bot selection leads to GitHub Secrets configuration.
+- `E --> F`: After configuring GitHub Secrets, the user edits the keyword configuration.
+- `F --> G`: After editing keywords, the user selects the run mode.
+- `G --> H`: Configuration is completed after selecting the run mode.
+- `H --> I`: The system automatically runs after configuration is complete.
+- `I --> J`: The system scrapes hot topics from various platforms.
+- `J --> K`: The system filters data based on keywords.
+- `K --> L`: Notifications are pushed to the user's phone.
+- `L --> M`: User reviews the received notifications.
+- `M --> N`: User evaluates the effectiveness of the notifications.
+- `N -- 不满意 --> F`: If the user is not satisfied, the flow loops back to editing the keyword configuration.
+- `N -- 满意 --> O`: If the user is satisfied, they continue to receive personalized notifications.
+
+## Repository Context & Terminology
+- **config/frequency_words.txt**: This file contains the keywords that the user is interested in, used for filtering relevant information.
+- **config/config.yaml**: This file contains the configuration settings for the system, including the run mode (daily, current, or incremental).
+- **GitHub Secrets**: A secure way to store sensitive information, such as bot webhook addresses, used to authenticate and authorize the notification system.
+- **Webhook**: A URL that the notification system uses to send messages to the selected bot platform (WeChat, Feishu, DingTalk, Telegram).
+- **Run Mode (daily/current/incremental)**: Defines how the system processes data. Daily likely processes data from the current day, current processes the most recent data, and incremental processes data that has changed since the last run.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the user starting the process and forking the project. The user then selects a notification method from options like WeChat, Feishu, DingTalk, or Telegram bots. Each bot selection leads to configuring GitHub Secrets by entering the bot's webhook address. Following this, the user edits the `config/frequency_words.txt` file to add keywords of interest, which are used to filter the scraped data. The user then selects a run mode (daily, current, or incremental) from the `config/config.yaml` file. After configuration, the system automatically runs, scraping hot topics from various platforms and filtering them based on the configured keywords. Notifications are then pushed to the user's phone, and the user reviews the results. If the user is not satisfied with the notifications, the flow loops back to editing the keyword configuration. If the user is satisfied, they continue to receive personalized notifications. The `config/frequency_words.txt` file allows users to customize the notifications based on their specific interests.

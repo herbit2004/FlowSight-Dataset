@@ -1,0 +1,15 @@
+graph TD
+    A[Client: Upload Request] --> B{Load Balancer: Route Request};
+    B --> C[Upload Service: Authenticate User];
+    C -- Valid Credentials --> D[Upload Service: Check File Metadata];
+    C -- Invalid Credentials --> E[Upload Service: Reject Upload];
+    D -- File Size & Type OK --> F[Object Storage: Initiate Multipart Upload];
+    D -- Exceeds Limit --> E;
+    F --> G[Upload Service: Receive Chunks];
+    G --> H[Object Storage: Append Chunk to Multipart Upload];
+    H --> I{All Chunks Received?};
+    I -- Yes --> J[Object Storage: Complete Multipart Upload];
+    I -- No --> G;
+    J --> K[Message Queue: File Processed Event];
+    classDef rejected fill:#f9f,stroke:#333,stroke-width:2px
+    class E rejected

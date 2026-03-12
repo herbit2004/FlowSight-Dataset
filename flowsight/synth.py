@@ -49,8 +49,8 @@ from flowsight.utils import (
     now_ts,
 )
 
-MAX_RETRIES = 5
-RETRY_SLEEP = 4
+MAX_RETRIES = 12   # keep retrying until PNG render succeeds (mermaid.ink can be flaky)
+RETRY_SLEEP = 5
 
 _meta_lock = __import__("threading").Lock()
 

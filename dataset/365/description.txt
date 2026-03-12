@@ -1,0 +1,69 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the flow of events and data between various services within a Condition Monitoring System (CMS) and a Decision Support System (DSS). It depicts how external events are processed, routed, and used to trigger workflows and actions, ultimately providing insights and support for decision-making. The diagram highlights the interaction between different components, including event sources, rule engines, stateful workflows, and knowledge bases.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TB). It starts with external event sources at the top, flows through various processing stages in the middle, and culminates in decision support and actions at the bottom. The primary flow represents the processing of events and the triggering of workflows based on defined rules and conditions.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs:
+- **External Event Sources**: Represents external systems that generate events.
+- **CMS — Condition Monitoring System**: Represents the core event processing and rule execution components.
+- **Agent Bus**: Represents the communication layer for internal services.
+- **DSS — Decision Support System**: Represents the components responsible for decision-making based on processed data.
+- **SWE — Stateful Workflow Engine**: Represents the workflow management and execution components.
+
+## Node-by-Node Description
+- **Email / IMAP**: Represents email and IMAP servers as external event sources. visible in diagram; no further repository context available.
+- **MQTT Devices**: Represents MQTT devices as external event sources. visible in diagram; no further repository context available.
+- **Webhooks**: Represents webhooks as external event sources. visible in diagram; no further repository context available.
+- **File System**: Represents the file system as an external event source. visible in diagram; no further repository context available.
+- **Schedulers**: Represents schedulers as external event sources. visible in diagram; no further repository context available.
+- **EventRouterService**: Routes incoming events based on defined conditions. visible in diagram; no further repository context available.
+- **RuleEngineService**: Evaluates rules against incoming events. visible in diagram; no further repository context available.
+- **RuleActionExecutorService**: Executes actions based on matched rules. visible in diagram; no further repository context available.
+- **EventBusService ZeroMQ PUB/SUB**: A message bus using ZeroMQ for publishing and subscribing to events. visible in diagram; no further repository context available.
+- **IntentRouterService**: Routes intents to appropriate handlers. visible in diagram; no further repository context available.
+- **DssQueryAdapterService**: Adapts queries for the Decision Support System. visible in diagram; no further repository context available.
+- **ContextInjectorService**: Injects context into workflows. visible in diagram; no further repository context available.
+- **BusLoggerService**: Logs bus-related events. visible in diagram; no further repository context available.
+- **DecisionSupportService**: Provides decision support functionalities. visible in diagram; no further repository context available.
+- **KnowledgeGraphService Quadstore RDF**: A knowledge graph service using Quadstore RDF. visible in diagram; no further repository context available.
+- **VectorStoreService ChromaDB**: A vector store service using ChromaDB. visible in diagram; no further repository context available.
+- **StatefulWorkflowsService XState v5**: A stateful workflow service using XState v5. visible in diagram; no further repository context available.
+- **WorkflowEntryActionService**: Executes actions at workflow entry points. visible in diagram; no further repository context available.
+- **Claude LLM**: Represents the Claude Large Language Model. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Email / IMAP & MQTT Devices & Webhooks & File System & Schedulers --> EventRouterService`: External event sources send events to the Event Router Service.
+- `EventRouterService --> EventBusService`: The Event Router Service publishes events to the Event Bus.
+- `EventRouterService --> RuleEngineService`: The Event Router Service sends events to the Rule Engine Service for rule evaluation.
+- `RuleEngineService --> RuleActionExecutorService`: The Rule Engine Service sends matched rules to the Rule Action Executor Service.
+- `RuleActionExecutorService --> EventBusService`: The Rule Action Executor Service publishes agent intents to the Event Bus.
+- `RuleActionExecutorService --> Claude LLM`: The Rule Action Executor Service triggers a prompt action on Claude LLM.
+- `RuleActionExecutorService --> StatefulWorkflowsService`: The Rule Action Executor Service triggers a workflow event in the Stateful Workflow Service.
+- `EventBusService --> IntentRouterService`: The Event Bus Service sends agent intents to the Intent Router Service.
+- `IntentRouterService --> EventBusService`: The Intent Router Service sends workflow triggers to the Event Bus Service.
+- `StatefulWorkflowsService --> EventBusService`: The Stateful Workflow Service sends workflow status updates to the Event Bus Service.
+- `StatefulWorkflowsService --> WorkflowEntryActionService`: The Stateful Workflow Service triggers actions at workflow entry points.
+- `WorkflowEntryActionService --> Claude LLM`: The Workflow Entry Action Service sends prompts/scripts to Claude LLM.
+- `DssQueryAdapterService --> DecisionSupportService`: The DSS Query Adapter Service sends queries to the Decision Support Service.
+- `ContextInjectorService --> DssQueryAdapterService`: The Context Injector Service provides context to the DSS Query Adapter Service.
+- `RuleActionExecutorService -.-> ContextInjectorService`: The Rule Action Executor Service enriches context for the Context Injector Service.
+- `StatefulWorkflowsService -.-> ContextInjectorService`: The Stateful Workflow Service provides context to the Context Injector Service.
+- `DecisionSupportService --> KnowledgeGraphService`: The Decision Support Service uses the Knowledge Graph Service.
+- `DecisionSupportService --> VectorStoreService`: The Decision Support Service uses the Vector Store Service.
+- `EventBusService --> DecisionSupportService`: The Event Bus Service sends DSS updates to the Decision Support Service.
+- `EventBusService --> DssQueryAdapterService`: The Event Bus Service sends DSS queries to the DSS Query Adapter Service.
+- `EventBusService --> BusLoggerService`: The Event Bus Service sends events to the Bus Logger Service.
+
+## Repository Context & Terminology
+- **ZeroMQ (ZeroMQ PUB/SUB)**: A high-performance asynchronous messaging library, used here for the EventBusService to enable publish-subscribe communication between services.
+- **XState**: A library for creating, interpreting, and executing finite state machines and statecharts, used in the StatefulWorkflowsService.
+- **ChromaDB**: An open-source embedding database, used by the VectorStoreService for storing and querying vector embeddings.
+- **Quadstore RDF**: A storage solution for RDF (Resource Description Framework) data, used by the KnowledgeGraphService.
+- **CMS (Condition Monitoring System)**: A system that monitors conditions and triggers actions based on defined rules.
+- **DSS (Decision Support System)**: A system that provides information and tools to support decision-making processes.
+- **Agent Bus**: A communication channel (EventBusService) facilitating interaction between different agents or services within the system.
+
+## High-Density QA Ground Truth Summary
+The process begins with external event sources like Email/IMAP, MQTT Devices, Webhooks, File System, and Schedulers sending events to the EventRouterService. The EventRouterService then routes these events to both the RuleEngineService for rule evaluation and the EventBusService (ZeroMQ PUB/SUB) for broader distribution. If a rule is matched by the RuleEngineService, it triggers the RuleActionExecutorService, which can then perform several actions: sending agent/intent messages back to the EventBusService, triggering a prompt action on Claude LLM, and initiating a workflow event in the StatefulWorkflowsService (XState v5). The EventBusService facilitates communication between services like IntentRouterService, DssQueryAdapterService, and BusLoggerService. The IntentRouterService triggers workflows in the StatefulWorkflowsService. The StatefulWorkflowsService interacts with the WorkflowEntryActionService, which can send prompts/scripts to Claude LLM. The DssQueryAdapterService queries the DecisionSupportService, which utilizes KnowledgeGraphService (Quadstore RDF) and VectorStoreService (ChromaDB) for knowledge retrieval and decision support. The system leverages ZeroMQ for asynchronous messaging and XState for managing stateful workflows, enabling a flexible and responsive architecture for condition monitoring and decision support.

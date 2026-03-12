@@ -1,0 +1,71 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the order processing workflow, from when a user places an order to when the order is marked as complete. This diagram serves as a visual representation of the steps involved in fulfilling an order.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The flow starts with "User Places Order" at the top and ends with "Order Marked Complete" and "Cancel Order" at the bottom. The diagram shows a series of steps, decisions, and loops involved in processing an order.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Order Placement, Payment Verification, Inventory Check, Fulfillment Initiation, Shipping, Delivery, and Completion/Cancellation.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial step where a user submits an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision node that checks if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **C / Cancel Order**: Represents the action of canceling the order.
+  visible in diagram; no further repository context available.
+- **D / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory.
+  visible in diagram; no further repository context available.
+- **E / Fulfillment Initiated**: Represents the start of the fulfillment process for the order.
+  visible in diagram; no further repository context available.
+- **F / Order Backordered**: Represents the state where the order is backordered due to unavailability of inventory.
+  visible in diagram; no further repository context available.
+- **H / Shipping Address Valid?**: A decision node that checks if the shipping address provided by the user is valid.
+  visible in diagram; no further repository context available.
+- **G / Contact User For Address**: Represents the action of contacting the user to obtain a valid shipping address.
+  visible in diagram; no further repository context available.
+- **I / Package Items**: Represents the process of packaging the items for shipment.
+  visible in diagram; no further repository context available.
+- **J / Shipping Confirmation Sent**: Represents the action of sending a shipping confirmation to the user.
+  visible in diagram; no further repository context available.
+- **K / Package Shipped**: Represents the state where the package has been shipped.
+  visible in diagram; no further repository context available.
+- **L / Delivery Successful?**: A decision node that checks if the delivery of the package was successful.
+  visible in diagram; no further repository context available.
+- **M / Investigate Delivery Failure**: Represents the action of investigating a failed delivery.
+  visible in diagram; no further repository context available.
+- **N / Order Marked Complete**: Represents the final state where the order is marked as complete.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, initiating the workflow.
+- `B -- No --> C`: If payment is not received, the order is canceled.
+- `B -- Yes --> D`: If payment is received, an inventory check is performed.
+- `D -- Available --> E`: If inventory is available, fulfillment is initiated.
+- `D -- Unavailable --> F`: If inventory is unavailable, the order is backordered.
+- `F --> B`: Backordered orders loop back to the "Payment Received?" check.
+- `E --> H`: Fulfillment initiated leads to a check for shipping address validity.
+- `H -- No --> G`: If the shipping address is invalid, the user is contacted.
+- `G --> E`: After contacting the user for the address, the process loops back to "Fulfillment Initiated".
+- `H -- Yes --> I`: If the shipping address is valid, the items are packaged.
+- `I --> J`: Packaged items lead to sending a shipping confirmation.
+- `J --> K`: Shipping confirmation is sent, then the package is shipped.
+- `K --> L`: The package is shipped, leading to a check for delivery success.
+- `L -- No --> M`: If delivery is unsuccessful, the delivery failure is investigated.
+- `M --> K`: After investigating delivery failure, the process loops back to "Package Shipped".
+- `L -- Yes --> N`: If delivery is successful, the order is marked complete.
+- `N --> A`: After the order is marked complete, the process loops back to "User Places Order".
+- `C --> N`: Canceled orders merge into "Order Marked Complete".
+
+## Repository Context & Terminology
+- **User Places Order**: Standard meaning is a customer initiating a purchase. In this diagram, it's the starting point and also an illogical loop destination after order completion.
+- **Payment Received?**: Standard meaning is verifying payment confirmation. In this diagram, it's a decision point, but there's no explicit payment processing step.
+- **Inventory Check**: Standard meaning is verifying stock levels. In this diagram, it determines whether fulfillment is initiated or the order is backordered.
+- **Fulfillment Initiated**: Standard meaning is starting the process of preparing an order for shipment. In this diagram, it leads to shipping address validation.
+- **Shipping Address Valid?**: Standard meaning is verifying the accuracy of the delivery address. In this diagram, an invalid address triggers contacting the user.
+- **Package Shipped**: Standard meaning is the item leaving the warehouse. In this diagram, it precedes the delivery success check.
+- **Delivery Successful?**: Standard meaning is confirming the customer received the package. In this diagram, a successful delivery loops back to "User Places Order".
+- **Order Marked Complete**: Standard meaning is the final stage of order processing. In this diagram, it's an illogical loop back to the beginning and also the destination of canceled orders.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Places Order," which initiates the order processing workflow. The first decision point is "Payment Received?". If payment is not received ("No"), the order is "Cancel Order" and then incorrectly merges into "Order Marked Complete". If payment is received ("Yes"), an "Inventory Check" is performed. If the inventory is "Unavailable", the order is "Order Backordered" and loops back to "Payment Received?". If inventory is "Available", "Fulfillment Initiated", leading to "Shipping Address Valid?". If the address is invalid ("No"), the system "Contact User For Address" and loops back to "Fulfillment Initiated". If the address is valid ("Yes"), the system proceeds to "Package Items" then "Shipping Confirmation Sent" then "Package Shipped". Next, "Delivery Successful?" is checked. If delivery fails ("No"), the system "Investigate Delivery Failure" and loops back to "Package Shipped". If delivery is successful ("Yes"), the "Order Marked Complete" and then incorrectly loops back to "User Places Order". The diagram contains several logical errors, including looping back to the start after order completion, merging order cancellation into order completion, and looping back to payment received after a backorder.

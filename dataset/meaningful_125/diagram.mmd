@@ -1,0 +1,44 @@
+graph TD
+    subgraph Data Ingestion Zone
+        A[Raw Data Source: Customer Transactions] --> B(Landing Zone: S3 Bucket - /raw)
+        B -->|Initial Load| C{Check: Schema Validation?}
+    end
+
+    C -- Yes --> D(Staging Zone: S3 Bucket - /staging)
+    C -- No --> E[Quarantine Zone: S3 Bucket - /quarantine]
+    E --> F(Alert: Data Quality Team)
+
+    subgraph Transformation Zone
+        D --> G{Data Quality Checks}
+        G -- Pass --> H(Data Cleansing: PySpark Job)
+        G -- Fail --> I[Exception Logging]
+        I --> F
+        H --> J(Transformation: Deduplication & Enrichment)
+    end
+
+    subgraph Hot Tier - Optimized for Real-Time Analytics
+        J --> K(Parquet Format: S3 Bucket - /hot)
+        K --> L[Real-Time Dashboard: Presto/Athena]
+    end
+
+    subgraph Warm Tier - Optimized for Interactive Analysis
+        K -->|Scheduled Roll-up| M(Summarization: Spark Aggregation)
+        M --> N(Optimized Parquet: S3 Bucket - /warm)
+        N --> O[Interactive BI Tools: Tableau/Looker]
+    end
+
+    subgraph Cold Tier - Optimized for Archival and Batch Processing
+        N -->|Periodic Archival| P(Convert to ORC: S3 Bucket - /cold)
+        P --> Q[Historical Data Analysis: EMR/Hive]
+        Q --> R(Reporting: Audit & Compliance)
+    end
+
+    subgraph Deep Freeze Tier - Long Term Archival
+       P --> |Monthly Archival| S(Move to Glacier)
+       S --> T(Disaster Recovery/Compliance)
+    end
+
+    classDef fillGreen fill:#ccffcc,stroke:#333,stroke-width:2px
+    classDef fillRed fill:#ffcccc,stroke:#333,stroke-width:2px
+    class E,I fillRed
+    class K,N,P fillGreen

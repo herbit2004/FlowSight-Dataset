@@ -1,0 +1,20 @@
+graph TD
+    A[User Places Order] --> B{Payment Received?};
+    B -- Yes --> C[Inventory Available?];
+    B -- No --> H[Cancel Order & Refund];
+    C -- No --> D[Notify Replenishment Team];
+    D --> E[Create Backorder];
+    E --> K[Order Fulfilled];
+    C -- Yes --> F[Shipping Label Printed];
+    F --> I[Ship Order];
+    I --> J{Delivery Successful?};
+    J -- No --> G[Process Return];
+    G --> A;
+    J -- Yes --> K[Order Fulfilled];
+    K --> L[Update Order Status];
+    L --> M[Send Confirmation Email];
+    M --> N{Feedback Requested?};
+    N -- No --> O[Archive Order];
+	N -- Yes --> P[Collect Payment];
+	P --> O[Archive Order];
+    H --> O[Archive Order];

@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of data and control between different components of a system. It illustrates how Claude Code interacts with a hook system to trigger actions and deliver alerts to the user terminal. The diagram serves as a high-level overview of the system's architecture and data flow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) fashion. It shows a hierarchical structure, starting with Claude Code at the top and ending with the User Terminal at the bottom. The flow progresses from the Claude Code component, through the Hook System and Output Channels, and finally to the User.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs:
+- **Claude Code**: Represents the Claude Code component.
+- **Hook System**: Represents the hook system responsible for processing triggers and parsing context.
+- **Output Channels**: Represents the different output channels used to deliver alerts.
+- **User**: Represents the user and their terminal.
+
+## Node-by-Node Description
+- **CC / Claude Code CLI**: Represents the Claude Code Command Line Interface, which triggers actions and sends JSON data. visible in diagram; no further repository context available.
+- **HS / Hook Runner Python**: Represents the Hook Runner component, implemented in Python, which receives triggers and JSON data. visible in diagram; no further repository context available.
+- **CTX / Context Parser stdin JSON**: Represents the Context Parser component, which parses JSON data received from stdin. visible in diagram; no further repository context available.
+- **AF / Audio Files MP3s**: Represents the audio files output channel, which plays MP3 files. visible in diagram; no further repository context available.
+- **DN / Desktop Notifications osascript/notify-send**: Represents the desktop notifications output channel, which uses osascript or notify-send to display notifications. visible in diagram; no further repository context available.
+- **TTS / Text-to-Speech say/espeak/SAPI**: Represents the text-to-speech output channel, which uses say, espeak, or SAPI to generate speech. visible in diagram; no further repository context available.
+- **U / User Terminal**: Represents the user's terminal, which receives alerts. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `CC --> HS`: Claude Code CLI triggers the Hook System with JSON data.
+- `HS --> CTX`: The Hook Runner parses the data and sends it to the Context Parser.
+- `CTX --> AF`: The Context Parser triggers the Audio Files output channel to play MP3s.
+- `CTX --> DN`: The Context Parser triggers the Desktop Notifications output channel to display notifications.
+- `CTX --> TTS`: The Context Parser triggers the Text-to-Speech output channel to generate speech.
+- `AF --> U`: The Audio Files output channel alerts the user via the User Terminal.
+- `DN --> U`: The Desktop Notifications output channel alerts the user via the User Terminal.
+- `TTS --> U`: The Text-to-Speech output channel alerts the user via the User Terminal.
+Multiple paths converge at the User Terminal, where alerts from different output channels are received.
+
+## Repository Context & Terminology
+- **Claude Code CLI**: The command-line interface for interacting with the Claude Code system.
+- **Hook System**: A system that allows triggering actions based on specific events or conditions.
+- **Hook Runner**: A component responsible for executing hooks or actions.
+- **Context Parser**: A component that parses context data, typically in JSON format.
+- **stdin**: Standard input, a common way to pass data to a program.
+- **osascript**: A command-line tool for executing AppleScript scripts on macOS.
+- **notify-send**: A command-line tool for sending desktop notifications on Linux.
+- **say**: A command-line tool on macOS for text-to-speech.
+- **espeak**: An open-source software speech synthesizer.
+- **SAPI**: Speech API, a Microsoft API for speech recognition and text-to-speech.
+
+## High-Density QA Ground Truth Summary
+The process begins with the Claude Code CLI, which triggers the Hook System by sending JSON data. The Hook Runner, implemented in Python, receives this data and parses it, passing the parsed context to the Context Parser via stdin. The Context Parser then branches out to three different output channels: Audio Files (MP3s), Desktop Notifications (using osascript/notify-send), and Text-to-Speech (using say/espeak/SAPI). Each of these output channels generates an alert that is sent to the User Terminal. The Desktop Notifications channel utilizes `osascript` on macOS or `notify-send` on Linux to display alerts, while the Text-to-Speech channel leverages `say` on macOS, `espeak`, or the Microsoft Speech API (SAPI) to generate spoken alerts. All three output channels converge at the User Terminal, where the user receives the alerts. The Claude Code CLI acts as the initiator, while the User Terminal serves as the final destination for the alerts generated by the system.

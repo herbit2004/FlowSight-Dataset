@@ -1,0 +1,52 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the data flow and component interaction within a Claude agent system. It illustrates the interaction between the client, transport layer, session layer, SDK, and storage, showing how messages and state are managed. The diagram serves as a high-level overview of the system's architecture.
+
+## Overall Layout
+The diagram's primary direction is left-to-right (LR). It is divided into several subgraphs representing different layers of the system. The start node is the "Browser/App (WS Client)" and the end node is the ".claude/projects/JSONL logs" storage.
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Client**: Represents the user interface or application interacting with the system.
+- **Transport**: Handles the communication between the client and the session layer.
+- **SessionLayer**: Manages user sessions and message handling.
+- **SDK**: Provides the software development kit for interacting with the Claude agent.
+- **Storage**: Stores the logs and data.
+
+## Node-by-Node Description
+- **Browser/App (WS Client)**: Represents the client-side application, typically a web browser or native app, that interacts with the system using WebSocket.
+  visible in diagram; no further repository context available.
+- **WebSocketHandler**: Handles WebSocket connections and communication.
+  visible in diagram; no further repository context available.
+- **SessionManager**: Manages user sessions.
+  visible in diagram; no further repository context available.
+- **Session**: Represents a user session, including options, messages, busy/loading state, and client information.
+  visible in diagram; no further repository context available.
+- **SimpleClaudeAgentSDKClient (simple implementation)**: A simple implementation of the Claude Agent SDK client.
+  visible in diagram; no further repository context available.
+- **@anthropic-ai/claude-agent-sdk**: Represents the Claude Agent SDK.
+  visible in diagram; no further repository context available.
+- **IClaudeAgentSDKClient<>**: An interface for the Claude Agent SDK client.
+  visible in diagram; no further repository context available.
+- **.claude/projects/JSONL logs**: Stores the logs in JSONL format.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Browser/App (WS Client) --> WebSocketHandler`: The client sends chat messages, SDK options, or resumes a session to the WebSocket handler.
+- `WebSocketHandler --> SessionManager`: The WebSocket handler forwards messages to the session manager.
+- `SessionManager --> Session`: The session manager manages the session state.
+- `Session <--> IClaudeAgentSDKClient<>`: The Session interacts with the IClaudeAgentSDKClient interface.
+- `SimpleClaudeAgentSDKClient (simple implementation) -. implements .-> IClaudeAgentSDKClient<>`: The SimpleClaudeAgentSDKClient implements the IClaudeAgentSDKClient interface.
+- `SimpleClaudeAgentSDKClient (simple implementation) --> @anthropic-ai/claude-agent-sdk`: The SimpleClaudeAgentSDKClient uses the Claude Agent SDK.
+- `WebSocketHandler --> Session`: The WebSocket handler sends messages and state to the Session.
+- `Session -. loadMessages .-> .claude/projects/JSONL logs`: The session loads messages from the JSONL logs.
+
+## Repository Context & Terminology
+- **WebSocket**: A communication protocol that provides full-duplex communication channels over a single TCP connection. It's used for real-time data transfer between the client and the server.
+- **SDK (Software Development Kit)**: A set of software development tools that allows the creation of applications for a certain software package, software framework, hardware platform, computer system, video game console, operating system, or similar platform.
+- **JSONL**: A format where each line is a separate JSON object. It's often used for storing logs and data.
+- **Session**: Represents a user's interaction with the application over a period of time. It includes data such as user options, messages, and state.
+- **Interface**: A contract that defines the methods and properties that a class must implement. In this case, `IClaudeAgentSDKClient` is an interface that defines the methods for interacting with the Claude Agent SDK.
+- **Implementation**: A concrete class that implements an interface. `SimpleClaudeAgentSDKClient` is a simple implementation of the `IClaudeAgentSDKClient` interface.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the architecture of a Claude agent system, starting with the `Browser/App (WS Client)` which initiates communication by sending chat messages, SDK options, or resuming a session to the `WebSocketHandler`. The `WebSocketHandler` then forwards these messages to the `SessionManager`, which manages the `Session` state, including options, messages, and busy/loading status. The `Session` interacts with the `IClaudeAgentSDKClient` interface, which is implemented by `SimpleClaudeAgentSDKClient`. The `SimpleClaudeAgentSDKClient` utilizes the `@anthropic-ai/claude-agent-sdk`. The `WebSocketHandler` also sends messages and state directly to the `Session`. The `Session` loads messages from `.claude/projects/JSONL logs`, which serves as the end node for data persistence. The use of WebSockets enables real-time communication between the client and the server, while the SDK provides tools for interacting with the Claude agent. The JSONL format is used for storing logs, ensuring data integrity and ease of access.

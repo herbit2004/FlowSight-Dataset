@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow. It illustrates the steps involved from when a user places an order to when the order is completed. This diagram serves as a visual representation of the order fulfillment process, but contains intentional errors and deviations from standard practice.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The flow starts with the "User Places Order" node at the top and ends with the "Order Completed" node at the bottom right. The diagram shows a single primary flow with multiple branches and loops.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement & Payment, Inventory Check & Backorder, Order Processing, Shipping, Delivery, and Completion.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial step where a user submits an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Order Rejected**: Represents the outcome where the order is rejected, presumably due to payment failure or other issues. visible in diagram; no further repository context available.
+- **D / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **E / Packing Order**: Represents the process of packing the order for shipment. visible in diagram; no further repository context available.
+- **F / Backorder Placed**: Represents the action of placing a backorder for items that are currently unavailable. visible in diagram; no further repository context available.
+- **G / Notify Customer**: Represents the action of notifying the customer about the backorder and potential delay. visible in diagram; no further repository context available.
+- **H / Customer Accepts Delay?**: A decision point to determine if the customer accepts the delay due to the backorder. visible in diagram; no further repository context available.
+- **I / Update Order Status**: Represents the action of updating the order status, presumably to reflect the backorder and customer's acceptance. visible in diagram; no further repository context available.
+- **J / Shipping Label Generated**: Represents the process of generating a shipping label for the order. visible in diagram; no further repository context available.
+- **K / Shipping Label Valid?**: A decision point to check if the generated shipping label is valid. visible in diagram; no further repository context available.
+- **L / Order Shipped**: Represents the action of shipping the order to the customer. visible in diagram; no further repository context available.
+- **M / Send Shipping Confirmation**: Represents the action of sending a shipping confirmation to the customer. visible in diagram; no further repository context available.
+- **N / Customer Receives Order**: Represents the event where the customer receives the order. visible in diagram; no further repository context available.
+- **O / Order Completed**: Represents the final stage where the order is marked as completed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The user placing an order triggers the payment verification process.
+- `B -- No --> C`: If payment is not received, the order is rejected.
+- `B -- Yes --> D`: If payment is received, an inventory check is initiated.
+- `D -- Available --> E`: If the inventory is available, the order is packed.
+- `D -- Unavailable --> F`: If the inventory is unavailable, a backorder is placed.
+- `F --> G`: Placing a backorder triggers a notification to the customer.
+- `G --> H`: The customer is prompted to accept the delay.
+- `H -- Yes --> I`: If the customer accepts the delay, the order status is updated.
+- `I --> E`: After updating the order status, the process merges into packing the order.
+- `H -- No --> C`: If the customer does not accept the delay, the order is rejected.
+- `E --> J`: Packing the order leads to generating a shipping label.
+- `J --> K`: The generated shipping label is validated.
+- `K -- Yes --> L`: If the shipping label is valid, the order is shipped.
+- `K -- No --> L`: If the shipping label is *not* valid, the order is shipped (counterfactual error).
+- `L --> M`: Shipping the order triggers sending a shipping confirmation.
+- `M --> N`: Sending a shipping confirmation leads to the customer receiving the order.
+- `N --> O`: The customer receiving the order leads to the order being completed.
+- `C --> O`: Rejected orders are marked as completed.
+- `O --> A`: Order completion leads back to the user placing another order (wrong causal direction).
+
+## Repository Context & Terminology
+- **User Places Order**: Standard term for a customer initiating a purchase. In this diagram, it's the starting point of the entire process.
+- **Payment Received?**: Standard check for successful transaction. Here, a 'No' leads to order rejection without any failure handling.
+- **Inventory Check**: Standard process of verifying stock levels. Here, unavailability triggers a backorder.
+- **Backorder Placed**: Standard practice of ordering items not currently in stock. Here, it triggers customer notification *after* placement.
+- **Notify Customer**: Standard practice of informing the customer. Here, it happens *after* backorder placement, which is a reversed sequence.
+- **Shipping Label Valid?**: Standard check for address and other data. Here, an invalid label *still* results in the order being shipped (counterfactual error).
+- **Order Completed**: Standard final status. Here, it loops back to "User Places Order", which is a wrong causal direction.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Places Order", which leads to the "Payment Received?" decision. If payment is not received ("No"), the "Order Rejected" node is reached, and the process jumps to "Order Completed". If payment is received ("Yes"), an "Inventory Check" is performed. If the inventory is "Available", the process proceeds to "Packing Order". If the inventory is "Unavailable", a "Backorder Placed" action is triggered, followed by "Notify Customer". The customer is then asked "Customer Accepts Delay?". If "Yes", the "Update Order Status" action is taken, and the process merges into "Packing Order". If "No", the "Order Rejected" node is reached, and the process jumps to "Order Completed". "Packing Order" leads to "Shipping Label Generated", followed by "Shipping Label Valid?". Regardless of whether the shipping label is valid ("Yes" or "No" – counterfactual error), the "Order Shipped" node is reached. "Order Shipped" leads to "Send Shipping Confirmation", then "Customer Receives Order", and finally "Order Completed". The "Order Completed" node then loops back to "User Places Order" (wrong causal direction). The diagram contains several intentional errors, including shipping orders with invalid labels and notifying customers about delays after placing backorders.

@@ -1,0 +1,14 @@
+graph TD
+    subgraph Customer Initiates Return
+        A[Customer: Starts Return Request Online] --> B{Check Return Eligibility};
+        B -- Eligible --> C[Generate Return Shipping Label];
+        B -- Ineligible: > 30 Days --> R[Notify Customer: Return Denied];
+    end
+    C --> D[Customer: Ships Item Back];
+    D --> E{Item Received at Warehouse};
+    E -- Damaged/Incorrect Item --> F[Inspection & Exception Handling];
+    E -- As Expected --> G[Refund Approval Process];
+    F --> H[Manual Review & Decision];
+    H -- Approve Refund --> G;
+    H -- Deny Refund --> R;
+    G --> I[Initiate Refund/Exchange];

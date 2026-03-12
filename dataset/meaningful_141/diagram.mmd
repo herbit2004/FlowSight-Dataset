@@ -1,0 +1,42 @@
+graph TD
+    A[Data Source: Customer Transactions] --> B(Data Ingestion Service);
+    B --> C{Is Data Masking Required?};
+    C -- Yes --> D[PII Identification Module];
+    D --> E(Data Masking Engine);
+    E --> F{Apply Masking Rule: Redaction};
+    F -- Rule Matched --> G[Redact Sensitive Data];
+    G --> H(Masked Data Output);
+    F -- No Rule Matched --> I{Apply Masking Rule: Substitution};
+    I -- Rule Matched --> J[Substitute with Pseudonym];
+    J --> H;
+    I -- No Rule Matched --> K{Apply Masking Rule: Encryption};
+    K -- Rule Matched --> L[Encrypt Data with AES-256];
+    L --> H;
+    K -- No Rule Matched --> M[No Suitable Masking Rule];
+    M --> H;
+    C -- No --> N{Is Data Encryption Required?};
+    N -- Yes --> O[Encryption Key Retrieval Service];
+    O --> P(Data Encryption Engine);
+    P --> Q[Encrypt Data with Key];
+    Q --> R(Encrypted Data Output);
+    N -- No --> S(Data Output - Unmasked/Unencrypted);
+    B --> S;
+    H --> T(Data Validation Service);
+    R --> T;
+    S --> T;
+    T --> U{Validation Successful?};
+    U -- Yes --> V[Store Validated Data];
+    U -- No --> W[Rejection Queue];
+    V --> X(Data Warehouse);
+    W --> Y[Alerting Service];
+    Y --> Z(Monitoring Dashboard);
+    classDef mask fill:#f9f,stroke:#333,stroke-width:2px
+    class D,E,F,G,I,J,K,L,M mask
+    classDef encrypt fill:#ccf,stroke:#333,stroke-width:2px
+    class O,P,Q encrypt
+    classDef output fill:#eee,stroke:#333,stroke-width:2px
+    class H,R,S output
+    classDef ingest fill:#afa,stroke:#333,stroke-width:2px
+    class B ingest
+    classDef validate fill:#faa,stroke:#333,stroke-width:2px
+    class T validate

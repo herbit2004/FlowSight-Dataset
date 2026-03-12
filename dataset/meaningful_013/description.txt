@@ -1,0 +1,91 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating an ETL (Extract, Transform, Load) process for data integration, specifically focusing on data flow from a CRM system through validation, enrichment, quality checks, and routing to various destination systems. The diagram outlines the steps involved in moving data from a source system to various destination systems, including error handling and monitoring. It serves as a visual representation of the data pipeline architecture.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It depicts a hierarchical flow starting with the data source and ETL job scheduler, progressing through transformation and enrichment stages, and culminating in destination systems. The start nodes are "Source System: Legacy CRM" and "ETL Job Scheduler", and the end nodes are the destination systems and monitoring/alerting components.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs:
+- **Data Source**: Represents the origin of the data.
+- **Transformation and Enrichment**: Details the data transformation and enrichment processes.
+- **Destination Systems**: Shows the various target systems for the processed data.
+- **Monitoring and Alerting**: Covers the monitoring and alerting aspects of the data pipeline.
+
+## Node-by-Node Description
+- **Source System: Legacy CRM**: Represents the source data system, a legacy CRM.
+  visible in diagram; no further repository context available.
+- **Data Extraction: CRM Connector**: Represents the component responsible for extracting data from the CRM system.
+  visible in diagram; no further repository context available.
+- **Data Validation and Cleansing**: Represents the stage where data is validated and cleansed.
+  visible in diagram; no further repository context available.
+- **Error Queue: Dead Letter Topic**: Represents a queue for storing failed data records.
+  visible in diagram; no further repository context available.
+- **Data Transformation: Mapping Engine**: Represents the engine responsible for transforming the data.
+  visible in diagram; no further repository context available.
+- **Data Enrichment: Third-Party API**: Represents the stage where data is enriched using a third-party API.
+  visible in diagram; no further repository context available.
+- **Fallback Enrichment: Local Cache**: Represents a local cache used for fallback enrichment in case the third-party API fails.
+  visible in diagram; no further repository context available.
+- **Data Augmentation**: Represents the process of augmenting the data.
+  visible in diagram; no further repository context available.
+- **Data Standardization**: Represents the process of standardizing the data.
+  visible in diagram; no further repository context available.
+- **Schema Transformation**: Represents the process of transforming the data schema.
+  visible in diagram; no further repository context available.
+- **Data Quality Checks**: Represents the stage where data quality checks are performed.
+  visible in diagram; no further repository context available.
+- **Data Remediation Queue**: Represents a queue for storing data that failed quality checks and requires remediation.
+  visible in diagram; no further repository context available.
+- **Data Routing**: Represents the component responsible for routing the data to the appropriate destination system.
+  visible in diagram; no further repository context available.
+- **Destination System 1: Data Warehouse**: Represents the data warehouse destination system.
+  visible in diagram; no further repository context available.
+- **Destination System 2: Reporting Database**: Represents the reporting database destination system.
+  visible in diagram; no further repository context available.
+- **Destination System 3: Operational Data Store**: Represents the operational data store destination system.
+  visible in diagram; no further repository context available.
+- **Alerting System: PagerDuty**: Represents the alerting system used for notifying operations teams.
+  visible in diagram; no further repository context available.
+- **Ops Team Notification**: Represents the notification sent to the operations team.
+  visible in diagram; no further repository context available.
+- **Metrics Collector**: Represents the component responsible for collecting metrics.
+  visible in diagram; no further repository context available.
+- **Grafana Dashboard**: Represents the Grafana dashboard used for visualizing metrics.
+  visible in diagram; no further repository context available.
+- **ETL Job Scheduler**: Represents the job scheduler responsible for scheduling and running ETL jobs.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Source System: Legacy CRM --> Data Extraction: CRM Connector`: Data flows from the CRM system to the CRM connector for extraction.
+- `Data Extraction: CRM Connector --> Data Validation and Cleansing`: Extracted data is passed to the validation and cleansing stage.
+- `Data Validation and Cleansing -- Valid Data --> Data Transformation: Mapping Engine`: Valid data is passed to the transformation engine.
+- `Data Validation and Cleansing -- Invalid Data --> Error Queue: Dead Letter Topic`: Invalid data is sent to the dead letter queue.
+- `Data Transformation: Mapping Engine --> Data Enrichment: Third-Party API`: Transformed data is passed to the third-party API for enrichment.
+- `Data Enrichment: Third-Party API -- API Success --> Data Augmentation`: If the API call is successful, the data is augmented.
+- `Data Enrichment: Third-Party API -- API Failure --> Fallback Enrichment: Local Cache`: If the API call fails, fallback enrichment is performed using the local cache.
+- `Fallback Enrichment: Local Cache --> Data Augmentation`: Data from the local cache is passed to the data augmentation stage.
+- `Data Enrichment: Third-Party API -- API Timeout --> Alerting System: PagerDuty`: If the API call times out, an alert is sent to PagerDuty.
+- `Data Augmentation --> Data Standardization`: Augmented data is passed to the standardization stage.
+- `Data Standardization --> Schema Transformation`: Standardized data is passed to the schema transformation stage.
+- `Schema Transformation --> Data Quality Checks`: Transformed data is passed to the quality checks stage.
+- `Data Quality Checks -- Quality Met --> Data Routing`: Data that passes quality checks is routed to destination systems.
+- `Data Quality Checks -- Quality Failed --> Data Remediation Queue`: Data that fails quality checks is sent to the remediation queue.
+- `Data Routing --> Destination System 1: Data Warehouse`: Data is routed to the data warehouse.
+- `Data Routing --> Destination System 2: Reporting Database`: Data is routed to the reporting database.
+- `Data Routing --> Destination System 3: Operational Data Store`: Data is routed to the operational data store.
+- `Error Queue: Dead Letter Topic --> Alerting System: PagerDuty`: Errors trigger alerts to PagerDuty.
+- `Data Remediation Queue --> Alerting System: PagerDuty`: Data requiring remediation triggers alerts to PagerDuty.
+- `Data Extraction: CRM Connector -- Extract Failed --> Alerting System: PagerDuty`: Extraction failures trigger alerts to PagerDuty.
+- Multiple paths converge at the Metrics Collector from various stages (Data Extraction, Data Validation, Data Transformation, Data Enrichment, Data Augmentation, Data Standardization, Schema Transformation, Data Quality Checks, Data Routing, Destination Systems, Error Queue, Data Remediation Queue).
+
+## Repository Context & Terminology
+- **ETL (Extract, Transform, Load)**: A data integration process that involves extracting data from various sources, transforming it into a usable format, and loading it into a target system.
+- **CRM (Customer Relationship Management)**: A system used to manage customer interactions and data throughout the customer lifecycle.
+- **Data Warehouse**: A central repository of integrated data from one or more disparate sources.
+- **Reporting Database**: A database optimized for generating reports and analytics.
+- **Operational Data Store (ODS)**: A database designed to integrate data from multiple sources for operational reporting and decision support.
+- **PagerDuty**: An incident management platform that provides alerting and on-call scheduling.
+- **Grafana**: An open-source data visualization and monitoring tool.
+
+## High-Density QA Ground Truth Summary
+The ETL process begins with the "Source System: Legacy CRM" and the "ETL Job Scheduler". Data is extracted from the CRM system using the "Data Extraction: CRM Connector" and then passed to "Data Validation and Cleansing". If the data is valid, it proceeds to "Data Transformation: Mapping Engine"; otherwise, it's sent to the "Error Queue: Dead Letter Topic", triggering an alert via "Alerting System: PagerDuty". Transformed data is then enriched using a "Data Enrichment: Third-Party API". If the API call is successful, "Data Augmentation" occurs; if it fails, "Fallback Enrichment: Local Cache" is used. An API timeout also triggers an alert. The data then undergoes "Data Standardization" and "Schema Transformation" before "Data Quality Checks". Data that meets quality standards is routed via "Data Routing" to "Destination System 1: Data Warehouse", "Destination System 2: Reporting Database", and "Destination System 3: Operational Data Store". Data failing quality checks is sent to the "Data Remediation Queue", also triggering an alert. The "Metrics Collector" gathers metrics from various stages, which are visualized on a "Grafana Dashboard". The "Ops Team Notification" node receives alerts from PagerDuty. The entire process is monitored and generates alerts to ensure data quality and timely delivery to the destination systems.

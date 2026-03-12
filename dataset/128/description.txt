@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of generating a PPT presentation using a series of agents. The diagram outlines the flow of information and the steps involved in creating the presentation, from user input to the final PPT slide generation. It serves as a visual representation of the system's architecture and workflow.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with user input at the top and progresses through various agent interactions to the final PPT generation at the bottom. There is a single start node and a looping process for PPT generation.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Loop PPT Agent," which encapsulates the iterative process of writing and checking PPT slides.
+
+## Node-by-Node Description
+- **A / 用户输入研究内容**: User provides research content as input. visible in diagram; no further repository context available.
+- **B / 调用 Outline Agent**: The system invokes the Outline Agent. visible in diagram; no further repository context available.
+- **C / MCP 检索资料**: MCP (likely Master Control Program) retrieves relevant materials. visible in diagram; no further repository context available.
+- **D / 生成大纲**: An outline is generated. visible in diagram; no further repository context available.
+- **E / 用户确认大纲**: The user confirms the generated outline. visible in diagram; no further repository context available.
+- **F / 发送大纲给 PPT 生成 Agent**: The outline is sent to the PPT Generation Agent. visible in diagram; no further repository context available.
+- **G / Split Outline Agent 拆分大纲**: The Outline Agent splits the outline into smaller parts. visible in diagram; no further repository context available.
+- **H / Parallel Agent 并行处理**: The system processes the split outline in parallel using multiple agents. visible in diagram; no further repository context available.
+- **I1 / Research Agent 1**: The first research agent. visible in diagram; no further repository context available.
+- **I2 / Research Agent 2**: The second research agent. visible in diagram; no further repository context available.
+- **I3 / Research Agent 3**: The third research agent. visible in diagram; no further repository context available.
+- **RAG1 / 自动知识库检索 RAG**: Research Agent 1 performs retrieval using Retrieval-Augmented Generation (RAG). visible in diagram; no further repository context available.
+- **RAG2 / 自动知识库检索 RAG**: Research Agent 2 performs retrieval using Retrieval-Augmented Generation (RAG). visible in diagram; no further repository context available.
+- **RAG3 / 自动知识库检索 RAG**: Research Agent 3 performs retrieval using Retrieval-Augmented Generation (RAG). visible in diagram; no further repository context available.
+- **J / SummaryAgent合并结果**: The Summary Agent combines the results from the research agents. visible in diagram; no further repository context available.
+- **L / Loop PPT Agent 生成幻灯片页**: The Loop PPT Agent generates PPT slide pages. visible in diagram; no further repository context available.
+- **L1 / Write PPT Agent 生成每页幻灯片**: The Write PPT Agent generates each slide. visible in diagram; no further repository context available.
+- **L2 / Check PPT Agent 检查每页内容质量，最多重试 3 次**: The Check PPT Agent checks the content quality of each slide, retrying up to 3 times. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User input triggers the Outline Agent.
+- `B --> C`: Outline Agent uses MCP to retrieve materials.
+- `C --> D`: MCP materials are used to generate an outline.
+- `D --> E`: The generated outline is presented to the user for confirmation.
+- `E --> F`: If the user confirms the outline, it is sent to the PPT Generation Agent.
+- `F --> G`: The PPT Generation Agent splits the outline.
+- `G --> H`: The split outline is processed in parallel.
+- `H --> I1`, `H --> I2`, `H --> I3`: The parallel agent distributes tasks to Research Agents 1, 2, and 3.
+- `I1 --> RAG1`, `I2 --> RAG2`, `I3 --> RAG3`: Each Research Agent performs RAG.
+- `RAG1 --> J`, `RAG2 --> J`, `RAG3 --> J`: Results from the RAG processes converge at the Summary Agent.
+- `J --> L`: The Summary Agent's combined results are used by the Loop PPT Agent.
+- `L --> L1`: The Loop PPT Agent triggers the Write PPT Agent.
+- `L1 --> L2`: The Write PPT Agent passes the generated slide to the Check PPT Agent.
+- `L2 --> L1`: If the Check PPT Agent finds issues, it loops back to the Write PPT Agent for a retry (up to 3 times).
+
+## Repository Context & Terminology
+- **Outline Agent**: An agent responsible for generating and splitting the outline of the presentation.
+- **MCP**: Likely stands for Master Control Program, responsible for retrieving relevant materials.
+- **PPT Generation Agent**: An agent responsible for generating the PPT presentation based on the outline.
+- **Split Outline Agent**: An agent that splits the outline into smaller parts for parallel processing.
+- **Parallel Agent**: An agent that processes the split outline in parallel using multiple research agents.
+- **Research Agent**: An agent responsible for researching and gathering information for the presentation.
+- **RAG (Retrieval-Augmented Generation)**: A technique used by the research agents to retrieve information from a knowledge base and generate content.
+- **SummaryAgent**: An agent that combines the results from the research agents.
+- **Loop PPT Agent**: An agent that loops through the process of generating PPT slides.
+- **Write PPT Agent**: An agent that generates each slide of the PPT presentation.
+- **Check PPT Agent**: An agent that checks the content quality of each slide.
+
+## High-Density QA Ground Truth Summary
+The process begins with the user providing research content, which is then fed into the Outline Agent. The Outline Agent uses MCP to retrieve relevant materials and generates an outline. The user confirms this outline, which is then sent to the PPT Generation Agent. The PPT Generation Agent splits the outline using the Split Outline Agent, enabling parallel processing by multiple Research Agents. These Research Agents (1, 2, and 3) each perform Retrieval-Augmented Generation (RAG) to gather information. The results from the RAG processes converge at the SummaryAgent, which combines the findings. The combined results are then used by the Loop PPT Agent to generate the PPT slides. Inside the Loop PPT Agent subgraph, the Write PPT Agent generates each slide, which is then passed to the Check PPT Agent for quality assessment. If the Check PPT Agent identifies issues, it loops back to the Write PPT Agent for a retry, with a maximum of 3 retries. The process continues until all slides are generated and checked. The final output is a PPT presentation. The use of RAG highlights the system's ability to leverage existing knowledge bases for content generation, improving the quality and relevance of the presentation.

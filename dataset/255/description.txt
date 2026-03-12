@@ -1,0 +1,80 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the data flow and component interaction within a security scanning and orchestration system. It illustrates how different layers and tools interact to perform vulnerability assessments and credential scanning. The diagram serves as a high-level overview of the system's architecture, aiding in understanding the relationships between its various components.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner, with the user layer at the top and the data layer at the bottom. It is hierarchically structured, showing the flow of data and control from the user interface through various processing layers to the data storage. The start nodes are "Web Browser" and "Terminal/CLI", and the end nodes are "Neo4j Graph DB" and "PostgreSQL Project Settings".
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing different layers: User Layer, Frontend Layer, Backend Layer, MCP Tools Layer, Scanning Layer, Data Layer, LLM Providers, External APIs, and Target Layer.
+
+## Node-by-Node Description
+- **Web Browser**: Represents the user interface accessed through a web browser. visible in diagram; no further repository context available.
+- **Terminal/CLI**: Represents the command-line interface used to interact with the system. visible in diagram; no further repository context available.
+- **Next.js Webapp :3000**: The frontend application built with Next.js, running on port 3000. visible in diagram; no further repository context available.
+- **AI Agent Orchestrator FastAPI + LangGraph :8090**: The core orchestration component built with FastAPI and LangGraph, running on port 8090. visible in diagram; no further repository context available.
+- **Recon Orchestrator FastAPI + Docker SDK :8010**: Orchestrates the reconnaissance process using FastAPI and Docker SDK, running on port 8010. visible in diagram; no further repository context available.
+- **Network Recon Server Curl + Naabu :8000**: A server running Curl and Naabu for network reconnaissance, running on port 8000. visible in diagram; no further repository context available.
+- **Nuclei Server :8002**: A server running Nuclei for vulnerability scanning, running on port 8002. visible in diagram; no further repository context available.
+- **Metasploit Server :8003**: A server running Metasploit for penetration testing, running on port 8003. visible in diagram; no further repository context available.
+- **Nmap Server :8004**: A server running Nmap for network scanning, running on port 8004. visible in diagram; no further repository context available.
+- **Recon Pipeline Docker Container**: A Docker container running the reconnaissance pipeline. visible in diagram; no further repository context available.
+- **GVM/OpenVAS Scanner Network Vuln Assessment**: A scanner using GVM/OpenVAS for network vulnerability assessment. visible in diagram; no further repository context available.
+- **GitHub Secret Hunter Credential Scanning**: A tool for scanning GitHub repositories for credentials. visible in diagram; no further repository context available.
+- **Neo4j Graph DB :7474/:7687**: A Neo4j graph database running on ports 7474 and 7687. visible in diagram; no further repository context available.
+- **PostgreSQL Project Settings :5432**: A PostgreSQL database storing project settings, running on port 5432. visible in diagram; no further repository context available.
+- **OpenAI**: Represents the OpenAI API for language model integration. visible in diagram; no further repository context available.
+- **Anthropic**: Represents the Anthropic API for language model integration. visible in diagram; no further repository context available.
+- **Local Models Ollama - vLLM - LM Studio**: Represents locally hosted language models using Ollama, vLLM, or LM Studio. visible in diagram; no further repository context available.
+- **OpenRouter 300+ Models**: Represents the OpenRouter API for accessing various language models. visible in diagram; no further repository context available.
+- **AWS Bedrock**: Represents the AWS Bedrock service for language model integration. visible in diagram; no further repository context available.
+- **GitHub API Repos & Code Search**: Represents the GitHub API for repository and code search. visible in diagram; no further repository context available.
+- **Target Systems**: Represents the target systems being scanned. visible in diagram; no further repository context available.
+- **Guinea Pigs Test VMs**: Represents test virtual machines used for scanning. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Web Browser --> Next.js Webapp :3000`: The user interacts with the frontend application through a web browser.
+- `Terminal/CLI --> Recon Pipeline Docker Container`: The user interacts with the Recon Pipeline through a command-line interface.
+- `Next.js Webapp :3000 <--> AI Agent Orchestrator FastAPI + LangGraph :8090`: The frontend communicates with the AI Agent Orchestrator using WebSockets.
+- `Next.js Webapp :3000 --> Recon Orchestrator FastAPI + Docker SDK :8010`: The frontend communicates with the Recon Orchestrator using REST + SSE.
+- `Next.js Webapp :3000 --> Neo4j Graph DB :7474/:7687`: The frontend reads/writes data to the Neo4j database.
+- `Next.js Webapp :3000 --> PostgreSQL Project Settings :5432`: The frontend reads/writes data to the PostgreSQL database.
+- `Recon Orchestrator FastAPI + Docker SDK :8010 --> Recon Pipeline Docker Container`: The Recon Orchestrator triggers the Recon Pipeline using Docker SDK.
+- `Recon Orchestrator FastAPI + Docker SDK :8010 --> GVM/OpenVAS Scanner Network Vuln Assessment`: The Recon Orchestrator triggers the GVM/OpenVAS Scanner using Docker SDK.
+- `Recon Orchestrator FastAPI + Docker SDK :8010 --> GitHub Secret Hunter Credential Scanning`: The Recon Orchestrator triggers the GitHub Secret Hunter using Docker SDK.
+- `GitHub Secret Hunter Credential Scanning --> GitHub API Repos & Code Search`: The GitHub Secret Hunter uses the GitHub API for repository and code search.
+- `AI Agent Orchestrator FastAPI + LangGraph :8090 --> OpenAI`: The AI Agent Orchestrator uses the OpenAI API.
+- `AI Agent Orchestrator FastAPI + LangGraph :8090 --> Anthropic`: The AI Agent Orchestrator uses the Anthropic API.
+- `AI Agent Orchestrator FastAPI + LangGraph :8090 --> Local Models Ollama - vLLM - LM Studio`: The AI Agent Orchestrator uses locally hosted language models.
+- `AI Agent Orchestrator FastAPI + LangGraph :8090 --> OpenRouter 300+ Models`: The AI Agent Orchestrator uses the OpenRouter API.
+- `AI Agent Orchestrator FastAPI + LangGraph :8090 --> AWS Bedrock`: The AI Agent Orchestrator uses the AWS Bedrock service.
+- `AI Agent Orchestrator FastAPI + LangGraph :8090 --> Neo4j Graph DB :7474/:7687`: The AI Agent Orchestrator reads/writes data to the Neo4j database.
+- `AI Agent Orchestrator FastAPI + LangGraph :8090 --> Network Recon Server Curl + Naabu :8000`: The AI Agent Orchestrator communicates with the Network Recon Server using MCP Protocol.
+- `AI Agent Orchestrator FastAPI + LangGraph :8090 --> Nuclei Server :8002`: The AI Agent Orchestrator communicates with the Nuclei Server using MCP Protocol.
+- `AI Agent Orchestrator FastAPI + LangGraph :8090 --> Metasploit Server :8003`: The AI Agent Orchestrator communicates with the Metasploit Server using MCP Protocol.
+- `AI Agent Orchestrator FastAPI + LangGraph :8090 --> Nmap Server :8004`: The AI Agent Orchestrator communicates with the Nmap Server using MCP Protocol.
+- `Recon Pipeline Docker Container --> Neo4j Graph DB :7474/:7687`: The Recon Pipeline writes data to the Neo4j database.
+- `GVM/OpenVAS Scanner Network Vuln Assessment --> Recon Pipeline Docker Container`: The GVM/OpenVAS Scanner reads Recon Output from the Recon Pipeline.
+- `GVM/OpenVAS Scanner Network Vuln Assessment --> Neo4j Graph DB :7474/:7687`: The GVM/OpenVAS Scanner writes data to the Neo4j database.
+- `GVM/OpenVAS Scanner Network Vuln Assessment --> Target Systems`: The GVM/OpenVAS Scanner scans Target Systems.
+- `GVM/OpenVAS Scanner Network Vuln Assessment --> Guinea Pigs Test VMs`: The GVM/OpenVAS Scanner scans Guinea Pigs Test VMs.
+- `Network Recon Server Curl + Naabu :8000 --> Target Systems`: The Network Recon Server scans Target Systems.
+- `Nuclei Server :8002 --> Target Systems`: The Nuclei Server scans Target Systems.
+- `Metasploit Server :8003 --> Target Systems`: The Metasploit Server scans Target Systems.
+- `Nmap Server :8004 --> Target Systems`: The Nmap Server scans Target Systems.
+- `Network Recon Server Curl + Naabu :8000 --> Guinea Pigs Test VMs`: The Network Recon Server scans Guinea Pigs Test VMs.
+- `Nuclei Server :8002 --> Guinea Pigs Test VMs`: The Nuclei Server scans Guinea Pigs Test VMs.
+- `Metasploit Server :8003 --> Guinea Pigs Test VMs`: The Metasploit Server scans Guinea Pigs Test VMs.
+- `Nmap Server :8004 --> Guinea Pigs Test VMs`: The Nmap Server scans Guinea Pigs Test VMs.
+- `Recon Orchestrator FastAPI + Docker SDK :8010 --> Next.js Webapp :3000`: The Recon Orchestrator sends fetch settings to the Next.js Webapp.
+
+## Repository Context & Terminology
+- **FastAPI**: A modern, fast (high-performance), web framework for building APIs with Python 3.7+ based on standard Python type hints.
+- **LangGraph**: A framework for building LLM-powered applications.
+- **Docker SDK**: A Python library for programmatically interacting with the Docker Engine API.
+- **OpenVAS**: Open Source Vulnerability Assessment System.
+- **Neo4j**: A graph database management system.
+- **MCP Protocol**: visible in diagram; no further repository context available.
+- **Ollama**: visible in diagram; no further repository context available.
+
+## High-Density QA Ground Truth Summary
+The architecture diagram illustrates a security scanning system. The process starts with a user interacting with the system via either a "Web Browser" or a "Terminal/CLI". The "Web Browser" interacts with the "Next.js Webapp :3000" frontend, which communicates with the "AI Agent Orchestrator FastAPI + LangGraph :8090" backend via WebSockets. The frontend also communicates with the "Recon Orchestrator FastAPI + Docker SDK :8010" using REST + SSE. The "Recon Orchestrator" then triggers various scanning tools like "GitHub Secret Hunter", "GVM/OpenVAS Scanner", and the "Recon Pipeline" using Docker SDK. The "GitHub Secret Hunter" uses the "GitHub API" to scan for credentials. The "AI Agent Orchestrator" integrates with various LLM providers such as "OpenAI", "Anthropic", "Local Models", "OpenRouter", and "AWS Bedrock" via their respective APIs. The "AI Agent Orchestrator" also communicates with MCP Tools Layer components such as "Network Recon Server", "Nuclei Server", "Metasploit Server", and "Nmap Server" using the MCP protocol. The scanning tools assess "Target Systems" and "Guinea Pigs Test VMs". The "Recon Pipeline" and "GVM/OpenVAS Scanner" write data to the "Neo4j Graph DB", which stores the scan results. The frontend also interacts with the "PostgreSQL Project Settings" database. The system's end nodes are the "Neo4j Graph DB" and "PostgreSQL Project Settings", where the scan results and project settings are stored.

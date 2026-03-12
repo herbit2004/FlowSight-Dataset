@@ -1,0 +1,52 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the data flow and component interaction within a policy analysis and generation system. It depicts how data from various sources is processed through internal packages to produce policy outputs. The diagram serves as a high-level overview of the system's architecture and the relationships between its components.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It is divided into four main sections: CLI Layer, Data Sources, Internal Packages, and Outputs. The flow starts from the CLI Layer and Data Sources, proceeds through the Internal Packages, and culminates in the Outputs.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing different stages of the process: CLI Layer, Data Sources, Internal Packages, and Outputs.
+
+## Node-by-Node Description
+- **CLI / cmd/cpp/main.go Cobra CLI**: Represents the command-line interface entry point, utilizing the Cobra CLI framework. visible in diagram; no further repository context available.
+- **HubbleJSON / Hubble Flows JSON Files**: Represents Hubble flow data ingested from JSON files. visible in diagram; no further repository context available.
+- **HubbleCLI / Hubble CLI Future: API**: Represents the Hubble CLI, potentially providing a future API. visible in diagram; no further repository context available.
+- **Hubble / internal/hubble/ Flow Parsing**: Represents the internal package responsible for parsing Hubble flows. visible in diagram; no further repository context available.
+- **Synth / internal/synth/ Policy Synthesis**: Represents the internal package responsible for synthesizing policies. visible in diagram; no further repository context available.
+- **Verify / internal/verify/ Policy Validation**: Represents the internal package responsible for validating policies. visible in diagram; no further repository context available.
+- **Explain / internal/explain/ Report Generation**: Represents the internal package responsible for generating reports. visible in diagram; no further repository context available.
+- **Graph / internal/graph/ Network Graph**: Represents the internal package responsible for creating network graphs. visible in diagram; no further repository context available.
+- **Validate / internal/validate/ Input Validation**: Represents the internal package responsible for validating input. visible in diagram; no further repository context available.
+- **Policies / CiliumNetworkPolicy YAML**: Represents the output Cilium network policies in YAML format. visible in diagram; no further repository context available.
+- **Report / HTML Report with Graph**: Represents the output HTML report containing a network graph. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `CLI --> Hubble`: The CLI provides input to the Flow Parsing module, indicated by the "learn" label.
+- `CLI --> Synth`: The CLI proposes policies to the Policy Synthesis module.
+- `CLI --> Verify`: The CLI triggers policy verification in the Policy Validation module.
+- `CLI --> Explain`: The CLI triggers report generation in the Report Generation module.
+- `HubbleJSON --> Hubble`: Hubble flow data from JSON files is fed into the Flow Parsing module.
+- `HubbleCLI -.-> Hubble`: The Hubble CLI (future API) provides input to the Flow Parsing module.
+- `Hubble --> Synth`: Parsed flows are passed from the Flow Parsing module to the Policy Synthesis module.
+- `Synth --> Verify`: Synthesized policies are passed to the Policy Validation module.
+- `Synth --> Explain`: Synthesized policies are passed to the Report Generation module.
+- `Hubble --> Explain`: Flows are passed from the Flow Parsing module to the Report Generation module.
+- `Validate --> Hubble`: Input Validation provides data to Flow Parsing.
+- `Validate --> Synth`: Input Validation provides data to Policy Synthesis.
+- `Validate --> Verify`: Input Validation provides data to Policy Validation.
+- `Validate --> Explain`: Input Validation provides data to Report Generation.
+- `Synth --> Policies`: Synthesized policies are output as CiliumNetworkPolicy YAML.
+- `Explain --> Graph`: The Report Generation module feeds data to the Network Graph module.
+- `Explain --> Report`: The Report Generation module generates an HTML Report with Graph.
+
+## Repository Context & Terminology
+- **Cobra CLI**: A framework for creating command-line interfaces.
+- **Hubble**: A network observability tool.
+- **CiliumNetworkPolicy**: A Kubernetes network policy implementation provided by Cilium.
+- **YAML**: A human-readable data serialization format.
+- **Flow Parsing**: The process of analyzing network flows to extract relevant information.
+- **Policy Synthesis**: The process of generating network policies based on observed flows or other inputs.
+- **Network Graph**: A visual representation of network connections and policies.
+
+## High-Density QA Ground Truth Summary
+The process begins with the `cmd/cpp/main.go` Cobra CLI in the CLI Layer, which serves as the entry point for user interaction. The CLI can trigger several actions: learning flows, proposing policies, verifying policies, and explaining network behavior. These actions initiate data flows to the internal packages. Data sources, including Hubble Flows from JSON files and the Hubble CLI (future API), feed into the `internal/hubble/ Flow Parsing` module. The `internal/validate/ Input Validation` module provides validation data to `internal/hubble/ Flow Parsing`, `internal/synth/ Policy Synthesis`, `internal/verify/ Policy Validation`, and `internal/explain/ Report Generation`. Parsed flows from Hubble are then passed to `internal/synth/ Policy Synthesis`. The Policy Synthesis module generates policies that are used by both `internal/verify/ Policy Validation` and `internal/explain/ Report Generation`. Flows are also passed directly from `internal/hubble/ Flow Parsing` to `internal/explain/ Report Generation`. The `internal/explain/ Report Generation` module generates reports and feeds data to `internal/graph/ Network Graph`. Finally, the system outputs `CiliumNetworkPolicy YAML` and an `HTML Report with Graph`, representing the synthesized policies and a visual representation of the network. The Cobra CLI framework facilitates user interaction, while Hubble provides the network observability data that drives policy generation.

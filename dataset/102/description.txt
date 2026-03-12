@@ -1,0 +1,53 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the process of scanning, parsing, validating, and fixing Mermaid syntax within Markdown files. The diagram outlines the steps involved in identifying, correcting, and saving Mermaid diagrams found within a directory.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It starts with the "Directory Scanner" node and ends with the "Save File" node. The flow includes decision diamonds for validation and fixing, creating a looping structure for error correction.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Initial Processing (Directory Scanner to Syntax Validator), Validation (Syntax Validator to AI Fixer), Correction (AI Fixer to Update Content/Log Error), Iteration (Next Block to More Blocks?), and Finalization (Save File).
+
+## Node-by-Node Description
+- **Directory Scanner**: Scans a directory for files. visible in diagram; no further repository context available.
+- **Markdown Parser**: Parses the files found by the directory scanner as Markdown. visible in diagram; no further repository context available.
+- **Mermaid Extractor**: Extracts Mermaid diagrams from the parsed Markdown content. visible in diagram; no further repository context available.
+- **Syntax Validator**: Validates the syntax of the extracted Mermaid diagrams. visible in diagram; no further repository context available.
+- **Valid?**: A decision point to determine if the Mermaid syntax is valid. visible in diagram; no further repository context available.
+- **AI Fixer**: Attempts to automatically fix invalid Mermaid syntax using AI. visible in diagram; no further repository context available.
+- **Re-validate**: Re-validates the syntax after the AI Fixer has attempted to correct it. visible in diagram; no further repository context available.
+- **Fixed?**: A decision point to determine if the Mermaid syntax has been fixed. visible in diagram; no further repository context available.
+- **Skip Block**: Skips the current block if it is valid. visible in diagram; no further repository context available.
+- **Update Content**: Updates the content with the fixed Mermaid diagram. visible in diagram; no further repository context available.
+- **Log Error**: Logs an error if the Mermaid syntax cannot be fixed. visible in diagram; no further repository context available.
+- **Next Block**: Moves to the next block of Mermaid syntax. visible in diagram; no further repository context available.
+- **More Blocks?**: A decision point to determine if there are more blocks to process. visible in diagram; no further repository context available.
+- **Save File**: Saves the file with the updated content. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Directory Scanner --> Markdown Parser`: Scans the directory and passes the files to the Markdown Parser.
+- `Markdown Parser --> Mermaid Extractor`: Parses the Markdown and passes it to the Mermaid Extractor.
+- `Mermaid Extractor --> Syntax Validator`: Extracts Mermaid diagrams and passes them to the Syntax Validator.
+- `Syntax Validator --> Valid?`: Passes the extracted Mermaid diagram to the validation check.
+- `Valid? -- Yes --> Skip Block`: If the syntax is valid, skip the block.
+- `Valid? -- No --> AI Fixer`: If the syntax is invalid, attempt to fix it with the AI Fixer.
+- `AI Fixer --> Re-validate`: Passes the potentially fixed syntax to be re-validated.
+- `Re-validate --> Fixed?`: Passes the re-validated syntax to the fixed check.
+- `Fixed? -- Yes --> Update Content`: If the syntax is fixed, update the content.
+- `Fixed? -- No --> Log Error`: If the syntax is not fixed, log an error.
+- `Skip Block --> Next Block`: Proceeds to the next block after skipping.
+- `Update Content --> Next Block`: Proceeds to the next block after updating the content.
+- `Log Error --> Next Block`: Proceeds to the next block after logging an error.
+- `Next Block --> More Blocks?`: Checks if there are more blocks to process.
+- `More Blocks? -- Yes --> Syntax Validator`: If there are more blocks, loop back to the Syntax Validator.
+- `More Blocks? -- No --> Save File`: If there are no more blocks, save the file.
+- `Syntax Validator -- Yes --> Save File`: If the syntax is valid, save the file.
+
+## Repository Context & Terminology
+- **Markdown**: A lightweight markup language with plain text formatting syntax.
+- **Mermaid**: A JavaScript-based diagramming and charting tool that uses Markdown-inspired text definitions to create diagrams dynamically.
+- **Syntax Validation**: The process of checking if the Mermaid diagram syntax conforms to the defined rules.
+- **AI Fixer**: An AI-powered component that attempts to automatically correct syntax errors in Mermaid diagrams.
+- **Block**: A section or segment of Mermaid syntax within a Markdown file.
+
+## High-Density QA Ground Truth Summary
+The process begins with the "Directory Scanner" which identifies files, passing them to the "Markdown Parser". The parser then feeds the content to the "Mermaid Extractor," which isolates Mermaid diagram code blocks. These blocks are then passed to the "Syntax Validator" to check for correctness. If the "Valid?" check returns "Yes," the process skips the block via "Skip Block" and proceeds to "Next Block." If the syntax is invalid ("No"), the "AI Fixer" attempts to correct the syntax. The "Re-validate" node then checks the AI-corrected syntax. If "Fixed?" is "Yes," the "Update Content" node incorporates the corrected diagram. If "Fixed?" is "No," the "Log Error" node records the failure. Both "Update Content" and "Log Error" then proceed to "Next Block." The "Next Block" node leads to the "More Blocks?" decision point. If "Yes," the process loops back to the "Syntax Validator" to process the next block. If "No," the process concludes with the "Save File" node, saving the modified Markdown file. The AI Fixer attempts to automatically correct syntax errors, leveraging AI to improve diagram quality.

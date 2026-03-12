@@ -1,0 +1,85 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the indexing pipeline and search serving process for a search engine. It depicts the flow of data and operations from a user search query to the point where search nodes are ready to serve results. The diagram serves as a high-level overview of the indexing and search serving architecture.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into three subgraphs representing different stages of the process. The start node is "User Search Query" and the end node is "Search Nodes Ready to Serve."
+
+## Subgraphs / Stages
+The diagram is divided into three subgraphs:
+- **Client Request**: Represents the initial stage where a user submits a search query.
+- **Indexing Pipeline**: Represents the core indexing process, including incremental updates, schema validation, and index segment creation.
+- **Index Serving**: Represents the process of pushing index segments to search nodes and making them available for serving search queries.
+
+## Node-by-Node Description
+- **A / User Search Query**: Represents the initial user search query.
+  visible in diagram; no further repository context available.
+- **B / Query Router**: Represents the component responsible for routing the search query to the appropriate indexing pipeline.
+  visible in diagram; no further repository context available.
+- **C / Is Incremental Update?**: Represents a decision point to determine if an incremental update is needed.
+  visible in diagram; no further repository context available.
+- **D / Parse Delta Feed**: Represents the process of parsing the delta feed for incremental updates.
+  visible in diagram; no further repository context available.
+- **E / Full Index Build Triggered**: Represents the process of triggering a full index build.
+  visible in diagram; no further repository context available.
+- **F / Snapshot Data from Source**: Represents the process of taking a snapshot of the data from the source.
+  visible in diagram; no further repository context available.
+- **G / Transform Delta Records**: Represents the process of transforming delta records.
+  visible in diagram; no further repository context available.
+- **H / Apply Schema & Validation**: Represents the process of applying schema and validation to the data.
+  visible in diagram; no further repository context available.
+- **I / Apply Delta to Inverted Index**: Represents the process of applying the delta to the inverted index.
+  visible in diagram; no further repository context available.
+- **J / Write to Error Queue**: Represents the process of writing invalid data to an error queue.
+  visible in diagram; no further repository context available.
+- **K / Update Bloom Filters**: Represents the process of updating bloom filters.
+  visible in diagram; no further repository context available.
+- **L / Commit Index Segments**: Represents the process of committing index segments.
+  visible in diagram; no further repository context available.
+- **M / Push Segments to Search Nodes**: Represents the process of pushing index segments to search nodes.
+  visible in diagram; no further repository context available.
+- **N / Replication Complete?**: Represents a decision point to determine if replication is complete.
+  visible in diagram; no further repository context available.
+- **O / Rollout New Segments**: Represents the process of rolling out new segments.
+  visible in diagram; no further repository context available.
+- **P / Retry Push**: Represents the process of retrying the push of segments.
+  visible in diagram; no further repository context available.
+- **Q / Invalidate Cache & Load**: Represents the process of invalidating the cache and loading new data.
+  visible in diagram; no further repository context available.
+- **R / Index Ready**: Represents the state where the index is ready.
+  visible in diagram; no further repository context available.
+- **S / Search Nodes Ready to Serve**: Represents the state where the search nodes are ready to serve.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: A user search query is sent to the query router.
+- `B --> C`: The query router sends the query to the indexing pipeline to determine if an incremental update is needed.
+- `C -- Yes --> D`: If an incremental update is needed, parse the delta feed.
+- `C -- No --> E`: If a full index build is needed, trigger a full index build.
+- `E --> F`: Snapshot data from the source for a full index build.
+- `D --> G`: Transform delta records after parsing the delta feed.
+- `F --> G`: Transform delta records after snapshotting data from the source.
+- `G --> H`: Apply schema and validation to the transformed delta records.
+- `H -- Valid --> I`: If the data is valid, apply the delta to the inverted index.
+- `H -- Invalid --> J`: If the data is invalid, write it to the error queue.
+- `I --> K`: Update bloom filters after applying the delta to the inverted index.
+- `K --> L`: Commit index segments after updating bloom filters.
+- `L --> M`: Push segments to search nodes after committing index segments.
+- `M --> N`: Check if replication is complete.
+- `N -- Yes --> O`: If replication is complete, rollout new segments.
+- `N -- No --> P`: If replication is not complete, retry the push.
+- `P --> M`: Retry pushing segments to search nodes.
+- `O --> Q`: Invalidate cache and load new data after rolling out new segments.
+- `Q --> R`: The index is ready after invalidating the cache and loading new data.
+- `R --> S`: Search nodes are ready to serve after the index is ready.
+
+## Repository Context & Terminology
+- **Inverted Index**: A data structure that maps content (e.g., words) to its locations in a document or set of documents. Used for efficient search.
+- **Delta Feed**: A stream of changes or updates to the data source, used for incremental indexing.
+- **Bloom Filter**: A space-efficient probabilistic data structure used to test whether an element is a member of a set. Used to reduce unnecessary disk lookups.
+- **Index Segments**: Smaller, self-contained parts of the overall index. Committing segments allows for incremental updates and faster search.
+- **Search Nodes**: Servers or instances responsible for serving search queries.
+- **Replication**: The process of copying index segments to multiple search nodes for redundancy and load balancing.
+- **Cache Invalidation**: The process of removing old data from the cache to ensure that the search nodes serve the most up-to-date results.
+
+## High-Density QA Ground Truth Summary
+The indexing and search serving process begins with a "User Search Query" that is routed by the "Query Router" to the "Indexing Pipeline." The pipeline first checks "Is Incremental Update?". If 'Yes', it "Parse Delta Feed"; otherwise ('No'), a "Full Index Build Triggered" and "Snapshot Data from Source" occurs. Both paths converge at "Transform Delta Records," followed by "Apply Schema & Validation." Invalid records are sent to "Write to Error Queue," while valid records "Apply Delta to Inverted Index," then "Update Bloom Filters," and finally "Commit Index Segments." The "Index Serving" stage begins with "Push Segments to Search Nodes," followed by a check for "Replication Complete?". If 'No', it "Retry Push"; if 'Yes', "Rollout New Segments," then "Invalidate Cache & Load," leading to "Index Ready." Finally, "Search Nodes Ready to Serve." The inverted index is a core data structure, mapping terms to document locations, enabling efficient search. Bloom filters optimize disk lookups, and index segments allow for incremental updates.

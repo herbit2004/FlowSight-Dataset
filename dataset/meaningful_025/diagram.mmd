@@ -1,0 +1,39 @@
+graph TD
+    subgraph GlobalShardManager
+        A[Incoming Request] --> B{Tenant ID Present?};
+        B -- Yes --> C[Extract Tenant ID];
+        B -- No --> D[Default Tenant ID];
+        C --> E[Lookup Shard Key Range];
+        D --> E;
+        E --> F{Shard Key Range Found?};
+        F -- Yes --> G[Route to Appropriate Shard Router];
+        F -- No --> H[Error: No Shard Key Range];
+    end
+
+    subgraph ShardRouter_A
+        G --> I[ShardRouter_A: Receive Request];
+        I --> J[ShardRouter Lookup];
+        J --> K{Shard Location Found?};
+        K -- Yes --> L[Forward to DataNode_A];
+        K -- No --> M[Fallback Router];
+    end
+    
+    subgraph ShardRouter_B
+       M --> N[ShardRouter_B: Receive Request];
+       N --> O[ShardRouter Lookup];
+       O --> P{Shard Location Found?};
+       P -- Yes --> Q[Forward to DataNode_B];
+       P -- No --> R[Alerting: Data Inconsistency];
+    end
+
+    L --> S[DataNode_A: Process Request];
+    Q --> T[DataNode_B: Process Request];
+    S --> U[DataNode_A: Return Result];
+    T --> V[DataNode_B: Return Result];
+    U --> W[ShardRouter_A: Return Result];
+    W --> X[GlobalShardManager: Return Result];
+    V --> Y[ShardRouter_B: Return Result];
+    Y --> X;
+
+    classDef errorFill fill:#f9f,stroke:#333,stroke-width:2px;
+    class H,R errorFill;

@@ -1,0 +1,61 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the process of extracting information and relationships from documents to populate a knowledge graph. The diagram outlines the steps involved in document ingestion, text processing, entity recognition, and relationship extraction, ultimately leading to the creation of triples for storage in a knowledge graph.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with "Document Ingestion" at the top and flows downwards through a series of processing steps, ending with "Knowledge Graph Store" and "Discarded Relationship" at the bottom. The diagram shows a linear progression with branching decision points.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Document Ingestion, Text Processing, Entity Recognition & Linking, Relationship Extraction, Validation, and Knowledge Graph Storage.
+
+## Node-by-Node Description
+- **A / Document Ingestion**: Represents the initial step of receiving a document for processing. visible in diagram; no further repository context available.
+- **B / Document Type?**: A decision point to determine the type of the ingested document. visible in diagram; no further repository context available.
+- **C / PDF Parser**: A component responsible for extracting text from PDF documents. visible in diagram; no further repository context available.
+- **D / Text Preprocessor**: A module that cleans and prepares the text for further analysis. visible in diagram; no further repository context available.
+- **E / Tokenization & POS Tagging**: The process of breaking down the text into tokens and assigning part-of-speech tags. visible in diagram; no further repository context available.
+- **F / Named Entity Recognition**: Identifies and classifies named entities in the text. visible in diagram; no further repository context available.
+- **G / Entity linking available?**: A decision point to determine if entity linking is available. visible in diagram; no further repository context available.
+- **H / Wikidata Lookup**: A process to link entities to Wikidata entries. visible in diagram; no further repository context available.
+- **I / Contextual Entity Linking**: A process to link entities based on the context. visible in diagram; no further repository context available.
+- **J / Entity Normalization**: A process to normalize the entities. visible in diagram; no further repository context available.
+- **K / Relationship Extraction**: Identifies relationships between entities. visible in diagram; no further repository context available.
+- **L / Valid Relationship?**: A decision point to determine if the extracted relationship is valid. visible in diagram; no further repository context available.
+- **M / Triple Generation**: Creates triples (subject, predicate, object) from the extracted relationships. visible in diagram; no further repository context available.
+- **N / Discarded Relationship**: Represents relationships that are deemed invalid. visible in diagram; no further repository context available.
+- **O / Knowledge Graph Store**: The final destination where the extracted triples are stored. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Document is passed from ingestion to type determination.
+- `B -- PDF --> C`: If the document type is PDF, it is sent to the PDF Parser.
+- `B -- Text --> D`: If the document type is Text, it is sent to the Text Preprocessor.
+- `C --> D`: Output from PDF Parser is sent to the Text Preprocessor.
+- `D --> E`: Preprocessed text is sent for tokenization and POS tagging.
+- `E --> F`: Tokenized and tagged text is sent for named entity recognition.
+- `F --> G`: Recognized entities are passed to the entity linking availability check.
+- `G -- Yes --> H`: If entity linking is available, Wikidata Lookup is performed.
+- `G -- No --> I`: If entity linking is not available, Contextual Entity Linking is performed.
+- `H --> J`: Output from Wikidata Lookup is sent to Entity Normalization.
+- `I --> J`: Output from Contextual Entity Linking is sent to Entity Normalization.
+- `J --> K`: Normalized entities are sent for Relationship Extraction.
+- `K --> L`: Extracted relationships are passed to the validity check.
+- `L -- Yes --> M`: If the relationship is valid, triples are generated.
+- `L -- No --> N`: If the relationship is not valid, it is discarded.
+- `M --> O`: Generated triples are stored in the Knowledge Graph Store.
+
+## Repository Context & Terminology
+- **Document Ingestion**: The process of receiving and loading documents into the system for processing.
+- **PDF Parser**: A software component that extracts text and metadata from PDF files.
+- **Text Preprocessor**: A module that cleans and prepares text data by removing noise, normalizing formats, and handling special characters.
+- **Tokenization**: The process of breaking down a text into individual words or tokens.
+- **Part-of-Speech (POS) Tagging**: Assigning grammatical tags (e.g., noun, verb, adjective) to each token in a text.
+- **Named Entity Recognition (NER)**: Identifying and classifying named entities (e.g., persons, organizations, locations) in a text.
+- **Entity Linking**: The process of associating named entities with their corresponding entries in a knowledge base (e.g., Wikidata).
+- **Wikidata**: A free, collaborative, multilingual knowledge graph.
+- **Contextual Entity Linking**: Linking entities based on the surrounding text and context.
+- **Entity Normalization**: The process of standardizing entity representations to ensure consistency.
+- **Relationship Extraction**: Identifying and extracting relationships between entities in a text.
+- **Triple**: A statement in the form of (subject, predicate, object), representing a relationship between two entities.
+- **Knowledge Graph**: A graph-based representation of knowledge, where nodes represent entities and edges represent relationships between them.
+
+## High-Density QA Ground Truth Summary
+The process begins with "Document Ingestion," where a document is received. The next step is to determine the "Document Type." If the document is a "PDF," it's processed by the "PDF Parser"; otherwise, if it's "Text," it proceeds directly to the "Text Preprocessor." The output from the "PDF Parser" also feeds into the "Text Preprocessor." Subsequently, "Tokenization & POS Tagging" is performed, followed by "Named Entity Recognition." A key decision point is "Entity linking available?". If "Yes," a "Wikidata Lookup" is performed; if "No," "Contextual Entity Linking" is used. Both paths converge at "Entity Normalization," followed by "Relationship Extraction." Another decision point, "Valid Relationship?", determines whether to proceed with "Triple Generation" ("Yes") or to mark the relationship as "Discarded Relationship" ("No"). Finally, valid triples are stored in the "Knowledge Graph Store." The process leverages techniques like NER and entity linking to transform unstructured text into structured knowledge represented as triples, which are then stored in a knowledge graph for querying and reasoning.

@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of data and interactions between different services in a system. It illustrates the frontend application communicating with backend services through an API gateway, focusing on user authentication and profile management. The diagram serves as a high-level overview of the system's architecture and how different components interact to handle user-related operations.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into two main subgraphs: "Frontend App" at the top and "Backend Services" at the bottom. The "Frontend App" subgraph initiates the flow, and the "Backend Services" subgraph handles user authentication and profile management.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Frontend App**: Represents the frontend application and its interaction with the API Gateway.
+- **Backend Services**: Encompasses the backend services responsible for user authentication and profile management, including the User Service, Auth Service, and Profile Service.
+
+## Node-by-Node Description
+- **FA / Frontend App**: Represents the frontend application.
+  visible in diagram; no further repository context available.
+- **API_GW / API Gateway**: Acts as an intermediary between the frontend application and the backend services, routing requests and enriching responses.
+  visible in diagram; no further repository context available.
+- **UserSvc / User Service**: Manages user-related data and operations.
+  visible in diagram; no further repository context available.
+- **AuthSvc / Auth Service**: Handles user authentication and authorization.
+  visible in diagram; no further repository context available.
+- **ProfileSvc / Profile Service**: Manages user profile data.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `FA -- API Request --> API_GW`: The frontend application sends an API request to the API Gateway.
+- `API_GW -- Route to User Service --> UserSvc`: The API Gateway routes the request to the User Service.
+- `UserSvc -- Verify User --> AuthSvc`: The User Service verifies the user's credentials with the Auth Service.
+- `AuthSvc -- User Validated --> UserSvc`: The Auth Service confirms that the user is validated, returning control to the User Service.
+- `UserSvc -- Get User Profile --> ProfileSvc`: The User Service requests the user's profile from the Profile Service.
+- `ProfileSvc -- Profile Not Found --> UserSvc`: If the profile is not found, the Profile Service notifies the User Service.
+- `UserSvc -- Create Default Profile --> ProfileSvc`: The User Service requests the Profile Service to create a default profile.
+- `ProfileSvc -- Profile Created --> UserSvc`: The Profile Service confirms that the profile is created, returning control to the User Service.
+- `ProfileSvc -- Return Profile Data --> UserSvc`: The Profile Service returns the user's profile data to the User Service.
+- `UserSvc -- Return User Data --> API_GW`: The User Service returns the user data to the API Gateway.
+- `API_GW -- Enrich Response --> FA`: The API Gateway enriches the response and sends it back to the frontend application.
+
+## Repository Context & Terminology
+- **Frontend App**: The client-side application that users interact with directly.
+- **API Gateway**: A service that acts as a single entry point for all client requests, routing them to the appropriate backend services.
+- **User Service**: A microservice responsible for managing user accounts and related data.
+- **Auth Service**: A microservice responsible for authenticating users and managing their authorization.
+- **Profile Service**: A microservice responsible for managing user profile information.
+- **API Request**: A request made by the frontend application to the backend services through the API Gateway.
+- **Enrich Response**: The process of adding additional information to the response before sending it back to the frontend application.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a system where the Frontend App initiates an API Request to the API Gateway. The API Gateway then routes this request to the User Service. The User Service verifies the user with the Auth Service, which returns a User Validated signal. The User Service then requests the user's profile from the Profile Service. If the Profile Not Found, the User Service triggers the creation of a Create Default Profile via the Profile Service. Once the profile is available, the Profile Service returns the Profile Data to the User Service. The User Service then returns the User Data to the API Gateway, which enriches the response and sends it back to the Frontend App. The API Gateway acts as a central point for routing requests and enriching responses, while the User Service, Auth Service, and Profile Service handle specific user-related operations. This architecture promotes modularity and scalability by separating concerns into distinct microservices.

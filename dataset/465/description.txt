@@ -1,0 +1,66 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the data flow and component interaction within a web application. It depicts the frontend, backend, ingestion processes, and various services used by the application. The diagram serves as a high-level overview of the system's architecture, showing how different parts of the application communicate and depend on each other.
+
+## Overall Layout
+The diagram is laid out from left to right. It is divided into four main sections: Frontend, Backend, Services, and Ingestion. The Frontend section represents the user interface, the Backend section represents the server-side logic, the Services section represents external services used by the application, and the Ingestion section represents data loading processes.
+
+## Subgraphs / Stages
+The diagram contains four explicit subgraphs: Frontend, Backend, Services, and Ingestion.
+- **Frontend**: Represents the user interface components.
+- **Backend**: Represents the server-side API endpoints.
+- **Services**: Represents external services used by the application.
+- **Ingestion**: Represents the data loading and processing components.
+
+## Node-by-Node Description
+- **Chat / /chat - Chat UI + charts**: Represents the chat user interface and associated charting components in the frontend. visible in diagram; no further repository context available.
+- **Insights / /insights - Graph tools + calculators**: Represents the insights page with graph tools and calculators in the frontend. visible in diagram; no further repository context available.
+- **Map / /map - Leaflet map**: Represents the map component in the frontend, using Leaflet. visible in diagram; no further repository context available.
+- **ChatAPI / POST /api/chat**: Represents the `/api/chat` endpoint in the backend, which handles chat-related requests. visible in diagram; no further repository context available.
+- **RateAPI / POST /api/chat/rate**: Represents the `/api/chat/rate` endpoint in the backend, which handles chat rating requests. visible in diagram; no further repository context available.
+- **PropsAPI / GET /api/properties**: Represents the `/api/properties` endpoint in the backend, which retrieves property data. visible in diagram; no further repository context available.
+- **ByIdsAPI / GET /api/properties/by-ids**: Represents the `/api/properties/by-ids` endpoint in the backend, which retrieves property data by IDs. visible in diagram; no further repository context available.
+- **SimAPI / GET /api/graph/similar/:zpid**: Represents the `/api/graph/similar/:zpid` endpoint in the backend, which retrieves similar graph data based on a ZPID. visible in diagram; no further repository context available.
+- **ExplAPI / GET /api/graph/explain**: Represents the `/api/graph/explain` endpoint in the backend, which explains graph data. visible in diagram; no further repository context available.
+- **HoodAPI / GET /api/graph/neighborhood/:name**: Represents the `/api/graph/neighborhood/:name` endpoint in the backend, which retrieves neighborhood graph data by name. visible in diagram; no further repository context available.
+- **Gemini / Google Gemini**: Represents the Google Gemini service. visible in diagram; no further repository context available.
+- **Pinecone / Pinecone Index**: Represents the Pinecone Index service. visible in diagram; no further repository context available.
+- **Neo4j / Neo4j Aura**: Represents the Neo4j Aura graph database service. visible in diagram; no further repository context available.
+- **Mongo / MongoDB Atlas**: Represents the MongoDB Atlas database service. visible in diagram; no further repository context available.
+- **Redis / Redis Cache**: Represents the Redis Cache service. visible in diagram; no further repository context available.
+- **Prom / Prometheus**: Represents the Prometheus monitoring service. visible in diagram; no further repository context available.
+- **Clean / cleanProperties.ts**: Represents the `cleanProperties.ts` file in the Ingestion section. visible in diagram; no further repository context available.
+- **Upsert / upsertProperties.ts**: Represents the `upsertProperties.ts` file in the Ingestion section. visible in diagram; no further repository context available.
+- **IngestGraph / ingestNeo4j.ts**: Represents the `ingestNeo4j.ts` file in the Ingestion section. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Chat --> ChatAPI`: The chat UI sends requests to the `/api/chat` endpoint.
+- `Chat --> RateAPI`: The chat UI sends requests to the `/api/chat/rate` endpoint.
+- `Insights --> SimAPI`: The insights page sends requests to the `/api/graph/similar/:zpid` endpoint.
+- `Insights --> ExplAPI`: The insights page sends requests to the `/api/graph/explain` endpoint.
+- `Insights --> HoodAPI`: The insights page sends requests to the `/api/graph/neighborhood/:name` endpoint.
+- `Map --> PropsAPI`: The map component sends requests to the `/api/properties` endpoint.
+- `Map --> ByIdsAPI`: The map component sends requests to the `/api/properties/by-ids` endpoint.
+- `ChatAPI --> Gemini`: The `/api/chat` endpoint sends requests to Google Gemini.
+- `ChatAPI --> Pinecone`: The `/api/chat` endpoint sends requests to Pinecone.
+- `ChatAPI -- optional --> Neo4j`: The `/api/chat` endpoint optionally sends requests to Neo4j.
+- `PropsAPI --> Pinecone`: The `/api/properties` endpoint sends requests to Pinecone.
+- `ByIdsAPI --> Pinecone`: The `/api/properties/by-ids` endpoint sends requests to Pinecone.
+- `ByIdsAPI --> Mongo`: The `/api/properties/by-ids` endpoint sends requests to MongoDB Atlas.
+- `SimAPI --> Neo4j`: The `/api/graph/similar/:zpid` endpoint sends requests to Neo4j.
+- `ExplAPI --> Neo4j`: The `/api/graph/explain` endpoint sends requests to Neo4j.
+- `HoodAPI --> Neo4j`: The `/api/graph/neighborhood/:name` endpoint sends requests to Neo4j.
+- `Clean --> Mongo`: The `cleanProperties.ts` script sends data to MongoDB Atlas.
+- `Upsert --> Pinecone`: The `upsertProperties.ts` script sends data to Pinecone.
+- `IngestGraph --> Neo4j`: The `ingestNeo4j.ts` script sends data to Neo4j.
+
+## Repository Context & Terminology
+- **Frontend**: The user interface of the application, typically built with technologies like React, Vue, or Angular.
+- **Backend**: The server-side logic of the application, responsible for handling requests, processing data, and interacting with databases and external services.
+- **API Endpoint**: A specific URL that the backend exposes for clients to interact with.
+- **Pinecone Index**: A vector database used for similarity search and retrieval.
+- **Neo4j Aura**: A graph database as a service, used for storing and querying relationships between data.
+- **MongoDB Atlas**: A cloud-based NoSQL database service.
+- **Redis Cache**: An in-memory data store used for caching frequently accessed data.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the architecture of a web application, starting with the Frontend components: `/chat` (Chat UI + charts), `/insights` (Graph tools + calculators), and `/map` (Leaflet map). The `/chat` component interacts with the Backend's `POST /api/chat` and `POST /api/chat/rate` endpoints. The `/insights` component interacts with `GET /api/graph/similar/:zpid`, `GET /api/graph/explain`, and `GET /api/graph/neighborhood/:name`. The `/map` component interacts with `GET /api/properties` and `GET /api/properties/by-ids`. The `POST /api/chat` endpoint communicates with Google Gemini and Pinecone Index, and optionally with Neo4j Aura. The `GET /api/properties` and `GET /api/properties/by-ids` endpoints communicate with Pinecone Index, and the latter also communicates with MongoDB Atlas. The `GET /api/graph/similar/:zpid`, `GET /api/graph/explain`, and `GET /api/graph/neighborhood/:name` endpoints communicate with Neo4j Aura. The Ingestion processes, including `cleanProperties.ts`, `upsertProperties.ts`, and `ingestNeo4j.ts`, load data into MongoDB Atlas, Pinecone Index, and Neo4j Aura, respectively. The application uses Redis Cache and Prometheus for caching and monitoring, respectively, though these are end nodes in the diagram. The Pinecone Index serves as a vector database for similarity searches, while Neo4j Aura stores and queries relationships between data points.

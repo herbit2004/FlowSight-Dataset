@@ -1,0 +1,33 @@
+graph TD
+    A[Start: Archival & Cleanup Job Scheduler] --> B{Check Job Schedule};
+    B -- Daily? --> C[Initiate Daily Scan: File System & Database];
+    B -- Weekly? --> D[Initiate Weekly Scan: Audit Logs & Permissions];
+    B -- Monthly? --> E[Initiate Monthly Scan: Inactive User Accounts];
+    C --> F{File Age > Retention Period?};
+    F -- Yes --> G[Move File to Archive: Cold Storage];
+    F -- No --> H[Log: File within Retention];
+    D --> I{Log Data Age > 90 Days?};
+    I -- Yes --> J[Purge Log Data];
+    I -- No --> K[Maintain Log Data];
+    E --> L{User Last Logged-in > 1 Year?};
+    L -- Yes --> M[Disable User Account];
+    M --> N{Account Disabled > 6 Months?};
+    N -- Yes --> O[Delete User Account];
+    N -- No --> P[Maintain Disabled Account + Alert];
+    L -- No --> Q[Log: User Actively Using Account];
+    G --> R[Update File Metadata: Archived Timestamp];
+    R --> S[Generate Archival Report];
+    H --> S;
+    J --> T[Generate Audit Log Purge Report];
+    K --> T;
+    O --> U[Generate User Deletion Report];
+    P --> U;
+    S --> V[Email Archival Report];
+    T --> W[Email Audit Log Report];
+    U --> X[Email User Account Report];
+    V --> Y[End: Report Sent];
+    W --> Y;
+    X --> Y;
+
+    classDef reportFill fill:#f9f,stroke:#333,stroke-width:2px
+    class S,T,U,V,W,X reportFill

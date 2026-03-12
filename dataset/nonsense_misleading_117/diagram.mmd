@@ -1,0 +1,19 @@
+graph TD
+    A[User initiates order] --> B{Check Inventory};
+    B -- Yes --> C[Create Order Record];
+    B -- No --> H[Send Backorder Request];
+    C --> D{Payment Successful?};
+    D -- No --> E[Cancel Order];
+    D -- Yes --> C;
+    E --> F[Refund Payment];
+    F --> G[Notify Customer of Cancellation];
+    H --> I[Receive Stock];
+    I --> B;
+    G --> J[End];
+    C --> K[Pack Order];
+    K --> L[Ship Order];
+    L --> M{Delivery Successful?};
+    M -- No --> N[Mark As Lost];
+    M -- Yes --> O[Update Inventory];
+    N --> O;
+    O --> J

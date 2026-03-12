@@ -1,0 +1,34 @@
+graph TD
+    subgraph User Registration and Login Flow
+    A[User initiates registration] --> B{Check email address format};
+    B -- Valid format --> C{Email already exists?};
+    B -- Invalid format --> F[Display error: Invalid email];
+    C -- Yes --> G[Display error: Email already registered];
+    C -- No --> D[Generate temporary token];
+    D --> E[Send verification email];
+    E --> H[User clicks verification link];
+    H --> I{Token valid and not expired?};
+    I -- Yes --> J[Create user account];
+    J --> K[Set user status to active];
+    K --> L[Send welcome email];
+    L --> M[Display success message: Registration complete];
+    I -- No --> N[Display error: Invalid or expired token];
+
+    A --> O[User initiates login];
+    O --> P{Username/password valid?};
+    P -- Yes --> Q{Account active?};
+    P -- No --> R[Display error: Invalid credentials];
+    Q -- Yes --> S[Generate session token];
+    Q -- No --> T[Display error: Account not activated];
+    S --> U{MFA enabled?};
+    U -- Yes --> V[Send MFA code];
+    V --> W{User enters valid MFA code?};
+    W -- Yes --> X[Establish session];
+    W -- No --> Y[Display error: Invalid MFA code];
+    X --> Z[Redirect to user dashboard];
+    U -- No --> AA[Establish session];
+    AA --> Z;
+    end
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px;
+    class F,G,N,R,T,Y error;

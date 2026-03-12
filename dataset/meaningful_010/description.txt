@@ -1,0 +1,76 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the configuration management process for a target device. It depicts the flow of a configuration request from the Configuration Center, the authorization and profile retrieval process, and the subsequent application of the configuration to the target device, including handling of success and failure scenarios. The flowchart serves as a visual representation of the steps involved in ensuring a device is properly configured.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into two main subgraphs: "Configuration Center" and "Target Device". The process starts with a "Configuration Request" in the Configuration Center and ends with either "Log Success" or "Log Failure" after the target device configuration.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Configuration Center**: This subgraph represents the initial stage of the configuration process, including authorization, profile retrieval, and determining whether to push the configuration.
+- **Target Device**: This subgraph represents the actions taken on the target device to apply the configuration, including initiating a session, checking device status, and handling configuration updates.
+
+## Node-by-Node Description
+- **A / Configuration Request**: Represents the initiation of a configuration request within the Configuration Center. visible in diagram; no further repository context available.
+- **B / Authorization Check**: Represents the process of verifying the authorization of the configuration request. In the repository this corresponds to a security module that validates user permissions.
+- **C / Profile Lookup**: Represents a decision point to determine if a profile exists. visible in diagram; no further repository context available.
+- **Z / Access Denied**: Represents the state where the configuration request is denied due to authorization failure. visible in diagram; no further repository context available.
+- **D / Retrieve Profile from Cache**: Represents the retrieval of a configuration profile from a cache. In the repository this corresponds to a caching layer that stores frequently accessed profiles.
+- **E / Apply Profile**: Represents the application of the retrieved configuration profile. In the repository this corresponds to the core configuration logic that sets parameters based on the profile.
+- **F / Fetch Profile from DB**: Represents fetching the configuration profile from a database. In the repository this corresponds to the database access layer.
+- **G / Populate Cache**: Represents populating the cache with the fetched configuration profile. In the repository this corresponds to the caching layer update mechanism.
+- **H / Push Configuration?**: Represents a decision point to determine if the configuration should be pushed to the target device. visible in diagram; no further repository context available.
+- **I / Initiate Configuration Session**: Represents the initiation of a configuration session with the target device. visible in diagram; no further repository context available.
+- **J / Device Alive?**: Represents a check to determine if the target device is alive and reachable. visible in diagram; no further repository context available.
+- **K / Push Configuration Data**: Represents pushing the configuration data to the target device. visible in diagram; no further repository context available.
+- **L / Queue Configuration Update**: Represents queuing a configuration update for the target device. visible in diagram; no further repository context available.
+- **M / Acknowledge Success**: Represents acknowledging the successful application of the configuration. visible in diagram; no further repository context available.
+- **N / Termination**: Represents the termination of the configuration session. visible in diagram; no further repository context available.
+- **O / Start Configuration Poll**: Represents the initiation of a configuration polling process on the target device. visible in diagram; no further repository context available.
+- **P / Configuration Changed?**: Represents a check to determine if the configuration has changed. visible in diagram; no further repository context available.
+- **Q / Download Configuration**: Represents downloading the updated configuration. visible in diagram; no further repository context available.
+- **R / Apply Configuration**: Represents applying the downloaded configuration. visible in diagram; no further repository context available.
+- **S / Acknowledge Success**: Represents acknowledging the successful application of the configuration. visible in diagram; no further repository context available.
+- **T / Sleep**: Represents a sleep state before the next configuration poll. visible in diagram; no further repository context available.
+- **U / Log Success**: Represents logging a successful configuration. visible in diagram; no further repository context available.
+- **V / Log Failure**: Represents logging a failed configuration. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Configuration Request --> Authorization Check`: A configuration request triggers the authorization check.
+- `Authorization Check -- Authorized --> Profile Lookup`: If the authorization check is successful, proceed to profile lookup.
+- `Authorization Check -- Unauthorized --> Access Denied`: If the authorization check fails, access is denied.
+- `Profile Lookup --> Retrieve Profile from Cache`: Profile lookup triggers retrieval from cache.
+- `Retrieve Profile from Cache -- Cache Hit --> Apply Profile`: If the profile is found in the cache, apply the profile.
+- `Retrieve Profile from Cache -- Cache Miss --> Fetch Profile from DB`: If the profile is not found in the cache, fetch it from the database.
+- `Fetch Profile from DB --> Populate Cache`: After fetching from the database, populate the cache.
+- `Populate Cache --> Apply Profile`: After populating the cache, apply the profile.
+- `Apply Profile --> Push Configuration?`: After applying the profile, determine if the configuration should be pushed.
+- `Push Configuration? -- Yes --> Initiate Configuration Session`: If the configuration should be pushed, initiate a configuration session.
+- `Push Configuration? -- No --> Start Configuration Poll`: If the configuration should not be pushed, start configuration polling.
+- `Initiate Configuration Session --> Device Alive?`: After initiating a session, check if the device is alive.
+- `Device Alive? -- Yes --> Push Configuration Data`: If the device is alive, push the configuration data.
+- `Device Alive? -- No --> Queue Configuration Update`: If the device is not alive, queue a configuration update.
+- `Push Configuration Data --> Acknowledge Success`: After pushing data, acknowledge success.
+- `Queue Configuration Update --> Termination`: After queuing an update, terminate the session.
+- `Start Configuration Poll --> Configuration Changed?`: After starting the poll, check if the configuration has changed.
+- `Configuration Changed? -- Yes --> Download Configuration`: If the configuration has changed, download it.
+- `Configuration Changed? -- No --> Sleep`: If the configuration has not changed, sleep.
+- `Download Configuration --> Apply Configuration`: After downloading, apply the configuration.
+- `Apply Configuration --> Acknowledge Success`: After applying, acknowledge success.
+- `Sleep --> Start Configuration Poll`: After sleeping, restart the configuration poll.
+- `Acknowledge Success --> Termination`: After acknowledging success, terminate the session.
+- `Termination -- Success --> Log Success`: On successful termination, log success.
+- `Termination -- Failure --> Log Failure`: On failed termination, log failure.
+- `Acknowledge Success --> Log Success`: Acknowledge Success leads to Log Success.
+- `Acknowledge Success --> Log Failure`: Acknowledge Success leads to Log Failure.
+
+## Repository Context & Terminology
+- **Configuration Center**: A centralized system responsible for managing and distributing configurations to target devices.
+- **Authorization Check**: The process of verifying that a user or system has the necessary permissions to perform a specific action, such as requesting a configuration.
+- **Profile Lookup**: The process of searching for a specific configuration profile, often based on device type or user role.
+- **Cache**: A temporary storage location for frequently accessed data, used to improve performance by reducing the need to retrieve data from slower storage.
+- **Database (DB)**: A structured collection of data stored and accessed electronically.
+- **Target Device**: The device that is being configured.
+- **Configuration Poll**: A process where the target device periodically checks for configuration updates.
+
+## High-Density QA Ground Truth Summary
+The configuration process begins with a "Configuration Request" at the Configuration Center, which triggers an "Authorization Check". If authorized, the process proceeds to "Profile Lookup". If unauthorized, the process terminates with "Access Denied". A successful profile lookup leads to "Retrieve Profile from Cache". A "Cache Hit" leads directly to "Apply Profile", while a "Cache Miss" triggers "Fetch Profile from DB" followed by "Populate Cache" before "Apply Profile". After applying the profile, the system decides whether to "Push Configuration?". If yes, an "Initiate Configuration Session" occurs on the Target Device, followed by a "Device Alive?" check. If the device is alive, "Push Configuration Data" is performed; otherwise, a "Queue Configuration Update" is scheduled. If the system decides not to push the configuration, it initiates a "Start Configuration Poll" on the Target Device. The device then checks if the "Configuration Changed?". If so, it proceeds to "Download Configuration" and "Apply Configuration". If not, it enters a "Sleep" state before polling again. After either pushing or downloading and applying the configuration, the system executes "Acknowledge Success", leading to "Termination". Finally, the process concludes with either "Log Success" or "Log Failure", depending on the outcome of the configuration process. The "Authorization Check" ensures that only authorized requests are processed, preventing unauthorized access to device configurations.

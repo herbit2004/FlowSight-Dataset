@@ -1,0 +1,68 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting an order processing workflow. It illustrates the sequence of steps involved in processing a user order, from initial placement to archival, including inventory checks, payment processing, shipping, and handling of unsuccessful paths. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User Places Order" node at the top and flows downwards through a series of processes and decision points, ultimately converging at the "Archive Order" node. The diagram has a single start node and a single end node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement & Inventory Check, Payment Processing, Shipping Preparation, Address Validation, Order Fulfillment, and Order Archival.
+
+## Node-by-Node Description
+- **User Places Order**: Represents the initial action of a user submitting an order.
+  visible in diagram; no further repository context available.
+- **Inventory Available?**: A decision point to check if the requested items are in stock.
+  visible in diagram; no further repository context available.
+- **Payment Processing**: Represents the process of charging the user for the order.
+  visible in diagram; no further repository context available.
+- **Payment Successful?**: A decision point to determine if the payment was successfully processed.
+  visible in diagram; no further repository context available.
+- **Shipping Preparation**: Represents the steps involved in preparing the order for shipment.
+  visible in diagram; no further repository context available.
+- **Shipping Address Valid?**: A decision point to validate the provided shipping address.
+  visible in diagram; no further repository context available.
+- **Package Shipped**: Represents the action of the package being dispatched for delivery.
+  visible in diagram; no further repository context available.
+- **Order Delivered**: Represents the final delivery of the order to the user.
+  visible in diagram; no further repository context available.
+- **Update Inventory**: Represents the process of adjusting the inventory levels based on the order.
+  visible in diagram; no further repository context available.
+- **Cancel Order**: Represents the action of canceling the order.
+  visible in diagram; no further repository context available.
+- **Send Confirmation Email**: Represents sending an email confirmation to the user.
+  visible in diagram; no further repository context available.
+- **Archive Order**: Represents the final step of archiving the order details.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Places Order --> Inventory Available?`: Represents the flow from order placement to inventory check.
+- `Inventory Available? -- No --> Cancel Order`: If inventory is not available, the order is canceled.
+- `Inventory Available? -- Yes --> Payment Processing`: If inventory is available, payment processing begins.
+- `Payment Processing --> Payment Successful?`: Represents the flow from payment processing to payment success check.
+- `Payment Successful? -- No --> Update Inventory`: If payment fails, inventory is updated.
+- `Update Inventory --> User Places Order`: After updating inventory (due to payment failure), the flow returns to the beginning, "User Places Order".
+- `Payment Successful? -- Yes --> Shipping Preparation`: If payment is successful, shipping preparation begins.
+- `Shipping Preparation --> Shipping Address Valid?`: Represents the flow from shipping preparation to address validation.
+- `Shipping Address Valid? -- No --> Cancel Order`: If the shipping address is invalid, the order is canceled.
+- `Shipping Address Valid? -- Yes --> Package Shipped`: If the shipping address is valid, the package is shipped.
+- `Package Shipped --> Order Delivered`: Represents the flow from package shipment to order delivery.
+- `Order Delivered --> Send Confirmation Email`: After the order is delivered, a confirmation email is sent.
+- `Send Confirmation Email --> Archive Order`: Represents the flow from sending a confirmation email to archiving the order.
+- `Cancel Order --> Archive Order`: Canceled orders are archived.
+- Paths converge at `Archive Order` from `Cancel Order` and `Send Confirmation Email`.
+
+## Repository Context & Terminology
+- **User Places Order**: In a real-world e-commerce system, this would involve the user adding items to a cart and proceeding to checkout. In this diagram, it's the starting point of the workflow.
+- **Inventory Available?**: This refers to checking the stock levels of the ordered items. In this diagram, a 'No' result leads to order cancellation, without any attempt to backorder or notify the user.
+- **Payment Processing**: This involves securely processing the user's payment information. In this diagram, failure leads to inventory update and a return to the start, which is an illogical loop.
+- **Payment Successful?**: This is a check to ensure the payment was authorized. In this diagram, a 'No' result triggers inventory update and a return to the "User Places Order" step, instead of prompting for payment retry.
+- **Shipping Preparation**: This includes picking, packing, and labeling the order for shipment.
+- **Shipping Address Valid?**: This is a check to ensure the shipping address is deliverable. In this diagram, an invalid address leads to order cancellation.
+- **Package Shipped**: This signifies that the package has been handed over to the carrier.
+- **Order Delivered**: This indicates that the package has been successfully delivered to the customer.
+- **Update Inventory**: This adjusts the stock levels after a failed payment. In this diagram, this step is incorrectly placed after payment failure and leads to a loop back to the beginning.
+- **Cancel Order**: This process terminates the order. In this diagram, it occurs due to inventory unavailability or an invalid shipping address.
+- **Send Confirmation Email**: Typically sent immediately after order placement, this confirms the order details to the user. In this diagram, it is sent *after* order delivery, which is counterintuitive.
+- **Archive Order**: This stores the order details for record-keeping.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Places Order", which flows to "Inventory Available?". If inventory is not available, the process branches to "Cancel Order" and then to "Archive Order". If inventory is available, the flow proceeds to "Payment Processing" and then to the decision point "Payment Successful?". A 'Yes' branch leads to "Shipping Preparation", then to "Shipping Address Valid?". If the address is invalid, the order is "Cancel Order" and then "Archive Order". If the address is valid, the flow goes to "Package Shipped", then "Order Delivered", and finally "Send Confirmation Email" before "Archive Order". Critically, if "Payment Successful?" is 'No', the diagram incorrectly flows to "Update Inventory" and then loops back to "User Places Order", creating an illogical cycle. The "Send Confirmation Email" is also incorrectly placed after "Order Delivered". The diagram reflects an order processing workflow, but contains errors such as updating inventory after payment failure and looping back to the start, and sending confirmation email after delivery, which deviate from standard e-commerce practices.

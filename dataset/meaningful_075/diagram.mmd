@@ -1,0 +1,35 @@
+graph TD
+    subgraph User_Interaction
+        A[User: Initiates Contract Signing] --> B{Contract Details Valid?};
+        B -- Yes --> C[Digital Signature Pad: Present Contract];
+        B -- No --> D[Display Error: Incomplete Details];
+        D --> A;
+        C --> E{User Accepts Terms?};
+        E -- Yes --> F[Capture Digital Signature];
+        E -- No --> G[Contract Abandoned];
+    end
+
+    subgraph Backend_Processing
+        F --> H[Signature Validation Service];
+        H --> I{Valid Signature?};
+        I -- Yes --> J[Document Management System: Store Signed Contract];
+        I -- No --> K[Flag Invalid Signature];
+    end
+
+    subgraph Notification_Workflow
+        J --> L[Notification Service: Send Confirmation Emails];
+        L --> M[Admin Notification: Contract Signed];
+        J --> N[Accounting Module: Update Contract Status];
+    end
+    
+    subgraph Audit_Trail
+        J--> O[Audit Log: Record Contract Signing];
+        K--> P[Audit Log: Record Invalid Signature Attempt];
+    end
+
+    M --> Q{Accounting System Integration};
+    Q -- Successful Integration --> N;
+    Q -- Integration Failed --> R[Error Handling: Alert IT Support];
+
+    classDef errorFill fill:#f9f,stroke:#333,stroke-width:2px
+    class D,K,R errorFill

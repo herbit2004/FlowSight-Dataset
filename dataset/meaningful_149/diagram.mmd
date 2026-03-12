@@ -1,0 +1,76 @@
+graph TD
+    subgraph Resource Request Workflow
+    A[User: Initiates Resource Request] --> B{Resource Type?};
+    B -- Database Resource --> C[Database Request Form];
+    B -- Compute Resource --> D[Compute Request Form];
+    B -- Network Resource --> E[Network Request Form];
+
+    C --> F[Submit Database Request];
+    D --> G[Submit Compute Request];
+    E --> H[Submit Network Request];
+
+    F --> I{Database Approval Needed?};
+    G --> J{Compute Approval Needed?};
+    H --> K{Network Approval Needed?};
+
+    I -- Yes --> L[Database Approval Manager];
+    I -- No --> M[Provision Database Resource];
+
+    J -- Yes --> N[Compute Approval Manager];
+    J -- No --> O[Provision Compute Resource];
+
+    K -- Yes --> P[Network Approval Manager];
+    K -- No --> Q[Provision Network Resource];
+
+    L --> R{Approval Status?};
+    N --> S{Approval Status?};
+    P --> T{Approval Status?};
+
+    R -- Approved --> M;
+    R -- Rejected --> U[Notify User: Database Rejected];
+
+    S -- Approved --> O;
+    S -- Rejected --> V[Notify User: Compute Rejected];
+
+    T -- Approved --> Q;
+    T -- Rejected --> W[Notify User: Network Rejected];
+
+    M --> X[Update Database Inventory];
+    O --> Y[Update Compute Inventory];
+    Q --> Z[Update Network Inventory];
+
+    X --> AA[Notify User: Database Provisioned];
+    Y --> BB[Notify User: Compute Provisioned];
+    Z --> CC[Notify User: Network Provisioned];
+
+    AA --> DD[Database Resource Available];
+    BB --> EE[Compute Resource Available];
+    CC --> FF[Network Resource Available];
+
+    U --> GG[Database Request Closed];
+    V --> HH[Compute Request Closed];
+    W --> II[Network Request Closed];
+
+    DD --> GG;
+    EE --> HH;
+    FF --> II;
+
+    GG --> JJ[End of Workflow];
+    HH --> JJ;
+    II --> JJ;
+
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style JJ fill:#f9f,stroke:#333,stroke-width:2px
+
+    classDef approval fill:#ccf,stroke:#333,stroke-width:1px
+    class L,N,P approval
+    classDef form fill:#ddf,stroke:#333,stroke-width:1px
+    class C,D,E form
+    classDef provision fill:#fff,stroke:#333,stroke-width:1px
+    class M,O,Q provision
+    classDef notify fill:#eef,stroke:#333,stroke-width:1px
+    class AA,BB,CC,U,V,W notify
+    classDef inventory fill:#dde,stroke:#333,stroke-width:1px
+    class X,Y,Z inventory

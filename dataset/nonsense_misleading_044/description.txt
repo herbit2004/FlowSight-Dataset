@@ -1,0 +1,56 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating an order processing workflow. It depicts the steps involved in processing a user's order, from submission to completion, including inventory checks, payment processing, shipping, and delivery. The diagram serves as a visual representation of the order fulfillment process, but contains intentional errors.
+
+## Overall Layout
+The diagram's layout is top-down (TD). The flow starts with "User submits order" at the top and progresses downwards through various decision points and actions, ultimately leading to "Order complete" or "Notify user: Order failed". The diagram contains an illogical loop where "Order complete" returns to "User submits order".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Inventory Check, Payment Processing, Order Fulfillment, Shipping, Delivery, and Error Handling.
+
+## Node-by-Node Description
+- **A / User submits order**: Represents the initial action where a user places an order. visible in diagram; no further repository context available.
+- **B / Inventory available?**: A decision point to check if the ordered items are in stock. visible in diagram; no further repository context available.
+- **C / Payment processed**: Represents the action of processing the user's payment. visible in diagram; no further repository context available.
+- **D / Payment successful?**: A decision point to determine if the payment was successfully processed. visible in diagram; no further repository context available.
+- **E / Order picked and packed**: Represents the action of picking the items from inventory and packing them for shipping. visible in diagram; no further repository context available.
+- **F / Refund Payment**: Represents the action of refunding the payment to the user. visible in diagram; no further repository context available.
+- **G / Shipping label printed**: Represents the action of printing a shipping label for the package. visible in diagram; no further repository context available.
+- **H / Package shipped**: Represents the action of shipping the package to the user. visible in diagram; no further repository context available.
+- **I / Package delivered?**: A decision point to determine if the package has been delivered to the user. visible in diagram; no further repository context available.
+- **J / Investigate delivery issue**: Represents the action of investigating a delivery issue. visible in diagram; no further repository context available.
+- **K / Order complete**: Represents the final state where the order has been successfully processed and delivered. visible in diagram; no further repository context available.
+- **Z / Notify user: Order failed**: Represents the action of notifying the user that their order has failed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the workflow.
+- `B -- Yes --> C`: If inventory is available, proceed to payment processing.
+- `B -- No --> Z`: If inventory is not available, notify the user that the order failed.
+- `C --> D`: Payment is processed.
+- `D -- Yes --> E`: If payment is successful, proceed to order picking and packing.
+- `D -- No --> F`: If payment is not successful, refund the payment.
+- `F --> Z`: Refund payment leads to notifying the user that the order failed.
+- `E --> G`: Order is picked and packed, then a shipping label is printed.
+- `G --> H`: Shipping label printed, then the package is shipped.
+- `H --> I`: Package shipped, awaiting delivery confirmation.
+- `I -- No --> J`: If the package is not delivered, investigate the delivery issue.
+- `I -- Yes --> K`: If the package is delivered, the order is complete.
+- `J --> H`: Investigating the delivery issue leads back to the package being shipped.
+- `K --> A`: Order complete leads back to user submitting order.
+- `Z --> A`: Notify user order failed leads back to user submitting order.
+
+## Repository Context & Terminology
+- **User submits order**: Typically, this refers to the action of a customer placing an order through an e-commerce platform. In this diagram, it's the starting point of the workflow, but also an illogical return point from both successful and failed order paths.
+- **Inventory available?**: This refers to checking if the required quantity of the ordered item is present in the warehouse or stock. In this diagram, it's a decision point that determines whether the order can proceed.
+- **Payment processed**: This refers to the action of charging the customer's payment method for the order amount. In this diagram, it's a step after inventory check, but before confirming payment success.
+- **Payment successful?**: This refers to verifying that the payment has been successfully received and cleared. In this diagram, it's a decision point that determines whether the order can proceed to fulfillment or requires a refund.
+- **Order picked and packed**: This refers to the process of retrieving the ordered items from the warehouse and preparing them for shipment. In this diagram, it's a step in the fulfillment process, but occurs *after* payment.
+- **Shipping label printed**: This refers to generating and printing a label containing the shipping address and other relevant information for the package. In this diagram, it occurs *before* the order is picked and packed, which is an error.
+- **Package shipped**: This refers to the action of sending the package to the customer via a shipping carrier. In this diagram, it's a step in the fulfillment process, but can loop back from delivery investigation.
+- **Package delivered?**: This refers to checking if the package has been successfully delivered to the customer's address. In this diagram, it's a decision point that determines whether the order is complete or requires further investigation.
+- **Investigate delivery issue**: This refers to the process of looking into why a package has not been delivered as expected. In this diagram, it leads back to "Package shipped", creating an illogical loop.
+- **Order complete**: This refers to the final state where the order has been successfully processed and delivered to the customer. In this diagram, it loops back to "User submits order", which is an error.
+- **Refund Payment**: This refers to returning the payment to the customer due to a failed order. In this diagram, it occurs *before* notifying the user of the failure, which is an error.
+- **Notify user: Order failed**: This refers to informing the customer that their order could not be fulfilled. In this diagram, it's the outcome of inventory unavailability or payment failure, and also occurs *after* a refund.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "User submits order", which then proceeds to check "Inventory available?". If "Yes", the flow moves to "Payment processed"; if "No", the user is notified that the order failed, and the flow returns to "User submits order". After "Payment processed", the diagram checks "Payment successful?". A "Yes" outcome leads to "Order picked and packed", while a "No" outcome triggers "Refund Payment", followed by notifying the user of order failure, then returning to "User submits order". "Order picked and packed" is followed by "Shipping label printed", then "Package shipped", which leads to the "Package delivered?" decision. If "Yes", the "Order complete", but then loops back to "User submits order". If "No", the flow goes to "Investigate delivery issue", which then loops back to "Package shipped". The diagram contains several errors: the sequence of "Shipping label printed" before "Order picked and packed" is incorrect, the "Order complete" action should terminate the flow instead of looping back to "User submits order", and the "Investigate delivery issue" action should lead back to "Package delivered?" instead of "Package shipped". The "Refund Payment" action occurs *after* the "Order failed" notification, which is also incorrect.

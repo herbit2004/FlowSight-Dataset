@@ -1,0 +1,55 @@
+graph TD
+    subgraph Developer Workspace
+        A[Dev: Feature Branch: MyNewWidget];
+        B[Dev: Local Changes Committed];
+    end
+
+    subgraph Central Repository: Code Review and Merge
+        C[CI/CD: Pre-merge Build Triggered];
+        D[Code Review: Assign Reviewers];
+        E[Reviewer A: Code Review Pass];
+        F[Reviewer B: Code Review Pass with Minor Nits];
+        G[Static Analysis: Security Scan Pass];
+        H[Quality Gate: Unit Tests Pass];
+        I[Quality Gate: Integration Tests Pass];
+        J[Quality Gate: Code Coverage > 80%];
+        K[Merge Conflict Check];
+        L[Staging Deployment: Auto-Deployed after Merge];
+        M[Main Branch: Updated];
+    end
+
+    subgraph Post-Merge: Monitoring and Release
+        N[Monitoring: Performance Metrics OK];
+        O[Release Automation: Tag and Package];
+        P[Production Deployment: Gradual Rollout];
+    end
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    D --> F
+    C --> G
+    G --> H
+    H --> I
+    I --> J
+
+    E -- Pass --> K
+    E -- Fail --> A
+    F -- Pass with Nits --> K
+    F -- Fail --> A
+
+    J -- Pass --> K
+    J -- Fail --> A
+
+    K -- No Conflicts --> L
+    K -- Conflicts Detected --> A
+
+    L --> M
+    M --> N
+    N -- Performance OK --> O
+    N -- Degradation Detected --> A
+    O --> P
+
+    classDef pass fill:#90EE90,stroke:#333,stroke-width:2px;
+    class E,F,G,H,I,J,N pass;

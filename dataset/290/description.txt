@@ -1,0 +1,67 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the data flow and processing pipeline of a system, likely for indexing and searching code or text. It illustrates the journey of data from various local and remote sources through an ingestion layer, dual storage, and finally to presentation layers for user interaction and automation. The diagram serves as a high-level overview of the system's architecture, aiding in understanding the data flow and component interactions.
+
+## Overall Layout
+The diagram flows from left to right. It is divided into distinct stages representing data sources, ingestion, storage, and presentation. The data originates from local and remote sources, converges at the ingestion layer, splits into two storage components, and finally reaches two presentation interfaces.
+
+## Subgraphs / Stages
+The diagram contains four explicit subgraphs:
+- **Local Sources**: Represents various local data sources.
+- **Remote Sources**: Represents remote data sources.
+- **Dual Storage**: Represents the dual storage system.
+- **Presentation**: Represents the presentation layer.
+
+## Node-by-Node Description
+- **A1 / Codex**: Represents a local data source named Codex. visible in diagram; no further repository context available.
+- **A2 / Cline**: Represents a local data source named Cline. visible in diagram; no further repository context available.
+- **A3 / Gemini**: Represents a local data source named Gemini. visible in diagram; no further repository context available.
+- **A4 / Claude**: Represents a local data source named Claude. visible in diagram; no further repository context available.
+- **A5 / OpenCode**: Represents a local data source named OpenCode. visible in diagram; no further repository context available.
+- **A6 / Amp**: Represents a local data source named Amp. visible in diagram; no further repository context available.
+- **A7 / Cursor**: Represents a local data source named Cursor. visible in diagram; no further repository context available.
+- **A8 / ChatGPT**: Represents a local data source named ChatGPT. visible in diagram; no further repository context available.
+- **A9 / Aider**: Represents a local data source named Aider. visible in diagram; no further repository context available.
+- **A10 / Pi-Agent**: Represents a local data source named Pi-Agent. visible in diagram; no further repository context available.
+- **A11 / Factory**: Represents a local data source named Factory. visible in diagram; no further repository context available.
+- **R1 / sources.toml**: Represents a configuration file named `sources.toml` for remote sources. visible in diagram; no further repository context available.
+- **R2 / SSH/rsync Sync Engine**: Represents a synchronization engine using SSH and rsync for remote data. visible in diagram; no further repository context available.
+- **R3 / remotes/Synced Data**: Represents the directory where synced data from remote sources is stored. visible in diagram; no further repository context available.
+- **C1 / franken_agent_detection Auto-Discover & Scan Normalize & Dedupe**: Represents the ingestion layer component responsible for auto-discovering, scanning, normalizing, and deduplicating data. visible in diagram; no further repository context available.
+- **S1 / frankensqlite (WAL) Source of Truth BEGIN CONCURRENT Migrations**: Represents the frankensqlite database, acting as the source of truth, using Write-Ahead Logging (WAL), and supporting concurrent migrations. visible in diagram; no further repository context available.
+- **T1 / frankensearch BM25 + Semantic RRF Fusion Reranking**: Represents the frankensearch component, utilizing BM25, Semantic RRF (Reciprocal Rank Fusion), and Fusion Reranking for search functionality. visible in diagram; no further repository context available.
+- **U1 / TUI (FrankenTUI) Elm Architecture Analytics Dashboard Async Search**: Represents the Textual User Interface (TUI) built with Elm, providing analytics, a dashboard, and asynchronous search capabilities. visible in diagram; no further repository context available.
+- **U2 / CLI / Robot JSON Output Automation**: Represents the Command Line Interface (CLI) or Robot interface, outputting JSON for automation purposes. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A1 --> C1`: Data from Codex is ingested into the franken_agent_detection component.
+- `A2 --> C1`: Data from Cline is ingested into the franken_agent_detection component.
+- `A3 --> C1`: Data from Gemini is ingested into the franken_agent_detection component.
+- `A4 --> C1`: Data from Claude is ingested into the franken_agent_detection component.
+- `A5 --> C1`: Data from OpenCode is ingested into the franken_agent_detection component.
+- `A6 --> C1`: Data from Amp is ingested into the franken_agent_detection component.
+- `A7 --> C1`: Data from Cursor is ingested into the franken_agent_detection component.
+- `A8 --> C1`: Data from ChatGPT is ingested into the franken_agent_detection component.
+- `A9 --> C1`: Data from Aider is ingested into the franken_agent_detection component.
+- `A10 --> C1`: Data from Pi-Agent is ingested into the franken_agent_detection component.
+- `A11 --> C1`: Data from Factory is ingested into the franken_agent_detection component.
+- `R1 --> R2`: The `sources.toml` configuration file is used by the SSH/rsync Sync Engine.
+- `R2 --> R3`: The SSH/rsync Sync Engine synchronizes data into the `remotes/Synced Data` directory.
+- `R3 --> C1`: Data from the `remotes/Synced Data` directory is ingested into the franken_agent_detection component.
+- `C1 --> S1`: Processed data is persisted into the frankensqlite database.
+- `C1 --> T1`: An index is created in frankensearch from the processed data.
+- `S1 -.-> T1`: The frankensqlite database is used to rebuild the frankensearch index.
+- `T1 --> U1`: Queries are made to frankensearch to populate the TUI.
+- `T1 --> U2`: Queries are made to frankensearch to provide data for the CLI/Robot interface.
+- Convergence: The outputs of all local and remote sources converge at the `franken_agent_detection` node.
+
+## Repository Context & Terminology
+- **franken_agent_detection**: The component responsible for automatically discovering, scanning, normalizing, and deduplicating data from various sources.
+- **frankensqlite**: A SQLite database used as the source of truth for the system, employing Write-Ahead Logging (WAL) for improved performance and concurrency.
+- **frankensearch**: A search engine component utilizing BM25, Semantic RRF, and Fusion Reranking to provide relevant search results.
+- **BM25**: A ranking function used by frankensearch to determine the relevance of documents to a given search query.
+- **Semantic RRF (Reciprocal Rank Fusion)**: A technique used in frankensearch to combine the results of multiple search algorithms, improving the overall ranking quality.
+- **TUI (FrankenTUI)**: A Textual User Interface built with Elm, providing a user-friendly way to interact with the system.
+- **sources.toml**: A configuration file that specifies the remote data sources to be synchronized.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a data pipeline that begins with multiple local sources (Codex, Cline, Gemini, Claude, OpenCode, Amp, Cursor, ChatGPT, Aider, Pi-Agent, Factory) and remote sources configured via `sources.toml` and synchronized using an SSH/rsync engine into a `remotes/Synced Data` directory. All these sources converge at the `franken_agent_detection` component, which automatically discovers, scans, normalizes, and deduplicates the data. The processed data is then persisted into a `frankensqlite` database, serving as the source of truth, and indexed by `frankensearch`. The `frankensearch` component utilizes BM25 for initial ranking, followed by Semantic RRF and Fusion Reranking to refine the search results. The `frankensqlite` database can be used to rebuild the `frankensearch` index. Finally, the system presents the data through two interfaces: a TUI (FrankenTUI) built with Elm for interactive analytics and a CLI/Robot interface that outputs JSON for automation. Queries from both the TUI and CLI are directed to the `frankensearch` component. The use of `frankensqlite` with WAL ensures data integrity and concurrency, while `frankensearch` provides efficient and relevant search capabilities.

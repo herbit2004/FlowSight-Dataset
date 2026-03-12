@@ -1,0 +1,49 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the rendering pipeline of a web browser. It depicts the sequence of steps involved in converting HTML and CSS code into a visual representation on the screen. The diagram serves as a high-level overview of the rendering process, highlighting the key stages and data transformations.
+
+## Overall Layout
+The diagram flows from left to right (LR). It is divided into four subgraphs representing the major stages of the rendering pipeline. The process starts with "HTML bytes" and "CSS bytes" and ends with "Pixmap".
+
+## Subgraphs / Stages
+The diagram contains four subgraphs:
+- **Parse**: Responsible for parsing the HTML and CSS code.
+- **Style**: Applies styles to the parsed HTML elements.
+- **Layout**: Calculates the position and size of each element on the screen.
+- **Paint**: Converts the layout information into a visual representation.
+
+## Node-by-Node Description
+- **HTML bytes**: Represents the raw HTML code received by the browser. visible in diagram; no further repository context available.
+- **DOM tree**: Represents the Document Object Model, a tree-like structure representing the HTML document. visible in diagram; no further repository context available.
+- **CSS bytes**: Represents the raw CSS code received by the browser. visible in diagram; no further repository context available.
+- **Stylesheet collection**: Represents the collection of CSS stylesheets used to style the HTML document. visible in diagram; no further repository context available.
+- **Styled tree**: Represents the DOM tree with styles applied to each element. visible in diagram; no further repository context available.
+- **Computed values**: Represents the final computed values for each CSS property of each element. visible in diagram; no further repository context available.
+- **Box tree**: Represents the tree of boxes generated from the styled tree, used for layout calculations. visible in diagram; no further repository context available.
+- **anonymous wrappers**: Represents the anonymous wrapper boxes created during layout. visible in diagram; no further repository context available.
+- **Fragment tree**: Represents the tree of fragments after layout calculations. visible in diagram; no further repository context available.
+- **Display list**: Represents the list of drawing commands generated from the fragment tree. visible in diagram; no further repository context available.
+- **Pixmap**: Represents the final rendered image. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `HTML bytes --> DOM tree`: Represents the parsing of HTML bytes into a DOM tree.
+- `CSS bytes --> Stylesheet collection`: Represents the parsing of CSS bytes into a stylesheet collection.
+- `DOM tree --> Styled tree`: Represents the application of styles to the DOM tree.
+- `Stylesheet collection --> Styled tree`: Represents the application of styles to the DOM tree. Convergence: both DOM tree and Stylesheet collection contribute to the Styled tree.
+- `Styled tree --> Computed values`: Represents the calculation of computed values based on the styled tree, cascading and inheritance.
+- `Computed values --> Box tree`: Represents the creation of the box tree from the computed values.
+- `Box tree --> Fragment tree`: Represents the layout process, including the creation of anonymous wrappers.
+- `Fragment tree --> Display list`: Represents the generation of the display list from the fragment tree.
+- `Display list --> Pixmap`: Represents the rasterization of the display list into a pixmap, taking stacking order into account.
+
+## Repository Context & Terminology
+- **HTML**: HyperText Markup Language, the standard markup language for creating web pages.
+- **CSS**: Cascading Style Sheets, a style sheet language used for describing the presentation of a document written in a markup language like HTML.
+- **DOM**: Document Object Model, a programming interface for HTML and XML documents. It represents the page so that programs can change the document structure, style, and content.
+- **Rendering Pipeline**: The sequence of steps a web browser takes to convert HTML, CSS, and JavaScript into a visual representation on the screen.
+- **Cascade**: The process of combining different style sheets and resolving conflicts between them.
+- **Inheritance**: The mechanism by which certain CSS properties are passed down from parent elements to their children.
+- **Layout**: The process of calculating the position and size of each element on the screen.
+- **Paint**: The process of converting the layout information into a visual representation.
+
+## High-Density QA Ground Truth Summary
+The rendering pipeline begins with the browser receiving "HTML bytes" and "CSS bytes". These are independently parsed into a "DOM tree" and "Stylesheet collection" respectively. Both the DOM tree and stylesheet collection converge to create the "Styled tree", where CSS rules are applied to the DOM elements. The "Styled tree" then undergoes a "cascade + inherit" process to determine the "Computed values" for each element's style properties. These computed styles are used to generate a "Box tree", which represents the layout structure. During layout, "anonymous wrappers" may be created to handle specific layout requirements, resulting in a "Fragment tree". The "Fragment tree" is then transformed into a "Display list", a sequence of drawing operations. Finally, the "Display list" is processed, taking "stacking order" into account, to produce the final "Pixmap", which is the rendered image displayed on the screen. The cascade and inheritance mechanisms are crucial for resolving style conflicts and applying styles efficiently throughout the DOM tree, ensuring a consistent visual representation.

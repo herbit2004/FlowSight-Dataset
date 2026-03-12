@@ -1,0 +1,49 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the flow of data from a PostgreSQL database to Elasticsearch/OpenSearch, mediated by the `pgsync` component. It depicts the data replication process, including change data capture (CDC) and indexing. The diagram serves to visualize the system's architecture and data pipeline.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TB). It features a subgraph representing the PostgreSQL database, with data flowing from it to `pgsync`, then to Redis/Valkey, Query Builder, JSON Documents, and finally to Elasticsearch/OpenSearch. The start node is "Postgres DB" and the end node is "Elasticsearch/OpenSearch".
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "PostgreSQL Database".
+
+## Node-by-Node Description
+- **Postgres DB**: Represents the PostgreSQL database instance.
+  visible in diagram; no further repository context available.
+- **pg_notify**: Represents the PostgreSQL's publish/subscribe mechanism for asynchronous notifications.
+  visible in diagram; no further repository context available.
+- **Replication Slot/WAL**: Represents the replication slot and Write-Ahead Log (WAL) used for logical decoding.
+  visible in diagram; no further repository context available.
+- **pgsync**: Represents the `pgsync` component, which is responsible for synchronizing data from PostgreSQL to Elasticsearch/OpenSearch.
+  visible in diagram; no further repository context available.
+- **Redis/Valkey**: Represents a Redis or Valkey instance used for checkpointing and locking.
+  visible in diagram; no further repository context available.
+- **Query Builder**: Represents a component that builds queries, likely using SQLAlchemy, to fetch data.
+  visible in diagram; no further repository context available.
+- **JSON Documents**: Represents the JSON documents generated from the query results.
+  visible in diagram; no further repository context available.
+- **Elasticsearch/OpenSearch**: Represents the Elasticsearch or OpenSearch instance where the data is indexed.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Postgres DB --> pg_notify`: Represents the triggering of `pg_notify` based on database events.
+- `Postgres DB --> Replication Slot/WAL`: Represents the flow of Logical Decoding WAL to the Replication Slot.
+- `pg_notify --> pgsync`: Represents the `pgsync` component being notified of changes.
+- `Replication Slot/WAL --> pgsync`: Represents the `pgsync` component polling the Replication Slot for changes.
+- `pgsync --> Redis/Valkey`: Represents `pgsync` using Redis/Valkey for checkpointing and locking.
+- `pgsync --> Query Builder`: Represents `pgsync` using SQLAlchemy to build queries.
+- `Query Builder --> JSON Documents`: Represents the fetching of documents.
+- `JSON Documents --> Elasticsearch/OpenSearch`: Represents the bulk indexing of JSON documents into Elasticsearch/OpenSearch.
+
+## Repository Context & Terminology
+- **PostgreSQL Database**: A relational database management system known for its robustness and standards compliance.
+- **pg_notify**: A PostgreSQL feature that allows asynchronous notifications to be sent to listening clients when certain events occur in the database.
+- **Replication Slot**: A feature in PostgreSQL that ensures that WAL (Write-Ahead Log) segments required by a logical replication subscriber are retained on the publisher.
+- **WAL (Write-Ahead Log)**: A log file that records all changes made to the database before they are applied. This ensures data durability and consistency.
+- **pgsync**: A tool or component responsible for synchronizing data from PostgreSQL to other data stores, such as Elasticsearch/OpenSearch.
+- **Redis/Valkey**: An in-memory data structure store, often used as a cache or message broker. In this context, it's used for checkpointing and locking to manage the synchronization process.
+- **SQLAlchemy**: A Python SQL toolkit and Object-Relational Mapper (ORM) that provides a flexible and high-level way to interact with databases.
+- **Elasticsearch/OpenSearch**: A distributed, RESTful search and analytics engine capable of solving a growing number of use cases.
+
+## High-Density QA Ground Truth Summary
+The process begins with the "Postgres DB" node, representing the PostgreSQL database. From there, two parallel flows originate: one triggers "pg_notify" based on database events, and the other sends Logical Decoding WAL to the "Replication Slot/WAL". The "pg_notify" component then notifies the "pgsync" component, while "pgsync" also polls the "Replication Slot/WAL" for changes. The "pgsync" component acts as a central hub, using "Redis/Valkey" for checkpointing and locking, and using "SQLAlchemy" via the "Query Builder" to construct queries. The "Query Builder" then fetches data, resulting in "JSON Documents". Finally, these "JSON Documents" are bulk indexed into "Elasticsearch/OpenSearch". The use of PostgreSQL's `pg_notify` feature enables real-time change data capture (CDC), ensuring that updates in the database are quickly reflected in Elasticsearch/OpenSearch. The "Replication Slot/WAL" ensures that the WAL segments required for logical replication are retained, preventing data loss during the synchronization process. The end goal is to have a synchronized and searchable index in "Elasticsearch/OpenSearch".

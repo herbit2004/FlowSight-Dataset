@@ -1,0 +1,67 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of secrets management, specifically focusing on secret rotation. It depicts the steps involved in requesting, authorizing, executing, and monitoring the rotation of secrets, such as database credentials and API keys. The diagram serves as a visual representation of the workflow, aiding in understanding and troubleshooting the secret rotation process.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It is divided into two main subgraphs: "Secrets Management" and "Monitoring & Alerting". The process starts with a "Secret Rotation Request" and ends with either "Normal Operations" or "Trigger Alert & Remediation".
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Secrets Management**: This subgraph encompasses the core logic of secret rotation, including authorization, secret type determination, credential generation, vault updates, and success/failure handling.
+- **Monitoring & Alerting**: This subgraph focuses on post-rotation status checks and actions based on the outcome.
+
+## Node-by-Node Description
+- **A / Secret Rotation Request**: Represents the initiation of a secret rotation process. visible in diagram; no further repository context available.
+- **B / Authorization Check**: Represents the process of verifying the requester's permissions to rotate the secret. visible in diagram; no further repository context available.
+- **C / Secret Type?**: Represents a decision point where the type of secret (e.g., Database Secret, API Key) is determined. visible in diagram; no further repository context available.
+- **D / Fetch Current Secret Details**: Represents retrieving the existing credentials or configuration for a database secret. visible in diagram; no further repository context available.
+- **E / Retrieve API Key Configuration**: Represents retrieving the configuration details for an API key. visible in diagram; no further repository context available.
+- **F / Generate New Database Credentials**: Represents the creation of new username/password or other authentication information for a database. visible in diagram; no further repository context available.
+- **G / Generate New API Key**: Represents the creation of a new API key. visible in diagram; no further repository context available.
+- **H / Update Database Configuration**: Represents updating the database connection settings with the new credentials. visible in diagram; no further repository context available.
+- **I / Update API Integration Points**: Represents updating all services that use the API key with the new key. visible in diagram; no further repository context available.
+- **J / Update Secrets Vault**: Represents storing the new secret in a secure vault (e.g., HashiCorp Vault). visible in diagram; no further repository context available.
+- **K / Rotation Successful?**: Represents a decision point to determine if the secret rotation was successful. visible in diagram; no further repository context available.
+- **L / Audit Log Success**: Represents logging a successful secret rotation event. visible in diagram; no further repository context available.
+- **M / Rollback Changes**: Represents reverting any changes made during the rotation process in case of failure. visible in diagram; no further repository context available.
+- **N / Audit Log Failure**: Represents logging a failed secret rotation event. visible in diagram; no further repository context available.
+- **O / Notify Subscribers**: Represents notifying relevant parties (e.g., administrators, applications) about the secret rotation. visible in diagram; no further repository context available.
+- **P / Rotation Complete**: Represents the final step in the secret rotation process. visible in diagram; no further repository context available.
+- **Q / Secret Rotation Status Check**: Represents monitoring the status of the newly rotated secret. visible in diagram; no further repository context available.
+- **R / Normal Operations**: Represents the system operating normally after a successful secret rotation. visible in diagram; no further repository context available.
+- **S / Trigger Alert & Remediation**: Represents triggering an alert and initiating remediation actions if the secret rotation failed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: A secret rotation request triggers the authorization check.
+- `B -- Authorized --> C`: If the request is authorized, the process proceeds to determine the secret type.
+- `B -- Unauthorized --> Z`: If the request is unauthorized, it is rejected and logged.
+- `C -- Database Secret --> D`: If the secret type is a database secret, the current secret details are fetched.
+- `C -- API Key --> E`: If the secret type is an API key, the API key configuration is retrieved.
+- `D --> F`: Fetching current secret details leads to generating new database credentials.
+- `E --> G`: Retrieving API key configuration leads to generating a new API key.
+- `F --> H`: New database credentials are used to update the database configuration.
+- `G --> I`: A new API key is used to update API integration points.
+- `H --> J`: The updated database configuration is used to update the secrets vault.
+- `I --> J`: The updated API integration points are used to update the secrets vault.
+- `J --> K`: Updating the secrets vault leads to a check for rotation success.
+- `K -- Yes --> L`: If the rotation was successful, a success audit log is created.
+- `K -- No --> M`: If the rotation was unsuccessful, changes are rolled back.
+- `M --> N`: Rolling back changes leads to creating a failure audit log.
+- `L --> O`: A successful audit log leads to notifying subscribers.
+- `N --> O`: A failure audit log also leads to notifying subscribers.
+- `O --> P`: Notifying subscribers leads to the rotation being complete.
+- `P --> Q`: Rotation completion triggers a secret rotation status check.
+- `Q -- Status OK --> R`: If the status check is OK, normal operations resume.
+- `Q -- Status Failed --> S`: If the status check failed, an alert is triggered, and remediation is initiated.
+
+## Repository Context & Terminology
+- **Secret Rotation**: The process of automatically updating secrets (e.g., passwords, API keys) on a regular basis to improve security.
+- **Authorization Check**: Verifying that the entity requesting the secret rotation has the necessary permissions.
+- **Secrets Vault**: A secure storage system for managing and protecting sensitive information like secrets. Examples include HashiCorp Vault, AWS Secrets Manager, and Azure Key Vault.
+- **API Key**: A code used to identify and authenticate an application or user when accessing an API.
+- **Database Credentials**: The username and password used to access a database.
+- **Rollback**: Reverting changes made during a failed operation to restore the system to its previous state.
+- **Subscribers**: Entities (e.g., applications, users) that need to be notified about secret rotations.
+- **Remediation**: Actions taken to correct a problem or failure, such as manual intervention or automated recovery processes.
+
+## High-Density QA Ground Truth Summary
+The secret rotation process begins with a "Secret Rotation Request," which is then subjected to an "Authorization Check." If authorized, the system determines the "Secret Type," branching into either a "Database Secret" or an "API Key" path. For database secrets, the system fetches current details and generates new credentials, updating the database configuration. For API keys, it retrieves the API key configuration and generates a new API key, updating API integration points. Both paths converge at "Update Secrets Vault," where the new secret is securely stored. A "Rotation Successful?" check determines the next step. On success, an "Audit Log Success" is created; on failure, "Rollback Changes" are initiated, followed by an "Audit Log Failure." Both success and failure paths lead to "Notify Subscribers" and "Rotation Complete." Finally, a "Secret Rotation Status Check" is performed. A "Status OK" result leads to "Normal Operations," while a "Status Failed" result triggers an "Alert & Remediation." The "Secrets Vault" is a central component, representing a secure storage system like HashiCorp Vault, crucial for managing the lifecycle of sensitive credentials. The "Authorization Check" ensures that only authorized entities can initiate secret rotations, preventing unauthorized access and potential security breaches.

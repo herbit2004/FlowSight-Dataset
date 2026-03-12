@@ -1,0 +1,10 @@
+graph TD
+    A[Log Source: Microservice A] --> B{Route to Aggregator?};
+    B -- Yes --> C[Kafka Topic: service-a-logs];
+    B -- No --> D[Drop Log Event];
+    C --> E{Sampling Rate > Threshold?};
+    E -- Yes --> F[Downsample Log Events];
+    E -- No --> G[Forward All Logs];
+    F --> G;
+    G --> H[Log Aggregator Service];
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px

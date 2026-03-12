@@ -1,0 +1,67 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the user check-in process within an application and its interaction with a task management system. The diagram outlines the steps involved in a user logging into the app, completing tasks, and the subsequent updates to their performance score. It serves as a visual representation of the workflow and data flow between the user interface and the backend task management system.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It is divided into two subgraphs: "User Check-In Process" and "Task Management System." The start node is "User Opens Check-In App," and the end nodes are "Display Updated Score."
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **User Check-In Process**: This subgraph details the steps a user takes when logging into the application, answering check-in questions, and viewing their task list.
+- **Task Management System**: This subgraph outlines the backend processes involved in retrieving task lists, updating task metrics, and recalculating user performance scores based on task completion events.
+
+## Node-by-Node Description
+- **A / User Opens Check-In App**: Represents the initial action of a user opening the check-in application. visible in diagram; no further repository context available.
+- **B / Is User Already Logged In Today?**: A decision point to determine if the user has already logged in for the current day. visible in diagram; no further repository context available.
+- **C / Display Check-In Questions**: Displays a set of questions to the user upon logging in. visible in diagram; no further repository context available.
+- **D / Submit Check-In Response**: Represents the user submitting their responses to the check-in questions. visible in diagram; no further repository context available.
+- **E / Validate Check-In Data**: Validates the data submitted by the user during the check-in process. visible in diagram; no further repository context available.
+- **F / Validation Successful?**: A decision point to determine if the check-in data is valid. visible in diagram; no further repository context available.
+- **G / Record Check-In Data**: Records the validated check-in data into the system. visible in diagram; no further repository context available.
+- **H / Display Task List**: Displays the user's task list. visible in diagram; no further repository context available.
+- **I / User Completes Task**: Represents the user completing a task from their task list. visible in diagram; no further repository context available.
+- **J / Mark Task as Complete**: Marks the completed task as complete in the system. visible in diagram; no further repository context available.
+- **K / Update Task Status in Database**: Updates the status of the task in the database. visible in diagram; no further repository context available.
+- **L / Update Successful?**: A decision point to determine if the task status update was successful. visible in diagram; no further repository context available.
+- **M / Recalculate User Performance Score**: Recalculates the user's performance score based on the completed task. visible in diagram; no further repository context available.
+- **N / Display Updated Score**: Displays the updated user performance score. visible in diagram; no further repository context available.
+- **O / Retrieve Task List from Database**: Retrieves the task list from the database. visible in diagram; no further repository context available.
+- **P / Task Completion Event Received**: Represents the receipt of a task completion event. visible in diagram; no further repository context available.
+- **Q / Update Task Metrics**: Updates the task metrics based on the completion event. visible in diagram; no further repository context available.
+- **R / Trigger Performance Recalculation**: Triggers the recalculation of the user's performance. visible in diagram; no further repository context available.
+- **S / Publish Task Completion Event**: Publishes a task completion event. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User opening the app leads to checking if the user is already logged in.
+- `B -- Yes --> H`: If the user is already logged in, display the task list.
+- `B -- No --> C`: If the user is not logged in, display the check-in questions.
+- `C --> D`: Displaying check-in questions leads to submitting the check-in response.
+- `D --> E`: Submitting the check-in response leads to validating the check-in data.
+- `E --> F`: Validating the check-in data leads to checking if the validation was successful.
+- `F -- Yes --> G`: If the validation was successful, record the check-in data.
+- `F -- No --> C`: If the validation was not successful, redisplay the check-in questions.
+- `G --> H`: Recording the check-in data leads to displaying the task list.
+- `H --> I`: Displaying the task list leads to the user completing a task.
+- `I --> J`: User completing a task leads to marking the task as complete.
+- `J --> K`: Marking the task as complete leads to updating the task status in the database.
+- `K --> L`: Updating the task status leads to checking if the update was successful.
+- `L -- Yes --> M`: If the update was successful, recalculate the user performance score.
+- `L -- No --> H`: If the update was not successful, redisplay the task list.
+- `M --> N`: Recalculating the user performance score leads to displaying the updated score.
+- `H --> O`: Displaying the task list triggers retrieving the task list from the database.
+- `P --> Q`: Receiving a task completion event leads to updating task metrics.
+- `Q --> R`: Updating task metrics leads to triggering performance recalculation.
+- `R --> M`: Triggering performance recalculation leads to recalculating the user performance score.
+- `J --> S`: Marking the task as complete leads to publishing a task completion event.
+- `S --> P`: Publishing a task completion event leads to receiving a task completion event.
+
+## Repository Context & Terminology
+- **Check-In App**: An application that users interact with to log their presence or start their work day, often including a set of questions or tasks to complete.
+- **Task Management System**: A system used to organize, track, and manage tasks, often including features for assigning tasks, setting deadlines, and monitoring progress.
+- **Task List**: A list of tasks assigned to a user, typically managed within the task management system.
+- **Task Completion Event**: An event triggered when a user completes a task, used to update task metrics and recalculate performance scores.
+- **Performance Score**: A metric used to evaluate a user's performance, often based on the number and type of tasks completed.
+- **Database**: A structured set of data held in a computer, especially one that is accessible in various ways.
+- **Validation**: The process of checking if data meets certain criteria or rules.
+
+## High-Density QA Ground Truth Summary
+The user check-in process begins with the user opening the check-in app. The system then checks if the user is already logged in for the day. If the user is already logged in ("Yes" branch), the system proceeds directly to displaying the task list. If the user is not logged in ("No" branch), the system displays check-in questions. The user submits their responses, and the system validates the check-in data. If validation is successful ("Yes" branch), the check-in data is recorded, and the task list is displayed. If validation fails ("No" branch), the check-in questions are redisplayed, creating a loop until valid data is submitted. After the task list is displayed, the user completes a task, which is then marked as complete. The task status is updated in the database. If the update is successful ("Yes" branch), the user's performance score is recalculated, and the updated score is displayed, concluding the process. If the update is not successful ("No" branch), the task list is redisplayed. Task completion also triggers a separate flow within the Task Management System, where a task completion event is published, task metrics are updated, and performance recalculation is triggered, ultimately influencing the user's displayed performance score. The "Task Management System" subgraph handles backend processes related to task completion and performance evaluation.

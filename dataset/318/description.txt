@@ -1,0 +1,43 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the deployment of Argo CD in multiple clusters and environments. It illustrates the relationship between Ops Clusters (A and B) and their respective Env Clusters (A and B), showing how Argo CD instances manage deployments across different environments (Dev, Stage, Prod). The diagram also highlights the optional aggregation of observability data between Ops Clusters.
+
+## Overall Layout
+The diagram is laid out from left to right. It shows two main branches, one for Ops Cluster A and Env Clusters A, and another for Ops Cluster B and Env Clusters B. The Ops Clusters are on the left, and the Env Clusters they manage are on the right.
+
+## Subgraphs / Stages
+The diagram contains four subgraphs:
+- **Ops Cluster A**: Contains Argo CD A and Observability A.
+- **Env Clusters A**: Contains Dev A, Stage A, and Prod A.
+- **Ops Cluster B**: Contains Argo CD B and Observability B.
+- **Env Clusters B**: Contains Dev B, Stage B, and Prod B.
+
+## Node-by-Node Description
+- **Argo CD A**: Represents an instance of Argo CD running in Ops Cluster A. visible in diagram; no further repository context available.
+- **Observability A**: Represents the observability component in Ops Cluster A. visible in diagram; no further repository context available.
+- **Dev A**: Represents the Development environment in Env Clusters A. visible in diagram; no further repository context available.
+- **Stage A**: Represents the Staging environment in Env Clusters A. visible in diagram; no further repository context available.
+- **Prod A**: Represents the Production environment in Env Clusters A. visible in diagram; no further repository context available.
+- **Argo CD B**: Represents an instance of Argo CD running in Ops Cluster B. visible in diagram; no further repository context available.
+- **Observability B**: Represents the observability component in Ops Cluster B. visible in diagram; no further repository context available.
+- **Dev B**: Represents the Development environment in Env Clusters B. visible in diagram; no further repository context available.
+- **Stage B**: Represents the Staging environment in Env Clusters B. visible in diagram; no further repository context available.
+- **Prod B**: Represents the Production environment in Env Clusters B. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Argo CD A --> Dev A`: Argo CD A deploys to the Dev A environment.
+- `Argo CD A --> Stage A`: Argo CD A deploys to the Stage A environment.
+- `Argo CD A --> Prod A`: Argo CD A deploys to the Prod A environment.
+- `Argo CD B --> Dev B`: Argo CD B deploys to the Dev B environment.
+- `Argo CD B --> Stage B`: Argo CD B deploys to the Stage B environment.
+- `Argo CD B --> Prod B`: Argo CD B deploys to the Prod B environment.
+- `Observability A -. optional aggregated exports .- Observability B`: Observability data is optionally aggregated from Observability A to Observability B.
+
+## Repository Context & Terminology
+- **Argo CD**: A declarative, GitOps continuous delivery tool for Kubernetes. It allows defining desired application states in Git repositories and automatically deploys and manages applications in Kubernetes clusters.
+- **Ops Cluster**: A Kubernetes cluster dedicated to running operational tools like Argo CD and observability components.
+- **Env Cluster**: A Kubernetes cluster dedicated to running application environments like Development, Staging, and Production.
+- **Observability**: The capability to monitor and understand the state of a system through metrics, logs, and traces.
+- **GitOps**: A declarative way of implementing continuous deployment for cloud-native applications.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a multi-cluster Argo CD deployment. The process starts with Argo CD instances (Argo CD A in Ops Cluster A and Argo CD B in Ops Cluster B). Argo CD A deploys applications to Dev A, Stage A, and Prod A environments within Env Clusters A. Similarly, Argo CD B deploys applications to Dev B, Stage B, and Prod B environments within Env Clusters B. The diagram highlights that observability data can be optionally aggregated from Observability A in Ops Cluster A to Observability B in Ops Cluster B, which allows for centralized monitoring. Argo CD, a GitOps tool, ensures that the desired state defined in Git is continuously reconciled with the actual state in the Kubernetes clusters, enabling automated deployments across multiple environments. The end nodes are the Dev, Stage, and Prod environments in both Env Clusters A and B, representing the deployed applications. The optional aggregated exports between Observability A and Observability B is represented by a dotted line.

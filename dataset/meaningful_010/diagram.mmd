@@ -1,0 +1,36 @@
+graph TD
+    subgraph Configuration Center
+        A[Configuration Request] --> B(Authorization Check);
+        B -- Authorized --> C{Profile Lookup};
+        B -- Unauthorized --> Z[Access Denied];
+        C --> D[Retrieve Profile from Cache];
+        D -- Cache Hit --> E(Apply Profile);
+        D -- Cache Miss --> F[Fetch Profile from DB];
+        F --> G(Populate Cache);
+        G --> E;
+        E --> H{Push Configuration?};
+    end
+
+    subgraph Target Device
+        H -- Yes --> I[Initiate Configuration Session];
+        I --> J{Device Alive?};
+        J -- Yes --> K[Push Configuration Data];
+        J -- No --> L[Queue Configuration Update];
+        K --> M(Acknowledge Success);
+        M --> N[Termination];
+        H -- No --> O[Start Configuration Poll];
+		O --> P{Configuration Changed?};
+		P -- Yes --> Q[Download Configuration];
+		Q --> R(Apply Configuration);
+		R --> S[Acknowledge Success];
+		P -- No --> T[Sleep];
+		T --> O;
+    end
+
+    N -- Success --> U[Log Success];
+    N -- Failure --> V[Log Failure];
+	S --> U;
+	S --> V;
+
+    classDef approved fill:#ccffcc,stroke:#333,stroke-width:2px;
+    class B,D,E,G,J,K,M,Q,R,S approved;

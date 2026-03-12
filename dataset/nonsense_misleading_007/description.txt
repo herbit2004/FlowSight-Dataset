@@ -1,0 +1,80 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating an order processing workflow. It depicts the steps involved from when a user places an order to the end of the process, including payment, shipping, and potential cancellation or restocking. This diagram serves as a visual representation of the order lifecycle.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It starts with the "User Places Order" node and ends with the "End Process" node. The diagram contains a subgraph named "Order Processing".
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Order Processing**: This subgraph encompasses the initial stage of the order process, starting with the user placing an order and ending the process.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action of a user submitting an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **C / Prepare Order**: Represents the step of preparing the order for shipment.
+  visible in diagram; no further repository context available.
+- **D / Order Shipped**: Indicates that the order has been shipped to the customer.
+  visible in diagram; no further repository context available.
+- **E / Order Delivered**: Represents the confirmation that the order has been delivered to the customer.
+  visible in diagram; no further repository context available.
+- **F / Cancel Order**: Represents the action of cancelling the order.
+  visible in diagram; no further repository context available.
+- **G / Shipping Error?**: A decision point to check if there was an error during shipping.
+  visible in diagram; no further repository context available.
+- **H / Notify Customer of Cancellation**: Represents notifying the customer about the order cancellation.
+  visible in diagram; no further repository context available.
+- **I / Issue Refund**: Represents the action of issuing a refund for the cancelled order.
+  visible in diagram; no further repository context available.
+- **K / Update Inventory**: Represents updating the inventory levels after a cancellation.
+  visible in diagram; no further repository context available.
+- **L / Generate Invoice**: Represents generating an invoice for the order.
+  visible in diagram; no further repository context available.
+- **M / Archive Order Data**: Represents archiving the order data for record-keeping.
+  visible in diagram; no further repository context available.
+- **N / Analyze Sales Data**: Represents analyzing the sales data.
+  visible in diagram; no further repository context available.
+- **O / Restock Needed?**: A decision point to check if restocking is needed based on the sales data analysis.
+  visible in diagram; no further repository context available.
+- **P / End Process**: Represents the end of the order processing workflow.
+  visible in diagram; no further repository context available.
+- **Q / Restock Inventory**: Represents the action of restocking the inventory.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, initiating the payment check.
+- `B -- Yes --> C`: Payment received, proceeding to prepare the order.
+- `B -- No --> F`: Payment not received, proceeding to cancel the order.
+- `C --> D`: Order is prepared and then shipped.
+- `D --> E`: Order is shipped and then delivered.
+- `E -- Success --> A`: Order delivered successfully, looping back to the beginning (User Places Order).
+- `D --> G`: Order is shipped, checking for shipping errors.
+- `G -- Yes --> I`: Shipping error occurred, proceeding to issue a refund.
+- `G -- No --> I`: No shipping error, proceeding to issue a refund.
+- `F --> H`: Order is cancelled, proceeding to notify the customer.
+- `I --> H`: Refund is issued, proceeding to notify the customer of cancellation.
+- `H --> K`: Customer is notified of cancellation, proceeding to update inventory.
+- `K --> L`: Inventory is updated, proceeding to generate an invoice.
+- `L --> M`: Invoice is generated, proceeding to archive order data.
+- `M --> N`: Order data is archived, proceeding to analyze sales data.
+- `N --> O`: Sales data is analyzed, checking if restocking is needed.
+- `O -- No --> P`: Restocking not needed, ending the process.
+- `O -- Yes --> Q`: Restocking is needed, proceeding to restock inventory.
+- `Q --> C`: Inventory is restocked, proceeding to prepare the order.
+- `A --> P`: User places order, ending the process.
+
+## Repository Context & Terminology
+- **Order Processing**: In standard practice, this refers to the entire sequence of steps involved in fulfilling a customer's order. In this diagram, it's a subgraph that includes the initial order placement and the end of the process.
+- **User Places Order**: Standard meaning is the customer initiating a purchase. In this diagram, it's the starting point and, illogically, a potential loop-back point after successful delivery.
+- **Payment Received?**: Standard meaning is verifying successful payment. In this diagram, a 'No' leads to cancellation, but a 'Yes' does not guarantee order fulfillment.
+- **Prepare Order**: Standard meaning is gathering items for shipment. In this diagram, it follows payment but precedes any customer notification.
+- **Order Shipped**: Standard meaning is the order leaving the warehouse. In this diagram, it occurs before customer notification of cancellation.
+- **Shipping Error?**: Standard meaning is checking for problems during delivery. In this diagram, both 'Yes' and 'No' branches lead to issuing a refund.
+- **Issue Refund**: Standard meaning is returning money to the customer. In this diagram, it happens after a shipping error (or lack thereof) and before notifying the customer.
+- **Notify Customer of Cancellation**: Standard meaning is informing the customer about the cancellation. In this diagram, it occurs after the refund is issued and before inventory updates.
+- **Update Inventory**: Standard meaning is adjusting stock levels. In this diagram, it happens only after cancellation, not after successful order fulfillment.
+- **Restock Inventory**: Standard meaning is replenishing stock. In this diagram, it loops back to "Prepare Order" after restocking.
+
+## High-Density QA Ground Truth Summary
+The order processing flowchart begins with the "User Places Order," which immediately ends the process. The next step is to check if "Payment Received?". If "Yes," the process moves to "Prepare Order" and then "Order Shipped." If "No," the process goes to "Cancel Order." After "Order Shipped," the process checks for "Shipping Error?". Regardless of whether there is a shipping error or not, the process proceeds to "Issue Refund." Following the refund, the customer is notified of the cancellation ("Notify Customer of Cancellation"), and the inventory is updated ("Update Inventory"). An invoice is then generated ("Generate Invoice"), and the order data is archived ("Archive Order Data"). The sales data is then analyzed ("Analyze Sales Data") to determine if restocking is needed ("Restock Needed?"). If restocking is not needed, the process ends ("End Process"). If restocking is needed, the inventory is restocked ("Restock Inventory"), and the process loops back to "Prepare Order". The "Order Delivered" node has a "Success" path that loops back to "User Places Order," creating an illogical restart of the entire process. The "Order Processing" subgraph encapsulates the "User Places Order" node and the "End Process" node, indicating that the order process ends immediately after the user places the order.

@@ -1,0 +1,31 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the relationships between `rpm-ostree` and its dependencies or related components: `ostree`, `bootc`, and `libdnf`. It depicts the high-level architecture and dependencies of the `rpm-ostree` system, showing how it interacts with other components to manage image-based operating system deployments. The diagram serves as a visual aid to understand the system's architecture and dependencies.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It presents a hierarchical structure with `rpm-ostree` at the top level, branching out to `ostree`, `bootc`, and `libdnf`. There is one start node (`rpm-ostree`) and three end nodes (`ostree`, `bootc`, and `libdnf`).
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into four stages: `rpm-ostree`, `ostree`, `bootc`, and `libdnf`.
+
+## Node-by-Node Description
+- **rpmostree / rpm-ostree (daemon + CLI) status, upgrade, rollback package layering initramfs --enable**: This node represents the `rpm-ostree` system, including its daemon and command-line interface. It highlights key functionalities such as status checks, upgrades, rollbacks, package layering, and `initramfs` enabling. visible in diagram; no further repository context available.
+- **ostree / ostree (image system) fetch ostree repositories transactional upgrades and rollbacks**: This node represents the `ostree` image system, responsible for fetching `ostree` repositories and handling transactional upgrades and rollbacks. visible in diagram; no further repository context available.
+- **bootc / bootc (image system) fetch bootable container images transactional upgrades and rollbacks**: This node represents the `bootc` image system, responsible for fetching bootable container images and handling transactional upgrades and rollbacks. visible in diagram; no further repository context available.
+- **libdnf / libdnf (pkg system) ties together libsolv (SAT solver) librepo (RPM repo downloads) librpm (RPM installation)**: This node represents the `libdnf` package management system, which ties together `libsolv` (SAT solver), `librepo` (RPM repository downloads), and `librpm` (RPM installation). visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `rpmostree --> ostree`: `rpm-ostree` utilizes `ostree` for image system functionalities.
+- `rpmostree --> bootc`: `rpm-ostree` utilizes `bootc` for fetching bootable container images.
+- `rpmostree --> libdnf`: `rpm-ostree` utilizes `libdnf` for package management, including dependency resolution and RPM installation.
+
+## Repository Context & Terminology
+- **rpm-ostree**: A hybrid image/package system. It combines the advantages of both image-based and package-based systems.
+- **ostree**: A system for managing bootable, immutable, versioned file system trees.
+- **bootc**: A tool for creating bootable container images.
+- **libdnf**: The DNF (Dandified YUM) package management library.
+- **libsolv**: A dependency solver library used by DNF.
+- **librepo**: A library for downloading RPM repository metadata and packages.
+- **librpm**: A library for installing and managing RPM packages.
+
+## High-Density QA Ground Truth Summary
+The diagram begins with `rpm-ostree`, a system providing daemon and CLI functionalities for managing operating system images, including status checks, upgrades, rollbacks, and package layering, with `initramfs` enabling. From `rpm-ostree`, the diagram branches out to three key components: `ostree`, `bootc`, and `libdnf`. `ostree` is used as the underlying image system, responsible for fetching `ostree` repositories and handling transactional upgrades and rollbacks. `bootc` is used for fetching bootable container images and also supports transactional upgrades and rollbacks. `libdnf`, the DNF package management library, ties together `libsolv` (the SAT solver for dependency resolution), `librepo` (for downloading RPM repository metadata and packages), and `librpm` (for RPM package installation). The diagram highlights the dependencies and interactions between `rpm-ostree` and these components, illustrating how `rpm-ostree` leverages them to provide a robust image-based operating system management solution. The end nodes are `ostree`, `bootc`, and `libdnf`, representing the core dependencies of `rpm-ostree`.

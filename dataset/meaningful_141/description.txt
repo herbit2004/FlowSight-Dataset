@@ -1,0 +1,81 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a data masking and encryption pipeline for customer transactions. The diagram outlines the steps involved in processing customer data, including data ingestion, masking, encryption, validation, and storage. It serves as a visual representation of the data flow and decision-making processes within the system.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). The flow starts with the data source and progresses through a series of decision points and processing steps, ultimately leading to data storage or rejection. The start node is "Data Source: Customer Transactions," and the end nodes are "Data Warehouse," "Monitoring Dashboard," and "Data Output - Unmasked/Unencrypted".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Data Ingestion, Data Masking, Data Encryption, Data Validation, Data Storage, and Alerting.
+
+## Node-by-Node Description
+- **A / Data Source: Customer Transactions**: Represents the origin of the data, specifically customer transaction data. visible in diagram; no further repository context available.
+- **B / Data Ingestion Service**: Represents the service responsible for receiving and processing the incoming data. visible in diagram; no further repository context available.
+- **C / Is Data Masking Required?**: A decision point that determines whether data masking is necessary. visible in diagram; no further repository context available.
+- **D / PII Identification Module**: Module responsible for identifying Personally Identifiable Information (PII) in the data. visible in diagram; no further repository context available.
+- **E / Data Masking Engine**: Engine responsible for applying data masking techniques. visible in diagram; no further repository context available.
+- **F / Apply Masking Rule: Redaction**: A decision point to apply redaction masking rule. visible in diagram; no further repository context available.
+- **G / Redact Sensitive Data**: Action to redact sensitive data. visible in diagram; no further repository context available.
+- **H / Masked Data Output**: Represents the output of the data masking process. visible in diagram; no further repository context available.
+- **I / Apply Masking Rule: Substitution**: A decision point to apply substitution masking rule. visible in diagram; no further repository context available.
+- **J / Substitute with Pseudonym**: Action to substitute data with a pseudonym. visible in diagram; no further repository context available.
+- **K / Apply Masking Rule: Encryption**: A decision point to apply encryption masking rule. visible in diagram; no further repository context available.
+- **L / Encrypt Data with AES-256**: Action to encrypt data using AES-256 encryption. visible in diagram; no further repository context available.
+- **M / No Suitable Masking Rule**: Indicates that no suitable masking rule was found. visible in diagram; no further repository context available.
+- **N / Is Data Encryption Required?**: A decision point that determines whether data encryption is necessary. visible in diagram; no further repository context available.
+- **O / Encryption Key Retrieval Service**: Service responsible for retrieving encryption keys. visible in diagram; no further repository context available.
+- **P / Data Encryption Engine**: Engine responsible for encrypting the data. visible in diagram; no further repository context available.
+- **Q / Encrypt Data with Key**: Action to encrypt data using a retrieved key. visible in diagram; no further repository context available.
+- **R / Encrypted Data Output**: Represents the output of the data encryption process. visible in diagram; no further repository context available.
+- **S / Data Output - Unmasked/Unencrypted**: Represents the data output when neither masking nor encryption is required. visible in diagram; no further repository context available.
+- **T / Data Validation Service**: Service responsible for validating the processed data. visible in diagram; no further repository context available.
+- **U / Validation Successful?**: A decision point that determines whether the data validation was successful. visible in diagram; no further repository context available.
+- **V / Store Validated Data**: Action to store the validated data. visible in diagram; no further repository context available.
+- **X / Data Warehouse**: Represents the data warehouse where validated data is stored. visible in diagram; no further repository context available.
+- **W / Rejection Queue**: Represents a queue for rejected data. visible in diagram; no further repository context available.
+- **Y / Alerting Service**: Service responsible for generating alerts for rejected data. visible in diagram; no further repository context available.
+- **Z / Monitoring Dashboard**: Represents a dashboard for monitoring the data processing pipeline. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Data flow from the data source to the data ingestion service.
+- `B --> C`: Data flow from the data ingestion service to the data masking decision point.
+- `C -- Yes --> D`: If data masking is required, the data flows to the PII Identification Module.
+- `C -- No --> N`: If data masking is not required, the data flows to the data encryption decision point.
+- `D --> E`: Data flow from the PII Identification Module to the Data Masking Engine.
+- `E --> F`: Data flow from the Data Masking Engine to the Redaction masking rule.
+- `F -- Rule Matched --> G`: If the redaction rule matches, the data is redacted.
+- `F -- No Rule Matched --> I`: If the redaction rule does not match, the data flows to the Substitution masking rule.
+- `G --> H`: Data flow from the Redact Sensitive Data action to the Masked Data Output.
+- `I -- Rule Matched --> J`: If the substitution rule matches, the data is substituted with a pseudonym.
+- `I -- No Rule Matched --> K`: If the substitution rule does not match, the data flows to the Encryption masking rule.
+- `J --> H`: Data flow from the Substitute with Pseudonym action to the Masked Data Output.
+- `K -- Rule Matched --> L`: If the encryption rule matches, the data is encrypted with AES-256.
+- `K -- No Rule Matched --> M`: If the encryption rule does not match, there is no suitable masking rule.
+- `L --> H`: Data flow from the Encrypt Data with AES-256 action to the Masked Data Output.
+- `M --> H`: Data flow from the No Suitable Masking Rule to the Masked Data Output.
+- `N -- Yes --> O`: If data encryption is required, the data flows to the Encryption Key Retrieval Service.
+- `N -- No --> S`: If data encryption is not required, the data flows to the Data Output - Unmasked/Unencrypted.
+- `O --> P`: Data flow from the Encryption Key Retrieval Service to the Data Encryption Engine.
+- `P --> Q`: Data flow from the Data Encryption Engine to the Encrypt Data with Key action.
+- `Q --> R`: Data flow from the Encrypt Data with Key action to the Encrypted Data Output.
+- `B --> S`: Data flow from the Data Ingestion Service to the Data Output - Unmasked/Unencrypted.
+- `H --> T`: Data flow from the Masked Data Output to the Data Validation Service.
+- `R --> T`: Data flow from the Encrypted Data Output to the Data Validation Service.
+- `S --> T`: Data flow from the Data Output - Unmasked/Unencrypted to the Data Validation Service.
+- `T --> U`: Data flow from the Data Validation Service to the Validation Successful? decision point.
+- `U -- Yes --> V`: If the validation is successful, the data is stored.
+- `U -- No --> W`: If the validation is not successful, the data is sent to the Rejection Queue.
+- `V --> X`: Data flow from the Store Validated Data action to the Data Warehouse.
+- `W --> Y`: Data flow from the Rejection Queue to the Alerting Service.
+- `Y --> Z`: Data flow from the Alerting Service to the Monitoring Dashboard.
+
+## Repository Context & Terminology
+- **Data Masking**: The process of obscuring or replacing sensitive data with modified or synthetic data.
+- **Data Encryption**: The process of converting data into an unreadable format to protect its confidentiality.
+- **PII (Personally Identifiable Information)**: Any data that could potentially identify a specific individual.
+- **AES-256**: Advanced Encryption Standard with a 256-bit key, a symmetric encryption algorithm.
+- **Data Warehouse**: A central repository for storing integrated data from various sources.
+- **Alerting Service**: A service that generates notifications or alerts based on predefined rules or events.
+- **Monitoring Dashboard**: A visual interface for tracking and monitoring the performance and status of a system or process.
+
+## High-Density QA Ground Truth Summary
+The data processing pipeline begins with customer transaction data entering the system via the "Data Source: Customer Transactions" node, which is then ingested by the "Data Ingestion Service." The first decision point is "Is Data Masking Required?". If 'Yes', the data flows to the "PII Identification Module" and then to the "Data Masking Engine," where masking rules are applied sequentially: "Redaction," "Substitution," and "Encryption." Each rule application branches based on whether the rule matches ("Rule Matched") or not ("No Rule Matched"), leading to actions like "Redact Sensitive Data," "Substitute with Pseudonym," or "Encrypt Data with AES-256." If no suitable masking rule is found, the flow proceeds to "No Suitable Masking Rule." All masking paths converge at "Masked Data Output." If data masking is not required ("Is Data Masking Required? -- No"), the flow proceeds to "Is Data Encryption Required?". If encryption is needed ("Yes"), the "Encryption Key Retrieval Service" is invoked, followed by the "Data Encryption Engine" and "Encrypt Data with Key," resulting in "Encrypted Data Output." If encryption is not required ("No"), the data flows to "Data Output - Unmasked/Unencrypted." All data outputs (masked, encrypted, or unmasked) converge at the "Data Validation Service," which determines if "Validation Successful?". If 'Yes', the data is stored in the "Data Warehouse"; if 'No', it's sent to the "Rejection Queue," triggering the "Alerting Service" and ultimately displayed on the "Monitoring Dashboard." The pipeline ensures data security through masking and encryption techniques, with validation and alerting mechanisms to maintain data quality.

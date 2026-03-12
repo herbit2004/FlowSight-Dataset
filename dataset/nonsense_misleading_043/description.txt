@@ -1,0 +1,63 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the order processing workflow, from order receipt to completion. The diagram outlines the steps involved in fulfilling an order, including payment processing, item packaging, shipping, and handling order cancellations.
+
+## Overall Layout
+The diagram flows primarily from top to bottom. It starts with "Start: Order Received" at the top and ends with "End: Order Complete" at the bottom. The diagram includes decision diamonds that create branching paths.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Initiation & Payment, Inventory Check, Shipping Address Validation, Order Fulfillment/Cancellation, Delivery & Feedback, and Order Completion.
+
+## Node-by-Node Description
+- **A / Start: Order Received**: Represents the beginning of the order processing workflow. visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision point to determine if the payment was successful. visible in diagram; no further repository context available.
+- **C / Send Payment Reminder**: A step to remind the customer to make a payment if the initial payment was unsuccessful. visible in diagram; no further repository context available.
+- **D / Package Items**: Represents the action of packaging the ordered items. visible in diagram; no further repository context available.
+- **E / All Items in Stock?**: A decision point to check if all ordered items are in stock. visible in diagram; no further repository context available.
+- **F / Set Shipping Address**: Represents the action of setting or confirming the shipping address. visible in diagram; no further repository context available.
+- **G / Order Cancelled**: Represents the state where the order has been cancelled. visible in diagram; no further repository context available.
+- **H / Notify Customer of Delay**: Represents the action of informing the customer about a delay in order processing. visible in diagram; no further repository context available.
+- **I / Customer Cancels Order?**: A decision point to determine if the customer cancels the order after being notified of a delay. visible in diagram; no further repository context available.
+- **J / Backorder Items**: Represents the action of backordering items that are not currently in stock. visible in diagram; no further repository context available.
+- **K / Shipping Address Valid?**: A decision point to validate the shipping address. visible in diagram; no further repository context available.
+- **L / Order Shipped**: Represents the state where the order has been shipped. visible in diagram; no further repository context available.
+- **M / Send Shipping Notification**: Represents the action of sending a notification to the customer that their order has been shipped. visible in diagram; no further repository context available.
+- **N / Order Delivered**: Represents the state where the order has been delivered to the customer. visible in diagram; no further repository context available.
+- **O / Request Customer Feedback**: Represents the action of requesting feedback from the customer after the order has been delivered. visible in diagram; no further repository context available.
+- **P / Refund Payment**: Represents the action of refunding the payment to the customer. visible in diagram; no further repository context available.
+- **Q / End: Order Complete**: Represents the end of the order processing workflow. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: An order is received and proceeds to payment processing.
+- `B -- Yes --> D`: If payment is successful, the process moves to packaging items.
+- `B -- No --> C`: If payment is unsuccessful, a payment reminder is sent.
+- `C --> G`: After sending a payment reminder, the order is cancelled.
+- `D --> E`: After packaging items, the system checks if all items are in stock.
+- `E -- Yes --> F`: If all items are in stock, the shipping address is set.
+- `E -- No --> H`: If not all items are in stock, the customer is notified of a delay.
+- `F --> K`: After setting the shipping address, it is validated.
+- `K -- Yes --> L`: If the shipping address is valid, the order is shipped.
+- `K -- No --> L`: If the shipping address is invalid, the order is shipped.
+- `H --> I`: After notifying the customer of a delay, the system checks if they want to cancel the order.
+- `I -- Yes --> G`: If the customer cancels the order, the order is cancelled.
+- `I -- No --> J`: If the customer does not cancel the order, the items are backordered.
+- `J --> D`: After backordering items, the process returns to packaging items.
+- `L --> M`: After the order is shipped, a shipping notification is sent.
+- `M --> N`: After sending a shipping notification, the order is delivered.
+- `N --> O`: After the order is delivered, customer feedback is requested.
+- `O --> A`: After requesting customer feedback, the process loops back to the start (Order Received).
+- `G --> P`: After the order is cancelled, a refund payment is issued.
+- `P --> Q`: After refunding the payment, the order is complete.
+- `L --> Q`: After the order is shipped, the order is complete.
+- Paths converge at node Q (End: Order Complete) from nodes P (Refund Payment) and L (Order Shipped).
+
+## Repository Context & Terminology
+- **Order Received**: Standard meaning is the initial receipt of a customer's order. In this diagram, it's the starting point of the entire process, and also the endpoint of a feedback loop.
+- **Payment Successful?**: Standard meaning is a check to ensure payment has been processed correctly. In this diagram, it's a decision point that determines whether to proceed with the order or send a payment reminder.
+- **Package Items**: Standard meaning is the process of preparing the items for shipment. In this diagram, it's a step in the order fulfillment process after payment is confirmed.
+- **All Items in Stock?**: Standard meaning is a check to verify that all ordered items are available. In this diagram, it's a decision point that determines whether to proceed with shipping or notify the customer of a delay.
+- **Shipping Address Valid?**: Standard meaning is a check to ensure the shipping address is correct and deliverable. In this diagram, it's a decision point, but the "No" branch incorrectly leads to "Order Shipped".
+- **Order Shipped**: Standard meaning is the point at which the order leaves the warehouse. In this diagram, it's a state reached even if the shipping address is invalid.
+- **Order Cancelled**: Standard meaning is the termination of the order process. In this diagram, it leads to a refund.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Start: Order Received" (A), immediately followed by a check for "Payment Successful?" (B). If payment fails ("No" branch), a "Send Payment Reminder" (C) is triggered, leading to "Order Cancelled" (G). If payment is successful ("Yes" branch), the process moves to "Package Items" (D), then checks "All Items in Stock?" (E). If items are unavailable ("No" branch), the "Customer" is notified of a delay (H), and the system checks if the "Customer Cancels Order?" (I). If the customer cancels ("Yes" branch), the "Order" is "Cancelled" (G); otherwise ("No" branch), items are "Backorder Items" (J), looping back to "Package Items" (D). If all items are in stock ("Yes" branch), the "Shipping Address" is set (F), and then validated "Shipping Address Valid?" (K). Irrespective of the address being valid or not, the process proceeds to "Order Shipped" (L), then "Send Shipping Notification" (M), followed by "Order Delivered" (N), and finally "Request Customer Feedback" (O), which loops back to "Start: Order Received" (A). "Order Cancelled" (G) leads to "Refund Payment" (P), which then goes to "End: Order Complete" (Q), while "Order Shipped" (L) also goes to "End: Order Complete" (Q). This implies cancelling an order and shipping it leads to the same result.

@@ -1,0 +1,42 @@
+graph TD
+    subgraph User Interaction
+        A[User Action: Earn/Spend Points] --> B(Loyalty API Gateway);
+    end
+
+    B --> C{Eligibility Check?};
+    C -- Yes --> D[Points Calculation Engine];
+    C -- No --> E[Insufficient Tier Standing];
+
+    D --> F(Points Ledger Service);
+    F --> G{Transaction Successful?};
+    G -- Yes --> H[Tier Evaluation Service];
+    G -- No --> I[Transaction Rollback];
+
+    H --> J(Tier Update Request);
+    J --> K[Tier Database];
+
+    I --> L[Error Logging Service];
+    L --> M((Notification Service));
+
+    K --> N{Tier Updated?};
+    N -- Yes --> O[Reward Catalog Service];
+    N -- No --> P[Admin Alert System];
+
+    O --> Q(Reward Eligibility Check);
+    Q --> R{Reward Available?};
+    R -- Yes --> S[Reward Redemption Service];
+    R -- No --> T[Alternative Reward Offer];
+
+    S --> M;
+    T --> M;
+    E --> M;
+    P --> M;
+
+    subgraph Data Layer
+      K -- Tier Data --> X[Data Lake - Analytics];
+      F -- Points Data --> X;
+    end
+
+    style M fill:#f9f,stroke:#333,stroke-width:2px
+    classDef error fill:#fcc,stroke:#333,stroke-width:2px
+    class I,P error

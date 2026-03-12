@@ -1,0 +1,35 @@
+graph TD
+    subgraph Region A
+      A1(User Request) --> A2{Load Balancer A};
+      A2 -- Healthy Instance --> A3[Application Server A1];
+      A2 -- Healthy Instance --> A4[Application Server A2];
+      A2 -- No Healthy Instances --> A5((Failover));
+    end
+
+    subgraph Region B
+      B1(Standby User Request - Rarely Used) --> B2{Load Balancer B};
+      B2 -- Healthy Instance --> B3[Application Server B1];
+      B2 -- Healthy Instance --> B4[Application Server B2];
+    end
+
+    A5 -- Signal Failover --> B2;
+
+    style A1 fill:#f9f,stroke:#333,stroke-width:2px
+    style B1 fill:#ccf,stroke:#333,stroke-width:2px
+
+    classDef important fill:#f9f,stroke:#333,stroke-width:2px;
+    class A1,B1 important
+
+    A3 -- DB Read/Write --> DB1[Database Primary];
+    A4 -- DB Read/Write --> DB1;
+    B3 -- DB Read Only --> DB2[Database Read Replica];
+    B4 -- DB Read Only --> DB2;
+
+    DB1 -- Asynchronous Replication --> DB2;
+
+    subgraph Monitoring
+      M1[Health Checks & Metrics];
+      M1 --> A2;
+      M1 --> B2;
+      M1 -- Detects region failure --> A5;
+    end

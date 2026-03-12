@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It illustrates the logic for loading a module required by a handler function, attempting different file paths until a successful load or all paths are exhausted. The diagram serves to document the module resolution process, likely for debugging or understanding the system's module loading behavior.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "Handler Function Needs Module" node and ends with either "Log Success Path" or "Throw Error". The diagram represents a sequence of attempts to load a module from different paths, with success or failure branches at each attempt.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 3 stages:
+1. Initial module loading: "Handler Function Needs Module" to "loadDocumentGenerator OR loadSpecGenerator".
+2. Path resolution attempts: "Try Path 1" through "Try Path 4".
+3. Outcome: "Return Module" or "Throw Error" followed by logging.
+
+## Node-by-Node Description
+- **A / Handler Function Needs Module**: Represents the starting point where a handler function requires a specific module. visible in diagram; no further repository context available.
+- **B / loadDocumentGenerator OR loadSpecGenerator**: Represents the attempt to load either a document generator or a spec generator. visible in diagram; no further repository context available.
+- **C / Try Path 1 ./utils/*.js**: Represents the first attempt to load the module from the path `./utils/*.js`. visible in diagram; no further repository context available.
+- **D / Try Path 2 ../utils/*.js**: Represents the second attempt to load the module from the path `../utils/*.js`. visible in diagram; no further repository context available.
+- **E / Try Path 3 ./*.js**: Represents the third attempt to load the module from the path `./*.js`. visible in diagram; no further repository context available.
+- **F / Try Path 4 ../*.js**: Represents the fourth attempt to load the module from the path `../*.js`. visible in diagram; no further repository context available.
+- **Z / Return Module**: Represents the successful loading of the module. visible in diagram; no further repository context available.
+- **G / Throw Error with all attempted paths**: Represents the scenario where all attempts to load the module have failed. visible in diagram; no further repository context available.
+- **H / Log Success Path console.error SDD-DEBUG**: Represents logging the successful path using `console.error` with the `SDD-DEBUG` identifier. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Indicates the start of the module loading process.
+- `B --> C`: Indicates the start of the path resolution attempts.
+- `C -- Success --> Z`: Indicates the module was successfully loaded from the first path.
+- `C -- Fail --> D`: Indicates the module was not found at the first path, and the process moves to the second path.
+- `D -- Success --> Z`: Indicates the module was successfully loaded from the second path.
+- `D -- Fail --> E`: Indicates the module was not found at the second path, and the process moves to the third path.
+- `E -- Success --> Z`: Indicates the module was successfully loaded from the third path.
+- `E -- Fail --> F`: Indicates the module was not found at the third path, and the process moves to the fourth path.
+- `F -- Success --> Z`: Indicates the module was successfully loaded from the fourth path.
+- `F -- Fail --> G`: Indicates the module was not found at the fourth path, and an error is thrown.
+- `Z --> H`: Indicates that after successfully loading the module, the success path is logged.
+Multiple paths converge at node Z ("Return Module") after a successful module load from any of the attempted paths.
+
+## Repository Context & Terminology
+- **Module Resolution**: The process of finding and loading a module that is required by another module. The diagram illustrates a specific strategy for module resolution, trying different file paths.
+- **./utils/*.js, ../utils/*.js, ./*.js, ../*.js**: These represent different relative file paths that are attempted during module resolution. The `*` likely represents a wildcard for the module name.
+- **loadDocumentGenerator, loadSpecGenerator**: These are specific functions or methods responsible for loading either a document generator or a specification generator module.
+- **console.error SDD-DEBUG**: This indicates that the successful path is logged using `console.error` with a specific identifier `SDD-DEBUG`, likely for debugging purposes.
+- **Handler Function**: A function that handles a specific event or request. In this context, it's a function that requires a module to perform its task.
+- **Throw Error with all attempted paths**: This indicates that if all the paths fail to load the module, an error is thrown, likely to indicate a missing dependency or configuration issue.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "Handler Function Needs Module," initiating the module loading process. The system then attempts to "loadDocumentGenerator OR loadSpecGenerator." The core of the diagram involves iterative path resolution. It first tries "Try Path 1 ./utils/*.js." If successful, the flow converges at "Return Module," and the "Log Success Path console.error SDD-DEBUG" node is reached, indicating a successful module load and logging of the path. If the first path fails, the process proceeds to "Try Path 2 ../utils/*.js," then "Try Path 3 ./*.js," and finally "Try Path 4 ../*.js," each with a success branch leading to "Return Module" and the logging node, or a failure branch leading to the next path attempt. If all four paths fail, the flow reaches "Throw Error with all attempted paths," indicating a failure to load the required module. The paths like `./utils/*.js` and `../*.js` represent different relative file locations where the module might be located, and the `*` likely acts as a wildcard for the module's name. The `SDD-DEBUG` identifier suggests this logging is specifically for debugging purposes.

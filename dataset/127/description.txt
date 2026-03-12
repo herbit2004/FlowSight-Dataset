@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture and data flow between a user, the CodeGPT system utilizing a Gemini Provider, and Google's Gemini API and VertexAI Gemini services. It illustrates how user requests are processed through CodeGPT and routed to the appropriate Google AI service, with responses flowing back to the user. The diagram serves to visualize the interaction between different components in the system.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It shows a hierarchical structure with the User at the top, followed by the CodeGPT layer, and then the Google layer at the bottom. The User node is the start and end point of the flow.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **CodeGPT**: Represents the CodeGPT system, which includes the Gemini Provider.
+- **Google**: Represents Google's services, including the Gemini API and VertexAI Gemini.
+
+## Node-by-Node Description
+- **User**: Represents the end user interacting with the system.
+  visible in diagram; no further repository context available.
+- **Gemini Provider**: Represents the component within CodeGPT that manages interactions with the Gemini API and VertexAI Gemini.
+  visible in diagram; no further repository context available.
+- **Gemini API**: Represents Google's Gemini API service.
+  visible in diagram; no further repository context available.
+- **VertexAI Gemini**: Represents Google's VertexAI Gemini service.
+  visible in diagram; no further repository context available.
+- **Completion / GetSummaryPrefix**: Represents the type of request made by the user.
+  visible in diagram; no further repository context available.
+- **BackendGeminiAPI**: Represents the backend API call to Gemini API.
+  visible in diagram; no further repository context available.
+- **BackendVertexAI**: Represents the backend API call to VertexAI.
+  visible in diagram; no further repository context available.
+- **Response (text, usage)**: Represents the response received from Gemini API or VertexAI Gemini, including the generated text and usage information.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User --> GeminiClient`: User initiates a request of type Completion or GetSummaryPrefix to the Gemini Provider.
+- `GeminiClient -- BackendGeminiAPI --> GeminiAPI`: Gemini Provider sends a request to the Gemini API.
+- `GeminiAPI -- Response (text, usage) --> GeminiClient`: Gemini API sends a response (text and usage) back to the Gemini Provider.
+- `GeminiClient -- BackendVertexAI --> VertexAI`: Gemini Provider sends a request to the VertexAI Gemini.
+- `VertexAI -- Response (text, usage) --> GeminiClient`: VertexAI Gemini sends a response (text and usage) back to the Gemini Provider.
+- `GeminiClient --> User`: Gemini Provider sends the response back to the User.
+
+## Repository Context & Terminology
+- **CodeGPT**: The overall system or application that utilizes the Gemini Provider to interact with Google's AI services.
+- **Gemini Provider**: A component within CodeGPT responsible for managing interactions with different Gemini-based services (Gemini API and VertexAI Gemini). It likely handles request routing, response parsing, and potentially usage tracking.
+- **Gemini API**: Google's API for accessing the Gemini model directly.
+- **VertexAI Gemini**: Google's Gemini model accessed through the VertexAI platform, which provides additional enterprise features and management capabilities.
+- **Completion**: A type of request to the AI model, asking it to complete a given prompt or generate text.
+- **GetSummaryPrefix**: A specific type of completion request, likely used to generate a summary or prefix for a given input.
+- **BackendGeminiAPI / BackendVertexAI**: These likely represent internal methods or functions within the Gemini Provider that handle the specific API calls to either the Gemini API or VertexAI Gemini services.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the flow of requests and responses between a User, the CodeGPT system, and Google's AI services. The process begins with the User initiating a request, either a "Completion" or "GetSummaryPrefix" type, which is sent to the Gemini Provider within CodeGPT. The Gemini Provider then acts as a router, deciding whether to send the request to Google's Gemini API via the "BackendGeminiAPI" path, or to VertexAI Gemini via the "BackendVertexAI" path. Both Gemini API and VertexAI Gemini, upon receiving the request, process it and return a "Response (text, usage)" back to the Gemini Provider. The Gemini Provider then consolidates or processes this response before sending it back to the originating User. The CodeGPT system, specifically the Gemini Provider component, serves as an intermediary, abstracting away the complexities of interacting directly with either the raw Gemini API or the VertexAI Gemini service. The diagram highlights the architectural choice of using a provider pattern to potentially support multiple Gemini backends. The User node represents the start and end point of this request-response cycle.

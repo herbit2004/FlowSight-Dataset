@@ -1,0 +1,19 @@
+graph TD
+    A[User Places Order] --> B{Payment Successful?};
+    B -- Yes --> C[Order Confirmation Sent];
+    B -- No --> Z[Order Cancelled];
+    C --> D[Shipping Label Created];
+    D --> E[Item Picked & Packed];
+    E --> F[Package Arrives at Customer];
+    F --> G{Customer Satisfied?};
+    G -- No --> H[Process Refund Request];
+    H --> I[Refund Approved?];
+    I -- Yes --> J[Refund Issued];
+    I -- No --> Z;
+
+    J --> A;
+
+    E --> K[Send Delivery Notification];
+    K --> F;
+    G -- Yes --> L[Store Order Review];
+    L --> Z;

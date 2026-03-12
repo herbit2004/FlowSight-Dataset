@@ -1,0 +1,43 @@
+graph TD
+    subgraph Clickstream Data Ingestion
+        A[Clickstream Events] --> B(Kafka Topic: Raw Events)
+        B --> C{Data Quality Checks}
+        C -- Valid --> D(Spark: Feature Extraction)
+        C -- Invalid --> E[Dead-letter Queue]
+    end
+
+    subgraph Feature Engineering
+        D --> F(Feature Store: Real-time Features)
+        G[User Profiles] --> F
+        H[Item Metadata] --> F
+    end
+
+    subgraph Candidate Retrieval
+        F --> I{Candidate Set Generation}
+        I -- Query Based --> J(Faiss Index: Semantic Similarity)
+        I -- Context Based --> K(Collaborative Filtering)
+        J --> L(Candidate Items - Query)
+        K --> M(Candidate Items - Context)
+    end
+
+    subgraph Ranking & Scoring
+        L --> N(Candidate Set Aggregation)
+        M --> N
+        N --> O{Ranking Model: XGBoost}
+        O --> P(Scores & Ranks)
+    end
+
+    subgraph Post-Processing & Delivery
+        P --> Q{Business Logic Filters}
+        Q -- Meets Threshold --> R(Ranking API)
+        Q -- Does Not Meet --> S[Fallback Recommendation]
+        R --> T[User Interface]
+        S --> T
+    end
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    classDef data fill:#ccf,stroke:#333,stroke-width:2px
+    classDef decision fill:#ffc,stroke:#333,stroke-width:2px
+
+    class A,B,D,F,G,H,J,K,N,O,P,R,S data
+    class C,I,Q decision

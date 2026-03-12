@@ -1,0 +1,44 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the components and data flow within a system, likely for botnet threat intelligence or security analysis. It depicts the interaction between client-side tools, a VPS server, an internal network with services and a database, and external services for data enrichment. The diagram serves to visualize the system's architecture and data processing pipeline.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner. It is hierarchically structured into four layers: Client Layer, VPS Server, Internal Network, and External Services. The start nodes are the components within the Client Layer, and the end nodes are the Neo4j Database and the External Services.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs: Client Layer, VPS Server, Internal Network, and External Services.
+- **Client Layer**: Represents the user interface and client-side tools interacting with the system.
+- **VPS Server**: Acts as a reverse proxy and handles TLS encryption.
+- **Internal Network**: Contains the core services and database for data processing and storage.
+- **External Services**: Provides external data sources for enriching the analysis.
+
+## Node-by-Node Description
+- **Cursor IDE / MCP Query Only**: Represents a client-side tool (Cursor IDE) used for making MCP (Malware Configuration Parser) queries. visible in diagram; no further repository context available.
+- **Monitoring Dashboard**: Represents a client-side dashboard for monitoring the system. visible in diagram; no further repository context available.
+- **API Client/Script**: Represents a generic API client or script used to interact with the system. visible in diagram; no further repository context available.
+- **Caddy Reverse Proxy / Port 80/443 / Let's Encrypt TLS**: Represents a Caddy reverse proxy server listening on ports 80 and 443 and using Let's Encrypt for TLS. visible in diagram; no further repository context available.
+- **FastAPI Service / Port 8000 / + Continuous Scanner**: Represents a FastAPI service running on port 8000, which includes a continuous scanner component. visible in diagram; no further repository context available.
+- **Neo4j Database / Port 7687**: Represents a Neo4j graph database running on port 7687. visible in diagram; no further repository context available.
+- **BBOT Modules / SecurityTrails, Shodan, VirusTotal, etc.**: Represents external services used for data enrichment, including SecurityTrails, Shodan, and VirusTotal. visible in diagram; no further repository context available.
+- **Telegram Bot API**: Represents the Telegram Bot API used for notifications. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Cursor IDE / MCP Query Only --> Caddy Reverse Proxy`: MCP queries are sent to the Caddy reverse proxy over HTTPS.
+- `Monitoring Dashboard --> Caddy Reverse Proxy`: Monitoring data is sent to the Caddy reverse proxy via HTTPS API.
+- `API Client/Script --> Caddy Reverse Proxy`: API requests are sent to the Caddy reverse proxy via HTTPS API.
+- `Caddy Reverse Proxy --> FastAPI Service`: The Caddy reverse proxy forwards requests to the FastAPI service.
+- `FastAPI Service --> Neo4j Database`: The FastAPI service ingests data into the Neo4j database.
+- `FastAPI Service --> BBOT Modules`: The FastAPI service performs continuous scans using BBOT modules.
+- `FastAPI Service --> Telegram Bot API`: The FastAPI service sends cycle complete notifications via the Telegram Bot API.
+- `FastAPI Service --> FastAPI Service`: The FastAPI service performs an auto scan loop, continuously scanning and updating the database.
+
+## Repository Context & Terminology
+- **Caddy**: A powerful, enterprise-ready, open source web server with automatic HTTPS.
+- **FastAPI**: A modern, fast (high-performance), web framework for building APIs with Python 3.7+ based on standard Python type hints.
+- **Neo4j**: A graph database management system developed by Neo4j, Inc.
+- **BBOT Modules**: Refers to a collection of modules used for botnet threat intelligence, likely including integrations with services like SecurityTrails, Shodan, and VirusTotal.
+- **SecurityTrails, Shodan, VirusTotal**: External services providing data enrichment and threat intelligence feeds.
+- **Let's Encrypt**: A certificate authority that provides free TLS certificates.
+- **MCP (Malware Configuration Parser)**: A tool or component for parsing malware configurations.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with client-side interactions from the Cursor IDE (for MCP queries), the Monitoring Dashboard, and generic API Clients/Scripts. These clients communicate with the Caddy Reverse Proxy on the VPS Server via HTTPS. Caddy, configured with Let's Encrypt for TLS, forwards requests to the FastAPI Service running on port 8000 within the Internal Network. The FastAPI service is central, performing several key functions: it ingests data into the Neo4j Database (port 7687), triggers continuous scans using BBOT Modules (SecurityTrails, Shodan, VirusTotal), and sends cycle completion notifications via the Telegram Bot API. The FastAPI service also executes an auto-scan loop, continuously updating the Neo4j database with fresh scan results. The BBOT modules likely contain parsers and API clients for interacting with external threat intelligence services, enriching the data stored in Neo4j. The system uses a combination of client-server architecture, reverse proxying, and external data enrichment to provide botnet threat intelligence.

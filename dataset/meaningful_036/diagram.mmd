@@ -1,0 +1,93 @@
+graph TD;
+
+    subgraph CustomerApp
+        A[App Open / Event Trigger];
+        B(Notification Settings Check);
+    end
+
+    subgraph BackendServices
+        C[Event Receiver API];
+        D(User Profile Service);
+        E{Notification Preference Store};
+        F[Content Assembly Engine];
+        G{Segmentation Service};
+        H[Frequency Capping Logic];
+        I(Push Provider Router);
+    end
+
+    subgraph PushProviders
+        J[APNs];
+        K[Firebase FCM];
+        L[Amazon SNS];
+    end
+
+    subgraph Analytics
+        M[Notification Delivery Tracker];
+        N[Open/Click Event Listener];
+    end
+
+    A --> B;
+    B -- Push Enabled? --> C;
+    B -- Push Disabled --> Z[No Push Attempt];
+    C --> D;
+    D --> E;
+
+    E -- Preference Data --> G;
+    C --> G;
+
+    G -- User Segment --> F;
+    F --> H;
+
+    H -- Within Frequency Cap? --> I;
+    H -- Exceeded Frequency Cap --> Z;
+
+    I -- iOS Device --> J;
+    I -- Android Device --> K;
+    I -- Other Device --> L;
+
+    J --> M;
+    K --> M;
+    L --> M;
+
+    M --> N;
+
+    N -- Notification Opened? --> O[Log Conversion Event];
+    N -- Time Out --> P[No Action];
+
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px;
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N highlight;
+
+    style Z fill:#fbb,stroke:#f66,stroke-width:2px
+
+    subgraph EngagementPlatform
+        R[A/B Test Experiment Engine];
+        S[Control Group Filter];
+    end
+
+    F --> S;
+    S -- Is in Experiment? --> R;
+    R -- Is in Control Group? --> I;
+    R -- Is in Treatment Group? --> I;
+    S -- Not in Experiment --> I;
+
+    click O "https://example.com/conversion" "More Details about Conversion Event"
+
+    AA[Failure Condition Monitor]
+    AA -- Failure Threshold Exceeded --> BB[Circuit Breaker - Disables Push];
+    BB -- Success Rate Recovered --> CC[Re-enables Push];
+    I --> AA;
+    J --> AA;
+    K --> AA;
+    L --> AA;
+
+    subgraph DataWarehouse
+    DD[Aggregation Pipeline];
+    end
+    N --> DD;
+    M --> DD;
+
+    DD --> EE[Reporting Dashboard];
+
+    style BB fill:#ffaaaa,stroke:#333,stroke-width:2px
+
+    CC -.-> I

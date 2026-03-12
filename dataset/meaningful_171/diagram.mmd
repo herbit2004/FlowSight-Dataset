@@ -1,0 +1,37 @@
+graph TD
+    subgraph Billing Infrastructure
+        A[Bill Generation Request] --> B(Request Validation);
+        B -- Valid Request --> C{Account Status Check};
+        B -- Invalid Request --> Z[Error: Invalid Request];
+
+        C -- Account Active --> D(Usage Data Retrieval);
+        C -- Account Inactive --> Y[Error: Account Inactive];
+
+        D --> E{Usage Data Available?};
+        E -- Yes --> F(Data Transformation & Aggregation);
+        E -- No --> X[Error: No Usage Data];
+
+        F --> G(Rate Calculation);
+        G --> H(Discount Application);
+
+        H --> I{Promotions Applicable?};
+        I -- Yes --> J(Apply Promotions);
+        I -- No --> K(Proceed to Bill Generation);
+
+        J --> K(Proceed to Bill Generation);
+
+        K --> L(Bill Formatting);
+        L --> M(Tax Calculation);
+        M --> N(Final Bill Generation);
+
+        N --> O{Bill Generation Successful?};
+        O -- Yes --> P(Bill Storage);
+        O -- No --> W[Error: Bill Generation Failed];
+
+        P --> Q(Notification Trigger);
+        Q --> R(Payment Gateway Integration);
+        R --> S[Bill Delivered to Customer];
+    end
+
+    classDef errorFill fill:#f9f,stroke:#333,stroke-width:2px
+    class Z,Y,X,W errorFill

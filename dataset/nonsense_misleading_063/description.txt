@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the steps involved in processing an order. It depicts the flow of control and data through the order processing system, from order initiation to completion or cancellation. This diagram serves as a visual representation of the order processing workflow.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with "Send Confirmation Email" and "User Initiates Order" at the top and ends with "Order End" at the bottom. The diagram represents a single process flow with decision points.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Initiation, Stock Check, Payment Processing, Shipping Label Creation, Delivery Confirmation, and Order Completion/Cancellation.
+
+## Node-by-Node Description
+- **Send Confirmation Email**: Sends a confirmation email. visible in diagram; no further repository context available.
+- **User Initiates Order**: Represents the start of the order processing workflow when a user places an order. style A fill:#f9f,stroke:#333,stroke-width:2px
+- **Item in Stock?**: A decision point to check if the ordered item is available in stock.
+- **Process Payment**: Processes the payment for the order.
+- **Email sent to customer**: An email is sent to the customer. visible in diagram; no further repository context available.
+- **Shipping Label Created**: Creates a shipping label for the order.
+- **Cancel Order**: Cancels the order.
+- **Attempt Refund**: Attempts to refund the payment.
+- **Package Delivered?**: A decision point to check if the package has been delivered.
+- **Update Tracking Info**: Updates the tracking information for the package.
+- **Order End**: Represents the end of the order processing workflow. style H fill:#ccf,stroke:#333,stroke-width:2px
+
+## Edges, Branches & Convergence
+- `Send Confirmation Email --> User Initiates Order`: Sends confirmation email after user initiates order.
+- `User Initiates Order --> Item in Stock?`: Checks if the item is in stock after the order is initiated.
+- `Item in Stock? -- No --> Cancel Order`: If the item is not in stock, the order is cancelled.
+- `Cancel Order --> Order End`: The order ends after cancellation.
+- `Item in Stock? -- Yes --> Process Payment`: If the item is in stock, the payment is processed.
+- `Process Payment -- Success --> Shipping Label Created`: If the payment is successful, a shipping label is created.
+- `Process Payment -- Failure --> Email sent to customer`: If the payment fails, an email is sent to the customer.
+- `Email sent to customer --> Attempt Refund`: After sending the email, a refund is attempted.
+- `Attempt Refund --> Process Payment`: The refund attempt loops back to process payment again.
+- `Shipping Label Created --> Package Delivered?`: After creating the shipping label, it checks if the package is delivered.
+- `Package Delivered? -- Yes --> Order End`: If the package is delivered, the order ends.
+- `Package Delivered? -- No --> Update Tracking Info`: If the package is not delivered, the tracking information is updated.
+- `Update Tracking Info --> Shipping Label Created`: Updating tracking information leads back to shipping label creation.
+
+## Repository Context & Terminology
+- **Order**: A request to purchase goods or services. In this diagram, it represents the entire process flow.
+- **Stock**: The availability of items. Here, it's a decision point determining the next step.
+- **Payment**: The transfer of money for the order. In this diagram, payment processing can loop indefinitely due to the refund/retry flow.
+- **Refund**: The return of money to the customer. Here, it's triggered by payment failure and leads back to payment processing.
+- **Shipping Label**: A label containing information for shipping the package. In this diagram, its creation is triggered by successful payment.
+- **Tracking Info**: Information about the location of the package during shipping. In this diagram, updating tracking info leads back to shipping label creation.
+- **Confirmation Email**: An email sent to confirm the order. In this diagram, it is sent *before* the user initiates the order.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Send Confirmation Email" which flows into "User Initiates Order". The next step is a decision: "Item in Stock?". If "No", the flow goes to "Cancel Order" and then "Order End". If "Yes", the flow proceeds to "Process Payment". A successful payment leads to "Shipping Label Created", while a failed payment results in "Email sent to customer", followed by "Attempt Refund", which then loops back to "Process Payment". After "Shipping Label Created", the diagram checks "Package Delivered?". If "Yes", the flow ends at "Order End". If "No", the flow goes to "Update Tracking Info", which then incorrectly loops back to "Shipping Label Created". The diagram contains several errors: the confirmation email is sent at the beginning, not the end; a refund attempt retries the original payment; updating tracking information leads to label creation; and there is no packing step. The "Item in Stock?" check determines whether the order is cancelled immediately or proceeds to payment processing.

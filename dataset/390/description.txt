@@ -1,0 +1,66 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of resolving a target address (hostname or IP address) and preparing for a port scan. The diagram outlines the steps involved in cleaning the input, determining if it's an IP address, resolving hostnames, validating IP formats (IPv4 and IPv6), and selecting the appropriate socket type for the subsequent port scan. This flowchart serves as a visual guide to the address resolution logic within a network scanning or security tool.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It starts with a "User Input: Target" node and progresses through a series of checks and resolutions, ultimately leading to either the "Perform Port Scan" node or an error message. The diagram has a hierarchical structure, branching based on conditions and converging at the "Perform Port Scan" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: input processing, IP address check, hostname resolution (if needed), IP format validation, and socket selection.
+
+## Node-by-Node Description
+- **Start / User Input: Target**: Represents the initial user-provided target address (hostname or IP address). visible in diagram; no further repository context available.
+- **Clean / Clean Input Remove http://, brackets**: Represents the process of sanitizing the user input by removing "http://" prefixes and brackets. visible in diagram; no further repository context available.
+- **CheckIP / Is it already an IP?**: A decision node that checks if the cleaned input is already a valid IP address. visible in diagram; no further repository context available.
+- **ResolveDNS / Resolve as Hostname**: Represents the process of resolving a hostname to an IP address. visible in diagram; no further repository context available.
+- **TryIPv4 / Try IPv4 Resolution socket.gethostbyname**: Attempts to resolve the hostname to an IPv4 address using `socket.gethostbyname`. visible in diagram; no further repository context available.
+- **TryIPv6 / Try IPv6 Resolution socket.getaddrinfo**: Attempts to resolve the hostname to an IPv6 address using `socket.getaddrinfo`. visible in diagram; no further repository context available.
+- **ValidateIP / Validate IP Format**: A decision node that validates the format of the IP address. visible in diagram; no further repository context available.
+- **CheckIPv4 / is_ipv4?**: A decision node that checks if the IP address is IPv4. visible in diagram; no further repository context available.
+- **CheckIPv6 / is_ipv6?**: A decision node that checks if the IP address is IPv6. visible in diagram; no further repository context available.
+- **IPv4Valid / Validate 4 octets 0-255 each**: Validates that the IPv4 address consists of four octets, each ranging from 0 to 255. visible in diagram; no further repository context available.
+- **IPv6Valid / Validate IPv6 format socket.inet_pton**: Validates the IPv6 address format using `socket.inet_pton`. visible in diagram; no further repository context available.
+- **ReturnIPv4 / Return AF_INET socket.AF_INET**: Returns the IPv4 address family (`AF_INET`) and the resolved IP address. visible in diagram; no further repository context available.
+- **ReturnIPv6 / Return AF_INET6 socket.AF_INET6**: Returns the IPv6 address family (`AF_INET6`) and the resolved IP address. visible in diagram; no further repository context available.
+- **UseIPv4 / Use AF_INET Socket**: Indicates that an IPv4 socket should be used for the subsequent port scan. visible in diagram; no further repository context available.
+- **UseIPv6 / Use AF_INET6 Socket**: Indicates that an IPv6 socket should be used for the subsequent port scan. visible in diagram; no further repository context available.
+- **Scan / Perform Port Scan**: Represents the execution of the port scan. visible in diagram; no further repository context available.
+- **Error / Return None**: Returns None, indicating an error in address resolution or validation. visible in diagram; no further repository context available.
+- **FailMsg / Display Error Message**: Displays an error message to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Start --> Clean`: User input is passed to the cleaning process.
+- `Clean --> CheckIP`: Cleaned input is passed to the IP address check.
+- `CheckIP -- Yes --> ValidateIP`: If the input is already an IP address, proceed to IP format validation.
+- `CheckIP -- No --> ResolveDNS`: If the input is not an IP address, resolve it as a hostname.
+- `ResolveDNS --> TryIPv4`: Attempt IPv4 resolution.
+- `TryIPv4 -- Success --> ReturnIPv4`: If IPv4 resolution is successful, return the IPv4 address.
+- `TryIPv4 -- Fail --> TryIPv6`: If IPv4 resolution fails, attempt IPv6 resolution.
+- `TryIPv6 -- Success --> ReturnIPv6`: If IPv6 resolution is successful, return the IPv6 address.
+- `TryIPv6 -- Fail --> Error`: If IPv6 resolution fails, return an error.
+- `ValidateIP --> CheckIPv4`: Check if the IP is IPv4.
+- `ValidateIP --> CheckIPv6`: Check if the IP is IPv6.
+- `CheckIPv4 -- Yes --> IPv4Valid`: If it's IPv4, validate the IPv4 format.
+- `CheckIPv6 -- Yes --> IPv6Valid`: If it's IPv6, validate the IPv6 format.
+- `IPv4Valid -- Valid --> ReturnIPv4`: If IPv4 format is valid, return the IPv4 address.
+- `IPv4Valid -- Invalid --> Error`: If IPv4 format is invalid, return an error.
+- `IPv6Valid -- Valid --> ReturnIPv6`: If IPv6 format is valid, return the IPv6 address.
+- `IPv6Valid -- Invalid --> Error`: If IPv6 format is invalid, return an error.
+- `ReturnIPv4 --> UseIPv4`: Use an IPv4 socket.
+- `ReturnIPv6 --> UseIPv6`: Use an IPv6 socket.
+- `UseIPv4 --> Scan`: Perform the port scan using the IPv4 socket.
+- `UseIPv6 --> Scan`: Perform the port scan using the IPv6 socket.
+- `Error --> FailMsg`: Display an error message.
+- `ReturnIPv4` and `ReturnIPv6` converge to `Scan`.
+
+## Repository Context & Terminology
+- **AF_INET**: Address Family for IPv4. Used to specify the IPv4 protocol when creating sockets.
+- **AF_INET6**: Address Family for IPv6. Used to specify the IPv6 protocol when creating sockets.
+- **socket.gethostbyname**: A Python socket library function used to resolve a hostname to an IPv4 address.
+- **socket.getaddrinfo**: A Python socket library function used to resolve a hostname to a list of address information, including IPv4 and IPv6 addresses.
+- **socket.inet_pton**: A Python socket library function that converts an IPv6 address from its textual representation to a packed binary format.
+- **Port Scan**: A network scanning technique used to discover open ports and services on a target host. visible in diagram; no further repository context available.
+- **IP Address**: A numerical label assigned to each device connected to a computer network that uses the Internet Protocol for communication. visible in diagram; no further repository context available.
+- **Hostname**: A domain name assigned to a host computer. visible in diagram; no further repository context available.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Input: Target", which is then cleaned to remove "http://" prefixes and brackets. The cleaned input is checked to determine if it's already an IP address. If it is, the IP format is validated, branching into IPv4 and IPv6 checks. For IPv4, the validation ensures four octets are within the range of 0-255. For IPv6, `socket.inet_pton` is used for format validation. Valid IPv4 addresses lead to `Return AF_INET` and the use of an `AF_INET` socket, while valid IPv6 addresses lead to `Return AF_INET6` and the use of an `AF_INET6` socket. If the initial input is not an IP address, the system attempts to resolve it as a hostname, first trying IPv4 resolution via `socket.gethostbyname`, and if that fails, IPv6 resolution via `socket.getaddrinfo`. Successful resolution for either protocol leads to the respective socket selection. Invalid IP formats or failed hostname resolutions result in an error message being displayed. Finally, both IPv4 and IPv6 socket paths converge at the "Perform Port Scan" node, initiating the network scan. The use of `socket.gethostbyname` and `socket.getaddrinfo` are key functions for DNS resolution, while `AF_INET` and `AF_INET6` specify the address families for IPv4 and IPv6 sockets respectively.

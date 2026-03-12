@@ -1,0 +1,35 @@
+graph TD
+    subgraph Client Application
+        A[Incoming Request] --> B{Read or Write?};
+    end
+
+    B -- Is Read --> C[Read Router];
+    B -- Is Write --> H[Write Router];
+
+    C --> D{Cache Hit?};
+    D -- Yes --> E[Return Cached Data];
+    D -- No --> F[Read Replica 1];
+    F --> G[Return Data];
+    G --> K[Cache Write];
+
+    H --> I[Primary Database];
+    I --> J[Replication Queuer];
+    J --> K[Cache Invalidation];
+
+    subgraph Data Layer
+        F --> L[Read Replica 2];
+        L --> G;
+        K --> M[Cache Server];
+    end
+
+    G --> E;
+    E --> N[Return to Client];
+    I --> N;
+    M --> N;
+
+    J --> O[Replication Worker];
+    O --> L;
+    O --> F;
+
+    classDef readfill fill:#f9f,stroke:#333,stroke-width:2px;
+    class F,L readfill;

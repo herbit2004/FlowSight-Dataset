@@ -1,0 +1,68 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of requests and responses within a client-server system, specifically focusing on the API gateway and its interactions with various internal services and databases. The diagram illustrates the request routing, authentication, authorization, rate limiting, and data persistence aspects of the system. It serves as a high-level overview of the system's architecture and how different components interact.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner. It is hierarchically structured with an "External" section at the top and an "Internal" section below. The "Client App" node serves as the start node, and the databases (Order DB, Payment Gateway, User DB) and the "Client App" again serve as the end nodes.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **External**: Represents the external client application interacting with the system.
+- **Internal**: Represents the internal services and components within the system's architecture.
+
+## Node-by-Node Description
+- **Client App**: Represents the client application making requests to the system.
+  visible in diagram; no further repository context available.
+- **API Gateway**: Represents the central API gateway responsible for routing requests, authentication, authorization, and rate limiting.
+  visible in diagram; no further repository context available.
+- **Authentication Service**: Responsible for authenticating users and verifying JWT tokens.
+  visible in diagram; no further repository context available.
+- **Authorization Service**: Responsible for authorizing user access based on roles and permissions.
+  visible in diagram; no further repository context available.
+- **Rate Limiter**: Responsible for limiting the number of requests from a client within a specific time frame.
+  visible in diagram; no further repository context available.
+- **User Profile Service**: Responsible for managing user profile information.
+  visible in diagram; no further repository context available.
+- **Order Service**: Responsible for processing order requests.
+  visible in diagram; no further repository context available.
+- **Payment Service**: Responsible for processing payment transactions.
+  visible in diagram; no further repository context available.
+- **Order DB**: Represents the database storing order information.
+  visible in diagram; no further repository context available.
+- **Payment Gateway**: Represents the external payment gateway used for processing payments.
+  visible in diagram; no further repository context available.
+- **User DB**: Represents the database storing user information.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Client App --> API Gateway`: A request is sent from the client application to the API gateway.
+- `API Gateway --> Rate Limiter`: The API gateway checks if the client's quota has been exceeded.
+- `Rate Limiter -- Quota Exceeded? --> Client App`: If the quota is exceeded, a response is sent back to the client.
+- `Rate Limiter -- No --> API Gateway`: If the quota is not exceeded, the request proceeds to the API gateway.
+- `API Gateway --> Authentication Service`: The API gateway checks if the request has a JWT.
+- `Authentication Service -- JWT Valid? --> Authorization Service`: The authentication service validates the JWT.
+- `Authorization Service -- Yes --> API Gateway`: If the JWT is valid, the request proceeds to the API gateway.
+- `Authorization Service -- No --> Client App`: If the JWT is invalid, a response is sent back to the client.
+- `Authentication Service -- No --> Client App`: If the request does not have a JWT, a response is sent back to the client.
+- `API Gateway --> Order Service`: The API gateway routes the order request to the order service.
+- `API Gateway --> Payment Service`: The API gateway routes the payment request to the payment service.
+- `API Gateway --> User Profile Service`: The API gateway routes the user profile request to the user profile service.
+- `Order Service --> Order DB`: The order service processes the order and stores the information in the order database.
+- `Payment Service --> Payment Gateway`: The payment service processes the payment and interacts with the external payment gateway.
+- `User Profile Service --> User DB`: The user profile service gets or updates the user profile and stores the information in the user database.
+- `Payment Service -- Success --> API Gateway`: On successful payment processing, a success response is sent to the API Gateway.
+- `Order Service -- Success --> API Gateway`: On successful order processing, a success response is sent to the API Gateway.
+- `User Profile Service -- Success --> API Gateway`: On successful user profile processing, a success response is sent to the API Gateway.
+- `API Gateway --> Client App`: The API gateway sends a response back to the client application.
+
+## Repository Context & Terminology
+- **API Gateway**: A reverse proxy and API management tool that sits in front of backend services. It handles routing, authentication, authorization, rate limiting, and other cross-cutting concerns.
+- **JWT (JSON Web Token)**: A standard for securely transmitting information between parties as a JSON object. It is commonly used for authentication and authorization.
+- **Authentication Service**: A service responsible for verifying the identity of a user or client.
+- **Authorization Service**: A service responsible for determining whether a user or client has permission to access a specific resource or perform a specific action.
+- **Rate Limiter**: A mechanism for limiting the number of requests that a client can make to an API within a given time period. This helps to prevent abuse and protect the API from being overwhelmed.
+- **Order Service**: A service responsible for managing orders, including creating, updating, and retrieving order information.
+- **Payment Service**: A service responsible for processing payments, including interacting with payment gateways and handling payment transactions.
+- **User Profile Service**: A service responsible for managing user profile information, such as name, email address, and other personal details.
+
+## High-Density QA Ground Truth Summary
+The process starts with the "Client App" sending a "Request" to the "API Gateway." The "API Gateway" first checks with the "Rate Limiter" to determine if the client's "Quota Exceeded?". If "Yes", the flow returns to the "Client App". If "No", the "API Gateway" proceeds to check "Has JWT?" with the "Authentication Service." If the "Authentication Service" determines "JWT Valid?" is "No", the flow returns to the "Client App." If "Yes", the "Authorization Service" is consulted. If the "Authorization Service" determines the user is not authorized, the flow returns to the "Client App"; otherwise, the request proceeds to the "API Gateway." The "API Gateway" then routes the request to the appropriate service: "Order Service," "Payment Service," or "User Profile Service." The "Order Service" processes the order and interacts with the "Order DB." The "Payment Service" processes the payment and interacts with the "Payment Gateway." The "User Profile Service" gets or updates the user profile and interacts with the "User DB." Each service, upon success, sends a "Success" message back to the "API Gateway." Finally, the "API Gateway" sends a "Response" back to the "Client App," completing the request cycle. The API Gateway acts as a central point for managing and securing access to backend services, enforcing policies like rate limiting and authentication before routing requests.

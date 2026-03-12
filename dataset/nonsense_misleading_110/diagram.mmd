@@ -1,0 +1,36 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- Yes --> C[Inventory Check];
+    B -- No --> Z[Send Late Payment Reminder];
+    Z --> A;
+
+    C --> D{Inventory Available?};
+    D -- Yes --> E[Generate Shipping Label];
+    D -- No --> F[Notify User of Delay];
+    F --> A;
+
+    E --> G[Package Order];
+    G --> H[Ship Order];
+    H --> I[Update Inventory];
+    I --> J{Shipping Confirmation Sent?};
+    J -- No --> K[Log Shipping Error];
+    K --> H;
+    J -- Yes --> L[Forward Feedback Request];
+
+    L --> M{Feedback Received?};
+    M -- No --> N[Close Order];
+    M -- Yes --> O[Process Feedback];
+    O --> N;
+
+    N --> P[Archive Order Data];
+    P --> Q{Refund Requested?};
+
+    Q -- No --> R[Review Order History];
+    Q -- Yes --> S[Process Refund Request];
+    S --> T{Refund Approved?};
+    T -- Yes --> U[Issue Refund];
+    T -- No --> F;
+
+    U --> R;
+
+    R --> V[End];

@@ -1,0 +1,16 @@
+graph TD
+    A[User Request] --> B{Traffic Router};
+    B -- Canary Weight < Threshold --> C[Production Cluster];
+    B -- Canary Weight >= Threshold --> D[Canary Cluster];
+    D --> E[Canary Service: Verify Response];
+    E -- Success --> F{Metrics Aggregator};
+    E -- Failure --> G[Rollback Canary];
+    F -- Metrics Threshold Met? --> H[Increase Canary Weight];
+    F -- Metrics Unsatisfactory? --> G;
+    H --> B;
+    C --> I[Production Service];
+    I --> F;
+    G --> J[Route All Traffic to Prod];
+    J --> C;
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J default

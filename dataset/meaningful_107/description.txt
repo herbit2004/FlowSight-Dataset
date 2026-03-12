@@ -1,0 +1,70 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a data synchronization and ETL (Extract, Transform, Load) pipeline. It depicts the flow of order data from a source system through various stages of validation, transformation, enrichment, and quality checks before being loaded into a data warehouse. The diagram serves as a visual representation of the data integration process.
+
+## Overall Layout
+The diagram's primary direction is left to right (LR). It presents a linear flow with branching decision points. The start node is "Source System: Order Management" and the end nodes are "Data Warehouse: Star Schema" and "Quarantine Area for Correction."
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Data Synchronization & ETL Pipeline".
+
+## Node-by-Node Description
+- **A / Source System: Order Management**: Represents the initial source of order data.
+  visible in diagram; no further repository context available.
+- **B / Order Data Extractor**: Extracts order data from the source system.
+  visible in diagram; no further repository context available.
+- **C / Data Validation**: Validates the extracted order data against predefined rules and constraints.
+  visible in diagram; no further repository context available.
+- **D / Exception Handling & Logging**: Handles and logs any exceptions or errors encountered during data validation.
+  visible in diagram; no further repository context available.
+- **E / Data Transformation**: Transforms the validated order data into a format suitable for further processing.
+  visible in diagram; no further repository context available.
+- **F / Customer ID Lookup**: Looks up customer IDs in a customer database.
+  visible in diagram; no further repository context available.
+- **G / Customer ID Found?**: A decision point to determine if the customer ID was found in the lookup.
+  visible in diagram; no further repository context available.
+- **I / Create New Customer Record**: Creates a new customer record if the customer ID is not found.
+  visible in diagram; no further repository context available.
+- **H / Enrich Order Data**: Enriches the order data with additional information.
+  visible in diagram; no further repository context available.
+- **J / Data Aggregation**: Aggregates the order data.
+  visible in diagram; no further repository context available.
+- **K / Load to Data Warehouse**: Loads the transformed and enriched order data into the data warehouse.
+  visible in diagram; no further repository context available.
+- **L / Data Quality Checks**: Performs data quality checks on the loaded data.
+  visible in diagram; no further repository context available.
+- **M / Data Quality Passed?**: A decision point to determine if the data quality checks passed.
+  visible in diagram; no further repository context available.
+- **N / Data Warehouse: Star Schema**: Represents the data warehouse with a star schema.
+  visible in diagram; no further repository context available.
+- **O / Quarantine Area for Correction**: Represents a quarantine area for data that failed the data quality checks.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Order data flows from the source system to the data extractor.
+- `B --> C`: Extracted order data is passed to the data validation stage.
+- `C -- Invalid Data --> D`: If the data is invalid, it is sent to exception handling and logging.
+- `C -- Valid Data --> E`: If the data is valid, it is sent to data transformation.
+- `E --> F`: Transformed data is passed to the customer ID lookup.
+- `F --> G`: The result of the customer ID lookup is passed to the decision point.
+- `G -- Yes --> H`: If the customer ID is found, the data is sent to order data enrichment.
+- `G -- No --> I`: If the customer ID is not found, a new customer record is created.
+- `I --> H`: New customer record creation flows into order data enrichment.
+- `H --> J`: Enriched order data is passed to data aggregation.
+- `J --> K`: Aggregated data is loaded into the data warehouse.
+- `K --> L`: Data loaded into the data warehouse undergoes data quality checks.
+- `L --> M`: The result of the data quality checks is passed to the decision point.
+- `M -- Yes --> N`: If the data quality checks pass, the data is stored in the data warehouse star schema.
+- `M -- No --> O`: If the data quality checks fail, the data is sent to a quarantine area for correction.
+
+## Repository Context & Terminology
+- **ETL Pipeline**: A data integration process that involves extracting data from various sources, transforming it into a consistent format, and loading it into a data warehouse or other target system.
+- **Data Validation**: The process of ensuring that data meets predefined rules and constraints.
+- **Data Transformation**: The process of converting data from one format to another.
+- **Data Enrichment**: The process of adding additional information to data to make it more complete and useful.
+- **Data Aggregation**: The process of combining data from multiple sources into a single summary.
+- **Data Warehouse**: A central repository for storing integrated data from various sources.
+- **Star Schema**: A data warehouse schema that organizes data into fact and dimension tables.
+- **Quarantine Area**: A temporary storage area for data that fails data quality checks.
+
+## High-Density QA Ground Truth Summary
+The data synchronization and ETL pipeline begins with the "Source System: Order Management," from which order data is extracted by the "Order Data Extractor." The extracted data then undergoes "Data Validation." If the data is deemed "Invalid Data," it is directed to "Exception Handling & Logging"; otherwise, "Valid Data" proceeds to "Data Transformation." Following transformation, a "Customer ID Lookup" is performed. If the "Customer ID Found?" is "No," a "Create New Customer Record" process is initiated; if "Yes," the flow proceeds directly to "Enrich Order Data." Both paths converge at "Enrich Order Data," after which "Data Aggregation" occurs. The aggregated data is then loaded into the "Load to Data Warehouse," followed by "Data Quality Checks." If the "Data Quality Passed?" is "Yes," the data is stored in the "Data Warehouse: Star Schema," a common data warehouse architecture optimized for querying. If the data quality check fails ("No"), the data is sent to a "Quarantine Area for Correction," indicating a need for further review and potential remediation before final storage. The ETL pipeline ensures data is clean, consistent, and readily available for analysis within the data warehouse.

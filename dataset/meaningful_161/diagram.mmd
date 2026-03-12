@@ -1,0 +1,32 @@
+graph TD
+    subgraph Order Processing Workflow
+        A[Order Received] --> B{Inventory Check};
+        B -- Available --> C[Allocate Inventory];
+        C --> D[Await Payment];
+        B -- Unavailable --> E[Backorder Item];
+        E --> F[Await Restock];
+        F --> C;
+        D -- Payment Received --> G[Initiate Shipment];
+        D -- Payment Failed --> H[Order Cancellation];
+        G --> I[Generate Shipping Label];
+        I --> J[Package Order];
+        J --> K[Hand Off to Courier];
+        K --> L[Update Order Status: Shipped];
+        L --> M[Order Completion];
+        H --> N[Release Inventory];
+        N --> O[Update Order Status: Cancelled];
+        O --> M;
+    end
+
+    subgraph Reporting & Alerts
+        L --> P[Generate Shipment Report];
+        H --> Q[Generate Cancellation Report];
+        B -- Low Stock --> R[Trigger Low Stock Alert];
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style M fill:#ccf,stroke:#333,stroke-width:2px
+    style H fill:#fcc,stroke:#333,stroke-width:2px
+
+    classDef completed fill:#afa,stroke:#333,stroke-width:2px
+    class M completed

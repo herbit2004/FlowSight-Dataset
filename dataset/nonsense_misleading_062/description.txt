@@ -1,0 +1,71 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the order fulfillment process, from when a user places an order to when the order is completed. The diagram outlines the steps involved in processing an order, including payment verification, inventory check, shipping, and delivery.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User Places Order" node at the top and flows downwards through a series of decision points and processes, ultimately leading to the "Order Completed" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Placement & Payment, Fulfillment, Shipping, Delivery, and Completion/Cancellation.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action of a user submitting an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to determine if the payment for the order has been successfully received.
+  visible in diagram; no further repository context available.
+- **C / Order Cancelled**: Represents the state where the order is cancelled.
+  visible in diagram; no further repository context available.
+- **D / Fulfillment Begins**: Indicates the start of the order fulfillment process.
+  visible in diagram; no further repository context available.
+- **E / Inventory Available?**: A decision point to check if the required inventory is available to fulfill the order.
+  visible in diagram; no further repository context available.
+- **F / Backorder Placed**: Represents the action of placing the order on backorder due to insufficient inventory.
+  visible in diagram; no further repository context available.
+- **G / Order Packed**: Indicates that the order has been packed and is ready for shipping.
+  visible in diagram; no further repository context available.
+- **H / Shipping Label Created**: Represents the creation of a shipping label for the package.
+  visible in diagram; no further repository context available.
+- **I / Package Shipped**: Indicates that the package has been shipped.
+  visible in diagram; no further repository context available.
+- **J / Delivery Successful?**: A decision point to determine if the delivery of the package was successful.
+  visible in diagram; no further repository context available.
+- **K / Refund Processed**: Represents the action of processing a refund for the order.
+  visible in diagram; no further repository context available.
+- **L / Order Completed**: Represents the final state where the order is completed.
+  visible in diagram; no further repository context available.
+- **M / Customer Notified**: Indicates that the customer has been notified about the order status.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, initiating the payment verification process.
+- `B -- No --> C`: If payment is not received, the order is cancelled.
+- `B -- Yes --> D`: If payment is received, fulfillment begins.
+- `D --> E`: Fulfillment begins, leading to an inventory check.
+- `E -- No --> F`: If inventory is not available, a backorder is placed.
+- `F --> D`: Backorder placed loops back to Fulfillment Begins (illogical loop).
+- `E -- Yes --> G`: If inventory is available, the order is packed.
+- `G --> H`: Order packed, leading to shipping label creation.
+- `H --> I`: Shipping label created, leading to package shipment.
+- `I --> J`: Package shipped, leading to a delivery success check.
+- `J -- No --> K`: If delivery is not successful, a refund is processed.
+- `K --> L`: Refund processed, leading to order completion.
+- `J -- Yes --> M`: If delivery is successful, the customer is notified (incorrect branch).
+- `M --> C`: Customer notified leads back to order cancellation (wrong causal direction).
+- `C --> L`: Order cancelled leads to order completion (reversed sequence).
+
+## Repository Context & Terminology
+- **User Places Order**: The initial action by a customer to purchase a product or service. In this diagram, it represents the start of the order processing workflow.
+- **Payment Received?**: A check to verify if the payment for the order has been successfully processed. In this diagram, it is a decision point that determines whether the order proceeds to fulfillment or is cancelled.
+- **Fulfillment Begins**: The start of the process of preparing and shipping the order. In this diagram, it is triggered after successful payment verification.
+- **Inventory Available?**: A check to determine if there is sufficient stock to fulfill the order. In this diagram, it is a decision point that determines whether the order proceeds to packing or is placed on backorder.
+- **Backorder Placed**: An order that cannot be fulfilled immediately due to insufficient stock. In this diagram, placing a backorder incorrectly loops back to the fulfillment process.
+- **Order Packed**: The process of preparing the order for shipment. In this diagram, it occurs after verifying that inventory is available.
+- **Shipping Label Created**: The process of generating a label with the necessary information for shipping the package. In this diagram, it follows the order packing step.
+- **Package Shipped**: The action of sending the package to the customer. In this diagram, it follows the creation of the shipping label.
+- **Delivery Successful?**: A check to verify if the package was successfully delivered to the customer. In this diagram, it is a decision point that determines whether a refund is processed or the customer is notified (incorrect branch).
+- **Refund Processed**: The action of issuing a refund to the customer. In this diagram, it occurs if the delivery is not successful.
+- **Customer Notified**: The action of informing the customer about the order status. In this diagram, it incorrectly leads to order cancellation.
+- **Order Cancelled**: The action of terminating the order process. In this diagram, it occurs if payment is not received or after customer notification (incorrect causal direction).
+- **Order Completed**: The final state of the order process. In this diagram, it occurs after a refund is processed or after order cancellation (reversed sequence).
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Places Order," which leads to a "Payment Received?" decision. If payment is not received, the "Order Cancelled" node is reached, which then proceeds to "Order Completed." If payment is received, "Fulfillment Begins," leading to an "Inventory Available?" decision. If inventory is unavailable, a "Backorder Placed" node is reached, which incorrectly loops back to "Fulfillment Begins." If inventory is available, the "Order Packed" node is reached, followed by "Shipping Label Created" and "Package Shipped." Next, a "Delivery Successful?" decision is made. If delivery is unsuccessful, a "Refund Processed" node is reached, leading to "Order Completed." Illogically, if delivery is successful, the "Customer Notified" node is reached, which then incorrectly leads back to "Order Cancelled," before proceeding to "Order Completed." The "Backorder Placed" node looping back to "Fulfillment Begins" represents an illogical flow, as there is no inventory replenishment step. The "Customer Notified" node leading to "Order Cancelled" also represents an incorrect causal direction.

@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a data replication process between two regions, Region A and Region B. It outlines the steps involved in handling data change events, prioritizing data, serializing and deserializing data, and ensuring successful replication through acknowledgements and retries. The diagram serves as a visual representation of the data flow and decision-making within the replication system.
+
+## Overall Layout
+The diagram flows from top to bottom (TB). It is divided into two subgraphs representing Region A and Region B. The start node is "Data Change Event" in Region A, and the end node is "Remove from Queue" after successful replication, or "Retry after Delay" if replication fails initially.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Region A**: Handles the initial data change event, prioritization, queuing, serialization, and availability check for Region B.
+- **Region B**: Processes the received data, deserializes it, applies changes to the database, and sends an acknowledgement.
+
+## Node-by-Node Description
+- **A / Data Change Event**: Represents the initiation of a data change event in Region A. visible in diagram; no further repository context available.
+- **B / Is Priority Data?**: A decision point to determine if the data change event is considered priority data. visible in diagram; no further repository context available.
+- **C / Priority Queue**: A queue for storing priority data change events. visible in diagram; no further repository context available.
+- **D / Standard Queue**: A queue for storing standard (non-priority) data change events. visible in diagram; no further repository context available.
+- **E / Replication Processor A**: A processor responsible for handling data replication tasks in Region A. visible in diagram; no further repository context available.
+- **F / Data Serializer**: A component that serializes the data into a format suitable for transmission. visible in diagram; no further repository context available.
+- **G / Region B Available?**: A decision point to check if Region B is available for replication. visible in diagram; no further repository context available.
+- **H / Send to Region B Endpoint**: Sends the serialized data to the Region B endpoint. visible in diagram; no further repository context available.
+- **J / Ack Received?**: A decision point to check if an acknowledgement has been received from Region B. visible in diagram; no further repository context available.
+- **K / Remove from Queue**: Removes the data change event from the queue after successful replication. visible in diagram; no further repository context available.
+- **I / Retry after Delay**: Retries the replication process after a delay if Region B is unavailable or an acknowledgement is not received. visible in diagram; no further repository context available.
+- **L / Region B Endpoint**: The endpoint in Region B that receives the data. visible in diagram; no further repository context available.
+- **M / Data Deserializer**: A component that deserializes the received data in Region B. visible in diagram; no further repository context available.
+- **N / Apply Changes to DB**: Applies the changes to the database in Region B. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Data change event is passed to the priority check.
+- `B -- Yes --> C`: If the data is priority data, it is sent to the Priority Queue.
+- `B -- No --> D`: If the data is not priority data, it is sent to the Standard Queue.
+- `C --> E`: Priority Queue sends data to Replication Processor A.
+- `D --> E`: Standard Queue sends data to Replication Processor A.
+- `E --> F`: Replication Processor A sends data to the Data Serializer.
+- `F --> G`: Serialized data is passed to the Region B availability check.
+- `G -- Yes --> H`: If Region B is available, the data is sent to the Region B Endpoint.
+- `G -- No --> I`: If Region B is unavailable, the process retries after a delay.
+- `H --> J`: Data is sent to Region B Endpoint, then an acknowledgement is awaited.
+- `J -- Yes --> K`: If an acknowledgement is received, the data is removed from the queue.
+- `J -- No --> I`: If an acknowledgement is not received, the process retries after a delay.
+- `I --> G`: After a delay, the process returns to check Region B availability.
+- `H --> L`: The data is sent to the Region B Endpoint.
+- `L --> M`: The data is passed to the Data Deserializer in Region B.
+- `M --> N`: The deserialized data is used to apply changes to the database.
+
+## Repository Context & Terminology
+- **Data Change Event**: An event triggered by a modification to data, requiring replication to other regions.
+- **Priority Queue**: A queue that prioritizes certain data change events for faster replication.
+- **Standard Queue**: A queue for data change events that do not require immediate replication.
+- **Replication Processor**: A component responsible for managing the replication process, including serialization, transmission, and error handling.
+- **Data Serializer**: A component that converts data into a format suitable for transmission over a network.
+- **Data Deserializer**: A component that converts serialized data back into its original format.
+- **Region**: A geographically distinct location or data center.
+- **Endpoint**: A network address or service that receives data.
+- **Acknowledgement (Ack)**: A signal indicating that data has been successfully received and processed.
+
+## High-Density QA Ground Truth Summary
+The data replication process begins with a "Data Change Event" in Region A. The system then determines "Is Priority Data?". If yes, the event is enqueued in the "Priority Queue"; otherwise, it's placed in the "Standard Queue". Both queues feed into "Replication Processor A", which prepares the data for transmission. The "Data Serializer" converts the data into a transmittable format. Next, the system checks "Region B Available?". If Region B is not available, the process enters a "Retry after Delay" loop until Region B becomes available. If Region B is available, the serialized data is sent to the "Send to Region B Endpoint". In Region B, the data is received at the "Region B Endpoint", deserialized by the "Data Deserializer", and the changes are applied to the database via "Apply Changes to DB". After sending the data to Region B, Region A waits for an "Ack Received?". If an acknowledgement is received, the data change event is "Remove from Queue", completing the process. If no acknowledgement is received, the process enters the "Retry after Delay" loop, ensuring eventual consistency between regions. The queues (Priority and Standard) are essential for managing the rate of data replication, preventing overload, and ensuring that critical data is replicated promptly.

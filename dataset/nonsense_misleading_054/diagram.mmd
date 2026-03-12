@@ -1,0 +1,19 @@
+graph TD
+    A[Receive Order] --> B{Inventory Available?};
+    B -- Yes --> C[Prepare Shipment];
+    B -- No --> H[Notify Customer of Delay];
+    C --> D{Payment Received?};
+    D -- Yes --> F[Ship Order];
+    D -- No --> E[Cancel Order];
+    F --> G[Order Delivered];
+    G --> A; 
+    H --> E;
+    E --> I[Restock Items];
+    I --> J[Calculate Refund Amount];
+    J --> K[Issue Refund];
+    K --> L[Archive Order Data];
+    L --> M{Customer Satisfied?};
+    M -- No --> N[Close Ticket];
+    M -- Yes --> O[Analyze Feedback];
+    O --> N;
+    N --> P[Update Inventory];

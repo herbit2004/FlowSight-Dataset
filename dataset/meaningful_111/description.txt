@@ -1,0 +1,44 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of a payment callback processing system. It depicts the steps involved in receiving a callback from a payment gateway, validating it, extracting relevant data, and reconciling it with existing transaction records. The diagram serves as a visual representation of the callback processing logic.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "Payment Gateway" node at the top and flows downwards through a series of processing steps, branching based on validation results and reconciliation outcomes, ultimately leading to either a transaction update or an exception queue.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Payment Gateway Callback, Callback Validation, Callback Processing, Reconciliation, and Transaction Update/Exception Handling.
+
+## Node-by-Node Description
+- **A / Payment Gateway: Sends Callback**: Represents the initial step where a payment gateway sends a callback notification.
+  visible in diagram; no further repository context available.
+- **B / Callback Router: Validates Signature & Route**: Represents the component responsible for validating the signature of the callback and routing it to the appropriate processor.
+  visible in diagram; no further repository context available.
+- **C / Callback Processor: Extracts Payment Data**: Represents the component that extracts relevant payment data from the validated callback.
+  visible in diagram; no further repository context available.
+- **D / Error Queue: Dead Letter Queue**: Represents an error queue where invalid callbacks are placed for later analysis.
+  visible in diagram; no further repository context available.
+- **E / Reconciliation Service: Matches Callback with Transaction**: Represents the service that attempts to match the callback data with an existing transaction record.
+  visible in diagram; no further repository context available.
+- **F / Transaction Updater: Updates Transaction Status to 'Settled'**: Represents the component that updates the transaction status to 'Settled' if a matching transaction is found.
+  visible in diagram; no further repository context available.
+- **G / Exception Queue: Needs Manual Investigation**: Represents an exception queue where callbacks that cannot be matched with existing transactions are placed for manual investigation.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The payment gateway sends a callback to the callback router.
+- `B -- Valid Signature, Route to Callback Processor --> C`: If the callback signature is valid, the callback is routed to the callback processor.
+- `B -- Invalid Signature --> D`: If the callback signature is invalid, the callback is sent to the error queue (dead letter queue).
+- `C --> E`: The callback processor sends the extracted payment data to the reconciliation service.
+- `E -- Match Found --> F`: If the reconciliation service finds a matching transaction, the transaction updater is triggered.
+- `E -- No Match Found --> G`: If the reconciliation service does not find a matching transaction, the callback is sent to the exception queue.
+
+## Repository Context & Terminology
+- **Payment Gateway**: A third-party service that processes online payments.
+- **Callback**: A notification sent by the payment gateway to the merchant's system after a payment has been processed.
+- **Signature Validation**: Verifying the authenticity and integrity of the callback message using cryptographic techniques.
+- **Reconciliation**: The process of matching payment callbacks with existing transaction records to ensure that payments are correctly recorded.
+- **Dead Letter Queue**: A queue used to store messages that could not be processed.
+- **Exception Queue**: A queue used to store messages that require manual intervention or investigation.
+- **Transaction Status**: The current state of a transaction (e.g., pending, settled, failed).
+
+## High-Density QA Ground Truth Summary
+The process begins with the Payment Gateway sending a Callback to the Callback Router. The Callback Router validates the signature of the callback. If the signature is valid, the flow proceeds to the Callback Processor, which extracts payment data. If the signature is invalid, the callback is routed to the Error Queue (Dead Letter Queue) for later analysis. The Callback Processor then sends the extracted data to the Reconciliation Service, which attempts to match the callback with an existing transaction. If a match is found, the Transaction Updater updates the transaction status to 'Settled', indicating successful payment processing. If no match is found, the callback is sent to the Exception Queue, signifying a need for manual investigation to resolve the discrepancy. Signature validation is crucial to ensure that the callback originates from the trusted Payment Gateway and has not been tampered with. The Reconciliation Service ensures that the callback is correctly linked to the original transaction, preventing accounting errors.

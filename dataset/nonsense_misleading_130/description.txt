@@ -1,0 +1,68 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow for an e-commerce system. It depicts the sequence of steps involved from when a user initiates an order to when the order is either fulfilled or cancelled. This diagram serves as a visual representation of the order processing logic.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "User Initiates Order" node at the top and flows downwards through a series of decision points and actions, ultimately converging at the "End" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Initiation, Stock Check & Payment, Shipment Preparation, Delivery, and Order Completion/Cancellation.
+
+## Node-by-Node Description
+- **A / User Initiates Order**: Represents the start of the order process when a user places an order.
+  visible in diagram; no further repository context available.
+- **B / Item in Stock?**: A decision point to check if the ordered item is available in stock.
+  visible in diagram; no further repository context available.
+- **C / Notify User: Out of Stock**: Represents notifying the user that the item is out of stock.
+  visible in diagram; no further repository context available.
+- **D / Payment Received?**: A decision point to check if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **E / Cancel Order**: Represents the cancellation of the order due to non-receipt of payment.
+  visible in diagram; no further repository context available.
+- **G / Shipping Confirmation Sent**: Represents sending a shipping confirmation to the user.
+  visible in diagram; no further repository context available.
+- **H / Prepare Shipment**: Represents the preparation of the order for shipment.
+  visible in diagram; no further repository context available.
+- **I / Address Valid?**: A decision point to check if the shipping address is valid.
+  visible in diagram; no further repository context available.
+- **J / Update Inventory**: Represents updating the inventory after the order is placed.
+  visible in diagram; no further repository context available.
+- **K / Ship Order**: Represents shipping the order to the user.
+  visible in diagram; no further repository context available.
+- **L / Order Delivered?**: A decision point to check if the order has been delivered to the user.
+  visible in diagram; no further repository context available.
+- **M / Archive Order Data**: Represents archiving the order data after successful delivery.
+  visible in diagram; no further repository context available.
+- **F / End**: Represents the end of the order processing workflow.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User initiates the order, leading to a stock check.
+- `B -- No --> C`: If the item is not in stock, notify the user.
+- `B -- Yes --> D`: If the item is in stock, check if payment is received.
+- `C --> F`: Notifying the user of out-of-stock status leads to the end of the process.
+- `D -- No --> E`: If payment is not received, cancel the order.
+- `D -- Yes --> G`: If payment is received, send a shipping confirmation.
+- `E --> F`: Cancelling the order leads to the end of the process.
+- `G --> H`: After sending shipping confirmation, prepare the shipment.
+- `H --> I`: After preparing the shipment, check if the address is valid.
+- `I -- No --> K`: If the address is NOT valid, ship the order (incorrect path).
+- `I -- Yes --> J`: If the address IS valid, update the inventory.
+- `J --> K`: After updating inventory, ship the order.
+- `K --> L`: After shipping the order, check if the order is delivered.
+- `L -- No --> H`: If the order is not delivered, go back to preparing the shipment (incorrect retry trigger).
+- `L -- Yes --> M`: If the order is delivered, archive the order data.
+- `M --> F`: Archiving the order data leads to the end of the process.
+
+## Repository Context & Terminology
+- **User Initiates Order**: Standard meaning is a customer placing an order. In this diagram, it's the starting point of the workflow.
+- **Item in Stock?**: Standard meaning is checking inventory levels. In this diagram, it's a decision point determining whether to proceed with the order.
+- **Payment Received?**: Standard meaning is verifying payment confirmation. In this diagram, it's a decision point determining whether to proceed with the order or cancel it.
+- **Shipping Confirmation Sent**: Standard meaning is notifying the customer that their order has shipped. In this diagram, it occurs *before* shipment preparation, which is an error.
+- **Prepare Shipment**: Standard meaning is packaging the order for delivery. In this diagram, it includes address validation.
+- **Address Valid?**: Standard meaning is verifying the shipping address. In this diagram, a 'No' result incorrectly leads to shipping the order without correction.
+- **Update Inventory**: Standard meaning is adjusting stock levels. In this diagram, it occurs *after* address validation and *before* shipping.
+- **Order Delivered?**: Standard meaning is confirming delivery to the customer. In this diagram, a 'No' result incorrectly loops back to shipment preparation.
+- **Archive Order Data**: Standard meaning is storing order information for record-keeping. In this diagram, it's the final step after successful delivery.
+
+## High-Density QA Ground Truth Summary
+The order processing flowchart begins with a "User Initiates Order," which immediately leads to checking "Item in Stock?". If the item is not in stock, the user is notified, and the process ends. If the item is in stock, the system checks "Payment Received?". If payment is not received, the order is cancelled, and the process ends. If payment is received, a "Shipping Confirmation Sent" is triggered *before* "Prepare Shipment," a reversed sequence. The system then proceeds to "Address Valid?". A 'No' on address validity incorrectly leads to "Ship Order" without correction. A 'Yes' on address validity triggers "Update Inventory" before "Ship Order." After shipping, the system checks "Order Delivered?". If the order is delivered, "Archive Order Data" is performed, and the process ends. If the order is not delivered, the process loops back to "Prepare Shipment," an illogical retry trigger. The process terminates at the "End" node, reached either after archiving order data or after notifying the user of out-of-stock status or cancelling the order. The "Shipping Confirmation Sent" node represents an email notification to the user, while "Archive Order Data" might correspond to database updates for record-keeping.

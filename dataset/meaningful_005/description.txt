@@ -1,0 +1,97 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the read and write paths, along with the cache invalidation process, in a caching system. It depicts the flow of data and control through various components, including the cache layer, primary database, write manager, and invalidation manager. The diagram serves as a high-level architectural overview of the system's data handling and consistency mechanisms.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It is organized into four main subgraphs: Read Path, User Action, Write Path, and Invalidation Path, with an additional subgraph for Cache Monitoring. The start nodes are "User Reads Data" and "User Writes Data", and the end nodes are "Administrator" and "Invalidation Log: Record Completion".
+
+## Subgraphs / Stages
+- **Read Path**: Describes the flow when a user reads data, including checking the cache, retrieving from the primary database if necessary, and refilling the cache.
+- **User Action**: Represents the initial user interaction, specifically writing data, and queuing the write request.
+- **Write Path**: Details the process of writing data to the primary database, validating the write, and queuing an invalidation request.
+- **Invalidation Path**: Illustrates how the cache is invalidated when data is updated in the primary database.
+- **Cache Monitoring**: Shows how the system monitors the cache and alerts the administrator if thresholds are exceeded.
+
+## Node-by-Node Description
+- **User Reads Data**: Represents a user requesting data from the system.
+  visible in diagram; no further repository context available.
+- **Cache Layer: Check Cache**: Represents the cache layer checking if the requested data is present.
+  visible in diagram; no further repository context available.
+- **Cache Hit**: Indicates that the requested data was found in the cache.
+  visible in diagram; no further repository context available.
+- **Cache Data Returned**: Represents the data being returned from the cache to the user.
+  visible in diagram; no further repository context available.
+- **Cache Miss**: Indicates that the requested data was not found in the cache.
+  visible in diagram; no further repository context available.
+- **Primary Database**: Represents the main database where data is stored.
+  visible in diagram; no further repository context available.
+- **Data Retrieved**: Represents the data being retrieved from the primary database.
+  visible in diagram; no further repository context available.
+- **Cache Refill**: Represents the process of updating the cache with the data retrieved from the primary database.
+  visible in diagram; no further repository context available.
+- **User Writes Data**: Represents a user writing data to the system.
+  visible in diagram; no further repository context available.
+- **Queue Write Request**: Represents the write request being added to a queue for processing.
+  visible in diagram; no further repository context available.
+- **Ack to User**: Represents the acknowledgement sent to the user after the write request is queued.
+  visible in diagram; no further repository context available.
+- **Write Manager: Validate & Route**: Represents the component responsible for validating the write request and routing it to the primary database.
+  visible in diagram; no further repository context available.
+- **Write to Primary**: Represents the process of writing data to the primary database.
+  visible in diagram; no further repository context available.
+- **Write ACK**: Represents the acknowledgement received from the primary database after the write operation.
+  visible in diagram; no further repository context available.
+- **Async Event**: Represents an asynchronous event triggered by the write operation.
+  visible in diagram; no further repository context available.
+- **Queue Invalidation Request**: Represents the invalidation request being added to a queue for processing.
+  visible in diagram; no further repository context available.
+- **Invalidation Manager**: Represents the component responsible for invalidating the cache entries.
+  visible in diagram; no further repository context available.
+- **Iterate Cache Groups**: Represents the process of iterating through the cache groups.
+  visible in diagram; no further repository context available.
+- **Cache Group Lookup**: Represents the process of looking up a specific cache group.
+  visible in diagram; no further repository context available.
+- **Cache Group Found**: Indicates that a cache group was found.
+  visible in diagram; no further repository context available.
+- **Remote Cache: Invalidate Entry**: Represents the process of invalidating an entry in the remote cache.
+  visible in diagram; no further repository context available.
+- **All Groups Processed**: Indicates that all cache groups have been processed.
+  visible in diagram; no further repository context available.
+- **Invalidation Log: Record Completion**: Represents the recording of the invalidation completion in a log.
+  visible in diagram; no further repository context available.
+- **Alerting System: Check Thresholds**: Represents the system monitoring cache performance and triggering alerts based on predefined thresholds.
+  visible in diagram; no further repository context available.
+- **Administrator**: Represents the administrator who receives alerts from the monitoring system.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Reads Data --> Cache Layer: Check Cache`: A user request triggers a cache check.
+- `Cache Layer: Check Cache -- Cache Hit --> Cache Data Returned`: If the data is in the cache, it's returned.
+- `Cache Layer: Check Cache -- Cache Miss --> Primary Database`: If the data is not in the cache, it's retrieved from the primary database.
+- `Primary Database --> Data Retrieved --> Cache Refill`: Data retrieved from the database is used to refill the cache.
+- `Cache Refill --> Cache Layer: Check Cache`: The cache is refilled, updating its contents.
+- `Cache Data Returned --> User Action`: The data is returned to the user action.
+- `Primary Database --> User Action`: The data is returned to the user action.
+- `User Writes Data --> Queue Write Request`: A user write request is queued.
+- `Queue Write Request --> Write Manager: Validate & Route`: The queued write request is sent to the write manager.
+- `Write Manager: Validate & Route --> Write to Primary --> Primary Database`: The write manager writes the data to the primary database.
+- `Primary Database --> Write ACK --> Write Manager: Validate & Route`: The primary database sends an acknowledgement to the write manager.
+- `Write Manager: Validate & Route --> Async Event --> Queue Invalidation Request`: The write manager queues an invalidation request.
+- `Queue Invalidation Request --> Invalidation Manager`: The invalidation request is sent to the invalidation manager.
+- `Invalidation Manager --> Iterate Cache Groups --> Cache Group Lookup`: The invalidation manager iterates through cache groups.
+- `Cache Group Lookup --> Cache Group Found --> Remote Cache: Invalidate Entry`: If a cache group is found, the corresponding entry is invalidated.
+- `Remote Cache: Invalidate Entry --> Invalidation Manager`: After invalidating an entry, the process returns to the invalidation manager.
+- `Invalidation Manager --> All Groups Processed --> Invalidation Log: Record Completion`: Once all groups are processed, the completion is recorded.
+- `Invalidation Log: Record Completion --> Alerting System: Check Thresholds`: The invalidation completion triggers a check of the alerting system thresholds.
+- `Alerting System: Check Thresholds --> Administrator`: If thresholds are exceeded, an alert is sent to the administrator.
+
+## Repository Context & Terminology
+- **Cache Layer**: A component that stores frequently accessed data for faster retrieval.
+- **Primary Database**: The main database where all data is persistently stored.
+- **Write Manager**: A component responsible for validating and routing write requests.
+- **Invalidation Manager**: A component responsible for invalidating cache entries when data is updated in the primary database.
+- **Cache Group**: A logical grouping of cache entries, often based on data type or access pattern.
+- **Remote Cache**: A cache that is located on a different machine or process than the application using it.
+- **Alerting System**: A system that monitors performance metrics and triggers alerts when predefined thresholds are exceeded.
+
+## High-Density QA Ground Truth Summary
+The process begins with either a "User Reads Data" request or a "User Writes Data" action. For reads, the system first checks the "Cache Layer". A "Cache Hit" results in "Cache Data Returned" directly to the user action, while a "Cache Miss" triggers retrieval from the "Primary Database". The retrieved data then refills the "Cache". For writes, the "Queue Write Request" node passes the request to the "Write Manager", which validates and routes the write to the "Primary Database". An asynchronous event then queues an "Invalidation Request". The "Invalidation Manager" iterates through "Cache Groups", performing a "Cache Group Lookup" and invalidating the corresponding "Remote Cache" entry if found. After all groups are processed, the "Invalidation Log" records the completion, triggering the "Alerting System" to check thresholds. If thresholds are exceeded, the "Administrator" is notified. The cache invalidation mechanism ensures data consistency between the cache and the primary database, a critical aspect of distributed caching systems. The alerting system provides operational oversight, allowing administrators to proactively address potential performance issues.

@@ -1,0 +1,56 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a CI/CD (Continuous Integration/Continuous Deployment) pipeline. It illustrates the steps involved in making changes to an application, building and testing it, deploying it, and verifying the deployment. The diagram serves as a visual representation of the automated process for software release.
+
+## Overall Layout
+The diagram flows from left to right. It starts with making changes to the application and ends with the application updates being live or a system health check. The diagram includes decision diamonds to represent success checks at various stages.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Code Change & Build, Docker Image Creation, Deployment, Verification, Rollback/Cancellation, and Final State.
+
+## Node-by-Node Description
+- **nv / Make changes to\nthe application**: Represents the initial step of modifying the application code. visible in diagram; no further repository context available.
+- **n7 / Build and test frontend\nand backend**: Represents the process of building and testing the frontend and backend components of the application. visible in diagram; no further repository context available.
+- **nf / Success?**: A decision point to check if the build and test of the frontend and backend were successful. visible in diagram; no further repository context available.
+- **n2 / Build and test docker\nimage**: Represents the process of building and testing the Docker image. visible in diagram; no further repository context available.
+- **n5 / Success?**: A decision point to check if the Docker image build and test were successful. visible in diagram; no further repository context available.
+- **nx / Publish docker image\nto GitHub packages**: Represents the process of publishing the Docker image to GitHub packages. visible in diagram; no further repository context available.
+- **nj / Success?**: A decision point to check if publishing the Docker image to GitHub packages was successful. visible in diagram; no further repository context available.
+- **nd / Deploy**: Represents the deployment stage. visible in diagram; no further repository context available.
+- **nc / Login into VM and copy\ndocker compose file\nfrom repo**: Represents logging into a Virtual Machine (VM) and copying the Docker Compose file from the repository. visible in diagram; no further repository context available.
+- **n6 / Success?**: A decision point to check if logging into the VM and copying the Docker Compose file was successful. visible in diagram; no further repository context available.
+- **no / Pull previously pushed Docker image\nand execute most recent\n docker compose file**: Represents pulling the previously pushed Docker image and executing the most recent Docker Compose file. visible in diagram; no further repository context available.
+- **na / Success?**: A decision point to check if pulling the Docker image and executing the Docker Compose file was successful. visible in diagram; no further repository context available.
+- **ng / Better check your\nsystem's health**: Represents a step to check the system's health if the deployment was not successful. visible in diagram; no further repository context available.
+- **nk / Updates are live**: Represents the final state where the application updates are live. visible in diagram; no further repository context available.
+- **n4 / Cancel pipeline**: Represents the action of canceling the pipeline if any of the success checks fail. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `nv --> n7`: Committing changes triggers the build and test of the frontend and backend.
+- `n7 --> nf`: After building and testing, a success check is performed.
+- `nf -- Yes --> n2`: If the build and test are successful, the Docker image is built and tested.
+- `nf -- No --> n4`: If the build and test fail, the pipeline is canceled.
+- `n2 --> n5`: After building and testing the Docker image, a success check is performed.
+- `n5 -- Yes --> nx`: If the Docker image build and test are successful, the image is published to GitHub packages.
+- `n5 -- No --> n4`: If the Docker image build and test fail, the pipeline is canceled.
+- `nx --> nj`: After publishing the Docker image, a success check is performed.
+- `nj -- Yes --> nd`: If publishing the Docker image is successful, the deployment stage is initiated.
+- `nj -- No --> n4`: If publishing the Docker image fails, the pipeline is canceled.
+- `nd --> nc`: The deployment stage involves logging into a VM and copying the Docker Compose file.
+- `nc --> n6`: After logging in and copying the Docker Compose file, a success check is performed.
+- `n6 -- Yes --> no`: If logging in and copying the Docker Compose file are successful, the previously pushed Docker image is pulled and the Docker Compose file is executed.
+- `n6 -- No --> n4`: If logging in and copying the Docker Compose file fail, the pipeline is canceled.
+- `no --> na`: After pulling the Docker image and executing the Docker Compose file, a success check is performed.
+- `na -- Yes --> nk`: If pulling the Docker image and executing the Docker Compose file are successful, the updates are live.
+- `na -- No --> ng`: If pulling the Docker image and executing the Docker Compose file fail, the system's health is checked.
+- Multiple paths converge at `n4`: The "Cancel pipeline" node is reached if any of the success checks (nf, n5, nj, n6) fail.
+
+## Repository Context & Terminology
+- **Docker Image**: A lightweight, standalone, executable package that includes everything needed to run a piece of software, including the code, runtime, system tools, system libraries, and settings.
+- **Docker Compose**: A tool for defining and running multi-container Docker applications. A Compose file is used to configure the application's services.
+- **GitHub Packages**: A package hosting service, integrated with GitHub, that allows you to host your software packages privately or publicly.
+- **VM (Virtual Machine)**: An emulation of a computer system. Virtual machines are based on computer architectures and provide functionality of a physical computer.
+- **CI/CD Pipeline**: A process that automates the software release process, from code changes to deployment.
+- **Docker Compose File**: A YAML file defining services, networks, and volumes for a Docker application.
+
+## High-Density QA Ground Truth Summary
+The CI/CD pipeline starts with 'Make changes to the application', followed by a 'Commit' which triggers the 'Build and test frontend and backend' stage. A 'Success?' check determines the next step; a 'No' outcome leads to 'Cancel pipeline', while a 'Yes' outcome proceeds to 'Build and test docker image'. Another 'Success?' check follows; failure cancels the pipeline, success leads to 'Publish docker image into GitHub packages'. A further 'Success?' check determines whether to 'Deploy' or 'Cancel pipeline'. The 'Deploy' stage involves 'Login into VM and copy docker compose file from repo', followed by a 'Success?' check. If successful, the pipeline executes 'Pull previously pushed Docker image and execute most recent docker compose file'. A final 'Success?' check determines the end state: 'Updates are live' if successful, or 'Better check your system's health' if not. The pipeline uses Docker images and Docker Compose files for deployment, leveraging GitHub Packages for image hosting. The pipeline is designed to automate the process of building, testing, and deploying applications, with cancellation points at each stage to handle failures.

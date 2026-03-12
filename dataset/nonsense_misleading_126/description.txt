@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting an order processing workflow. It illustrates the steps involved from when a user submits an order to when the order is closed, including payment processing, inventory checks, fulfillment, shipping, and handling of backorders and shipping issues. This diagram serves as a visual representation of the order processing logic, but contains deliberate errors.
+
+## Overall Layout
+The diagram's primary direction is top-down. It starts with the "User Submits Order" node at the top and flows downwards through various decision points and processes, eventually looping back to the start node "User Submits Order". There is no clear hierarchy, but rather a sequence of steps with branching logic.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Order Submission, Payment Processing, Inventory Management, Backorder Handling, Order Fulfillment, Shipping, and Order Closure.
+
+## Node-by-Node Description
+- **User Submits Order**: Represents the initial action of a user placing an order. visible in diagram; no further repository context available.
+- **Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **Send Order Confirmation**: Represents sending an order confirmation to the user. visible in diagram; no further repository context available.
+- **Inventory Check**: Represents checking the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **Notify Customer of Backorder**: Represents notifying the customer that the order is on backorder due to unavailability of items. visible in diagram; no further repository context available.
+- **Customer Accepts Backorder?**: A decision point to check if the customer accepts the backorder. visible in diagram; no further repository context available.
+- **Fulfill Order**: Represents the process of preparing the order for shipment. visible in diagram; no further repository context available.
+- **Packing and Shipping**: Represents the process of packing the order and shipping it to the customer. visible in diagram; no further repository context available.
+- **Shipping Successful?**: A decision point to check if the shipping was successful. visible in diagram; no further repository context available.
+- **Investigate Shipping Issue**: Represents investigating issues related to unsuccessful shipping. visible in diagram; no further repository context available.
+- **Cancel Order and Refund**: Represents canceling the order and issuing a refund to the customer. visible in diagram; no further repository context available.
+- **Update Inventory**: Represents updating the inventory after the order is processed or canceled. visible in diagram; no further repository context available.
+- **Close Order**: Represents the final step of closing the order. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Submits Order --> Payment Received?`: The order submission triggers the payment verification process.
+- `Payment Received? -- No --> Send Order Confirmation`: If payment is not received, send an order confirmation.
+- `Payment Received? -- Yes --> Inventory Check`: If payment is received, proceed to check inventory.
+- `Inventory Check -- Available --> Fulfill Order`: If the inventory is available, fulfill the order.
+- `Inventory Check -- Unavailable --> Notify Customer of Backorder`: If the inventory is unavailable, notify the customer of the backorder.
+- `Notify Customer of Backorder --> Customer Accepts Backorder?`: After notification, check if the customer accepts the backorder.
+- `Customer Accepts Backorder? -- Yes --> Fulfill Order`: If the customer accepts the backorder, fulfill the order.
+- `Customer Accepts Backorder? -- No --> Cancel Order and Refund`: If the customer does not accept the backorder, cancel the order and refund.
+- `Fulfill Order --> Packing and Shipping`: After fulfilling the order, proceed to packing and shipping.
+- `Packing and Shipping --> Shipping Successful?`: Packing and shipping leads to a check for successful shipping.
+- `Shipping Successful? -- Yes --> Update Inventory`: If shipping is successful, update the inventory.
+- `Shipping Successful? -- No --> Investigate Shipping Issue`: If shipping is not successful, investigate the shipping issue.
+- `Investigate Shipping Issue --> Shipping Successful?`: After investigating the shipping issue, return to check if shipping is successful.
+- `Cancel Order and Refund --> Update Inventory`: After canceling the order and refunding, update the inventory.
+- `Update Inventory --> Close Order`: After updating inventory, close the order.
+- `Send Order Confirmation --> Close Order`: After sending the order confirmation, close the order.
+- `Close Order --> User Submits Order`: After closing the order, loop back to the beginning, "User Submits Order".
+
+## Repository Context & Terminology
+- **User Submits Order**: Typically, this refers to a user initiating an order through a website or application. In this diagram, it's the starting point of the workflow and also the end point to which the process loops back.
+- **Payment Received?**: This refers to verifying if the payment for the order has been successfully processed. In this diagram, it's a decision point that determines whether to proceed with the order or send an order confirmation.
+- **Inventory Check**: This refers to checking the availability of the items in the order in the inventory system. In this diagram, it determines whether the order can be fulfilled immediately or if a backorder is necessary.
+- **Notify Customer of Backorder**: This refers to informing the customer that some or all of the items in their order are currently out of stock and will be shipped later. In this diagram, it's a step taken when the inventory check fails.
+- **Customer Accepts Backorder?**: This refers to getting confirmation from the customer whether they are willing to wait for the backordered items. In this diagram, it's a decision point that determines whether to proceed with the backorder or cancel the order.
+- **Fulfill Order**: This refers to the process of preparing the order for shipment, including picking the items, packing them, and generating shipping labels. In this diagram, it's a step taken after the inventory check is successful or the customer accepts the backorder.
+- **Packing and Shipping**: This refers to the process of physically packing the items and shipping them to the customer's address. In this diagram, it follows the fulfillment stage.
+- **Shipping Successful?**: This refers to verifying if the order has been successfully delivered to the customer. In this diagram, it's a decision point that determines whether to update the inventory or investigate shipping issues.
+- **Investigate Shipping Issue**: This refers to looking into the reasons for unsuccessful shipping and taking corrective actions. In this diagram, it's a step taken when shipping is not successful.
+- **Cancel Order and Refund**: This refers to canceling the order and issuing a refund to the customer. In this diagram, it's a step taken when the customer does not accept the backorder.
+- **Update Inventory**: This refers to updating the inventory system to reflect the changes in stock levels due to order fulfillment or cancellation. In this diagram, it's a step taken after successful shipping or cancellation.
+- **Close Order**: This refers to marking the order as complete in the system. In this diagram, it's the final step in the workflow, but it loops back to the beginning.
+- **Send Order Confirmation**: This refers to sending a confirmation message to the user after they submit the order. In this diagram, this happens if the payment is not received.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Submits Order," which immediately transitions to "Payment Received?". If payment is not received ("No" branch), an "Order Confirmation" is sent, and the process proceeds to "Close Order," looping back to "User Submits Order." If payment is received ("Yes" branch), an "Inventory Check" is performed. If items are "Unavailable," the "Customer" is notified of a "Backorder," and their acceptance is queried. If the "Customer Accepts Backorder?", the process moves to "Fulfill Order"; otherwise, the "Order" is "Cancelled" and a "Refund" is issued, followed by "Update Inventory" and "Close Order." If the "Inventory Check" indicates items are "Available," the process proceeds to "Fulfill Order," then "Packing and Shipping." "Shipping Successful?" determines the next step: "Yes" leads to "Update Inventory" and "Close Order," while "No" triggers "Investigate Shipping Issue," looping back to "Shipping Successful?". The "Update Inventory" step precedes "Close Order," which then erroneously loops back to "User Submits Order," restarting the entire process. The "Send Order Confirmation" step occurs prematurely, before payment verification, which is a deviation from standard order processing.

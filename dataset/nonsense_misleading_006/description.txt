@@ -1,0 +1,51 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the steps in an order processing system. It depicts the flow of an order from submission to completion, including payment verification, inventory checks, supplier contact, and delivery scheduling. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User Submits Order" node at the top and flows downwards through a series of process and decision nodes, ultimately leading to the "Order Completed" node at the bottom.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Payment, Inventory Check, Supplier Contact (if needed), Order Confirmation & Scheduling, Order Fulfillment, and Order Completion.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision node that checks whether the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **D / Inventory Available?**: A decision node that checks whether the inventory has the required stock. visible in diagram; no further repository context available.
+- **G / Contact Supplier**: Represents the action of contacting the supplier to request more stock. visible in diagram; no further repository context available.
+- **H / Supplier Stock?**: A decision node that checks whether the supplier has the required stock. visible in diagram; no further repository context available.
+- **E / Order Confirmation Sent**: Represents the action of sending an order confirmation to the user. visible in diagram; no further repository context available.
+- **F / Delivery Scheduled**: Represents the action of scheduling the delivery of the order. visible in diagram; no further repository context available.
+- **I / Package Order**: Represents the action of packaging the order for shipment. visible in diagram; no further repository context available.
+- **J / Ship Order**: Represents the action of shipping the order to the customer. visible in diagram; no further repository context available.
+- **K / Order Delivered?**: A decision node that checks whether the order has been delivered to the customer. visible in diagram; no further repository context available.
+- **L / Order Completed**: Represents the final stage where the order is marked as completed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, triggering the payment verification process.
+- `B -- Yes --> C`: If payment is received, proceed to inventory check.
+- `B -- No --> L`: If payment is not received, the order is immediately marked as completed.
+- `C --> D`: Inventory check leads to a decision on inventory availability.
+- `D -- Yes --> E`: If inventory is available, send order confirmation.
+- `D -- No --> G`: If inventory is not available, contact the supplier.
+- `G --> H`: Contacting the supplier leads to checking supplier stock.
+- `H -- Yes --> C`: If the supplier has stock, loop back to inventory check.
+- `H -- No --> E`: If the supplier does not have stock, send order confirmation.
+- `E --> F`: Order confirmation leads to delivery scheduling.
+- `F --> I`: Delivery scheduling leads to packaging the order.
+- `I --> J`: Packaging the order leads to shipping the order.
+- `J --> K`: Shipping the order leads to checking if the order was delivered.
+- `K -- Yes --> L`: If the order is delivered, mark the order as completed.
+
+## Repository Context & Terminology
+- **User Submits Order**: Standard meaning is a customer placing an order. In this diagram, it's the starting point of the order processing flow.
+- **Payment Received?**: Standard meaning is verifying if payment was successful. In this diagram, a "No" outcome immediately completes the order without a refund process.
+- **Inventory Check**: Standard meaning is verifying stock levels. In this diagram, it triggers supplier contact if stock is unavailable.
+- **Inventory Available?**: Standard meaning is a binary check on stock. In this diagram, a "No" outcome triggers contacting the supplier.
+- **Contact Supplier**: Standard meaning is reaching out to replenish stock. In this diagram, it's a step in the order fulfillment process, but stock update is not shown.
+- **Supplier Stock?**: Standard meaning is checking if the supplier has stock. In this diagram, a "Yes" outcome loops back to inventory check, while a "No" outcome sends an order confirmation.
+- **Order Confirmation Sent**: Standard meaning is notifying the customer of the order. In this diagram, it can occur even if the supplier is out of stock.
+- **Order Completed**: Standard meaning is the final state of an order. In this diagram, it can be reached without payment or delivery.
+
+## High-Density QA Ground Truth Summary
+The order processing flowchart begins with a "User Submits Order," which immediately proceeds to "Payment Received?". If payment is received ("Yes" branch), the system performs an "Inventory Check" and then evaluates "Inventory Available?". If inventory is available ("Yes" branch), an "Order Confirmation Sent," followed by "Delivery Scheduled," "Package Order," and "Ship Order." If inventory is unavailable ("No" branch), the system proceeds to "Contact Supplier" and checks "Supplier Stock?". If the supplier has stock ("Yes" branch), the process loops back to "Inventory Check." Critically, if the supplier does not have stock ("No" branch), an "Order Confirmation Sent" despite the lack of stock. The "Delivery Scheduled" step occurs *before* "Package Order," an illogical sequence. After shipping, the system checks "Order Delivered?". If delivered ("Yes" branch), the "Order Completed." If payment is not received initially ("No" branch), the process jumps directly to "Order Completed," skipping any refund or cancellation steps. The "Supplier Stock?" node's "Yes" branch incorrectly loops back to "Inventory Check," and the "No" branch incorrectly leads to "Order Confirmation Sent." The "Order Delivered?" decision affects "Order Completed," when it should be the other way around.

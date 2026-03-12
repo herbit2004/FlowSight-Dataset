@@ -1,0 +1,26 @@
+graph TD
+    classDef approved fill:#afa,stroke:#333,stroke-width:2px
+    classDef rejected fill:#f66,stroke:#333,stroke-width:2px
+    classDef pending fill:#ffa,stroke:#333,stroke-width:2px
+    A[Submit Expense Report] --> B{Manager Approval?}
+    B -- Yes --> C{Finance Review?}
+    B -- No --> D[Report Rejected]:::rejected
+    C -- Yes --> E{Compliance Check?}
+    C -- No --> F[Request More Info]:::pending
+    F --> C
+    E -- Pass --> G[Payment Processing]
+    E -- Fail --> H[Compliance Rejection]:::rejected
+    G --> I[Generate Payment File]
+    I --> J[Upload to Bank System]
+    J --> K[Payment Confirmed]:::approved
+    H --> L[Notify Submitter of Non-Compliance]:::rejected
+    L --> A
+    D --> M[Notify Submitter of Rejection]:::rejected
+    M --> A
+
+    style A fill:#ccf,stroke:#333,stroke-width:2px
+    style G fill:#ccf,stroke:#333,stroke-width:2px
+    style I fill:#ccf,stroke:#333,stroke-width:2px
+    style J fill:#ccf,stroke:#333,stroke-width:2px
+    K --> N[Update Expense System]:::approved
+    N --> O[Report Approved]:::approved

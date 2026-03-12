@@ -1,0 +1,67 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a retrieval system architecture. It illustrates the flow of data and processes involved in retrieving relevant information based on a query or new insight. The diagram outlines the stages of input, processing, storage, and retrieval, showing how different components interact to deliver top-K results.
+
+## Overall Layout
+The diagram's primary direction is left to right (LR). It is divided into four subgraphs representing stages: Input, Processing, Storage, and Retrieval. The start nodes are "Query/Pattern" and "New Insight," and the end node is "Top-K Results."
+
+## Subgraphs / Stages
+- **Input**: Represents the initial stage where the system receives a query or new insight.
+- **Processing**: Represents the stage where the input is processed and transformed into a suitable format for storage and retrieval.
+- **Storage**: Represents the stage where processed data is stored in various data stores for efficient retrieval.
+- **Retrieval**: Represents the stage where relevant information is retrieved based on the processed query and ranked to produce top-K results.
+
+## Node-by-Node Description
+- **Query/Pattern**: Represents the initial query or pattern input to the system.
+  visible in diagram; no further repository context available.
+- **New Insight**: Represents a new piece of information or insight input to the system.
+  visible in diagram; no further repository context available.
+- **ONNX Embeddings**: Represents the process of generating embeddings using the ONNX framework.
+  visible in diagram; no further repository context available.
+- **LearningBridge SONA + ReasoningBank**: Represents a component that uses SONA and ReasoningBank for learning and knowledge representation.
+  visible in diagram; no further repository context available.
+- **Normalization**: Represents the process of normalizing the embeddings.
+  visible in diagram; no further repository context available.
+- **HNSW Index 150x faster**: Represents a Hierarchical Navigable Small World (HNSW) index used for fast vector search.
+  visible in diagram; no further repository context available.
+- **SQLite Cache**: Represents a SQLite database used as a cache.
+  visible in diagram; no further repository context available.
+- **AgentDB**: Represents a database for storing agent-related information.
+  visible in diagram; no further repository context available.
+- **MemoryGraph PageRank + Communities**: Represents an in-memory graph database used for PageRank and community detection.
+  visible in diagram; no further repository context available.
+- **Vector Search**: Represents the process of searching for similar vectors using the HNSW index and SQLite cache.
+  visible in diagram; no further repository context available.
+- **Semantic Match**: Represents the process of matching the query with stored data based on semantic similarity.
+  visible in diagram; no further repository context available.
+- **Graph-Aware Ranking**: Represents the process of ranking the retrieved results based on graph information.
+  visible in diagram; no further repository context available.
+- **Top-K Results**: Represents the final set of top-K results returned by the system.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Query/Pattern --> ONNX Embeddings`: The query/pattern is passed to the ONNX Embeddings component for embedding generation.
+- `ONNX Embeddings --> Normalization`: The generated embeddings are passed to the Normalization component for normalization.
+- `Normalization --> HNSW Index`: Normalized embeddings are stored in the HNSW Index.
+- `Normalization --> SQLite Cache`: Normalized embeddings are stored in the SQLite Cache.
+- `New Insight --> LearningBridge SONA + ReasoningBank`: The new insight is passed to the LearningBridge component.
+- `LearningBridge SONA + ReasoningBank --> AgentDB`: The output of the LearningBridge is stored in the AgentDB.
+- `AgentDB --> MemoryGraph PageRank + Communities`: Data from AgentDB is used to construct the MemoryGraph.
+- `HNSW Index --> Vector Search`: The HNSW Index is used for vector search.
+- `SQLite Cache --> Vector Search`: The SQLite Cache is used for vector search.
+- `AgentDB --> Semantic Match`: Data from AgentDB is used for semantic matching.
+- `Vector Search --> Graph-Aware Ranking`: The results of the vector search are passed to the Graph-Aware Ranking component.
+- `Semantic Match --> Graph-Aware Ranking`: The results of the semantic match are passed to the Graph-Aware Ranking component.
+- `MemoryGraph PageRank + Communities --> Graph-Aware Ranking`: The MemoryGraph data is used for graph-aware ranking.
+- `Graph-Aware Ranking --> Top-K Results`: The ranked results are presented as the top-K results.
+
+## Repository Context & Terminology
+- **ONNX Embeddings**: Open Neural Network Exchange embeddings, a standard format for representing machine learning models.
+- **HNSW (Hierarchical Navigable Small World)**: An algorithm and data structure for approximate nearest neighbor search. It's known for its speed and efficiency in high-dimensional spaces.
+- **PageRank**: An algorithm used by search engines to rank web pages in their search engine results. It assigns a numerical weighting to each element of a hyperlinked set of documents.
+- **SONA**: visible in diagram; no further repository context available.
+- **ReasoningBank**: visible in diagram; no further repository context available.
+- **AgentDB**: visible in diagram; no further repository context available.
+- **MemoryGraph**: visible in diagram; no further repository context available.
+
+## High-Density QA Ground Truth Summary
+The process begins with either a "Query/Pattern" or "New Insight" as input. The "Query/Pattern" is immediately processed by "ONNX Embeddings" to generate vector embeddings, which are then normalized. "New Insight" is processed by "LearningBridge SONA + ReasoningBank." The normalized embeddings are stored in both "HNSW Index" (for fast vector search) and "SQLite Cache." The output of "LearningBridge" is stored in "AgentDB," which in turn feeds data into "MemoryGraph PageRank + Communities." For retrieval, "Vector Search" utilizes both "HNSW Index" and "SQLite Cache" to find similar vectors. "Semantic Match" uses data from "AgentDB" to find semantically similar results. Both "Vector Search" and "Semantic Match" results, along with data from "MemoryGraph," are fed into "Graph-Aware Ranking." Finally, "Graph-Aware Ranking" produces the "Top-K Results." The "HNSW Index" is noted to be "150x faster," indicating a performance optimization for vector search. The "MemoryGraph" leverages "PageRank + Communities" for ranking, suggesting graph-based relevance scoring.

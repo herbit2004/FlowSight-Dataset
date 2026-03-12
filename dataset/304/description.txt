@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a task distribution system. It illustrates how tasks are received, processed, and dispatched to worker nodes based on their load. The diagram provides a high-level overview of the system's architecture and workflow.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TB). It is hierarchically structured with a master server containing a task distributor and a Redis cache, which interacts with a worker node cluster. The start node is "接收扫描任务" (Receive Scan Task), and the end nodes are the worker nodes.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **主服务器 (Master Server)**: Encompasses the core components responsible for task scheduling and load balancing.
+- **Worker 节点集群 (Worker Node Cluster)**: Represents the group of worker nodes that execute the dispatched tasks.
+
+## Node-by-Node Description
+- **主服务器 (Master Server)**: Represents the main server responsible for coordinating task distribution.
+  visible in diagram; no further repository context available.
+- **任务调度器 (Task Distributor)**: A component within the master server responsible for receiving, analyzing, and distributing tasks.
+  visible in diagram; no further repository context available.
+- **接收扫描任务 (Receive Scan Task)**: The entry point for new tasks into the system.
+  visible in diagram; no further repository context available.
+- **负载感知选择 (Load Aware Selection)**: A process that analyzes the current load of worker nodes to make informed dispatching decisions.
+  visible in diagram; no further repository context available.
+- **智能分发 (Intelligent Dispatch)**: The component that distributes tasks to worker nodes based on load and other factors.
+  visible in diagram; no further repository context available.
+- **Redis 负载缓存 (Redis Load Cache)**: A Redis instance used to store and retrieve load information about worker nodes.
+  visible in diagram; no further repository context available.
+- **Worker 1 (本地) (Worker 1 (Local))**: A worker node running locally with CPU utilization of 45% and memory utilization of 60%.
+  visible in diagram; no further repository context available.
+- **Worker 2 (远程) (Worker 2 (Remote))**: A remote worker node with CPU utilization of 30% and memory utilization of 40%.
+  visible in diagram; no further repository context available.
+- **Worker N (远程) (Worker N (Remote))**: A remote worker node with CPU utilization of 90% and memory utilization of 85%.
+  visible in diagram; no further repository context available.
+- **Worker 节点集群 (Worker Node Cluster)**: Represents the group of worker nodes that execute the dispatched tasks.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `接收扫描任务 (Receive Scan Task) --> 负载感知选择 (Load Aware Selection)`: A new task is submitted for processing.
+- `负载感知选择 (Load Aware Selection) --> 智能分发 (Intelligent Dispatch)`: The load-aware selection process informs the intelligent dispatch component.
+- `Redis 负载缓存 (Redis Load Cache) -.负载数据.-> 负载感知选择 (Load Aware Selection)`: Load data is fed into the load-aware selection process.
+- `智能分发 (Intelligent Dispatch) --> Worker 1 (本地) (Worker 1 (Local))`: A task is dispatched to the local worker node.
+- `智能分发 (Intelligent Dispatch) --> Worker 2 (远程) (Worker 2 (Remote))`: A task is dispatched to the remote worker node.
+- `智能分发 (Intelligent Dispatch) --> Worker N (远程) (Worker N (Remote))`: A task is dispatched to the remote worker node, skipping Worker 2 due to high load.
+- `Worker 1 (本地) (Worker 1 (Local)) -.心跳上报.-> Redis 负载缓存 (Redis Load Cache)`: Worker 1 reports its heartbeat to the Redis cache.
+- `Worker 2 (远程) (Worker 2 (Remote)) -.心跳上报.-> Redis 负载缓存 (Redis Load Cache)`: Worker 2 reports its heartbeat to the Redis cache.
+- `Worker N (远程) (Worker N (Remote)) -.心跳上报.-> Redis 负载缓存 (Redis Load Cache)`: Worker N reports its heartbeat to the Redis cache.
+
+## Repository Context & Terminology
+- **主服务器 (Master Server)**: The central server that manages task distribution and worker node coordination.
+- **任务调度器 (Task Distributor)**: The component responsible for scheduling and distributing tasks to worker nodes.
+- **Redis 负载缓存 (Redis Load Cache)**: A Redis instance used to store and retrieve load information about worker nodes, enabling load-aware task distribution.
+- **心跳上报 (Heartbeat Reporting)**: A mechanism by which worker nodes periodically report their status (CPU, memory usage) to the master server.
+- **负载感知选择 (Load Aware Selection)**: The process of selecting a worker node for task execution based on its current load.
+- **智能分发 (Intelligent Dispatch)**: The algorithm or logic used to distribute tasks to worker nodes, taking into account their load and other factors.
+- **Worker 节点集群 (Worker Node Cluster)**: A group of worker nodes that execute the tasks dispatched by the master server.
+
+## High-Density QA Ground Truth Summary
+The process begins with "接收扫描任务" (Receive Scan Task), which feeds into "负载感知选择" (Load Aware Selection). The "负载感知选择" component uses "负载数据" from the "Redis 负载缓存" to determine the optimal worker node for task execution. The "Redis 负载缓存" is populated by "心跳上报" from each of the worker nodes, including "Worker 1 (本地)", "Worker 2 (远程)", and "Worker N (远程)", providing real-time CPU and memory utilization metrics. "智能分发" then dispatches the task to the selected worker node. If a worker node is overloaded, the "智能分发" component can skip it, as shown by the "高负载跳过" edge to "Worker N (远程)". The worker nodes, such as "Worker 1 (本地)" with 45% CPU and 60% memory usage, represent the end points of the task distribution process. The "Redis 负载缓存" acts as a central repository for worker node status, enabling the "任务调度器" to make informed decisions about task distribution, ensuring efficient resource utilization across the "Worker 节点集群".

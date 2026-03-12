@@ -1,0 +1,20 @@
+graph TD
+    A[Start: CI Pipeline Trigger] --> B{Is this a Pull Request?};
+    B -- Yes --> C[Fetch Changed Module List];
+    B -- No (e.g., nightly build) --> D[Fetch All Module List];
+    C --> E[Dependency Graph Builder];
+    D --> E;
+    E --> F{Dependency Resolution: Success?};
+    F -- Yes --> G[License Scanner];
+    F -- No --> H[Fail Build: Dependency Resolution Error];
+    G --> I{License Compliance Checks: Pass?};
+    I -- Yes --> J[SBOM Generation];
+    I -- No --> K[Fail Build: License Violation];
+    J --> L[Vulnerability Scan of Dependencies];
+    L --> M{Vulnerability Scan: Clean?};
+    M -- Yes --> N[Publish SBOM & Artifacts];
+    M -- No --> O[Report Vulnerabilities & Consider Risk Assessment];
+    O --> N;
+    N --> P[End: CI Pipeline Complete];
+    classDef fail fill:#f9f,stroke:#333,stroke-width:2px
+    class H,K fail

@@ -1,0 +1,41 @@
+graph TD
+    subgraph CustomerOrderService
+        A[Order Request Received] --> B{Validate Order};
+        B -- Valid --> C[Inventory Check];
+        B -- Invalid --> Z[Reject Order];
+        C -- Sufficient Inventory --> D[Create Order Record];
+        C -- Insufficient Inventory --> Y[Backorder Flow];
+        D --> E[Order ID Generated];
+    end
+
+    subgraph PaymentService
+        E --> F{Payment Required?};
+        F -- Yes --> G[Authorize Payment];
+        F -- No --> H[Acknowledge Order];
+        G --> I{Payment Successful?};
+        I -- Yes --> H[Acknowledge Order];
+        I -- No --> J[Payment Failure Handling];
+        J --> Z[Reject Order];
+
+        H --> K[Update Order Status: Awaiting Fulfillment];
+    end
+
+    subgraph FulfillmentService
+        K --> L[Fulfillment Request Sent];
+        L --> M[Allocate Inventory];
+        M --> N{Inventory Allocation Success?};
+        N -- Yes --> O[Generate Shipping Label];
+        N -- No --> Y[Backorder Flow];
+        O --> P[Ship Order];
+        P --> Q[Update Order Status: Shipped];
+        Q --> R[Customer Notification];
+    end
+
+    Y --> S[Create Backorder Request];
+    S --> T[Await Inventory Restock];
+    T --> C
+
+    Z --> U[Cancel Order Process];
+
+    classDef rejected fill:#f9f,stroke:#333,stroke-width:2px;
+    class Z,U rejected;

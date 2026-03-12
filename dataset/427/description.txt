@@ -1,0 +1,45 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating a multi-region deployment strategy for a microservices application. It depicts the flow of traffic from global users through traffic management services to active regions, each containing a load balancer, EKS cluster, and database. The diagram highlights global replication and write forwarding between the primary and secondary databases.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TB). It shows a hierarchical structure starting with global users, then traffic management, followed by two active regions (A and B), each containing a load balancer, EKS cluster, and database. The end nodes are the Aurora Primary and Aurora Secondary databases.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Traffic Management**: Handles incoming traffic and distributes it to the active regions.
+- **Region A (Active)**: Represents an active region with a load balancer, EKS cluster, and Aurora Primary database.
+- **Region B (Active)**: Represents another active region with a load balancer, EKS cluster, and Aurora Secondary database.
+
+## Node-by-Node Description
+- **Global Users**: Represents users accessing the application from various locations. visible in diagram; no further repository context available.
+- **Route 53 Latency-Based Routing**: An AWS service that routes traffic to the region with the lowest latency. visible in diagram; no further repository context available.
+- **CloudFront CDN**: An AWS content delivery network for caching and delivering content. visible in diagram; no further repository context available.
+- **Load Balancer (Region A)**: Distributes incoming traffic within Region A. visible in diagram; no further repository context available.
+- **EKS Cluster Microservices (Region A)**: A cluster of microservices running on Amazon Elastic Kubernetes Service (EKS) in Region A. visible in diagram; no further repository context available.
+- **Aurora Primary**: The primary database instance in Region A. visible in diagram; no further repository context available.
+- **Load Balancer (Region B)**: Distributes incoming traffic within Region B. visible in diagram; no further repository context available.
+- **EKS Cluster Microservices (Region B)**: A cluster of microservices running on Amazon Elastic Kubernetes Service (EKS) in Region B. visible in diagram; no further repository context available.
+- **Aurora Secondary**: The secondary database instance in Region B. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Global Users --> Route 53 Latency-Based Routing`: Traffic from global users is routed to the region with the lowest latency using Route 53.
+- `Global Users --> CloudFront CDN`: Traffic from global users is routed to the CloudFront CDN.
+- `Route 53 Latency-Based Routing --> Load Balancer (Region A)`: Traffic is routed to the load balancer in Region A.
+- `Route 53 Latency-Based Routing --> Load Balancer (Region B)`: Traffic is routed to the load balancer in Region B.
+- `Load Balancer (Region A) --> EKS Cluster Microservices (Region A)`: Traffic is distributed to the EKS cluster in Region A.
+- `Load Balancer (Region B) --> EKS Cluster Microservices (Region B)`: Traffic is distributed to the EKS cluster in Region B.
+- `EKS Cluster Microservices (Region A) --> Aurora Primary`: Microservices in Region A interact with the Aurora Primary database.
+- `EKS Cluster Microservices (Region B) --> Aurora Secondary`: Microservices in Region B interact with the Aurora Secondary database.
+- `Aurora Primary <--> Aurora Secondary`: Global replication and write forwarding occur between the Aurora Primary and Secondary databases.
+
+## Repository Context & Terminology
+- **Route 53**: A scalable and highly available Domain Name System (DNS) web service. It is used here for latency-based routing, directing users to the region with the lowest latency.
+- **CloudFront CDN**: A fast content delivery network (CDN) service that securely delivers data, videos, applications, and APIs to customers globally with low latency and high transfer speeds.
+- **Load Balancer**: Distributes incoming application traffic across multiple targets, such as EC2 instances, in multiple Availability Zones. This increases the availability of the application.
+- **EKS Cluster**: Amazon Elastic Kubernetes Service (EKS) is a managed Kubernetes service that makes it easy to run Kubernetes on AWS without needing to install, operate, and maintain your own Kubernetes control plane.
+- **Microservices**: An architectural style that structures an application as a collection of loosely coupled services, which are independently deployable, scalable, and maintainable.
+- **Aurora**: A MySQL and PostgreSQL-compatible relational database built for the cloud, that combines the performance and availability of traditional enterprise databases with the simplicity and cost-effectiveness of open-source databases.
+- **Global Replication & Write Forwarding**: A database replication strategy where data changes in one database (e.g., Aurora Primary) are automatically copied to another database (e.g., Aurora Secondary) and writes are forwarded to the primary database.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a multi-region active-active architecture. The process begins with `Global Users` accessing the application. Traffic is then directed through `Route 53 Latency-Based Routing` and `CloudFront CDN` for optimal performance and availability. `Route 53` uses latency-based routing to direct users to the closest active region, either `Region A (Active)` or `Region B (Active)`. Each region contains a `Load Balancer` that distributes traffic to an `EKS Cluster Microservices`. The microservices in `Region A` interact with the `Aurora Primary` database, while the microservices in `Region B` interact with the `Aurora Secondary` database. A key aspect of this architecture is the `Global Replication & Write Forwarding` between the `Aurora Primary` and `Aurora Secondary` databases, ensuring data consistency across regions. This setup leverages AWS services like Route 53, CloudFront, EKS, and Aurora to create a highly available and scalable application deployment. The architecture supports distributing user traffic across multiple regions based on latency, enhancing the user experience and providing redundancy.

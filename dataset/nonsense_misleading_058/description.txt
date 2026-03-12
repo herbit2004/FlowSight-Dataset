@@ -1,0 +1,53 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow. It illustrates the sequence of steps involved in processing an order, from receiving the order to its delivery, including inventory checks, payment processing, and handling potential delays or failures. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram's layout is top-down (TD), with a single subgraph representing the "Order Processing" flow. The process starts with "Receive Order" and ends with "Order Delivered" and "Cancel Order & Refund".
+
+## Subgraphs / Stages
+The diagram contains one subgraph:
+- **Order Processing**: This subgraph encapsulates the entire order processing workflow, including all the steps from receiving the order to its delivery or cancellation.
+
+## Node-by-Node Description
+- **A / Receive Order**: Represents the initial step of receiving an order. visible in diagram; no further repository context available.
+- **B / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **C / Create Order**: Represents the creation of an order record in the system. visible in diagram; no further repository context available.
+- **D / Payment Processing**: Represents the process of handling the payment for the order. visible in diagram; no further repository context available.
+- **E / Shipping Preparation**: Represents the preparation of the order for shipping. visible in diagram; no further repository context available.
+- **F / Shipping Confirmation**: Represents the confirmation of the shipment of the order. visible in diagram; no further repository context available.
+- **G / Order Delivered**: Represents the final step of the order being delivered to the customer. visible in diagram; no further repository context available.
+- **H / Notify Customer of Delay**: Represents the process of informing the customer about a delay in the order processing. visible in diagram; no further repository context available.
+- **I / Customer Accepts Delay?**: Represents a decision point where the customer's acceptance of the delay is checked. visible in diagram; no further repository context available.
+- **J / Cancel Order & Refund**: Represents the cancellation of the order and the initiation of a refund. visible in diagram; no further repository context available.
+- **K / Send Order to Warehouse**: Represents the process of sending the order details to the warehouse for fulfillment. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Represents the flow from receiving the order to checking the inventory.
+- `B -- Yes --> C`: If the inventory check is successful ("Yes"), the flow proceeds to create the order.
+- `B -- No --> H`: If the inventory check fails ("No"), the customer is notified of the delay.
+- `H --> I`: Represents the flow from notifying the customer of the delay to checking if the customer accepts the delay.
+- `I -- Yes --> C`: If the customer accepts the delay ("Yes"), the flow proceeds to create the order.
+- `I -- No --> J`: If the customer does not accept the delay ("No"), the order is cancelled and a refund is issued.
+- `C --> D`: Represents the flow from creating the order to processing the payment.
+- `D -- Success --> E`: If the payment processing is successful ("Success"), the flow proceeds to shipping preparation.
+- `D -- Failure --> C`: If the payment processing fails ("Failure"), the flow loops back to create order.
+- `E --> F`: Represents the flow from shipping preparation to shipping confirmation.
+- `F --> G`: Represents the flow from shipping confirmation to order delivered.
+- `K --> E`: Represents the flow from sending the order to the warehouse to shipping preparation.
+
+## Repository Context & Terminology
+- **Order Processing**: In general, this refers to the entire process of fulfilling a customer's order. In this diagram, it's the overarching process encompassing all steps from order receipt to delivery or cancellation.
+- **Receive Order**: Typically, this is the initial step where the order is captured from the customer. In this diagram, it's the starting point of the workflow.
+- **Inventory Check**: Usually involves verifying if the ordered items are in stock. In this diagram, it's a decision point that determines whether the order can proceed immediately or if a delay notification is needed.
+- **Create Order**: Generally refers to creating a record of the order in the system. In this diagram, it's a step that follows either a successful inventory check or customer acceptance of a delay.
+- **Payment Processing**: Involves handling the financial transaction for the order. In this diagram, a failure in payment processing loops back to create order.
+- **Shipping Preparation**: Typically involves packaging and preparing the order for shipment. In this diagram, it follows successful payment processing and is preceded by shipping confirmation.
+- **Shipping Confirmation**: Usually involves notifying the customer that the order has been shipped. In this diagram, it precedes shipping preparation.
+- **Order Delivered**: The final step where the customer receives the order. In this diagram, it's the end point of a successful order fulfillment.
+- **Notify Customer of Delay**: Involves informing the customer about a delay in fulfilling their order. In this diagram, it's triggered by a failed inventory check.
+- **Customer Accepts Delay?**: A decision point based on the customer's response to the delay notification. In this diagram, acceptance leads to create order, while rejection leads to order cancellation.
+- **Cancel Order & Refund**: Involves cancelling the order and issuing a refund to the customer. In this diagram, it's triggered by the customer rejecting the delay.
+- **Send Order to Warehouse**: Typically involves transmitting the order details to the warehouse for fulfillment. In this diagram, it leads directly to shipping preparation.
+
+## High-Density QA Ground Truth Summary
+The order processing flowchart begins with "Receive Order," which transitions to "Inventory Check." If the inventory check returns "Yes," the process proceeds directly to "Create Order." If "No," the flow moves to "Notify Customer of Delay," followed by a decision point "Customer Accepts Delay?". A "Yes" response from the customer loops back to "Create Order," while a "No" response leads to "Cancel Order & Refund," one of the terminal states. After "Create Order," the process advances to "Payment Processing." A "Success" outcome from payment processing leads to "Shipping Preparation," which is preceded by "Shipping Confirmation," then "Order Delivered," the other terminal state. A "Failure" in payment processing loops back to "Create Order." "Send Order to Warehouse" leads to "Shipping Preparation." The diagram contains several deviations from standard order processing: the "Yes" branch of the inventory check skips sending the order to the warehouse, payment failure loops back to order creation, shipping confirmation precedes shipping preparation, and customer agreement to delay goes straight to create order. The terminal states are "Order Delivered" and "Cancel Order & Refund."

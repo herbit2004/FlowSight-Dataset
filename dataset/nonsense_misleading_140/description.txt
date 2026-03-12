@@ -1,0 +1,56 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the process flow for order processing, from order submission to delivery. The diagram outlines the steps involved in checking payment, inventory, shipping address, packaging, and shipping, as well as handling scenarios where payment is not received, inventory is unavailable, or the shipping address is invalid.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User Submits Order" node at the top and flows downwards through a series of decision points and processes, ultimately leading to the "Order Delivered" node. The diagram contains a loop where the order is resubmitted after delivery.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Payment, Inventory & Address Validation, Order Fulfillment, Exception Handling (Reorder/Cancellation), Payment Handling (Reminder/Refund), and Order Completion/Resubmission.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial step where a user places an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if payment has been received for the order. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of checking if the items in the order are available in inventory. visible in diagram; no further repository context available.
+- **D / Shipping Address Valid?**: A decision point to validate the shipping address provided by the user. visible in diagram; no further repository context available.
+- **E / Cancel Order**: Represents the process of canceling the order. visible in diagram; no further repository context available.
+- **F / Reorder Inventory**: Represents the process of reordering inventory if items are unavailable. visible in diagram; no further repository context available.
+- **G / Generate Shipping Label**: Represents the process of generating a shipping label for the order. visible in diagram; no further repository context available.
+- **H / Package Items**: Represents the process of packaging the items in the order. visible in diagram; no further repository context available.
+- **I / Send Shipping Confirmation**: Represents the process of sending a shipping confirmation to the user. visible in diagram; no further repository context available.
+- **J / Order Delivered**: Represents the final step where the order is delivered to the user. visible in diagram; no further repository context available.
+- **K / Send Payment Reminder**: Represents the process of sending a payment reminder to the user. visible in diagram; no further repository context available.
+- **L / Refund Payment**: Represents the process of refunding the payment to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, triggering the payment check.
+- `B -- Yes --> C`: If payment is received, proceed to inventory check.
+- `B -- No --> K`: If payment is not received, send a payment reminder.
+- `C -- Available --> D`: If inventory is available, proceed to shipping address validation.
+- `C -- Unavailable --> F`: If inventory is unavailable, reorder inventory.
+- `D -- Yes --> H`: If the shipping address is valid, package the items.
+- `D -- No --> E`: If the shipping address is invalid, cancel the order.
+- `H --> G`: After packaging items, generate a shipping label.
+- `G --> I`: After generating the shipping label, send a shipping confirmation.
+- `I --> J`: After sending shipping confirmation, the order is delivered.
+- `J --> A`: After the order is delivered, the process loops back to the beginning, prompting the user to submit another order.
+- `F --> C`: After reordering inventory, return to the inventory check.
+- `K --> L`: After sending a payment reminder, refund the payment.
+- `L --> E`: After refunding the payment, cancel the order.
+- `E --> K`: After canceling the order, send a payment reminder.
+
+## Repository Context & Terminology
+- **User Submits Order**: In standard practice, this refers to the action of a customer placing an order through an e-commerce platform. In this diagram, it's the starting point of the order processing flow, but also the endpoint of a loop, implying orders are resubmitted after delivery.
+- **Payment Received?**: In standard practice, this is a check to confirm that the customer's payment has been successfully processed. In this diagram, if payment isn't received, a reminder is sent, but then a refund is issued *before* cancellation.
+- **Inventory Check**: In standard practice, this involves verifying that the ordered items are in stock. In this diagram, if inventory is unavailable, a reorder is triggered, which then loops back to the inventory check.
+- **Shipping Address Valid?**: In standard practice, this is a validation step to ensure the provided shipping address is accurate and deliverable. In this diagram, an invalid address leads to order cancellation, but a *valid* address leads to packaging.
+- **Package Items**: In standard practice, this is the process of preparing the order for shipment. In this diagram, this step is reached only after address validation.
+- **Generate Shipping Label**: In standard practice, this involves creating a label with the shipping address and other relevant information. In this diagram, it follows packaging.
+- **Send Shipping Confirmation**: In standard practice, this is a notification sent to the customer confirming that their order has been shipped. In this diagram, it precedes order delivery.
+- **Order Delivered**: In standard practice, this signifies the successful delivery of the order to the customer. In this diagram, it leads back to the "User Submits Order" node, creating a loop.
+- **Send Payment Reminder**: In standard practice, this is a notification sent to the customer to remind them to complete their payment. In this diagram, it's triggered by non-payment, but also *after* order cancellation.
+- **Refund Payment**: In standard practice, this is the process of returning the payment to the customer. In this diagram, it occurs *before* order cancellation, and *after* a payment reminder.
+- **Cancel Order**: In standard practice, this is the process of terminating an order. In this diagram, it is triggered by an invalid shipping address or after a refund, and loops back to sending a payment reminder.
+- **Reorder Inventory**: In standard practice, this is the process of replenishing stock when inventory levels are low. In this diagram, it loops back to the inventory check.
+
+## High-Density QA Ground Truth Summary
+The process begins with the "User Submits Order," which then proceeds to a "Payment Received?" check. If payment is received ("Yes" branch), an "Inventory Check" is performed; if not ("No" branch), a "Send Payment Reminder" is triggered, which then leads to a "Refund Payment," and subsequently to "Cancel Order" before looping back to "Send Payment Reminder" again. If inventory is available ("Available" branch), the process moves to "Shipping Address Valid?". If inventory is unavailable ("Unavailable" branch), "Reorder Inventory" is initiated, looping back to "Inventory Check." If the shipping address is valid ("Yes" branch), the system proceeds to "Package Items," then "Generate Shipping Label," and "Send Shipping Confirmation," culminating in "Order Delivered," which then loops back to "User Submits Order." If the shipping address is not valid ("No" branch), the order is "Cancel Order," which then loops back to "Send Payment Reminder." The diagram contains several counterfactual errors, including a loop where the user resubmits the order after delivery, a refund occurring before cancellation, and an invalid shipping address leading to cancellation, which then loops back to sending a payment reminder. The "Reorder Inventory" process incorrectly skips the address check, returning directly to the inventory check.

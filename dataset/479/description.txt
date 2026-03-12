@@ -1,0 +1,63 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting a data migration and code conversion pipeline. It illustrates the flow of COBOL files through various processing stages, involving parsing, AI agents, and storage, ultimately resulting in Java/C# code and a web portal. The diagram serves as a high-level overview of the system's architecture and data flow.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It is hierarchically structured into input, processing pipeline, hybrid storage, and output stages. The start node is the "Input" stage, and the end nodes are "Java/C# Code" and "Web Portal & MCP Server".
+
+## Subgraphs / Stages
+The diagram contains four explicit subgraphs:
+- **Input**: Represents the source of COBOL files.
+- **Processing Pipeline**: Contains the core processing steps, including parsing and AI agents.
+- **Hybrid Storage**: Stores intermediate data in SQLite and Neo4j databases.
+- **Output**: Represents the final outputs, including Java/C# code and a web portal.
+
+## Node-by-Node Description
+- **COBOL / COBOL Files**: Represents the input COBOL files with extensions `.cbl` and `.cpy` located in the `source/` directory.
+  visible in diagram; no further repository context available.
+- **REGEX / Regex / Syntax Parsing**: Represents the regex and syntax parsing stage, including deep SQL/Variable extraction.
+  visible in diagram; no further repository context available.
+- **AGENTS / AI Agents**: Represents the AI agents framework.
+  visible in diagram; no further repository context available.
+- **ANALYZER / CobolAnalyzerAgent**: Represents the Cobol Analyzer Agent.
+  visible in diagram; no further repository context available.
+- **EXTRACTOR / BusinessLogicExtractor**: Represents the Business Logic Extractor.
+  visible in diagram; no further repository context available.
+- **CONVERTER / Java/C# Converter**: Represents the Java/C# Converter.
+  visible in diagram; no further repository context available.
+- **MAPPER / DependencyMapper**: Represents the Dependency Mapper.
+  visible in diagram; no further repository context available.
+- **SQLITE / SQLite**: Represents the SQLite database named `Data/migration.db`, storing run metadata, file content, raw AI analysis, and generated code.
+  visible in diagram; no further repository context available.
+- **NEO4J / Neo4j**: Represents the Neo4j database located at `bolt://localhost:7687`, storing dependencies, relationship graph, and impact analysis data.
+  visible in diagram; no further repository context available.
+- **CODE / Java/C# Code**: Represents the output Java/C# code, located in `output/java` or `output/csharp`.
+  visible in diagram; no further repository context available.
+- **PORTAL / Web Portal & MCP Server**: Represents the Web Portal and MCP Server running at `localhost:5028`.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `COBOL --> REGEX`: COBOL files are passed to the regex/syntax parsing stage.
+- `REGEX --> AGENTS`: Parsed data is passed to the AI agents framework.
+- `AGENTS --> ANALYZER`: The AI Agents framework triggers the CobolAnalyzerAgent.
+- `AGENTS --> EXTRACTOR`: The AI Agents framework triggers the BusinessLogicExtractor.
+- `AGENTS --> CONVERTER`: The AI Agents framework triggers the Java/C# Converter.
+- `AGENTS --> MAPPER`: The AI Agents framework triggers the DependencyMapper.
+- `ANALYZER --> SQLITE`: The CobolAnalyzerAgent outputs data to the SQLite database.
+- `EXTRACTOR --> SQLITE`: The BusinessLogicExtractor outputs data to the SQLite database.
+- `CONVERTER --> SQLITE`: The Java/C# Converter outputs data to the SQLite database.
+- `CONVERTER --> CODE`: The Java/C# Converter generates Java/C# code.
+- `MAPPER --> NEO4J`: The DependencyMapper outputs data to the Neo4j database.
+- `SQLITE --> PORTAL`: The SQLite database provides data to the Web Portal & MCP Server.
+- `NEO4J --> PORTAL`: The Neo4j database provides data to the Web Portal & MCP Server.
+
+## Repository Context & Terminology
+- **COBOL**: COBOL (Common Business-Oriented Language) is a programming language primarily used in business, finance, and administrative systems.
+- **SQLite**: A self-contained, high-reliability, embedded, full-featured, public-domain, SQL database engine.
+- **Neo4j**: A graph database management system developed by Neo4j, Inc. Described as a NoSQL database, it is often used for relationship-centric data.
+- **Regex/Syntax Parsing**: The process of analyzing the structure and syntax of the COBOL code using regular expressions to extract relevant information, such as SQL queries and variable definitions.
+- **AI Agents**: Software entities that use artificial intelligence techniques to perform specific tasks, such as analyzing COBOL code or extracting business logic.
+- **MS Agent Framework**: visible in diagram; no further repository context available.
+- **MCP Server**: visible in diagram; no further repository context available.
+
+## High-Density QA Ground Truth Summary
+The process begins with COBOL files, located in the `source/` directory and having `.cbl` or `.cpy` extensions, which are fed into the Regex/Syntax Parsing stage for deep SQL/Variable extraction. The parsed data is then passed to the AI Agents framework, which triggers four agents: CobolAnalyzerAgent, BusinessLogicExtractor, Java/C# Converter, and DependencyMapper. The CobolAnalyzerAgent and BusinessLogicExtractor output data to the SQLite database (`Data/migration.db`), storing run metadata, file content, raw AI analysis, and generated code. The Java/C# Converter outputs both to the SQLite database and generates Java/C# code located in `output/java` or `output/csharp`. The DependencyMapper outputs data to the Neo4j database (`bolt://localhost:7687`), storing dependencies, relationship graph, and impact analysis data. Finally, both the SQLite and Neo4j databases provide data to the Web Portal & MCP Server running at `localhost:5028`. The final outputs are the generated Java/C# code and the Web Portal, which leverages the data stored in SQLite and Neo4j. The AI Agents framework uses AI to perform tasks such as analyzing COBOL code and extracting business logic.

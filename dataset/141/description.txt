@@ -1,0 +1,61 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the flow of data and requests between different components of a web application. It depicts the interaction between various services, including web applications, APIs, databases, and cloud functions, within the Contoso ecosystem. The diagram serves as a high-level overview of the system's architecture, highlighting the dependencies and communication pathways between its constituent parts.
+
+## Overall Layout
+The diagram has a top-to-bottom (TD) layout. It is hierarchically structured, starting with the "Internet" at the top, followed by Azure services, and ending with the "Database/Storage" at the bottom. The diagram illustrates the flow of requests from external sources through various services to the underlying data storage.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs:
+- **Internet**: Represents external entry points to the system.
+- **Azure Static Web Apps**: Hosts static web applications.
+- **Azure API Management**: Manages and secures APIs.
+- **Azure Functions**: Serverless compute service.
+- **Azure Container Apps**: Hosts containerized applications.
+- **Database/Storage**: Represents the data storage layer.
+
+## Node-by-Node Description
+- **https://portal.contoso.com**: Represents the portal website accessible via the internet. visible in diagram; no further repository context available.
+- **https://blog.contoso.com**: Represents the blog website accessible via the internet. visible in diagram; no further repository context available.
+- **https://cms.contoso.com**: Represents the CMS website accessible via the internet. visible in diagram; no further repository context available.
+- **https://stripe.contoso.com**: Represents the Stripe website accessible via the internet. visible in diagram; no further repository context available.
+- **https://api.contoso.com**: Represents the API endpoint accessible via the internet. visible in diagram; no further repository context available.
+- **%%**: Represents an unspecified external entity on the internet. visible in diagram; no further repository context available.
+- **Angular**: Represents the Angular-based static web application. visible in diagram; no further repository context available.
+- **API Gateway**: Represents the Azure API Management gateway. visible in diagram; no further repository context available.
+- **Node.js**: Represents the Node.js runtime environment within Azure Functions. visible in diagram; no further repository context available.
+- **Next.js**: Represents the Next.js application within Azure Container Apps. visible in diagram; no further repository context available.
+- **Strapi**: Represents the Strapi CMS application within Azure Container Apps. visible in diagram; no further repository context available.
+- **Stripe**: Represents the Stripe service within Azure Container Apps. visible in diagram; no further repository context available.
+- **PostgreSQL - Strapi**: Represents the PostgreSQL database used by Strapi. visible in diagram; no further repository context available.
+- **MongoDB - Portal**: Represents the MongoDB database used by the Portal. visible in diagram; no further repository context available.
+- **Azure Blob Storage - CMS**: Represents the Azure Blob Storage used by the CMS. visible in diagram; no further repository context available.
+- **validate payment (through APIM)**: Represents the validation of payment through APIM. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Portal --> SWA_Angular`: A request from the portal website is routed to the Angular static web application.
+- `SWA_Angular -- "portal.contoso.com/api/**" --> APIM`: The Angular application sends API requests to the API Management gateway.
+- `APIM -- "portal.contoso.com/api/**" --> Functions`: The API Management gateway routes requests to Azure Functions.
+- `Blog -- "blog.contoso.com" --> ACA_Next`: A request from the blog website is routed to the Next.js application.
+- `ACA_Next -. "Strapi API" .-> ACA_Strapi`: The Next.js application communicates with the Strapi CMS via its API.
+- `CMS -- "cms.contoso.com" --> ACA_Strapi`: A request from the CMS website is routed to the Strapi CMS application.
+- `ACA_Strapi -- "read/write" ----> DB_PostresSQL`: Strapi reads and writes data to the PostgreSQL database.
+- `DB_PostresSQL -- "read only" --> Functions`: Azure Functions reads data from the PostgreSQL database.
+- `ACA_Strapi -- "upload" --> Storage`: Strapi uploads files to Azure Blob Storage.
+- `API --> APIM`: A request from the API is routed to the API Management gateway.
+- `APIM -- "api.contoso.com" --> Functions`: The API Management gateway routes requests to Azure Functions.
+- `Functions <-- "read/write" --> DB_Mongo`: Azure Functions reads and writes data to the MongoDB database.
+- `Stripe ---> APIM`: A request from Stripe is routed to the API Management gateway.
+- `APIM -- "stripe.contoso.com" --> ACA_Stripe`: The API Management gateway routes requests to the Stripe service within Azure Container Apps.
+- `ACA_Stripe <-. "validate payment (through APIM)" .-> Functions`: The Stripe service triggers payment validation through Azure Functions.
+
+## Repository Context & Terminology
+- **Azure Container Apps**: A serverless container execution environment that enables running microservices and containerized applications without managing infrastructure.
+- **Azure API Management (APIM)**: A fully managed service that enables developers to publish, secure, transform, analyze, and monetize APIs.
+- **Azure Functions**: A serverless compute service that enables you to run code on-demand without having to explicitly provision or manage infrastructure.
+- **Azure Blob Storage**: A massively scalable and secure object storage for any type of unstructured data—images, videos, audio, documents, and more—easily and cost-effectively.
+- **Next.js**: An open-source React front-end development web framework that enables functionalities such as server-side rendering and static website generation.
+- **Strapi**: An open-source headless CMS that allows developers to build customizable APIs.
+- **Angular**: A platform and framework for building single-page client applications using HTML, CSS and TypeScript.
+
+## High-Density QA Ground Truth Summary
+The architecture diagram begins with external requests originating from the "Internet" subgraph, specifically from `https://portal.contoso.com`, `https://blog.contoso.com`, `https://cms.contoso.com`, `https://stripe.contoso.com`, and `https://api.contoso.com`. Requests from `https://portal.contoso.com` are routed to the "Azure Static Web Apps" subgraph, specifically to an "Angular" application, via the `portal.contoso.com/api/**` endpoint, which then forwards requests to the "Azure API Management" subgraph's "API Gateway". The API Gateway then routes these requests to "Azure Functions" using the same `portal.contoso.com/api/**` endpoint. Requests from `https://blog.contoso.com` are directed to the "Azure Container Apps" subgraph's "Next.js" application, which communicates with the "Strapi" CMS. The "Strapi" CMS reads and writes data to a "PostgreSQL - Strapi" database and uploads files to "Azure Blob Storage - CMS". "Azure Functions" reads data from the "PostgreSQL - Strapi" database and reads/writes data to a "MongoDB - Portal" database. The "API Gateway" also receives requests from `https://api.contoso.com` and "Stripe", routing them to "Azure Functions" and "Stripe" service within "Azure Container Apps" respectively. The "Stripe" service triggers payment validation through "Azure Functions". The diagram highlights the central role of "Azure API Management" in routing and securing API requests within the Contoso ecosystem, and the use of "Azure Container Apps" for hosting containerized applications like "Next.js" and "Strapi".

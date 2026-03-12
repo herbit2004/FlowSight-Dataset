@@ -1,0 +1,13 @@
+graph TD
+    A[User Initiates Config Change via CLI] --> B{Validate Syntax and Permissions};
+    B -- Valid Syntax, Approved Permissions --> C[Create Temporary Staging Directory];
+    B -- Invalid Syntax or Insufficient Permissions --> Z[Reject Change Request, Log Error];
+    C --> D[Apply Change to Staging Configuration];
+    D --> E{Run Pre-Change Health Checks};
+    E -- Checks Pass --> F[Promote Staging Configuration to Active Configuration];
+    E -- Checks Fail --> G[Initiate Automated Rollback];
+    F --> H[Monitor System for Instability];
+    H -- Stable System --> I[Log Success and Audit];
+    H -- Instability Detected --> G;
+    G --> J[Revert to Last Known Good Configuration];
+    J --> I;

@@ -1,0 +1,51 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the high-level components and data flow within the HugeGraph system. It depicts the interaction between client applications, the HugeGraph server, and various storage backends. The diagram serves as a visual representation of the system's architecture, aiding in understanding its structure and data flow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner. It is hierarchically structured into three main layers: Client Layer, HugeGraph Server, and Storage Layer. The Client Layer is at the top, and the Storage Layer is at the bottom.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Client Layer**: Represents the different client applications that interact with the HugeGraph server.
+- **HugeGraph Server**: Represents the core server component of the HugeGraph system.
+- **Storage Layer**: Represents the different storage backends used by HugeGraph, divided into Legacy Backends, Distributed Mode, and Standalone Mode.
+
+## Node-by-Node Description
+- **GC / Gremlin Console**: Represents the Gremlin Console client application. visible in diagram; no further repository context available.
+- **REST / REST Client**: Represents the REST Client application. visible in diagram; no further repository context available.
+- **CYPHER / Cypher Client**: Represents the Cypher Client application. visible in diagram; no further repository context available.
+- **SDK / SDK/Tools**: Represents the SDK/Tools client application. visible in diagram; no further repository context available.
+- **API / REST API Jersey 3**: Represents the REST API implemented using Jersey 3. visible in diagram; no further repository context available.
+- **GS / Gremlin Server TinkerPop 3.5**: Represents the Gremlin Server component using TinkerPop 3.5. visible in diagram; no further repository context available.
+- **CS / Cypher Engine OpenCypher**: Represents the Cypher Engine component using OpenCypher. visible in diagram; no further repository context available.
+- **CORE / Graph Engine hugegraph-core**: Represents the core Graph Engine component of HugeGraph. visible in diagram; no further repository context available.
+- **MYSQL / MySQL**: Represents the MySQL database backend. visible in diagram; no further repository context available.
+- **PG / PostgreSQL**: Represents the PostgreSQL database backend. visible in diagram; no further repository context available.
+- **CASS / Cassandra**: Represents the Cassandra database backend. visible in diagram; no further repository context available.
+- **HBASE / HBase, ≤v1.7**: Represents the HBase database backend, version ≤v1.7. visible in diagram; no further repository context available.
+- **PD / HugeGraph-PD Raft Cluster :8620/:8686**: Represents the HugeGraph-PD component in a Raft Cluster, listening on ports 8620 and 8686. visible in diagram; no further repository context available.
+- **STORE / HugeGraph-Store Raft + RocksDB :8520**: Represents the HugeGraph-Store component using Raft and RocksDB, listening on port 8520. visible in diagram; no further repository context available.
+- **ROCKS / RocksDB Embedded**: Represents the RocksDB database backend in embedded mode. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Clients --> Server`: Represents the interaction between client applications and the HugeGraph server.
+- `API --> CORE`: Represents the REST API interacting with the Graph Engine.
+- `GS --> CORE`: Represents the Gremlin Server interacting with the Graph Engine.
+- `CS --> CORE`: Represents the Cypher Engine interacting with the Graph Engine.
+- `CORE --> ROCKS`: Represents the Graph Engine interacting with the RocksDB backend in standalone mode.
+- `CORE --> PD`: Represents the Graph Engine interacting with the HugeGraph-PD component in distributed mode.
+- `CORE -.-> Legacy`: Represents the Graph Engine interacting with the legacy backends.
+- `PD <--> STORE`: Represents the interaction between HugeGraph-PD and HugeGraph-Store components in distributed mode.
+
+## Repository Context & Terminology
+- **Gremlin**: A graph traversal language commonly used with graph databases.
+- **TinkerPop**: An Apache project providing a graph computing framework.
+- **Cypher**: A declarative graph query language.
+- **OpenCypher**: An open-source initiative for the Cypher query language.
+- **Raft**: A consensus algorithm used for distributed systems.
+- **RocksDB**: A high-performance embedded database for key-value data.
+- **Jersey**: An open source, production-ready, framework for building RESTful Web Services in Java.
+- **hugegraph-core**: The core graph engine module within the HugeGraph project.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the architecture of the HugeGraph system, starting with client applications in the Client Layer (Gremlin Console, REST Client, Cypher Client, SDK/Tools) which interact with the HugeGraph Server. The server layer, running on port 8080, comprises a REST API (Jersey 3), a Gremlin Server (TinkerPop 3.5), and a Cypher Engine (OpenCypher), all feeding into the core Graph Engine (hugegraph-core). The Graph Engine then directs data to different storage backends based on the deployment mode. In standalone mode, it connects directly to an embedded RocksDB instance. In distributed mode, it interacts with a HugeGraph-PD Raft Cluster (ports 8620/8686), which in turn communicates with the HugeGraph-Store (Raft + RocksDB, port 8520). The Graph Engine also supports interaction with legacy backends (MySQL, PostgreSQL, Cassandra, HBase ≤v1.7), although this is represented as a dashed line, indicating a less direct or potentially deprecated path. The use of TinkerPop for the Gremlin Server indicates support for graph traversal and manipulation using the Gremlin language.

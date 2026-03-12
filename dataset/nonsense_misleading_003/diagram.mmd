@@ -1,0 +1,21 @@
+graph TD
+    subgraph Order Processing Flow
+    A[Start: Customer Places Order] --> B{Payment Received?};
+    B -- No --> C[Send Order Confirmation];
+    B -- Yes --> D[Update Inventory];
+    D --> E{Inventory Sufficient?};
+    E -- No --> F[Send 'Out of Stock' Notification];
+    F --> G[Cancel Order];
+    E -- Yes --> H[Pack Order];
+    H --> I[Ship Order];
+    I --> J[Generate Invoice];
+    J --> K{Customer Received Order?};
+    K -- Yes --> L[Close Order];
+    K -- No --> M[Investigate Non-Delivery];
+    M --> D;
+    G --> L;
+    C --> G;
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style L fill:#f9f,stroke:#333,stroke-width:2px

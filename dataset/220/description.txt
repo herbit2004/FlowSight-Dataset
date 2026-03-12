@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the deployment pipeline of a software project. It outlines the automated and manual steps involved in deploying code changes from development to production, including pull requests, branch management, and release creation. The diagram serves as a visual representation of the deployment workflow, aiding in understanding and communication among team members.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TD). It is divided into three subgraphs: Push, Pull Request, and Cleanup. The "Push" subgraph is the primary flow, starting with a "Push" event and leading to various deployment stages. The "Pull Request" and "Cleanup" subgraphs represent related but distinct processes.
+
+## Subgraphs / Stages
+- **Push**: This subgraph represents the main deployment pipeline triggered by a code push. It includes checks for protected branches, deployment to staging or production, and release creation.
+- **Pull Request**: This subgraph represents the process of creating an ephemeral deployment from a pull request.
+- **Cleanup**: This subgraph represents the process of cleaning up resources after a branch is deleted.
+
+## Node-by-Node Description
+- **A / Push**: Represents a code push event to a repository. visible in diagram; no further repository context available.
+- **D / Is Protected Branch?**: A decision point to determine if the branch being pushed to is a protected branch. visible in diagram; no further repository context available.
+- **F1 / Offer Manual Ephemeral Deployment**: A step where a manual ephemeral deployment is offered if the branch is not protected. visible in diagram; no further repository context available.
+- **H / Is it the 'main' branch?**: A decision point to determine if the protected branch is the main branch. visible in diagram; no further repository context available.
+- **I1 / Deploy to Production**: Represents the deployment of code to the production environment. visible in diagram; no further repository context available.
+- **I2 / Deploy to Staging**: Represents the deployment of code to the staging environment. visible in diagram; no further repository context available.
+- **J1 / Create GitHub Release**: Represents the creation of a GitHub release. visible in diagram; no further repository context available.
+- **J2 / Deploy Storybook**: Represents the deployment of a storybook. visible in diagram; no further repository context available.
+- **B / Pull Request**: Represents the creation of a pull request. visible in diagram; no further repository context available.
+- **F / Ephemeral Deployment**: Represents the creation of an ephemeral deployment. visible in diagram; no further repository context available.
+- **C / Delete Branch**: Represents the deletion of a branch. visible in diagram; no further repository context available.
+- **X / Destroy Deployment Stack**: Represents the destruction of the deployment stack associated with the deleted branch. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> D`: Represents the flow from a code push to the protected branch check.
+- `D -- Yes --> H`: If the branch is protected, the flow proceeds to check if it's the main branch.
+- `D -- No --> F1`: If the branch is not protected, a manual ephemeral deployment is offered.
+- `H -- Yes --> J2`: If the branch is the main branch, the storybook is deployed.
+- `H -- No --> I2`: If the branch is not the main branch, the code is deployed to staging.
+- `I2 --> J1`: After deployment to staging, a GitHub release is created.
+- `H -- Yes --> I1`: If the branch is the main branch, the code is deployed to production.
+- `I1 --> J1`: After deployment to production, a GitHub release is created.
+- `B --> F`: Represents the flow from a pull request to the creation of an ephemeral deployment.
+- `C --> X`: Represents the flow from deleting a branch to destroying the deployment stack.
+- `F1 -.-> I1`: Manual trigger from ephemeral deployment to deploy to production.
+- `I1, I2 converge at J1`: Both Deploy to Production and Deploy to Staging converge at Create GitHub Release.
+
+## Repository Context & Terminology
+- **Protected Branch**: A branch in a version control system (like Git) that has restrictions on who can push changes to it, often requiring code review or other checks.
+- **Main Branch**: The primary branch in a repository, typically representing the stable, production-ready code. Often named `main` or `master`.
+- **Ephemeral Deployment**: A temporary deployment environment, often created for testing pull requests or experimental features.
+- **Staging Environment**: A deployment environment that closely mirrors the production environment, used for final testing before release.
+- **Production Environment**: The live environment where the application is deployed and accessible to end-users.
+- **Storybook**: A tool for developing UI components in isolation.
+- **GitHub Release**: A tagged snapshot of a repository at a specific point in time, often used to mark stable releases of software.
+
+## High-Density QA Ground Truth Summary
+The deployment pipeline starts with a code push (A). The first decision point (D) checks if the branch is protected. If not, a manual ephemeral deployment is offered (F1), which can trigger a deployment to production (I1) via manual trigger. If the branch is protected, the pipeline checks if it's the main branch (H). If it is the main branch, the storybook is deployed (J2) and the code is deployed to production (I1). If it's not the main branch, the code is deployed to staging (I2). Both the "Deploy to Staging" (I2) and "Deploy to Production" (I1) paths converge at "Create GitHub Release" (J1). Separately, a pull request (B) triggers an ephemeral deployment (F). Also, deleting a branch (C) triggers the destruction of the deployment stack (X). The pipeline uses protected branches to enforce code review and testing before deployment to production. The use of staging and ephemeral environments allows for testing changes in isolation before they are merged into the main branch and deployed to production.

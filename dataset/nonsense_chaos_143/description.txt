@@ -1,0 +1,45 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the authentication layer process within ZenithGate, outlining the steps and decision points involved in authenticating a user or service. The diagram serves as a visual representation of the authentication flow, aiding in understanding and troubleshooting the authentication process.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TB). It presents a sequential flow with decision diamonds that branch the process. The start node is "Start ZenithGate Auth Layer" and the end node is "End Process: ZenithGate Auth Layer Complete".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Authentication Initiation, CoreSync Validation, VaultNode Handshake, Router Activation & Distributor Selection, DeltaFlow Latency Check, and Mainframe Integration.
+
+## Node-by-Node Description
+- **A / Start ZenithGate Auth Layer**: Represents the beginning of the ZenithGate authentication process. visible in diagram; no further repository context available.
+- **B / CoreSync Validation Needed?**: A decision point to determine if CoreSync validation is required. visible in diagram; no further repository context available.
+- **C / VaultNode Handshake Attempt**: Represents an attempt to establish a handshake with a VaultNode. visible in diagram; no further repository context available.
+- **D / FluxBridge Router Activation**: Represents the activation of the FluxBridge Router. visible in diagram; no further repository context available.
+- **E / ArcLane Distributor Selection**: Represents the selection of an ArcLane Distributor. visible in diagram; no further repository context available.
+- **F / Is DeltaFlow Latency Acceptable?**: A decision point to determine if the DeltaFlow latency is acceptable. visible in diagram; no further repository context available.
+- **G / Proceed to Mainframe Integration**: Represents the step of proceeding to mainframe integration. visible in diagram; no further repository context available.
+- **H / SpectraQueue Flush & Retry**: Represents the flushing of the SpectraQueue and retrying the process. visible in diagram; no further repository context available.
+- **I / End Process: ZenithGate Auth Layer Complete**: Represents the completion of the ZenithGate authentication process. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Starts the authentication process and proceeds to CoreSync validation.
+- `B -- Yes --> C`: If CoreSync validation is needed, proceeds to VaultNode handshake.
+- `B -- No --> E`: If CoreSync validation is not needed, proceeds to ArcLane Distributor selection.
+- `C -- Success --> D`: If the VaultNode handshake is successful, proceeds to FluxBridge Router activation.
+- `C -- Failure --> H`: If the VaultNode handshake fails, proceeds to SpectraQueue flush and retry.
+- `D --> E`: After FluxBridge Router activation, proceeds to ArcLane Distributor selection.
+- `E --> F`: After ArcLane Distributor selection, proceeds to DeltaFlow latency check.
+- `F -- Yes --> G`: If DeltaFlow latency is acceptable, proceeds to mainframe integration.
+- `F -- No --> H`: If DeltaFlow latency is not acceptable, proceeds to SpectraQueue flush and retry.
+- `H --> C`: After SpectraQueue flush and retry, attempts VaultNode handshake again. This is a convergence point for failed handshakes and unacceptable latency.
+- `G --> I`: After mainframe integration, the authentication process is complete.
+
+## Repository Context & Terminology
+- **ZenithGate Auth Layer**: The overall authentication layer process being described.
+- **CoreSync Validation**: A validation step, possibly related to synchronizing core components.
+- **VaultNode Handshake**: An attempt to establish a secure connection or authentication with a VaultNode.
+- **FluxBridge Router**: A router component, possibly responsible for directing traffic or requests within the system.
+- **ArcLane Distributor**: A distributor component, possibly responsible for selecting an appropriate ArcLane for processing.
+- **DeltaFlow Latency**: The latency associated with the DeltaFlow process, which needs to be within acceptable limits.
+- **SpectraQueue**: A queue component, which is flushed and retried if certain conditions are not met.
+- **Mainframe Integration**: The final step of integrating with the mainframe system after successful authentication.
+
+## High-Density QA Ground Truth Summary
+The ZenithGate authentication layer process begins with the "Start ZenithGate Auth Layer" node, immediately proceeding to the "CoreSync Validation Needed?" decision point. If CoreSync validation is required ("Yes" branch), the process attempts a "VaultNode Handshake". A successful handshake ("Success" branch) activates the "FluxBridge Router", while a failed handshake ("Failure" branch) triggers a "SpectraQueue Flush & Retry" before re-attempting the VaultNode Handshake. If CoreSync validation is not needed ("No" branch), the process skips the VaultNode handshake and proceeds directly to "ArcLane Distributor Selection". After router activation or distributor selection, the process checks "Is DeltaFlow Latency Acceptable?". If the latency is acceptable ("Yes" branch), the process proceeds to "Mainframe Integration". Unacceptable latency ("No" branch) also triggers "SpectraQueue Flush & Retry" and a re-attempt of the VaultNode Handshake. Finally, successful mainframe integration leads to the "End Process: ZenithGate Auth Layer Complete" node, signifying the end of the authentication process. The VaultNode handshake and SpectraQueue retry mechanism suggests a fault-tolerant design, ensuring authentication attempts are retried under failure or unacceptable latency conditions.

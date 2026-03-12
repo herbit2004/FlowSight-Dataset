@@ -1,0 +1,71 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data backup and restore process. It depicts the sequence of operations involved in backing up data and restoring it from a repository. The diagram serves as a visual representation of the workflow, outlining the steps from initiating a backup to completing the restore process.
+
+## Overall Layout
+The diagram's primary direction is left to right (LR). It is divided into two main sections: the backup sequence at the top and the restore sequence at the bottom. The "Backup Orchestrator" node serves as the starting point, and the "Idle State - Waits" and "Restore Complete Notification" nodes represent the end states.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Restore Sequence". The backup process is not explicitly within a subgraph.
+
+## Node-by-Node Description
+- **Backup Orchestrator**: Represents the component responsible for initiating and managing the backup process. visible in diagram; no further repository context available.
+- **Backup Trigger?**: A decision point that determines whether a backup should be initiated. visible in diagram; no further repository context available.
+- **Snapshot Agent Initiation**: The process of starting the snapshot agent. visible in diagram; no further repository context available.
+- **Volume Lock Acquired?**: A decision point that checks if the volume lock has been acquired. visible in diagram; no further repository context available.
+- **Data Volume Snapshot**: The process of creating a snapshot of the data volume. visible in diagram; no further repository context available.
+- **Retry Volume Lock**: The process of retrying to acquire the volume lock. visible in diagram; no further repository context available.
+- **Metadata Capture**: The process of capturing metadata associated with the data volume. visible in diagram; no further repository context available.
+- **Backup Package Creation**: The process of creating a backup package. visible in diagram; no further repository context available.
+- **Storage Repository Upload**: The process of uploading the backup package to a storage repository. visible in diagram; no further repository context available.
+- **Backup Metadata Update**: The process of updating the backup metadata. visible in diagram; no further repository context available.
+- **Snapshot Agent Release**: The process of releasing the snapshot agent. visible in diagram; no further repository context available.
+- **Volume Unlock Request**: The process of requesting the volume unlock. visible in diagram; no further repository context available.
+- **Backup Complete Notification**: The process of sending a notification upon completion of the backup. visible in diagram; no further repository context available.
+- **Idle State - Waits**: Represents the idle state where the system waits for new requests. visible in diagram; no further repository context available.
+- **Restore Request Received**: The process of receiving a restore request. visible in diagram; no further repository context available.
+- **Backup ID Valid?**: A decision point that checks if the backup ID is valid. visible in diagram; no further repository context available.
+- **Metadata Retrieval**: The process of retrieving metadata associated with the backup. visible in diagram; no further repository context available.
+- **Error - Invalid Backup ID**: An error state indicating that the backup ID is invalid. visible in diagram; no further repository context available.
+- **Volume Preparation**: The process of preparing the volume for restoration. visible in diagram; no further repository context available.
+- **Data Restore from Repository**: The process of restoring data from the storage repository. visible in diagram; no further repository context available.
+- **Metadata Re-application**: The process of re-applying metadata to the restored data. visible in diagram; no further repository context available.
+- **Restore Verification**: The process of verifying the restored data. visible in diagram; no further repository context available.
+- **Restore Complete Notification**: The process of sending a notification upon completion of the restore. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Backup Orchestrator --> Backup Trigger?`: Initiates the backup process.
+- `Backup Trigger? -- Yes --> Snapshot Agent Initiation`: Proceeds with backup if a trigger is present.
+- `Backup Trigger? -- No --> Idle State - Waits`: Enters idle state if no trigger is present.
+- `Snapshot Agent Initiation --> Volume Lock Acquired?`: Attempts to acquire a volume lock.
+- `Volume Lock Acquired? -- Yes --> Data Volume Snapshot`: Proceeds with snapshot if lock is acquired.
+- `Volume Lock Acquired? -- No --> Retry Volume Lock`: Retries to acquire the lock if it's not acquired.
+- `Retry Volume Lock --> Volume Lock Acquired?`: Loops back to attempt acquiring the volume lock.
+- `Data Volume Snapshot --> Metadata Capture`: Captures metadata after snapshot.
+- `Metadata Capture --> Backup Package Creation`: Creates a backup package.
+- `Backup Package Creation --> Storage Repository Upload`: Uploads the package to the repository.
+- `Storage Repository Upload --> Backup Metadata Update`: Updates backup metadata.
+- `Backup Metadata Update --> Snapshot Agent Release`: Releases the snapshot agent.
+- `Snapshot Agent Release --> Volume Unlock Request`: Requests volume unlock.
+- `Volume Unlock Request --> Backup Complete Notification`: Notifies completion of backup.
+- `Backup Complete Notification --> Idle State - Waits`: Returns to idle state after backup.
+- `Backup Orchestrator --> Restore Request Received`: Initiates the restore process.
+- `Restore Request Received --> Backup ID Valid?`: Checks if the backup ID is valid.
+- `Backup ID Valid? -- Yes --> Metadata Retrieval`: Proceeds with metadata retrieval if ID is valid.
+- `Backup ID Valid? -- No --> Error - Invalid Backup ID`: Enters error state if ID is invalid.
+- `Metadata Retrieval --> Volume Preparation`: Prepares the volume for restoration.
+- `Volume Preparation --> Data Restore from Repository`: Restores data from the repository.
+- `Data Restore from Repository --> Metadata Re-application`: Re-applies metadata.
+- `Metadata Re-application --> Restore Verification`: Verifies the restored data.
+- `Restore Verification --> Restore Complete Notification`: Notifies completion of restore.
+
+## Repository Context & Terminology
+- **Backup Orchestrator**: A central component that manages and coordinates the entire backup process.
+- **Snapshot Agent**: An agent responsible for creating snapshots of data volumes.
+- **Volume Lock**: A mechanism to prevent data corruption during backup by ensuring exclusive access to the volume.
+- **Metadata**: Data that describes other data, providing context and information about the backup.
+- **Storage Repository**: A storage location where backup packages are stored.
+- **Restore Verification**: The process of ensuring that the restored data is consistent and accurate.
+- **Backup ID**: A unique identifier for a specific backup, used to retrieve it during restoration.
+
+## High-Density QA Ground Truth Summary
+The backup and restore process begins with the "Backup Orchestrator," which triggers the "Backup Trigger?" decision. If a backup trigger is present ("Yes" branch), the process initiates the "Snapshot Agent Initiation" and attempts to acquire a "Volume Lock." If the lock is acquired ("Yes" branch), a "Data Volume Snapshot" is created, followed by "Metadata Capture," "Backup Package Creation," "Storage Repository Upload," "Backup Metadata Update," "Snapshot Agent Release," and "Volume Unlock Request," culminating in a "Backup Complete Notification" before returning to the "Idle State - Waits." If the "Volume Lock" cannot be acquired ("No" branch), the process retries via "Retry Volume Lock." Alternatively, if no backup trigger is present ("No" branch), the system directly enters the "Idle State." The restore process begins with "Restore Request Received," followed by a "Backup ID Valid?" check. If the ID is valid ("Yes" branch), "Metadata Retrieval," "Volume Preparation," "Data Restore from Repository," "Metadata Re-application," and "Restore Verification" occur, leading to "Restore Complete Notification." An invalid ID ("No" branch) results in an "Error - Invalid Backup ID." The "Volume Lock" mechanism ensures data consistency during backups, while "Restore Verification" confirms the integrity of restored data.

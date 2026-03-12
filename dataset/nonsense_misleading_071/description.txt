@@ -1,0 +1,57 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow for an e-commerce system. It depicts the sequence of steps from when a user places an order to when the order is archived, including payment processing, inventory management, shipping, and delivery confirmation. This diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The flow starts with the "User Places Order" node at the top and progresses downwards through various decision points and actions, eventually leading to the "Archive Order" node at the bottom. The diagram contains a loop from "Mark Order as Complete" back to "User Places Order".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement & Payment, Inventory Check, Restock & Notification, Shipping, Delivery Confirmation, and Order Completion/Cancellation.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial step where a user submits an order. visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision point to determine if the payment for the order was successful. visible in diagram; no further repository context available.
+- **C / Order Cancelled**: Represents the action of cancelling the order if the payment was unsuccessful. visible in diagram; no further repository context available.
+- **D / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **E / Inventory Available?**: A decision point to determine if the required inventory is available. visible in diagram; no further repository context available.
+- **F / Order Shipped**: Represents the action of shipping the order to the customer. visible in diagram; no further repository context available.
+- **G / Restock Inventory**: Represents the action of restocking the inventory if the required items are not available. visible in diagram; no further repository context available.
+- **H / Notify Customer of Delay**: Represents the action of notifying the customer about a delay in the order due to inventory issues. visible in diagram; no further repository context available.
+- **I / Update Order Status**: Represents the action of updating the order status in the system. visible in diagram; no further repository context available.
+- **J / Delivery Confirmed?**: A decision point to determine if the delivery of the order has been confirmed by the customer. visible in diagram; no further repository context available.
+- **K / Initiate Refund**: Represents the action of initiating a refund for the order. visible in diagram; no further repository context available.
+- **L / Mark Order as Complete**: Represents the action of marking the order as complete. visible in diagram; no further repository context available.
+- **M / Send Confirmation Email**: Represents the action of sending a confirmation email to the customer. visible in diagram; no further repository context available.
+- **N / Archive Order**: Represents the action of archiving the order data. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, triggering payment processing.
+- `B -- No --> C`: If payment is unsuccessful, the order is cancelled.
+- `B -- Yes --> D`: If payment is successful, proceed to inventory check.
+- `D --> E`: Inventory check leads to a decision point regarding inventory availability.
+- `E -- Yes --> F`: If inventory is available, the order is shipped.
+- `E -- No --> G`: If inventory is not available, restock inventory.
+- `G --> H`: Restock inventory leads to notifying the customer of a delay.
+- `H --> F`: Notifying the customer of a delay leads back to order shipped.
+- `F --> I`: Order shipped leads to updating the order status.
+- `I --> J`: Updating order status leads to delivery confirmation.
+- `J -- No --> K`: If delivery is not confirmed, initiate a refund.
+- `J -- Yes --> L`: If delivery is confirmed, mark the order as complete.
+- `L --> A`: Marking the order as complete loops back to user places order.
+- `C --> M`: Order cancellation leads to sending a confirmation email.
+- `K --> M`: Initiating a refund leads to sending a confirmation email.
+- `M --> N`: Sending a confirmation email leads to archiving the order.
+
+## Repository Context & Terminology
+- **User Places Order**: The initial action of a customer creating an order in the system. In this diagram, it also serves as a loop destination from order completion.
+- **Payment Successful?**: A check to verify if the payment for the order was processed successfully. In this diagram, a 'No' outcome leads to order cancellation.
+- **Inventory Check**: The process of verifying the availability of the ordered items in the warehouse or stock. In this diagram, it is triggered after successful payment.
+- **Inventory Available?**: A check to determine if there is sufficient stock to fulfill the order. In this diagram, a 'No' outcome triggers restock *after* customer notification.
+- **Restock Inventory**: The action of replenishing the stock of items in the inventory. In this diagram, it occurs *after* notifying the customer of a delay and loops back to shipping.
+- **Notify Customer of Delay**: Informing the customer about a delay in order fulfillment. In this diagram, it happens *after* restock and loops back to shipping.
+- **Delivery Confirmed?**: A check to verify if the customer has confirmed the delivery of the order. In this diagram, a 'No' outcome leads to a refund.
+- **Initiate Refund**: The process of issuing a refund to the customer. In this diagram, it is triggered by a lack of delivery confirmation.
+- **Mark Order as Complete**: The action of finalizing the order in the system. In this diagram, it loops back to "User Places Order".
+- **Archive Order**: The process of storing the order data for record-keeping. In this diagram, it is the final step after sending a confirmation email.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Places Order," which immediately proceeds to a "Payment Successful?" check. If payment fails ("No" branch), the "Order Cancelled" node is reached; if payment succeeds ("Yes" branch), an "Inventory Check" is performed. If inventory is available ("Yes" branch), the "Order Shipped" node is reached; otherwise ("No" branch), the system "Restock Inventory" and then "Notify Customer of Delay" before looping back to "Order Shipped". After shipping, the "Update Order Status" node is reached, followed by a "Delivery Confirmed?" check. A "No" outcome from delivery confirmation leads to "Initiate Refund," while a "Yes" outcome results in "Mark Order as Complete," which then loops back to "User Places Order". Both "Order Cancelled" and "Initiate Refund" converge on "Send Confirmation Email," which then leads to the final "Archive Order" node. The "Mark Order as Complete" node incorrectly loops back to the "User Places Order" node, creating a new order cycle. The "Restock Inventory" action occurs after the customer is notified of the delay, which is counter-intuitive.

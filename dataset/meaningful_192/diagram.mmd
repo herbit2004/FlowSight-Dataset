@@ -1,0 +1,48 @@
+graph TD
+    classDef serviceClass fill:#f9f,stroke:#333,stroke-width:2px
+    classDef queueClass fill:#ccf,stroke:#333,stroke-width:2px
+    classDef databaseClass fill:#eee,stroke:#333,stroke-width:2px
+
+    A[Order Service: New Order Request] --> B{Validate Order};
+    B -- Valid --> C[Order Processor: Enqueue Order for Fulfillment];
+    B -- Invalid --> X[Order Service: Return Error to Client];
+
+    C --> D(Order Fulfillment Queue)
+    class D queueClass;
+    D --> E[Fulfillment Service: Dequeue Order];
+    E --> F{Check Inventory};
+    F -- In Stock --> G[Inventory Service: Reserve Items];
+    F -- Out of Stock --> H[Order Management: Mark Order as Backordered];
+    H --> I[Order Service: Send Backorder Notification];
+
+    G --> K[Database: Update Inventory Records]
+    class K databaseClass;
+    K --> L[Payment Service: Authorize Payment];
+    L --> M{Payment Authorized?};
+    M -- Yes --> N[Package Order];
+    M -- No --> O[Order Management: Cancel Order];
+    O --> P[Order Service: Send Cancellation Notification];
+
+    N --> Q[Shipping Service: Create Shipping Label];
+    Q --> R[Shipping Service: Notify Warehouse];
+    R --> S[Webhook: Order Shipped Event];
+    S --> T[Order Service: Update Order Status];
+    T --> U[Order Service: Send Shipping Confirmation];
+    U --> Z[Log Analytics];
+
+    style A serviceClass;
+    style C serviceClass;
+    style E serviceClass;
+    style H serviceClass;
+    style I serviceClass;
+    style L serviceClass;
+    style O serviceClass;
+    style P serviceClass;
+    style Q serviceClass;
+    style R serviceClass;
+    style S serviceClass;
+    style T serviceClass;
+    style U serviceClass;
+    style X serviceClass;
+
+    style G serviceClass;

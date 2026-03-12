@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow of an e-commerce system. It outlines the steps involved from receiving an order to updating the inventory. Note that this diagram contains several logical errors and deviations from standard order processing flows.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with "Receive Order" at the top and progresses downwards. The process ends with "Update Inventory", which then loops back to the start.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Reception, Inventory Check, Credit Card Validation, Order Fulfillment, and Inventory Update.
+
+## Node-by-Node Description
+- **A / Receive Order**: Represents the initial step where the system receives a new order.
+  visible in diagram; no further repository context available.
+- **B / Inventory Check**: Represents the process of checking if the ordered items are in stock.
+  visible in diagram; no further repository context available.
+- **C / Credit Card Valid?**: Represents the process of validating the customer's credit card.
+  visible in diagram; no further repository context available.
+- **D / Package Order**: Represents the process of packaging the order for shipment.
+  visible in diagram; no further repository context available.
+- **E / Notify Customer: Out of Stock**: Represents the process of notifying the customer that the ordered items are out of stock.
+  visible in diagram; no further repository context available.
+- **F / Ship Order**: Represents the process of shipping the packaged order to the customer.
+  visible in diagram; no further repository context available.
+- **G / Update Inventory**: Represents the process of updating the inventory levels after an order is shipped or when stock is found to be unavailable.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The system proceeds to check the inventory after receiving an order.
+- `B -- "In Stock?" --> C`: If the items are in stock, the system proceeds to validate the credit card.
+- `B -- "In Stock?" --> E`: If the items are in stock, the system notifies the customer that the items are out of stock. This is an error in the diagram.
+- `C -- "Yes" --> D`: If the credit card is valid, the system proceeds to package the order.
+- `C -- "No" --> D`: If the credit card is not valid, the system proceeds to package the order. This is an error in the diagram.
+- `D --> F`: After packaging, the order is shipped.
+- `F --> G`: After shipping, the inventory is updated. This is out of sequence.
+- `E --> G`: After notifying the customer about out-of-stock items, the inventory is updated.
+- `G --> A`: After updating the inventory, the process loops back to receiving a new order. This is an error in the diagram.
+
+## Repository Context & Terminology
+- **Receive Order**: In standard e-commerce, this refers to the process of capturing order details from the customer's request. In this diagram, it is the starting point of the workflow.
+- **Inventory Check**: In standard e-commerce, this refers to verifying the availability of items in the warehouse. In this diagram, the outcome "In Stock?" leads to contradictory paths.
+- **Credit Card Valid?**: In standard e-commerce, this refers to verifying the customer's payment information. In this diagram, an invalid card leads to packaging the order, which is incorrect.
+- **Package Order**: In standard e-commerce, this refers to preparing the order for shipment. In this diagram, it occurs even when the credit card is invalid.
+- **Ship Order**: In standard e-commerce, this refers to sending the packaged order to the customer. In this diagram, it happens after packaging, but before inventory update.
+- **Notify Customer: Out of Stock**: In standard e-commerce, this refers to informing the customer that an item is unavailable. In this diagram, this notification occurs even when the item is supposedly in stock.
+- **Update Inventory**: In standard e-commerce, this refers to adjusting the stock levels after an order is shipped. In this diagram, it happens before shipping and loops back to "Receive Order".
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Receive Order", which leads to an "Inventory Check". A positive "In Stock?" result incorrectly branches to both "Credit Card Valid?" and "Notify Customer: Out of Stock". If the "Credit Card Valid?" check returns "Yes", or even "No" (an error), the process proceeds to "Package Order". After packaging, the order is "Ship Order", which is then followed by "Update Inventory". The "Notify Customer: Out of Stock" node also leads to "Update Inventory". Critically, "Update Inventory" then loops back to "Receive Order", creating an illogical cycle. The diagram contains several errors: an "In Stock?" result leads to an out-of-stock notification, an invalid credit card leads to packaging, and the inventory update occurs before shipping and restarts the entire process. The standard e-commerce flow would involve payment capture after credit card validation and inventory update after shipping, neither of which are correctly represented here.

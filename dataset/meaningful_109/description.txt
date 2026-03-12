@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a user authentication and authorization process. It depicts the steps involved in verifying a user's identity and granting access to resources based on their roles and permissions. The diagram serves as a visual representation of the security workflow within a system.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It is hierarchically structured, starting with user authentication and progressing through authorization and permission evaluation. The start node is "User," and the end nodes are "Resource Handler" and "Authorization Error."
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs: "User Authentication" and "Permission Evaluation."
+- **User Authentication**: This subgraph focuses on verifying the user's identity.
+- **Permission Evaluation**: This subgraph focuses on determining whether the user has the necessary permissions to access a resource.
+
+## Node-by-Node Description
+- **A / User**: Represents the user attempting to access the system. visible in diagram; no further repository context available.
+- **B / Authentication Server**: Responsible for verifying the user's credentials. visible in diagram; no further repository context available.
+- **C / Session Manager**: Manages user sessions after successful authentication. visible in diagram; no further repository context available.
+- **D / Authentication Error**: Indicates that the user's authentication failed. visible in diagram; no further repository context available.
+- **E / Authorization Service**: Determines the user's roles and permissions. visible in diagram; no further repository context available.
+- **F / Role Provider**: Provides the user's roles. visible in diagram; no further repository context available.
+- **G / Role Definition Repository**: Stores the definitions of roles and their associated permissions. visible in diagram; no further repository context available.
+- **H / Permission Validator**: Validates whether the user has the required permissions for a specific resource. visible in diagram; no further repository context available.
+- **I / Resource Access Request**: Represents the user's request to access a specific resource. visible in diagram; no further repository context available.
+- **J / Permission Check**: Checks if the user's role has the required permission. visible in diagram; no further repository context available.
+- **K / Access Granted**: Indicates that the user has been granted access to the resource. visible in diagram; no further repository context available.
+- **L / Access Denied**: Indicates that the user has been denied access to the resource. visible in diagram; no further repository context available.
+- **M / Resource Handler**: Handles the user's request and provides access to the resource. visible in diagram; no further repository context available.
+- **N / Authorization Error**: Indicates that the user is not authorized to access the resource. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The user sends their credentials to the Authentication Server.
+- `B -- Valid Credentials --> C`: If the credentials are valid, the flow proceeds to the Session Manager.
+- `B -- Invalid Credentials --> D`: If the credentials are invalid, an Authentication Error is triggered.
+- `C --> E`: The Session Manager passes the user's session to the Authorization Service.
+- `E --> F`: The Authorization Service requests the user's roles from the Role Provider.
+- `F -- User Role(s) --> G`: The Role Provider retrieves the user's roles from the Role Definition Repository.
+- `G --> H`: The Role Definition Repository provides the roles to the Permission Validator.
+- `H --> I`: The Permission Validator receives a Resource Access Request.
+- `I -- Requires Permission --> J`: If the resource requires permission, the flow proceeds to the Permission Check.
+- `J -- Allowed for Role --> K`: If the user's role has the required permission, Access is Granted.
+- `J -- Not Allowed --> L`: If the user's role does not have the required permission, Access is Denied.
+- `K --> M`: Access Granted leads to the Resource Handler.
+- `L --> N`: Access Denied leads to an Authorization Error.
+
+## Repository Context & Terminology
+- **User Authentication**: The process of verifying a user's identity.
+- **Authentication Server**: A server that verifies user credentials (e.g., username and password).
+- **Session Manager**: A component that manages user sessions, typically using cookies or tokens.
+- **Authorization Service**: A service that determines what resources a user is allowed to access.
+- **Role Provider**: A component that retrieves the roles assigned to a user.
+- **Role Definition Repository**: A database or storage system that stores the definitions of roles and their associated permissions.
+- **Permission Validator**: A component that checks whether a user has the necessary permissions to access a resource.
+- **Resource Access Request**: A request from a user to access a specific resource.
+- **Resource Handler**: A component that handles the user's request and provides access to the resource if authorized.
+
+## High-Density QA Ground Truth Summary
+The process begins with the "User" submitting credentials to the "Authentication Server." The "Authentication Server" then branches based on the validity of the credentials. If "Valid Credentials" are provided, the flow proceeds to the "Session Manager," which establishes a user session. If "Invalid Credentials" are provided, an "Authentication Error" occurs, terminating the process. Upon successful authentication, the "Authorization Service" determines the user's roles by consulting the "Role Provider," which retrieves role definitions from the "Role Definition Repository." The "Permission Validator" then checks the "Resource Access Request" against the user's roles. This leads to a "Permission Check," branching into "Allowed for Role" or "Not Allowed." If "Allowed for Role," "Access Granted" leads to the "Resource Handler," providing access to the requested resource. If "Not Allowed," "Access Denied" results in an "Authorization Error," preventing access. The "Role Definition Repository" is crucial for defining permissions associated with each role, ensuring proper authorization.

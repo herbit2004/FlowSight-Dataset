@@ -1,0 +1,36 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the interaction between different hardware platforms running llama-box components. It illustrates how llama-box instances on NVIDIA and Apple hardware communicate using TCP to serve requests. The diagram provides a high-level overview of the distributed setup.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It shows client-side components at the top and server-side components at the bottom. There are multiple start nodes (client components) and multiple end nodes (server components).
+
+## Subgraphs / Stages
+The diagram contains four subgraphs, each representing a different hardware platform: NVIDIA 4080, Apple Mac Max, NVIDIA 4090, Apple Mac Studio, and Any. These subgraphs visually group the components running on each platform.
+
+## Node-by-Node Description
+- **clix / llama-box-*-cuda**: Represents a llama-box client running on NVIDIA 4080 hardware, specifically using CUDA. visible in diagram; no further repository context available.
+- **cliy / llama-box-*-metal**: Represents a llama-box client running on Apple Mac Max hardware, specifically using Metal. visible in diagram; no further repository context available.
+- **srva / llama-box-*-cuda (rpc server)**: Represents a llama-box RPC server running on NVIDIA 4090 hardware, using CUDA. visible in diagram; no further repository context available.
+- **srvb / llama-box-*-metal (rpc server)**: Represents a llama-box RPC server running on Apple Mac Studio hardware, using Metal. visible in diagram; no further repository context available.
+- **srvn / llama-box-*-cuda/metal/... (rpc server)**: Represents a llama-box RPC server running on an unspecified hardware platform, supporting both CUDA and Metal. visible in diagram; no further repository context available.
+- **hostx / NVIDIA 4080**: Represents the NVIDIA 4080 hardware platform. visible in diagram; no further repository context available.
+- **hosty / Apple Mac Max**: Represents the Apple Mac Max hardware platform. visible in diagram; no further repository context available.
+- **hosta / NVIDIA 4090**: Represents the NVIDIA 4090 hardware platform. visible in diagram; no further repository context available.
+- **hostb / Apple Mac Studio**: Represents the Apple Mac Studio hardware platform. visible in diagram; no further repository context available.
+- **hostn / Any**: Represents an unspecified hardware platform. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `clix --> srva`: A TCP connection from the llama-box client on NVIDIA 4080 to the llama-box RPC server on NVIDIA 4090.
+- `clix --> srvb`: A TCP connection from the llama-box client on NVIDIA 4080 to the llama-box RPC server on Apple Mac Studio.
+- `cliy --> srvb`: A TCP connection from the llama-box client on Apple Mac Max to the llama-box RPC server on Apple Mac Studio.
+- `cliy --> srvn`: A TCP connection from the llama-box client on Apple Mac Max to the llama-box RPC server on the "Any" platform.
+
+## Repository Context & Terminology
+- **llama-box**: A software component or library, likely related to large language models (LLMs).
+- **CUDA**: A parallel computing platform and programming model developed by NVIDIA for use with its GPUs.
+- **Metal**: Apple's low-level, low-overhead hardware acceleration API.
+- **RPC Server**: A server that provides remote procedure call functionality, allowing clients to execute functions on the server.
+- **TCP**: Transmission Control Protocol, a standard for reliable data transfer over the internet.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a distributed system where llama-box clients on NVIDIA 4080 (clix) and Apple Mac Max (cliy) communicate with llama-box RPC servers on NVIDIA 4090 (srva), Apple Mac Studio (srvb), and an unspecified platform (srvn). The clients initiate TCP connections to the servers. Specifically, clix connects to both srva and srvb, while cliy connects to srvb and srvn. The NVIDIA 4080 client (clix) uses CUDA, indicated by "llama-box-*-cuda", while the Apple Mac Max client (cliy) uses Metal, indicated by "llama-box-*-metal". The servers are RPC servers, enabling remote procedure calls. The server on the "Any" platform supports both CUDA and Metal, as indicated by "llama-box-*-cuda/metal/...". The diagram highlights the interoperability of llama-box across different hardware platforms and acceleration technologies (CUDA and Metal), using TCP as the communication protocol. The use of CUDA and Metal suggests that llama-box leverages GPU acceleration for its computations.

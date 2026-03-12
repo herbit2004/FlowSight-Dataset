@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a synchronization pipeline. It depicts the process of automatically syncing local changes to a GitHub repository using Git commands, triggered by a scheduled task. The diagram serves as a visual representation of the automated workflow, including error handling for conflicts.
+
+## Overall Layout
+The diagram flows from top to bottom (TB). It starts with a scheduled check for changes, branches based on whether changes are detected, and ends with either a successful sync to GitHub or a manual intervention step.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **trigger**: Encapsulates the initial scheduled check for changes.
+- **sync**: Represents the Git synchronization pipeline.
+
+## Node-by-Node Description
+- **trigger / ⏰ Every 5 min — launchd**: Represents a scheduled task that runs every 5 minutes using `launchd`.
+  visible in diagram; no further repository context available.
+- **check / 📂 Any changes?**: A decision node that checks if there are any changes in the local repository.
+  visible in diagram; no further repository context available.
+- **skip / 💤 Sleep — nothing to do**: Represents a state where the system sleeps because there are no changes to synchronize.
+  visible in diagram; no further repository context available.
+- **stage / ➕ git add -A**: Executes the `git add -A` command, which stages all changes in the repository.
+  visible in diagram; no further repository context available.
+- **commit / 💾 git commit**: Executes the `git commit` command, which commits the staged changes to the local repository.
+  visible in diagram; no further repository context available.
+- **pull / ⬇️ git pull --rebase**: Executes the `git pull --rebase` command, which fetches changes from the remote repository and rebases the local branch on top of them.
+  visible in diagram; no further repository context available.
+- **push / ⬆️ git push**: Executes the `git push` command, which pushes the committed changes to the remote GitHub repository.
+  visible in diagram; no further repository context available.
+- **done / ✅ Synced to GitHub**: Represents the successful completion of the synchronization process.
+  visible in diagram; no further repository context available.
+- **err / ⚠️ Needs manual fix gmd doctor to diagnose**: Represents a state where a conflict occurred during the `git pull --rebase` operation, requiring manual intervention and diagnosis using `gmd doctor`.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `check -- No --> skip`: If there are no changes detected, the process goes to sleep.
+- `check -- Yes --> stage`: If there are changes detected, the process proceeds to the synchronization pipeline.
+- `stage --> commit`: After staging changes, the process commits them.
+- `commit --> pull`: After committing, the process pulls and rebases from the remote repository.
+- `pull --> push`: After successfully pulling and rebasing, the process pushes the changes to the remote repository.
+- `push --> done`: After successfully pushing, the process is complete.
+- `pull -- conflict --> err`: If a conflict occurs during the pull and rebase operation, the process goes to the manual fix state.
+
+## Repository Context & Terminology
+- **launchd**: A system service management framework in macOS used to manage daemons, applications, processes, and scripts. The diagram indicates that `launchd` is used to schedule the synchronization task every 5 minutes.
+- **git add -A**: A Git command that stages all changes (new, modified, and deleted) in the repository for the next commit.
+- **git commit**: A Git command that records the staged changes in the repository's history.
+- **git pull --rebase**: A Git command that fetches changes from a remote repository and integrates them into the current branch by rebasing the local commits on top of the remote commits. This helps maintain a cleaner commit history.
+- **git push**: A Git command that uploads the local repository's commits to a remote repository.
+- **gmd doctor**: A diagnostic tool (likely specific to the project) used to diagnose and resolve issues, particularly conflicts arising during the `git pull --rebase` operation.
+
+## High-Density QA Ground Truth Summary
+The synchronization process starts with a `launchd` scheduled task that triggers every 5 minutes to check for changes. The `check` node determines if any changes exist in the local repository. If no changes are found, the process enters a `Sleep` state. If changes are detected, the process proceeds to the `Sync pipeline`. The pipeline begins with `git add -A` to stage all changes, followed by `git commit` to commit the staged changes locally. Next, `git pull --rebase` attempts to integrate remote changes, potentially leading to a `conflict`. If a conflict arises during the `git pull --rebase` operation, the process branches to an `err` state, indicating that manual intervention is required, potentially using a tool called `gmd doctor` for diagnosis. If the `git pull --rebase` is successful, the process continues to `git push` to upload the local commits to the remote GitHub repository. Finally, upon successful push, the process reaches the `Synced to GitHub` state, indicating completion. The use of `git pull --rebase` aims to keep the commit history linear and clean, but necessitates manual conflict resolution when integration issues arise.

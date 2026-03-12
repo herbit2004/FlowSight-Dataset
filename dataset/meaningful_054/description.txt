@@ -1,0 +1,97 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the Service Level Agreement (SLA) tracking and ticket escalation system. It illustrates the workflow of incident management, from creation to resolution, including SLA policy checks, escalation procedures, and reporting. The diagram serves as a visual representation of the automated processes involved in ensuring timely incident resolution and adherence to service level agreements.
+
+## Overall Layout
+The diagram flows from left to right. It starts with incident creation and ends with incident closure. The diagram includes decision points that determine the path of the workflow based on SLA breaches and tier acknowledgements.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "SLA Tracking and Ticket Escalation System".
+
+## Node-by-Node Description
+- **A / Incident Created**: Represents the creation of a new incident in the system.
+  visible in diagram; no further repository context available.
+- **B / SLA Policy Check**: Represents a check to determine if an SLA policy applies to the incident.
+  visible in diagram; no further repository context available.
+- **C / Start SLA Timer**: Represents the starting of the SLA timer for the incident.
+  visible in diagram; no further repository context available.
+- **D / Assign Default Policy**: Represents the assignment of a default SLA policy to the incident if no specific policy is matched.
+  visible in diagram; no further repository context available.
+- **E / SLA Breach?**: Represents a decision point to determine if the SLA has been breached.
+  visible in diagram; no further repository context available.
+- **F / Monitor Until Resolved**: Represents the monitoring of the incident until it is resolved.
+  visible in diagram; no further repository context available.
+- **G / Escalate Ticket**: Represents the escalation of the ticket to a higher tier.
+  visible in diagram; no further repository context available.
+- **H / Assign to Next Tier**: Represents the assignment of the escalated ticket to the next support tier.
+  visible in diagram; no further repository context available.
+- **I / Tier Acknowledgement?**: Represents a decision point to determine if the assigned tier has acknowledged the ticket.
+  visible in diagram; no further repository context available.
+- **J / SLA Timer Reset**: Represents the resetting of the SLA timer.
+  visible in diagram; no further repository context available.
+- **K / Further Escalation Check**: Represents a check to determine if further escalation is required.
+  visible in diagram; no further repository context available.
+- **L / Notify Management**: Represents the notification of management about the SLA breach.
+  visible in diagram; no further repository context available.
+- **M / Management Review**: Represents the review of the incident by management.
+  visible in diagram; no further repository context available.
+- **N / Update Ticket Details**: Represents the updating of the ticket details.
+  visible in diagram; no further repository context available.
+- **O / Log Escalation Event**: Represents the logging of the escalation event.
+  visible in diagram; no further repository context available.
+- **P / Send Escalation Notification**: Represents the sending of an escalation notification.
+  visible in diagram; no further repository context available.
+- **Q / Alert On-Call Engineer**: Represents the alerting of the on-call engineer.
+  visible in diagram; no further repository context available.
+- **R / Incident Resolved**: Represents the resolution of the incident.
+  visible in diagram; no further repository context available.
+- **S / Stop SLA Timer**: Represents the stopping of the SLA timer.
+  visible in diagram; no further repository context available.
+- **T / Calculate Resolution Time**: Represents the calculation of the resolution time.
+  visible in diagram; no further repository context available.
+- **U / Store Data in Analytics DB**: Represents the storing of the incident data in the analytics database.
+  visible in diagram; no further repository context available.
+- **V / Generate SLA Report**: Represents the generation of the SLA report.
+  visible in diagram; no further repository context available.
+- **W / Close Incident**: Represents the closing of the incident.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Incident creation triggers the SLA policy check.
+- `B -- Matched Policy --> C`: If a policy is matched, the SLA timer is started.
+- `B -- No Policy --> D`: If no policy is matched, a default policy is assigned.
+- `D --> C`: After assigning a default policy, the SLA timer is started.
+- `C --> E`: The SLA timer triggers a check for SLA breach.
+- `E -- No Breach --> F`: If no breach, the incident is monitored until resolved.
+- `F --> E`: The monitoring loop continues until a breach occurs or the incident is resolved.
+- `E -- Breach --> G`: If there is a breach, the ticket is escalated.
+- `G --> H`: The escalated ticket is assigned to the next tier.
+- `H --> I`: The system checks for tier acknowledgement.
+- `I -- Yes --> J`: If the tier acknowledges, the SLA timer is reset.
+- `J --> F`: After resetting the timer, the incident is monitored.
+- `I -- No --> K`: If the tier does not acknowledge, a further escalation check is performed.
+- `K -- Time Exceeded --> L`: If the escalation time is exceeded, management is notified.
+- `L --> M`: Management reviews the incident.
+- `K -- Time Not Exceeded --> H`: If the escalation time is not exceeded, the ticket remains assigned to the next tier.
+- `G --> N`: Escalation also triggers updating ticket details.
+- `N --> O`: Ticket details update triggers logging the escalation event.
+- `O --> P`: Logging the escalation event triggers sending an escalation notification.
+- `P --> Q`: Sending the escalation notification triggers alerting the on-call engineer.
+- `Q --> I`: The on-call engineer alert leads back to the tier acknowledgement check.
+- `F --> R`: Incident resolution triggers the next step.
+- `R --> S`: The incident resolution triggers stopping the SLA timer.
+- `S --> T`: Stopping the SLA timer triggers calculating the resolution time.
+- `T --> U`: Calculating the resolution time triggers storing data in the analytics database.
+- `U --> V`: Storing data in the analytics database triggers generating an SLA report.
+- `V --> W`: Generating an SLA report triggers closing the incident.
+
+## Repository Context & Terminology
+- **SLA (Service Level Agreement)**: A contract between a service provider and the end user that defines the level of service expected from the service provider.
+- **Incident**: An unplanned interruption to an IT service or a reduction in the quality of an IT service.
+- **Escalation**: The process of transferring an incident to a more experienced or specialized support tier.
+- **Tier**: A level of support within the IT support organization.
+- **On-Call Engineer**: An engineer who is available to respond to incidents outside of normal business hours.
+- **Analytics DB**: A database used for storing and analyzing data related to incidents and SLAs.
+- **Resolution Time**: The time taken to resolve an incident from the time it was reported.
+
+## High-Density QA Ground Truth Summary
+The SLA tracking and ticket escalation system begins with an 'Incident Created', which triggers an 'SLA Policy Check'. If a matching policy is found ('Matched Policy'), the 'SLA Timer' is started; otherwise ('No Policy'), a 'Default Policy' is assigned before starting the timer. The 'SLA Breach?' decision point determines whether the SLA has been breached. If 'No Breach', the system enters a 'Monitor Until Resolved' loop, continuously checking for breaches. If a 'Breach' occurs, the 'Escalate Ticket' process begins, assigning the ticket to the 'Next Tier'. The system then checks for 'Tier Acknowledgement?'. If acknowledged ('Yes'), the 'SLA Timer Reset' occurs, and the system returns to monitoring. If not acknowledged ('No'), a 'Further Escalation Check' is performed. If 'Time Exceeded', 'Notify Management' and 'Management Review' steps are triggered. The 'Escalate Ticket' process also triggers 'Update Ticket Details', 'Log Escalation Event', 'Send Escalation Notification', and 'Alert On-Call Engineer'. Once the 'Incident Resolved', the 'SLA Timer' is stopped, 'Resolution Time' is calculated, data is stored in the 'Analytics DB', an 'SLA Report' is generated, and finally, the 'Incident' is 'Close'd. The SLA, a key concept, defines the expected service level and drives the escalation process when breached.

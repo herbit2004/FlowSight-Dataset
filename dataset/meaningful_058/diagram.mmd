@@ -1,0 +1,30 @@
+graph TD
+    subgraph Secrets Management Service
+        A[Secret Rotation Request] --> B(Authorization Check);
+        B -- Authorized --> C{Secret Type?};
+        B -- Unauthorized --> Z[Reject Request & Log];
+        C -- Database Secret --> D[Fetch Current Secret Details];
+        C -- API Key --> E[Retrieve API Key Configuration];
+        D --> F(Generate New Database Credentials);
+        E --> G(Generate New API Key);
+        F --> H[Update Database Configuration];
+        G --> I[Update API Integration Points];
+        H --> J(Update Secrets Vault);
+        I --> J;
+        J --> K{Rotation Successful?};
+        K -- Yes --> L[Audit Log Success];
+        K -- No --> M[Rollback Changes];
+        M --> N[Audit Log Failure];
+        L --> O[Notify Subscribers];
+        N --> O;
+        O --> P[Rotation Complete];
+    end
+
+    subgraph Monitoring & Alerting
+        P --> Q(Secret Rotation Status Check);
+        Q -- Status OK --> R[Normal Operations];
+        Q -- Status Failed --> S[Trigger Alert & Remediation];
+    end
+
+    classDef alert fill:#f9f,stroke:#333,stroke-width:2px
+    S:::alert

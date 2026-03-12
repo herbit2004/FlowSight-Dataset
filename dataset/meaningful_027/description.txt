@@ -1,0 +1,73 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow in an e-commerce or similar system. It illustrates the sequence of operations from receiving an order to generating reports and managing inventory. The diagram serves as a visual representation of the system's architecture and data flow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with "Order Received" at the top and flows down through various services and decision points, eventually leading to data storage and reporting components at the bottom.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into four stages:
+1. Order Validation and Event Creation
+2. Service Processing (Order, Inventory, Reporting)
+3. Data Aggregation and Storage
+4. Reporting and Inventory Management
+
+## Node-by-Node Description
+- **Order Received**: Represents the initial state when an order is received by the system. visible in diagram; no further repository context available.
+- **Validate Order**: A decision point where the order is validated. visible in diagram; no further repository context available.
+- **Create Order Event**: An event is created after a valid order is received. visible in diagram; no further repository context available.
+- **Reject Order Event**: An event is created when an invalid order is received. visible in diagram; no further repository context available.
+- **Order Event Bus**: A message bus that distributes order-related events to various services. visible in diagram; no further repository context available.
+- **Order Service**: A service responsible for handling order-related operations. In the repository this corresponds to a microservice responsible for order management.
+- **Inventory Service**: A service responsible for managing inventory levels. In the repository this corresponds to a microservice responsible for inventory management.
+- **Reporting Service**: A service responsible for generating reports. In the repository this corresponds to a microservice responsible for reporting.
+- **Apply Order Event**: A decision point within the Order Service to determine if the event is a new order or an update. visible in diagram; no further repository context available.
+- **Update Inventory**: A decision point within the Inventory Service to determine if there is sufficient stock. visible in diagram; no further repository context available.
+- **Update Report**: A decision point within the Reporting Service to determine what type of report to update. visible in diagram; no further repository context available.
+- **Order Aggregate: Create**: Creates a new order aggregate. visible in diagram; no further repository context available.
+- **Order Aggregate: Update**: Updates an existing order aggregate. visible in diagram; no further repository context available.
+- **Reserve Stock**: Reserves the required stock in the inventory. visible in diagram; no further repository context available.
+- **Backorder Creation Event**: An event created when there is insufficient stock. visible in diagram; no further repository context available.
+- **Sales Report**: Generates a sales report. visible in diagram; no further repository context available.
+- **Inventory Report**: Generates an inventory report. visible in diagram; no further repository context available.
+- **Order Snapshot**: Creates a snapshot of the order. visible in diagram; no further repository context available.
+- **Order Store**: Stores the order data. visible in diagram; no further repository context available.
+- **Inventory Store**: Stores the inventory data. visible in diagram; no further repository context available.
+- **Reporting Database**: Stores the reporting data. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Order Received --> Validate Order`: An order is received and passed for validation.
+- `Validate Order -- Valid Order --> Create Order Event`: If the order is valid, an order event is created.
+- `Validate Order -- Invalid Order --> Reject Order Event`: If the order is invalid, an order reject event is created.
+- `Create Order Event --> Order Event Bus`: The order event is sent to the event bus.
+- `Reject Order Event --> Order Event Bus`: The order reject event is sent to the event bus.
+- `Order Event Bus --> Order Service`: The order event is sent to the Order Service.
+- `Order Event Bus --> Inventory Service`: The order event is sent to the Inventory Service.
+- `Order Event Bus --> Reporting Service`: The order event is sent to the Reporting Service.
+- `Order Service --> Apply Order Event`: The Order Service processes the order event.
+- `Apply Order Event -- New Order --> Order Aggregate: Create`: If it is a new order, a new order aggregate is created.
+- `Apply Order Event -- Order Update --> Order Aggregate: Update`: If it is an order update, the existing order aggregate is updated.
+- `Inventory Service --> Update Inventory`: The Inventory Service processes the inventory update.
+- `Update Inventory -- Sufficient Stock --> Reserve Stock`: If there is sufficient stock, the stock is reserved.
+- `Update Inventory -- Insufficient Stock --> Backorder Creation Event`: If there is insufficient stock, a backorder creation event is created.
+- `Backorder Creation Event --> Order Event Bus`: The backorder creation event is sent back to the event bus.
+- `Reporting Service --> Update Report`: The Reporting Service processes the report update.
+- `Update Report --> Sales Report`: A sales report is generated.
+- `Update Report --> Inventory Report`: An inventory report is generated.
+- `Order Aggregate: Create --> Order Snapshot`: A snapshot of the created order is taken.
+- `Order Aggregate: Update --> Order Snapshot`: A snapshot of the updated order is taken.
+- `Order Snapshot --> Order Store`: The order snapshot is stored.
+- `Reserve Stock --> Inventory Store`: The reserved stock is stored in the inventory store.
+- `Sales Report --> Reporting Database`: The sales report is stored in the reporting database.
+- `Inventory Report --> Reporting Database`: The inventory report is stored in the reporting database.
+
+## Repository Context & Terminology
+- **Order Service**: A microservice responsible for managing orders, including creation, updates, and validation.
+- **Inventory Service**: A microservice responsible for managing inventory levels, reservations, and stock updates.
+- **Reporting Service**: A microservice responsible for generating reports based on order and inventory data.
+- **Order Event Bus**: A message bus (e.g., Kafka, RabbitMQ) used for asynchronous communication between services.
+- **Order Aggregate**: A collection of related objects treated as a single unit for data consistency.
+- **Order Snapshot**: A point-in-time representation of an order's state.
+- **Backorder**: An order that cannot be fulfilled immediately due to insufficient stock.
+
+## High-Density QA Ground Truth Summary
+The process begins with "Order Received," which is then passed to "Validate Order." If the order is valid, a "Create Order Event" is triggered; otherwise, a "Reject Order Event" is created. Both events are published to the "Order Event Bus." The "Order Event Bus" distributes the events to the "Order Service," "Inventory Service," and "Reporting Service." The "Order Service" then decides, via "Apply Order Event," whether to "Order Aggregate: Create" or "Order Aggregate: Update," based on whether it's a new order or an update. An "Order Snapshot" is created from either aggregate and stored in the "Order Store." The "Inventory Service," via "Update Inventory," checks for "Sufficient Stock." If available, "Reserve Stock" occurs, updating the "Inventory Store." If not, a "Backorder Creation Event" is published back to the "Order Event Bus." The "Reporting Service," via "Update Report," generates "Sales Report" and "Inventory Report," which are stored in the "Reporting Database." The "Order Service," "Inventory Service," and "Reporting Service" are key microservices in this architecture, each handling specific aspects of order processing.

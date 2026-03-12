@@ -1,0 +1,30 @@
+graph TD
+    subgraph Experiment Service
+    A[User Request] --> B{Experiment Active?};
+    B -- No --> K[Control Group];
+    B -- Yes --> C{Experiment Eligible?};
+    C -- No --> K;
+    C -- Yes --> D{Traffic Split Logic};
+    D -- Group A (50%) --> E[Feature A Variant];
+    D -- Group B (50%) --> F[Feature B Variant];
+    E --> G[Record Impression: A];
+    F --> H[Record Impression: B];
+    G --> I[Return Response];
+    H --> I;
+    K --> L[Standard Feature];
+    L --> I;
+    I --> Z[Log Service];
+    end
+    subgraph Data Pipeline
+    Z --> M[Kafka Topic: Experiment Events];
+    M --> N[Spark Streaming Job];
+    N --> O[Aggregate Metrics];
+    O --> P[Experiment Results Database];
+    end
+    subgraph Monitoring
+    P --> Q[Dashboard Service];
+    Q --> R[Alerting System];
+    end
+
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,K,L,M,N,O,P,Q,R,Z default

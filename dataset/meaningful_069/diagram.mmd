@@ -1,0 +1,39 @@
+graph TD
+    subgraph User Interaction
+        A[User Action: Comment/Like] --> B(Event Publisher: UserActivityPub)
+    end
+
+    subgraph Kafka Topics
+        B --> C{Kafka Topic: user_activity_events}
+    end
+
+    subgraph Real-time Processing
+        C --> D{Stream Processor: ActivityStreamProcessor}
+        D -- Valid Activity --> E[Activity Enricher: UserProfileLookup]
+        D -- Invalid Activity --> Z[Dead Letter Queue: InvalidActivityDLQ]
+        E --> F[Feed Aggregator: TimelineAggregator]
+        F --> G{Redis Cache: AggregatedFeeds}
+    end
+
+    subgraph Batch Processing & Storage
+        C --> H[Data Lake Ingestion: ActivityLogIngestor]
+        H --> I(Data Lake: ActivityDataLake)
+
+        subgraph Reporting & Analytics
+            I --> J{Spark Job: PopularityCalculator}
+            J --> K[Data Warehouse: AnalyticsDataStore]
+            K --> L[Dashboard: PopularityDashboard]
+        end
+    end
+
+    subgraph Push Notifications
+        G --> M{Feed Push Notifier}
+        M --> N[Notification Service]
+        N --> O[User Device]
+    end
+
+    G --> P{Comment Indexer}
+    P --> Q[Search Index: CommentSearchIndex]
+
+    classDef kafka fill:#f9f,stroke:#333,stroke-width:2px
+    class C kafka

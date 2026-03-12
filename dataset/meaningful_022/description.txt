@@ -1,0 +1,72 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order submission flow in an e-commerce system. It outlines the steps involved in processing an order, from initial receipt to successful completion or failure, including payment processing, inventory updates, and error handling. The diagram serves as a visual representation of the order processing logic.
+
+## Overall Layout
+The diagram's primary direction is left to right (LR). It depicts a single process flow, starting with "Order Received" and ending with either "Order Completed" or "Order Failed - Notify Support". There is no explicit hierarchy.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Reception & Validation, Payment Processing, Order Fulfillment, Post-Processing, and Error Handling.
+
+## Node-by-Node Description
+- **Order Received**: Represents the initial receipt of an order.
+  visible in diagram; no further repository context available.
+- **Validate Order**: Represents the process of validating the order details.
+  visible in diagram; no further repository context available.
+- **Process Payment**: Represents the process of attempting to collect payment for the order.
+  visible in diagram; no further repository context available.
+- **Payment Successful?**: A decision point to determine if the payment was successfully processed.
+  visible in diagram; no further repository context available.
+- **Fulfill Order**: Represents the process of preparing the order for shipment.
+  visible in diagram; no further repository context available.
+- **Payment Retry Logic**: Represents the logic for retrying payment processing.
+  visible in diagram; no further repository context available.
+- **Retry Attempt Limit Reached?**: A decision point to determine if the maximum number of payment retry attempts has been reached.
+  visible in diagram; no further repository context available.
+- **Increment Retry Count**: Represents the action of incrementing the payment retry counter.
+  visible in diagram; no further repository context available.
+- **Circuit Breaker Open?**: A decision point to determine if the circuit breaker is open, preventing further payment attempts.
+  visible in diagram; no further repository context available.
+- **Attempt Payment Retry**: Represents the action of attempting to process the payment again.
+  visible in diagram; no further repository context available.
+- **Order Completed**: Represents the successful completion of the order processing.
+  visible in diagram; no further repository context available.
+- **Post-Processing Tasks**: Represents tasks performed after the order is completed, such as sending confirmation emails.
+  visible in diagram; no further repository context available.
+- **Inventory Update**: Represents the process of updating the inventory levels after the order is completed.
+  visible in diagram; no further repository context available.
+- **Reject Order**: Represents the action of rejecting the order due to payment failure or other issues.
+  visible in diagram; no further repository context available.
+- **Order Failed - Notify Support**: Represents the final state where the order has failed and support needs to be notified.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Order Received --> Validate Order`: The flow starts with the receipt of an order.
+- `Validate Order -- Valid --> Process Payment`: If the order is valid, proceed to payment processing.
+- `Validate Order -- Invalid --> Reject Order`: If the order is invalid, reject it.
+- `Process Payment --> Payment Successful?`: After processing the payment, check if it was successful.
+- `Payment Successful? -- Yes --> Fulfill Order`: If the payment was successful, fulfill the order.
+- `Payment Successful? -- No --> Payment Retry Logic`: If the payment failed, initiate the payment retry logic.
+- `Fulfill Order --> Order Completed`: After fulfilling the order, mark it as completed.
+- `Payment Retry Logic --> Retry Attempt Limit Reached?`: After initiating the payment retry logic, check if the retry limit has been reached.
+- `Retry Attempt Limit Reached? -- Yes --> Reject Order`: If the retry limit has been reached, reject the order.
+- `Retry Attempt Limit Reached? -- No --> Increment Retry Count`: If the retry limit has not been reached, increment the retry count.
+- `Increment Retry Count --> Circuit Breaker Open?`: After incrementing the retry count, check if the circuit breaker is open.
+- `Circuit Breaker Open? -- Yes --> Reject Order`: If the circuit breaker is open, reject the order.
+- `Circuit Breaker Open? -- No --> Attempt Payment Retry`: If the circuit breaker is closed, attempt the payment retry.
+- `Attempt Payment Retry --> Payment Successful?`: After attempting the payment retry, return to the "Payment Successful?" decision point.
+- `Order Completed --> Post-Processing Tasks`: After the order is completed, perform post-processing tasks.
+- `Post-Processing Tasks --> Inventory Update`: After post-processing tasks, update the inventory.
+- `Inventory Update --> Reject Order`: If the inventory update fails, reject the order.
+- `Reject Order --> Order Failed - Notify Support`: After rejecting the order, notify support.
+
+## Repository Context & Terminology
+- **Order Validation**: The process of verifying that the order details are correct and complete before processing the payment.
+- **Payment Processing**: The process of collecting payment from the customer for the order.
+- **Payment Retry Logic**: A mechanism to automatically retry payment processing in case of temporary failures.
+- **Circuit Breaker**: A design pattern used to prevent an application from repeatedly trying to execute an operation that is likely to fail.
+- **Order Fulfillment**: The process of preparing the order for shipment, including picking, packing, and labeling.
+- **Post-Processing Tasks**: Tasks performed after the order is completed, such as sending confirmation emails and updating order status.
+- **Inventory Update**: The process of adjusting the inventory levels to reflect the items sold in the order.
+
+## High-Density QA Ground Truth Summary
+The order submission flow begins with "Order Received," which triggers "Validate Order." If the order is deemed "Invalid," the flow immediately branches to "Reject Order" and then to "Order Failed - Notify Support," the terminal failure state. If the order is "Valid," the process moves to "Process Payment" and then to the decision point "Payment Successful?". A "Yes" branch leads to "Fulfill Order," "Order Completed," "Post-Processing Tasks," and "Inventory Update," representing a successful order. A "No" branch initiates "Payment Retry Logic," followed by a check: "Retry Attempt Limit Reached?". If "Yes," the order is rejected; if "No," the "Retry Count" is incremented. A "Circuit Breaker Open?" check then determines whether to attempt another payment retry or reject the order. If the circuit breaker is open, the order is rejected. If the circuit breaker is closed, the system attempts payment again. The "Payment Retry Logic" and "Circuit Breaker" are examples of resilience patterns implemented to handle transient payment failures, preventing cascading failures and improving the overall system stability. The flow converges at "Reject Order" from multiple failure points, ultimately leading to "Order Failed - Notify Support."

@@ -1,0 +1,44 @@
+graph TD
+    subgraph Ingestion
+        A[Data Source: Application Logs] --> B(Raw Data Landing Zone)
+        C[Data Source: CRM System] --> B
+        D[Data Source: Sensor Feeds] --> B
+    end
+
+    B --> E{Data Validation & Profiling}
+    E -- Invalid Data --> F[Quarantine Area]
+    E -- Valid Data --> G(Bronze Layer: Raw Data Storage)
+
+    subgraph Bronze Layer
+        G --> H{Data Deduplication}
+        H -- Duplicates Found --> I[Duplicates Archive]
+        H -- Clean Data --> Silver
+    end
+
+    subgraph Silver Layer
+        Silver(Silver Layer: Cleansed & Normalized Data) --> J{Data Transformation: Customer Segmentation}
+        J --> K(Feature Engineering Pipeline)
+        K --> L(Silver Data Storage)
+    end
+
+    subgraph Gold Layer
+        L --> M{Aggregate Data: Monthly KPIs}
+        M --> N(Gold Layer: Curated Data - Customer 360)
+        N --> O{Access Control & Security}
+    end
+
+    O --> P[Data Analytics Dashboard]
+    O --> Q[Machine Learning Models]
+
+    subgraph Tiering Workflow
+        N --> R{Data Lake Age > 30 days?}
+        R -- Yes --> S(Move to Warm Storage)
+        R -- No --> N
+        S --> T{Data Lake Age > 365 days?}
+        T -- Yes --> U(Move to Cold Storage - Glacier)
+        T -- No --> S
+    end
+
+    style F fill:#f9f,stroke:#333,stroke-width:2px
+    classDef highRisk fill:#f9f,stroke:#333,stroke-width:2px
+    class F highRisk

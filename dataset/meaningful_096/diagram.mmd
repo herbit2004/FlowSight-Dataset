@@ -1,0 +1,47 @@
+graph TD
+    subgraph UserActivity
+        A[User Session Start] --> B{Query Intent};
+        B -- Explicit Search Query --> C[Search Service API];
+        B -- Implicit Browsing --> D[Content Recommendations];
+        C --> E[Query Preprocessor];
+        D --> F[Recommendation Engine];
+    end
+
+    subgraph CorePipeline
+        E --> G[Query Understanding];
+        G --> H[Index Selection];
+        H --> I[Ranked Results Retrieval];
+        F --> J[Personalized Content IDs];
+        J --> I;
+        I --> K{Post-Processing};
+        K -- Filtering & Rules --> L[Result Enrichment];
+        K -- A/B Testing Variant --> M[Variant Enrichment];
+        L --> N[Ranking Model];
+        M --> N;
+        N --> O[Scoring and Ranking];
+    end
+
+    subgraph Output
+        O --> P[Response Formatting];
+        P --> Q[Client Display];
+    end
+
+    subgraph Data Infrastructure
+        style R fill:#f9f,stroke:#333,stroke-width:2px
+        R[User Profile Database] --> F;
+        S[Product Catalog] --> I;
+        T[Search Index] --> I;
+        U[Clickstream Data] --> N;
+        V[Purchase History] --> N;
+        W[Real-Time Event Stream] --> F;
+
+        F --> R;
+        I --> S;
+        I --> T;
+        N --> U;
+        N --> V;
+        F --> W;
+    end
+
+    classDef blue fill:#f9f,stroke:#333,stroke-width:2px;
+    class R,S,T,U,V,W blue;

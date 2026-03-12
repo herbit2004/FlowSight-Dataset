@@ -1,0 +1,17 @@
+graph TD
+    A[Start: LuminaCore Boot Sequence] --> B{CoreSync Validation};
+    B -- Core Integrity OK? --> C[FluxBridge Router Initialization];
+    B -- Integrity Failed --> E[VaultNode Handshake Attempt];
+    C --> D{ArcLane Distributor Availability};
+    D -- Distributor Ready --> F[SpectraQueue Flush Trigger];
+    D -- Distributor Offline --> E;
+    E -- Handshake Successful --> F;
+    E -- Handshake Failed --> G[ZenithGate Auth Layer Engagement];
+    F --> H[ZenithGate Request Submission];
+    G --> H;
+    H --> I{Auth Layer Response};
+    I -- Auth Granted --> J[Execute ArcLane Dataflow];
+    I -- Auth Denied --> K[System Halt: Cascade Failure];
+    J --> L[Complete: Post-Dataflow Integrity Check];
+    L --> M[End: LuminaCore Active];
+    K --> M;

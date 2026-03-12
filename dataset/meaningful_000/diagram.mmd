@@ -1,0 +1,22 @@
+graph TD
+    A[User initiates registration] --> B{Account exists?};
+    B -- Yes --> C[Display 'Account Already Exists' error];
+    B -- No --> D[Validate email format];
+    D -- Invalid format --> E[Display 'Invalid Email' error];
+    D -- Valid format --> F[Send verification email to user];
+    F --> G[User clicks verification link];
+    G --> H{Verification token valid?};
+    H -- No --> I[Display 'Invalid Verification Link' error];
+    H -- Yes --> J[Create user account in database];
+    J --> K[Generate access and refresh tokens];
+    K --> L[Store refresh token securely];
+    L --> M[Set authentication cookies/headers];
+    M --> N[Redirect user to welcome page];
+    N --> O[User initiates login];
+    O --> P{Credentials valid?};
+    P -- No --> Q[Display 'Invalid Credentials' error];
+    P -- Yes --> R[Generate new access token];
+    R --> M;
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px;
+    class C,E,I,Q error;

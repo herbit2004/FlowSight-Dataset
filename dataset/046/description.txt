@@ -1,0 +1,45 @@
+## Diagram Type & Purpose
+This is a hierarchical architecture diagram illustrating the provider structure of a system that supports multiple AI models. It shows how a MultiProvider component manages different AI provider implementations (Claude, Copilot, OpenAI, OpenRouter) and their respective authentication methods. The diagram serves to visualize the system's flexibility in handling various AI services and their credentials.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) fashion. The MultiProvider node sits at the top, acting as the root. The diagram branches out to different provider implementations, each of which further connects to specific authentication methods or API keys.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into two stages:
+1. Provider Selection: The MultiProvider component manages and selects between different AI providers.
+2. Authentication: Each provider utilizes a specific authentication method (OAuth or API key) to access the corresponding AI service.
+
+## Node-by-Node Description
+- **MP / MultiProvider**: The central component responsible for detecting credentials and allowing runtime switching between different AI providers.
+- **Claude / ClaudeProvider**: An AI provider implementation specifically for Claude models, located in `provider/claude.rs`.
+- **Copilot / CopilotProvider**: An AI provider implementation for Copilot models, located in `provider/copilot.rs`.
+- **OpenAI / OpenAIProvider**: An AI provider implementation for OpenAI models, located in `provider/openai.rs`.
+- **OR / OpenRouterProvider**: An AI provider implementation for OpenRouter, located in `provider/openrouter.rs`.
+- **ClaudeCreds / ~/.claude/.credentials.json**: The file storing OAuth credentials for Claude Max.
+- **APIKey / ANTHROPIC_API_KEY**: Represents the direct API key used for Anthropic models.
+- **GHCreds / ~/.config/github-copilot/**: The directory storing OAuth credentials for Copilot Pro/Free.
+- **CodexCreds / ~/.codex/auth.json**: The file storing OAuth credentials for ChatGPT Pro.
+- **ORKey / OPENROUTER_API_KEY**: Represents the API key used for OpenRouter, which supports 200+ models.
+
+## Edges, Branches & Convergence
+- `MP --> Claude`: The MultiProvider selects the ClaudeProvider.
+- `MP --> Copilot`: The MultiProvider selects the CopilotProvider.
+- `MP --> OpenAI`: The MultiProvider selects the OpenAIProvider.
+- `MP --> OR`: The MultiProvider selects the OpenRouterProvider.
+- `Claude --> ClaudeCreds`: The ClaudeProvider uses OAuth credentials stored in `~/.claude/.credentials.json`.
+- `Claude --> APIKey`: The ClaudeProvider uses the `ANTHROPIC_API_KEY` directly.
+- `Copilot --> GHCreds`: The CopilotProvider uses OAuth credentials stored in `~/.config/github-copilot/`.
+- `OpenAI --> CodexCreds`: The OpenAIProvider uses OAuth credentials stored in `~/.codex/auth.json`.
+- `OR --> ORKey`: The OpenRouterProvider uses the `OPENROUTER_API_KEY`.
+
+## Repository Context & Terminology
+- **MultiProvider**: A component that manages multiple AI providers and allows switching between them at runtime. It likely handles credential detection and provider selection logic.
+- **ClaudeProvider**: A specific implementation for interacting with Claude models, likely using the Anthropic API. The `provider/claude.rs` file likely contains the implementation details.
+- **CopilotProvider**: A specific implementation for interacting with Copilot models. The `provider/copilot.rs` file likely contains the implementation details.
+- **OpenAIProvider**: A specific implementation for interacting with OpenAI models. The `provider/openai.rs` file likely contains the implementation details.
+- **OpenRouterProvider**: A specific implementation for interacting with OpenRouter, which acts as an aggregator for multiple AI models. The `provider/openrouter.rs` file likely contains the implementation details.
+- **OAuth**: An open standard for access delegation, commonly used for authenticating users and granting access to resources without sharing passwords.
+- **API Key**: A secret key used to authenticate requests to an API.
+
+## High-Density QA Ground Truth Summary
+The diagram begins with the `MultiProvider`, which detects credentials and allows runtime switching between AI providers. From the `MultiProvider`, the diagram branches out to four different provider implementations: `ClaudeProvider`, `CopilotProvider`, `OpenAIProvider`, and `OpenRouterProvider`. The `ClaudeProvider`, implemented in `provider/claude.rs`, uses either OAuth credentials from `~/.claude/.credentials.json` for Claude Max or a direct `ANTHROPIC_API_KEY`. The `CopilotProvider`, implemented in `provider/copilot.rs`, uses OAuth credentials stored in `~/.config/github-copilot/` for Copilot Pro/Free. The `OpenAIProvider`, implemented in `provider/openai.rs`, uses OAuth credentials from `~/.codex/auth.json` for ChatGPT Pro. Finally, the `OpenRouterProvider`, implemented in `provider/openrouter.rs`, uses the `OPENROUTER_API_KEY` to access 200+ models. The selection of a specific provider by the `MultiProvider` dictates which authentication method is used, ultimately determining which AI service is accessed. The diagram highlights the modular design, allowing for easy integration of new AI providers and authentication methods.

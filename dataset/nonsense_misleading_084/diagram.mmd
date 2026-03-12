@@ -1,0 +1,17 @@
+graph TD
+    A[Start: User Submits Order] --> B{Payment Received?};
+    B -- Yes --> C[Inventory Check];
+    B -- No --> G[Send Payment Reminder];
+    C --> D{Inventory Available?};
+    D -- No --> F[Notify User: Backorder];
+    D -- Yes --> E[Package Items];
+    E --> H[Shipping Started];
+    H --> I{Delivery Successful?};
+    I -- No --> J[Investigate Delivery Problem];
+    J --> H;
+    I -- Yes --> K[Order Confirmation Sent];
+    K --> L[Update Inventory];
+    L --> M[End: Order Completed];
+    F --> M;
+    G --> A;
+    H -- Success --> F;

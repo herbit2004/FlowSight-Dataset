@@ -1,0 +1,76 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of a loyalty points system. It depicts the process of earning and spending points, including eligibility checks, transaction processing, tier evaluation, and reward redemption. The diagram serves as a visual representation of the system's logic and data flow, aiding in understanding and troubleshooting the loyalty program.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with user interaction and flows through various services and decision points, eventually converging at a notification service. The start node is "User Action: Earn/Spend Points" and the end node is "Notification Service".
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "User Interaction" and "Data Layer". Logically, the diagram is divided into the following stages:
+1. User Interaction and Eligibility Check
+2. Points Calculation and Transaction Processing
+3. Tier Evaluation and Update
+4. Reward Redemption
+5. Notification
+
+## Node-by-Node Description
+- **A / User Action: Earn/Spend Points**: Represents the initial user action of either earning or spending loyalty points. visible in diagram; no further repository context available.
+- **B / Loyalty API Gateway**: Acts as the entry point for loyalty-related requests. visible in diagram; no further repository context available.
+- **C / Eligibility Check?**: A decision point to determine if the user is eligible for the points transaction. visible in diagram; no further repository context available.
+- **D / Points Calculation Engine**: Calculates the number of points to be awarded or deducted. visible in diagram; no further repository context available.
+- **F / Points Ledger Service**: Manages the user's points balance in a ledger. In the repository this corresponds to the service responsible for maintaining the accurate record of points for each user.
+- **G / Transaction Successful?**: A decision point to determine if the points transaction was successfully processed. visible in diagram; no further repository context available.
+- **H / Tier Evaluation Service**: Evaluates the user's tier based on their points balance. visible in diagram; no further repository context available.
+- **J / Tier Update Request**: Requests an update to the user's tier. visible in diagram; no further repository context available.
+- **K / Tier Database**: Stores user tier information. visible in diagram; no further repository context available.
+- **X / Data Lake - Analytics**: Stores data for analytics purposes. visible in diagram; no further repository context available.
+- **N / Tier Updated?**: A decision point to determine if the user's tier has been updated. visible in diagram; no further repository context available.
+- **O / Reward Catalog Service**: Provides a catalog of available rewards. visible in diagram; no further repository context available.
+- **Q / Reward Eligibility Check**: Checks if the user is eligible for a specific reward. visible in diagram; no further repository context available.
+- **R / Reward Available?**: A decision point to determine if the requested reward is available. visible in diagram; no further repository context available.
+- **S / Reward Redemption Service**: Processes the redemption of a reward. visible in diagram; no further repository context available.
+- **T / Alternative Reward Offer**: Offers an alternative reward if the requested reward is unavailable. visible in diagram; no further repository context available.
+- **I / Transaction Rollback**: Rolls back the transaction if it fails. visible in diagram; no further repository context available.
+- **L / Error Logging Service**: Logs any errors that occur during the process. visible in diagram; no further repository context available.
+- **P / Admin Alert System**: Alerts the administrator of any issues. visible in diagram; no further repository context available.
+- **E / Insufficient Tier Standing**: Indicates that the user does not have sufficient tier standing. visible in diagram; no further repository context available.
+- **M / Notification Service**: Sends notifications to the user or administrator. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User action triggers the Loyalty API Gateway.
+- `B --> C`: Loyalty API Gateway initiates an eligibility check.
+- `C -- Yes --> D`: User is eligible, proceed to points calculation.
+- `C -- No --> E`: User is not eligible, insufficient tier standing.
+- `D --> F`: Points Calculation Engine sends data to Points Ledger Service.
+- `F --> G`: Points Ledger Service initiates a transaction.
+- `G -- Yes --> H`: Transaction is successful, proceed to tier evaluation.
+- `G -- No --> I`: Transaction fails, initiate transaction rollback.
+- `H --> J`: Tier Evaluation Service requests a tier update.
+- `J --> K`: Tier Update Request updates the Tier Database.
+- `K --> N`: Tier Database triggers a check to see if the tier was updated.
+- `N -- Yes --> O`: Tier is updated, proceed to reward catalog service.
+- `N -- No --> P`: Tier is not updated, trigger admin alert system.
+- `O --> Q`: Reward Catalog Service initiates a reward eligibility check.
+- `Q --> R`: Reward Eligibility Check determines if the reward is available.
+- `R -- Yes --> S`: Reward is available, proceed to reward redemption service.
+- `R -- No --> T`: Reward is not available, offer an alternative reward.
+- `I --> L`: Transaction Rollback triggers the Error Logging Service.
+- `E --> M`: Insufficient Tier Standing triggers the Notification Service.
+- `L --> M`: Error Logging Service triggers the Notification Service.
+- `S --> M`: Reward Redemption Service triggers the Notification Service.
+- `T --> M`: Alternative Reward Offer triggers the Notification Service.
+- `P --> M`: Admin Alert System triggers the Notification Service.
+- `F --> X`: Points Ledger Service sends points data to Data Lake - Analytics.
+- `K --> X`: Tier Database sends tier data to Data Lake - Analytics.
+
+## Repository Context & Terminology
+- **Loyalty API Gateway**: An API gateway that handles all requests related to the loyalty program.
+- **Points Calculation Engine**: A service responsible for calculating the number of points earned or spent in a transaction.
+- **Points Ledger Service**: A service that maintains a record of all points transactions for each user.
+- **Tier Evaluation Service**: A service that determines a user's loyalty tier based on their points balance or other criteria.
+- **Reward Catalog Service**: A service that provides a list of available rewards and their associated costs.
+- **Reward Redemption Service**: A service that processes the redemption of rewards by users.
+- **Data Lake**: A centralized repository for storing large volumes of structured and unstructured data.
+- **Admin Alert System**: A system that notifies administrators of any issues or anomalies in the loyalty program.
+
+## High-Density QA Ground Truth Summary
+The loyalty points system begins with a user action to earn or spend points, which is captured by the Loyalty API Gateway. The gateway then initiates an eligibility check. If the user is eligible (`C -- Yes --> D`), the Points Calculation Engine calculates the points and updates the Points Ledger Service. A successful transaction (`G -- Yes --> H`) triggers the Tier Evaluation Service, potentially leading to a Tier Update Request. If the tier is updated (`N -- Yes --> O`), the Reward Catalog Service is accessed, followed by a Reward Eligibility Check. If a reward is available (`R -- Yes --> S`), the Reward Redemption Service is invoked. Conversely, if the initial eligibility check fails (`C -- No --> E`), or the transaction fails (`G -- No --> I`), or the tier is not updated (`N -- No --> P`), or the reward is unavailable (`R -- No --> T`), alternative paths are taken, including error logging, admin alerts, or alternative reward offers. All paths ultimately converge at the Notification Service, which informs the user or administrator of the outcome. The Points Ledger Service and Tier Database also feed data into the Data Lake for analytics. The Points Ledger Service is a core component, ensuring accurate tracking of user points balances, which directly impacts tier evaluation and reward eligibility.

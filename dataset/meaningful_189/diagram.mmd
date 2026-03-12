@@ -1,0 +1,35 @@
+graph TD
+    subgraph Customer Order Flow
+    A[Customer Order Creation] --> B{Validate Order Details};
+    B -- Valid --> C[Inventory Check & Reservation];
+    B -- Invalid --> Z[Display Error to Customer];
+    C -- Sufficient Inventory --> D[Calculate Order Total];
+    C -- Insufficient Inventory --> Z;
+    D --> E[Generate Order ID];
+    E --> F[Present Payment Options];
+    end
+
+    subgraph Payment Processing
+    F --> G{Customer Selects Payment Method};
+    G -- Credit Card --> H[Card Payment Gateway];
+    G -- PayPal --> I[PayPal API];
+    G -- Store Credit --> J[Internal Credit System];
+    H --> K{Authorization Request};
+    I --> K;
+    J --> K;
+    K -- Approved --> L[Payment Capture];
+    K -- Declined --> M[Payment Declined Notification];
+    L --> N[Order Confirmation];
+    end
+
+    subgraph Post-Payment Execution
+    N --> O[Update Inventory Levels];
+    O --> P[Send Shipping Notification];
+	P --> Q[Order Completion];
+	M --> R[Rollback Inventory Reservation];
+	R --> S[Notify Customer of Payment Failure];
+	S --> Z;
+    end
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class Z,M,R,S error

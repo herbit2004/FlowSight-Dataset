@@ -1,0 +1,63 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the high-level components and data flow within the Pulumi system. It depicts the interaction between the user, the Pulumi CLI, SDKs, core components, plugins, backend services, data storage, and external systems. The diagram serves as a visual representation of the Pulumi architecture, aiding in understanding the system's structure and dependencies.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The hierarchy starts with the User at the top, flowing down through the Pulumi System components, and finally reaching External Systems at the bottom. The User node serves as the starting point, and the Cloud Providers and Version Control nodes in External Systems represent the end points.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs: Pulumi System, SDKs, Core Components, Plugins, Backend Services, Data Storage, and External Systems.
+- **Pulumi System**: Encompasses the core functionality of the Pulumi platform.
+- **SDKs**: Contains the Software Development Kits for different languages (Go, Node.js, Python).
+- **Core Components**: Includes the Engine, Resource Manager, State Manager, and Config Manager.
+- **Plugins**: Consists of Provider Plugins and Language Plugins.
+- **Backend Services**: Contains the API Server and Storage Service.
+- **Data Storage**: Represents the State Storage (e.g., S3, Azure Blob).
+- **External Systems**: Includes Cloud Providers (AWS, Azure, GCP, etc.) and Version Control (e.g., GitHub, GitLab).
+
+## Node-by-Node Description
+- **User**: Represents the end-user interacting with the Pulumi system. visible in diagram; no further repository context available.
+- **CLI (Go)**: The Pulumi Command Line Interface, written in Go. It serves as the primary interface for users to interact with Pulumi.
+- **Go SDK**: The Software Development Kit for Go, allowing users to write Pulumi programs in Go.
+- **Node.js SDK**: The Software Development Kit for Node.js, enabling users to write Pulumi programs in JavaScript or TypeScript.
+- **Python SDK**: The Software Development Kit for Python, allowing users to write Pulumi programs in Python.
+- **Engine (Go)**: The core orchestration engine of Pulumi, responsible for planning and executing infrastructure deployments.
+- **Resource Manager (Go)**: Manages the lifecycle of cloud resources.
+- **State Manager (Go)**: Manages the state of the infrastructure.
+- **Config Manager (Go)**: Manages the configuration settings for Pulumi deployments.
+- **API Server (Go)**: Provides an API endpoint for interacting with the Pulumi system.
+- **Storage Service (Go)**: Provides storage services for Pulumi, likely related to storing state and configuration.
+- **State Storage (e.g., S3, Azure Blob)**: Stores the state of the infrastructure, often using cloud storage services like S3 or Azure Blob Storage.
+- **Provider Plugins (Various Languages)**: Plugins that interact with specific cloud providers (e.g., AWS, Azure, GCP).
+- **Language Plugins (Various Languages)**: Plugins that support different programming languages for Pulumi programs.
+- **Cloud Providers (AWS, Azure, GCP, etc.)**: External cloud service providers.
+- **Version Control (e.g., GitHub, GitLab)**: External version control systems used for managing Pulumi code.
+
+## Edges, Branches & Convergence
+- `User --> CLI`: The user interacts with the Pulumi system through the CLI.
+- `CLI --> GoSDK`: The CLI utilizes the Go SDK.
+- `CLI --> NodeSDK`: The CLI utilizes the Node.js SDK.
+- `CLI --> PythonSDK`: The CLI utilizes the Python SDK.
+- `CLI --> Engine`: The CLI interacts with the Engine to initiate deployments.
+- `Engine --> ResourceManager`: The Engine uses the Resource Manager to manage resources.
+- `Engine --> StateManager`: The Engine uses the State Manager to manage state.
+- `Engine --> ConfigManager`: The Engine uses the Config Manager to manage configuration.
+- `ResourceManager --> ProviderPlugins`: The Resource Manager uses Provider Plugins to interact with cloud providers.
+- `Engine --> LanguagePlugins`: The Engine uses Language Plugins to support different programming languages.
+- `Engine --> APIServer`: The Engine interacts with the API Server.
+- `StateManager --> StorageService`: The State Manager uses the Storage Service to store state.
+- `StorageService --> StateStorage`: The Storage Service stores data in State Storage.
+- `ProviderPlugins --> CloudProviders`: Provider Plugins interact with Cloud Providers.
+- `CLI --> VersionControl`: The CLI interacts with Version Control systems.
+
+## Repository Context & Terminology
+- **Pulumi CLI**: The command-line interface is the primary way users interact with Pulumi.
+- **SDKs (Go, Node.js, Python)**: These SDKs allow users to define infrastructure as code in their preferred programming languages.
+- **Engine**: The core of Pulumi, responsible for orchestrating deployments and managing resources.
+- **State**: Pulumi stores the state of your infrastructure to track changes and manage deployments. This state is typically stored in a cloud storage service like S3 or Azure Blob Storage.
+- **Providers**: Pulumi Providers are plugins that interact with specific cloud providers or services.
+- **Plugins**: Pulumi uses plugins to extend its functionality and support different languages and providers.
+- **Go**: The Go programming language is used for the core components of the Pulumi system, such as the Engine, State Manager, and API Server.
+- **Infrastructure as Code (IaC)**: Pulumi enables Infrastructure as Code, allowing users to define and manage infrastructure using code.
+
+## High-Density QA Ground Truth Summary
+The Pulumi architecture begins with a User interacting with the Pulumi CLI (written in Go). The CLI then interfaces with various SDKs (Go, Node.js, Python) depending on the user's chosen language. The CLI also communicates with the core Pulumi Engine (Go), which orchestrates deployments. The Engine interacts with the Resource Manager (Go), State Manager (Go), and Config Manager (Go) to manage resources, state, and configuration respectively. The Resource Manager utilizes Provider Plugins (written in various languages) to interact with external Cloud Providers like AWS, Azure, and GCP. The Engine also uses Language Plugins (various languages) to support different programming languages. The State Manager relies on the Storage Service (Go) to persist infrastructure state in Data Storage, such as S3 or Azure Blob. The Engine also interacts with the API Server (Go). The CLI interacts with Version Control systems like GitHub or GitLab. The end points of the diagram are the Cloud Providers and Version Control systems, representing the external systems that Pulumi interacts with. The Pulumi Engine, written in Go, is central to the entire process, managing the lifecycle of cloud resources and ensuring that the desired state of the infrastructure is achieved.

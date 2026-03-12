@@ -1,0 +1,52 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the components and data flow within a self-hosted registry system. It depicts the interaction between client-side elements (user/developer, AI agent/LLM) and the registry's core components, including API, data storage, and runtime environment. The diagram serves as a high-level overview of the system's architecture, aiding in understanding the relationships between different modules and their roles.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner. It is hierarchically structured with three main subgraphs: Client Side, Registry Core (within Self-Hosted Infrastructure), and Runtime Environment (also within Self-Hosted Infrastructure). The start nodes are User/Developer and AI Agent/LLM, and the end node is MCP Server.
+
+## Subgraphs / Stages
+- **Client Side**: Represents the user or developer interacting with the system, as well as the AI Agent/LLM component.
+- **Registry Core**: Contains the core components of the registry, including the API, search functionality (Meilisearch), data storage (Registry Data), and OAuth proxy.
+- **Runtime Environment**: Encompasses the execution environment for tools, including local execution and a secure sandbox, ultimately leading to the MCP Server.
+
+## Node-by-Node Description
+- **User / Developer**: Represents a human user or developer interacting with the system.
+  visible in diagram; no further repository context available.
+- **AI Agent / LLM**: Represents an AI agent or Large Language Model interacting with the system.
+  visible in diagram; no further repository context available.
+- **Registry API**: The main API endpoint for the registry.
+  visible in diagram; no further repository context available.
+- **OAuth Proxy**: Handles authentication and authorization for the registry.
+  visible in diagram; no further repository context available.
+- **Meilisearch**: Provides search functionality for the registry.
+  visible in diagram; no further repository context available.
+- **Registry Data**: The data storage component for the registry.
+  visible in diagram; no further repository context available.
+- **Local Exec**: Represents local execution of tools within the runtime environment.
+  visible in diagram; no further repository context available.
+- **Secure Sandbox**: Represents a secure environment for executing tools.
+  visible in diagram; no further repository context available.
+- **MCP Server**: The final server component in the runtime environment.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User --> Registry API`: User searches for tools via the Registry API.
+- `AI Agent / LLM --> Registry API`: AI Agent executes tools via the Registry API.
+- `AI Agent / LLM --> OAuth Proxy`: AI Agent authenticates via the OAuth Proxy.
+- `Registry API --> Meilisearch`: Registry API queries the index in Meilisearch.
+- `Registry API --> Registry Data`: Registry API reads metadata from Registry Data.
+- `Registry API --> Local Exec`: Registry API runs a tool in Local Exec.
+- `Registry API --> Secure Sandbox`: Registry API runs a tool in the Secure Sandbox.
+- `Local Exec --> MCP Server`: Local Exec executes on the MCP Server.
+- `Secure Sandbox --> MCP Server`: Secure Sandbox executes on the MCP Server.
+
+## Repository Context & Terminology
+- **Registry API**: The central API for interacting with the registry, providing endpoints for searching, executing, and managing tools.
+- **OAuth Proxy**: Handles authentication and authorization, ensuring secure access to the registry's resources.
+- **Meilisearch**: A fast and relevant search engine used for indexing and querying the registry's metadata.
+- **Runtime Environment**: The environment where tools are executed, providing isolation and resource management.
+- **Secure Sandbox**: A secure execution environment that isolates tools from the host system, preventing malicious code from causing harm.
+- **MCP Server**: The server responsible for managing and controlling the execution of tools within the runtime environment.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the architecture of a self-hosted registry system. The process begins with either a User/Developer searching for tools via the Registry API or an AI Agent/LLM executing tools via the Registry API after authenticating through the OAuth Proxy. The Registry API then interacts with several core components. It queries the Meilisearch index for search results and reads metadata from the Registry Data store. The Registry API can also trigger the execution of tools in either the Local Exec environment or the Secure Sandbox. Both Local Exec and Secure Sandbox environments ultimately execute processes on the MCP Server. The choice between Local Exec and Secure Sandbox depends on the tool's security requirements. The OAuth Proxy handles authentication flows initiated by the AI Agent/LLM, ensuring secure access to the registry. The Registry API serves as the central point of interaction, coordinating search, data retrieval, and tool execution within the self-hosted environment. The MCP Server represents the final stage where tools are executed, completing the workflow.

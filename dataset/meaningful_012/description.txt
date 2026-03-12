@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of uploading a file to an object storage system. It outlines the steps involved, from the initial client request to the final event notification after the file has been processed. The diagram serves as a visual representation of the upload workflow, aiding in understanding the system's architecture and data flow.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "Client: Upload Request" node at the top and flows downwards through various services and storage components, ending with the "Message Queue: File Processed Event" node. The diagram depicts a linear flow with a loop for handling multipart uploads.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Client Request, Authentication & Metadata Check, Rejection (failure state), Multipart Upload Initiation, Chunk Processing Loop, and Completion/Notification.
+
+## Node-by-Node Description
+- **A / Client: Upload Request**: Represents the initial request from a client to upload a file. visible in diagram; no further repository context available.
+- **B / Load Balancer: Route Request**: Represents the load balancer routing the upload request to an appropriate server. visible in diagram; no further repository context available.
+- **C / Upload Service: Authenticate User**: Represents the upload service authenticating the user making the request. visible in diagram; no further repository context available.
+- **D / Upload Service: Check File Metadata**: Represents the upload service checking the file's metadata (size, type, etc.). visible in diagram; no further repository context available.
+- **E / Upload Service: Reject Upload**: Represents the upload service rejecting the upload due to invalid credentials or exceeding limits. visible in diagram; no further repository context available.
+- **F / Object Storage: Initiate Multipart Upload**: Represents the object storage initiating a multipart upload process. visible in diagram; no further repository context available.
+- **G / Upload Service: Receive Chunks**: Represents the upload service receiving chunks of the file. visible in diagram; no further repository context available.
+- **H / Object Storage: Append Chunk to Multipart Upload**: Represents the object storage appending a chunk to the multipart upload. visible in diagram; no further repository context available.
+- **I / All Chunks Received?**: Represents a decision point to check if all chunks have been received. visible in diagram; no further repository context available.
+- **J / Object Storage: Complete Multipart Upload**: Represents the object storage completing the multipart upload. visible in diagram; no further repository context available.
+- **K / Message Queue: File Processed Event**: Represents a message queue sending a file processed event. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The client's upload request is routed to the load balancer.
+- `B --> C`: The load balancer routes the request to the upload service for authentication.
+- `C -- Valid Credentials --> D`: If the user is authenticated, the flow proceeds to check file metadata.
+- `C -- Invalid Credentials --> E`: If the user is not authenticated, the upload is rejected.
+- `D -- File Size & Type OK --> F`: If the file metadata is valid, the flow proceeds to initiate a multipart upload.
+- `D -- Exceeds Limit --> E`: If the file metadata is invalid (e.g., exceeds size limit), the upload is rejected.
+- `F --> G`: The object storage initiates a multipart upload, and the flow proceeds to receive chunks.
+- `G --> H`: The upload service receives chunks and sends them to the object storage to be appended.
+- `H --> I`: The object storage appends the chunk, and the flow proceeds to check if all chunks have been received.
+- `I -- Yes --> J`: If all chunks have been received, the multipart upload is completed.
+- `I -- No --> G`: If not all chunks have been received, the flow loops back to receive more chunks.
+- `J --> K`: After the multipart upload is completed, a file processed event is sent to the message queue.
+
+## Repository Context & Terminology
+- **Client**: The application or user initiating the file upload.
+- **Load Balancer**: Distributes network traffic across multiple servers to ensure no single server is overwhelmed.
+- **Upload Service**: A service responsible for handling file uploads, including authentication and metadata validation.
+- **Object Storage**: A storage architecture that manages data as objects, often used for storing large files.
+- **Multipart Upload**: A process of uploading a large file in smaller parts or chunks.
+- **Message Queue**: A service that allows asynchronous communication between different components of a system.
+- **File Metadata**: Data describing the file, such as its size, type, and creation date.
+
+## High-Density QA Ground Truth Summary
+The upload process begins with a `Client` sending an `Upload Request` to a `Load Balancer`. The `Load Balancer` routes the request to the `Upload Service` for `Authenticate User`. If `Valid Credentials` are provided, the process continues to `Upload Service: Check File Metadata`; otherwise, the upload is `Reject`ed. If the `File Size & Type` are `OK`, `Object Storage` initiates a `Multipart Upload`. The `Upload Service` then `Receive Chunks`, which are appended to the `Multipart Upload` in `Object Storage`. A loop continues until `All Chunks Received?` If `No`, the process returns to `Upload Service: Receive Chunks`; if `Yes`, the `Object Storage` `Complete Multipart Upload`. Finally, a `Message Queue` sends a `File Processed Event`. The `Multipart Upload` strategy is crucial for handling large files, breaking them into smaller, manageable pieces for efficient transfer and storage in the `Object Storage`. The `Message Queue` ensures that downstream processes are notified asynchronously upon successful file processing.

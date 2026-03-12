@@ -1,0 +1,22 @@
+graph TD
+    subgraph Report Generation and Export
+        A[Receive Report Request] --> B{Validate Request};
+        B -- Valid --> C[Fetch Data from Sources];
+        B -- Invalid --> E[Return Error Response];
+        C --> D{Data Aggregation};
+        D --> F[Format Data for Report];
+        F --> G{Select Export Format};
+        G -- PDF --> H[Generate PDF];
+        G -- CSV --> I[Generate CSV];
+        G -- XLSX --> J[Generate XLSX];
+        H --> K[Secure Document];
+        I --> L[Compress File];
+        J --> M[Apply Spreadsheet Formatting];
+        K --> N[Save Report to Storage];
+        L --> N;
+        M --> N;
+        N --> O[Send Report to User];
+        O --> P[Log Generation Details];
+    end
+    classDef internal fill:#f9f,stroke:#333,stroke-width:2px
+    style A,B,C,D,F,G,H,I,J,K,L,M,N,O,P internal

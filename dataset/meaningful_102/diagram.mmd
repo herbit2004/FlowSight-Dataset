@@ -1,0 +1,22 @@
+graph TD
+    A[Application Server: MyApp] --> B(Log Forwarder: Fluentd);
+    B -- High CPU Usage? --> C{Resource Monitor};
+    C -- Yes --> D[Dynamic Sampling: Reduce Verbosity];
+    C -- No --> E[Default Sampling];
+    D --> F(Kafka Topic: app-logs);
+    E --> F;
+    F --> G[Log Aggregator: Apache Flume];
+    G --> H{Data Enrichment?};
+    H -- Needs GeoIP? --> I[GeoIP Lookup Service];
+    H -- No --> J[Parse & Normalize Logs];
+    I --> J;
+    J --> K(Elasticsearch Indexer);
+    K --> L[Elasticsearch Cluster];
+    L --> M{Alerting Rules?};
+    M -- Threshold Breached --> N[PagerDuty Alert];
+    M -- OK --> O[Idle];
+    N --> P[Incident Management System];
+    L --> Q(Kibana Dashboard);
+
+    classDef critical fill:#f9f,stroke:#333,stroke-width:2px
+    class N,P critical

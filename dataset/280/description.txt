@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a transform pipeline and its interactions with other components like a compressor cache and an LLM provider. The diagram illustrates the flow of data and control through various stages of the pipeline, including content routing, compression, and interaction with a language model. It serves as a high-level architectural overview of the data transformation process.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TB). It consists of a main "Transform Pipeline" subgraph at the top, which feeds into other components. The pipeline starts with "CacheAligner" and ends with interactions with an "LLM Provider" and a "Compress-Cache-Retrieve" (CCR) component.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Transform Pipeline**: The main pipeline responsible for transforming data through a series of steps.
+- **ContentRouter dispatches**: Represents the different compressors that the ContentRouter can dispatch to based on content type.
+- **CCR: Compress-Cache-Retrieve**: A component responsible for compressing and caching data, and retrieving it when needed.
+
+## Node-by-Node Description
+- **CA / 1. CacheAligner\nStabilizes prefix for KV cache**: The first step in the transform pipeline, responsible for stabilizing the prefix for the KV cache. visible in diagram; no further repository context available.
+- **CR / 2. ContentRouter\nDetects content type, picks compressor**: Detects the content type and selects an appropriate compressor. visible in diagram; no further repository context available.
+- **IC / 3. IntelligentContext\nScore-based token fitting**: Performs score-based token fitting. visible in diagram; no further repository context available.
+- **QE / 4. Query Echo\nRe-injects user question**: Re-injects the user question. visible in diagram; no further repository context available.
+- **LLM / LLM Provider**: Provides language model services. visible in diagram; no further repository context available.
+- **SC / SmartCrusher\nAny JSON type**: A compressor for any JSON type. visible in diagram; no further repository context available.
+- **CC / CodeCompressor\nAST-aware code**: A compressor for AST-aware code. visible in diagram; no further repository context available.
+- **LL / LLMLingua\nML-based text**: A compressor for ML-based text. visible in diagram; no further repository context available.
+- **Store / Compressed\nStore**: Stores compressed data. visible in diagram; no further repository context available.
+- **Tool / headroom_retrieve**: Retrieves data from the compressed store. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `CA --> CR`: Data flows from CacheAligner to ContentRouter.
+- `CR --> IC`: Data flows from ContentRouter to IntelligentContext.
+- `IC --> QE`: Data flows from IntelligentContext to Query Echo.
+- `QE --> LLM`: The user question is passed to the LLM Provider.
+- `LLM -. "retrieves when\nit needs more" .-> Tool`: The LLM Provider retrieves data from the headroom_retrieve when it needs more information.
+- `CR --> Compressors`: The ContentRouter dispatches to one of the compressors based on content type.
+- `SC -. "stores originals +\nsummary of what's omitted" .-> Store`: The SmartCrusher stores originals and a summary of what's omitted in the Compressed Store.
+- `Tool <--> Store`: The headroom_retrieve tool interacts with the Compressed Store to retrieve data.
+
+## Repository Context & Terminology
+- **CacheAligner**: A component responsible for stabilizing the prefix for the KV cache.
+- **ContentRouter**: A component that detects the content type and picks an appropriate compressor.
+- **IntelligentContext**: A component that performs score-based token fitting.
+- **Query Echo**: A component that re-injects the user question.
+- **LLM Provider**: A service that provides language model capabilities.
+- **SmartCrusher**: A compressor designed for any JSON type.
+- **CodeCompressor**: A compressor designed for AST-aware code.
+- **LLMLingua**: A compressor designed for ML-based text.
+- **Compress-Cache-Retrieve (CCR)**: A component responsible for compressing, caching, and retrieving data.
+- **headroom_retrieve**: A tool within the CCR component used to retrieve data from the compressed store.
+
+## High-Density QA Ground Truth Summary
+The transform pipeline begins with the CacheAligner stabilizing the prefix for the KV cache. This is followed by the ContentRouter, which detects the content type and selects a compressor. Based on the content type, the ContentRouter dispatches to either the SmartCrusher for JSON data, the CodeCompressor for AST-aware code, or LLMLingua for ML-based text. The IntelligentContext then performs score-based token fitting, and the Query Echo re-injects the user question. The user question is then passed to the LLM Provider. If the LLM Provider requires additional information, it retrieves data from the Compress-Cache-Retrieve (CCR) component using the headroom_retrieve tool. The SmartCrusher stores the original data and a summary of what's omitted in the Compressed Store. The CCR component acts as a cache, providing compressed data to the LLM Provider when needed, optimizing performance and reducing the amount of data that needs to be processed by the LLM. The pipeline concludes with the LLM Provider having the necessary information to fulfill the user's request.

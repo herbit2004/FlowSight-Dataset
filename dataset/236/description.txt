@@ -1,0 +1,59 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating and comparing different workflows for generating cards from video content using Large Language Models (LLMs). It compares three distinct flows: one using ChatGPT/Claude, one using a local LLM setup, and one using Gemini. The diagram serves to visualize the number of LLM calls required by each approach and the steps involved.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It consists of three subgraphs, each representing a different workflow. Each subgraph starts with a "Video" node and ends with a "Done" node.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **ChatGPT/Claude Flow**: Represents the workflow using ChatGPT or Claude, involving extracting frames, batch describing them, merging segments, and generating cards.
+- **Local Flow**: Represents the workflow using a local LLM, involving extracting frames, generating descriptions, merging, titling, merge checking, and merging cards.
+- **Gemini Flow**: Represents the workflow using Gemini, involving uploading and transcribing the video, and generating cards.
+
+## Node-by-Node Description
+- **CV / Video**: Represents the input video for the ChatGPT/Claude flow. visible in diagram; no further repository context available.
+- **CE / Extract frames every 60s**: Represents the step of extracting frames from the video every 60 seconds in the ChatGPT/Claude flow. visible in diagram; no further repository context available.
+- **CB / Batch describe 10 frames/call**: Represents the step of batch describing 10 frames per LLM call in the ChatGPT/Claude flow. visible in diagram; no further repository context available.
+- **CM / Merge segments 1 call**: Represents the step of merging segments using one LLM call in the ChatGPT/Claude flow. visible in diagram; no further repository context available.
+- **CC / Generate Cards 1 call**: Represents the step of generating cards using one LLM call in the ChatGPT/Claude flow. visible in diagram; no further repository context available.
+- **CD / Done**: Represents the completion of the ChatGPT/Claude flow. visible in diagram; no further repository context available.
+- **LV / Video**: Represents the input video for the Local flow. visible in diagram; no further repository context available.
+- **LE / Extract 30 frames**: Represents the step of extracting 30 frames from the video in the Local flow. visible in diagram; no further repository context available.
+- **LD / 30 descriptions 30 LLM calls**: Represents the step of generating 30 descriptions using 30 LLM calls in the Local flow. visible in diagram; no further repository context available.
+- **LM / Merge 1 call**: Represents the step of merging descriptions using one LLM call in the Local flow. visible in diagram; no further repository context available.
+- **LT / Title 1 call**: Represents the step of generating a title using one LLM call in the Local flow. visible in diagram; no further repository context available.
+- **LC / Merge Check 1 call**: Represents the step of checking the merged content using one LLM call in the Local flow. visible in diagram; no further repository context available.
+- **LMC / Merge Cards 1 call**: Represents the step of merging cards using one LLM call in the Local flow. visible in diagram; no further repository context available.
+- **LD2 / Done**: Represents the completion of the Local flow. visible in diagram; no further repository context available.
+- **GV / Video**: Represents the input video for the Gemini flow. visible in diagram; no further repository context available.
+- **GU / Upload + Transcribe 1 LLM call**: Represents the step of uploading and transcribing the video using one LLM call in the Gemini flow. visible in diagram; no further repository context available.
+- **GC / Generate Cards 1 LLM call**: Represents the step of generating cards using one LLM call in the Gemini flow. visible in diagram; no further repository context available.
+- **GD / Done**: Represents the completion of the Gemini flow. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `CV --> CE`: Represents the flow from the input video to extracting frames in the ChatGPT/Claude flow.
+- `CE --> CB`: Represents the flow from extracting frames to batch describing them in the ChatGPT/Claude flow.
+- `CB --> CM`: Represents the flow from batch describing to merging segments in the ChatGPT/Claude flow.
+- `CM --> CC`: Represents the flow from merging segments to generating cards in the ChatGPT/Claude flow.
+- `CC --> CD`: Represents the flow from generating cards to completion in the ChatGPT/Claude flow.
+- `LV --> LE`: Represents the flow from the input video to extracting frames in the Local flow.
+- `LE --> LD`: Represents the flow from extracting frames to generating descriptions in the Local flow.
+- `LD --> LM`: Represents the flow from generating descriptions to merging in the Local flow.
+- `LM --> LT`: Represents the flow from merging to titling in the Local flow.
+- `LT --> LC`: Represents the flow from titling to merge checking in the Local flow.
+- `LC --> LMC`: Represents the flow from merge checking to merging cards in the Local flow.
+- `LMC --> LD2`: Represents the flow from merging cards to completion in the Local flow.
+- `GV --> GU`: Represents the flow from the input video to uploading and transcribing in the Gemini flow.
+- `GU --> GC`: Represents the flow from uploading and transcribing to generating cards in the Gemini flow.
+- `GC --> GD`: Represents the flow from generating cards to completion in the Gemini flow.
+
+## Repository Context & Terminology
+- **LLM (Large Language Model)**: A type of artificial intelligence model that uses deep learning techniques to understand and generate human language.
+- **ChatGPT/Claude**: Specific LLMs provided by OpenAI and Anthropic, respectively.
+- **Gemini**: An LLM provided by Google.
+- **Frames**: Still images extracted from a video.
+- **Cards**: Visual summaries or highlights generated from the video content.
+- **Transcription**: The process of converting audio from the video into text.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates three distinct workflows for generating cards from video content using LLMs. The ChatGPT/Claude flow begins with a "Video" input, followed by "Extract frames every 60s". The extracted frames are then processed by "Batch describe 10 frames/call", which uses an LLM to generate descriptions for batches of 10 frames. These descriptions are then merged in the "Merge segments 1 call" step, followed by "Generate Cards 1 call", and finally "Done". The Local flow also starts with a "Video" input, then "Extract 30 frames", followed by "30 descriptions 30 LLM calls", "Merge 1 call", "Title 1 call", "Merge Check 1 call", "Merge Cards 1 call", and "Done". The Gemini flow begins with "Video", then "Upload + Transcribe 1 LLM call", followed by "Generate Cards 1 LLM call", and "Done". The primary difference between these flows lies in the number of LLM calls required, with the ChatGPT/Claude flow requiring 4-6 calls, the Local flow requiring 33+ calls, and the Gemini flow requiring only 2 calls. The "Batch describe" step in the ChatGPT/Claude flow and the "Upload + Transcribe" step in the Gemini flow are key differences that significantly reduce the number of LLM calls compared to the Local flow, which processes each frame individually.

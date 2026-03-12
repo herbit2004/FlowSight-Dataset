@@ -1,0 +1,40 @@
+graph TD
+    subgraph User Request
+        A[User Application] --> B(API Gateway);
+    end
+
+    B --> C{Rate Limit Check};
+    C -- Within Limit --> D[Request Router];
+    C -- Exceeds Limit --> E(Return 429);
+
+    D --> F{Model Version?};
+    F -- Versioned --> G[Model A Inference];
+    F -- Latest --> H[Model B Inference];
+    subgraph Model A
+        G --> GA[Pre-processing A];
+        GA --> GB[Model A Core];
+        GB --> GC[Post-processing A];
+    end
+
+     subgraph Model B
+        H --> HA[Pre-processing B];
+        HA --> HB[Model B Core];
+        HB --> HC[Post-processing B];
+    end
+
+    GC --> I{Ensemble?};
+    HC --> I
+
+    I -- Yes --> J[Ensemble Stage];
+    I -- No --> K[Response Builder];
+
+    J --> K
+
+    K --> L(API Gateway);
+    L --> M[User Application];
+
+    classDef versioned fill:#f9f,stroke:#333,stroke-width:2px
+    classDef latest fill:#ccf,stroke:#333,stroke-width:2px
+
+    class G,GA,GB,GC versioned;
+    class H,HA,HB,HC latest;

@@ -1,0 +1,36 @@
+graph TD
+    subgraph User Request Flow
+        A[User Application] --> B{Rate Limit Check};
+        B -- Exceeds Global Rate Limit? --> C[Reject Request];
+        B -- Passes Global Rate Limit --> D{Quota Check};
+        D -- Exceeds User Quota? --> E[Reject Request];
+        D -- Passes User Quota --> F[Process Request];
+        F --> G[Backend Service];
+        G --> H[Return Response];
+        H --> I[User Application];
+        C --> I;
+        E --> I;
+    end
+
+    subgraph Background Processes
+        J[Request Ingestion] --> K[Kafka Queue];
+        K --> L{Quota Update Service};
+        L --> M[Quota Database];
+        K --> N{Rate Limit Update Service};
+        N --> O[Redis Cache];
+        P[Scheduled Task: Daily Quota Reset] --> M;
+    end
+
+    subgraph Monitoring and Alerts
+        M --> Q[Prometheus];
+        O --> Q;
+        Q -- Critical Quota Threshold Reached --> R[PagerDuty Alert];
+        Q -- High Volume Errors --> S[PagerDuty Alert];
+    end
+
+    classDef reject fill:#f9f,stroke:#333,stroke-width:2px
+    class C,E reject
+    classDef alert fill:#fbb,stroke:#333,stroke-width:2px
+    class R,S alert
+    classDef service fill:#ccf,stroke:#333,stroke-width:2px
+    class G,L,N service

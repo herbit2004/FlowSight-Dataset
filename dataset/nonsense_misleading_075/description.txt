@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the order processing workflow of a system. The diagram outlines the steps involved from receiving a customer order to closing the order, including inventory checks, payment processing, packaging, shipping, and delivery confirmation.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TB). It starts with "Receive Customer Order" at the top and ends with "Close Order" at the bottom. The diagram includes decision diamonds that create branching paths.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Reception, Inventory Check, Payment Processing, Order Fulfillment, Delivery, and Order Completion.
+
+## Node-by-Node Description
+- **A / Receive Customer Order**: Represents the initial step of receiving a customer order. visible in diagram; no further repository context available.
+- **B / Inventory Available?**: A decision point to check if the required inventory is available. visible in diagram; no further repository context available.
+- **H / Send Out-of-Stock Notification**: Represents sending a notification to the customer if the inventory is not available. visible in diagram; no further repository context available.
+- **C / Process Payment**: Represents processing the customer's payment. visible in diagram; no further repository context available.
+- **D / Payment Successful?**: A decision point to check if the payment was successful. visible in diagram; no further repository context available.
+- **E / Cancel Order**: Represents canceling the order. visible in diagram; no further repository context available.
+- **F / Package Order**: Represents packaging the order for shipment. visible in diagram; no further repository context available.
+- **G / Ship Order**: Represents shipping the packaged order. visible in diagram; no further repository context available.
+- **I / Delivery Successful?**: A decision point to check if the delivery was successful. visible in diagram; no further repository context available.
+- **J / Send Delivery Confirmation**: Represents sending a delivery confirmation to the customer. visible in diagram; no further repository context available.
+- **K / Update Inventory**: Represents updating the inventory after delivery confirmation. visible in diagram; no further repository context available.
+- **L / Close Order**: Represents closing the order. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Flow from receiving the customer order to checking inventory availability.
+- `B -- No --> H`: If inventory is not available, send an out-of-stock notification.
+- `H --> A`: After sending the out-of-stock notification, the flow returns to receiving a customer order.
+- `B -- Yes --> C`: If inventory is available, process the payment.
+- `C --> D`: Flow from processing payment to checking if the payment was successful.
+- `D -- No --> E`: If payment is not successful, cancel the order.
+- `D -- Yes --> F`: If payment is successful, package the order.
+- `F --> G`: Flow from packaging the order to shipping the order.
+- `G --> I`: Flow from shipping the order to checking if the delivery was successful.
+- `I -- No --> E`: If delivery is not successful, cancel the order.
+- `I -- Yes --> J`: If delivery is successful, send a delivery confirmation.
+- `J --> K`: Flow from sending delivery confirmation to updating inventory.
+- `K --> L`: Flow from updating inventory to closing the order.
+- `L --> A`: After closing the order, the flow returns to receiving a customer order.
+
+## Repository Context & Terminology
+- **Receive Customer Order**: Standard meaning is to accept an order from a customer. In this diagram, it's the starting point of the workflow and also a loop-back point from both "Send Out-of-Stock Notification" and "Close Order".
+- **Inventory Available?**: Standard meaning is to check if the product is in stock. In this diagram, it's a decision point that determines whether to proceed with the order or send an out-of-stock notification.
+- **Send Out-of-Stock Notification**: Standard meaning is to inform the customer that the product is not available. In this diagram, it loops back to "Receive Customer Order" instead of notifying supply chain or backordering.
+- **Process Payment**: Standard meaning is to charge the customer for the order. In this diagram, it follows the inventory check and precedes the payment success check.
+- **Payment Successful?**: Standard meaning is to verify if the payment was processed correctly. In this diagram, a "Yes" outcome leads to packaging the order, while a "No" outcome leads to canceling the order.
+- **Package Order**: Standard meaning is to prepare the order for shipment. In this diagram, it follows successful payment.
+- **Ship Order**: Standard meaning is to send the order to the customer. In this diagram, it follows packaging the order.
+- **Delivery Successful?**: Standard meaning is to verify if the order was delivered to the customer. In this diagram, a "Yes" outcome leads to sending a delivery confirmation, while a "No" outcome leads to canceling the order.
+- **Send Delivery Confirmation**: Standard meaning is to notify the customer that the order has been delivered. In this diagram, it precedes updating the inventory.
+- **Update Inventory**: Standard meaning is to adjust the stock levels after an order. In this diagram, it occurs *after* delivery confirmation, which is incorrect.
+- **Cancel Order**: Standard meaning is to terminate the order process. In this diagram, it occurs if payment fails or delivery fails.
+- **Close Order**: Standard meaning is to finalize the order process. In this diagram, it loops back to "Receive Customer Order" instead of terminating the process.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Receive Customer Order," which flows into the "Inventory Available?" decision. If inventory is not available ("No" branch), a "Send Out-of-Stock Notification" is triggered, which then illogically loops back to "Receive Customer Order." If inventory is available ("Yes" branch), the process moves to "Process Payment," followed by the "Payment Successful?" decision. If payment is unsuccessful ("No" branch), the order is canceled via "Cancel Order." If payment is successful ("Yes" branch), the order is "Package Order" and then "Ship Order." Next, the "Delivery Successful?" decision determines the flow. A failed delivery ("No" branch) results in "Cancel Order." A successful delivery ("Yes" branch) triggers "Send Delivery Confirmation," which is followed by "Update Inventory." Finally, "Close Order" loops back to "Receive Customer Order," creating a continuous cycle. The standard process of updating inventory *after* shipping but *before* delivery confirmation is reversed in this diagram, and the "Close Order" action incorrectly loops back to the beginning.

@@ -1,0 +1,54 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the subscription process for a service. It depicts the steps a user takes from starting a subscription to account disablement, including payment, account creation, profile setup, and upsell offers. The diagram outlines the flow of actions and decisions within the subscription lifecycle.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "User Starts Subscription" node at the top and progresses downwards through various stages, ultimately leading to the "Account Disabled" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Subscription Initiation (User Starts Subscription, Payment Successful?), Account Setup (Welcome Email Sent, Account Created, Profile Setup, Profile Complete?), Active Subscription (Subscription Active, Billing Cycle Starts, Access Granted), Subscription Expiry (Subscription Expires), Upsell Offer (Upsell Offer Sent, Upsell Accepted?), and Account Termination (Account Disabled).
+
+## Node-by-Node Description
+- **A / User Starts Subscription**: Represents the initial action of a user starting a subscription. visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision point to check if the payment was successful. visible in diagram; no further repository context available.
+- **C / Account Created**: Represents the creation of a user account. visible in diagram; no further repository context available.
+- **D / Welcome Email Sent**: Represents sending a welcome email to the user. visible in diagram; no further repository context available.
+- **E / Profile Setup**: Represents the process of setting up the user's profile. visible in diagram; no further repository context available.
+- **F / Profile Complete?**: A decision point to check if the user's profile is complete. visible in diagram; no further repository context available.
+- **G / Subscription Active**: Represents the state where the user's subscription is active. visible in diagram; no further repository context available.
+- **H / Billing Cycle Starts**: Represents the start of a billing cycle for the subscription. visible in diagram; no further repository context available.
+- **I / Access Granted**: Represents granting access to the service after the billing cycle starts. visible in diagram; no further repository context available.
+- **J / Subscription Expires**: Represents the expiration of the user's subscription. visible in diagram; no further repository context available.
+- **K / Account Disabled**: Represents the disabling of the user's account. visible in diagram; no further repository context available.
+- **L / Upsell Offer Sent**: Represents sending an upsell offer to the user. visible in diagram; no further repository context available.
+- **M / Upsell Accepted?**: A decision point to check if the user accepted the upsell offer. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A -- Pays --> B`: The user pays for the subscription, leading to a payment success check.
+- `B -- No --> K`: If the payment is not successful, the account is disabled.
+- `B -- Yes --> D`: If the payment is successful, a welcome email is sent.
+- `D -- After Account Creation --> C`: After the welcome email is sent, the account is created.
+- `C --> E`: After the account is created, the user proceeds to profile setup.
+- `E -- Completes Profile --> F`: The user completes their profile, leading to a profile completion check.
+- `F -- No --> L`: If the profile is not complete, an upsell offer is sent.
+- `F -- Yes --> G`: If the profile is complete, the subscription becomes active.
+- `G --> H`: When the subscription is active, the billing cycle starts.
+- `H -- Cycle Start --> I`: The billing cycle starts, leading to access being granted.
+- `I --> J`: After access is granted, the subscription eventually expires.
+- `J -- Expires --> M`: The subscription expires, leading to an upsell offer acceptance check.
+- `M -- Yes --> G`: If the upsell offer is accepted, the subscription becomes active again.
+- `M -- No --> K`: If the upsell offer is rejected, the account is disabled.
+- `L -- No --> E`: If the upsell offer is not accepted, the user is sent back to profile setup.
+- `L -- Yes --> K`: If the upsell offer is accepted, the account is disabled.
+
+## Repository Context & Terminology
+- **User Starts Subscription**: In a standard context, this refers to the initial step where a user initiates the process of subscribing to a service. In this diagram, it represents the starting point of the subscription flow.
+- **Payment Successful?**: In a standard context, this is a check to ensure that the payment transaction was completed successfully. In this diagram, it's a decision point that determines whether the user proceeds to account creation or account disablement.
+- **Account Created**: In a standard context, this refers to the process of creating a user account in the system. In this diagram, it represents the creation of the user account after the welcome email is sent.
+- **Welcome Email Sent**: In a standard context, this is an email sent to the user to welcome them after they subscribe. In this diagram, it is sent *before* the account is created, which is an unusual sequence.
+- **Profile Setup**: In a standard context, this refers to the process of setting up the user's profile with personal information. In this diagram, it represents the step where the user sets up their profile after account creation.
+- **Subscription Active**: In a standard context, this refers to the state where the user's subscription is currently active and they have access to the service. In this diagram, it represents the state after the profile is complete.
+- **Upsell Offer Sent**: In a standard context, this refers to offering the user an upgraded or additional service. In this diagram, it is offered if the profile is incomplete.
+- **Account Disabled**: In a standard context, this refers to deactivating the user's account, usually due to non-payment or violation of terms. In this diagram, it occurs due to payment failure or rejection of an upsell offer.
+
+## High-Density QA Ground Truth Summary
+The subscription process begins with the "User Starts Subscription" node, after which the user pays, leading to a "Payment Successful?" check. If the payment fails, the "Account Disabled" node is reached, terminating the process. If the payment is successful, a "Welcome Email Sent" node is triggered *before* the "Account Created" node, an unusual sequence. After account creation, the user proceeds to "Profile Setup," and a "Profile Complete?" check follows. If the profile is incomplete, an "Upsell Offer Sent" node is triggered, and if the upsell is rejected, the user loops back to "Profile Setup." If the profile is complete, the "Subscription Active" node is reached, leading to "Billing Cycle Starts" and "Access Granted." The subscription eventually expires, leading to an "Upsell Accepted?" check. Regardless of whether the upsell is accepted or rejected, the process ends with the "Account Disabled" node. The diagram's unusual flow, such as sending a welcome email before account creation and disabling the account upon upsell rejection, deviates from standard subscription management practices.

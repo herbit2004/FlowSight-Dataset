@@ -1,0 +1,23 @@
+graph TD
+    subgraph Region A
+        A[Data Change Event] --> B{Is Priority Data?};
+        B -- Yes --> C(Priority Queue);
+        B -- No --> D(Standard Queue);
+        C --> E(Replication Processor A);
+        D --> E;
+        E --> F(Data Serializer);
+    end
+    F --> G{Region B Available?};
+    G -- Yes --> H(Send to Region B Endpoint);
+    G -- No --> I(Retry after Delay);
+    I --> G;
+    H --> J(Ack Received?);
+    J -- Yes --> K(Remove from Queue);
+    J -- No --> I;
+    subgraph Region B
+        H --> L(Region B Endpoint);
+        L --> M(Data Deserializer);
+        M --> N(Apply Changes to DB);
+    end
+    classDef success fill:#afa,stroke:#333,stroke-width:2px;
+    K:::success

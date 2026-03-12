@@ -1,0 +1,80 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of an order review system. It depicts the process from initial order event to final reporting and feedback, including sampling, review, and escalation steps. The diagram serves as a visual representation of the system's logic and data flow.
+
+## Overall Layout
+The diagram flows from top to bottom (TB). It is hierarchically structured into four subgraphs representing different stages of the order review process. The start node is "Order System Event" and the end nodes are "Order System", "Error Logging", and "Dashboard Updates".
+
+## Subgraphs / Stages
+The diagram contains four subgraphs:
+- **Data Acquisition Layer**: Handles initial order events and acceptance.
+- **Sampling & Assignment**: Determines if an order meets sampling criteria and assigns review tasks.
+- **Review & Analysis**: Manages the review process, including task claiming, form population, and review submission.
+- **Reporting & Feedback**: Updates order status, calculates review scores, and provides feedback through dashboards and error logging.
+
+## Node-by-Node Description
+- **A / Order System Event**: Represents an event triggered by the order system. visible in diagram; no further repository context available.
+- **B / Kafka Topic: order.events**: Represents a Kafka topic where order events are published. In the repository this corresponds to a message queue for order events.
+- **C / Order Accepted?**: A decision point to determine if the order is accepted. visible in diagram; no further repository context available.
+- **D / Sampling Service API**: An API used to sample orders for review. In the repository this corresponds to an API endpoint for sampling orders.
+- **E / Reject, Log Error**: Represents the action of rejecting the order and logging an error. visible in diagram; no further repository context available.
+- **F / Met sampling criteria?**: A decision point to determine if the order meets the sampling criteria. visible in diagram; no further repository context available.
+- **G / Create Review Task**: Represents the creation of a review task. visible in diagram; no further repository context available.
+- **H / Skip Review**: Represents the action of skipping the review process. visible in diagram; no further repository context available.
+- **I / Task Queue: Review Assignments**: Represents a task queue where review assignments are stored. In the repository this corresponds to a queue for review tasks.
+- **J / Review Task API**: An API used to retrieve review tasks. In the repository this corresponds to an API endpoint for retrieving review tasks.
+- **K / Reviewer Claims Task**: A decision point to determine if a reviewer claims the task. visible in diagram; no further repository context available.
+- **L / Populate Review Form**: Represents the action of populating a review form. visible in diagram; no further repository context available.
+- **M / Reviewer Input**: Represents the input provided by the reviewer. visible in diagram; no further repository context available.
+- **N / Submit Review**: Represents the action of submitting the review. visible in diagram; no further repository context available.
+- **O / Pass/Fail Criteria Met?**: A decision point to determine if the order meets the pass/fail criteria. visible in diagram; no further repository context available.
+- **P / Report: Review Passed**: Represents the action of reporting that the review passed. visible in diagram; no further repository context available.
+- **Q / Initiate Escalation**: Represents the action of initiating an escalation process. visible in diagram; no further repository context available.
+- **R / Escalation Workflow**: Represents the escalation workflow. visible in diagram; no further repository context available.
+- **S / Update Order Status**: Represents the action of updating the order status. visible in diagram; no further repository context available.
+- **T / Kafka Topic: order.updates**: Represents a Kafka topic where order updates are published. In the repository this corresponds to a message queue for order updates.
+- **U / Order System**: Represents the order system. visible in diagram; no further repository context available.
+- **V / Error Logging**: Represents the action of logging errors. visible in diagram; no further repository context available.
+- **W / Review Score Calculation**: Represents the calculation of a review score. visible in diagram; no further repository context available.
+- **X / Store in Review DB**: Represents the action of storing the review in a database. In the repository this corresponds to a database for storing review data.
+- **Y / Dashboard Updates**: Represents the action of updating dashboards. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Order system event is published to the Kafka topic.
+- `B --> C`: Order event is processed to determine if the order is accepted.
+- `C -- Yes --> D`: If the order is accepted, it is sent to the Sampling Service API.
+- `C -- No --> E`: If the order is not accepted, it is rejected and an error is logged.
+- `D --> F`: The order is checked against sampling criteria.
+- `F -- Yes --> G`: If the sampling criteria are met, a review task is created.
+- `F -- No --> H`: If the sampling criteria are not met, the review is skipped.
+- `G --> I`: The review task is added to the task queue.
+- `H --> I`: The process skips to the task queue.
+- `I --> J`: Review tasks are retrieved via the Review Task API.
+- `J --> K`: A reviewer attempts to claim a task.
+- `K -- Yes --> L`: If a reviewer claims the task, a review form is populated.
+- `K -- No --> I`: If no reviewer claims the task, the process returns to the task queue.
+- `L --> M`: The reviewer provides input.
+- `M --> N`: The review is submitted.
+- `N --> O`: The review is checked against pass/fail criteria.
+- `O -- Pass --> P`: If the review passes, it is reported as passed.
+- `O -- Fail --> Q`: If the review fails, an escalation is initiated.
+- `Q --> R`: The escalation workflow is executed.
+- `P --> S`: The order status is updated.
+- `R --> S`: The order status is updated after escalation.
+- `S --> T`: The updated order status is published to the Kafka topic.
+- `T --> U`: The order system is updated.
+- `E --> V`: Errors are logged.
+- `N --> W`: The review score is calculated.
+- `W --> X`: The review is stored in the review database.
+- `X --> Y`: Dashboards are updated.
+
+## Repository Context & Terminology
+- **Kafka Topic**: A category or feed name to which records are published in Kafka, a distributed event streaming platform.
+- **API (Application Programming Interface)**: A set of defined rules that enable different applications to communicate with each other.
+- **Task Queue**: A queue that distributes units of work as tasks among multiple workers or systems.
+- **Review DB**: A database specifically designed to store and manage review data.
+- **Sampling Service**: A service responsible for selecting a subset of orders for review based on predefined criteria.
+- **Escalation Workflow**: A defined process for handling reviews that fail to meet certain criteria, often involving higher-level review or intervention.
+- **Dashboard**: A visual display of key performance indicators (KPIs) and other relevant metrics.
+
+## High-Density QA Ground Truth Summary
+The order review process begins with an "Order System Event" which is then published to a "Kafka Topic: order.events". The system then checks if the "Order Accepted?". If 'No', the process ends with "Reject, Log Error". If 'Yes', the process proceeds to "Sampling Service API" to determine if the order "Met sampling criteria?". If 'Yes', a "Create Review Task" is triggered; if 'No', the review is "Skip Review". Both paths converge at the "Task Queue: Review Assignments". A "Review Task API" allows reviewers to claim tasks; if "Reviewer Claims Task" is 'No', the process loops back to the "Task Queue". If 'Yes', a "Populate Review Form" step is initiated, followed by "Reviewer Input" and "Submit Review". The system then checks if "Pass/Fail Criteria Met?". If 'Pass', a "Report: Review Passed" is generated; if 'Fail', an "Initiate Escalation" and "Escalation Workflow" are triggered. Both paths converge at "Update Order Status", which publishes to "Kafka Topic: order.updates" before updating the "Order System". Concurrently, the "Submit Review" step triggers "Review Score Calculation" and "Store in Review DB", which updates "Dashboard Updates". The Kafka topics serve as message queues, enabling asynchronous communication between different components of the order review system.

@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the control plane and target namespace components of a service mesh or similar distributed system. It illustrates the interactions between various services, databases, and Kubernetes API server, highlighting the flow of requests and data within the system. The diagram serves as a high-level overview of the system's architecture, aiding in understanding the relationships between different components.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It features two main subgraphs: "Control Plane" on the left and "Target Namespace" on the right. The "Control Plane" subgraph contains several service components, while the "Target Namespace" subgraph contains the service deployment and Envoy sidecar. The flow generally starts from the services within the "Control Plane" and interacts with the Kubernetes API Server and other databases, eventually affecting the "Target Namespace".
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Control Plane**: This subgraph encompasses the core control plane components, including services like `svc-task-resource`, `svc-task-executor`, `svc-fault-scheduler`, `svc-reqrsp-proxy`, `svc-result-processor`, and `svc-topo`. These services manage and orchestrate tasks within the system.
+- **Target Namespace**: This subgraph represents the target environment where the services are deployed. It includes the `业务Service/Deployment` (Service/Deployment) and the `Envoy Sidecar`, which handles traffic management and observability for the deployed service.
+
+## Node-by-Node Description
+- **svc-task-resource**: A service responsible for managing task resources. visible in diagram; no further repository context available.
+- **svc-task-executor**: A service responsible for executing tasks. visible in diagram; no further repository context available.
+- **svc-fault-scheduler**: A service responsible for scheduling fault injection tasks. visible in diagram; no further repository context available.
+- **svc-reqrsp-proxy**: A service acting as a request/response proxy. visible in diagram; no further repository context available.
+- **svc-result-processor**: A service responsible for processing task results. visible in diagram; no further repository context available.
+- **svc-topo**: A service related to topology management. visible in diagram; no further repository context available.
+- **Kubernetes API Server**: The central API server for Kubernetes, managing cluster state and providing access to resources. visible in diagram; no further repository context available.
+- **Redis**: An in-memory data store used for caching and session management. visible in diagram; no further repository context available.
+- **Jaeger Query**: A component of the Jaeger tracing system, used for querying and analyzing traces. visible in diagram; no further repository context available.
+- **MySQL**: A relational database used for persistent data storage. visible in diagram; no further repository context available.
+- **业务Service/Deployment**: Represents a service or deployment within the target namespace. visible in diagram; no further repository context available.
+- **Envoy Sidecar**: An Envoy proxy running as a sidecar container, handling traffic management and observability for the service. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `svc-task-executor --> svc-reqrsp-proxy`: An HTTP request is sent from the task executor to the request/response proxy.
+- `svc-task-resource <--> svc-task-executor`: HTTP communication occurs between the task resource and task executor.
+- `svc-result-processor <--> svc-task-resource`: HTTP communication occurs between the result processor and task resource.
+- `svc-fault-scheduler --> Kubernetes API Server`: The fault scheduler interacts with the Kubernetes API server using the K8s API.
+- `svc-reqrsp-proxy --> Kubernetes API Server`: The request/response proxy interacts with the Kubernetes API server using K8s API & Exec.
+- `svc-topo --> Jaeger Query`: The topology service sends HTTP requests to the Jaeger Query component.
+- `svc-task-resource & svc-task-executor & svc-reqrsp-proxy --> MySQL`: These services interact with the MySQL database using JDBC.
+- `svc-fault-scheduler & svc-reqrsp-proxy --> Redis`: These services interact with the Redis data store.
+- `Kubernetes API Server <--> 业务Service/Deployment`: The Kubernetes API server interacts with the service/deployment in the target namespace.
+
+## Repository Context & Terminology
+- **Control Plane**: The set of components that manage and control the data plane.
+- **Target Namespace**: The Kubernetes namespace where the application services are deployed.
+- **Kubernetes API Server**: The central management component of a Kubernetes cluster.
+- **Redis**: An open source (BSD licensed), in-memory data structure store, used as a database, cache and message broker.
+- **Jaeger**: An open source, end-to-end distributed tracing system.
+- **Envoy Sidecar**: A proxy that runs alongside each service instance, providing traffic management, security, and observability features.
+- **JDBC**: Java Database Connectivity, an API for connecting to databases.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the architecture of a control plane interacting with services deployed in a target namespace within a Kubernetes environment. The process begins with `svc-result-processor` sending an HTTP request to `svc-task-resource`, which in turn communicates via HTTP with `svc-task-executor`. `svc-task-executor` also sends HTTP requests to `svc-reqrsp-proxy`. `svc-fault-scheduler` and `svc-reqrsp-proxy` interact with the Kubernetes API Server using K8s API and K8s API & Exec respectively, and both also interact with Redis. `svc-topo` sends HTTP requests to Jaeger Query for tracing purposes. `svc-task-resource`, `svc-task-executor`, and `svc-reqrsp-proxy` all connect to a MySQL database via JDBC. The Kubernetes API Server manages the `业务Service/Deployment` within the Target Namespace, which also includes an Envoy Sidecar for traffic management. The control plane services orchestrate tasks and manage the deployed services, leveraging databases like MySQL and Redis, and integrating with tracing systems like Jaeger. The Kubernetes API Server acts as the central point of interaction for managing the cluster and the deployed services.

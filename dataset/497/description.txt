@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the flow of requests and data between different components of a web application. It depicts the interaction between a client, frontend, backend API, and data storage services. The diagram serves as a high-level overview of the system's architecture and how the different parts work together.
+
+## Overall Layout
+The diagram has a left-to-right (LR) layout. It starts with the Client node on the left and flows through various containers and services towards the right, ending with the MinIO container. The diagram illustrates the sequence of operations from user request to data storage.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Client Interaction, Nginx Routing, API Processing, Data Storage, and Response Handling.
+
+## Node-by-Node Description
+- **Client / Browser/CLI/Git**: Represents the user or application interacting with the system, using a browser, command-line interface, or Git client.
+  visible in diagram; no further repository context available.
+- **Nginx Container / hub-ui:80**: An Nginx web server container running on port 80, responsible for routing incoming requests to the appropriate backend services.
+  visible in diagram; no further repository context available.
+- **Vue Frontend / Static Files**: Represents the Vue.js frontend application serving static files.
+  visible in diagram; no further repository context available.
+- **FastAPI Container / hub-api:48888**: A FastAPI application container running on port 48888, handling API requests.
+  visible in diagram; no further repository context available.
+- **LakeFS Container / lakefs:28000**: A LakeFS container running on port 28000, providing object storage management.
+  visible in diagram; no further repository context available.
+- **PostgreSQL Container / postgres:5432**: A PostgreSQL database container running on port 5432, used for storing relational data.
+  visible in diagram; no further repository context available.
+- **MinIO Container / minio:9000**: A MinIO object storage container running on port 9000, used for storing objects.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Client --> Nginx`: Client sends a request to the Nginx container on port 28080.
+- `Nginx --> Vue Frontend`: Nginx serves static files (/, *.html, *.js) to the Vue Frontend.
+- `Nginx --> FastAPI`: Nginx routes API requests (/api/*, /org/*, /{ns}/{repo}.git/*, /resolve/*, /admin/*) to the FastAPI container.
+- `FastAPI --> LakeFS`: FastAPI sends REST API requests to the LakeFS container.
+- `FastAPI --> MinIO`: FastAPI sends S3 API requests to the MinIO container.
+- `FastAPI --> PostgreSQL`: FastAPI sends SQL queries to the PostgreSQL container.
+- `LakeFS --> MinIO`: LakeFS stores objects in the MinIO container.
+- `Vue Frontend --> Client`: Vue Frontend sends a Response to the Client.
+- `FastAPI --> Nginx`: FastAPI sends a JSON Response to the Nginx container.
+- `Nginx --> Client`: Nginx sends a Response to the Client.
+
+## Repository Context & Terminology
+- **Nginx**: A popular open-source web server and reverse proxy. In this architecture, it acts as a gateway, routing requests to different backend services.
+- **Vue Frontend**: A JavaScript framework for building user interfaces. The frontend serves static files to the client.
+- **FastAPI**: A modern, high-performance web framework for building APIs with Python. It handles API requests and interacts with the database and object storage.
+- **LakeFS**: An open-source platform that delivers git-like semantics to object storage.
+- **PostgreSQL**: A powerful, open-source relational database system. It stores structured data for the application.
+- **MinIO**: A high-performance, S3 compatible object storage server. It stores unstructured data such as images and videos.
+- **REST API**: An architectural style for designing networked applications. It relies on a stateless, client-server communication protocol.
+- **S3 API**: The API provided by Amazon S3 (Simple Storage Service) for interacting with object storage. MinIO is compatible with this API.
+- **SQL**: Structured Query Language, used for managing and querying data in relational database management systems.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with a Client (Browser/CLI/Git) sending a request to the Nginx Container (hub-ui:80) on port 28080. Nginx then routes requests based on the URL path. Static file requests (/, *.html, *.js) are served directly from the Vue Frontend (Static Files), which then sends a response back to the Client. API requests (/api/*, /org/*, /{ns}/{repo}.git/*, /resolve/*, /admin/*) are forwarded to the FastAPI Container (hub-api:48888). FastAPI acts as the backend API, interacting with various data storage services. It sends REST API requests to the LakeFS Container (lakefs:28000), S3 API requests to the MinIO Container (minio:9000), and SQL queries to the PostgreSQL Container (postgres:5432). LakeFS, in turn, stores objects in MinIO. Finally, FastAPI sends a JSON response back to Nginx, which relays it to the Client. Nginx uses reverse proxying to route requests to the appropriate backend service, abstracting the internal architecture from the client.

@@ -1,0 +1,31 @@
+graph TD
+    subgraph UserInteraction [User Request]
+        UA(User Agent) --> API(API Gateway);
+    end
+
+    API -- /payments --> AS(Auth Service);
+    AS -- Validated User --> PS(Payment Service);
+    PS -- New Payment Request --> RF(Risk Filter);
+    RF -- Low Risk --> CC(Credit Check);
+    RF -- High Risk --> REJECT[Reject Transaction];
+
+    CC -- Sufficient Funds --> BA(Billing Adapter);
+    CC -- Insufficient Funds --> INSUFFICIENT[Insufficient Funds];
+
+    BA -- Submit Charge --> PSP1(Payment Service Provider - API 1);
+    BA -- Attempt Alternate PSP --> PSP2(Payment Service Provider - API 2);
+
+    PSP1 -- Success --> WP(Webhook Processor);
+    PSP1 -- Failure --> PSP2;
+    PSP2 -- Success --> WP;
+    PSP2 -- Failure --> FAILURE[Payment Failed];
+
+    WP --> UM(User Messaging);
+    UM -- Success --> SUCCESS[Payment Successful];
+    UM -- Failure --> RETRY[Retry Message];
+
+    style REJECT fill:#f9f,stroke:#333,stroke-width:2px
+    style INSUFFICIENT fill:#f9f,stroke:#333,stroke-width:2px
+    style FAILURE fill:#f9f,stroke:#333,stroke-width:2px
+    style SUCCESS fill:#9f9,stroke:#333,stroke-width:2px
+    style RETRY fill:#ff0,stroke:#333,stroke-width:2px

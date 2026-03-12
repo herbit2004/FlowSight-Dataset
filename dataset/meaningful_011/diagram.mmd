@@ -1,0 +1,46 @@
+graph TD
+    subgraph Leader Election Process
+        A[Candidate Node: Start]-->B{Quorum Check}
+        B -- Majority achieved? --> C[Propose Leadership]
+        B -- Quorum failed -->A
+        C --> D{Acceptance Wait: Timeout}
+        D -- All acceptances received --> E[Become Leader: Update State]
+        D -- Timeout expired --> A
+
+        subgraph Leader Actions
+                E --> F[Heartbeat Broadcast]
+                F --> G{Other Nodes Alive?}
+                G -- Yes --> F
+                G -- No --> H[Detect Failure: Trigger new election]
+                H --> A
+        end
+
+        subgraph Lock Acquisition
+            I[Client Request: Lock Key] --> J{Lock Available?}
+            J -- Yes --> K[Attempt Lock Acquisition]
+            J -- No --> L[Enter Waiting Queue]
+            K --> M{Acquisition Successful?}
+            M -- Yes --> N[Lock Acquired: Return success]
+            M -- No --> L
+            L --> O[Monitor Lock State]
+            O --> J
+            N --> P[Perform Action with Lock]
+
+        end
+    end
+
+    subgraph Failure Detection
+         Q[Node Failure]-->H
+         subgraph Consensus Protocols
+             R[RAFT/Paxos/ZAB] --> B
+             R --> G
+             R --> M
+         end
+    end
+
+    P --> S[Release Lock]
+    S --> T[Notify Waiting Queue]
+    T --> J
+
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px
+    class A,E,N,Q highlight

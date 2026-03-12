@@ -1,0 +1,92 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the data flow and processing pipeline of a prompt engineering system. It depicts the various stages involved in ingesting, transforming, and consuming prompts, highlighting the different components and their interactions. The diagram serves as a high-level overview of the system's architecture and helps in understanding the data flow and dependencies between different modules.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner, progressing from external data sources at the top to final consumption at the bottom. It is hierarchically structured into several layers representing different stages of the prompt processing pipeline. The start nodes are the external data sources, and the end nodes are the various consumption points.
+
+## Subgraphs / Stages
+The diagram is divided into the following subgraphs, representing distinct stages in the prompt processing pipeline:
+- **External System & Data Source Layer**: Represents external data sources and APIs.
+- **Data Ingestion & Collection Layer**: Focuses on ingesting and collecting data from various sources.
+- **Data Processing & Intelligent Decision Layer / Core**: Represents the core data processing and transformation logic.
+- **Execution & Consumption Layer**: Represents the final consumption points of the processed prompts.
+- **User Interaction & Interface Layer**: Represents the user interface and interaction points.
+- **Infrastructure & Cross-Cutting Capability Layer**: Represents the underlying infrastructure and cross-cutting capabilities.
+
+## Node-by-Node Description
+- **ext_contrib / 社区贡献者**: Represents community contributors as an external data source. visible in diagram; no further repository context available.
+- **ext_sheet / Google 表格 / 外部表格**: Represents Google Sheets or external spreadsheets as a data source. visible in diagram; no further repository context available.
+- **ext_md / 外部 Markdown 提示词**: Represents external Markdown prompts as a data source. visible in diagram; no further repository context available.
+- **ext_api / 预留：其他数据源 / API**: Represents other data sources or APIs. visible in diagram; no further repository context available.
+- **excel_raw / prompt_excel/*.xlsx**: Represents raw prompt data in Excel format. visible in diagram; no further repository context available.
+- **md_raw / prompt_docs/外部MD输入**: Represents raw prompt data in Markdown format. visible in diagram; no further repository context available.
+- **excel_to_docs / prompts-library/scripts/excel_to_docs.py**: Python script to convert Excel prompts to documentation format. In the repository this corresponds to `library/scripts/excel_to_docs.py`.
+- **docs_to_excel / prompts-library/scripts/docs_to_excel.py**: Python script to convert documentation prompts to Excel format. In the repository this corresponds to `library/scripts/docs_to_excel.py`.
+- **ingest_bus / 标准化数据帧**: Represents the standardized data frame after ingestion. visible in diagram; no further repository context available.
+- **validate / 字段校验与规范化**: Represents the data validation and normalization process. visible in diagram; no further repository context available.
+- **transform / 格式映射转换**: Represents the format mapping and transformation process. visible in diagram; no further repository context available.
+- **artifacts_md / prompt_docs/规范MD**: Represents the standardized prompt documentation in Markdown format. visible in diagram; no further repository context available.
+- **artifacts_xlsx / prompt_excel/导出XLSX**: Represents the standardized prompt data in Excel format. visible in diagram; no further repository context available.
+- **orchestrator / main.py · scripts/start_convert.py**: The main orchestration script for data processing. In the repository this corresponds to `scripts/start_convert.py`.
+- **catalog_coding / i18n/zh/prompts/coding_prompts**: Represents coding prompts catalog. visible in diagram; no further repository context available.
+- **catalog_system / i18n/zh/prompts/system_prompts**: Represents system prompts catalog. visible in diagram; no further repository context available.
+- **catalog_assist / i18n/zh/prompts/assistant_prompts**: Represents assistant prompts catalog. visible in diagram; no further repository context available.
+- **catalog_user / i18n/zh/prompts/user_prompts**: Represents user prompts catalog. visible in diagram; no further repository context available.
+- **docs_repo / i18n/zh/documents/***: Represents the documentation repository. visible in diagram; no further repository context available.
+- **new_consumer / 预留：其他下游渠道**: Represents other downstream channels. visible in diagram; no further repository context available.
+- **ai_flow / AI 结对编程流程**: Represents the AI pair programming flow. visible in diagram; no further repository context available.
+- **deliverables / 项目上下文 / 计划 / 代码产出**: Represents the project context, plan, and code output. visible in diagram; no further repository context available.
+- **cli / CLI: python main.py**: Command-line interface entry point. In the repository this corresponds to `main.py`.
+- **makefile / Makefile 任务封装**: Makefile for task encapsulation. visible in diagram; no further repository context available.
+- **readme / README.md 使用指南**: README file with usage instructions. In the repository this corresponds to `README.md`.
+- **git / Git 版本控制**: Git version control system. visible in diagram; no further repository context available.
+- **backups / backups/一键备份.sh · backups/快速备份.py**: Backup scripts. In the repository this corresponds to `backups/一键备份.sh` and `backups/快速备份.py`.
+- **deps / requirements.txt · scripts/requirements.txt**: Dependency requirements file. In the repository this corresponds to `scripts/requirements.txt`.
+- **config / prompts-library/scripts/config.yaml**: Configuration file. In the repository this corresponds to `library/scripts/config.yaml`.
+- **monitor / 预留：日志与监控**: Logging and monitoring. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `ext_contrib --> ext_sheet`: Community contributions flow into Google Sheets.
+- `ext_contrib --> ext_md`: Community contributions flow into external Markdown.
+- `ext_api --> ext_sheet`: Other data sources flow into Google Sheets.
+- `ext_sheet --> excel_raw`: Google Sheets data flows into raw Excel prompts.
+- `ext_md --> md_raw`: External Markdown data flows into raw Markdown prompts.
+- `excel_raw --> excel_to_docs`: Raw Excel prompts are converted to documentation format.
+- `md_raw --> docs_to_excel`: Raw Markdown prompts are converted to Excel format.
+- `excel_to_docs --> ingest_bus`: Converted Excel prompts flow into the standardized data frame.
+- `docs_to_excel --> ingest_bus`: Converted Markdown prompts flow into the standardized data frame.
+- `ingest_bus --> validate`: Standardized data frame is validated and normalized.
+- `validate --> transform`: Validated data is transformed.
+- `transform --> artifacts_md`: Transformed data flows into standardized Markdown documentation.
+- `transform --> artifacts_xlsx`: Transformed data flows into standardized Excel data.
+- `orchestrator --> validate`: Orchestrator triggers data validation.
+- `orchestrator --> transform`: Orchestrator triggers data transformation.
+- `artifacts_md --> catalog_coding`: Standardized Markdown documentation flows into coding prompts catalog.
+- `artifacts_md --> catalog_system`: Standardized Markdown documentation flows into system prompts catalog.
+- `artifacts_md --> catalog_assist`: Standardized Markdown documentation flows into assistant prompts catalog.
+- `artifacts_md --> catalog_user`: Standardized Markdown documentation flows into user prompts catalog.
+- `artifacts_md --> docs_repo`: Standardized Markdown documentation flows into the documentation repository.
+- `artifacts_md --> new_consumer`: Standardized Markdown documentation flows into other downstream channels.
+- `catalog_coding --> ai_flow`: Coding prompts catalog flows into AI pair programming flow.
+- `ai_flow --> deliverables`: AI pair programming flow results in project context, plan, and code output.
+- `cli --> orchestrator`: Command-line interface triggers the orchestrator.
+- `makefile --> cli`: Makefile triggers the command-line interface.
+- `readme --> cli`: README provides usage instructions for the command-line interface.
+- `git --> orchestrator`: Git version control influences the orchestrator.
+- `backups --> artifacts_md`: Backup scripts influence the standardized Markdown documentation.
+- `deps --> orchestrator`: Dependency requirements influence the orchestrator.
+- `config --> orchestrator`: Configuration influences the orchestrator.
+- `monitor --> orchestrator`: Logging and monitoring influence the orchestrator.
+
+## Repository Context & Terminology
+- **README.md**: A file containing a description of the project and instructions on how to use it.
+- **Makefile**: A file containing a set of commands to automate the build process.
+- **requirements.txt**: A file containing a list of Python packages required to run the project.
+- **scripts/start_convert.py**: The main script responsible for orchestrating the data conversion process.
+- **library/scripts/excel_to_docs.py**: A script that converts Excel files to documentation formats.
+- **library/scripts/docs_to_excel.py**: A script that converts documentation formats to Excel files.
+- **library/scripts/config.yaml**: A YAML file containing configuration settings for the project.
+- **backups/一键备份.sh**: A shell script for one-click backups.
+
+## High-Density QA Ground Truth Summary
+The prompt engineering system begins by ingesting data from external sources such as Google Sheets (`ext_sheet`), external Markdown files (`ext_md`), and potentially other APIs (`ext_api`), facilitated by community contributions (`ext_contrib`). This raw data, in the form of `prompt_excel/*.xlsx` and `prompt_docs/外部MD输入`, is then converted using `library/scripts/excel_to_docs.py` and `library/scripts/docs_to_excel.py` respectively, resulting in a standardized data frame (`ingest_bus`). The core processing is orchestrated by `scripts/start_convert.py`, which triggers data validation and normalization (`validate`) followed by format mapping and transformation (`transform`). The transformed data is then output as standardized Markdown documentation (`prompt_docs/规范MD`) and Excel data (`prompt_excel/导出XLSX`). The Markdown documentation is consumed by various prompt catalogs, including `i18n/zh/prompts/coding_prompts`, `i18n/zh/prompts/system_prompts`, `i18n/zh/prompts/assistant_prompts`, and `i18n/zh/prompts/user_prompts`, as well as the documentation repository (`i18n/zh/documents/*`) and potentially other downstream channels. The `main.py` script serves as the command-line interface, triggered by a `Makefile` and guided by the `README.md` file. The system relies on `scripts/requirements.txt` for dependencies and `library/scripts/config.yaml` for configuration. The final outputs include project context, plans, and code generated from the AI pair programming flow (`deliverables`).

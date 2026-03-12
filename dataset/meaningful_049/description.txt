@@ -1,0 +1,74 @@
+## Diagram Type & Purpose
+This is a flowchart illustrating the service discovery process in a microservices architecture. It depicts the interactions between a service provider, a service consumer, and a service discovery server. The diagram outlines how services register themselves, how consumers find available services, and how health checks and load balancing are handled.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TD). It is divided into three subgraphs representing the Service Provider, Service Consumer, and Service Discovery Server. The start nodes are "Service Instance" (Service Provider), "Consumer Application" (Service Consumer), and "Receive Registration Request" (Service Discovery Server). The end nodes are "Service Instance" (Service Consumer), "Fallback Mechanism" (Service Consumer), "Service Unavailable Error" (Service Consumer), "Mark Instance as Healthy" (Service Discovery Server), "Mark Instance as Unhealthy" (Service Discovery Server), and "Return Error" (Service Discovery Server).
+
+## Subgraphs / Stages
+- **Service Provider**: This subgraph represents a service instance registering itself with the service discovery server and maintaining its health status.
+- **Service Consumer**: This subgraph represents a consumer application querying the service discovery server to find available instances of a service and handling potential failures.
+- **Service Discovery Server**: This subgraph represents the central registry that manages service instances, validates requests, performs health checks, and returns instance lists.
+
+## Node-by-Node Description
+- **Service Instance (Service Provider)**: Represents an instance of a service that needs to be registered. visible in diagram; no further repository context available.
+- **Register with Service Discovery**: The service instance sends a registration request to the service discovery server. visible in diagram; no further repository context available.
+- **Registration Successful?**: A decision point to determine if the registration was successful. visible in diagram; no further repository context available.
+- **Start Health Check Endpoint**: The service provider starts a health check endpoint after successful registration. visible in diagram; no further repository context available.
+- **Retry Registration**: The service provider retries registration if the initial attempt fails. visible in diagram; no further repository context available.
+- **Consumer Application**: Represents an application that needs to consume a service. visible in diagram; no further repository context available.
+- **Query Service Discovery for Service X**: The consumer application queries the service discovery server for instances of a specific service (Service X). visible in diagram; no further repository context available.
+- **Service X Instances Found?**: A decision point to determine if any instances of the requested service were found. visible in diagram; no further repository context available.
+- **Filter by Health Status**: The consumer filters the found instances based on their health status. visible in diagram; no further repository context available.
+- **Healthy Instances Available?**: A decision point to determine if any healthy instances are available. visible in diagram; no further repository context available.
+- **Load Balance Request to Instance**: The consumer load balances the request to one of the healthy instances. visible in diagram; no further repository context available.
+- **Service Instance (Service Consumer)**: Represents the service instance that receives the request from the consumer. visible in diagram; no further repository context available.
+- **Circuit Breaker Triggered**: The circuit breaker is triggered if no healthy instances are available. visible in diagram; no further repository context available.
+- **Fallback Mechanism**: The consumer uses a fallback mechanism when the circuit breaker is triggered. visible in diagram; no further repository context available.
+- **Service Unavailable Error**: An error is returned if no instances of the service are found. visible in diagram; no further repository context available.
+- **Receive Registration Request**: The service discovery server receives a registration request from a service instance. visible in diagram; no further repository context available.
+- **Validate Request**: The service discovery server validates the registration request. visible in diagram; no further repository context available.
+- **Store Instance Metadata**: The service discovery server stores the metadata of the registered instance. visible in diagram; no further repository context available.
+- **Return Error**: The service discovery server returns an error if the registration request is invalid. visible in diagram; no further repository context available.
+- **Run Health Checks**: The service discovery server runs health checks on the registered instances. visible in diagram; no further repository context available.
+- **Instance Healthy?**: A decision point to determine if an instance is healthy. visible in diagram; no further repository context available.
+- **Mark Instance as Healthy**: The service discovery server marks the instance as healthy. visible in diagram; no further repository context available.
+- **Mark Instance as Unhealthy**: The service discovery server marks the instance as unhealthy. visible in diagram; no further repository context available.
+- **Return Instance List**: The service discovery server returns a list of available instances to the consumer. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Service Instance (Service Provider) --> Register with Service Discovery`: The service instance initiates registration with the service discovery server.
+- `Register with Service Discovery --> Registration Successful?`: The registration request is processed, leading to a decision point.
+- `Registration Successful? -- Yes --> Start Health Check Endpoint`: If registration is successful, the service starts its health check endpoint.
+- `Registration Successful? -- No --> Retry Registration`: If registration fails, the service retries the registration process.
+- `Retry Registration --> Register with Service Discovery`: The service instance retries registration.
+- `Consumer Application --> Query Service Discovery for Service X`: The consumer application queries the service discovery server for a specific service.
+- `Query Service Discovery for Service X --> Service X Instances Found?`: The query is processed, leading to a decision point.
+- `Service X Instances Found? -- Yes --> Filter by Health Status`: If instances are found, they are filtered by health status.
+- `Service X Instances Found? -- No --> Service Unavailable Error`: If no instances are found, a service unavailable error is returned.
+- `Filter by Health Status --> Healthy Instances Available?`: The filtered instances are checked for health, leading to a decision point.
+- `Healthy Instances Available? -- Yes --> Load Balance Request to Instance`: If healthy instances are available, the request is load balanced.
+- `Healthy Instances Available? -- No --> Circuit Breaker Triggered`: If no healthy instances are available, the circuit breaker is triggered.
+- `Load Balance Request to Instance --> Service Instance (Service Consumer)`: The request is sent to a service instance.
+- `Circuit Breaker Triggered --> Fallback Mechanism`: The fallback mechanism is activated.
+- `Receive Registration Request --> Validate Request`: The service discovery server receives a registration request and validates it.
+- `Validate Request -- Valid --> Store Instance Metadata`: If the request is valid, the instance metadata is stored.
+- `Validate Request -- Invalid --> Return Error`: If the request is invalid, an error is returned.
+- `Store Instance Metadata --> Run Health Checks`: After storing metadata, health checks are run.
+- `Run Health Checks --> Instance Healthy?`: The health check results in a decision point.
+- `Instance Healthy? -- Yes --> Mark Instance as Healthy`: If the instance is healthy, it is marked as such.
+- `Instance Healthy? -- No --> Mark Instance as Unhealthy`: If the instance is unhealthy, it is marked as such.
+- `Query Service Discovery for Service X --> Return Instance List`: The service discovery server returns a list of instances.
+- `Return Instance List --> Service X Instances Found?`: The list of instances is used to determine if any instances were found.
+
+## Repository Context & Terminology
+- **Service Discovery**: A mechanism that allows services to automatically discover and locate each other in a distributed system.
+- **Service Provider**: A service that offers functionality and registers itself with a service discovery server.
+- **Service Consumer**: A service that consumes the functionality offered by other services, using service discovery to locate them.
+- **Health Check**: A process to verify the availability and health of a service instance.
+- **Load Balancing**: Distributing network traffic across multiple servers to prevent any single server from becoming a bottleneck.
+- **Circuit Breaker**: A design pattern used to prevent cascading failures in distributed systems by temporarily blocking requests to a failing service.
+- **Fallback Mechanism**: A backup plan or alternative implementation used when the primary service is unavailable.
+- **Instance Metadata**: Information about a service instance, such as its IP address, port, and other relevant details.
+
+## High-Density QA Ground Truth Summary
+The service discovery process begins with a Service Provider's "Service Instance" attempting to "Register with Service Discovery," or a Service Consumer's "Consumer Application" initiating a "Query Service Discovery for Service X," and the Service Discovery Server "Receive Registration Request." The Service Provider's registration process involves a "Registration Successful?" check; if yes, it starts a health check endpoint; if no, it retries registration. The Service Consumer queries for a service, leading to "Service X Instances Found?". If instances are found, they are "Filter by Health Status," leading to "Healthy Instances Available?". If healthy instances exist, the request is "Load Balance Request to Instance," eventually reaching a "Service Instance." If no healthy instances are available, a "Circuit Breaker Triggered" activates a "Fallback Mechanism." If no instances are found initially, a "Service Unavailable Error" is returned. The Service Discovery Server validates registration requests; valid requests lead to "Store Instance Metadata" and "Run Health Checks," while invalid requests "Return Error." Health checks determine if an "Instance Healthy?"; if yes, "Mark Instance as Healthy"; if no, "Mark Instance as Unhealthy." The service discovery mechanism, crucial in microservices architectures, ensures that services can dynamically locate and communicate with each other, enhancing system resilience through health checks, load balancing, and fallback strategies.

@@ -1,0 +1,112 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the end-to-end flow of an e-commerce application, from user login to order processing and error handling. It depicts the sequence of user interactions, API calls, service layer operations, and database interactions involved in the application. The diagram serves as a high-level overview of the system architecture and the flow of data between different components.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured, with distinct subgraphs representing different stages of the e-commerce flow. The start node is "User Opens App," and the end nodes include "Order Confirmation," "Out of Stock Error," "Payment Failed," "Error Logs," and "Error Toast Notification."
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Authentication System**: Handles user login and authentication.
+- **E-Commerce Flow**: Covers product browsing, adding to cart, and checkout.
+- **Checkout Processing**: Manages order creation, inventory check, payment processing, and order confirmation.
+- **Error Management**: Deals with error handling and logging.
+- **Product Search**: Implements the product search functionality.
+
+## Node-by-Node Description
+- **APP_Start / User Opens App**: Represents the initial action of a user opening the application. visible in diagram; no further repository context available.
+- **AUTH_Check / User Logged In?**: A decision node that checks if the user is already logged in. visible in diagram; no further repository context available.
+- **UI_LoginPage / Login Page**: Represents the login page UI component. visible in diagram; no further repository context available.
+- **UI_LoginForm / Login Form**: Represents the login form UI component. visible in diagram; no further repository context available.
+- **API_Login / POST /api/auth/login**: Represents the API endpoint for user login. visible in diagram; no further repository context available.
+- **SVC_AuthValidator / Auth Validator Service**: Represents the service layer component responsible for validating user credentials. visible in diagram; no further repository context available.
+- **DB_Users / Users Database**: Represents the database containing user information. visible in diagram; no further repository context available.
+- **LoginResult / Valid Credentials?**: A decision node that checks if the user credentials are valid. visible in diagram; no further repository context available.
+- **UI_LoginError / Show Login Error**: Represents the UI component that displays a login error message. visible in diagram; no further repository context available.
+- **SVC_TokenGenerator / Token Generator**: Represents the service layer component responsible for generating authentication tokens. visible in diagram; no further repository context available.
+- **STATE_UserSession / Store User Session**: Represents the state manager component responsible for storing user session information. visible in diagram; no further repository context available.
+- **UI_Dashboard / Dashboard**: Represents the main dashboard UI component. visible in diagram; no further repository context available.
+- **UI_ProductGrid / Product Grid**: Represents the UI component displaying a grid of products. visible in diagram; no further repository context available.
+- **UI_ProductCard / Product Card**: Represents the UI component for displaying a single product. visible in diagram; no further repository context available.
+- **UI_ProductModal / Product Details Modal**: Represents the UI component displaying detailed information about a product. visible in diagram; no further repository context available.
+- **STATE_CartManager / Cart State Manager**: Represents the state manager component responsible for managing the shopping cart. visible in diagram; no further repository context available.
+- **UI_CartIcon / Cart Icon Badge**: Represents the UI component displaying the number of items in the cart. visible in diagram; no further repository context available.
+- **UI_CartDrawer / Shopping Cart Drawer**: Represents the UI component displaying the contents of the shopping cart. visible in diagram; no further repository context available.
+- **UI_CheckoutFlow / Checkout Page**: Represents the UI component for the checkout page. visible in diagram; no further repository context available.
+- **API_CreateOrder / POST /api/orders**: Represents the API endpoint for creating an order. visible in diagram; no further repository context available.
+- **SVC_OrderProcessor / Order Processor**: Represents the service layer component responsible for processing orders. visible in diagram; no further repository context available.
+- **SVC_InventoryCheck / Inventory Service**: Represents the service layer component responsible for checking inventory. visible in diagram; no further repository context available.
+- **DB_Inventory / Inventory DB**: Represents the database containing inventory information. visible in diagram; no further repository context available.
+- **StockCheck / Items In Stock?**: A decision node that checks if the items in the order are in stock. visible in diagram; no further repository context available.
+- **UI_StockError / Out of Stock Error**: Represents the UI component that displays an out-of-stock error message. visible in diagram; no further repository context available.
+- **SVC_PaymentGateway / Payment Service**: Represents the service layer component responsible for processing payments. visible in diagram; no further repository context available.
+- **EXT_Stripe / Stripe API**: Represents the external API for processing payments via Stripe. visible in diagram; no further repository context available.
+- **PaymentResult / Payment Success?**: A decision node that checks if the payment was successful. visible in diagram; no further repository context available.
+- **UI_PaymentError / Payment Failed**: Represents the UI component that displays a payment failure message. visible in diagram; no further repository context available.
+- **DB_Orders / Orders Database**: Represents the database containing order information. visible in diagram; no further repository context available.
+- **SVC_EmailService / Email Service**: Represents the service layer component responsible for sending emails. visible in diagram; no further repository context available.
+- **EXT_SendGrid / SendGrid API**: Represents the external API for sending emails via SendGrid. visible in diagram; no further repository context available.
+- **UI_OrderSuccess / Order Confirmation**: Represents the UI component that displays an order confirmation message. visible in diagram; no further repository context available.
+- **UI_ErrorToast / Error Toast Notification**: Represents the UI component that displays an error toast notification. visible in diagram; no further repository context available.
+- **SVC_ErrorLogger / Error Logger**: Represents the service layer component responsible for logging errors. visible in diagram; no further repository context available.
+- **DB_ErrorLogs / Error Logs**: Represents the database containing error logs. visible in diagram; no further repository context available.
+- **UI_SearchBar / Search Bar**: Represents the UI component for the search bar. visible in diagram; no further repository context available.
+- **SVC_SearchDebounce / Debounce Service**: Represents the service layer component responsible for debouncing search queries. visible in diagram; no further repository context available.
+- **API_Search / GET /api/search**: Represents the API endpoint for searching products. visible in diagram; no further repository context available.
+- **SVC_SearchEngine / Search Engine**: Represents the service layer component responsible for performing the search. visible in diagram; no further repository context available.
+- **DB_Products / Products DB**: Represents the database containing product information. visible in diagram; no further repository context available.
+- **UI_SearchResults / Search Results Dropdown**: Represents the UI component displaying the search results. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `APP_Start --> AUTH_Check`: User opens the app, initiating the authentication check.
+- `AUTH_Check -- No --> UI_LoginPage`: If the user is not logged in, redirect to the login page.
+- `UI_LoginPage --> UI_LoginForm`: The login page displays the login form.
+- `UI_LoginForm --> API_Login`: User submits the login form, triggering the login API call.
+- `API_Login --> SVC_AuthValidator`: The login API call invokes the authentication validator service.
+- `SVC_AuthValidator --> DB_Users`: The authentication validator service queries the users database.
+- `DB_Users --> LoginResult`: The users database returns the user credentials for validation.
+- `LoginResult -- No --> UI_LoginError`: If the credentials are invalid, display a login error.
+- `LoginResult -- Yes --> SVC_TokenGenerator`: If the credentials are valid, generate an authentication token.
+- `SVC_TokenGenerator --> API_Login`: The token generator returns the token to the login API.
+- `API_Login -- Success --> STATE_UserSession`: Upon successful login, store the user session.
+- `AUTH_Check -- Yes --> UI_Dashboard`: If the user is already logged in, redirect to the dashboard.
+- `STATE_UserSession --> UI_Dashboard`: After storing the user session, redirect to the dashboard.
+- `UI_Dashboard --> UI_ProductGrid`: The dashboard displays the product grid.
+- `UI_ProductGrid --> UI_ProductCard`: The product grid displays individual product cards.
+- `UI_ProductCard --> UI_ProductModal`: User selects "View Details" on a product card, opening the product details modal.
+- `UI_ProductCard --> STATE_CartManager`: User selects "Quick Add" on a product card, adding the product to the cart.
+- `UI_ProductModal --> STATE_CartManager`: User selects "Add to Cart" on the product details modal, adding the product to the cart.
+- `STATE_CartManager --> UI_CartIcon`: The cart state manager updates the cart icon badge.
+- `UI_CartIcon --> UI_CartDrawer`: User clicks on the cart icon badge, opening the shopping cart drawer.
+- `UI_CartDrawer --> UI_CheckoutFlow`: User selects "Checkout" in the shopping cart drawer, navigating to the checkout page.
+- `UI_CheckoutFlow --> API_CreateOrder`: User submits the checkout form, triggering the order creation API call.
+- `API_CreateOrder --> SVC_OrderProcessor`: The order creation API call invokes the order processor service.
+- `SVC_OrderProcessor --> SVC_InventoryCheck`: The order processor service invokes the inventory check service.
+- `SVC_InventoryCheck --> DB_Inventory`: The inventory check service queries the inventory database.
+- `DB_Inventory --> StockCheck`: The inventory database returns the inventory information.
+- `StockCheck -- No --> UI_StockError`: If the items are out of stock, display an out-of-stock error.
+- `StockCheck -- Yes --> SVC_PaymentGateway`: If the items are in stock, invoke the payment gateway service.
+- `SVC_PaymentGateway --> EXT_Stripe`: The payment gateway service calls the Stripe API.
+- `EXT_Stripe --> PaymentResult`: The Stripe API returns the payment result.
+- `PaymentResult -- No --> UI_PaymentError`: If the payment fails, display a payment failure message.
+- `PaymentResult -- Yes --> DB_Orders`: If the payment is successful, store the order in the orders database.
+- `DB_Orders --> SVC_EmailService`: After storing the order, invoke the email service.
+- `SVC_EmailService --> EXT_SendGrid`: The email service calls the SendGrid API.
+- `DB_Orders --> UI_OrderSuccess`: After storing the order, display an order confirmation message.
+- `API_Login --> UI_ErrorToast`: If an error occurs during login, display an error toast notification.
+- `API_CreateOrder --> UI_ErrorToast`: If an error occurs during order creation, display an error toast notification.
+- `EXT_Stripe --> UI_ErrorToast`: If an error occurs during payment processing, display an error toast notification.
+- `EXT_SendGrid --> SVC_ErrorLogger`: If an error occurs during email sending, log the error.
+- `SVC_ErrorLogger --> DB_ErrorLogs`: The error logger service stores the error logs in the error logs database.
+- `UI_Dashboard --> UI_SearchBar`: The dashboard displays the search bar.
+- `UI_SearchBar --> SVC_SearchDebounce`: User types in the search bar, triggering the debounce service.
+- `SVC_SearchDebounce --> API_Search`: After a 300ms debounce, call the search API.
+- `API_Search --> SVC_SearchEngine`: The search API invokes the search engine service.
+- `SVC_SearchEngine --> DB_Products`: The search engine service queries the products database.
+- `DB_Products --> UI_SearchResults`: The products database returns the search results.
+- `UI_SearchResults --> UI_ProductModal`: User selects a search result, opening the product details modal.
+
+## Repository Context & Terminology
+- **UI Component**: A reusable visual element in the user interface, such as a button, form, or grid.
+- **API Endpoint**: A specific URL that exposes a server-side function or resource, typically using REST principles.
+- **Service Layer**: An architectural layer that encapsulates business logic and provides an abstraction between the UI and the data access layer.
+- **Database**: A structured

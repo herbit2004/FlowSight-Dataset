@@ -1,0 +1,64 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a transaction saga. It illustrates the sequence of operations involved in processing a client request, including order placement, inventory reservation, payment authorization, and delivery scheduling. The diagram also shows a compensation flow that handles failures during the transaction.
+
+## Overall Layout
+The diagram has a left-to-right (LR) primary direction. It consists of a main sequence of operations, with a compensation flow branching off to handle failures. The start node is "Client Request," and the end nodes are "Notify Client of Success" and "Notify Client of Failure."
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Transaction Saga" which encompasses the entire process. Within the saga, there is a "Compensation Flow" subgraph that handles failure scenarios.
+
+## Node-by-Node Description
+- **A / Client Request**: Represents the initial request from a client to place an order.
+  visible in diagram; no further repository context available.
+- **B / Order Placement Service**: Represents the service responsible for handling the order placement process.
+  visible in diagram; no further repository context available.
+- **C / Inventory Service: Reserve Stock**: Represents the inventory service responsible for reserving the required stock for the order.
+  visible in diagram; no further repository context available.
+- **D / Payment Service: Authorize Payment**: Represents the payment service responsible for authorizing the payment for the order.
+  visible in diagram; no further repository context available.
+- **E / Delivery Service: Schedule Delivery**: Represents the delivery service responsible for scheduling the delivery of the order.
+  visible in diagram; no further repository context available.
+- **F / Order Service: Mark Order as Processing**: Represents the order service responsible for marking the order as being processed.
+  visible in diagram; no further repository context available.
+- **G / Success Check**: Represents a decision point where the success of the transaction is checked.
+  visible in diagram; no further repository context available.
+- **H / Order Service: Mark Order as Failed**: Represents the order service responsible for marking the order as failed.
+  visible in diagram; no further repository context available.
+- **I / Delivery Service: Cancel Delivery**: Represents the delivery service responsible for canceling the delivery of the order.
+  visible in diagram; no further repository context available.
+- **J / Payment Service: Refund Payment**: Represents the payment service responsible for refunding the payment for the order.
+  visible in diagram; no further repository context available.
+- **K / Inventory Service: Return Stock**: Represents the inventory service responsible for returning the reserved stock to the inventory.
+  visible in diagram; no further repository context available.
+- **L / Notify Client of Failure**: Represents the notification sent to the client indicating that the order has failed.
+  visible in diagram; no further repository context available.
+- **M / Order Service: Mark Order as Completed**: Represents the order service responsible for marking the order as completed.
+  visible in diagram; no further repository context available.
+- **N / Notify Client of Success**: Represents the notification sent to the client indicating that the order has been successfully processed.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The client request is sent to the order placement service.
+- `B -- Valid Order --> C`: If the order is valid, the inventory service reserves the stock.
+- `C -- Stock Reserved --> D`: If the stock is reserved, the payment service authorizes the payment.
+- `D -- Payment Authorized --> E`: If the payment is authorized, the delivery service schedules the delivery.
+- `E -- Delivery Scheduled --> F`: If the delivery is scheduled, the order service marks the order as processing.
+- `F --> G`: The order service passes control to the success check.
+- `G -- Failure --> H`: If the success check fails, the compensation flow is triggered.
+- `G -- Success --> M`: If the success check is successful, the order service marks the order as completed.
+- `H --> I`: The order service marks the order as failed, triggering the delivery service to cancel the delivery.
+- `I --> J`: The delivery service cancels the delivery, triggering the payment service to refund the payment.
+- `J --> K`: The payment service refunds the payment, triggering the inventory service to return the stock.
+- `K --> L`: The inventory service returns the stock, triggering the notification to the client of failure.
+- `M --> N`: The order service marks the order as completed, triggering the notification to the client of success.
+
+## Repository Context & Terminology
+- **Transaction Saga**: A sequence of local transactions that together form a single, atomic operation. If one transaction fails, the saga compensates by undoing the work of the previous transactions.
+- **Order Placement Service**: A service responsible for handling the initial steps of order creation and validation.
+- **Inventory Service**: A service responsible for managing the inventory of products.
+- **Payment Service**: A service responsible for handling payment processing.
+- **Delivery Service**: A service responsible for scheduling and managing deliveries.
+- **Compensation Flow**: A sequence of operations that undo the effects of a failed transaction.
+
+## High-Density QA Ground Truth Summary
+The transaction saga begins with a "Client Request" which triggers the "Order Placement Service." If the order is deemed valid, the flow proceeds to the "Inventory Service" to reserve stock. Upon successful stock reservation, the "Payment Service" authorizes the payment. Subsequently, the "Delivery Service" schedules the delivery, and the "Order Service" marks the order as processing. A "Success Check" then determines whether the transaction has been successful. In case of "Failure," a compensation flow is initiated, where the "Order Service" marks the order as failed, the "Delivery Service" cancels the delivery, the "Payment Service" refunds the payment, and the "Inventory Service" returns the stock, ultimately notifying the client of failure. Conversely, upon "Success," the "Order Service" marks the order as completed, and the client is notified of success. The transaction saga pattern ensures data consistency across multiple services by implementing compensating transactions to revert changes made by previous operations in case of failure, maintaining the overall atomicity of the business process.

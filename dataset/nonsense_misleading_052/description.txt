@@ -1,0 +1,59 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow of a system. It illustrates the sequence of steps involved from when a user places an order to when the order is shipped, including payment verification, inventory management, and shipment preparation. This diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The process starts with the "User Places Order" node at the top and flows downwards through a series of steps and decision points, ultimately leading to "Send Shipping Confirmation" or restarting the process.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: User Order Placement, Payment Verification, Inventory Management, Shipment Preparation, Manager Approval, and Order Completion/Cancellation.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial step where a user submits an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **D / Inventory Available?**: A decision point to determine if the required inventory is available. visible in diagram; no further repository context available.
+- **E / Order Shipped**: Represents the stage where the order is marked as shipped. visible in diagram; no further repository context available.
+- **F / Send Shipping Confirmation**: Represents the final step of sending a shipping confirmation to the user. visible in diagram; no further repository context available.
+- **G / Allocate Inventory**: Represents the process of allocating the required inventory for the order. visible in diagram; no further repository context available.
+- **H / Cancel Order - Notify User**: Represents the action of canceling the order and notifying the user if payment is not received. visible in diagram; no further repository context available.
+- **I / Prepare Shipment**: Represents the process of preparing the shipment for the order. visible in diagram; no further repository context available.
+- **J / Package Ready?**: A decision point to check if the package is ready for shipment. visible in diagram; no further repository context available.
+- **K / Repeat Preparation**: Represents the action of repeating the preparation process if the package is not ready. visible in diagram; no further repository context available.
+- **L / Notify Warehouse Manager**: Represents the action of notifying the warehouse manager for approval. visible in diagram; no further repository context available.
+- **M / Manager OK?**: A decision point to determine if the warehouse manager approves the shipment. visible in diagram; no further repository context available.
+- **N / Deallocate Inventory**: Represents the action of deallocating the inventory if the manager does not approve the shipment. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The user's order triggers the payment verification process.
+- `B -- Yes --> C`: If payment is received, proceed to inventory check.
+- `B -- No --> H`: If payment is not received, cancel the order and notify the user.
+- `C --> D`: The inventory check leads to a decision on inventory availability.
+- `D -- Yes --> G`: If inventory is available, allocate the inventory.
+- `D -- No --> E`: If inventory is not available, the order is shipped (counterfactual error).
+- `E --> F`: After the order is shipped, send a shipping confirmation.
+- `G --> I`: After allocating inventory, prepare the shipment.
+- `I --> J`: Shipment preparation leads to a package readiness check.
+- `J -- Yes --> L`: If the package is ready, notify the warehouse manager.
+- `J -- No --> K`: If the package is not ready, repeat the preparation.
+- `K --> I`: Repeating the preparation process loops back to prepare shipment.
+- `L --> M`: Notifying the warehouse manager leads to a manager approval check.
+- `M -- Yes --> E`: If the manager approves, the order is shipped.
+- `M -- No --> N`: If the manager does not approve, deallocate the inventory.
+- `N --> A`: Deallocating inventory restarts the process from user order placement.
+
+## Repository Context & Terminology
+- **User Places Order**: The initial action by a customer to request goods or services. In this diagram, it's the starting point of the order processing workflow.
+- **Payment Received?**: A check to ensure that the customer has paid for the order. In this diagram, it's a binary decision that determines whether the order proceeds or is cancelled.
+- **Inventory Check**: A process to verify the availability of items in stock. In this diagram, it determines whether the order can be fulfilled based on current stock levels.
+- **Inventory Available?**: A decision point based on the inventory check. In this diagram, a 'No' result incorrectly leads to shipping the order.
+- **Allocate Inventory**: Reserving the required quantity of items for the order. In this diagram, it's a step taken after confirming inventory availability.
+- **Prepare Shipment**: The process of packaging and preparing the order for delivery. In this diagram, it involves steps that are checked for readiness.
+- **Package Ready?**: A check to ensure the shipment is properly prepared. In this diagram, a 'No' result loops back to repeat preparation.
+- **Notify Warehouse Manager**: Informing the manager for approval. In this diagram, it's a step before shipping, requiring manager's confirmation.
+- **Manager OK?**: A decision point based on the manager's approval. In this diagram, a 'No' result restarts the entire process.
+- **Order Shipped**: Marking the order as dispatched for delivery. In this diagram, it occurs prematurely in some branches.
+- **Send Shipping Confirmation**: Notifying the customer that the order has been shipped. In this diagram, it's the final step after shipping.
+- **Deallocate Inventory**: Releasing reserved inventory back into available stock. In this diagram, it occurs after manager disapproval, restarting the entire process.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with a user placing an order (A), which then proceeds to a payment verification step (B). If payment is received (B-Yes), an inventory check (C) is performed; otherwise (B-No), the order is cancelled and the user is notified (H), restarting the process from the beginning. If inventory is available (D-Yes), the inventory is allocated (G), and shipment preparation begins (I). However, if inventory is *not* available (D-No), the order is immediately marked as shipped (E), which is a counterfactual error, and a shipping confirmation is sent (F). During shipment preparation, a package readiness check (J) is performed. If the package is not ready (J-No), the preparation is repeated (K), looping back to the preparation step (I). If the package is ready (J-Yes), the warehouse manager is notified (L) for approval. If the manager approves (M-Yes), the order is shipped (E), skipping preparation and packaging steps. If the manager does not approve (M-No), the inventory is deallocated (N), and the entire process restarts from the user placing the order (A). The process concludes with sending a shipping confirmation (F) after the order is shipped (E). The "Inventory Available?" decision (D) incorrectly leads to order shipment (E) when inventory is unavailable, and manager disapproval (M-No) illogically restarts the entire process from user order placement (A).

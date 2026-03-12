@@ -1,0 +1,18 @@
+graph TD
+    A[User initiates order] --> B{Payment Received?};
+    B -- No --> C[Send Payment Reminder];
+    C --> D{Payment Received?};
+    D -- Yes --> F[Prepare Shipment];
+    D -- No --> A;
+    B -- Yes --> E[Inventory Check];
+    E -- Available --> G[Ship Order];
+    E -- Unavailable --> F;
+    G --> H[Send Shipping Confirmation];
+    H --> I{Customer Receives Order?};
+    I -- Yes --> K[Order Complete];
+    I -- No --> J[Investigate Delivery Issue];
+    J --> I;
+    F --> L[Create Shipping Label];
+    L --> G;
+    K --> M[Feedback Request Sent];
+    M --> A;

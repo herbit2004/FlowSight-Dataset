@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the high-level components and data flow within an AI-powered system. It depicts the interaction between user interfaces, a central nervous system (message broker), an AI core ("brain"), cognitive memory, and external services ("body"). The diagram serves as a blueprint for understanding the system's structure and how its different parts communicate.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) fashion. It presents a hierarchical structure, starting with user interfaces at the top, flowing through the nervous system and AI core, and then branching out to cognitive memory and external services at the bottom. There are no explicit end nodes; the diagram focuses on the cyclical flow of information.
+
+## Subgraphs / Stages
+The diagram contains four explicit subgraphs:
+- **User Interfaces**: Represents the entry points for users to interact with the system.
+- **Nervous System**: Represents the central message broker facilitating communication between components.
+- **The Brain (AI Core)**: Represents the core AI processing units.
+- **Cognitive Memory**: Represents the data storage and retrieval components.
+- **The Body (Services)**: Represents external services and integrations.
+
+## Node-by-Node Description
+- **Unified Portal**: A web-based interface for users to access the system. visible in diagram; no further repository context available.
+- **VS Code / EDT (MCP)**: Development environments used to interact with the system, potentially for development or configuration. visible in diagram; no further repository context available.
+- **NATS JetStream**: A messaging system used as the central nervous system for communication between components. visible in diagram; no further repository context available.
+- **LangGraph Orchestrator**: A component responsible for orchestrating the execution of AI workflows. visible in diagram; no further repository context available.
+- **Planner Node**: A component responsible for planning the execution of AI tasks. visible in diagram; no further repository context available.
+- **Executor Node**: A component responsible for executing AI tasks. visible in diagram; no further repository context available.
+- **Reflector Node**: A component responsible for reflecting on the execution of AI tasks. visible in diagram; no further repository context available.
+- **Postgres 17**: A PostgreSQL database used for storing data. visible in diagram; no further repository context available.
+- **pgvector**: A PostgreSQL extension for vector similarity search. visible in diagram; no further repository context available.
+- **Neo4j - Code Graph**: A Neo4j graph database used for storing code-related information. visible in diagram; no further repository context available.
+- **Git Automation**: A service for automating Git-related tasks. visible in diagram; no further repository context available.
+- **Docker Control**: A service for managing Docker containers. visible in diagram; no further repository context available.
+- **1C Integration (OData/RAS)**: Integration with 1C enterprise systems using OData and RAS protocols. visible in diagram; no further repository context available.
+- **Security Monitor**: A service for monitoring the security of the system. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Users <--> NATS`: User interfaces communicate with the NATS JetStream message broker.
+- `NATS <--> Orchestrator`: The NATS JetStream message broker communicates with the LangGraph Orchestrator.
+- `Orchestrator <--> Memory`: The LangGraph Orchestrator interacts with the Cognitive Memory (Postgres and Neo4j).
+- `Orchestrator <--> Body`: The LangGraph Orchestrator interacts with the Body (Services).
+- `Body --> NATS`: The Body (Services) communicate back to the NATS JetStream message broker.
+
+## Repository Context & Terminology
+- **NATS JetStream**: A distributed, high-performance messaging system. It's used for asynchronous communication between services.
+- **LangGraph Orchestrator**: This component likely manages the execution and coordination of complex AI workflows, potentially using a graph-based representation.
+- **pgvector**: This PostgreSQL extension enables efficient similarity searches on vector embeddings, which are commonly used in AI applications for tasks like semantic search and recommendation.
+- **Neo4j**: A graph database well-suited for representing and querying relationships between data points, making it useful for code analysis and knowledge representation.
+- **OData**: An open protocol for querying and updating data over HTTP.
+- **RAS**: 1C:Enterprise Remote Access Server.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with the "User Interfaces" subgraph, encompassing "Unified Portal" and "VS Code / EDT (MCP)," which serve as the primary interaction points. These interfaces communicate with the "Nervous System," specifically the "NATS JetStream" message broker, facilitating asynchronous communication. The "NATS JetStream" then interacts with the "LangGraph Orchestrator" within "The Brain (AI Core)." The orchestrator is central, managing the flow of execution to "Planner Node," "Executor Node," and "Reflector Node," which represent different stages of AI task processing. The "LangGraph Orchestrator" also interacts bidirectionally with the "Cognitive Memory," comprising "Postgres 17" (likely storing data and vector embeddings via "pgvector") and "Neo4j - Code Graph" (for relationship-based data). Furthermore, the orchestrator communicates with "The Body (Services)," including "Git Automation," "Docker Control," "1C Integration (OData/RAS)," and "Security Monitor." The "Body (Services)" then communicates back to the "NATS JetStream," completing a cyclical flow. The use of "pgvector" suggests the system leverages vector embeddings for similarity searches, while "Neo4j" indicates a focus on relationship-based data, potentially for knowledge representation or code analysis.

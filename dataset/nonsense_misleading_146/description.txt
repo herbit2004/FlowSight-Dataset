@@ -1,0 +1,59 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the steps in an order processing system. It illustrates the flow of an order from placement to either fulfillment or cancellation, including payment processing, shipping, customer satisfaction, and potential refunds. The diagram serves as a visual representation of the order lifecycle, but contains deliberate errors.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The flow starts with the "User Places Order" node at the top and progresses downwards through various stages, ultimately leading to either "Refund Issued" or "Order Cancelled" at the bottom. There is a loop from "Refund Issued" back to "User Places Order".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Order Placement, Payment Processing, Order Fulfillment, Delivery, Customer Satisfaction, Refund Processing, and Order Finalization.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial step where a user submits an order. visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision point to determine if the payment for the order was successful. visible in diagram; no further repository context available.
+- **C / Order Confirmation Sent**: Indicates that an order confirmation has been sent to the user. visible in diagram; no further repository context available.
+- **D / Shipping Label Created**: Represents the creation of a shipping label for the order. visible in diagram; no further repository context available.
+- **E / Item Picked & Packed**: Indicates that the ordered item has been picked and packed for shipment. visible in diagram; no further repository context available.
+- **F / Package Arrives at Customer**: Represents the point when the package is delivered to the customer. visible in diagram; no further repository context available.
+- **G / Customer Satisfied?**: A decision point to determine if the customer is satisfied with their order. visible in diagram; no further repository context available.
+- **H / Process Refund Request**: Indicates that a refund request is being processed. visible in diagram; no further repository context available.
+- **I / Refund Approved?**: A decision point to determine if the refund request has been approved. visible in diagram; no further repository context available.
+- **J / Refund Issued**: Represents the completion of the refund process. visible in diagram; no further repository context available.
+- **K / Send Delivery Notification**: Represents sending a delivery notification. visible in diagram; no further repository context available.
+- **L / Store Order Review**: Represents storing the order review. visible in diagram; no further repository context available.
+- **Z / Order Cancelled**: Represents the cancellation of the order. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The user's order is submitted for payment processing.
+- `B -- Yes --> C`: If the payment is successful, an order confirmation is sent.
+- `B -- No --> Z`: If the payment is not successful, the order is cancelled.
+- `C --> D`: After order confirmation, a shipping label is created.
+- `D --> E`: After the shipping label is created, the item is picked and packed.
+- `E --> F`: After the item is picked and packed, the package arrives at the customer.
+- `E --> K`: After the item is picked and packed, a delivery notification is sent.
+- `K --> F`: After sending the delivery notification, the package arrives at the customer.
+- `F --> G`: After the package arrives, the customer's satisfaction is evaluated.
+- `G -- No --> H`: If the customer is *not* satisfied, the order review is stored.
+- `G -- Yes --> L`: If the customer *is* satisfied, the order review is stored.
+- `H --> I`: A refund request is processed.
+- `I -- Yes --> J`: If the refund is approved, a refund is issued.
+- `I -- No --> Z`: If the refund is not approved, the order is cancelled.
+- `J --> A`: After a refund is issued, a new order is placed.
+- `L --> Z`: After the order review is stored, the order is cancelled.
+
+## Repository Context & Terminology
+- **User Places Order**: In standard e-commerce, this refers to the action of a customer initiating a purchase. In this diagram, it's the starting point of the entire process and also the endpoint of the refund process, creating an illogical loop.
+- **Payment Successful?**: In standard e-commerce, this refers to the verification of payment details. In this diagram, it's a decision point that determines whether the order proceeds or is immediately cancelled.
+- **Order Confirmation Sent**: In standard e-commerce, this is an automated message sent to the customer. In this diagram, it's a step after successful payment, leading to fulfillment.
+- **Shipping Label Created**: In standard logistics, this is a document attached to a package for delivery. In this diagram, it's created *before* the item is picked and packed, which is a reversed sequence.
+- **Item Picked & Packed**: In standard warehousing, this refers to retrieving and packaging the ordered item. In this diagram, it happens after the shipping label is created, which is incorrect.
+- **Package Arrives at Customer**: In standard logistics, this is the final delivery of the package. In this diagram, it leads to customer satisfaction evaluation.
+- **Customer Satisfied?**: In standard e-commerce, this is a feedback mechanism. In this diagram, if the customer is *not* satisfied, the order review is stored, which is a swapped branch outcome.
+- **Process Refund Request**: In standard e-commerce, this is the initiation of a refund. In this diagram, it's triggered by customer dissatisfaction.
+- **Refund Approved?**: In standard e-commerce, this is the decision to grant a refund. In this diagram, if not approved, the order is cancelled.
+- **Refund Issued**: In standard e-commerce, this is the completion of the refund process. In this diagram, it loops back to "User Places Order," creating an illogical flow.
+- **Send Delivery Notification**: In standard e-commerce, this is a notification sent to the customer when the package is shipped. In this diagram, it happens *after* the item is picked and packed, but *before* the package arrives at the customer, and is skipped in the main flow.
+- **Store Order Review**: In standard e-commerce, this is storing the order review. In this diagram, it happens *after* the customer is satisfied, but leads to order cancellation, which is illogical.
+- **Order Cancelled**: In standard e-commerce, this is the termination of the order. In this diagram, it's the final state for unsuccessful payments, unapproved refunds, and all customer satisfaction outcomes.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Places Order," which leads to a "Payment Successful?" decision. If payment fails ("No" branch), the "Order Cancelled" node is reached. If payment is successful ("Yes" branch), an "Order Confirmation Sent," followed by "Shipping Label Created" and then "Item Picked & Packed." A "Send Delivery Notification" is triggered after "Item Picked & Packed" and loops back to "Package Arrives at Customer." The package arriving at the customer leads to the "Customer Satisfied?" decision. If the customer is *not* satisfied ("No" branch), the "Store Order Review" node is reached, which then leads to "Order Cancelled." If the customer *is* satisfied ("Yes" branch), the "Store Order Review" node is reached, which then leads to "Order Cancelled." If the customer is not satisfied, a "Process Refund Request" is initiated, leading to "Refund Approved?". If the refund is approved ("Yes" branch), a "Refund Issued," which then loops back to "User Places Order." If the refund is not approved ("No" branch), the "Order Cancelled" node is reached. The "Order Cancelled" and "Refund Issued" nodes are terminal states, although "Refund Issued" loops back to the start. The sequence of "Shipping Label Created" before "Item Picked & Packed" is a reversed sequence. The customer satisfaction path merges directly into order cancellation without further action.

@@ -1,0 +1,78 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of a port scanner. It depicts the steps involved in initializing the scan, managing the port queue, establishing connections to target ports, and aggregating the results. The diagram serves as a visual representation of the port scanning workflow, aiding in understanding the system's architecture and data flow.
+
+## Overall Layout
+The diagram flows from left to right. It is hierarchically structured into stages, starting with scan initialization and ending with result aggregation. The start node is "Target IP + Scan Mode," and the end node is "Return Scan Data."
+
+## Subgraphs / Stages
+The diagram contains the following explicit subgraphs:
+- **Scan Initialization**: Handles the initial setup of the scan, including IP validation and address family detection.
+- **Port Queue Management**: Manages the queue of ports to be scanned, determining the ports based on the scan type.
+- **Thread Pool - 100 Workers**: Represents a pool of worker threads responsible for concurrently scanning ports.
+- **Port Connection Process**: Details the process of connecting to each port, grabbing banners, and mapping service information.
+- **Real-time Updates**: Emits real-time updates during the scan process.
+- **Result Aggregation**: Aggregates the results of the scan and prepares the data for return.
+
+## Node-by-Node Description
+- **Target IP + Scan Mode**: Represents the initial input, including the target IP address and the selected scan mode. visible in diagram; no further repository context available.
+- **Validate IP Format**: Validates the format of the target IP address. visible in diagram; no further repository context available.
+- **Detect Address Family**: Detects the address family (IPv4 or IPv6) of the target IP address. visible in diagram; no further repository context available.
+- **socket.AF_INET**: Represents the IPv4 address family. visible in diagram; no further repository context available.
+- **socket.AF_INET6**: Represents the IPv6 address family. visible in diagram; no further repository context available.
+- **Deep Scan?**: A decision point to determine if a deep scan is required. visible in diagram; no further repository context available.
+- **Ports 1-1024**: Represents the range of ports to be scanned in a deep scan. visible in diagram; no further repository context available.
+- **23 Common Ports**: Represents a list of 23 common ports to be scanned. visible in diagram; no further repository context available.
+- **Create Port Queue**: Creates a queue of ports to be scanned based on the scan type. visible in diagram; no further repository context available.
+- **Worker Thread 1**: Represents the first worker thread in the thread pool. visible in diagram; no further repository context available.
+- **Worker Thread 2**: Represents the second worker thread in the thread pool. visible in diagram; no further repository context available.
+- **Worker Thread ...**: Represents the additional worker threads in the thread pool. visible in diagram; no further repository context available.
+- **Worker Thread 100**: Represents the last worker thread in the thread pool. visible in diagram; no further repository context available.
+- **Socket Connect**: Establishes a socket connection to the target port. visible in diagram; no further repository context available.
+- **Port Open?**: A decision point to determine if the port is open. visible in diagram; no further repository context available.
+- **Grab Banner**: Grabs the banner from the open port. visible in diagram; no further repository context available.
+- **Map Service & Severity**: Maps the service running on the port and its severity. visible in diagram; no further repository context available.
+- **Emit 'port_found'**: Emits an event indicating that a port has been found. visible in diagram; no further repository context available.
+- **Emit 'scan_progress'**: Emits an event indicating the scan progress. visible in diagram; no further repository context available.
+- **Results List**: A list to store the results of the scan. visible in diagram; no further repository context available.
+- **Sort by Port Number**: Sorts the results by port number. visible in diagram; no further repository context available.
+- **Return Scan Data**: Returns the scan data. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Target IP + Scan Mode --> Validate IP Format`: The target IP and scan mode are passed to the IP format validation step.
+- `Validate IP Format --> Detect Address Family`: The validated IP address is passed to the address family detection step.
+- `Detect Address Family --> socket.AF_INET`: If the address family is IPv4, the flow goes to the socket.AF_INET node.
+- `Detect Address Family --> socket.AF_INET6`: If the address family is IPv6, the flow goes to the socket.AF_INET6 node.
+- `socket.AF_INET --> Create Port Queue`: The IPv4 address family is passed to the port queue creation step.
+- `socket.AF_INET6 --> Create Port Queue`: The IPv6 address family is passed to the port queue creation step.
+- `Deep Scan? -- Yes --> Ports 1-1024`: If a deep scan is required, the flow goes to the Ports 1-1024 node.
+- `Deep Scan? -- No --> 23 Common Ports`: If a deep scan is not required, the flow goes to the 23 Common Ports node.
+- `Ports 1-1024 --> Create Port Queue`: The range of ports is passed to the port queue creation step.
+- `23 Common Ports --> Create Port Queue`: The list of common ports is passed to the port queue creation step.
+- `Create Port Queue --> Worker Thread 1`: The port queue is passed to the first worker thread.
+- `Create Port Queue --> Worker Thread 2`: The port queue is passed to the second worker thread.
+- `Create Port Queue --> Worker Thread ...`: The port queue is passed to the additional worker threads.
+- `Create Port Queue --> Worker Thread 100`: The port queue is passed to the last worker thread.
+- `Worker Thread 1 --> Socket Connect`: The first worker thread attempts to connect to a port.
+- `Worker Thread 2 --> Socket Connect`: The second worker thread attempts to connect to a port.
+- `Worker Thread N --> Socket Connect`: The last worker thread attempts to connect to a port.
+- `Socket Connect --> Port Open?`: The socket connection is checked to see if the port is open.
+- `Port Open? -- Yes --> Grab Banner`: If the port is open, the banner is grabbed.
+- `Port Open? -- Callback --> Emit 'port_found'`: If the port is open, a callback emits a 'port_found' event.
+- `Grab Banner --> Map Service & Severity`: The banner is used to map the service and its severity.
+- `Map Service & Severity --> Results List`: The service and severity information is added to the results list.
+- `Map Service & Severity --> Emit 'scan_progress'`: The service and severity information is used to emit a 'scan_progress' event.
+- `Results List --> Sort by Port Number`: The results list is sorted by port number.
+- `Sort by Port Number --> Return Scan Data`: The sorted scan data is returned.
+- Multiple `Map Service & Severity` nodes converge at `Results List`.
+
+## Repository Context & Terminology
+- **socket.AF_INET**: Address family for IPv4. This constant is used in socket programming to specify the Internet Protocol version 4 address family.
+- **socket.AF_INET6**: Address family for IPv6. This constant is used in socket programming to specify the Internet Protocol version 6 address family.
+- **Port Scanning**: A process of sending packets to specific ports on a host and analyzing the responses to identify open ports and running services.
+- **Banner Grabbing**: A technique used to gather information about a remote system by capturing the banner or welcome message that a service sends when a connection is established.
+- **Thread Pool**: A collection of worker threads that are used to execute tasks concurrently, improving performance by reducing the overhead of creating and destroying threads for each task.
+- **Emit**: In the context of real-time updates, "emit" refers to sending out an event or message to subscribers or listeners, typically using a technology like WebSockets or Server-Sent Events.
+- **Callback**: A function that is passed as an argument to another function and is executed after the completion of that function.
+
+## High-Density QA Ground Truth Summary
+The port scan begins with the "Target IP + Scan Mode" node, where the user provides the target IP address and selects a scan mode. The IP format is then validated, and the address family (IPv4 or IPv6) is detected. Based on whether a deep scan is selected at the "Deep Scan?" decision node, either ports 1-1024 or 23 common ports are added to the port queue. The "Create Port Queue" node consolidates the ports to be scanned. A thread pool of 100 workers then processes the queue. Each "Worker Thread" attempts a "Socket Connect" to a port, and the "Port Open?" node determines if the connection was successful. If a port is open, the "Grab Banner" node retrieves the service banner, and the "Map Service & Severity" node identifies the service and its severity. Real-time updates are emitted via "Emit 'port_found'" and "Emit 'scan_progress'." All results are aggregated in the "Results List," sorted by port number, and finally returned via the "Return Scan Data" node. The use of `socket.AF_INET` and `socket.AF_INET6` indicates the program uses socket programming to establish network connections based on the detected IP address family.

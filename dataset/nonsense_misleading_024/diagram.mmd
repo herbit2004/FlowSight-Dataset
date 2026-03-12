@@ -1,0 +1,16 @@
+graph TD
+    A[User Places Order] --> B{Order Received?};
+    B -- Yes --> C[Check Stock Level];
+    B -- No --> A
+
+    C --> D{Sufficient Stock?};
+    D -- Yes --> E[Payment Processing];
+	  D -- No --> K[Notify Customer Stock Unavailable];
+    K --> A;	
+    E --> F{Payment Successful?};
+    F -- No --> G[Cancel Order];
+    F -- Yes --> H[Schedule Shipment];
+    H --> I[Order Shipped];
+    G --> A;
+    I --> J[Customer Receives Order];
+    J --> C;

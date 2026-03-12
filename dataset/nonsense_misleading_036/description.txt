@@ -1,0 +1,52 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow of a system. It depicts the sequence of steps involved from when a user places an order to the generation of a sales report, including payment processing, order dispatch, delivery confirmation, customer satisfaction, and handling of cancellations and refunds. The diagram serves as a visual representation of the order lifecycle.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "User Places Order" node at the top and progresses downwards through various stages of order processing. The end nodes are "Generate Sales Report", "User Places Order" (looping back), and "Close Ticket".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement & Payment, Order Dispatch & Delivery, Customer Satisfaction, Order Cancellation & Refund, Ticket Closure & Archiving, and Reporting & Inventory.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action of a user creating an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Dispatch Order**: Represents the action of sending the order for delivery. visible in diagram; no further repository context available.
+- **D / Order Delivered?**: A decision point to check if the order has been delivered to the customer. visible in diagram; no further repository context available.
+- **E / Send Thank You Note**: Represents sending a thank you note to the customer. visible in diagram; no further repository context available.
+- **F / Customer Satisfied?**: A decision point to check if the customer is satisfied with the order. visible in diagram; no further repository context available.
+- **G / Close Ticket**: Represents closing the customer support ticket related to the order. visible in diagram; no further repository context available.
+- **H / Cancel Order**: Represents the action of canceling the order. visible in diagram; no further repository context available.
+- **I / Refund Payment**: Represents the action of refunding the payment to the customer. visible in diagram; no further repository context available.
+- **J / Archive Order**: Represents archiving the order details. visible in diagram; no further repository context available.
+- **K / Update Inventory**: Represents updating the inventory levels. visible in diagram; no further repository context available.
+- **L / Generate Sales Report**: Represents generating a sales report. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, initiating the payment check.
+- `B -- Yes --> C`: Payment is received, proceed to dispatch the order.
+- `B -- No --> H`: Payment is not received, cancel the order.
+- `C --> D`: Order is dispatched, check for delivery status.
+- `D -- No --> C`: Order is not delivered, re-dispatch the order.
+- `D -- Yes --> E`: Order is delivered, send a thank you note.
+- `E --> F`: After sending the thank you note, check customer satisfaction.
+- `F -- No --> G`: Customer is not satisfied, close the ticket.
+- `F -- Yes --> A`: Customer is satisfied, loop back to "User Places Order".
+- `H --> I`: Order is canceled, refund the payment.
+- `I --> G`: Payment is refunded, close the ticket.
+- `G --> J`: Ticket is closed, archive the order.
+- `J --> K`: Order is archived, update the inventory.
+- `K --> L`: Inventory is updated, generate the sales report.
+
+## Repository Context & Terminology
+- **User Places Order**: Standard meaning is a customer initiating a purchase. In this diagram, it's the starting point and also a loop-back point if the customer is satisfied, implying a new order is immediately placed.
+- **Payment Received?**: Standard meaning is verifying successful payment. In this diagram, it's a binary check determining whether to dispatch or cancel the order.
+- **Dispatch Order**: Standard meaning is sending the order for delivery. In this diagram, it's a step after payment, with a loop back if delivery fails.
+- **Order Delivered?**: Standard meaning is confirming the order has reached the customer. In this diagram, it determines whether to send a thank you note or re-dispatch.
+- **Send Thank You Note**: Standard meaning is expressing gratitude to the customer. In this diagram, it precedes the customer satisfaction check, which is unusual.
+- **Customer Satisfied?**: Standard meaning is gauging customer contentment. In this diagram, a "Yes" leads back to "User Places Order", implying an immediate new order, while a "No" closes the ticket, which is counterintuitive.
+- **Close Ticket**: Standard meaning is resolving a customer support issue. In this diagram, it's reached after dissatisfaction or refund, and also after archiving the order.
+- **Update Inventory**: Standard meaning is adjusting stock levels. In this diagram, it occurs *after* generating the sales report, which is a reversed sequence.
+- **Generate Sales Report**: Standard meaning is creating a summary of sales data. In this diagram, it's the final step, occurring after inventory update.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Places Order," which leads to a "Payment Received?" decision. If "Yes," the "Dispatch Order" node is reached; if "No," the "Cancel Order" node is reached. From "Dispatch Order," the flow proceeds to "Order Delivered?" If "No," the process loops back to "Dispatch Order." If "Yes," a "Send Thank You Note" is issued, followed by a "Customer Satisfied?" check. A "Yes" response from "Customer Satisfied?" incorrectly loops back to "User Places Order," initiating a new order immediately. A "No" response from "Customer Satisfied?" leads to "Close Ticket." From "Cancel Order," the flow moves to "Refund Payment," then to "Close Ticket." After "Close Ticket," the flow proceeds to "Archive Order," then to "Update Inventory," and finally to "Generate Sales Report." The reversed sequence of "Update Inventory" and "Generate Sales Report" contradicts standard practice, where inventory updates typically precede report generation. The illogical loop from customer satisfaction directly back to placing a new order is also a key deviation from expected order processing workflows.

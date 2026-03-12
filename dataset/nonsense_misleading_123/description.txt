@@ -1,0 +1,45 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the process flow of an order processing system. The diagram outlines the steps involved from when a user submits an order to when the order is delivered, including payment verification, inventory check, and handling of potential delays.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "User Submits Order" node at the top and flows downwards towards the "Order Delivered?" node at the bottom. The diagram includes decision diamonds and loops, indicating conditional paths and iterative processes.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Submission & Payment, Order Preparation, Inventory Check, Order Fulfillment, and Delivery Confirmation.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action where a user places an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Display Error Message**: Indicates that an error message is displayed to the user if the payment is not received. visible in diagram; no further repository context available.
+- **D / Prepare Order**: Represents the step where the order is prepared after payment is confirmed. visible in diagram; no further repository context available.
+- **E / Inventory Available?**: A decision point to check if the required inventory is available to fulfill the order. visible in diagram; no further repository context available.
+- **F / Ship Order**: Represents the action of shipping the order to the customer. visible in diagram; no further repository context available.
+- **G / Order Delivered?**: A decision point to check if the order has been delivered to the customer. visible in diagram; no further repository context available.
+- **H / Notify Customer of Delay**: Represents the action of notifying the customer about a delay in the order if the inventory is not available. visible in diagram; no further repository context available.
+- **I / Process Refund**: Represents the action of processing a refund for the order. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The user submitting an order triggers the payment verification process.
+- `B -- No --> C`: If payment is not received, an error message is displayed.
+- `C --> A`: After displaying the error message, the process loops back to the "User Submits Order" node.
+- `B -- Yes --> D`: If payment is received, the order preparation process begins.
+- `D --> E`: Preparing the order leads to checking inventory availability.
+- `E -- Yes --> F`: If inventory is available, the order is shipped.
+- `F --> G`: Shipping the order leads to checking if the order has been delivered.
+- `G -- No --> D`: If the order is not delivered, the process loops back to "Prepare Order".
+- `E -- No --> H`: If inventory is not available, the customer is notified of the delay.
+- `H --> I`: Notifying the customer of the delay leads to processing a refund.
+- `I --> F`: Processing the refund leads to shipping the order.
+
+## Repository Context & Terminology
+- **User Submits Order**: In standard e-commerce, this is the initial action of a customer placing an order. In this diagram, it's the starting point of the order processing flow.
+- **Payment Received?**: In standard practice, this verifies successful payment. In this diagram, it's a decision point determining whether to proceed with order preparation or display an error.
+- **Prepare Order**: In standard practice, this involves picking, packing, and preparing the order for shipment. In this diagram, it's a step after payment confirmation and before inventory check.
+- **Inventory Available?**: In standard practice, this checks if the items in the order are in stock. In this diagram, it's a decision point determining whether to ship the order or notify the customer of a delay.
+- **Ship Order**: In standard practice, this involves sending the order to the customer. In this diagram, it's the action taken after inventory is confirmed or after a refund is processed, which is illogical.
+- **Order Delivered?**: In standard practice, this confirms that the customer has received the order. In this diagram, it's a decision point that, if negative, incorrectly loops back to "Prepare Order".
+- **Notify Customer of Delay**: In standard practice, this informs the customer about a delay due to inventory issues. In this diagram, it precedes the refund process, which is out of order.
+- **Process Refund**: In standard practice, this returns the customer's payment due to order cancellation or inventory issues. In this diagram, it occurs after notifying the customer of a delay and before shipping the order, which is illogical.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "User Submits Order," which then proceeds to the "Payment Received?" decision diamond. If payment is not received ("No" branch), an "Display Error Message" is shown, looping back to the initial order submission. If payment is received ("Yes" branch), the process moves to "Prepare Order," followed by an "Inventory Available?" check. A "Yes" branch from inventory availability leads to "Ship Order" and then to "Order Delivered?". If the order is not delivered ("No" branch), the flow incorrectly loops back to "Prepare Order." If inventory is not available ("No" branch), the customer is notified of a delay via "Notify Customer of Delay," which then triggers "Process Refund" before proceeding to "Ship Order." The "Process Refund" step is incorrectly placed after notifying the customer of the delay. The "Order Delivered?" node, upon a negative outcome, loops back to "Prepare Order," which is an illogical flow. The diagram lacks a proper backorder or cancellation path when inventory is unavailable, and the refund process is out of sequence.

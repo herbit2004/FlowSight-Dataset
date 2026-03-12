@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow in an e-commerce system. It illustrates the sequence of steps from receiving an order to shipping it, including validation, inventory management, payment processing, and warehouse operations. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "Order Received" node at the top and flows downwards through various stages to the "Order Shipped" node at the bottom. There is a clear hierarchical structure representing the sequential steps in the order processing pipeline.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Reception & Validation, Inventory Management, Payment Processing, Warehouse Operations, Shipment Scheduling, and Order Completion.
+
+## Node-by-Node Description
+- **A / Order Received**: Represents the initial state where an order is received by the system. visible in diagram; no further repository context available.
+- **B / Validate Order Data**: Represents the process of validating the order data for correctness and completeness. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **D / Reject Order**: Represents the action of rejecting the order if the order data is invalid. visible in diagram; no further repository context available.
+- **E / Allocate Inventory**: Represents the process of allocating the required quantity of items from the inventory for the order. visible in diagram; no further repository context available.
+- **F / Create Backorder**: Represents the process of creating a backorder if the items are out of stock. visible in diagram; no further repository context available.
+- **G / Payment Capture**: Represents the process of capturing the payment for the order. visible in diagram; no further repository context available.
+- **H / Packing Request Sent**: Represents the action of sending a packing request to the warehouse. visible in diagram; no further repository context available.
+- **I / Cancel Order**: Represents the action of canceling the order if the payment fails. visible in diagram; no further repository context available.
+- **J / Warehouse Picks Items**: Represents the process of the warehouse picking the items for the order. visible in diagram; no further repository context available.
+- **K / Order Packed**: Represents the state where the order is packed and ready for shipment. visible in diagram; no further repository context available.
+- **L / Shipment Scheduled**: Represents the process of scheduling the shipment for the order. visible in diagram; no further repository context available.
+- **M / Order Shipped**: Represents the final state where the order is shipped to the customer. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Represents the flow from receiving the order to validating the order data.
+- `B -- Valid --> C`: Represents the flow to inventory check if the order data is valid.
+- `B -- Invalid --> D`: Represents the flow to reject the order if the order data is invalid.
+- `C -- In Stock --> E`: Represents the flow to allocate inventory if the items are in stock.
+- `C -- Out of Stock --> F`: Represents the flow to create a backorder if the items are out of stock.
+- `E --> G`: Represents the flow from allocating inventory to payment capture.
+- `F --> G`: Represents the flow from creating a backorder to payment capture. This is a convergence point.
+- `G -- Payment Successful --> H`: Represents the flow to send a packing request if the payment is successful.
+- `G -- Payment Failed --> I`: Represents the flow to cancel the order if the payment fails.
+- `H --> J`: Represents the flow from sending a packing request to the warehouse picking the items.
+- `J --> K`: Represents the flow from the warehouse picking the items to the order being packed.
+- `K --> L`: Represents the flow from the order being packed to scheduling the shipment.
+- `L --> M`: Represents the flow from scheduling the shipment to the order being shipped.
+
+## Repository Context & Terminology
+- **Order**: A request from a customer to purchase goods or services.
+- **Inventory**: The stock of goods held by a company for sale.
+- **Backorder**: An order that cannot be filled immediately because the item is out of stock.
+- **Payment Capture**: The process of collecting funds from the customer's payment method.
+- **Packing Request**: A request sent to the warehouse to pack the items for an order.
+- **Shipment Scheduling**: The process of arranging for the transportation of the order to the customer.
+- **Order Shipped**: The final stage where the order has left the warehouse and is in transit to the customer.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Order Received," initiating the order processing workflow. The first step is "Validate Order Data," a decision point branching to "Inventory Check" if valid, or "Reject Order" if invalid. If the order data is valid, the system proceeds to "Inventory Check," which branches based on stock availability. "In Stock" leads to "Allocate Inventory," while "Out of Stock" results in "Create Backorder." Both "Allocate Inventory" and "Create Backorder" converge at "Payment Capture." Another key branch occurs after "Payment Capture": "Payment Successful" leads to "Packing Request Sent," initiating warehouse operations, while "Payment Failed" leads to "Cancel Order." The warehouse process continues with "Warehouse Picks Items," followed by "Order Packed," and then "Shipment Scheduled." Finally, the process concludes with "Order Shipped," marking the completion of the order fulfillment. The "Inventory Check" node is crucial for determining whether a backorder needs to be created, directly impacting customer order fulfillment timelines.

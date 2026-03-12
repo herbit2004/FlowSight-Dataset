@@ -1,0 +1,18 @@
+graph TD
+    A[Customer Places Order] --> B{Payment Received?};
+    B -- Yes --> C[Check Inventory];
+    B -- No --> Z[Send Order Confirmation];
+    C -- Available --> D[Create Shipping Label];
+    C -- Unavailable --> E[Notify Customer Backorder];
+    E --> F{Customer Accepts Backorder?};
+    F -- No --> H[Cancel Order];
+    F -- Yes --> D;
+    D --> G[Ship Order];
+    G --> I{Delivery Successful?};
+    I -- No --> J[Refund Payment];
+    I -- No --> K[Investigate Delivery Issue];
+    K --> G;
+    I -- Yes --> L[Send Order Confirmation];
+    H --> M[Update Inventory];
+    Z --> A;
+    J --> M;

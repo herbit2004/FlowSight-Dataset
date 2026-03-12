@@ -1,0 +1,34 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- Yes --> C[Inventory Check];
+    B -- No --> J[Send Payment Reminder];
+    J --> A;
+    C --> D{Sufficient Stock?};
+    D -- No --> E[Order Cancellation];
+    D -- Yes --> F[Create Shipping Label];
+    F --> G[Packing Order];
+    G --> H{Delivery Successful?};
+    H -- No --> K[Process Refund];
+    H -- Yes --> I[Order Delivered];
+    I --> L[Order Completed];
+    E --> L;
+    K --> C;
+    L --> M[Update Inventory System];
+    M --> N[Send Confirmation Email];
+    N --> O[Analytics Update];
+
+
+    subgraph Parallel Processing
+        P[Generate Invoice]
+        Q[Alert Warehouse Staff]
+        P --> R[Invoice Approved]
+        R --> Q
+        Q --> S[Warehouse Acknowledged]
+        S --> F
+    end
+
+    %% Added loop for the sake of testing
+    O --> B
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style L fill:#f9f,stroke:#333,stroke-width:2px

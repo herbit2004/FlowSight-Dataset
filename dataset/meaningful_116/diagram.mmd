@@ -1,0 +1,19 @@
+graph TD
+    A[Request Received] --> B{Circuit Open?};
+    B -- Yes (Immediate Fail) --> C[Return Cached Error];
+    B -- No --> D[Call External Service];
+    D --> E{Service Successful?};
+    E -- Yes --> F[Reset Failure Count];
+    F --> G[Return Service Response];
+    E -- No --> H[Increment Failure Count];
+    H --> I{Failure Count > Threshold?};
+    I -- Yes --> J[Open Circuit Breaker];
+    J --> K[Start Cooling Timeout Task];
+    I -- No --> G;
+    K --> L[Circuit Breaker Cooling];
+    L --> M{Timeout Complete?};
+    M -- Yes --> B;
+    M -- No --> L;
+
+    classDef yellow fill:#f9f,stroke:#333,stroke-width:2px;
+    class A,D,F,G yellow;

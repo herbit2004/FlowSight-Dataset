@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow and processing steps within a query engine. It depicts the transformation of an SQL query string into a tabular result set, highlighting the core engine's internal pipeline and its interaction with external components like a plugin registry and data source. The diagram serves as a high-level architecture overview of the query execution process.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TB). It features a central subgraph representing the core engine's internal pipeline. The start node is "SQL Query String," and the end node is "Tabular Result Set."
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Core Engine Internal Pipeline**: This subgraph encapsulates the main processing stages within the query engine, including parsing, abstract syntax tree manipulation, semantic analysis, code generation, and runtime execution.
+
+## Node-by-Node Description
+- **SQL Query String**: Represents the initial SQL query input. visible in diagram; no further repository context available.
+- **Lexer & Parser**: Responsible for lexing and parsing the SQL query string. visible in diagram; no further repository context available.
+- **Abstract Syntax Tree**: Represents the abstract syntax tree generated from the parsed SQL query. visible in diagram; no further repository context available.
+- **AST Visitors & Rewriters**: Performs transformations and modifications on the abstract syntax tree. visible in diagram; no further repository context available.
+- **Type Inference & Semantic Analysis**: Infers data types and performs semantic analysis on the AST. visible in diagram; no further repository context available.
+- **C# Code Generator & Compiler**: Generates C# code from the semantically analyzed AST and compiles it. visible in diagram; no further repository context available.
+- **Execution Runtime VM**: Executes the compiled C# code. visible in diagram; no further repository context available.
+- **Plugin / Schema Registry**: A registry containing information about available plugins and schemas. visible in diagram; no further repository context available.
+- **Data Source Plugin**: Represents a plugin that provides access to a data source. visible in diagram; no further repository context available.
+- **Tabular Result Set**: Represents the final tabular result set produced by the query execution. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `SQL Query String --> Lexer & Parser`: The SQL query string is passed to the lexer and parser.
+- `Lexer & Parser --> Abstract Syntax Tree`: The lexer and parser generate an abstract syntax tree.
+- `Abstract Syntax Tree --> AST Visitors & Rewriters`: The abstract syntax tree is passed to AST visitors and rewriters.
+- `AST Visitors & Rewriters --> Type Inference & Semantic Analysis`: The modified AST is passed to the type inference and semantic analysis stage.
+- `Plugin / Schema Registry -.-> Type Inference & Semantic Analysis`: The plugin/schema registry injects types and methods into the type inference and semantic analysis stage.
+- `Type Inference & Semantic Analysis --> C# Code Generator & Compiler`: The semantically analyzed AST is passed to the C# code generator and compiler.
+- `C# Code Generator & Compiler --> Execution Runtime VM`: The compiled C# code is passed to the execution runtime VM.
+- `Execution Runtime VM <--> Data Source Plugin`: The execution runtime VM streams data row-by-row from the data source plugin.
+- `Execution Runtime VM ===> Tabular Result Set`: The execution runtime VM produces the tabular result set.
+
+## Repository Context & Terminology
+- **SQL Query String**: A string containing a query written in the SQL language.
+- **Lexer**: A lexical analyzer that breaks down the SQL query string into tokens.
+- **Parser**: A component that constructs a parse tree or abstract syntax tree (AST) from the tokens produced by the lexer.
+- **Abstract Syntax Tree (AST)**: A tree representation of the syntactic structure of the SQL query.
+- **Semantic Analysis**: The process of checking the AST for semantic errors, such as type mismatches and undefined variables.
+- **C# Code Generator**: A component that generates C# code from the AST.
+- **Compiler**: A tool that translates the generated C# code into executable code.
+- **Execution Runtime VM**: A virtual machine that executes the compiled code.
+- **Plugin / Schema Registry**: A repository of available plugins and schema information.
+- **Data Source Plugin**: A plugin that provides access to a specific data source.
+- **Tabular Result Set**: The final output of the query execution, presented in a tabular format.
+
+## High-Density QA Ground Truth Summary
+The process begins with an "SQL Query String" which is fed into the "Lexer & Parser." This stage transforms the string into an "Abstract Syntax Tree." The AST then undergoes transformations by "AST Visitors & Rewriters." Simultaneously, the "Plugin / Schema Registry" injects necessary types and methods into the "Type Inference & Semantic Analysis" stage, which also receives the modified AST. The "Type Inference & Semantic Analysis" stage performs semantic checks and infers data types. Following this, the "C# Code Generator & Compiler" generates and compiles C# code. The compiled code is then executed by the "Execution Runtime VM." The "Execution Runtime VM" interacts with a "Data Source Plugin," streaming data row-by-row. Finally, the "Execution Runtime VM" produces the "Tabular Result Set," representing the query's output. The "Plugin / Schema Registry" is crucial for providing the necessary type information during semantic analysis, ensuring that the query is executed with the correct data types and methods.

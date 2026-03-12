@@ -1,0 +1,42 @@
+graph TD
+    subgraph User Check-In Flow
+    A[User Initiates Check-In];
+    B{Existing Check-In?};
+    C[Load Existing Check-In Data];
+    D[Create New Check-In Record];
+    E[Display Check-In Form];
+    F[User Enters Task Updates];
+    G[User Saves/Submits Check-In];
+
+    A --> B;
+    B -- Yes --> C;
+    B -- No --> D;
+    C --> E;
+    D --> E;
+    E --> F;
+    F --> G;
+    end
+
+    subgraph Task Completion Pipeline
+    G --> H{Task Completion Threshold?};
+    H -- Yes --> I[Trigger Task Completion Workflow];
+    H -- No --> J[No Action Required];
+
+    I --> K[Validate Dependencies];
+    K --> L{Dependencies Met?};
+    L -- Yes --> M[Mark Task as Complete];
+    L -- No --> N[Hold Completion; Notify Dependencies];
+    M --> O[Update Task Status];
+    O --> P[Send Completion Notification];
+	  end
+
+    subgraph Data Storage & Reporting
+    G --> Q[Store Check-In Data];
+    P --> R[Update Reporting Metrics];
+    Q --> R;
+    R --> S[Generate Daily Activity Report];
+
+	  end
+
+     classDef action fill:#f9f,stroke:#333,stroke-width:2px
+     class A,C,D,E,F,G,I,K,M,O,P,Q,R,S action

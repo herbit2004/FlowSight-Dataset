@@ -1,0 +1,43 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a software release process. It depicts the flow of code changes and tagging operations through different stages of development, staging, and production environments. The diagram serves as a visual representation of the release pipeline, outlining the steps involved in deploying code to various clusters.
+
+## Overall Layout
+The diagram has a left-to-right (LR) layout. The flow starts with the "dev branch/Fast iteration" node and progresses through staging, release branching, and production tagging, ultimately deploying to different clusters. The "Clusters" subgraph is positioned on the right side, representing the final deployment targets.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Clusters**: This subgraph groups the different cluster environments: dev, staging, production, and operations.
+
+## Node-by-Node Description
+- **D / dev branch\nFast iteration**: Represents the development branch where rapid iterations and code changes occur. visible in diagram; no further repository context available.
+- **S / staging branch\nSoak & integration**: Represents the staging environment where code is integrated and undergoes soak testing. visible in diagram; no further repository context available.
+- **R / release/x.y branch optional**: Represents an optional release branch, named according to a versioning scheme (x.y). visible in diagram; no further repository context available.
+- **P / Production stable tag**: Represents the creation of a stable tag for production deployment. visible in diagram; no further repository context available.
+- **C1 / dev-01\ntracks dev**: Represents the development cluster environment. visible in diagram; no further repository context available.
+- **C2 / stag-01\ntracks staging**: Represents the staging cluster environment. visible in diagram; no further repository context available.
+- **C3 / prod-01\ntracks stable**: Represents the production cluster environment. visible in diagram; no further repository context available.
+- **C4 / ops-01\ntracks stable**: Represents the operations cluster environment. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `D --> S`: Code changes flow from the development branch to the staging environment.
+- `S --> P`: A stable tag is created from the staging environment for production.
+- `S --> R`: An optional release branch is created from the staging environment.
+- `S --> R`: Fixes are merged from staging to the release branch.
+- `R --> P`: A stable tag is created from the release branch for production.
+- `R --> P`: The release branch is tagged as stable.
+- `D --> C1`: The development branch is deployed to the development cluster.
+- `S --> C2`: The staging environment is deployed to the staging cluster.
+- `P --> C3`: The production stable tag is deployed to the production cluster.
+- `P --> C4`: The production stable tag is deployed to the operations cluster.
+
+## Repository Context & Terminology
+- **dev branch**: The primary branch for active development, where new features and bug fixes are implemented.
+- **staging branch**: A branch used for integration and testing of code before it is released to production.
+- **Soak testing**: A type of software testing where a system is subjected to a continuous, expected load for a long period of time to identify performance issues or memory leaks.
+- **release/x.y branch**: An optional branch created for a specific release version (x.y), allowing for focused bug fixes and stabilization.
+- **Production stable tag**: A tag applied to a specific commit in the repository, indicating that it is a stable and tested version suitable for production deployment.
+- **Clusters**: Represent different environments (dev, staging, production, ops) where the application is deployed.
+- **dev-01, stag-01, prod-01, ops-01**: Naming conventions for specific cluster instances.
+
+## High-Density QA Ground Truth Summary
+The release process begins with the "dev branch/Fast iteration" node, representing the active development phase. Code changes from the development branch are then merged into the "staging branch/Soak & integration" node for integration and testing. From the staging environment, there are two possible paths: a "create tag stable" edge leads directly to the "Production stable tag" node, or a "release/x.y branch optional" node can be created. Fixes can be merged from staging to this optional release branch. The release branch, if used, is then tagged as stable, leading to the "Production stable tag" node. Finally, the "Production stable tag" is deployed to the "prod-01\ntracks stable" and "ops-01\ntracks stable" clusters. The development and staging branches are deployed to the "dev-01\ntracks dev" and "stag-01\ntracks staging" clusters respectively. The "release/x.y branch" is optional, allowing for a direct path from staging to production tagging or a more controlled release process with a dedicated release branch. The naming convention "prod-01" suggests a specific instance of the production cluster, potentially indicating multiple production environments.

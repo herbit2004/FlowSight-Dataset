@@ -1,0 +1,17 @@
+graph TD
+    A[User Places Order] --> B{Payment Received?};
+    B -- Yes --> C[Inventory Check];
+    B -- No --> H[Cancel Order - Notify User];
+    C --> D{Inventory Available?};
+    D -- No --> E[Order Shipped];
+    E --> F[Send Shipping Confirmation];
+    D -- Yes --> G[Allocate Inventory];
+    G --> I[Prepare Shipment];
+    I --> J{Package Ready?};
+    J -- No --> K[Repeat Preparation];
+    K --> I;
+    J -- Yes --> L[Notify Warehouse Manager];
+    L --> M{Manager OK?};
+    M -- Yes --> E;
+    M -- No --> N[Deallocate Inventory];
+    N --> A;

@@ -1,0 +1,28 @@
+graph TD
+    A[Client Application] --> B{Request Lock};
+    B --> C{Lock Manager Service};
+    C --> D{Candidate Lock};
+    D --> E{ZooKeeper Cluster};
+    E -- Node Available --> F[Create Ephemeral ZNode];
+    F -- Success --> G[Election Monitor];
+    G -- First Node? --> H{Leader Election};
+    H -- Yes --> I[Become Leader];
+    H -- No --> J[Become Follower];
+    I --> K[Grant Lock to Client];
+    J --> L[Watch Predecessor];
+    L -- Predecessor Fails --> M[Re-election Triggered];
+    M --> H;
+    K --> N[Return Lock Token];
+    N --> A;
+    A -- Use Resource --> O{Release Lock};
+    O --> P[Remove ZNode];
+    P --> E;
+    E -- Lock Node Failure --> M;
+    E -- Network Partition --> Q{Quorum Reached?};
+    Q -- No --> R[Initiate Fence];
+    Q -- Yes --> S[Continue Operations];
+    S --> K;
+    R --> C;
+
+    classDef leader fill:#f9f,stroke:#333,stroke-width:2px
+    I:::leader

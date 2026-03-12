@@ -1,0 +1,40 @@
+graph TD
+    subgraph API Gateway
+        A[Client Request] --> B{Request Router};
+        B -- Route based on path --> C{Authentication Handler};
+        C -- No Token --> D[Return 401 Unauthorized];
+        C -- Has Token --> E{Token Validation Service};
+        D --> Z[Client Response];
+        E -- Valid Token --> F{Authorization Service};
+        E -- Invalid Token --> D;
+        F -- Authorized --> G{Request Transformer};
+        F -- Unauthorized --> H[Return 403 Forbidden];
+        H --> Z;
+        G --> I[Upstream Service A];
+        G --> J[Upstream Service B];
+        G -- Route A --> I;
+        G -- Route B --> J;
+        I --> K[Response Transformer A];
+        J --> L[Response Transformer B];
+        K --> Z;
+        L --> Z;
+        Z[Client Response]
+    end
+
+    subgraph Token Validation Service
+        M[Token from Request] --> N{Token Parser};
+        N --> O{JWT Validator};
+        O -- Valid JWT --> P{Key Vault Lookup};
+        O -- Invalid JWT --> Q[Return Invalid];
+        P -- Key Found --> R{Signature Verification};
+        P -- Key Not Found --> Q;
+        R -- Signature Valid --> S[Return Valid];
+        R -- Signature Invalid --> Q;
+        Q --> E;
+        S --> E;
+    end
+
+    classDef success fill:#afa,stroke:#333,stroke-width:2px;
+    classDef error fill:#faa,stroke:#333,stroke-width:2px;
+    class S,P,R,F,G,I,J,K,L success;
+    class D,H,Q error;

@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow for an e-commerce system. It illustrates the steps involved from receiving an order to either shipping the order or canceling it. The diagram serves as a visual representation of the order fulfillment process, but contains intentional errors.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with "Order Received" at the top and ends with "End" at the bottom. The diagram shows a linear progression with branching decision points.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Reception, Payment & Address Validation, Packaging, Stock Check & Shipping, and Order Completion/Cancellation.
+
+## Node-by-Node Description
+- **A / Order Received**: Represents the initial state when an order is received. visible in diagram; no further repository context available.
+- **B / Payment Approved?**: A decision point to check if the payment for the order has been approved. visible in diagram; no further repository context available.
+- **F / Shipping Address Validated**: Represents the state where the shipping address is validated. visible in diagram; no further repository context available.
+- **D / Contact Customer for Address Update**: Represents the action of contacting the customer to update the shipping address. visible in diagram; no further repository context available.
+- **E / Package Items**: Represents the action of packaging the items in the order. visible in diagram; no further repository context available.
+- **G / Items in Stock?**: A decision point to check if all the items in the order are in stock. visible in diagram; no further repository context available.
+- **H / Ship Order**: Represents the action of shipping the order to the customer. visible in diagram; no further repository context available.
+- **C / Cancel Order**: Represents the action of canceling the order. visible in diagram; no further repository context available.
+- **I / Send Cancellation Email**: Represents the action of sending a cancellation email to the customer. visible in diagram; no further repository context available.
+- **J / End**: Represents the final state of the order processing workflow. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: An order is received and proceeds to payment approval check.
+- `B -- No --> C`: If payment is not approved, the order is canceled.
+- `B -- Yes --> F`: If payment is approved, the shipping address is validated.
+- `F -- No --> D`: If the shipping address is not valid, the customer is contacted for an update.
+- `D --> F`: After contacting the customer, the shipping address is validated again.
+- `F -- Yes --> E`: If the shipping address is valid, the items are packaged.
+- `E --> G`: After packaging, the system checks if the items are in stock.
+- `G -- No --> C`: If items are not in stock, the order is canceled.
+- `G -- Yes --> H`: If items are in stock, the order is shipped.
+- `H --> A`: After shipping, the process loops back to "Order Received", restarting the entire order process.
+- `C --> I`: After canceling the order, a cancellation email is sent.
+- `I --> J`: After sending the cancellation email, the process ends.
+- `H --> J`: After shipping the order, the process ends.
+
+## Repository Context & Terminology
+- **Order Received**: In standard e-commerce, this signifies the start of the fulfillment process. In this diagram, it's also the *restart* point after shipping, creating an infinite loop.
+- **Payment Approved?**: Standard check to ensure funds are available. Here, a negative outcome leads to cancellation.
+- **Shipping Address Validated**: Standard check for deliverability. Here, failure triggers customer contact.
+- **Package Items**: Standard step to prepare items for shipment. In this diagram, packaging occurs *before* checking stock levels, which is an error.
+- **Items in Stock?**: Standard check to prevent backorders. Here, a negative outcome leads to cancellation.
+- **Ship Order**: Standard step to send the order to the customer. In this diagram, shipping restarts the entire order process from "Order Received", which is an error.
+- **Cancel Order**: Standard action when fulfillment fails. Here, it's triggered by payment failure or lack of stock.
+- **Send Cancellation Email**: Standard notification to the customer.
+
+## High-Density QA Ground Truth Summary
+The order processing flowchart begins with "Order Received" (A), immediately followed by a check for "Payment Approved?" (B). If payment is not approved (B -- No --> C), the order is canceled, a cancellation email is sent (C --> I), and the process ends (I --> J). If payment is approved (B -- Yes --> F), the "Shipping Address Validated" (F). If the address is invalid (F -- No --> D), the customer is contacted for an update (D), and the address validation is retried (D --> F). If the address is valid (F -- Yes --> E), the items are packaged (E), *before* checking "Items in Stock?" (G). If items are not in stock (G -- No --> C), the order is canceled. If items are in stock (G -- Yes --> H), the order is shipped (H). Critically, after shipping (H), the process loops back to "Order Received" (H --> A), restarting the entire order process instead of completing. This creates an infinite loop. The "Send Cancellation Email" (I) step always precedes the "End" (J) node, which is also reached directly after shipping (H --> J). The standard e-commerce practice of checking stock *before* packaging is reversed in this diagram, and the shipping action incorrectly restarts the entire order process.

@@ -1,0 +1,16 @@
+graph TD
+    A[Start: IngressPoint Trigger] --> B{TriCore Analysis: Validate Signature?};
+    B -- Signature Valid --> C[PhaseShift Inversion: Load DataMap];
+    B -- Signature Invalid --> E[VaultNode Handshake: Initiate Reauth];
+    E --> F{ZenithGate Auth Layer: Authorized?};
+    F -- Yes --> C;
+    F -- No --> G[ArcLane Distributor: Log & Route to Isolation Cluster];
+    G --> H[SpectraQueue Flush: Purge Ingress Payload];
+    H --> I[End: Error Reported];
+    C --> D[CoreSync Validation: Data Integrity Check];
+    D -- Integrity OK --> J[FluxBridge Router: Forward to DataGrid];
+    D -- Integrity Failed --> K[DeltaStream Rebuild: Repair DataMap];
+    K --> L[Tiered Resync Protocol: Execute Resync];
+    L --> D;
+    J --> M[End: Data Ingested];
+    I --> M;

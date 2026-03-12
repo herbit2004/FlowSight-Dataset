@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order fulfillment process. It depicts the sequence of steps involved from when a user submits an order to when the order is completed, including payment verification, inventory check, shipping, and handling of unavailable items or invalid shipping addresses. The diagram serves as a visual representation of the order processing workflow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "User Submits Order" node at the top and flows downwards through a series of processes and decision points, ultimately leading to the "Order Completed" node. There is a loop back to an earlier stage from the "Ship Items" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Order Submission, Payment Verification, Inventory Check, Packaging, Shipping Address Validation, Shipping Label Creation, and Order Completion.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **D / Notify User & Refund**: Represents the action of notifying the user and processing a refund if the items are unavailable. visible in diagram; no further repository context available.
+- **E / Package Items**: Represents the process of packaging the ordered items for shipment. visible in diagram; no further repository context available.
+- **F / Shipping Address Valid?**: A decision point to check if the provided shipping address is valid. visible in diagram; no further repository context available.
+- **G / Create Shipping Label**: Represents the process of creating a shipping label for the package. visible in diagram; no further repository context available.
+- **H / Ship Items**: Represents the action of shipping the packaged items. visible in diagram; no further repository context available.
+- **I / Cancel Order**: Represents the action of canceling the order. visible in diagram; no further repository context available.
+- **J / Order Completed**: Represents the final state where the order processing is completed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+`A --> B`: User submits an order, triggering the payment verification process.
+`B -- No --> I`: If payment is not received, the order is canceled.
+`B -- Yes --> C`: If payment is received, an inventory check is initiated.
+`C -- Unavailable --> D`: If items are unavailable, the user is notified and a refund is processed.
+`C -- Available --> E`: If items are available, they are packaged.
+`E --> F`: Packaged items proceed to shipping address validation.
+`F -- No --> A`: If the shipping address is invalid, the process loops back to the beginning (User Submits Order).
+`F -- Yes --> G`: If the shipping address is valid, a shipping label is created.
+`G --> H`: A shipping label is created, leading to the items being shipped.
+`H --> C`: After shipping, the process loops back to the inventory check.
+`D --> I`: After notifying the user and refunding, the order is canceled.
+`I --> J`: The cancel order action leads to the order being completed.
+The paths from `D` and `I` converge at node `I` (Cancel Order).
+
+## Repository Context & Terminology
+- **User Submits Order**: Typically, this involves a user placing an order through a website or application. In this diagram, it's the starting point of the fulfillment process.
+- **Payment Received?**: This refers to verifying if the payment for the order has been successfully processed. In this diagram, it's a decision point that determines whether the order proceeds to the next stage.
+- **Inventory Check**: This involves checking the availability of the ordered items in the inventory system. In this diagram, it determines whether the items are available for packaging and shipping.
+- **Notify User & Refund**: This refers to informing the user that the ordered items are unavailable and processing a refund. In this diagram, it's an action taken when the inventory check fails.
+- **Package Items**: This involves preparing the ordered items for shipment. In this diagram, it's a step taken after the inventory check confirms availability.
+- **Shipping Address Valid?**: This refers to verifying if the provided shipping address is correct and deliverable. In this diagram, an invalid address restarts the entire order process.
+- **Create Shipping Label**: This involves generating a label with the shipping address and other relevant information for the carrier. In this diagram, it's a step taken after the shipping address is validated.
+- **Ship Items**: This refers to the action of sending the packaged items to the user. In this diagram, it loops back to the inventory check, which is an error.
+- **Cancel Order**: This refers to the action of terminating the order process. In this diagram, it occurs if payment is not received or after a refund is issued.
+- **Order Completed**: This refers to the final state where the order processing is finished. In this diagram, it's the end point of the process, even after a cancellation.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "User Submits Order," which immediately proceeds to "Payment Received?". If payment is not received ("No" branch), the order is immediately "Cancel Order" and then "Order Completed". If payment is received ("Yes" branch), the process moves to "Inventory Check". If the items are "Unavailable", the user is notified and refunded, and then the order is canceled before being marked as "Order Completed". If the items are "Available", they are "Package Items", and then the "Shipping Address Valid?" is checked. An invalid address ("No" branch) restarts the entire process from "User Submits Order". A valid address ("Yes" branch) leads to "Create Shipping Label" and then "Ship Items". Critically, after shipping, the process loops back to "Inventory Check", restarting the fulfillment process. The "Notify User & Refund" and "Cancel Order" actions both lead to the "Order Completed" node, marking the end of the process regardless of the outcome. The diagram illustrates a flawed order fulfillment system where an invalid shipping address restarts the order, and shipping loops back to inventory check, and no confirmation is sent after a cancel.

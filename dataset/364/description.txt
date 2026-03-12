@@ -1,0 +1,52 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the dependency injection (DI) process in a Java application using JSR-330 annotations. It depicts how the DI container analyzes configuration, resolves dependencies, and provides an entry point to the application. The diagram serves as a high-level overview of the dependency injection mechanism.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured into four main stages: Configuration, DI Container, Dependency Resolution, and the Application. The process starts with the Configuration stage and ends with the Application.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Configuration JSR-330**: Represents the configuration stage using JSR-330 annotations.
+- **DI Container**: Represents the dependency injection container responsible for managing dependencies.
+- **Dependency Resolution**: Represents the process of resolving dependencies.
+
+## Node-by-Node Description
+- **CA / @Inject Constructor**: Represents the use of the `@Inject` annotation on a constructor for dependency injection. visible in diagram; no further repository context available.
+- **CB / @Singleton Scope**: Represents the use of the `@Singleton` annotation to define a singleton scope. visible in diagram; no further repository context available.
+- **CC / @Named Qualifier**: Represents the use of the `@Named` annotation as a qualifier for dependency injection. visible in diagram; no further repository context available.
+- **ContainerDesc / API Scans bytecode via JDK Class-File API**: Represents the process of the DI container scanning bytecode using the JDK Class-File API. visible in diagram; no further repository context available.
+- **D1 / DependencyScanner**: Represents the component responsible for scanning dependencies. visible in diagram; no further repository context available.
+- **D2 / Provider Registry**: Represents the component responsible for registering providers. visible in diagram; no further repository context available.
+- **D3 / ServiceLocator**: Represents the service locator component. visible in diagram; no further repository context available.
+- **InjectionDesc / Implements the Service Locator design pattern**: Represents the implementation of the Service Locator design pattern. visible in diagram; no further repository context available.
+- **I1 / Request Type**: Represents the type of dependency being requested. visible in diagram; no further repository context available.
+- **I2 / Check Cache**: Represents the process of checking the cache for the dependency. visible in diagram; no further repository context available.
+- **I3 / Create Instance**: Represents the process of creating an instance of the dependency. visible in diagram; no further repository context available.
+- **I4 / Return Object**: Represents the process of returning the resolved dependency. visible in diagram; no further repository context available.
+- **APP / Your App Composition Root**: Represents the application's composition root where dependencies are injected. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `CA --> CB`: Represents the flow from `@Inject Constructor` to `@Singleton Scope` in the configuration stage.
+- `CB --> CC`: Represents the flow from `@Singleton Scope` to `@Named Qualifier` in the configuration stage.
+- `config --> container`: Represents the analysis of the configuration by the DI container.
+- `ContainerDesc --> D1`: Represents the flow from bytecode scanning to the `DependencyScanner`.
+- `D1 --> D2`: Represents the flow from `DependencyScanner` to `Provider Registry`.
+- `D2 --> D3`: Represents the flow from `Provider Registry` to `ServiceLocator`.
+- `container --> injection`: Represents the resolution of dependencies via the dependency resolution stage.
+- `InjectionDesc --> I1`: Represents the flow from the Service Locator pattern to `Request Type`.
+- `I1 --> I2`: Represents the flow from `Request Type` to `Check Cache`.
+- `I2 --> I3`: Represents the flow from `Check Cache` to `Create Instance`.
+- `I3 --> I4`: Represents the flow from `Create Instance` to `Return Object`.
+- `injection --> APP`: Represents the provision of an entry point to the application.
+
+## Repository Context & Terminology
+- **JSR-330**: A Java Specification Request that defines a standard set of annotations for dependency injection.
+- **@Inject**: A JSR-330 annotation used to mark a constructor, method, or field as requiring dependency injection.
+- **@Singleton**: A JSR-330 annotation used to define a scope where only one instance of a class is created.
+- **@Named**: A JSR-330 annotation used as a qualifier to differentiate between multiple dependencies of the same type.
+- **Dependency Injection (DI)**: A design pattern in which dependencies are provided to a class instead of the class creating them itself.
+- **Service Locator Pattern**: A design pattern that uses a central registry to locate and retrieve dependencies.
+- **Composition Root**: A module or class in an application where all dependencies are composed and wired together.
+
+## High-Density QA Ground Truth Summary
+The dependency injection process begins with the `Configuration JSR-330` stage, where annotations like `@Inject Constructor`, `@Singleton Scope`, and `@Named Qualifier` are used to define dependencies and their scopes. The DI container then analyzes this configuration, scanning bytecode via the JDK Class-File API. The `DependencyScanner` identifies dependencies, which are then registered in the `Provider Registry`. The `ServiceLocator` is used to resolve dependencies, implementing the Service Locator design pattern. During dependency resolution, the `Request Type` is checked against a `Check Cache`. If the dependency is not cached, a new `Create Instance` is created, and the `Return Object` is provided. Finally, the resolved dependencies provide an entry point to `Your App Composition Root`, where the application's components are wired together. JSR-330 provides a standard set of annotations for dependency injection, allowing for a more loosely coupled and testable application design. The DI container manages the lifecycle of dependencies, ensuring that they are properly created and injected into the application's components.

@@ -1,0 +1,29 @@
+graph TD
+    subgraph Region A
+        A[User Request] --> B(API Gateway);
+        B --> C{Write to Primary DB};
+        C -- Success --> D(Replication Queue);
+        C -- Failure --> E[Error Logging];
+    end
+
+    subgraph Cross-Region Replication Service
+        D --> F{Data Validation};
+        F -- Valid --> G(Transform Data);
+        F -- Invalid --> H[Alerting & Monitoring];
+        G --> I(Message Queue in Region B);
+    end
+
+    subgraph Region B
+        I --> J(Data Ingestion Service);
+        J --> K{Apply Updates to Secondary DB};
+        K -- Success --> L[Acknowledgement Queue];
+        K -- Failure --> M[Dead Letter Queue];
+    end
+
+    L --> N(Acknowledgement Processor);
+    N --> O[Update Status in Region A Metadata Store];
+
+    classDef successful fill:#ccffcc,stroke:#333,stroke-width:2px;
+    classDef failed fill:#ffcccc,stroke:#333,stroke-width:2px;
+    class D,G,J,K successful;
+    class E,H,M failed;

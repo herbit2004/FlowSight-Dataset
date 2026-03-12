@@ -1,0 +1,18 @@
+graph TD
+    A[Start: Order Received] --> B{Payment Received?};
+    B -- No --> C[Send Payment Reminder];
+    C --> F[Order Shipped]; 
+    B -- Yes --> D[Inventory Check];
+    D -- Available --> E[Order Packaging];
+    E --> G{Shipping Address Valid?};
+    G -- No --> H[Cancel Order];
+    G -- Yes --> F;
+    F --> I{Delivery Attempted?};
+    I -- No --> J[Notify Customer];
+    J --> I;
+    I -- Yes --> K{Customer Received?};
+    K -- Yes --> L[Order Completed];
+    K -- No --> M[Return to Sender];
+    M --> D;
+    H --> L;
+    L --> A;

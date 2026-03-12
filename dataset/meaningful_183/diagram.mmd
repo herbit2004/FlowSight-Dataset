@@ -1,0 +1,51 @@
+graph TD
+    subgraph User Interaction
+        A[User initiates points redemption] --> B{Redemption channel?};
+        B -- Web UI --> C[Web UI: Display available rewards];
+        B -- Mobile App --> D[Mobile App: Display available rewards];
+        C --> E{User selects reward};
+        D --> E;
+        E --> F[Frontend: Submit redemption request];
+    end
+
+    subgraph Backend Services
+        F --> G[API Gateway: Receive request];
+        G --> H[Redemption Service: Authenticate user];
+        H --> I{User authenticated?};
+        I -- Yes --> J[Redemption Service: Validate request];
+        I -- No --> K[Return error: Authentication failed];
+        J --> L{Sufficient points?};
+        L -- Yes --> M[Points Ledger: Debit points];
+        L -- No --> N[Return error: Insufficient points];
+        M --> O[Reward Inventory Service: Check availability];
+        O --> P{Reward available?};
+        P -- Yes --> Q[Reward Inventory Service: Reserve reward];
+        P -- No --> R[Return error: Reward unavailable];
+        Q --> S[Orchestration Service: Initiate fulfillment];
+        S --> T[Fulfillment Queue: Enqueue message];
+    end
+
+    subgraph Fulfillment Processing
+        T --> U[Fulfillment Processor: Consume message];
+        U --> V[Partner API: Submit fulfillment request];
+        V --> W{Partner response: Success?};
+        W -- Yes --> X[Reward Inventory Service: Mark reward as fulfilled];
+        W -- No --> Y[Retry Fulfillment Queue: Enqueue message for retry];
+        X --> Z[Points Ledger: Record redemption event];
+    end
+
+    subgraph Notification
+        Z --> AA[Notification Service: Send user confirmation];
+    end
+
+    K --> AB[Return error to Frontend];
+    N --> AB;
+    R --> AB;
+    AB --> AG[API Gateway: Return response];
+    AG --> AC[Frontend: Display error message];
+    X --> AE[Fulfillment Completed];
+    AE --> AG;
+    AG --> AF[Frontend: Display success message];
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class K,N,R error

@@ -1,0 +1,80 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a transaction processing and reconciliation system. It depicts the flow of data from external systems through validation, matching, discrepancy management, and finally, settlement. The diagram serves as a high-level overview of the entire process, outlining the key stages and decision points.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured into four main stages: Data Acquisition, Reconciliation Engine, Discrepancy Management, and Settlement Processing. The start nodes are "External System: Payment Gateway" and "Statement File Ingestion," and the end node is "Posting to GL."
+
+## Subgraphs / Stages
+The diagram contains four explicit subgraphs:
+- **Data Acquisition**: Focuses on ingesting transaction data from external sources.
+- **Reconciliation Engine**: Matches transaction data with statement data.
+- **Discrepancy Management**: Handles discrepancies identified during reconciliation.
+- **Settlement Processing**: Processes settlements based on reconciled data.
+
+## Node-by-Node Description
+- **A / External System: Payment Gateway**: Represents the entry point for transaction data from external payment systems. visible in diagram; no further repository context available.
+- **B / Transaction Log Ingestion**: Represents the process of ingesting transaction logs. visible in diagram; no further repository context available.
+- **C / Data Validation & Enrichment**: Represents the process of validating and enriching the transaction data. visible in diagram; no further repository context available.
+- **D / Normalized Transaction Data**: Represents the transaction data after validation and enrichment, in a normalized format. visible in diagram; no further repository context available.
+- **F / Statement File Ingestion**: Represents the process of ingesting statement files. visible in diagram; no further repository context available.
+- **G / Statement Validation & Parsing**: Represents the process of validating and parsing the statement data. visible in diagram; no further repository context available.
+- **H / Normalized Statement Data**: Represents the statement data after validation and parsing, in a normalized format. visible in diagram; no further repository context available.
+- **E / Real-time Matching Engine**: Represents the engine responsible for matching transaction data with statement data in real-time. visible in diagram; no further repository context available.
+- **I / Match Found?**: Represents a decision point to determine if an exact match was found. visible in diagram; no further repository context available.
+- **J / Potential Match Review**: Represents a decision point to determine if a potential match requires manual review. visible in diagram; no further repository context available.
+- **L / Discrepancy Investigation**: Represents the process of investigating discrepancies. visible in diagram; no further repository context available.
+- **M / Discrepancy Queue: Requires Manual Review**: Represents the queue of discrepancies that require manual review. visible in diagram; no further repository context available.
+- **N / Manual Adjustment Needed?**: Represents a decision point to determine if a manual adjustment is needed. visible in diagram; no further repository context available.
+- **O / Manual Adjustment**: Represents the process of manually adjusting the transaction or statement data. visible in diagram; no further repository context available.
+- **P / Escalation to Support Team**: Represents the process of escalating the discrepancy to the support team. visible in diagram; no further repository context available.
+- **K / Automatic Reconciliation**: Represents the process of automatically reconciling the transaction and statement data. visible in diagram; no further repository context available.
+- **Q / Settlement Calculation**: Represents the process of calculating the settlement amount. visible in diagram; no further repository context available.
+- **R / Sufficient Funds Available?**: Represents a decision point to determine if sufficient funds are available for settlement. visible in diagram; no further repository context available.
+- **S / Settlement Instruction Generation**: Represents the process of generating settlement instructions. visible in diagram; no further repository context available.
+- **U / Bank Communication: Settlement Request**: Represents the process of communicating the settlement request to the bank. visible in diagram; no further repository context available.
+- **V / Settlement Confirmation Received**: Represents the process of receiving confirmation of the settlement from the bank. visible in diagram; no further repository context available.
+- **W / Posting to GL**: Represents the process of posting the settlement to the general ledger. visible in diagram; no further repository context available.
+- **T / Retry Settlement**: Represents the process of retrying the settlement. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Transaction data flows from the external system to transaction log ingestion.
+- `B --> C`: Transaction logs are processed for data validation and enrichment.
+- `C --> D`: Normalized transaction data is output.
+- `F --> G`: Statement files are processed for validation and parsing.
+- `G --> H`: Normalized statement data is output.
+- `D --> E`: Normalized transaction data is sent to the real-time matching engine.
+- `H --> E`: Normalized statement data is sent to the real-time matching engine.
+- `E -- Exact Match --> I`: Exact matches are sent to the "Match Found?" decision.
+- `E -- Fuzzy Match --> J`: Fuzzy matches are sent to the "Potential Match Review" decision.
+- `I -- Yes --> K`: If a match is found, proceed to automatic reconciliation.
+- `I -- No --> L`: If no match is found, proceed to discrepancy investigation.
+- `J -- Approved --> K`: If a potential match is approved, proceed to automatic reconciliation.
+- `J -- Rejected --> L`: If a potential match is rejected, proceed to discrepancy investigation.
+- `L --> M`: Discrepancies are added to the discrepancy queue for manual review.
+- `M --> N`: Manual adjustment is considered for discrepancies.
+- `N -- Yes --> O`: If manual adjustment is needed, perform manual adjustment.
+- `N -- No --> P`: If manual adjustment is not needed, escalate to the support team.
+- `O --> K`: Manual adjustments lead to automatic reconciliation.
+- `P --> K`: Escalation to the support team leads to automatic reconciliation.
+- `K --> Q`: Automatic reconciliation leads to settlement calculation.
+- `Q --> R`: Settlement calculation leads to a check for sufficient funds.
+- `R -- Yes --> S`: If sufficient funds are available, generate settlement instructions.
+- `R -- No --> T`: If sufficient funds are not available, retry the settlement.
+- `T --> R`: Retry settlement loops back to check for sufficient funds.
+- `S --> U`: Settlement instructions are sent to the bank.
+- `U --> V`: Settlement confirmation is received from the bank.
+- `V --> W`: Settlement is posted to the general ledger.
+
+## Repository Context & Terminology
+- **Payment Gateway**: A system that authorizes payments for e-businesses and online retailers.
+- **Transaction Log**: A record of all transactions processed by the system.
+- **Data Validation**: The process of ensuring that data is accurate and consistent.
+- **Data Enrichment**: The process of adding additional information to existing data.
+- **Statement File**: A file containing a summary of transactions from a bank or other financial institution.
+- **Reconciliation**: The process of comparing two sets of records to ensure that they are in agreement.
+- **Discrepancy**: A difference between two sets of records that should be in agreement.
+- **Settlement**: The process of transferring funds from one party to another.
+- **General Ledger (GL)**: A record of all financial transactions of a company.
+
+## High-Density QA Ground Truth Summary
+The transaction processing and reconciliation system begins with data acquisition from an "External System: Payment Gateway" and "Statement File Ingestion." Transaction logs undergo "Data Validation & Enrichment," resulting in "Normalized Transaction Data," while statement files are processed through "Statement Validation & Parsing" to produce "Normalized Statement Data." Both normalized datasets feed into the "Real-time Matching Engine," which attempts to find matches. If an "Exact Match" is found ("Match Found? -- Yes --> Automatic Reconciliation"), the system proceeds to "Automatic Reconciliation." Fuzzy matches trigger "Potential Match Review"; approved matches proceed to automatic reconciliation, while rejected matches initiate "Discrepancy Investigation." Unmatched transactions also trigger discrepancy investigation. The "Discrepancy Queue: Requires Manual Review" leads to a decision point: "Manual Adjustment Needed?". If yes, "Manual Adjustment" is performed, followed by automatic reconciliation; if not, the issue is escalated to the "Escalation to Support Team," also leading to automatic reconciliation. "Automatic Reconciliation" then flows into "Settlement Calculation." A check for "Sufficient Funds Available?" determines whether to proceed with "Settlement Instruction Generation" and "Bank Communication: Settlement Request," followed by "Settlement Confirmation Received" and finally "Posting to GL," or to "Retry Settlement" if funds are insufficient. The "Posting to GL" node represents the successful completion of the transaction processing and reconciliation cycle.

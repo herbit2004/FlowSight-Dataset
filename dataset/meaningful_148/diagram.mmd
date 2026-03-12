@@ -1,0 +1,27 @@
+graph TD
+    subgraph Ticket_Lifecycle
+        A[Ticket Creation: User Report];
+        B[SLA Clock Start];
+        C{SLA Breach Check: Initial};
+        D[Assign to Support Group];
+        E[Ticket Resolution: Attempt];
+        F{SLA Breach Check: Ongoing};
+        G[Resolve Ticket];
+        H[Ticket Closure];
+    end
+
+    A --> B;
+    B --> C;
+    C -- SLA Met --> D;
+    C -- SLA Breached --> I[Escalate: Priority 1];
+    D --> E;
+    E --> F;
+    F -- SLA Met --> G;
+    F -- SLA Breached --> J[Escalate: Tier 2];
+    G --> H;
+    I --> D;
+    J --> K[Notify On-Call Engineer];
+    K --> D;
+
+    classDef breached fill:#f9f,stroke:#333,stroke-width:2px;
+    class I,J,K breached;

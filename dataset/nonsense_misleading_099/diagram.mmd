@@ -1,0 +1,18 @@
+graph TD
+    A[User Submits Incident Report] --> B{Severity Assessed?};
+    B -- No --> C[Automatic Triage];
+    C --> D{High Severity?};
+    D -- No --> E[Assign Directly to Engineer];
+    B -- Yes --> E;
+    E --> F[Engineer Investigates];
+    F --> G{Resolution Found?};
+    G -- No --> H[Escalate to Expert];
+    H --> F;
+    G -- Yes --> I[Implement Solution];
+    I --> J{Solution Deployed?};
+    J -- Yes --> K[Deploy Solution];
+    K --> L[Incident Resolved];
+    M[Incident Resolved] --> A;
+    J -- No --> L;
+    D -- Yes --> E;
+    L --> M;

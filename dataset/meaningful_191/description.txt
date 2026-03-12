@@ -1,0 +1,72 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of an inventory system. It depicts the process from receiving an order request to handling successful order fulfillment or managing failures, including inventory recovery and customer notification. The diagram serves as a visual representation of the order processing logic and error handling mechanisms within the inventory system.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It has a hierarchical structure with an overall "Inventory System" subgraph containing nested subgraphs for "Event Queue" and "Order Management". The start node is "Receive Order Request", and the end nodes include "Update Order History: Recovery Logged", "Create Incident Ticket", and "Create Refund Request".
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Inventory System**: The main container for the entire order processing flow.
+- **Event Queue**: Handles asynchronous events related to inventory deduction failures.
+- **Order Management**: Manages order history updates and incident creation.
+
+## Node-by-Node Description
+- **A / Receive Order Request**: Represents the initial step of receiving a customer order. visible in diagram; no further repository context available.
+- **B / Validate Order**: Represents the validation of the received order. visible in diagram; no further repository context available.
+- **C / Reserve Inventory**: Represents the process of reserving the required inventory for the order. visible in diagram; no further repository context available.
+- **D / Inventory Reservation Successful?**: A decision point to determine if the inventory reservation was successful. visible in diagram; no further repository context available.
+- **E / Deduct Inventory**: Represents the process of deducting the reserved inventory from the available stock. visible in diagram; no further repository context available.
+- **F / Rollback Inventory Reservation**: Represents the process of releasing the reserved inventory back to the available stock in case of a partial failure. visible in diagram; no further repository context available.
+- **G / Update Order Status: Processing**: Represents updating the order status to "Processing". visible in diagram; no further repository context available.
+- **H / Ship Order**: Represents the process of shipping the order to the customer. visible in diagram; no further repository context available.
+- **I / Reject Order: Inventory Unavailable**: Represents the rejection of the order due to inventory unavailability. visible in diagram; no further repository context available.
+- **J / Update Order Status: Shipped**: Represents updating the order status to "Shipped". visible in diagram; no further repository context available.
+- **K / Order Rejected Event**: Represents an event indicating that an order has been rejected. visible in diagram; no further repository context available.
+- **L / Notify Customer of Rejection**: Represents the process of notifying the customer about the order rejection. visible in diagram; no further repository context available.
+- **M / Inventory Deduction Failure Event**: Represents an event indicating that an inventory deduction has failed. visible in diagram; no further repository context available.
+- **N / Start Inventory Recovery**: Represents the process of initiating inventory recovery after a deduction failure. visible in diagram; no further repository context available.
+- **O / Identify Failed Deduction**: Represents the process of identifying the specific inventory deduction that failed. visible in diagram; no further repository context available.
+- **P / Compensate Inventory Levels**: Represents the process of compensating for the inventory discrepancy caused by the failed deduction. visible in diagram; no further repository context available.
+- **Q / Compensation Successful?**: A decision point to determine if the inventory compensation was successful. visible in diagram; no further repository context available.
+- **R / Log Recovery Success**: Represents logging the successful inventory recovery. visible in diagram; no further repository context available.
+- **S / Alert Operations Team: Manual Intervention**: Represents alerting the operations team for manual intervention in case of compensation failure. visible in diagram; no further repository context available.
+- **T / Send Rejection Email**: Represents sending a rejection email to the customer. visible in diagram; no further repository context available.
+- **U / Create Refund Request**: Represents creating a refund request for the customer. visible in diagram; no further repository context available.
+- **V / Update Order History: Recovery Logged**: Represents updating the order history to reflect the successful inventory recovery. visible in diagram; no further repository context available.
+- **W / Create Incident Ticket**: Represents creating an incident ticket for the compensation failure. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The order request is passed to the validation process.
+- `B -- Valid --> C`: If the order is valid, reserve the inventory.
+- `B -- Invalid --> I`: If the order is invalid, reject the order due to inventory unavailability.
+- `C --> D`: The inventory reservation process leads to a success check.
+- `D -- Yes --> E`: If inventory reservation is successful, deduct the inventory.
+- `D -- No (Partial Failure) --> F`: If inventory reservation fails partially, rollback the reservation.
+- `E --> G`: After deducting inventory, update the order status to processing.
+- `E -- Inventory Deduction Error --> M`: If there's an inventory deduction error, trigger the "Inventory Deduction Failure Event".
+- `F --> I`: After rolling back the inventory reservation, reject the order due to inventory unavailability.
+- `G --> H`: After updating the order status to processing, ship the order.
+- `H --> J`: After shipping the order, update the order status to shipped.
+- `K --> L`: When an order is rejected, notify the customer of the rejection.
+- `L --> T`: After notifying the customer of rejection, send a rejection email.
+- `M --> N`: When an inventory deduction fails, start inventory recovery.
+- `N --> O`: After starting inventory recovery, identify the failed deduction.
+- `O --> P`: After identifying the failed deduction, compensate inventory levels.
+- `P --> Q`: After compensating inventory levels, check if compensation was successful.
+- `Q -- Yes --> R`: If compensation is successful, log the recovery success.
+- `Q -- No --> S`: If compensation fails, alert the operations team for manual intervention.
+- `R --> V`: After logging recovery success, update the order history to reflect the recovery.
+- `S --> W`: If manual intervention is required, create an incident ticket.
+- `T --> U`: After sending a rejection email, create a refund request.
+
+## Repository Context & Terminology
+- **Inventory System**: A system responsible for managing and tracking the quantity and availability of products.
+- **Order**: A request from a customer to purchase goods or services.
+- **Inventory Reservation**: The process of temporarily allocating inventory to fulfill an order.
+- **Inventory Deduction**: The process of reducing the available inventory count after an order is shipped.
+- **Event Queue**: A message queue used for asynchronous communication between different parts of the system, often used for handling errors or failures.
+- **Compensation**: Actions taken to correct errors or failures, such as restoring inventory levels.
+- **Incident Ticket**: A record of an issue or problem that requires investigation and resolution.
+
+## High-Density QA Ground Truth Summary
+The inventory system process begins with "Receive Order Request", followed by "Validate Order". If the order is valid, the system proceeds to "Reserve Inventory"; otherwise, the flow branches to "Reject Order: Inventory Unavailable". Upon successful inventory reservation, the system attempts to "Deduct Inventory". An "Inventory Deduction Error" triggers the "Inventory Deduction Failure Event" within the "Event Queue", initiating "Start Inventory Recovery". The system then attempts to "Identify Failed Deduction" and "Compensate Inventory Levels". The success of compensation is evaluated at "Compensation Successful?". If successful, the system "Log Recovery Success" and "Update Order History: Recovery Logged" within the "Order Management" subgraph. If compensation fails, the system "Alert Operations Team: Manual Intervention" and "Create Incident Ticket". If the initial inventory reservation fails partially, the system executes "Rollback Inventory Reservation" and subsequently "Reject Order: Inventory Unavailable". Order rejection leads to "Notify Customer of Rejection" and "Send Rejection Email", culminating in "Create Refund Request". The "Event Queue" and "Order Management" subgraphs handle asynchronous error recovery and logging, respectively, ensuring system resilience and auditability.

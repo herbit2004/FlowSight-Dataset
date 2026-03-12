@@ -1,0 +1,41 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the data flow and component interaction within the AutoMem service. It illustrates how an AI Client interacts with the AutoMem service to store, recall, and associate data, leveraging a dual storage layer consisting of a graph database (FalkorDB) and a vector database (Qdrant). The diagram serves as a high-level overview of the system's architecture and data processing pipeline.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner. It has a hierarchical structure with the AI Client at the top, followed by the AutoMem Service Flask in the middle, and the Dual Storage Layer at the bottom. The AI Client is the start node, and the FalkorDB and Qdrant databases are the end nodes.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **AutoMem Service Flask**: This subgraph represents the core service logic, including the REST API, background enrichment pipeline, consolidation engine, and automated backups.
+- **Dual Storage Layer**: This subgraph represents the data storage components, consisting of the FalkorDB graph database and the Qdrant vector database.
+
+## Node-by-Node Description
+- **AI Client**: Represents an external AI client interacting with the AutoMem service. visible in diagram; no further repository context available.
+- **REST API / Memory Lifecycle**: Represents the REST API endpoint within the AutoMem service, responsible for managing the memory lifecycle. visible in diagram; no further repository context available.
+- **Background Enrichment Pipeline**: Represents a pipeline responsible for enriching data in the background. visible in diagram; no further repository context available.
+- **Consolidation Engine**: Represents an engine responsible for consolidating data. visible in diagram; no further repository context available.
+- **Automated Backups / Optional**: Represents an optional component responsible for automated backups. visible in diagram; no further repository context available.
+- **FalkorDB / Graph Database**: Represents the FalkorDB graph database used for storing graph data. visible in diagram; no further repository context available.
+- **Qdrant / Vector Database**: Represents the Qdrant vector database used for storing vector embeddings. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Client --> API`: The AI Client sends store, recall, or associate requests to the REST API.
+- `API --> FalkorDB`: The REST API interacts with the FalkorDB graph database.
+- `API --> Qdrant`: The REST API interacts with the Qdrant vector database.
+- `Enrichment --> FalkorDB`: The Background Enrichment Pipeline interacts with the FalkorDB graph database, creating 11 edge types and pattern nodes.
+- `Enrichment --> Qdrant`: The Background Enrichment Pipeline interacts with the Qdrant vector database, performing semantic search using 3072-d vectors.
+- `Consolidation --> FalkorDB`: The Consolidation Engine interacts with the FalkorDB graph database.
+- `Consolidation --> Qdrant`: The Consolidation Engine interacts with the Qdrant vector database.
+- `Backups -.-> FalkorDB`: Automated Backups optionally interact with the FalkorDB graph database.
+- `Backups -.-> Qdrant`: Automated Backups optionally interact with the Qdrant vector database.
+
+## Repository Context & Terminology
+- **AutoMem Service Flask**: The core service is likely implemented using the Flask web framework in Python.
+- **REST API**: A standard API design for interacting with the service, likely using HTTP methods (GET, POST, PUT, DELETE).
+- **FalkorDB**: A graph database used for storing relationships between data entities.
+- **Qdrant**: A vector database optimized for similarity search on high-dimensional vectors.
+- **Semantic search**: A search technique that focuses on the meaning and context of the search query rather than just keyword matching.
+- **3072-d vectors**: High-dimensional vectors used to represent data for semantic search in Qdrant. The dimensionality of 3072 suggests a specific embedding model is being used.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with an AI Client sending requests to the AutoMem Service Flask's REST API for storing, recalling, or associating data. The REST API then interacts with both the FalkorDB graph database and the Qdrant vector database. The Background Enrichment Pipeline enriches the data, creating 11 edge types and pattern nodes in FalkorDB, and performs semantic search using 3072-d vectors in Qdrant. The Consolidation Engine further processes and consolidates data in both databases. Automated Backups optionally back up data in both FalkorDB and Qdrant. The use of a Dual Storage Layer, comprising FalkorDB and Qdrant, suggests a hybrid approach where graph relationships and semantic vector representations are both leveraged for enhanced data management and retrieval. The 3072-d vectors used for semantic search in Qdrant indicate the use of a specific embedding model to represent the data's meaning. The final data resides in the FalkorDB graph database and the Qdrant vector database.

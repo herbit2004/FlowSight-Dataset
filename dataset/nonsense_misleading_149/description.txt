@@ -1,0 +1,57 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the process flow of an order, from receipt to archival. The diagram serves as a visual representation of the steps involved in order processing, including payment verification, inventory check, shipping, and customer satisfaction.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the 'Order Received' node at the top and flows downwards through a series of processes and decision points, ultimately converging at the 'Archive Order' node. There is an illogical loop from the 'Archive Order' node back to the 'Order Received' node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Receipt & Payment, Shipment Preparation, Shipping & Delivery, Customer Feedback, Order Resolution, and Archival.
+
+## Node-by-Node Description
+- **A / Order Received**: Represents the initial state where an order is received. visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision point to check if the payment for the order was successful. visible in diagram; no further repository context available.
+- **C / Prepare Shipment**: Represents the process of preparing the order for shipment. visible in diagram; no further repository context available.
+- **D / Inventory Available?**: A decision point to check if the required inventory is available for the order. visible in diagram; no further repository context available.
+- **E / Notify Customer of Delay**: Represents the action of notifying the customer about a delay in the order. visible in diagram; no further repository context available.
+- **F / Cancel Order**: Represents the process of canceling the order. visible in diagram; no further repository context available.
+- **H / Generate Shipping Label**: Represents the process of generating a shipping label for the order. visible in diagram; no further repository context available.
+- **I / Package Order**: Represents the process of packaging the order. visible in diagram; no further repository context available.
+- **J / Order Shipped**: Represents the state where the order has been shipped. visible in diagram; no further repository context available.
+- **L / Confirm Delivery**: Represents the process of confirming the delivery of the order. visible in diagram; no further repository context available.
+- **M / Customer Satisfied?**: A decision point to check if the customer is satisfied with the order. visible in diagram; no further repository context available.
+- **K / Process Refund**: Represents the process of issuing a refund for the order. visible in diagram; no further repository context available.
+- **N / Archive Order**: Represents the final state where the order is archived. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: An order is received and proceeds to payment verification.
+- `B -- Yes --> C`: If payment is successful, the process moves to shipment preparation.
+- `B -- No --> F`: If payment is not successful, the order is canceled.
+- `C --> D`: After shipment preparation, the process checks for inventory availability.
+- `D -- No --> E`: If inventory is not available, the customer is notified of the delay.
+- `E --> C`: After notifying the customer of the delay, the process loops back to shipment preparation.
+- `D -- Yes --> H`: If inventory is available, a shipping label is generated.
+- `H --> I`: After generating the shipping label, the order is packaged.
+- `I --> J`: After packaging the order, the order is shipped.
+- `J --> L`: After the order is shipped, the delivery is confirmed.
+- `L --> M`: After confirming delivery, customer satisfaction is checked.
+- `M -- No --> K`: If the customer is *not* satisfied, a refund is processed.
+- `M -- Yes --> N`: If the customer *is* satisfied, the order is archived.
+- `K --> N`: After processing the refund, the order is archived.
+- `F --> N`: After canceling the order, the order is archived.
+- `K --> N`: After processing the refund, the order is archived.
+- `F --> N`: After canceling the order, the order is archived.
+- `N -- Archive Done --> A`: After the order is archived, the process loops back to 'Order Received'.
+
+## Repository Context & Terminology
+- **Order Received**: In standard practice, this refers to the initial stage when a customer places an order. In this diagram, it's the starting point, but also illogically the endpoint of the archival process, creating a loop.
+- **Payment Successful?**: In standard practice, this is a check to ensure the customer's payment method is valid and sufficient funds are available. In this diagram, it's a decision point that determines whether to proceed with shipment or cancel the order.
+- **Prepare Shipment**: In standard practice, this involves gathering the items, packaging them securely, and preparing the necessary documentation. In this diagram, it's a step after successful payment and before checking inventory.
+- **Inventory Available?**: In standard practice, this is a check to ensure that the ordered items are in stock. In this diagram, if inventory is unavailable, the customer is notified, and the process loops back to 'Prepare Shipment', which is illogical.
+- **Generate Shipping Label**: In standard practice, this involves creating a label with the customer's address and shipping information. In this diagram, it occurs *after* packaging the order, which is reversed.
+- **Package Order**: In standard practice, this involves placing the items in a box or envelope and adding protective materials. In this diagram, it occurs *before* generating the shipping label, which is reversed.
+- **Customer Satisfied?**: In standard practice, this is a check to see if the customer is happy with their purchase and the service they received. In this diagram, if the customer *is* satisfied, the order is archived; if *not*, a refund is processed, which is reversed.
+- **Process Refund**: In standard practice, this involves returning the customer's money for the order. In this diagram, it's triggered by customer satisfaction, which is incorrect. There is no feedback loop to indicate refund completion.
+- **Archive Order**: In standard practice, this involves storing the order information for record-keeping purposes. In this diagram, it's the final step, but it illogically loops back to 'Order Received'.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with 'Order Received', immediately followed by a 'Payment Successful?' check. If payment fails ('No' branch), the order is canceled and then archived. If payment succeeds ('Yes' branch), the process moves to 'Prepare Shipment', then checks 'Inventory Available?'. A 'No' on inventory triggers customer notification of delay, then loops back to 'Prepare Shipment'. A 'Yes' on inventory leads to 'Generate Shipping Label', then 'Package Order', then 'Order Shipped', and finally 'Confirm Delivery'. After delivery confirmation, 'Customer Satisfied?' is evaluated. Illogically, a 'Yes' (customer *is* satisfied) leads to 'Archive Order', while a 'No' (customer *not* satisfied) triggers 'Process Refund', which then leads to 'Archive Order'. The 'Archive Order' node then loops back to the 'Order Received' node, restarting the entire process. The standard sequence of packaging before labeling is reversed, and the refund process lacks a completion feedback loop. The illogical loop from 'Archive Order' to 'Order Received' means the process never truly ends.

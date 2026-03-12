@@ -1,0 +1,56 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow and processing stages of an audio transcription system. It depicts the system's architecture, from audio input to final output, highlighting different transcription engine options and post-processing steps. The diagram serves as a high-level overview of the system's components and their interactions.
+
+## Overall Layout
+The diagram is laid out from left to right. It is divided into three main subgraphs: Input, Transcription, and Output. The flow starts with the Input subgraph and ends with the Output subgraph.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs: Input, Transcription, and Output.
+- **Input**: Handles audio input from hotkey events.
+- **Transcription**: Processes audio to generate text transcriptions using various engines.
+- **Output**: Post-processes and outputs the transcribed text, potentially integrating with a compositor.
+
+## Node-by-Node Description
+- **Hotkey (compositor/evdev)**: Represents the hotkey input mechanism, using compositor/evdev. visible in diagram; no further repository context available.
+- **Audio (cpal)**: Represents the audio input, using cpal. visible in diagram; no further repository context available.
+- **Engine?**: A decision node that determines which transcription engine to use. visible in diagram; no further repository context available.
+- **Backend?**: A decision node that determines which Whisper backend to use. visible in diagram; no further repository context available.
+- **Whisper (whisper-rs)**: Represents the Whisper transcription engine using whisper-rs. visible in diagram; no further repository context available.
+- **whisper-cli (subprocess)**: Represents the Whisper transcription engine using a subprocess. visible in diagram; no further repository context available.
+- **Remote Server (HTTP API)**: Represents a remote transcription server accessed via HTTP API. visible in diagram; no further repository context available.
+- **ONNX Engine (Parakeet, Moonshine, SenseVoice, Paraformer, Dolphin, Omnilingual)**: Represents the ONNX transcription engine, with specific models listed. visible in diagram; no further repository context available.
+- **Post-Process (optional)**: An optional post-processing stage for the transcription. visible in diagram; no further repository context available.
+- **Pre-Output Hook**: A hook executed before the output stage. visible in diagram; no further repository context available.
+- **Output (wtype/dotool/ydotool)**: Represents the final output of the transcribed text, using wtype/dotool/ydotool. visible in diagram; no further repository context available.
+- **Post-Output Hook**: A hook executed after the output stage. visible in diagram; no further repository context available.
+- **Compositor (submap/mode)**: Represents the compositor integration, using submap/mode. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Hotkey --> Audio`: Hotkey input triggers audio capture.
+- `Audio --> Engine?`: Audio data is passed to the engine selection node.
+- `Engine? -- whisper --> WhisperBackend`: If the "whisper" engine is selected, proceed to the Whisper backend selection.
+- `Engine? -- onnx --> ONNX Engine`: If the "onnx" engine is selected, proceed to the ONNX Engine.
+- `WhisperBackend -- local --> Whisper`: If the "local" Whisper backend is selected, use the whisper-rs implementation.
+- `WhisperBackend -- cli --> whisper-cli`: If the "cli" Whisper backend is selected, use the whisper-cli subprocess.
+- `WhisperBackend -- remote --> Remote Server`: If the "remote" Whisper backend is selected, use the Remote Server via HTTP API.
+- `Whisper --> Post-Process`: Output from the Whisper engine is passed to the post-processing stage.
+- `whisper-cli --> Post-Process`: Output from the whisper-cli engine is passed to the post-processing stage.
+- `Remote Server --> Post-Process`: Output from the Remote Server is passed to the post-processing stage.
+- `ONNX Engine --> Post-Process`: Output from the ONNX Engine is passed to the post-processing stage.
+- `Post-Process --> Pre-Output Hook`: Post-processed output is passed to the pre-output hook.
+- `Pre-Output Hook --> Output`: Output from the pre-output hook is passed to the output stage.
+- `Output --> Post-Output Hook`: Output from the output stage is passed to the post-output hook.
+- `Pre-Output Hook -.-> Compositor`: The pre-output hook optionally connects to the compositor.
+- `Post-Output Hook -.-> Compositor`: The post-output hook optionally connects to the compositor.
+
+## Repository Context & Terminology
+- **cpal**: A cross-platform audio I/O library in Rust.
+- **whisper-rs**: A Rust implementation of the Whisper speech recognition model.
+- **ONNX**: Open Neural Network Exchange, an open format for machine learning models.
+- **Parakeet, Moonshine, SenseVoice, Paraformer, Dolphin, Omnilingual**: Specific ONNX models used for speech recognition.
+- **wtype/dotool/ydotool**: Tools for controlling the keyboard and mouse on Linux.
+- **compositor/evdev**: Components related to window compositors and event devices.
+- **submap/mode**: Components related to submap and mode management within the compositor.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with hotkey input handled by `Hotkey (compositor/evdev)`, which triggers audio capture via `Audio (cpal)`. The audio data then flows to the `Engine?` decision node, determining the transcription engine. If the "whisper" engine is selected, the process branches to the `Backend?` node, which selects the Whisper backend: `local` (using `Whisper (whisper-rs)`), `cli` (using `whisper-cli (subprocess)`), or `remote` (using `Remote Server (HTTP API)`). Alternatively, if the "onnx" engine is selected, the process proceeds to the `ONNX Engine (Parakeet, Moonshine, SenseVoice, Paraformer, Dolphin, Omnilingual)`. The output from any of these engines converges at the `Post-Process (optional)` stage. The post-processed output then flows to the `Pre-Output Hook`, then to the `Output (wtype/dotool/ydotool)` stage, and finally to the `Post-Output Hook`. Both the `Pre-Output Hook` and `Post-Output Hook` optionally connect to the `Compositor (submap/mode)`. The use of `cpal` for audio input indicates a cross-platform approach, while the mention of `wtype/dotool/ydotool` suggests a Linux environment for the output stage.

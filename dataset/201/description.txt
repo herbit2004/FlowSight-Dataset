@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the training loop of a GPT (Generative Pre-trained Transformer) model. It depicts the flow of data and operations during the training process, from tokenization to parameter updates using an Adam optimizer. The diagram serves as a high-level overview of the model's training pipeline.
+
+## Overall Layout
+The diagram has a left-to-right (LR) primary direction. It is hierarchically structured with nested subgraphs representing the overall training loop and the internal structure of a Transformer layer. The start node is 'emma', and the end node is 'Adam Optimizer (update all parameters)'.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **TRAINING LOOP**: Encompasses the entire training process, repeated for a specified number of steps.
+- **GPT MODEL**: Represents the GPT model itself, containing the Transformer layer and related operations.
+- **Transformer Layer**: Represents the transformer layer, containing RMSNorm, Multi-Head Attention, and MLP.
+
+## Node-by-Node Description
+- **'emma'**: The input text string. visible in diagram; no further repository context available.
+- **[BOS, e, m, m, a, EOS]**: The tokenized input sequence, including beginning-of-sequence (BOS) and end-of-sequence (EOS) tokens. visible in diagram; no further repository context available.
+- **Token Embedding + Position Embedding**: Combines token embeddings with positional embeddings to create the input representation for the Transformer. visible in diagram; no further repository context available.
+- **RMSNorm → Multi-Head Attention (Q·K/√d → softmax → V) + Residual Connection**: The multi-head attention mechanism within the Transformer layer, including RMSNorm normalization and a residual connection. visible in diagram; no further repository context available.
+- **RMSNorm → MLP (expand → ReLU² → compress) + Residual Connection**: The feedforward network (MLP) within the Transformer layer, including RMSNorm normalization, ReLU activation, and a residual connection. visible in diagram; no further repository context available.
+- **Linear (weight-tied with Token Embedding)**: A linear layer that is weight-tied with the token embedding layer. visible in diagram; no further repository context available.
+- **Softmax → Probabilities**: Applies the softmax function to produce probability distributions over the vocabulary. visible in diagram; no further repository context available.
+- **Cross-Entropy Loss**: Calculates the cross-entropy loss between the predicted probabilities and the target tokens. visible in diagram; no further repository context available.
+- **Backward() ← Value autograd engine (chain rule through computation graph)**: Performs backpropagation to compute gradients using the chain rule. visible in diagram; no further repository context available.
+- **Adam Optimizer (update all parameters)**: Updates the model parameters using the Adam optimization algorithm. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `'emma' --> [BOS, e, m, m, a, EOS]`: Tokenization of the input text.
+- `[BOS, e, m, m, a, EOS] --> Token Embedding + Position Embedding`: Creation of token and position embeddings.
+- `Token Embedding + Position Embedding --> Transformer Layer`: Input to the Transformer layer.
+- `RMSNorm → Multi-Head Attention (Q·K/√d → softmax → V) + Residual Connection --> RMSNorm → MLP (expand → ReLU² → compress) + Residual Connection`: Flow within the Transformer layer.
+- `Transformer Layer --> Linear (weight-tied with Token Embedding)`: Output from the Transformer layer to the linear layer.
+- `Linear (weight-tied with Token Embedding) --> Softmax → Probabilities`: Generation of probabilities.
+- `Softmax → Probabilities --> Cross-Entropy Loss`: Calculation of the loss.
+- `Cross-Entropy Loss --> Backward() ← Value autograd engine (chain rule through computation graph)`: Backpropagation of the loss.
+- `Backward() ← Value autograd engine (chain rule through computation graph) --> Adam Optimizer (update all parameters)`: Parameter update using the Adam optimizer.
+
+## Repository Context & Terminology
+- **GPT (Generative Pre-trained Transformer)**: A type of neural network architecture based on the Transformer model, pre-trained on a large corpus of text data and fine-tuned for specific tasks.
+- **Tokenizer**: A process that converts raw text into a sequence of tokens, which are then used as input to the model.
+- **Token Embedding**: A vector representation of each token in the vocabulary.
+- **Position Embedding**: A vector representation of the position of each token in the sequence.
+- **RMSNorm**: Root Mean Square Layer Normalization.
+- **Multi-Head Attention**: A mechanism that allows the model to attend to different parts of the input sequence when computing the output.
+- **MLP (Multilayer Perceptron)**: A feedforward neural network.
+- **ReLU (Rectified Linear Unit)**: An activation function.
+- **Adam Optimizer**: An optimization algorithm used to update the model parameters during training.
+
+## High-Density QA Ground Truth Summary
+The GPT model training loop begins with an input text string, 'emma', which is then processed by a tokenizer to generate a sequence of tokens, including beginning-of-sequence (BOS) and end-of-sequence (EOS) tokens, represented as '[BOS, e, m, m, a, EOS]'. These tokens are converted into token embeddings and combined with positional embeddings to create an input representation. This representation is fed into a Transformer Layer, which contains RMSNorm, Multi-Head Attention, and MLP components. The Multi-Head Attention mechanism computes attention scores, while the MLP applies non-linear transformations. The output of the Transformer layer is passed through a linear layer that is weight-tied with the token embedding layer, followed by a softmax function to produce probabilities over the vocabulary. The cross-entropy loss is calculated between the predicted probabilities and the target tokens. Backpropagation is then performed to compute gradients, and the Adam optimizer updates all model parameters based on these gradients. The entire process is repeated within the TRAINING LOOP for a specified number of steps to refine the model's parameters.

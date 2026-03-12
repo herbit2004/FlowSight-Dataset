@@ -1,0 +1,16 @@
+graph TD
+    A[User Initiates Order] --> B{Payment Successful?};
+    B -- No --> H[Order Cancelled];
+    B -- Yes --> C[Shipment Dispatched];
+    C --> D{Delivery Successful?};
+    D -- No --> I[Issue Refund];
+    D -- Yes --> E[Send Order Confirmation];
+    E --> F[Order Archived];
+    F --> G{Customer Complaint?};
+    G -- Yes --> C;
+    G -- No --> A;
+    I --> J[Update Inventory];
+    J --> H;
+    H --> K[Notify User of Cancellation];
+    K --> L[Attempt Another Payment];
+    L --> B;

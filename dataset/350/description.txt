@@ -1,0 +1,68 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of data and control through a chat application. It illustrates the interaction between different layers, including the client, application, business logic, AI providers, and vector database. The diagram serves as a high-level overview of the system's architecture and how different components interact to process user input and generate responses.
+
+## Overall Layout
+The diagram is laid out from top to bottom, representing the flow of data from the client layer down to the vector database and AI providers, and back up to the client. The Client Layer is at the top, and the Vector Database Layer is at the bottom. The flow starts with the React UI Components and ends with the React UI Components.
+
+## Subgraphs / Stages
+The diagram is divided into five subgraphs, representing different layers of the application:
+- **Client Layer**: Handles the user interface and user input.
+- **Next.js Application Layer**: Manages API routes and server-side logic.
+- **Business Logic Layer**: Contains the core logic for intention recognition, response generation, and streaming.
+- **AI Providers Layer**: Provides access to various AI models and services.
+- **Vector Database Layer**: Stores and retrieves vector embeddings for semantic search.
+
+## Node-by-Node Description
+- **React UI Components**: Represents the React components responsible for rendering the user interface.
+  visible in diagram; no further repository context available.
+- **Chat Interface**: Represents the chat interface within the React UI.
+  visible in diagram; no further repository context available.
+- **User Input**: Represents the user's input to the chat interface.
+  visible in diagram; no further repository context available.
+- **API Routes**: Represents the API routes defined in the Next.js application.
+  visible in diagram; no further repository context available.
+- **api/chat/route.ts**: Represents the specific API route file handling chat requests.
+  visible in diagram; no further repository context available.
+- **Intention Module**: Responsible for understanding the user's intent from their input.
+  visible in diagram; no further repository context available.
+- **Response Module**: Generates a response based on the identified intent and retrieved information.
+  visible in diagram; no further repository context available.
+- **Streaming Module**: Handles the streaming of the response back to the client.
+  visible in diagram; no further repository context available.
+- **OpenAI API**: Represents the OpenAI API for accessing language models.
+  visible in diagram; no further repository context available.
+- **Anthropic API**: Represents the Anthropic API for accessing language models.
+  visible in diagram; no further repository context available.
+- **Fireworks API**: Represents the Fireworks API for accessing language models.
+  visible in diagram; no further repository context available.
+- **Pinecone Index**: Represents the Pinecone vector database index.
+  visible in diagram; no further repository context available.
+- **Vector Embeddings**: Represents the vector embeddings stored in the Pinecone database.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `React UI Components --> Chat Interface`: Represents the rendering of the chat interface by the React components.
+- `Chat Interface --> User Input`: Represents the user providing input to the chat interface.
+- `User Input --> API Routes`: Represents the user input being sent to the API routes.
+- `API Routes --> api/chat/route.ts`: Represents the API routes directing the request to the chat route handler.
+- `api/chat/route.ts --> Intention Module`: Represents the chat route handler passing the input to the intention module.
+- `Intention Module --> OpenAI API`: Represents the intention module using the OpenAI API.
+- `api/chat/route.ts --> Response Module`: Represents the chat route handler passing the input to the response module.
+- `Response Module --> Streaming Module`: Represents the response module passing the response to the streaming module.
+- `Response Module --> OpenAI API`: Represents the response module using the OpenAI API.
+- `Response Module --> Anthropic API`: Represents the response module using the Anthropic API.
+- `Response Module --> Fireworks API`: Represents the response module using the Fireworks API.
+- `Response Module --> Pinecone Index`: Represents the response module querying the Pinecone index.
+- `Pinecone Index --> Vector Embeddings`: Represents the Pinecone index retrieving vector embeddings.
+- `Streaming Module --> React UI Components`: Represents the streaming module sending the response back to the React UI components.
+
+## Repository Context & Terminology
+- **React UI Components**: UI elements built using the React library.
+- **Next.js Application Layer**: The backend of the application is built using the Next.js framework.
+- **API Routes**: Serverless functions in Next.js that handle API requests.
+- **Pinecone**: A vector database used for storing and querying vector embeddings.
+- **Vector Embeddings**: Numerical representations of text or other data, used for semantic search.
+- **OpenAI API, Anthropic API, Fireworks API**: APIs provided by OpenAI, Anthropic, and Fireworks for accessing their language models.
+
+## High-Density QA Ground Truth Summary
+The chat application's architecture begins with the user interacting with React UI Components within the Client Layer. This interaction flows to the Chat Interface, where User Input is captured and sent to the Next.js Application Layer via API Routes, specifically the `api/chat/route.ts` file. This route then triggers the Business Logic Layer, initiating the Intention Module to understand the user's request, potentially leveraging the OpenAI API. Simultaneously, the `api/chat/route.ts` also invokes the Response Module, which orchestrates the response generation. The Response Module can interact with multiple AI Providers such as OpenAI, Anthropic, and Fireworks APIs, as well as query the Pinecone Index in the Vector Database Layer to retrieve relevant Vector Embeddings. The Pinecone Index provides access to Vector Embeddings. Finally, the generated response is passed to the Streaming Module, which streams the response back to the React UI Components in the Client Layer, completing the cycle. The choice of AI provider (OpenAI, Anthropic, or Fireworks) is likely determined by configuration or A/B testing within the Response Module.

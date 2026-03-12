@@ -1,0 +1,86 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the interactions and data flow between different components of a system, likely a software application or service. It illustrates the roles of worker bees, a judge, a queen bee, and various infrastructure components in processing events and managing system state. The diagram serves as a high-level overview of the system's architecture, aiding in understanding the relationships between its parts.
+
+## Overall Layout
+The diagram is laid out from left to right, with the "External Event Source" and "User" at the top right, and the "PC" and "Worker Bees" on the left. The diagram is hierarchically structured with nested subgraphs representing different functional areas. There is no single start or end node; instead, multiple external events and user interactions trigger various processes within the system.
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **External Event Source**: Represents external sources that trigger events in the system.
+- **Worker Bees**: Represents a group of worker processes that perform tasks.
+- **Graph**: A subgraph within "Worker Bees" representing a network of nodes and their interactions.
+- **Event Loop Node**: A nested subgraph within "Graph" representing an event-driven processing unit.
+- **Judge**: Represents a component that evaluates criteria and principles.
+- **Queen Bee**: Represents a central component that manages system state and communication.
+- **Infra**: Represents infrastructure components such as memory and event bus.
+- **PC**: Represents a personal computer or client-side environment.
+
+## Node-by-Node Description
+- **User**: Represents a user interacting with the system. visible in diagram; no further repository context available.
+- **Schedulers**: Represents external schedulers that trigger events. visible in diagram; no further repository context available.
+- **Webhook**: Represents external webhooks that trigger events. visible in diagram; no further repository context available.
+- **SSE**: Represents external server-sent events that trigger events. visible in diagram; no further repository context available.
+- **Node (Graph)**: Represents a node within the "Graph" subgraph. visible in diagram; no further repository context available.
+- **Active Node**: Represents an active node within the "Graph" subgraph. visible in diagram; no further repository context available.
+- **listener**: Represents a listener within the "Event Loop Node" subgraph. visible in diagram; no further repository context available.
+- **System Prompt (Task)**: Represents a system prompt or task within the "Event Loop Node" subgraph. visible in diagram; no further repository context available.
+- **Event loop (Event Loop Node)**: Represents an event loop within the "Event Loop Node" subgraph. visible in diagram; no further repository context available.
+- **Conversation (Event Loop Node)**: Represents a conversation within the "Event Loop Node" subgraph. visible in diagram; no further repository context available.
+- **Conversation (Worker Bees)**: Represents a conversation within the "Worker Bees" subgraph. visible in diagram; no further repository context available.
+- **System prompt (Worker Bees)**: Represents a system prompt within the "Worker Bees" subgraph. visible in diagram; no further repository context available.
+- **Tool Registry**: Represents a registry of tools. visible in diagram; no further repository context available.
+- **Sub Agent**: Represents a sub-agent component. visible in diagram; no further repository context available.
+- **Event Bus (RAM)**: Represents an event bus implemented in RAM. visible in diagram; no further repository context available.
+- **Credential Store (Harddrive/Cloud)**: Represents a credential store on hard drive or cloud. visible in diagram; no further repository context available.
+- **Criteria**: Represents criteria used by the "Judge" component. visible in diagram; no further repository context available.
+- **Principles**: Represents principles used by the "Judge" component. visible in diagram; no further repository context available.
+- **Event loop (Judge)**: Represents an event loop within the "Judge" component. visible in diagram; no further repository context available.
+- **Scheduler**: Represents a scheduler within the "Judge" component. visible in diagram; no further repository context available.
+- **System prompt (Queen Bee)**: Represents a system prompt within the "Queen Bee" subgraph. visible in diagram; no further repository context available.
+- **Conversation (Queen Bee)**: Represents a conversation within the "Queen Bee" subgraph. visible in diagram; no further repository context available.
+- **Event loop (Queen Bee)**: Represents an event loop within the "Queen Bee" subgraph. visible in diagram; no further repository context available.
+- **Write through Conversation Memory (Logs/RAM/Harddrive)**: Represents a memory component for writing conversations, stored in logs, RAM, or hard drive. visible in diagram; no further repository context available.
+- **Shared Memory (State/Harddrive)**: Represents a shared memory component for storing state on hard drive. visible in diagram; no further repository context available.
+- **Browser**: Represents a web browser. visible in diagram; no further repository context available.
+- **Codebase v 0.0.x ... v π.π.η**: Represents the codebase with versioning. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `E_Sch --> ELN_L`: Schedulers trigger the listener.
+- `E_WH --> ELN_L`: Webhooks trigger the listener.
+- `E_SSE --> ELN_L`: Server-sent events trigger the listener.
+- `ELN_L --> ELN_EL`: The listener triggers the event loop.
+- `User --> WB_C`: User talks to the worker bee conversation.
+- `User --> QB_C`: User talks to the queen bee conversation.
+- `User --> CS`: User has read/write access to the credential store.
+- `ELN_C <--> WB_C`: Conversation is mirrored between the event loop node and worker bees.
+- `WB_C --> AN`: Conversation focuses on the active node.
+- `WorkerBees --> JudgeNode`: Worker Bees inquire the Judge Node.
+- `JudgeNode --> WorkerBees`: Judge Node approves the Worker Bees.
+- `J_C <--> WB_SP`: Criteria aligns with the system prompt.
+- `J_P <--> QB_SP`: Principles aligns with the system prompt.
+- `J_EL --> QB_EL`: Event loop reports (escalates) to the queen bee event loop.
+- `AN --> EB`: Active node publishes to the event bus.
+- `EB --> QB_C`: Event bus subscribes to the queen bee conversation.
+- `ELN_EL --> SA`: Event loop spawns the sub-agent.
+- `SA --> ELN_EL`: Sub-agent informs the event loop.
+- `SA --> B`: Sub-agent starts the browser.
+- `B --> ELN_EL`: Browser reports to the event loop.
+- `TR --> ELN_EL`: Tool registry is assigned to the event loop.
+- `CB --> WB_C`: Codebase modifies the worker bee conversation.
+- `AN <--> WTM`: Active node has read/write access to write-through conversation memory.
+- `AN <--> SM`: Active node has read/write access to shared memory.
+- `QB_C <--> WTM`: Queen bee conversation has read/write access to write-through conversation memory.
+- `QB_EL <--> SM`: Queen bee event loop has read/write access to shared memory.
+- `CS --> QB_C`: Credential store provides read access to the queen bee conversation.
+
+## Repository Context & Terminology
+- **Worker Bees**: A set of processes or agents that perform specific tasks within the system. These tasks are often triggered by external events or user interactions.
+- **Judge**: A component responsible for evaluating criteria and principles, potentially for decision-making or policy enforcement within the system.
+- **Queen Bee**: A central component that manages system state, communication, and coordination between different parts of the system.
+- **Event Bus**: A messaging system that allows different components to communicate with each other without being directly coupled.
+- **Credential Store**: A secure storage location for sensitive information such as passwords, API keys, or other credentials.
+- **Shared Memory**: A region of memory that can be accessed by multiple processes, allowing them to share data and communicate with each other.
+- **Codebase**: The source code of the system, which can be modified to change the behavior of the worker bees.
+
+## High-Density QA Ground Truth Summary
+The system begins with external events from "Schedulers," "Webhook," or "SSE," all triggering the "listener" within the "Event Loop Node." The "listener" then triggers the "Event loop." Alternatively, a "User" can initiate a "Talk" interaction with either the "Worker Bees" "Conversation" or the "Queen Bee" "Conversation," and also has "Read/Write Access" to the "Credential Store." The "Conversation" is mirrored between the "Event Loop Node" and "Worker Bees," and the "Worker Bees" "Conversation" focuses on the "Active Node." The "Active Node" publishes to the "Event Bus," which then subscribes to the "Queen Bee" "Conversation." The "Event Loop" spawns a "Sub Agent," which informs the "Event Loop" and starts the "Browser." The "Browser" reports back to the "Event Loop." The "Tool Registry" is assigned to the "Event Loop." The "Active Node" and "Queen Bee" have read/write access to both "Write through Conversation Memory" and "Shared Memory." The "Judge" aligns "Criteria" with the "Worker Bees" "System Prompt" and "Principles" with the "Queen Bee" "System Prompt," and the "Judge" "Event Loop" reports to the "Queen Bee" "Event Loop." The "Codebase" can be modified to affect the "Worker Bee" "Conversation." The system's architecture revolves around event-driven processing, managed by the "Queen Bee," with external events and user interactions triggering various workflows.

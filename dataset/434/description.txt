@@ -1,0 +1,42 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the data flow within a chat application. It shows how user messages are processed, how knowledge is loaded and used to generate responses, and how the responses are streamed back to the client. The diagram provides a high-level overview of the system's components and their interactions.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It is divided into three main sections: Client, Server, and Knowledge. The flow starts at the Chat Interface in the Client section and ends with the SSE Stream back to the Chat Interface.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Client**: Represents the user interface where the chat interaction takes place.
+- **Server**: Represents the backend logic responsible for processing messages and generating responses.
+- **Knowledge**: Represents the source of information used to provide context for the responses.
+
+## Node-by-Node Description
+- **A / Chat Interface**: The user interface component where users input messages and receive responses.
+  visible in diagram; no further repository context available.
+- **B / Next.js API**: The API endpoint built with Next.js that receives user messages and sends streaming responses.
+  visible in diagram; no further repository context available.
+- **C / Knowledge Loader**: A component within the server that loads knowledge from files.
+  visible in diagram; no further repository context available.
+- **D / OpenRouter API**: An API that receives context and messages to generate responses.
+  visible in diagram; no further repository context available.
+- **E / content/*.md**: Represents the knowledge base stored in markdown files within the 'content' directory.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: A user message is sent from the Chat Interface to the Next.js API.
+- `B --> C`: The Next.js API triggers the Knowledge Loader.
+- `C --> E`: The Knowledge Loader reads files from the knowledge base.
+- `C --> D`: The Knowledge Loader sends the context and message to the OpenRouter API.
+- `D --> B`: The OpenRouter API sends a streaming response back to the Next.js API.
+- `B --> A`: The Next.js API sends an SSE (Server-Sent Events) stream back to the Chat Interface.
+
+## Repository Context & Terminology
+- **Next.js**: A React framework for building web applications. The Next.js API likely handles routing and server-side logic.
+- **API**: Application Programming Interface; a set of defined rules that enable different applications to communicate with each other.
+- **SSE Stream**: Server-Sent Events; a server push technology enabling real-time data streaming from the server to the client.
+- **Markdown (.md)**: A lightweight markup language used for formatting text. The knowledge base is stored in markdown files.
+- **Knowledge Loader**: A module responsible for reading and parsing the markdown files in the `content/` directory to make the information available for the OpenRouter API.
+- **OpenRouter API**: An external API used to generate responses based on the provided context and message.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a chat application's architecture, beginning with the user interacting with the Chat Interface. A User Message is sent to the Next.js API on the server. The Next.js API then triggers the Knowledge Loader, which reads relevant files from the Knowledge base (specifically, `content/*.md`). The Knowledge Loader then sends the combined Context and the original Message to the OpenRouter API. The OpenRouter API processes this information and sends a Streaming Response back to the Next.js API. Finally, the Next.js API streams the response back to the Chat Interface via an SSE Stream, providing real-time updates to the user. The Knowledge Loader's role is crucial as it bridges the gap between the static knowledge base (markdown files) and the dynamic response generation by the OpenRouter API, ensuring the chat responses are context-aware. The use of Next.js suggests a modern web application framework, and SSE Stream indicates a real-time communication pattern for delivering responses.

@@ -1,0 +1,49 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the interaction between an MCP Client and an MCP Server, mediated by a GUARDRAIL component. The diagram illustrates the layered architecture of the GUARDRAIL, showing the flow of requests and execution containment. It serves to visualize the security and control mechanisms implemented between the client and server environments.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TB). It is divided into three main sections: the MCP Client Environment, the GUARDRAIL, and the MCP Server Environment. The flow starts at the MCP Client, passes through the GUARDRAIL layers, and ends at the MCP Server.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **MCP Client Environment**: Represents the environment where the MCP Client resides.
+- **GUARDRAIL**: Represents the core security and control component, composed of multiple layers.
+- **MCP Server Environment**: Represents the environment where the MCP Server resides.
+
+## Node-by-Node Description
+- **MC / MCP Client**: Represents the client application initiating requests.
+  visible in diagram; no further repository context available.
+- **IGL / Information Gateway Layer**: The first layer within the GUARDRAIL, responsible for handling initial information processing.
+  visible in diagram; no further repository context available.
+- **CVL / Context Verification Layer**: The second layer within the GUARDRAIL, responsible for verifying the context of the request.
+  visible in diagram; no further repository context available.
+- **RCL / Request Control Layer**: The third layer within the GUARDRAIL, responsible for controlling the request flow.
+  visible in diagram; no further repository context available.
+- **ECL / Execution Containment Layer**: The fourth layer within the GUARDRAIL, responsible for containing the execution of the request.
+  visible in diagram; no further repository context available.
+- **AML / Audit & Monitoring Layer**: The final layer within the GUARDRAIL, responsible for auditing and monitoring the request execution.
+  visible in diagram; no further repository context available.
+- **MS / MCP Server**: Represents the server application receiving and processing requests.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `MC -- "MCP Protocol" --> IGL`: The MCP Client communicates with the Information Gateway Layer using the MCP Protocol.
+- `IGL --> CVL`: The Information Gateway Layer passes the request to the Context Verification Layer.
+- `CVL --> RCL`: The Context Verification Layer passes the request to the Request Control Layer.
+- `RCL --> ECL`: The Request Control Layer passes the request to the Execution Containment Layer.
+- `ECL --> AML`: The Execution Containment Layer passes information to the Audit & Monitoring Layer.
+- `ECL -- "Contained Execution" --> MS`: The Execution Containment Layer sends the contained execution to the MCP Server.
+
+## Repository Context & Terminology
+- **MCP Client**: Represents a client application that uses the MCP protocol to interact with a server.
+- **MCP Server**: Represents a server application that receives and processes requests from MCP clients.
+- **MCP Protocol**: The communication protocol used between the MCP Client and the GUARDRAIL.
+- **GUARDRAIL**: A security and control component that mediates communication between the MCP Client and MCP Server. It consists of multiple layers to enforce security policies and monitor execution.
+- **Information Gateway Layer**: The entry point to the GUARDRAIL, responsible for initial request processing.
+- **Context Verification Layer**: Validates the context of the incoming request to ensure it meets security requirements.
+- **Request Control Layer**: Manages the flow of requests based on predefined rules and policies.
+- **Execution Containment Layer**: Isolates the execution of the request to prevent unauthorized access or damage.
+- **Audit & Monitoring Layer**: Tracks and logs all activities for auditing and security monitoring purposes.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a layered architecture for securing communication between an MCP Client and an MCP Server. The process begins with the MCP Client initiating a request, which is then transmitted to the Information Gateway Layer of the GUARDRAIL via the MCP Protocol. The request then flows sequentially through the Context Verification Layer, Request Control Layer, and Execution Containment Layer. The Execution Containment Layer performs the contained execution and sends the result to the MCP Server. Simultaneously, the Execution Containment Layer also sends information to the Audit & Monitoring Layer for logging and security analysis. The GUARDRAIL acts as a central point of control, ensuring that all requests are validated, controlled, and executed in a secure environment. The layered approach allows for modular security policies and enables comprehensive monitoring of all activities. The MCP Protocol is the communication standard between the client and the GUARDRAIL. The final stage involves the Audit & Monitoring Layer, which continuously tracks the execution for potential security breaches. The MCP Server receives the processed request from the Execution Containment Layer, completing the interaction.

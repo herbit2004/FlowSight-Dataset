@@ -1,0 +1,75 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of a campaign rule engine. It depicts the process of receiving a request, evaluating rules, segmenting users, selecting content, performing A/B testing, and assembling the final payload for a response. The diagram serves as a visual representation of the system's logic and data flow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into subgraphs representing different services or components. The process starts with "Request Received" and ends with "Return Response."
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Campaign Rule Engine**: The main process flow, handling rule evaluation, content selection, and payload assembly.
+- **Segmentation Service**: Responsible for user profile lookup and segment assignment.
+- **Content Repository**: Stores and retrieves content blocks and snippets.
+- **Experimentation Service**: Determines the variant group for A/B testing.
+
+## Node-by-Node Description
+- **A / Request Received**: Represents the initial point where a request is received by the campaign rule engine. visible in diagram; no further repository context available.
+- **B / Rule Evaluation Context**: Evaluates the rules based on the request context. visible in diagram; no further repository context available.
+- **C / Segment Check**: Checks if the user belongs to any specific segment. visible in diagram; no further repository context available.
+- **D / Personalized Content Selection**: Selects personalized content based on the user's segment. visible in diagram; no further repository context available.
+- **E / Default Content Selection**: Selects default content if the user does not belong to any specific segment. visible in diagram; no further repository context available.
+- **F / Content Merge**: Merges the selected content (personalized or default). visible in diagram; no further repository context available.
+- **G / A/B Test Check**: Checks if A/B testing is required for the campaign. visible in diagram; no further repository context available.
+- **H / Variant Assignment**: Assigns a variant to the user for A/B testing. visible in diagram; no further repository context available.
+- **I / Final Payload Assembly**: Assembles the final payload with the selected content and variant (if applicable). visible in diagram; no further repository context available.
+- **K / Payload Ready**: Indicates that the payload is ready to be sent. visible in diagram; no further repository context available.
+- **L / Return Response**: Returns the final response with the assembled payload. visible in diagram; no further repository context available.
+- **S1 / User Profile Lookup**: Looks up the user profile in the segmentation service. visible in diagram; no further repository context available.
+- **S2 / Profile Found?**: Checks if the user profile is found. visible in diagram; no further repository context available.
+- **S3 / Build Segment Array**: Builds a segment array for the user. visible in diagram; no further repository context available.
+- **S4 / Apply Default Segments**: Applies default segments to the user. visible in diagram; no further repository context available.
+- **CR1 / Retrieve Content Block IDs**: Retrieves content block IDs from the content repository. visible in diagram; no further repository context available.
+- **CR2 / Fetch Content Snippets**: Fetches content snippets from the content repository. visible in diagram; no further repository context available.
+- **CR3 / Fetch Variant Snippets**: Fetches variant-specific content snippets from the content repository. visible in diagram; no further repository context available.
+- **ES1 / Determine Variant Group**: Determines the variant group for the user in the experimentation service. visible in diagram; no further repository context available.
+- **J / Fetch Variant Content**: Fetches the content for the assigned variant. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Request is passed to the rule evaluation context.
+- `B --> C`: Rule evaluation context passes control to segment check.
+- `C -- Segment Match --> D`: If the user belongs to a segment, personalized content selection is triggered.
+- `C -- No Segment Match --> E`: If the user does not belong to a segment, default content selection is triggered.
+- `D --> F`: Personalized content is passed to content merge.
+- `E --> F`: Default content is passed to content merge.
+- `F --> G`: Merged content is passed to A/B test check.
+- `G -- A/B Test Required --> H`: If A/B testing is required, variant assignment is triggered.
+- `G -- No A/B Test --> I`: If A/B testing is not required, the process proceeds to final payload assembly.
+- `H --> J`: Assigned variant is used to fetch variant content.
+- `J --> I`: Variant content is passed to final payload assembly.
+- `A --> S1`: Request triggers user profile lookup in the segmentation service.
+- `S1 --> S2`: User profile lookup result is passed to profile found check.
+- `S2 -- Yes --> S3`: If the user profile is found, a segment array is built.
+- `S2 -- No --> S4`: If the user profile is not found, default segments are applied.
+- `S3 --> B`: Segment array is passed to rule evaluation context.
+- `S4 --> B`: Default segments are passed to rule evaluation context.
+- `D --> CR1`: Personalized content selection triggers content block ID retrieval.
+- `E --> CR1`: Default content selection triggers content block ID retrieval.
+- `CR1 --> CR2`: Content block IDs are used to fetch content snippets.
+- `CR2 --> F`: Content snippets are passed to content merge.
+- `G --> ES1`: A/B test check triggers variant group determination in the experimentation service.
+- `ES1 --> H`: Variant group is used for variant assignment.
+- `J --> CR3`: Variant assignment triggers fetching of variant snippets.
+- `CR3 --> I`: Variant snippets are passed to final payload assembly.
+- Paths converge at node `F` (Content Merge) from `D` (Personalized Content Selection) and `E` (Default Content Selection).
+- Paths converge at node `I` (Final Payload Assembly) from `J` (Fetch Variant Content) and `G` (A/B Test Check) when no A/B test is required.
+
+## Repository Context & Terminology
+- **Campaign Rule Engine**: A system that automates the process of delivering personalized content based on predefined rules and user segments.
+- **Segmentation Service**: A service responsible for categorizing users into different segments based on their attributes and behavior.
+- **Content Repository**: A storage system for managing and retrieving content blocks and snippets.
+- **A/B Testing**: A method of comparing two versions of a content element to determine which one performs better.
+- **Variant Assignment**: The process of assigning a specific version (variant) of content to a user for A/B testing.
+- **Payload**: The final data structure containing the content and any other relevant information to be delivered to the user.
+- **Experimentation Service**: A service responsible for managing and running A/B tests.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "Request Received" node, initiating the campaign rule engine process. The request is then passed to the "Rule Evaluation Context" node, where rules are evaluated. The process branches based on the "Segment Check" node. If a segment match is found, "Personalized Content Selection" is triggered; otherwise, "Default Content Selection" is used. The selected content is then merged at the "Content Merge" node. Next, an "A/B Test Check" determines if A/B testing is required. If so, the "Experimentation Service" determines the variant group, and "Variant Assignment" occurs, leading to "Fetch Variant Content." If no A/B test is needed, the process skips directly to "Final Payload Assembly." The "Segmentation Service" performs a "User Profile Lookup" and branches based on whether a profile is found, building a segment array or applying default segments, both feeding back into the "Rule Evaluation Context." The "Content Repository" is used to "Retrieve Content Block IDs" and "Fetch Content Snippets" based on the content selection. Finally, the "Final Payload Assembly" prepares the payload, which transitions to "Payload Ready" and ends with "Return Response." The campaign rule engine leverages user segmentation and A/B testing to deliver optimized content.

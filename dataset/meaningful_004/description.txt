@@ -1,0 +1,141 @@
+## Diagram Type & Purpose
+This is an architecture diagram and flowchart hybrid, illustrating the workflow of an order processing system. It depicts the flow of data and control between different services involved in processing an order, from order creation to delivery completion. The diagram serves as a high-level overview of the system's architecture and the interactions between its components.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner, with the Order Processing System at the top and the Delivery System at the bottom. The flow generally progresses downwards, with branches and convergences representing decision points and interactions between services. The start node is the Order Creation Service, and the end nodes are Email Notification, Logging Service, SMS Notification, and Completion Notification.
+
+## Subgraphs / Stages
+The diagram is divided into the following subgraphs, each representing a distinct service or component:
+- **Order Processing System**: Responsible for creating new orders.
+- **Kafka Cluster**: A distributed streaming platform used for message queuing.
+- **Inventory Management Service**: Manages inventory levels and reserves items for orders.
+- **Payment Processing Service**: Handles payment validation and processing.
+- **Order Fulfillment Service**: Creates shipments and updates order status.
+- **Shipping Service**: Schedules pickups and updates shipping status.
+- **Delivery System**: Manages the delivery process and updates delivery status.
+
+## Node-by-Node Description
+- **Order Creation Service**: Creates new orders within the Order Processing System.
+  visible in diagram; no further repository context available.
+- **Kafka Topic: NewOrders**: A Kafka topic where new order messages are published.
+  visible in diagram; no further repository context available.
+- **Kafka Broker 1**: A broker within the Kafka cluster.
+  visible in diagram; no further repository context available.
+- **Kafka Broker 2**: A broker within the Kafka cluster.
+  visible in diagram; no further repository context available.
+- **Kafka Broker 3**: A broker within the Kafka cluster.
+  visible in diagram; no further repository context available.
+- **Partition 1**: A partition within the Kafka topic.
+  visible in diagram; no further repository context available.
+- **Partition 2**: A partition within the Kafka topic.
+  visible in diagram; no further repository context available.
+- **Partition 3**: A partition within the Kafka topic.
+  visible in diagram; no further repository context available.
+- **Message Listener: NewOrderConsumer**: Listens for new order messages from the Kafka topic.
+  visible in diagram; no further repository context available.
+- **Check Inventory**: Checks if there is sufficient inventory for the order.
+  visible in diagram; no further repository context available.
+- **Reserve Inventory**: Reserves the inventory for the order.
+  visible in diagram; no further repository context available.
+- **Publish Message: InventoryReserved**: Publishes a message indicating that the inventory has been reserved.
+  visible in diagram; no further repository context available.
+- **Kafka Topic: InventoryEvents**: A Kafka topic for inventory-related events.
+  visible in diagram; no further repository context available.
+- **Publish Message: OrderFailed**: Publishes a message indicating that the order has failed.
+  visible in diagram; no further repository context available.
+- **Kafka Topic: OrderEvents**: A Kafka topic for order-related events.
+  visible in diagram; no further repository context available.
+- **Order Failure Handler**: Handles order failures.
+  visible in diagram; no further repository context available.
+- **Message Listener: InventoryReservedConsumer**: Listens for inventory reserved messages.
+  visible in diagram; no further repository context available.
+- **Validate Payment Method**: Validates the payment method.
+  visible in diagram; no further repository context available.
+- **Charge Payment**: Charges the payment.
+  visible in diagram; no further repository context available.
+- **Publish Message: PaymentProcessed**: Publishes a message indicating that the payment has been processed.
+  visible in diagram; no further repository context available.
+- **Kafka Topic: PaymentEvents**: A Kafka topic for payment-related events.
+  visible in diagram; no further repository context available.
+- **Message Listener: PaymentProcessedConsumer**: Listens for payment processed messages.
+  visible in diagram; no further repository context available.
+- **Create Shipment**: Creates a shipment for the order.
+  visible in diagram; no further repository context available.
+- **Update Order Status: 'Processing'**: Updates the order status to "Processing".
+  visible in diagram; no further repository context available.
+- **Send Shipment Confirmation**: Sends a shipment confirmation to the customer.
+  visible in diagram; no further repository context available.
+- **Publish Message: ShipmentCreated**: Publishes a message indicating that the shipment has been created.
+  visible in diagram; no further repository context available.
+- **Kafka Topic: ShipmentEvents**: A Kafka topic for shipment-related events.
+  visible in diagram; no further repository context available.
+- **Message Listener: ShipmentCreatedConsumer**: Listens for shipment created messages.
+  visible in diagram; no further repository context available.
+- **Schedule Pickup**: Schedules a pickup for the shipment.
+  visible in diagram; no further repository context available.
+- **Update Order Status: 'Shipped'**: Updates the order status to "Shipped".
+  visible in diagram; no further repository context available.
+- **Tracking Update**: Updates the tracking information for the shipment.
+  visible in diagram; no further repository context available.
+- **Delivery in Progress**: Indicates that the delivery is in progress.
+  visible in diagram; no further repository context available.
+- **Update Order Status: 'Delivered'**: Updates the order status to "Delivered".
+  visible in diagram; no further repository context available.
+- **SMS Notification**: Sends an SMS notification.
+  visible in diagram; no further repository context available.
+- **Email Notification**: Sends an email notification.
+  visible in diagram; no further repository context available.
+- **Logging Service**: Logs events.
+  visible in diagram; no further repository context available.
+- **Completion Notification**: Sends a completion notification.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Order Creation Service --> Kafka Topic: NewOrders`: A new order is created and published to the NewOrders Kafka topic.
+- `Kafka Topic: NewOrders --> Kafka Broker 1`: The new order message is sent to Kafka Broker 1.
+- `Kafka Topic: NewOrders --> Kafka Broker 2`: The new order message is sent to Kafka Broker 2.
+- `Kafka Topic: NewOrders --> Kafka Broker 3`: The new order message is sent to Kafka Broker 3.
+- `Kafka Broker 1 --> Partition 1`: Kafka Broker 1 stores the message in Partition 1.
+- `Kafka Broker 2 --> Partition 2`: Kafka Broker 2 stores the message in Partition 2.
+- `Kafka Broker 3 --> Partition 3`: Kafka Broker 3 stores the message in Partition 3.
+- `Message Listener: NewOrderConsumer --> Check Inventory`: The Inventory Management Service receives the new order message and checks inventory.
+- `Check Inventory -- Sufficient Inventory? --> Reserve Inventory`: If there is sufficient inventory, the inventory is reserved.
+- `Check Inventory -- Insufficient Inventory? --> Publish Message: OrderFailed`: If there is insufficient inventory, an OrderFailed message is published.
+- `Reserve Inventory --> Publish Message: InventoryReserved`: An InventoryReserved message is published.
+- `Publish Message: InventoryReserved --> Kafka Topic: InventoryEvents`: The InventoryReserved message is published to the InventoryEvents Kafka topic.
+- `Publish Message: OrderFailed --> Kafka Topic: OrderEvents`: The OrderFailed message is published to the OrderEvents Kafka topic.
+- `Kafka Topic: OrderEvents --> Order Failure Handler`: The Order Failure Handler receives the OrderFailed message.
+- `Order Failure Handler --> Email Notification`: The Order Failure Handler sends an email notification.
+- `Order Failure Handler --> Logging Service`: The Order Failure Handler logs the event.
+- `Message Listener: InventoryReservedConsumer --> Validate Payment Method`: The Payment Processing Service receives the InventoryReserved message and validates the payment method.
+- `Validate Payment Method -- Valid Payment? --> Charge Payment`: If the payment method is valid, the payment is charged.
+- `Validate Payment Method -- Invalid Payment? --> Publish Message: OrderFailed`: If the payment method is invalid, an OrderFailed message is published.
+- `Charge Payment --> Publish Message: PaymentProcessed`: A PaymentProcessed message is published.
+- `Publish Message: PaymentProcessed --> Kafka Topic: PaymentEvents`: The PaymentProcessed message is published to the PaymentEvents Kafka topic.
+- `Message Listener: PaymentProcessedConsumer --> Create Shipment`: The Order Fulfillment Service receives the PaymentProcessed message and creates a shipment.
+- `Create Shipment --> Update Order Status: 'Processing'`: The order status is updated to "Processing".
+- `Update Order Status: 'Processing' --> Send Shipment Confirmation`: A shipment confirmation is sent.
+- `Send Shipment Confirmation --> SMS Notification`: An SMS notification is sent.
+- `Send Shipment Confirmation --> Logging Service`: The event is logged.
+- `Create Shipment --> Publish Message: ShipmentCreated`: A ShipmentCreated message is published.
+- `Publish Message: ShipmentCreated --> Kafka Topic: ShipmentEvents`: The ShipmentCreated message is published to the ShipmentEvents Kafka topic.
+- `Message Listener: ShipmentCreatedConsumer --> Schedule Pickup`: The Shipping Service receives the ShipmentCreated message and schedules a pickup.
+- `Schedule Pickup --> Update Order Status: 'Shipped'`: The order status is updated to "Shipped".
+- `Update Order Status: 'Shipped' --> Tracking Update`: The tracking information is updated.
+- `Update Order Status: 'Shipped' --> Logging Service`: The event is logged.
+- `Tracking Update --> Delivery in Progress`: The Delivery System indicates that the delivery is in progress.
+- `Delivery in Progress --> Update Order Status: 'Delivered'`: The order status is updated to "Delivered".
+- `Update Order Status: 'Delivered' --> Completion Notification`: A completion notification is sent.
+- `Update Order Status: 'Delivered' --> Logging Service`: The event is logged.
+
+## Repository Context & Terminology
+- **Kafka**: A distributed, fault-tolerant streaming platform often used for building real-time data pipelines and streaming applications.
+- **Kafka Topic**: A category or feed name to which records are published.
+- **Kafka Broker**: A server in a Kafka cluster that handles the storage and retrieval of messages.
+- **Kafka Partition**: A division of a Kafka topic, allowing for parallel processing and increased throughput.
+- **Message Listener**: A component that subscribes to a Kafka topic and processes incoming messages.
+- **Order Processing System**: The overall system responsible for managing the entire order lifecycle.
+- **Inventory Management Service**: A service responsible for tracking and managing inventory levels.
+
+## High-Density QA Ground Truth Summary
+The order processing system begins with the `Order Creation Service` publishing a new order message to the `Kafka Topic: NewOrders`. This message is then distributed across the `Kafka Cluster` to `Kafka Broker 1`, `Kafka Broker 2`, and `Kafka Broker 3`, each storing the message in its respective `Partition`. The `Inventory Management Service`, via its `Message Listener: NewOrderConsumer`, receives the message and initiates a `Check Inventory` process. If `Sufficient Inventory` is available, the system proceeds to `Reserve Inventory` and publishes an `InventoryReserved` message to the `Kafka Topic: InventoryEvents`. Otherwise, an `OrderFailed` message is published to `Kafka Topic: OrderEvents`, triggering the `Order Failure Handler` which sends `Email Notification` and logs the event via `Logging Service`. If inventory is reserved, the `Payment Processing Service`'s `Message Listener: InventoryReservedConsumer` receives the `InventoryReserved` message and `Validate Payment Method`. A valid payment leads to `Charge Payment` and publishing a `PaymentProcessed` message to `Kafka Topic: PaymentEvents`. An invalid payment also results in an `OrderFailed` message. The `Order Fulfillment Service` then creates a shipment, updates the order status to 'Processing', sends a shipment confirmation with an `SMS Notification`, and publishes a `ShipmentCreated` message to `Kafka Topic: ShipmentEvents`. Finally, the `Shipping Service` schedules a pickup, updates the order status to 'Shipped', provides a `Tracking Update`, and the `Delivery System` updates the order status to 'Delivered', sending a `Completion Notification`. The `Logging Service` receives updates from multiple services.

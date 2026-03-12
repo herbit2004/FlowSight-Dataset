@@ -1,0 +1,19 @@
+graph TD
+    A[Customer Submits Compensation Claim] --> B{Validate Claim Data};
+    B -- Valid Data --> C[Calculate Initial Compensation Amount];
+    B -- Invalid Data --> D[Reject Claim and Notify Customer];
+    C --> E{Is Compensation Above Manager Threshold?};
+    E -- Yes --> F[Escalate Claim to Manager Approval];
+    E -- No --> G[Generate Automated Compensation Offer];
+    F --> H{Manager Approves Claim?};
+    H -- Yes --> I[Generate Final Compensation Offer];
+    H -- No --> J[Revise Compensation Amount and Re-evaluate];
+    J --> E;
+    I --> K[Send Offer to Customer];
+    G --> K;
+    K --> L{Customer Accepts Offer?};
+    L -- Yes --> M[Process Payment and Close Claim];
+    L -- No --> N[Initiate Negotiation Process];
+
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N default

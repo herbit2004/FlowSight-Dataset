@@ -1,0 +1,27 @@
+graph TD
+    subgraph Data Ingestion
+        A[S3 Data Arrival Event] --> B(Metadata Extraction);
+        B --> C{Data Validation};
+        C -- Valid --> D(Data Staging);
+        C -- Invalid --> E(Quarantine & Alert);
+    end
+
+    subgraph Transformation & Enrichment
+        D --> F(Customer ID Mapping);
+        F --> G(Product Feature Engineering);
+        G --> H{Completeness Check};
+        H -- Complete --> I(Geographic Enrichment);
+        H -- Missing Data --> J(Retry Feature Engineering);
+        J --> G;
+        I --> K(Data Aggregation);
+    end
+
+    subgraph Load & Archival
+        K --> L(Load to Snowflake);
+        L --> M(Archive to Cold Storage);
+    end
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,D,F,G,I,K,L,M process
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px
+    class C,H decision

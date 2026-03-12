@@ -1,0 +1,18 @@
+graph TD
+    A[User Places Order] --> B{Payment Successful?};
+    B -- No --> C[Show Error Message];
+    C --> A;
+    B -- Yes --> D[Initiate Shipment];
+    D --> E{Inventory Available?};
+    E -- No --> F[Order Fulfilled and Shipped];
+    E -- Yes --> G[Notify Customer of Backorder];
+    G --> H[Handle Customer Cancellation];
+    H --> A;
+    F --> I[Deliver Order];
+    I --> J{Order Received?};
+    J -- No --> K[Investigate Lost Package];
+    K --> I;
+    J -- Yes --> L[Complete Order];
+    L --> M(Update Inventory);
+    M --> D;
+    style A fill:#f9f,stroke:#333,stroke-width:2px

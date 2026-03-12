@@ -1,0 +1,35 @@
+graph TD
+    subgraph Device
+
+    A[Device Heartbeat Timer] --> B{Heartbeat Due?};
+    B -- Yes --> C[Send Heartbeat Signal];
+    B -- No --> A;
+    C --> D{Heartbeat Sent OK?};
+    D -- Yes --> A;
+    D -- No --> E[Increment Failed Attempts];
+    E --> F{Attempts > MaxRetries?};
+    F -- Yes --> G[Set Device Status: Offline];
+    F -- No --> A;
+
+    end
+
+   subgraph Cloud Platform
+    H[Receive Heartbeat Signal] --> I{Heartbeat Received Within Tolerance?};
+    I -- Yes --> J[Reset Offline Timer];
+    I -- No --> K[Increment Offline Counter];
+    K --> L{Counter > Offline Threshold?};
+    L -- Yes --> M[Notify Operations: Device Offline];
+    L -- No --> J;
+
+    J --> N[Store Last Seen Timestamp];
+    N --> O[Update Device Status: Online];
+    end
+    G --> M
+    O --> Z[Dashboard Display]
+    M --> Z
+    Z[Display Device Status & Alerts]
+
+    classDef online fill:#ccffcc,stroke:#333,stroke-width:2px;
+    classDef offline fill:#ffcccc,stroke:#333,stroke-width:2px;
+    class O,J,N online;
+    class G,M offline;

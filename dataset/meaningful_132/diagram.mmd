@@ -1,0 +1,72 @@
+graph TD
+    subgraph Users
+        A[User Request];
+    end
+
+    subgraph Entrypoint Service
+        B(Request Router);
+        C{Experiment Enabled?};
+    end
+
+    subgraph Experiment Configuration Service
+        D[Fetch Experiment Config];
+    end
+
+    subgraph Traffic Splitting Logic
+        E{Traffic Allocation};
+        F[Group A - Control];
+        G[Group B - Treatment];
+    end
+
+    subgraph Core Services
+        H[Service X - Original];
+        I[Service X - Modified];
+    end
+
+    subgraph Metrics & Reporting
+        J[Record Experiment Event];
+        K[Metrics Aggregator];
+        L[Reporting Dashboard];
+    end
+
+    A --> B
+    B --> D
+    D --> C
+    C -- No Active Experiment --> H
+    C -- Active Experiment --> E
+    E -- Traffic <= Control Allocation --> F
+    E -- Traffic > Control Allocation --> G
+    F --> H
+    G --> I
+    H --> J
+    I --> J
+    J --> K
+    K --> L
+
+    subgraph Feature Flag Service [Feature Flag Service]
+      style Feature Flag Service fill:#f9f,stroke:#333,stroke-width:2px
+        M[Check Feature Flag];
+    end
+
+    subgraph Error Handling
+        N[Error Logger];
+    end
+
+    B --> M
+    M -- Feature Flag Enabled --> C
+    M -- Feature Flag Disabled --> H
+    B -- Error Fetching Config --> N
+    H -- Internal Error --> N
+    I -- Internal Error --> N
+    J -- Error Recording Event --> N
+
+    style A fill:#ccf,stroke:#333,stroke-width:2px
+    style L fill:#ccf,stroke:#333,stroke-width:2px
+
+    classDef decision fill:#e2f0cb,stroke:#333,stroke-width:2px
+    classDef service fill:#fff2cc,stroke:#333,stroke-width:2px
+    classDef data fill:#d5e8d4,stroke:#333,stroke-width:2px
+
+    class C,E decision
+    class B,D,F,G,H,I,K service
+    class A,L data

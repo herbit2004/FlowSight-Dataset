@@ -1,0 +1,65 @@
+graph TD
+    subgraph Order Processing System
+      A[Order Creation Service] --> B(Kafka Topic: NewOrders);
+    end
+
+    subgraph Kafka Cluster
+      direction LR
+      B --> C{Kafka Broker 1};
+      B --> D{Kafka Broker 2};
+      B --> E{Kafka Broker 3};
+      C --> F(Partition 1);
+      D --> G(Partition 2);
+      E --> H(Partition 3);
+    end
+
+    subgraph Inventory Management Service
+      I[Message Listener: NewOrderConsumer] --> J{Check Inventory};
+      J -- Sufficient Inventory? --> K[Reserve Inventory];
+      K --> L{Publish Message: InventoryReserved};
+      L --> M(Kafka Topic: InventoryEvents);
+
+      J -- Insufficient Inventory? --> N[Publish Message: OrderFailed];
+      N --> O(Kafka Topic: OrderEvents);
+      O --> P[Order Failure Handler];
+      P --> Q((Email Notification));
+      P --> R((Logging Service));
+    end
+
+    subgraph Payment Processing Service
+      S[Message Listener: InventoryReservedConsumer] --> T{Validate Payment Method};
+
+      T -- Valid Payment? --> U[Charge Payment];
+      U --> V{Publish Message: PaymentProcessed};
+      V --> W(Kafka Topic: PaymentEvents);
+      T -- Invalid Payment? --> AA[Publish Message: OrderFailed];
+      AA --> O;
+    end
+
+    subgraph Order Fulfillment Service
+      X[Message Listener: PaymentProcessedConsumer] --> Y{Create Shipment};
+      Y --> Z[Update Order Status: 'Processing'];
+      Z --> BB[Send Shipment Confirmation];
+      BB --> CC((SMS Notification));
+      BB --> R;
+      Y --> DD{Publish Message: ShipmentCreated};
+      DD --> EE(Kafka Topic: ShipmentEvents);
+    end
+
+    subgraph Shipping Service
+      FF[Message Listener: ShipmentCreatedConsumer] --> GG{Schedule Pickup};
+      GG --> HH[Update Order Status: 'Shipped'];
+      HH --> II((Tracking Update));
+      HH --> R;
+    end
+
+  subgraph Delivery System
+    II --> JJ{Delivery in Progress};
+    JJ --> KK[Update Order Status: 'Delivered'];
+    KK --> LL((Completion Notification));
+    KK --> R;
+  end
+
+
+    classDef kafka fill:#f9f,stroke:#333,stroke-width:2px
+    class B,C,D,E,F,G,H,M,O,W,EE kafka

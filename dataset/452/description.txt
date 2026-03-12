@@ -1,0 +1,61 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the architecture and data flow of a question-answering system. It depicts the sequence of operations performed by different components, from user input to generating an answer with supporting evidence. The diagram serves as a high-level overview of the system's architecture and how the different modules interact.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User" node at the top and flows downwards through various processing stages to the "Answer + Evidence" node at the bottom. The diagram illustrates a sequential process with some feedback loops.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: User Input, Intent Routing & Planning, Retrieval, Writing & Refinement, Guardrails, and Answer Generation.
+
+## Node-by-Node Description
+- **User**: Represents the user providing the initial query.
+  visible in diagram; no further repository context available.
+- **Intent Router - Flash**: Responsible for routing the user's intent.
+  visible in diagram; no further repository context available.
+- **Planner - Pro**: Responsible for planning the steps required to answer the user's query.
+  visible in diagram; no further repository context available.
+- **Retrieval Planner - Pro**: Responsible for planning the retrieval of relevant information.
+  visible in diagram; no further repository context available.
+- **File-backed Memory**: A persistent storage mechanism for session data.
+  visible in diagram; no further repository context available.
+- **WebRetriever - Google CSE + Fetch**: Retrieves information from the web using Google Custom Search Engine (CSE) and a fetching mechanism.
+  visible in diagram; no further repository context available.
+- **VectorRetriever - FAISS**: Retrieves information from a vector database using FAISS (Facebook AI Similarity Search).
+  visible in diagram; no further repository context available.
+- **Writer - Pro**: Responsible for writing or formulating the answer.
+  visible in diagram; no further repository context available.
+- **Critic - Pro**: Critiques the generated answer.
+  visible in diagram; no further repository context available.
+- **Guardrails**: Applies safety and quality checks to the answer.
+  visible in diagram; no further repository context available.
+- **Answer + Evidence**: The final output, consisting of the answer and supporting evidence.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `User --> Intent Router - Flash`: User input is passed to the intent router.
+  `Intent Router - Flash --> Planner - Pro`: The intent router passes the routed intent to the planner.
+  `Planner - Pro --> Retrieval Planner - Pro`: The planner passes the plan to the retrieval planner.
+  `Planner - Pro --> File-backed Memory`: The planner stores session data in file-backed memory.
+  `Retrieval Planner - Pro --> VectorRetriever - FAISS`: The retrieval planner triggers vector-based retrieval.
+  `Retrieval Planner - Pro --> WebRetriever - Google CSE + Fetch`: The retrieval planner triggers web-based retrieval.
+  `VectorRetriever - FAISS --> Writer - Pro`: Retrieved vectors are passed to the writer.
+  `WebRetriever - Google CSE + Fetch --> Writer - Pro`: Retrieved web content is passed to the writer.
+  `Writer - Pro --> Critic - Pro`: The writer passes the generated answer to the critic.
+  `Critic - Pro --> Retrieval Planner - Pro`: The critic provides feedback to the retrieval planner for follow-up actions.
+  `Writer - Pro --> Guardrails`: The writer passes the generated answer to the guardrails.
+  `Guardrails --> Answer + Evidence`: The guardrails pass the refined answer and evidence to the final output.
+
+## Repository Context & Terminology
+- **Intent Router**: A component that determines the user's intention based on their input.
+- **Planner**: A component that creates a plan to fulfill the user's intention.
+- **Retrieval Planner**: A component that plans how to retrieve relevant information.
+- **File-backed Memory**: A storage mechanism that persists data to a file, allowing for session persistence.
+- **WebRetriever**: A component that retrieves information from the web. In this case, it uses Google CSE and a fetching mechanism.
+- **VectorRetriever**: A component that retrieves information from a vector database using FAISS.
+- **FAISS**: Facebook AI Similarity Search, a library for efficient similarity search and clustering of dense vectors.
+- **Writer**: A component that formulates the answer based on the retrieved information.
+- **Critic**: A component that evaluates the quality and correctness of the generated answer.
+- **Guardrails**: A component that ensures the answer is safe, ethical, and adheres to certain quality standards.
+
+## High-Density QA Ground Truth Summary
+The process begins with the "User" providing a query, which is then passed to the "Intent Router - Flash" to determine the user's intent. The "Planner - Pro" then formulates a plan to address the intent, storing session data in "File-backed Memory." The "Retrieval Planner - Pro" orchestrates information retrieval using both "WebRetriever - Google CSE + Fetch" and "VectorRetriever - FAISS." The WebRetriever uses Google's Custom Search Engine and a fetching mechanism to gather information from the web, while the VectorRetriever utilizes FAISS for efficient similarity search within a vector database. The retrieved information converges at the "Writer - Pro," which formulates an initial answer. This answer is then passed to the "Critic - Pro" for evaluation, potentially triggering follow-up retrieval actions via a feedback loop back to the "Retrieval Planner - Pro." Finally, the "Writer - Pro" passes the answer to "Guardrails" for safety and quality checks before the final "Answer + Evidence" is generated. The use of FAISS suggests the system leverages vector embeddings for semantic search, enhancing the relevance of retrieved information.

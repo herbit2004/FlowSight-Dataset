@@ -1,0 +1,67 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of user event data through a system for anomaly detection and campaign budget monitoring. It depicts the data processing pipeline, routing events based on their type, aggregating user sessions, detecting anomalies, monitoring campaign budgets, and triggering alerts or updates accordingly. The diagram serves as a high-level overview of the system's architecture and data flow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "User Event Stream" node at the top and flows down through various processing stages, ultimately converging at the "Dashboard Updates" node. The diagram branches into two main paths: one for user session aggregation and anomaly detection, and another for campaign budget monitoring.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into four stages:
+1. Event Routing: "User Event Stream" to "Event Router".
+2. User Session Aggregation and Anomaly Detection: "User Session Aggregator" to "Alert Service".
+3. Campaign Budget Monitoring: "Campaign Budget Monitor" to "Pause Notification".
+4. Reporting and Updates: "AlertService", "Pause Notification", "Budget Performance", and "Session Metrics" to "Dashboard Updates".
+
+## Node-by-Node Description
+- **User Event Stream**: Represents the source of incoming user event data. visible in diagram; no further repository context available.
+- **Event Router**: Routes incoming events based on their type. visible in diagram; no further repository context available.
+- **User Session Aggregator**: Aggregates user events into sessions. visible in diagram; no further repository context available.
+- **Campaign Budget Monitor**: Monitors campaign spending against a defined budget. visible in diagram; no further repository context available.
+- **Session Window**: Defines a time window for aggregating user events into sessions. visible in diagram; no further repository context available.
+- **Aggregated Spend**: Represents the total spending for a campaign within a given time window. visible in diagram; no further repository context available.
+- **Budget Window**: Defines a time window for monitoring campaign spending. visible in diagram; no further repository context available.
+- **Anomaly Detector**: Detects anomalies in user session data. visible in diagram; no further repository context available.
+- **Budget Comparator**: Compares the aggregated spend against the budget. visible in diagram; no further repository context available.
+- **Session Store**: Stores user session data. visible in diagram; no further repository context available.
+- **Campaign Pauser**: Pauses a campaign when the budget is exceeded. visible in diagram; no further repository context available.
+- **Budget Metrics**: Stores budget-related metrics. visible in diagram; no further repository context available.
+- **Alert Service**: Sends alerts based on detected anomalies. visible in diagram; no further repository context available.
+- **Session Metrics**: Stores session-related metrics. visible in diagram; no further repository context available.
+- **Pause Notification**: Sends a notification when a campaign is paused. visible in diagram; no further repository context available.
+- **Budget Performance**: Stores budget performance data. visible in diagram; no further repository context available.
+- **AlertService**: Sends alerts based on detected anomalies. visible in diagram; no further repository context available.
+- **Dashboard Updates**: Updates the dashboard with new data. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Event Stream --> Event Router`: Incoming user event data is sent to the event router.
+- `Event Router -- Route Key: UserID --> User Session Aggregator`: Events with the UserID route key are sent to the user session aggregator.
+- `Event Router -- Route Key: AdID --> Campaign Budget Monitor`: Events with the AdID route key are sent to the campaign budget monitor.
+- `User Session Aggregator --> Session Window`: Aggregated user session data is sent to the session window.
+- `Session Window -- Window Closed --> Anomaly Detector`: When the session window closes, the data is sent to the anomaly detector.
+- `Anomaly Detector -- Anomaly Detected --> Alert Service`: If an anomaly is detected, an alert is sent to the alert service.
+- `Anomaly Detector -- No Anomaly --> Session Store`: If no anomaly is detected, the session data is sent to the session store.
+- `Campaign Budget Monitor --> Aggregated Spend`: Campaign budget data is sent to the aggregated spend.
+- `Aggregated Spend --> Budget Window`: Aggregated spend data is sent to the budget window.
+- `Budget Window -- Window Closed --> Budget Comparator`: When the budget window closes, the data is sent to the budget comparator.
+- `Budget Comparator -- Budget Exceeded --> Campaign Pauser`: If the budget is exceeded, the campaign is paused.
+- `Budget Comparator -- Budget OK --> Budget Metrics`: If the budget is OK, the budget metrics are stored.
+- `Campaign Pauser --> Pause Notification`: A pause notification is sent when a campaign is paused.
+- `Alert Service --> AlertService`: The Alert Service sends alerts.
+- `Session Store --> Session Metrics`: Session data is used to generate session metrics.
+- `Budget Metrics --> Budget Performance`: Budget metrics are used to generate budget performance data.
+- `Alert Service --> Dashboard Updates`: The Alert Service sends updates to the dashboard.
+- `Pause Notification --> Dashboard Updates`: Pause notifications are sent to the dashboard.
+- `Session Metrics --> Dashboard Updates`: Session metrics are sent to the dashboard.
+- `Budget Performance --> Dashboard Updates`: Budget performance data is sent to the dashboard.
+- `Pause Notification --> AlertService`: Pause notifications are sent to the AlertService.
+
+## Repository Context & Terminology
+- **User Event Stream**: A continuous flow of data representing user actions or events within a system.
+- **Event Router**: A component responsible for directing events to the appropriate processing module based on event type or attributes.
+- **User Session Aggregator**: A module that groups user events into sessions based on time or activity.
+- **Campaign Budget Monitor**: A component that tracks campaign spending and compares it against a predefined budget.
+- **Anomaly Detector**: A module that identifies unusual patterns or deviations in user behavior or system performance.
+- **Alert Service**: A service responsible for sending notifications or alerts based on detected anomalies or budget overruns.
+- **Dashboard Updates**: A process that updates a dashboard with the latest data and insights.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "User Event Stream," which feeds into the "Event Router." The "Event Router" then branches based on the "Route Key." If the "Route Key" is "UserID," the flow proceeds to the "User Session Aggregator"; if the "Route Key" is "AdID," the flow proceeds to the "Campaign Budget Monitor." The "User Session Aggregator" passes data to the "Session Window," and upon window closure, the data is sent to the "Anomaly Detector." The "Anomaly Detector" branches based on whether an anomaly is detected. If an anomaly is detected, an "Alert Service" is triggered; otherwise, the data is sent to the "Session Store" for generating "Session Metrics." The "Campaign Budget Monitor" feeds into "Aggregated Spend," which then passes data to the "Budget Window." Upon window closure, the data is sent to the "Budget Comparator." The "Budget Comparator" branches based on whether the budget is exceeded. If the budget is exceeded, the "Campaign Pauser" is triggered, resulting in a "Pause Notification"; otherwise, "Budget Metrics" are stored, leading to "Budget Performance" calculations. The "Alert Service" and "Pause Notification" both send updates to the "AlertService" and "Dashboard Updates." The "Session Metrics" and "Budget Performance" also contribute to the "Dashboard Updates," providing a consolidated view of system status and performance. The "User Event Stream" represents the continuous flow of user actions, a fundamental concept in event-driven architectures.

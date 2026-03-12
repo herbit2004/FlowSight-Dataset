@@ -1,0 +1,64 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the data flow and component interactions within the osctrl system. It depicts how operators interact with various osctrl modules, and how these modules interact with shared packages, data storage, and logging destinations. The diagram serves as a high-level overview of the system's architecture and dependencies.
+
+## Overall Layout
+The diagram is laid out in a left-to-right direction. It shows the flow of data and control from operators through various osctrl components to shared packages and finally to data storage and logging destinations. The "Operators" node serves as the starting point, and the "Redis Cache", "PostgreSQL Backend", "Log Destinations", and "Carve Storage" nodes represent the end points.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into four stages:
+1. Operator Interaction: Operators interact with the system via CLI, REST API, or Web UI.
+2. Osctrl Modules: The operator interactions are handled by osctrl-cli, osctrl-api, and osctrl-admin modules.
+3. Shared Packages: The osctrl modules interact with shared packages.
+4. Data Storage and Logging: Shared packages interact with data storage (Redis Cache, PostgreSQL Backend, Carve Storage) and logging destinations.
+
+## Node-by-Node Description
+- **Operators**: Represents the users or systems interacting with the osctrl system.
+  visible in diagram; no further repository context available.
+- **osctrl-cli**: Represents the command-line interface for interacting with the osctrl system.
+  visible in diagram; no further repository context available.
+- **osctrl-api**: Represents the HTTP API for interacting with the osctrl system.
+  visible in diagram; no further repository context available.
+- **osctrl-admin**: Represents the web UI for administering the osctrl system.
+  visible in diagram; no further repository context available.
+- **osquery Agents**: Represents the osquery agents that collect data from the systems.
+  visible in diagram; no further repository context available.
+- **osctrl-tls**: Represents the TLS remote API for interacting with osquery agents.
+  visible in diagram; no further repository context available.
+- **Shared Packages (pkg/*)**: Represents the shared packages used by various osctrl modules.
+  visible in diagram; no further repository context available.
+- **Redis Cache**: Represents the Redis cache used by the osctrl system.
+  visible in diagram; no further repository context available.
+- **PostgreSQL Backend**: Represents the PostgreSQL database used by the osctrl system.
+  visible in diagram; no further repository context available.
+- **Log Destinations (DB, file, S3, Elastic, Splunk, Graylog, Kafka, Kinesis, Logstash)**: Represents the various log destinations supported by the osctrl system.
+  visible in diagram; no further repository context available.
+- **Carve Storage (DB, local, S3)**: Represents the storage locations for carved data.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Operators --> osctrl-cli`: Operators interact with the system via the command-line interface (CLI).
+- `Operators --> osctrl-api`: Operators interact with the system via the REST API.
+- `Operators --> osctrl-admin`: Operators interact with the system via the Web UI.
+- `osquery Agents --> osctrl-tls`: osquery agents interact with the system via the TLS Remote API.
+- `osctrl-admin --> osctrl-api`: osctrl-admin interacts with osctrl-api via HTTP API.
+- `osctrl-cli --> osctrl-api`: osctrl-cli interacts with osctrl-api via HTTP API.
+- `osctrl-tls --> Shared Packages (pkg/*)`: osctrl-tls interacts with shared packages.
+- `osctrl-admin --> Shared Packages (pkg/*)`: osctrl-admin interacts with shared packages.
+- `osctrl-api --> Shared Packages (pkg/*)`: osctrl-api interacts with shared packages.
+- `osctrl-cli --> Shared Packages (pkg/*)`: osctrl-cli interacts with shared packages.
+- `osctrl-cli --> PostgreSQL Backend`: osctrl-cli interacts with PostgreSQL Backend in Direct DB mode.
+- `Shared Packages (pkg/*) --> PostgreSQL Backend`: Shared packages interact with the PostgreSQL backend.
+- `Shared Packages (pkg/*) --> Redis Cache`: Shared packages interact with the Redis cache.
+- `Shared Packages (pkg/*) --> Log Destinations (DB, file, S3, Elastic, Splunk, Graylog, Kafka, Kinesis, Logstash)`: Shared packages interact with various log destinations.
+- `Shared Packages (pkg/*) --> Carve Storage (DB, local, S3)`: Shared packages interact with carve storage.
+
+## Repository Context & Terminology
+- **osctrl**: The name of the overall system, likely an osquery management and orchestration platform.
+- **pkg/\***: Indicates a directory containing shared packages or modules used by different components of the system.
+- **Carve Storage**: Refers to the storage location for carved data, which is data collected from endpoints using osquery. The storage can be a database, local storage, or cloud storage like S3.
+- **Log Destinations**: Refers to the various destinations where logs are sent, including databases, files, S3, ElasticSearch, Splunk, Graylog, Kafka, Kinesis, and Logstash.
+- **TLS Remote API**: A secure API used for communication between osctrl and osquery agents, using TLS encryption.
+- **Direct DB mode**: A mode where osctrl-cli can directly interact with the PostgreSQL database, bypassing the API.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the architecture of the osctrl system, starting with the "Operators" node. Operators can interact with the system via the CLI, REST API, or Web UI, which connect to the `osctrl-cli`, `osctrl-api`, and `osctrl-admin` modules respectively. The `osctrl-cli` and `osctrl-admin` modules communicate with the `osctrl-api` via HTTP API. Osquery agents communicate with the system via the `osctrl-tls` module using the TLS Remote API. All `osctrl-*` modules then interact with "Shared Packages (pkg/*)". The `osctrl-cli` can also interact directly with the PostgreSQL Backend in "Direct DB mode". The "Shared Packages" node serves as a central point, connecting to the "PostgreSQL Backend", "Redis Cache", "Log Destinations (DB, file, S3, Elastic, Splunk, Graylog, Kafka, Kinesis, Logstash)", and "Carve Storage (DB, local, S3)" nodes. The log destinations and carve storage options indicate the system's ability to collect and store data from endpoints, a core function of osquery-based systems. The end nodes represent the various storage and logging options available within the osctrl architecture.

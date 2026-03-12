@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the secret rotation process within a system. It outlines the steps involved in requesting, authenticating, generating, updating, verifying, and promoting a new secret, as well as handling potential failures through rollback mechanisms. The diagram serves as a visual representation of the secret rotation service's workflow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It consists of two main subgraphs: "Secret Rotation Service" and "External Secret Store." The process starts with the "Request Secret Rotation - API" node and can end in either "Cleanup Old Secret - Asynchronous" or "Reject Request" or "Rollback Secret Update."
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Secret Rotation Service**: This subgraph encompasses the core logic and steps involved in the secret rotation process.
+- **External Secret Store**: This subgraph represents the external storage system where the secrets are stored.
+
+## Node-by-Node Description
+- **A / Request Secret Rotation - API**: Represents the initial API endpoint that receives the request to rotate a secret. visible in diagram; no further repository context available.
+- **B / Authentication/Authorization**: Represents the process of verifying the API key and authenticating/authorizing the request. visible in diagram; no further repository context available.
+- **C / Secret Metadata Retrieval**: Represents the retrieval of metadata associated with the secret to be rotated. visible in diagram; no further repository context available.
+- **D / Generate New Secret**: Represents the generation of a new secret based on the rotation policy. visible in diagram; no further repository context available.
+- **E / Update External Secret Store**: Represents the process of updating the external secret store with the newly generated secret. visible in diagram; no further repository context available.
+- **F / Shadow Read Verification**: Represents a verification step where the new secret is read and verified before promotion. visible in diagram; no further repository context available.
+- **G / Promote New Secret**: Represents the promotion of the new secret, making it the active secret. visible in diagram; no further repository context available.
+- **H / Cleanup Old Secret - Asynchronous**: Represents the asynchronous cleanup of the old secret after the new secret has been successfully promoted. visible in diagram; no further repository context available.
+- **ES / External Secret**: Represents the external secret stored in the external secret store. visible in diagram; no further repository context available.
+- **Z / Reject Request**: Represents the rejection of the secret rotation request due to invalid API key or failed authentication/authorization. visible in diagram; no further repository context available.
+- **I / Rollback Secret Update**: Represents the rollback of the secret update process in case the shadow read verification fails. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A -- Valid API Key? --> B`: The request proceeds to authentication/authorization if a valid API key is provided.
+- `B -- Yes --> C`: If authentication/authorization is successful, the process proceeds to secret metadata retrieval.
+- `B -- No --> Z`: If authentication/authorization fails, the request is rejected.
+- `C -- Get Rotation Policy --> D`: After retrieving secret metadata, the rotation policy is obtained.
+- `D -- New Secret Generated --> E`: A new secret is generated and passed to the update external secret store node.
+- `E -- External Secret Updated --> F`: After updating the external secret store, the process proceeds to shadow read verification.
+- `F -- Verification Successful? --> G`: If the shadow read verification is successful, the process proceeds to promote the new secret.
+- `F -- Verification Failed --> I`: If the shadow read verification fails, the secret update is rolled back.
+- `G -- Promote Complete --> H`: After promoting the new secret, the old secret is cleaned up asynchronously.
+
+## Repository Context & Terminology
+- **Secret Rotation**: The process of periodically changing cryptographic secrets (e.g., passwords, API keys) to reduce the risk of compromise.
+- **API Key**: A code used to identify and authenticate an application or user accessing an API.
+- **Authentication**: The process of verifying the identity of a user or application.
+- **Authorization**: The process of granting access rights to authenticated users or applications.
+- **Metadata**: Data that provides information about other data. In this context, it refers to information about the secret, such as its type, creation date, and rotation policy.
+- **Rotation Policy**: A set of rules that define how often and under what conditions a secret should be rotated.
+- **Shadow Read Verification**: A process of verifying the newly updated secret before it is fully promoted, typically by performing read operations against it.
+- **Rollback**: The process of reverting changes made during a failed operation to restore the system to its previous state.
+- **Asynchronous**: A type of operation that does not block the calling thread, allowing other tasks to be performed concurrently.
+
+## High-Density QA Ground Truth Summary
+The secret rotation process begins with a "Request Secret Rotation - API" call. The first decision point is "Valid API Key?". If the API key is invalid ("No" branch), the process terminates at "Reject Request." If valid ("Yes" branch), the process proceeds to "Authentication/Authorization." After successful authentication, "Secret Metadata Retrieval" occurs, followed by obtaining the "Rotation Policy" and "Generate New Secret." The "Update External Secret Store" node then updates the external secret. A crucial verification step, "Shadow Read Verification," determines the next course of action. If verification fails, a "Rollback Secret Update" is initiated. If verification is successful, the "Promote New Secret" node promotes the new secret, followed by an asynchronous "Cleanup Old Secret." Secret rotation is a critical security practice, ensuring that compromised secrets have a limited lifespan. The "External Secret Store" represents a secure repository, such as HashiCorp Vault or AWS Secrets Manager, where secrets are stored and managed. The process concludes with either a successful secret promotion and cleanup or a rollback in case of verification failure.

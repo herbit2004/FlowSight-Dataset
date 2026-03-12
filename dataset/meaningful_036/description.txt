@@ -1,0 +1,89 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture and flow of a push notification system. It illustrates the process from when a user opens an app or triggers an event, through various backend services and engagement platforms, to the delivery of push notifications via different providers, and finally to analytics tracking. The diagram serves as a visual representation of the system's components and their interactions.
+
+## Overall Layout
+The diagram flows generally from top to bottom. It is divided into several subgraphs representing different stages of the push notification process. The start node is "App Open / Event Trigger" and the end nodes are "Reporting Dashboard", "No Action", "Circuit Breaker - Disables Push", and "Re-enables Push".
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **CustomerApp**: Represents the user's application and initial trigger events.
+- **BackendServices**: Contains the core logic and services for processing push notifications.
+- **PushProviders**: Lists the different push notification delivery services.
+- **Analytics**: Tracks the delivery and engagement of push notifications.
+- **EngagementPlatform**: Handles A/B testing and control group filtering.
+- **DataWarehouse**: Aggregates data for reporting.
+
+## Node-by-Node Description
+- **App Open / Event Trigger**: Represents the initial event that starts the push notification process.
+- **Notification Settings Check**: Checks if the user has enabled push notifications.
+- **Event Receiver API**: Receives events from the CustomerApp.
+- **User Profile Service**: Retrieves user profile information.
+- **Notification Preference Store**: Stores user notification preferences.
+- **Segmentation Service**: Segments users based on various criteria.
+- **Content Assembly Engine**: Assembles the content of the push notification.
+- **Frequency Capping Logic**: Limits the frequency of push notifications to avoid spamming users.
+- **Push Provider Router**: Routes the push notification to the appropriate provider based on the device type.
+- **APNs**: Apple Push Notification service for iOS devices.
+- **Firebase FCM**: Firebase Cloud Messaging for Android devices.
+- **Amazon SNS**: Amazon Simple Notification Service for other devices.
+- **Notification Delivery Tracker**: Tracks the delivery status of push notifications.
+- **Open/Click Event Listener**: Listens for push notification open and click events.
+- **Control Group Filter**: Filters out users who are in a control group for A/B testing.
+- **A/B Test Experiment Engine**: Determines if a user is in an experiment and which treatment group they belong to.
+- **Aggregation Pipeline**: Aggregates data for reporting.
+- **Reporting Dashboard**: Displays the push notification analytics.
+- **Log Conversion Event**: Logs a conversion event when a user opens a notification.
+- **No Action**: No action is taken when a notification times out.
+- **No Push Attempt**: No push notification is attempted if push is disabled or the user is in a control group.
+- **Failure Condition Monitor**: Monitors for failure conditions in push notification delivery.
+- **Circuit Breaker - Disables Push**: Disables push notifications if the failure threshold is exceeded.
+- **Re-enables Push**: Re-enables push notifications after the success rate recovers.
+
+## Edges, Branches & Convergence
+- `App Open / Event Trigger --> Notification Settings Check`: The app opening or an event triggers a check of the notification settings.
+- `Notification Settings Check -- Push Enabled? --> Event Receiver API`: If push notifications are enabled, the event is sent to the Event Receiver API.
+- `Notification Settings Check -- Push Disabled --> No Push Attempt`: If push notifications are disabled, no push notification is attempted.
+- `Event Receiver API --> User Profile Service`: The Event Receiver API retrieves user profile information.
+- `User Profile Service --> Notification Preference Store`: The User Profile Service accesses the Notification Preference Store.
+- `Notification Preference Store -- Preference Data --> Segmentation Service`: User preference data is used for segmentation.
+- `Event Receiver API --> Segmentation Service`: The Event Receiver API also feeds into the Segmentation Service.
+- `Segmentation Service -- User Segment --> Content Assembly Engine`: The user segment is used by the Content Assembly Engine.
+- `Content Assembly Engine --> Frequency Capping Logic`: The assembled content is passed to the Frequency Capping Logic.
+- `Frequency Capping Logic -- Within Frequency Cap? --> Push Provider Router`: If the frequency cap is not exceeded, the notification is routed to the Push Provider Router.
+- `Frequency Capping Logic -- Exceeded Frequency Cap --> No Push Attempt`: If the frequency cap is exceeded, no push notification is attempted.
+- `Push Provider Router -- iOS Device --> APNs`: iOS devices are routed to APNs.
+- `Push Provider Router -- Android Device --> Firebase FCM`: Android devices are routed to Firebase FCM.
+- `Push Provider Router -- Other Device --> Amazon SNS`: Other devices are routed to Amazon SNS.
+- `APNs --> Notification Delivery Tracker`: APNs sends data to the Notification Delivery Tracker.
+- `Firebase FCM --> Notification Delivery Tracker`: Firebase FCM sends data to the Notification Delivery Tracker.
+- `Amazon SNS --> Notification Delivery Tracker`: Amazon SNS sends data to the Notification Delivery Tracker.
+- `Notification Delivery Tracker --> Open/Click Event Listener`: The Notification Delivery Tracker sends data to the Open/Click Event Listener.
+- `Open/Click Event Listener -- Notification Opened? --> Log Conversion Event`: If the notification is opened, a conversion event is logged.
+- `Open/Click Event Listener -- Time Out --> No Action`: If the notification times out, no action is taken.
+- `Content Assembly Engine --> Control Group Filter`: The Content Assembly Engine sends data to the Control Group Filter.
+- `Control Group Filter -- Is in Experiment? --> A/B Test Experiment Engine`: If the user is in an experiment, the A/B Test Experiment Engine is used.
+- `A/B Test Experiment Engine -- Is in Control Group? --> Push Provider Router`: If the user is in the control group, the notification is routed to the Push Provider Router.
+- `A/B Test Experiment Engine -- Is in Treatment Group? --> Push Provider Router`: If the user is in a treatment group, the notification is routed to the Push Provider Router.
+- `Control Group Filter -- Not in Experiment --> Push Provider Router`: If the user is not in an experiment, the notification is routed to the Push Provider Router.
+- `Open/Click Event Listener --> Aggregation Pipeline`: The Open/Click Event Listener sends data to the Aggregation Pipeline.
+- `Notification Delivery Tracker --> Aggregation Pipeline`: The Notification Delivery Tracker sends data to the Aggregation Pipeline.
+- `Aggregation Pipeline --> Reporting Dashboard`: The Aggregation Pipeline sends data to the Reporting Dashboard.
+- `Push Provider Router --> Failure Condition Monitor`: The Push Provider Router sends data to the Failure Condition Monitor.
+- `APNs --> Failure Condition Monitor`: APNs sends data to the Failure Condition Monitor.
+- `Firebase FCM --> Failure Condition Monitor`: Firebase FCM sends data to the Failure Condition Monitor.
+- `Amazon SNS --> Failure Condition Monitor`: Amazon SNS sends data to the Failure Condition Monitor.
+- `Failure Condition Monitor -- Failure Threshold Exceeded --> Circuit Breaker - Disables Push`: If the failure threshold is exceeded, the circuit breaker disables push notifications.
+- `Circuit Breaker - Disables Push -- Success Rate Recovered --> Re-enables Push`: If the success rate recovers, push notifications are re-enabled.
+- `Re-enables Push -.-> Push Provider Router`: Push notifications are re-enabled to the Push Provider Router.
+
+## Repository Context & Terminology
+- **Push Notification**: A message that pops up on a mobile device.
+- **APNs (Apple Push Notification service)**: Apple's service for sending push notifications to iOS devices.
+- **Firebase FCM (Firebase Cloud Messaging)**: Google's service for sending push notifications to Android devices and other platforms.
+- **Amazon SNS (Amazon Simple Notification Service)**: A flexible, fully managed pub/sub messaging and mobile notifications service.
+- **Segmentation**: Dividing users into groups based on shared characteristics.
+- **Frequency Capping**: Limiting the number of push notifications a user receives within a certain time period.
+- **A/B Testing**: A method of comparing two versions of a push notification to see which performs better.
+
+## High-Density QA Ground Truth Summary
+The push notification process begins with an "App Open / Event Trigger" in the CustomerApp, which leads to a "Notification Settings Check". If "Push Enabled?", the flow proceeds to the BackendServices, starting with the "Event Receiver API". Otherwise, a "No Push Attempt" occurs. The "Event Receiver API" then interacts with the "User Profile Service" to access the "Notification Preference Store", retrieving "Preference Data" for the "Segmentation Service". The "Segmentation Service" outputs a "User Segment" to the "Content Assembly Engine", which prepares the notification content. "Frequency Capping Logic" then determines if the notification frequency is "Within Frequency Cap?". If not, a "No Push Attempt" occurs; otherwise, the "Push Provider Router" directs the notification to the appropriate provider ("APNs" for iOS, "Firebase FCM" for Android, "Amazon SNS" for other devices). The "Notification Delivery Tracker" and "Open/Click Event Listener" in the Analytics subgraph track notification delivery and user engagement, feeding data into the "Aggregation Pipeline" and ultimately the "Reporting Dashboard". The "EngagementPlatform" subgraph, containing the "Control Group Filter" and "A/B Test Experiment Engine", influences the routing to the "Push Provider Router" based on experiment participation. A "Failure Condition Monitor" can trigger a "Circuit Breaker - Disables Push" if failure thresholds are exceeded, with "Re-enables Push" occurring after success rate recovery.

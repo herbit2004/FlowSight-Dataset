@@ -1,0 +1,26 @@
+graph TD
+    A[Stratum Initiator] -->|Invoke ArcWave Protocol| B{Is ArcNode Active?}
+    B -- Yes --> C[Begin CoreSync Validation]
+    B -- No --> D[Activate FluxBridge Router]
+    D --> E[Establish VaultNode Handshake]
+    E --> F{Handshake Successful?}
+    F -- Yes --> C
+    F -- No --> G[Retry VaultNode Handshake]
+    G --> H{Retry Limit Reached?}
+    H -- Yes --> I[Log Error to SpectraQueue]
+    H -- No --> E
+    C --> J[Perform Temporal Integrity Check]
+    J --> K{Integrity Check OK?}
+    K -- Yes --> L[Schedule ZenithGate Auth Layer]
+    K -- No --> M[Initiate ArcLane Distributor]
+    L --> N[Execute Payload Transmission]
+    M --> N
+    N --> O{Transmission Complete?}
+    O -- Yes --> P[Finalize DataCommit Process]
+    O -- No --> Q[Restart Stratum Initiator]
+    Q --> A
+    P --> R[Deactivate CoreSync Validation]
+    R --> S[Update CoreMetrics Repository]
+    S --> T[Terminate ArcWave Protocol]
+    T --> U[Process End]
+    I --> U

@@ -1,0 +1,81 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture and process flow of a search engine system. It illustrates the steps involved in document indexing, query processing, search execution, result ranking, and presentation, including caching and analytics. The diagram serves as a high-level overview of the system's components and their interactions.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into several subgraphs representing different stages of the search process. The process starts with User Interaction and ends with the User Interface.
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **User Interaction**: Handles user search input and query parsing.
+- **Document Indexing**: Processes documents to create an inverted index for efficient searching.
+- **Search Backend**: Manages query conversion, semantic enrichment, and search execution.
+- **Highlighting and Presentation**: Filters, highlights, and formats search results for display.
+- **Cache and Persistence**: Caches search results and logs queries for analytics.
+
+## Node-by-Node Description
+- **User Search Input**: Represents the user's search query. visible in diagram; no further repository context available.
+- **Query Parser**: Parses the user's search query into a structured format. visible in diagram; no further repository context available.
+- **Document Ingestion**: Processes raw documents and prepares them for indexing. visible in diagram; no further repository context available.
+- **Text Extraction**: Extracts text content from documents. visible in diagram; no further repository context available.
+- **Tokenization & Normalization**: Breaks down the extracted text into tokens and normalizes them (e.g., lowercasing, stemming). visible in diagram; no further repository context available.
+- **Inverted Index Builder**: Creates an inverted index data structure, mapping terms to the documents they appear in. visible in diagram; no further repository context available.
+- **Index Storage**: Stores the inverted index for efficient retrieval. visible in diagram; no further repository context available.
+- **Boolean Query Conversion?**: A decision point to determine if the query can be converted to a boolean query. visible in diagram; no further repository context available.
+- **Semantic Enrichment**: Enriches the query with semantic information. visible in diagram; no further repository context available.
+- **Expand Query with Synonyms**: Expands the query by adding synonyms for the search terms. visible in diagram; no further repository context available.
+- **Boolean Query Evaluator**: Evaluates the boolean query against the inverted index. visible in diagram; no further repository context available.
+- **Index Available?**: A decision point to determine if the index is available. visible in diagram; no further repository context available.
+- **Index Search Engine**: Uses the inverted index to perform the search. visible in diagram; no further repository context available.
+- **Brute Force Search**: Performs a brute-force search if the index is not available. visible in diagram; no further repository context available.
+- **Rank & Score Results**: Ranks and scores the search results based on relevance. visible in diagram; no further repository context available.
+- **Apply Relevance Threshold?**: A decision point to determine if a relevance threshold should be applied. visible in diagram; no further repository context available.
+- **Filter Top Results**: Filters the top search results based on relevance. visible in diagram; no further repository context available.
+- **Highlight Search Terms**: Highlights the search terms in the search results. visible in diagram; no further repository context available.
+- **Snippet Generator**: Generates snippets of text from the documents to display in the search results. visible in diagram; no further repository context available.
+- **Response Formatter**: Formats the search results for display to the user. visible in diagram; no further repository context available.
+- **Cache Hit?**: A decision point to determine if the search results are available in the cache. visible in diagram; no further repository context available.
+- **Log Query & Results**: Logs the search query and results for analytics. visible in diagram; no further repository context available.
+- **Store Result in Cache**: Stores the search results in the cache. visible in diagram; no further repository context available.
+- **Analytics Database**: Stores the analytics data. visible in diagram; no further repository context available.
+- **Return Cached Result**: Returns the cached search results. visible in diagram; no further repository context available.
+- **User Interface**: Displays the search results to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Search Input --> Query Parser`: The user's search input is passed to the query parser.
+- `Query Parser --> Boolean Query Conversion?`: The parsed query is passed to the boolean query conversion step.
+- `Boolean Query Conversion? -- Yes --> Boolean Query Evaluator`: If the query can be converted to a boolean query, it is passed to the boolean query evaluator.
+- `Boolean Query Conversion? -- No --> Semantic Enrichment`: If the query cannot be converted to a boolean query, it undergoes semantic enrichment.
+- `Semantic Enrichment --> Expand Query with Synonyms`: The semantically enriched query is expanded with synonyms.
+- `Expand Query with Synonyms --> Boolean Query Evaluator`: The expanded query is passed to the boolean query evaluator.
+- `Boolean Query Evaluator --> Index Available?`: The boolean query is evaluated for index availability.
+- `Index Available? -- Yes --> Index Search Engine`: If the index is available, the index search engine is used.
+- `Index Available? -- No --> Brute Force Search`: If the index is not available, a brute force search is performed.
+- `Index Storage --> Index Search Engine`: The index storage provides data to the index search engine.
+- `Index Search Engine --> Rank & Score Results`: The index search engine passes results to the rank and score results step.
+- `Brute Force Search --> Rank & Score Results`: The brute force search passes results to the rank and score results step.
+- `Rank & Score Results --> Apply Relevance Threshold?`: The ranked and scored results are passed to the relevance threshold step.
+- `Apply Relevance Threshold? -- Yes --> Filter Top Results`: If the relevance threshold is applied, the top results are filtered.
+- `Apply Relevance Threshold? -- No --> Filter Top Results`: If the relevance threshold is not applied, all results are passed to the filter top results step.
+- `Filter Top Results --> Highlight Search Terms`: The filtered results are passed to the highlight search terms step.
+- `Highlight Search Terms --> Snippet Generator`: The highlighted results are passed to the snippet generator.
+- `Snippet Generator --> Response Formatter`: The snippets are passed to the response formatter.
+- `Response Formatter --> Cache Hit?`: The formatted response is checked for a cache hit.
+- `Cache Hit? -- Yes --> Return Cached Result`: If there is a cache hit, the cached result is returned.
+- `Cache Hit? -- No --> Store Result in Cache`: If there is no cache hit, the result is stored in the cache.
+- `Store Result in Cache --> Return Cached Result`: The stored result is returned.
+- `Rank & Score Results --> Log Query & Results`: The ranked and scored results are logged.
+- `Log Query & Results --> Analytics Database`: The logged data is stored in the analytics database.
+- `Return Cached Result --> User Interface`: The returned result is displayed in the user interface.
+
+## Repository Context & Terminology
+- **Inverted Index**: A data structure that maps terms to the documents in which they appear, enabling efficient search.
+- **Tokenization**: The process of breaking down text into individual words or tokens.
+- **Normalization**: The process of converting tokens to a standard form (e.g., lowercasing, stemming) to improve search accuracy.
+- **Semantic Enrichment**: Adding semantic information to a query to improve search relevance.
+- **Boolean Query**: A query that uses boolean operators (AND, OR, NOT) to combine search terms.
+- **Relevance Threshold**: A minimum score or ranking that search results must meet to be considered relevant.
+- **Snippet**: A short excerpt from a document that is displayed in search results to provide context.
+- **Cache**: A temporary storage area that stores frequently accessed data for faster retrieval.
+
+## High-Density QA Ground Truth Summary
+The search process begins with the `User Search Input`, which is then processed by the `Query Parser`. The parsed query proceeds to `Boolean Query Conversion?`, branching to either `Boolean Query Evaluator` if convertible, or `Semantic Enrichment` followed by `Expand Query with Synonyms` and then `Boolean Query Evaluator` if not. The `Boolean Query Evaluator` then checks `Index Available?`, using either the `Index Search Engine` (if available, leveraging the `Index Storage` built by `Document Indexing` steps like `Text Extraction`, `Tokenization & Normalization`, and `Inverted Index Builder`) or `Brute Force Search` otherwise. Both search paths converge at `Rank & Score Results`. These results then flow to `Apply Relevance Threshold?`, branching to `Filter Top Results` regardless of the threshold decision. The filtered results are then processed by `Highlight Search Terms`, `Snippet Generator`, and `Response Formatter`. The formatted response is checked for a `Cache Hit?`, returning the `Return Cached Result` if present, or `Store Result in Cache` before returning. Independently, `Rank & Score Results` also triggers `Log Query & Results` which feeds into the `Analytics Database`. Finally, the `Return Cached Result` is displayed via the `User Interface`. The inverted index, a core component, allows for efficient searching by mapping terms to documents, enabling faster retrieval than brute-force methods.

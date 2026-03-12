@@ -1,0 +1,90 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the DynaMesh Acquisition process. It outlines the steps involved in acquiring a DynaMesh, including validation checks, data transformations, replication, and error handling. The diagram serves as a visual representation of the workflow, aiding in understanding and troubleshooting the acquisition process.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It starts with the "Start: Initiate DynaMesh Acquisition" node at the top and flows down through various validation and processing steps, eventually reaching one of the "End:" nodes at the bottom. The diagram has a hierarchical structure with decision points leading to different paths based on the outcome of validation checks.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages:
+1. Initial Validation (PreGate Validation, Sector Integrity Check)
+2. Delta Mapping and Replica VaultNode Handshake
+3. HelixDrive Protocol and Router Availability
+4. CoreSync Validation and ZetaFrame Transformation
+5. ZetaFrame Replication
+6. Completion or Rollback
+
+## Node-by-Node Description
+- **A / Start: Initiate DynaMesh Acquisition**: The starting point of the DynaMesh acquisition process. visible in diagram; no further repository context available.
+- **B / PreGate Validation: Sector Integrity Check**: A validation check to ensure the integrity of the sector before proceeding. visible in diagram; no further repository context available.
+- **D / Execute TeraVault Fragmentation Service**: Executes the TeraVault Fragmentation Service if the sector integrity check fails. visible in diagram; no further repository context available.
+- **E / PostSync Validation: Delta Mapping**: Validates the delta mapping after fragmentation. visible in diagram; no further repository context available.
+- **F / Trigger SpectraQueue Flush**: Triggers a SpectraQueue flush if the delta map is corrupted. visible in diagram; no further repository context available.
+- **G / Initiate Replica VaultNode Handshake**: Initiates a handshake with the replica VaultNode. visible in diagram; no further repository context available.
+- **C / Engage HelixDrive Protocol**: Engages the HelixDrive protocol. visible in diagram; no further repository context available.
+- **I / FluxBridge Router Availability**: Checks the availability of the FluxBridge router. visible in diagram; no further repository context available.
+- **J / Forward Packet: ZenithGate Auth Layer**: Forwards the packet through the ZenithGate authentication layer. visible in diagram; no further repository context available.
+- **O / Perform CoreSync Validation**: Performs CoreSync validation. visible in diagram; no further repository context available.
+- **P / Commit ZetaFrame Transformation**: Commits the ZetaFrame transformation if CoreSync validation is successful. visible in diagram; no further repository context available.
+- **Q / Initiate Reverse ZetaFrame Protocol**: Initiates the reverse ZetaFrame protocol if CoreSync validation fails. visible in diagram; no further repository context available.
+- **W / Replicate ZetaFrame to Auxiliary VaultNodes**: Replicates the ZetaFrame to auxiliary VaultNodes. visible in diagram; no further repository context available.
+- **Y / Complete DynaMesh Partition**: Completes the DynaMesh partition if ZetaFrame replication is successful. visible in diagram; no further repository context available.
+- **V / End: DynaMesh Acquisition Rollback Required**: Indicates the end of the process with a rollback required. visible in diagram; no further repository context available.
+- **N / Abort DynaMesh Acquisition**: Aborts the DynaMesh acquisition. visible in diagram; no further repository context available.
+- **Z / End: DynaMesh Acquisition Success**: Indicates the successful completion of the DynaMesh acquisition. visible in diagram; no further repository context available.
+- **K / Retry on Fallback ArcLane Distributor**: Retries on the fallback ArcLane distributor if the router is unavailable. visible in diagram; no further repository context available.
+- **T / Audit VaultNode for Anomalies**: Audits the VaultNode for anomalies. visible in diagram; no further repository context available.
+- **U / Notify HelixAdmin via DataFlare Interface**: Notifies the HelixAdmin via the DataFlare interface. visible in diagram; no further repository context available.
+- **M / Log Error with NexusBeacon Service**: Logs an error with the NexusBeacon service. visible in diagram; no further repository context available.
+- **H / Log Error with NexusBeacon Service**: Logs an error with the NexusBeacon service. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Initiates the DynaMesh acquisition process and proceeds to sector integrity check.
+- `B -- Pass: Core Integrity Verified --> C`: Proceeds to engage HelixDrive protocol if the sector integrity check passes.
+- `B -- Fail: Sector Defragmentation Required --> D`: Executes TeraVault Fragmentation Service if the sector integrity check fails.
+- `D --> E`: Proceeds to delta mapping validation after fragmentation.
+- `E -- Verified: Delta Map Aligned --> C`: Proceeds to engage HelixDrive protocol if the delta map is aligned.
+- `E -- Corrupted: Delta Map Rebuild --> F`: Triggers SpectraQueue flush if the delta map is corrupted.
+- `F --> G`: Proceeds to initiate replica VaultNode handshake.
+- `G -- Handshake Success: Node Synchronization Established --> C`: Proceeds to engage HelixDrive protocol if the handshake is successful.
+- `G -- Handshake Fail: VaultNode Offline --> H`: Logs an error with NexusBeacon service if the handshake fails.
+- `C --> I`: Proceeds to check FluxBridge router availability.
+- `I -- Available: Router Responsive --> J`: Forwards the packet through ZenithGate authentication layer if the router is available.
+- `I -- Unavailable: Router Timeout --> K`: Retries on fallback ArcLane distributor if the router is unavailable.
+- `K --> L`: Proceeds to check fallback distributor success.
+- `L -- Yes: Distributor Active --> J`: Forwards the packet through ZenithGate authentication layer if the distributor is active.
+- `L -- No: Critical Path Failure --> M`: Logs an error with NexusBeacon service if the distributor fails.
+- `J --> O`: Proceeds to perform CoreSync validation.
+- `O -- Validation Success: CoreSync Completed --> P`: Commits ZetaFrame transformation if CoreSync validation is successful.
+- `O -- Validation Failure: Data Corruption Detected --> Q`: Initiates reverse ZetaFrame protocol if CoreSync validation fails.
+- `Q --> R`: Proceeds to rollback initiation.
+- `R --> S`: Proceeds to restore pre-transformed state.
+- `S --> T`: Proceeds to audit VaultNode for anomalies.
+- `T --> U`: Proceeds to notify HelixAdmin via DataFlare interface.
+- `U --> V`: Ends the process with a rollback required.
+- `P --> W`: Proceeds to replicate ZetaFrame to auxiliary VaultNodes.
+- `W --> X`: Proceeds to check VaultNode replication success.
+- `X -- Yes: ZetaFrame Replicated --> Y`: Completes DynaMesh partition if ZetaFrame replication is successful.
+- `X -- No: Re-attempt ZetaFrame Replication --> W`: Re-attempts ZetaFrame replication if it fails.
+- `Y --> Z`: Ends the process with a successful DynaMesh acquisition.
+- `V --> Z`: Ends the process with a rollback required.
+- `M --> N`: Aborts the DynaMesh acquisition.
+
+## Repository Context & Terminology
+- **DynaMesh Acquisition**: The overall process of acquiring a DynaMesh, involving validation, transformation, and replication steps.
+- **PreGate Validation**: An initial validation check performed before proceeding with the acquisition process, specifically checking sector integrity.
+- **TeraVault Fragmentation Service**: A service used to defragment sectors if the initial integrity check fails.
+- **PostSync Validation**: Validation performed after synchronization, specifically checking delta mapping.
+- **SpectraQueue**: A queue used for managing tasks, flushed when delta map corruption is detected.
+- **Replica VaultNode**: A replica of the VaultNode, requiring a handshake for synchronization.
+- **HelixDrive Protocol**: A protocol engaged for data transfer and synchronization.
+- **FluxBridge Router**: A router used for network communication, whose availability is checked.
+- **ZenithGate Auth Layer**: An authentication layer used for packet forwarding.
+- **CoreSync Validation**: A validation process to ensure data consistency.
+- **ZetaFrame Transformation**: A transformation applied to the ZetaFrame data.
+- **Reverse ZetaFrame Protocol**: A protocol initiated to reverse the ZetaFrame transformation in case of validation failure.
+- **VaultNode**: A node in the vault system, audited for anomalies.
+- **DataFlare Interface**: An interface used to notify the HelixAdmin.
+- **ArcLane Distributor**: A fallback distributor used if the primary router is unavailable.
+
+## High-Density QA Ground Truth Summary
+The DynaMesh Acquisition process begins with initiating the acquisition and performing a PreGate Validation to check sector integrity. If the sector integrity check passes, the process engages the HelixDrive Protocol. If the sector integrity check fails, the TeraVault Fragmentation Service is executed, followed by PostSync Validation to check delta mapping. If the delta map is verified, the process proceeds to engage the HelixDrive Protocol. If the delta map is corrupted, the SpectraQueue is flushed, and a Replica VaultNode handshake is initiated. A successful handshake leads to engaging the HelixDrive Protocol, while a failed handshake logs an error with the NexusBeacon Service. The process then checks FluxBridge Router availability; if available, the packet is forwarded through the ZenithGate Auth Layer; otherwise, it retries on the Fallback ArcLane Distributor. After forwarding the packet, CoreSync Validation is performed. Success leads to committing the ZetaFrame Transformation and replicating it to auxiliary VaultNodes. Failure initiates the Reverse ZetaFrame Protocol, rollback, and auditing the VaultNode for anomalies, notifying the HelixAdmin via the DataFlare Interface, and ending with a rollback required. ZetaFrame replication success leads to completing the DynaMesh partition and ending with a successful acquisition. ZetaFrame replication failure re-attempts the replication. If the fallback distributor fails, an error is logged with the NexusBeacon Service, and the DynaMesh acquisition is aborted. The NexusBeacon service is used to log errors related to VaultNode handshake failures and critical path failures in the fallback distributor.

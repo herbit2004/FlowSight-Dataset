@@ -1,0 +1,53 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the steps in an order processing system, including payment verification, shipping, and acknowledgement. The diagram outlines the flow of an order from receipt to acknowledgement, including handling of successful and unsuccessful payments.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with "Order Received" at the top and flows downwards through a series of processes. The start node is "Order Received," and the end node is "Acknowledge Receipt," which loops back to "Order Received."
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into four stages: Order Initiation (Order Received), Payment Processing (Payment Successful?, Cancel Order), Fulfillment (Shipping Notification Sent, Package Shipped, Package Delivered), and Completion/Retry (Acknowledge Receipt, Inventory Replenished, Request Payment).
+
+## Node-by-Node Description
+- **Order Received**: Represents the initial state where an order is received.
+  visible in diagram; no further repository context available.
+- **Payment Successful?**: A decision node that checks if the payment was successful.
+  visible in diagram; no further repository context available.
+- **Shipping Notification Sent**: Indicates that a notification has been sent to the customer regarding the shipment.
+  visible in diagram; no further repository context available.
+- **Package Shipped**: Represents the action of the package being shipped.
+  visible in diagram; no further repository context available.
+- **Package Delivered**: Represents the final delivery of the package to the customer.
+  visible in diagram; no further repository context available.
+- **Acknowledge Receipt**: Represents the acknowledgement of the receipt of the package.
+  visible in diagram; no further repository context available.
+- **Cancel Order**: Represents the cancellation of the order due to unsuccessful payment.
+  visible in diagram; no further repository context available.
+- **Inventory Replenished**: Represents the action of replenishing the inventory after an order is cancelled.
+  visible in diagram; no further repository context available.
+- **Request Payment**: Represents the action of requesting payment after inventory replenishment.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+`Order Received --> Payment Successful?`: The order proceeds to payment verification.
+`Payment Successful? -- No --> Cancel Order`: If payment is unsuccessful, the order is cancelled.
+`Payment Successful? -- Yes --> Shipping Notification Sent`: If payment is successful, a shipping notification is sent.
+`Shipping Notification Sent --> Package Shipped`: After the shipping notification, the package is shipped.
+`Package Shipped --> Package Delivered`: The package is delivered after being shipped.
+`Package Delivered --> Acknowledge Receipt`: After delivery, the receipt is acknowledged.
+`Acknowledge Receipt --> Order Received`: The acknowledgement loops back to the "Order Received" state.
+`Cancel Order --> Inventory Replenished`: After cancelling the order, the inventory is replenished.
+`Inventory Replenished --> Request Payment`: After replenishing inventory, a payment request is made.
+
+## Repository Context & Terminology
+- **Order Received**: Typically, this means an order has been placed in the system. In this diagram, it's the starting point and also the point to which the process loops back after acknowledgement.
+- **Payment Successful?**: This refers to the verification of payment. In this diagram, it's a decision point determining whether to proceed with shipping or cancel the order.
+- **Shipping Notification Sent**: Usually, this is a notification sent to the customer. In this diagram, it's sent *before* the package is shipped, which is an unusual sequence.
+- **Package Shipped**: This means the package has left the warehouse. In this diagram, it follows the shipping notification.
+- **Package Delivered**: This means the package has reached the customer. In this diagram, it leads to acknowledgement.
+- **Acknowledge Receipt**: Typically, this confirms the customer received the package. In this diagram, it loops back to "Order Received," restarting the process.
+- **Cancel Order**: This means the order has been terminated. In this diagram, it occurs after failed payment.
+- **Inventory Replenished**: This means restocking the inventory. In this diagram, it happens *after* order cancellation, which is standard, but then it leads to requesting payment, which is illogical.
+- **Request Payment**: Usually, this is done before order fulfillment. In this diagram, it occurs *after* inventory replenishment following a cancelled order, which is counterintuitive.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Order Received," which immediately flows into the "Payment Successful?" decision node. If the payment is not successful ("No" branch), the process moves to "Cancel Order," then "Inventory Replenished," and finally "Request Payment," an illogical sequence. If the payment is successful ("Yes" branch), the flow proceeds to "Shipping Notification Sent," followed by "Package Shipped," and then "Package Delivered." This is where the reversed sequence error occurs, as the shipping notification is sent *before* the package is shipped. After "Package Delivered," the process reaches "Acknowledge Receipt," which then loops back to the initial "Order Received" node, creating a continuous loop. The standard practice of order fulfillment (picking, packing) is skipped entirely. The "Inventory Replenished" node, which should typically precede a refund or cancellation confirmation, leads to a "Request Payment" node, further deviating from standard e-commerce workflows. The diagram's unusual flow, especially the looping back from acknowledgement to order receipt and the payment request after cancellation, highlights its intentional divergence from typical order processing systems.

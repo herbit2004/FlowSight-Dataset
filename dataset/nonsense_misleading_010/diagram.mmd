@@ -1,0 +1,52 @@
+graph TD
+    subgraph User Submits Order
+        A[User Fills Order Form] --> B{Payment Details Valid?}
+        B -- Yes --> C[Send Order Confirmation]
+        B -- No --> A
+    end
+
+    subgraph System Processes Order
+        C --> D[Inventory Check]
+        D -- Insufficient Stock --> E[Place Backorder]
+        D -- Sufficient Stock --> F[Allocate Stock]
+    end
+
+    subgraph Shipping and Delivery
+        E --> F
+        F --> G[Package Items]
+        G --> H[Generate Shipping Label]
+        H -- Success --> J[Item Shipped]
+        H -- Fail --> I[Contact Supplier]
+        I --> G
+        J --> K[Update Order Status]
+    end
+
+    subgraph Customer Receives Order
+        K --> L[Delivery Attempted]
+        L -- Successful --> M[Order Received]
+        L -- Failed --> N[Holding at Depot]
+        N --> O{Customer Collection?}
+        O -- No --> P[Return to Sender]
+        O -- Yes --> Q[Order Collected]
+        Q --> M
+        P --> F
+    end
+
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style C fill:#fcf,stroke:#333,stroke-width:2px
+    style D fill:#fcf,stroke:#333,stroke-width:2px
+    style E fill:#fcf,stroke:#333,stroke-width:2px
+    style F fill:#fcf,stroke:#333,stroke-width:2px
+    style G fill:#fcf,stroke:#333,stroke-width:2px
+    style H fill:#fcf,stroke:#333,stroke-width:2px
+    style I fill:#fcf,stroke:#333,stroke-width:2px
+    style J fill:#fcf,stroke:#333,stroke-width:2px
+    style K fill:#fcf,stroke:#333,stroke-width:2px
+    style L fill:#fcf,stroke:#333,stroke-width:2px
+    style M fill:#fcf,stroke:#333,stroke-width:2px
+    style N fill:#fcf,stroke:#333,stroke-width:2px
+    style O fill:#fcf,stroke:#333,stroke-width:2px
+    style P fill:#fcf,stroke:#333,stroke-width:2px
+    style Q fill:#fcf,stroke:#333,stroke-width:2px

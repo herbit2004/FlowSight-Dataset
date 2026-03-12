@@ -1,0 +1,44 @@
+graph TD
+    subgraph User Interaction
+        A[User Initiates Redemption Request];
+    end
+
+    subgraph Redemption Orchestration Service
+        B(Request Validation);
+        C{Sufficient Points?};
+        D[Point Deduction];
+        E[External System Call to Reward Provider];
+        F{External System Success?};
+        G[Confirmation Notification Sent to User];
+        H[Compensation/Retry Logic];
+        I[Failure Notification Sent to User];
+        J[Audit Log Entry];
+    end
+
+    subgraph Data Layer
+        K[Points Balance Database];
+        L[Redemption History Database];
+        M[Reward Provider API];
+    end
+
+    A --> B;
+    B --> C;
+    C -- Yes --> D;
+    C -- No --> I;
+    D --> K;
+    D --> E;
+    E --> M;
+    M -- Success --> F;
+    M -- Failure --> H;
+    F -- Yes --> G;
+    F -- No --> H;
+    H --> E;
+    H --> I;
+    G --> J;
+    I --> J;
+    K --> L;
+    J --> L;
+
+    classDef db fill:#f9f,stroke:#333,stroke-width:2px
+    K:::db
+    L:::db

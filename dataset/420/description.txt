@@ -1,0 +1,62 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the infrastructure and components of the arolariu.ro website, deployed on Azure. It shows the different layers of the application, including networking, websites, data, security, and observability, and how they interact with each other. The diagram serves as a high-level overview of the system's architecture.
+
+## Overall Layout
+The diagram is laid out in a top-down (TB) direction. It is structured hierarchically, with an Azure Subscription at the top level, containing subgraphs for Networking, Websites Layer, Data Layer, Security & Config, and Observability. The Azure Front Door acts as the entry point, and the various data storage and configuration components serve as endpoints.
+
+## Subgraphs / Stages
+The diagram contains the following explicit subgraphs:
+- **Networking**: Includes components related to network access and security.
+- **Websites Layer**: Contains the different websites and applications.
+- **Data Layer**: Includes data storage and processing components.
+- **Security & Config**: Contains components related to security and configuration management.
+- **Observability**: Includes components for monitoring and logging.
+
+## Node-by-Node Description
+- **Azure Front Door (CDN + WAF)**: Content Delivery Network and Web Application Firewall, providing caching and security for the websites. visible in diagram; no further repository context available.
+- **DNS Zone arolariu.ro**: DNS zone for the arolariu.ro domain. visible in diagram; no further repository context available.
+- **api.arolariu.ro .NET**: .NET API for the arolariu.ro domain. visible in diagram; no further repository context available.
+- **arolariu.ro Next.js**: Next.js website for the arolariu.ro domain. visible in diagram; no further repository context available.
+- **docs.arolariu.ro DocFX**: Documentation website for the arolariu.ro domain, built with DocFX. visible in diagram; no further repository context available.
+- **cv.arolariu.ro SvelteKit**: SvelteKit website for the arolariu.ro domain. visible in diagram; no further repository context available.
+- **Azure SQL**: Azure SQL database. visible in diagram; no further repository context available.
+- **Cosmos DB**: Azure Cosmos DB database. visible in diagram; no further repository context available.
+- **Blob Storage**: Azure Blob Storage. visible in diagram; no further repository context available.
+- **Azure OpenAI**: Azure OpenAI service. visible in diagram; no further repository context available.
+- **Log Analytics**: Azure Log Analytics for collecting and analyzing logs. visible in diagram; no further repository context available.
+- **App Insights**: Azure Application Insights for monitoring application performance. visible in diagram; no further repository context available.
+- **Grafana**: Grafana for visualizing metrics. visible in diagram; no further repository context available.
+- **Managed Identities**: Azure Managed Identities for authentication. visible in diagram; no further repository context available.
+- **Key Vault**: Azure Key Vault for storing secrets. visible in diagram; no further repository context available.
+- **App Configuration**: Azure App Configuration for managing application settings. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Azure Front Door --> DNS Zone`: Traffic is routed to the DNS zone.
+- `Azure Front Door --> arolariu.ro Next.js`: Traffic is routed to the main website.
+- `Azure Front Door --> api.arolariu.ro .NET`: Traffic is routed to the API.
+- `Azure Front Door --> docs.arolariu.ro DocFX`: Traffic is routed to the documentation website.
+- `Azure Front Door --> cv.arolariu.ro SvelteKit`: Traffic is routed to the CV website.
+- `api.arolariu.ro .NET --> Azure SQL`: API interacts with Azure SQL database.
+- `api.arolariu.ro .NET --> Cosmos DB`: API interacts with Cosmos DB database.
+- `api.arolariu.ro .NET --> Blob Storage`: API interacts with Blob Storage.
+- `api.arolariu.ro .NET --> Azure OpenAI`: API interacts with Azure OpenAI.
+- `api.arolariu.ro .NET --> Key Vault`: API retrieves secrets from Key Vault.
+- `arolariu.ro Next.js --> App Configuration`: Website retrieves configuration from App Configuration.
+- `arolariu.ro Next.js --> App Insights`: Website sends telemetry to App Insights.
+- `api.arolariu.ro .NET --> App Insights`: API sends telemetry to App Insights.
+- `Managed Identities -- authenticates --> arolariu.ro Next.js`: Managed Identities authenticates the website.
+- `Managed Identities -- authenticates --> api.arolariu.ro .NET`: Managed Identities authenticates the API.
+
+## Repository Context & Terminology
+- **Azure Front Door**: A scalable and secure entry point for web applications, providing CDN and WAF capabilities.
+- **Next.js**: A React framework for building web applications with server-side rendering and static site generation.
+- **DocFX**: A documentation generator for .NET.
+- **SvelteKit**: A framework for building web applications with Svelte.
+- **Azure SQL**: A managed SQL Server database service in Azure.
+- **Cosmos DB**: A globally distributed, multi-model database service in Azure.
+- **Blob Storage**: A service for storing unstructured data in Azure.
+- **Azure OpenAI**: A service providing access to OpenAI models in Azure.
+- **Managed Identities**: A feature of Azure Active Directory that provides an identity for applications to use when connecting to resources that support Azure AD authentication.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with Azure Front Door, acting as the entry point for all incoming traffic. Front Door then routes traffic to different websites and APIs based on the requested domain: arolariu.ro (Next.js), api.arolariu.ro (.NET), docs.arolariu.ro (DocFX), and cv.arolariu.ro (SvelteKit). The .NET API interacts with various data storage services, including Azure SQL, Cosmos DB, Blob Storage, and Azure OpenAI, and retrieves secrets from Key Vault. The Next.js website retrieves configuration settings from App Configuration. Both the website and the API send telemetry data to Azure Application Insights for monitoring. Managed Identities are used to authenticate both the website and the API. The DNS Zone manages the domain name resolution for arolariu.ro. Log Analytics and Grafana are used for observability, providing insights into the system's performance and health. The system is deployed within an Azure Subscription located in the swedencentral region.

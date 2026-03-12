@@ -1,0 +1,14 @@
+graph TD
+    A[User Request: Apply Coupon] --> B{Coupon Valid?};
+    B -- Yes --> C[Redemption Engine];
+    C --> D{Coupon Exhausted?};
+    D -- No --> E[Update Usage Count];
+    E --> F[Apply Discount];
+    F --> G[Order Total Updated];
+    D -- Yes --> H[Error: Coupon Limit Reached];
+    B -- No --> I[Error: Invalid Coupon];
+    H --> J[Display Error];
+    I --> J;
+    G --> K[Payment Processing];
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class H,I,J error

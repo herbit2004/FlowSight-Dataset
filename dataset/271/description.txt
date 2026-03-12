@@ -1,0 +1,89 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture and data flow within a system, likely related to a Multi-Chain Processing (MCP) framework. It illustrates the interaction between different components, including user input, agent runtime, tooling layers, and MCP servers, providing a high-level overview of the system's operation. The diagram serves as documentation for understanding the system's architecture and the flow of data between its components.
+
+## Overall Layout
+The diagram is laid out from top to bottom, with the user/app interaction at the top and the MCP servers at the bottom. It is hierarchically structured, with subgraphs representing different stages or components of the system. The start nodes are "Prompt/Task," "CLI (Typer)," and "Python API," representing user input methods. The end nodes are the "MCP Servers" and the "CLI (Typer)" and "Python API" nodes.
+
+## Subgraphs / Stages
+The diagram contains the following explicit subgraphs:
+- **User / App**: Represents the user interface and input methods.
+- **Agent Runtime**: Encompasses the agent's execution environment, including agent graph, prompt generation, and language model interaction.
+- **Agent Graph**: Details the structure and operation of the agent graph, including deep agents and ReAct logic.
+- **Tooling Layer (MCP)**: Focuses on the tooling layer responsible for loading and wrapping MCP tools.
+- **FastMCP Client**: Represents the client-side component for interacting with MCP servers.
+- **MCP Servers**: Represents the backend servers providing specific functionalities.
+
+## Node-by-Node Description
+- **Prompt / Task**: Represents the initial user prompt or task.
+  visible in diagram; no further repository context available.
+- **CLI (Typer)**: Represents the command-line interface built with Typer.
+  visible in diagram; no further repository context available.
+- **Python API**: Represents the Python API interface.
+  visible in diagram; no further repository context available.
+- **build_deep_agent()**: Represents the function responsible for building a deep agent.
+  visible in diagram; no further repository context available.
+- **prompt.py(DEFAULT_SYSTEM_PROMPT)**: Represents the prompt generation module, using a default system prompt.
+  visible in diagram; no further repository context available.
+- **DeepAgents loop(If installed)**: Represents a loop that iterates through deep agents if they are installed.
+  visible in diagram; no further repository context available.
+- **LangGraph ReAct(fallback)**: Represents the LangGraph ReAct implementation with fallback mechanism.
+  visible in diagram; no further repository context available.
+- **LangChain Model(Instance or Init_chat_model(provider-Id))**: Represents the LangChain model instance or initialization, potentially using a provider ID.
+  visible in diagram; no further repository context available.
+- **LangChain Tools(BaseTool[])**: Represents the LangChain tools, which are instances of BaseTool.
+  visible in diagram; no further repository context available.
+- **MCPToolLoader(JSON-Schema -> Pydantic -> BaseTool)**: Represents the MCP tool loader, which converts JSON schema to Pydantic models and then to BaseTool instances.
+  visible in diagram; no further repository context available.
+- **_FastMCPTool(async _arun -> client.call_tool)**: Represents the asynchronous FastMCP tool, which calls the client's `call_tool` method.
+  visible in diagram; no further repository context available.
+- **servers_to_mcp_config()(mcpServers dict)**: Represents the function that converts servers to MCP configuration, resulting in an `mcpServers` dictionary.
+  visible in diagram; no further repository context available.
+- **FastMCPMulti(fastmcp.Client)**: Represents the FastMCP multi-client.
+  visible in diagram; no further repository context available.
+- **Server A(e.g., math)**: Represents an MCP server, e.g., for math-related tasks.
+  visible in diagram; no further repository context available.
+- **Server B(e.g., search)**: Represents an MCP server, e.g., for search-related tasks.
+  visible in diagram; no further repository context available.
+- **Server C(e.g., github)**: Represents an MCP server, e.g., for GitHub-related tasks.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Prompt / Task --> CLI (Typer)`: User query flows to the command-line interface.
+- `Prompt / Task --> Python API`: User query flows to the Python API.
+- `CLI (Typer) --> build_deep_agent()`: CLI triggers the building of a deep agent.
+- `Python API --> build_deep_agent()`: Python API triggers the building of a deep agent.
+- `build_deep_agent() --> prompt.py(DEFAULT_SYSTEM_PROMPT)`: The deep agent building process uses the prompt generation module.
+- `build_deep_agent() --> LangChain Model(Instance or Init_chat_model(provider-Id))`: The deep agent building process uses the LangChain model.
+- `build_deep_agent() --> MCPToolLoader(JSON-Schema -> Pydantic -> BaseTool)`: The deep agent building process uses the MCP tool loader.
+- `build_deep_agent() --> Agent Graph`: The deep agent building process uses the Agent Graph.
+- `MCPToolLoader(JSON-Schema -> Pydantic -> BaseTool) --> LangChain Tools(BaseTool[])`: The MCP tool loader provides tools to LangChain.
+- `servers_to_mcp_config()(mcpServers dict) --> FastMCPMulti(fastmcp.Client)`: The server configuration is passed to the FastMCP multi-client.
+- `LangChain Tools(BaseTool[]) --> Agent Graph`: LangChain tools are used by the Agent Graph.
+- `Agent Graph <--> LangChain Model(Instance or Init_chat_model(provider-Id))`: The Agent Graph and LangChain model exchange messages.
+- `Agent Graph --> _FastMCPTool(async _arun -> client.call_tool)`: The Agent Graph triggers tool calls to the FastMCP tool.
+- `_FastMCPTool(async _arun -> client.call_tool) --> FastMCPMulti(fastmcp.Client)`: The FastMCP tool calls the FastMCP multi-client.
+- `FastMCPMulti(fastmcp.Client) --> Server A(e.g., math)`: The FastMCP multi-client calls the MCP servers.
+- `FastMCPMulti(fastmcp.Client) --> Server B(e.g., search)`: The FastMCP multi-client calls the MCP servers.
+- `FastMCPMulti(fastmcp.Client) --> Server C(e.g., github)`: The FastMCP multi-client calls the MCP servers.
+- `FastMCPMulti(fastmcp.Client) --> Server A(e.g., math)`: The FastMCP multi-client calls the MCP servers.
+- `FastMCPMulti(fastmcp.Client) --> Server B(e.g., search)`: The FastMCP multi-client calls the MCP servers.
+- `FastMCPMulti(fastmcp.Client) --> Server C(e.g., github)`: The FastMCP multi-client calls the MCP servers.
+- `Server A(e.g., math) --> FastMCPMulti(fastmcp.Client)`: MCP servers return tool results to the FastMCP multi-client.
+- `Server B(e.g., search) --> FastMCPMulti(fastmcp.Client)`: MCP servers return tool results to the FastMCP multi-client.
+- `Server C(e.g., github) --> FastMCPMulti(fastmcp.Client)`: MCP servers return tool results to the FastMCP multi-client.
+- `FastMCPMulti(fastmcp.Client) --> _FastMCPTool(async _arun -> client.call_tool)`: The FastMCP multi-client calls the FastMCP tool.
+- `_FastMCPTool(async _arun -> client.call_tool) --> Agent Graph`: The FastMCP tool returns tool calls to the Agent Graph.
+- `Agent Graph --> CLI (Typer)`: The Agent Graph returns the final answer to the CLI.
+- `Agent Graph --> Python API`: The Agent Graph returns the final answer to the Python API.
+
+## Repository Context & Terminology
+- **MCP (Multi-Chain Processing)**: A framework or system that involves processing data across multiple chains or services.
+- **FastMCP Client**: A client designed for efficient interaction with MCP servers.
+- **LangChain**: A framework for building applications using language models.
+- **ReAct**: A reasoning and acting framework used in language models.
+- **BaseTool**: A base class for defining tools that can be used by language models.
+- **JSON-Schema**: A format for describing the structure of JSON data.
+- **Pydantic**: A Python library for data validation and settings management using type annotations.
+
+## High-Density QA Ground Truth Summary
+The process begins with a user query submitted via either the CLI (Typer) or the Python API. This query triggers the `build_deep_agent()` function, which orchestrates the creation of an agent runtime environment. This involves utilizing a `prompt.py` module with a default system prompt, initializing a LangChain model (potentially with a provider ID), loading MCP tools using `MCPToolLoader` (converting JSON schemas to Pydantic models and then to `BaseTool` instances), and setting up the `Agent Graph`. The `Agent Graph` interacts with the LangChain model, exchanging messages to facilitate reasoning and action. If deep agents are installed, the `DeepAgents loop` iterates through them. The `Agent Graph` then triggers tool calls via `_FastMCPTool`, which asynchronously calls the `client.call_tool` method. These tool calls are routed through `FastMCPMulti` to the appropriate MCP servers (Server A, B, or C). The servers return tool results back through `FastMCPMulti` and `_FastMCPTool` to the `Agent Graph`. Finally, the `Agent Graph` provides the final answer back to the user via the CLI or Python API, completing the cycle. The `MCPToolLoader` converts JSON schemas into Pydantic models and then into `BaseTool` instances, which are then used by the LangChain tools.

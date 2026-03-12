@@ -1,0 +1,63 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a leader election process within a distributed system. It outlines the steps taken by application nodes to elect a leader using a Redis cluster for lock management and heartbeat monitoring. The diagram serves as a visual representation of the leader election algorithm, aiding in understanding and debugging the system's behavior.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TB). It is divided into three subgraphs: "Application Nodes," "Leader Election Process," and "Redis Cluster." The process starts with "Candidate Node Initialized" and can end with either "Become Leader - Claim Leadership" or "Initiate New Election Round."
+
+## Subgraphs / Stages
+- **Application Nodes**: Represents the application nodes participating in the leader election.
+- **Leader Election Process**: Details the steps involved in electing a leader, including acquiring a lock, heartbeat monitoring, and handling leader failure.
+- **Redis Cluster**: Represents the Redis cluster used for lock management and data storage during the election process.
+
+## Node-by-Node Description
+- **Candidate Node Initialized**: Represents the start of the leader election process for an application node. visible in diagram; no further repository context available.
+- **Obtain Election Token?**: A decision point to determine if the node can proceed with the election. visible in diagram; no further repository context available.
+- **Acquire Lock - Redis**: Attempts to acquire a lock in the Redis cluster to claim leadership. visible in diagram; no further repository context available.
+- **Become Leader - Claim Leadership**: The node successfully acquired the lock and becomes the leader. visible in diagram; no further repository context available.
+- **Start Leader Heartbeat**: The leader starts sending heartbeat signals to maintain its leadership. visible in diagram; no further repository context available.
+- **Heartbeat Acknowledged by Quorum?**: A decision point to determine if the leader's heartbeat is acknowledged by a quorum of nodes. visible in diagram; no further repository context available.
+- **Relinquish Leadership, Reset Election**: The leader relinquishes leadership and restarts the election process. visible in diagram; no further repository context available.
+- **Wait for Election Event**: The node waits for an event that triggers a new election round. visible in diagram; no further repository context available.
+- **Follower - Observe Leader**: The node observes the current leader and monitors its heartbeat. visible in diagram; no further repository context available.
+- **Leader Heartbeat Received?**: A decision point to determine if the follower has received the leader's heartbeat. visible in diagram; no further repository context available.
+- **Suspect Leader Failure**: The follower suspects that the leader has failed. visible in diagram; no further repository context available.
+- **Timeout Expired?**: A decision point to determine if the timeout for leader failure detection has expired. visible in diagram; no further repository context available.
+- **Initiate New Election Round**: A new election round is initiated. visible in diagram; no further repository context available.
+- **Redis Master Node 1**: Represents the first Redis master node in the cluster. visible in diagram; no further repository context available.
+- **Redis Master Node 2**: Represents the second Redis master node in the cluster. visible in diagram; no further repository context available.
+- **Redis Master Node 3**: Represents the third Redis master node in the cluster. visible in diagram; no further repository context available.
+- **Application Node 1**: Represents the first application node. visible in diagram; no further repository context available.
+- **Application Node 2**: Represents the second application node. visible in diagram; no further repository context available.
+- **Application Node 3**: Represents the third application node. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Candidate Node Initialized --> Obtain Election Token?`: The node proceeds to obtain an election token.
+- `Obtain Election Token? -- Yes --> Acquire Lock - Redis`: The node attempts to acquire a lock in Redis.
+- `Obtain Election Token? -- No --> Wait for Election Event`: The node waits for an election event.
+- `Acquire Lock - Redis -- Lock Acquired Successfully --> Become Leader - Claim Leadership`: The node becomes the leader.
+- `Acquire Lock - Redis -- Lock Acquisition Failed --> Follower - Observe Leader`: The node becomes a follower.
+- `Become Leader - Claim Leadership --> Start Leader Heartbeat`: The leader starts sending heartbeats.
+- `Start Leader Heartbeat --> Heartbeat Acknowledged by Quorum?`: The leader waits for heartbeat acknowledgements.
+- `Heartbeat Acknowledged by Quorum? -- Yes --> Start Leader Heartbeat`: The leader continues sending heartbeats.
+- `Heartbeat Acknowledged by Quorum? -- No --> Relinquish Leadership, Reset Election`: The leader relinquishes leadership.
+- `Relinquish Leadership, Reset Election --> Obtain Election Token?`: The node restarts the election process.
+- `Follower - Observe Leader --> Leader Heartbeat Received?`: The follower checks for leader heartbeats.
+- `Leader Heartbeat Received? -- Yes --> Follower - Observe Leader`: The follower continues observing the leader.
+- `Leader Heartbeat Received? -- No --> Suspect Leader Failure`: The follower suspects leader failure.
+- `Suspect Leader Failure --> Timeout Expired?`: The follower waits for a timeout.
+- `Timeout Expired? -- Yes --> Initiate New Election Round`: A new election round is initiated.
+- `Timeout Expired? -- No --> Suspect Leader Failure`: The follower continues suspecting leader failure.
+- `Initiate New Election Round --> Obtain Election Token?`: A new election round begins.
+- `Wait for Election Event --> Obtain Election Token?`: An election event triggers the node to obtain an election token.
+
+## Repository Context & Terminology
+- **Leader Election**: A process in distributed systems to choose a single node as the leader for coordinating tasks.
+- **Redis Cluster**: A distributed, in-memory data store often used for caching, session management, and leader election.
+- **Lock Acquisition**: The process of obtaining exclusive access to a resource, in this case, a lock in Redis to claim leadership.
+- **Heartbeat**: A periodic signal sent by the leader to indicate its health and availability.
+- **Quorum**: The minimum number of nodes required to acknowledge a leader's heartbeat for it to maintain leadership.
+- **Follower**: A node that observes the leader and monitors its heartbeat.
+- **Timeout**: A period after which a follower suspects leader failure if no heartbeat is received.
+
+## High-Density QA Ground Truth Summary
+The leader election process begins with a candidate node initializing and attempting to "Obtain Election Token?". If successful, the node proceeds to "Acquire Lock - Redis" by writing/reading to Redis Master Nodes 1, 2, and 3. If the lock acquisition is successful, the node transitions to "Become Leader - Claim Leadership" and starts sending heartbeats via "Start Leader Heartbeat". The leader then waits for "Heartbeat Acknowledged by Quorum?". If acknowledged, the leader continues sending heartbeats; otherwise, it "Relinquish Leadership, Reset Election", returning to the "Obtain Election Token?" step. If the initial "Obtain Election Token?" fails, the node enters a "Wait for Election Event" state, looping back to attempt token acquisition later. If the lock acquisition fails, the node becomes a "Follower - Observe Leader", monitoring the leader's heartbeats. If a "Leader Heartbeat Received?" check fails, the follower enters "Suspect Leader Failure", waiting for a "Timeout Expired?". If the timeout expires, a new election round is initiated via "Initiate New Election Round", returning to the "Obtain Election Token?" step. The Redis cluster serves as a distributed lock and heartbeat store, ensuring only one leader is elected at a time, and enabling followers to detect leader failures.

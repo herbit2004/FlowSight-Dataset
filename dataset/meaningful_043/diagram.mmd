@@ -1,0 +1,43 @@
+graph TD
+    subgraph User Interaction
+        A[User Search Query] --> B(Query Parser & Analyzer);
+    end
+
+    B --> C{Query Type?};
+    C -- Exact Match --> D[Exact Match Index Lookup];
+    C -- Fuzzy / Partial Match --> E[Fuzzy Search Engine];
+
+    D --> F(Retrieve Document IDs);
+    E --> F;
+
+    F --> G{Document Cache Hit?};
+    G -- Yes --> H[Load Document from Cache];
+    G -- No --> I[Fetch Document from Document Store];
+    I --> J(Document Preprocessor);
+    J --> K[Cache Document];
+    K --> H;
+
+    H --> L(Highlighting Engine);
+    L --> M{Highlighting Type?};
+    M -- Simple Keyword --> N[Simple Keyword Match];
+    M -- Contextual --> O[Contextual Similarity Algorithm];
+
+    N --> P(Apply Keyword Highlighting);
+    O --> Q(Rank Highlight Candidates);
+    Q --> R(Apply Contextual Highlighting);
+    P --> S[Post-Highlighting Rules];
+    R --> S;
+
+    S --> T[Generate Highlighted Snippet];
+
+    subgraph Output
+        T --> U[Return Highlighted Snippet to User];
+    end
+
+    classDef highlightFill fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef cacheFill fill:#ccf,stroke:#333,stroke-width:2px;
+    classDef searchFill fill:#afa,stroke:#333,stroke-width:2px;
+
+    class D,E,F,G,H,I searchFill;
+    class K cacheFill;
+    class L,N,O,P,Q,R highlightFill;

@@ -1,0 +1,40 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of requests and authorization in a system involving an MCP (Media Control Plane) client and server. It illustrates how the client interacts with the server through an API Gateway, including the authorization process handled by an OAuth server. The diagram provides a high-level overview of the system's architecture and the interactions between its key components.
+
+## Overall Layout
+The diagram flows from left to right (LR). It starts with the MCP Client, proceeds through the API Gateway, and then branches to the MCP Server and OAuth Server. The MCP Client is the start node, and the MCP Server and OAuth Server are the end nodes.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into three stages:
+1. Client Request: MCP Client initiates a request.
+2. Gateway Processing: API Gateway handles the request, including authorization.
+3. Server Interaction: The request is processed by the MCP Server, and authorization is handled by the OAuth Server.
+
+## Node-by-Node Description
+- **MCP Client**: Represents the client application that initiates requests to the MCP Server.
+  visible in diagram; no further repository context available.
+- **MCP Streamable HTTP Transport**: Represents the transport mechanism used by the MCP Client to communicate with the API Gateway.
+  visible in diagram; no further repository context available.
+- **API Gateway**: Acts as an intermediary, routing requests to the appropriate backend services and handling authorization.
+  visible in diagram; no further repository context available.
+- **MCP Server (Lambda function)**: Represents the MCP server, implemented as a Lambda function, which processes the requests.
+  visible in diagram; no further repository context available.
+- **OAuth Server (Cognito or similar)**: Handles the authorization of requests, likely using a service like Cognito.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `MCP Client --> API Gateway`: The MCP Client sends a request to the API Gateway using MCP Streamable HTTP Transport.
+- `API Gateway --> MCP Server`: The API Gateway invokes the MCP Server (Lambda function) to process the request.
+- `API Gateway --> OAuth Server`: The API Gateway authorizes the request via the OAuth Server (Cognito or similar).
+
+## Repository Context & Terminology
+- **MCP (Media Control Plane)**: Based on the diagram, MCP likely refers to a system or component responsible for managing media-related operations.
+- **API Gateway**: A common architectural pattern that acts as a single entry point for all client requests, routing them to the appropriate backend services.
+- **Lambda function**: A serverless compute service that allows you to run code without provisioning or managing servers.
+- **OAuth**: An open standard for access delegation, commonly used to grant websites or applications access to their information on other websites without giving them their passwords.
+- **Cognito**: A service that provides authentication, authorization, and user management for web and mobile apps.
+- **HTTP Transport**: A standard protocol for transmitting data over the internet.
+- **Streamable**: Indicates the data can be processed as a continuous stream rather than a single block.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a request flow starting with the MCP Client, which sends a request to the API Gateway using MCP Streamable HTTP Transport. The API Gateway then branches into two paths: one to the MCP Server (implemented as a Lambda function) and another to the OAuth Server (Cognito or similar). The API Gateway invokes the MCP Server to process the request, and it authorizes the request via the OAuth Server. The MCP Server likely handles media-related operations, while the OAuth Server handles authentication and authorization, ensuring that only authorized clients can access the MCP Server's resources. The MCP Client represents the application initiating the request, and the API Gateway acts as a central point for routing and securing access to the backend services. The OAuth Server, potentially implemented using AWS Cognito, ensures secure access by handling authentication and authorization. The MCP Server, implemented as a Lambda function, processes the request after authorization. The end nodes are the MCP Server and the OAuth Server, representing the final destinations of the request and authorization flow, respectively.

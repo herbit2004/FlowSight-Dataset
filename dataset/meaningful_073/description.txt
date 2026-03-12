@@ -1,0 +1,75 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of watermarking content, including authorization, watermark generation, and verification. It depicts the flow of requests and data between different services and components within a content protection system. The diagram serves as a visual representation of the steps involved in ensuring content integrity and authenticity.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured into stages representing different services. The process starts with a user app request and ends with either content approval or security logging.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing different services:
+- **Device**: Represents the user's device initiating the watermark request.
+- **Watermark Service**: Encompasses the processes related to watermark generation.
+- **Verification Service**: Handles the verification of the watermarked content.
+- **Security Logging**: Manages security-related events and alerts.
+
+## Node-by-Node Description
+- **A / User App Request**: Represents the initial request from the user application. visible in diagram; no further repository context available.
+- **B / Watermark Request**: Represents the request to watermark content. visible in diagram; no further repository context available.
+- **C / Authorization Server**: Represents the server responsible for authorizing the watermark request. visible in diagram; no further repository context available.
+- **D / Policy Check**: Represents the policy check to validate the request. visible in diagram; no further repository context available.
+- **E / Rejection Response**: Represents the response sent when the request is rejected. visible in diagram; no further repository context available.
+- **F / Watermark Generation**: Represents the process of generating the watermark. visible in diagram; no further repository context available.
+- **G / Retrieve Metadata**: Represents the retrieval of metadata for the content. visible in diagram; no further repository context available.
+- **H / Watermark Payload**: Represents the payload containing the watermark information. visible in diagram; no further repository context available.
+- **I / Image Processing**: Represents the image processing step. visible in diagram; no further repository context available.
+- **J / Embed Watermark**: Represents the embedding of the watermark into the content. visible in diagram; no further repository context available.
+- **K / Return Watermarked Image**: Represents the return of the watermarked image. visible in diagram; no further repository context available.
+- **L / Signed Assertion**: Represents the signed assertion of the watermarked content. visible in diagram; no further repository context available.
+- **M / Send Watermarked Content**: Represents the sending of the watermarked content. visible in diagram; no further repository context available.
+- **N / User App Display**: Represents the display of the watermarked content in the user application. visible in diagram; no further repository context available.
+- **O / Error Response**: Represents the error response. visible in diagram; no further repository context available.
+- **P / User App Error**: Represents the error displayed in the user application. visible in diagram; no further repository context available.
+- **Q / Content Validation**: Represents the validation of the content. visible in diagram; no further repository context available.
+- **R / Extract Watermark**: Represents the extraction of the watermark from the content. visible in diagram; no further repository context available.
+- **S / Flag as Suspicious**: Represents flagging the content as suspicious. visible in diagram; no further repository context available.
+- **T / Compare Watermark**: Represents the comparison of the extracted watermark with the original. visible in diagram; no further repository context available.
+- **U / Content Approved**: Represents the approval of the content. visible in diagram; no further repository context available.
+- **V / Log Anomaly**: Represents logging an anomaly. visible in diagram; no further repository context available.
+- **W / Security Dashboard**: Represents the security dashboard. visible in diagram; no further repository context available.
+- **X / Security Alert**: Represents the security alert. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User app request triggers the watermark request.
+- `B --> C`: Watermark request is sent to the authorization server.
+- `C --> D`: Authorization server initiates a policy check.
+- `D -- No --> E`: If the policy check fails, a rejection response is sent.
+- `D -- Yes --> F`: If the policy check passes, watermark generation is initiated.
+- `E --> O`: Rejection response leads to an error response.
+- `O --> P`: Error response results in a user app error.
+- `F --> G`: Watermark generation retrieves metadata.
+- `G --> H`: Metadata retrieval leads to the creation of a watermark payload.
+- `H --> I`: Watermark payload is processed for image processing.
+- `I --> J`: Image processing leads to embedding the watermark.
+- `J --> K`: Watermark embedding results in returning the watermarked image.
+- `K --> L`: The watermarked image is used to create a signed assertion.
+- `L --> M`: The signed assertion is used to send watermarked content.
+- `M --> N`: The watermarked content is displayed in the user app.
+- `N --> Q`: User app display triggers content validation.
+- `Q -- Valid Signature? --> R`: If the signature is valid, the watermark is extracted.
+- `Q -- Invalid Signature --> S`: If the signature is invalid, the content is flagged as suspicious.
+- `R --> T`: Watermark extraction leads to watermark comparison.
+- `T -- Match Original? --> U`: If the watermark matches the original, the content is approved.
+- `T -- No Match --> V`: If the watermark does not match, an anomaly is logged.
+- `V --> W`: Logging an anomaly updates the security dashboard.
+- `S --> X`: Flagging as suspicious triggers a security alert.
+
+## Repository Context & Terminology
+- **Watermark**: A subtle embedded pattern in digital content used for identification and copyright protection.
+- **Authorization Server**: A server that issues access tokens to clients after successfully authenticating the user and obtaining authorization.
+- **Policy Check**: A process to verify if a request meets the defined policies and rules.
+- **Metadata**: Data that provides information about other data, such as the content's author, creation date, and copyright information.
+- **Signed Assertion**: A digitally signed statement attesting to the authenticity and integrity of the content.
+- **Content Validation**: The process of verifying the integrity and authenticity of digital content.
+- **Security Logging**: The practice of recording security-related events and activities for auditing and analysis.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a `User App Request` from the `Device`, which triggers a `Watermark Request` sent to the `Authorization Server`. The `Authorization Server` performs a `Policy Check` to validate credentials. If the credentials are not valid, a `Rejection Response` is sent, leading to an `Error Response` and a `User App Error`. If the credentials are valid, the process proceeds to the `Watermark Service` for `Watermark Generation`. This involves `Retrieve Metadata`, creating a `Watermark Payload`, `Image Processing`, and finally `Embed Watermark`, resulting in a `Return Watermarked Image`. A `Signed Assertion` is created and the `Send Watermarked Content` step follows. The content is then displayed in the `User App Display`, initiating `Content Validation` within the `Verification Service`. If the signature is invalid, the content is `Flag as Suspicious` and a `Security Alert` is triggered. If the signature is valid, the `Extract Watermark` step is performed, followed by `Compare Watermark`. If the watermarks match, the `Content Approved`. If they do not match, a `Log Anomaly` event is created, updating the `Security Dashboard`. Watermarking, in this context, is a method of embedding unique identifiers within content to track its usage and prevent unauthorized distribution.

@@ -1,0 +1,63 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting an order processing workflow. It illustrates the steps involved from when a user submits an order to when the account is closed, including payment verification, inventory management, and feedback collection. The diagram serves as a visual representation of the order processing logic, but contains intentional errors and deviations from standard practice.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The flow starts with "User Submits Order" at the top and progresses downwards through a series of processes and decision points, eventually leading to "Log Account Closure" at the bottom. The diagram contains an illogical loop and several incorrect branch outcomes.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Payment (`A`, `B`), Shipment Preparation (`C`, `D`, `F`, `G`), Order Cancellation (`H`, `I`, `J`, `E`), Order Completion & Inventory (`K`, `L`, `M`), Feedback (`N`), and Account Closure (`O`, `P`).
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Prepare Shipment**: Represents the process of preparing the order for shipment. visible in diagram; no further repository context available.
+- **D / Inventory Available?**: A decision point to check if the ordered items are available in inventory. visible in diagram; no further repository context available.
+- **E / Cancel Order**: Represents the process of cancelling the order. visible in diagram; no further repository context available.
+- **F / Package Items**: Represents the process of packaging the items for shipment. visible in diagram; no further repository context available.
+- **G / Generate Shipping Label**: Represents the process of generating a shipping label for the package. visible in diagram; no further repository context available.
+- **H / Order Confirmation Sent**: Represents sending an order confirmation. Note: This is sent when payment is NOT received, so it should be a cancellation email. visible in diagram; no further repository context available.
+- **I / Send Cancellation Email**: Represents the process of sending a cancellation email to the user. visible in diagram; no further repository context available.
+- **J / Refund Payment**: Represents the process of refunding the payment to the user. visible in diagram; no further repository context available.
+- **K / Order Complete**: Represents the completion of the order processing. visible in diagram; no further repository context available.
+- **L / Update Inventory**: Represents the process of updating the inventory after the order is complete. visible in diagram; no further repository context available.
+- **M / Archive Order Data**: Represents the process of archiving the order data. visible in diagram; no further repository context available.
+- **N / Feedback Request Sent?**: A decision point to check if a feedback request has been sent to the user. visible in diagram; no further repository context available.
+- **O / Close Customer Account**: Represents the process of closing the customer account. visible in diagram; no further repository context available.
+- **P / Log Account Closure**: Represents the process of logging the account closure. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the payment verification process.
+- `B -- Yes --> C`: If payment is received, prepare the shipment.
+- `B -- No --> H`: If payment is not received, send an order confirmation (should be cancellation email).
+- `C --> D`: After preparing the shipment, check inventory availability.
+- `D -- Yes --> F`: If inventory is available, package the items.
+- `D -- No --> E`: If inventory is not available, cancel the order.
+- `F --> G`: After packaging the items, generate a shipping label.
+- `G --> C`: After generating the shipping label, the process loops back to "Prepare Shipment" (incorrect loop).
+- `H --> I`: After sending the order confirmation (cancellation email), send a cancellation email.
+- `I --> J`: After sending the cancellation email, refund the payment.
+- `J --> K`: After refunding the payment, the order is marked as complete.
+- `E --> K`: If the order is cancelled due to inventory unavailability, the order is marked as complete.
+- `K --> L`: After the order is complete, update the inventory.
+- `L --> M`: After updating the inventory, archive the order data.
+- `M --> N`: After archiving the order data, check if a feedback request has been sent.
+- `N -- Yes --> O`: If a feedback request has been sent, close the customer account.
+- `N -- No --> A`: If a feedback request has not been sent, the process restarts with "User Submits Order" (incorrect branch).
+- `O --> P`: After closing the customer account, log the account closure.
+- `P --> A`: After logging the account closure, the process restarts with "User Submits Order" (incorrect causal direction).
+
+## Repository Context & Terminology
+- **User Submits Order**: In standard e-commerce, this is the initial step where a customer places an order through a website or application. In this diagram, it's also the point where the process illogically restarts if feedback is not requested or after account closure.
+- **Payment Received?**: This refers to the verification of payment for the order. In this diagram, a 'No' outcome leads to sending an 'Order Confirmation Sent' message, which is counterfactual.
+- **Prepare Shipment**: This involves gathering the items, packaging them, and preparing them for dispatch. In this diagram, it is part of an illogical loop.
+- **Inventory Available?**: This checks if the ordered items are in stock. In this diagram, a 'No' outcome correctly leads to order cancellation.
+- **Cancel Order**: This is the process of terminating an order, usually due to payment failure or inventory issues. In this diagram, it merges incorrectly with the 'Refund Payment' path.
+- **Generate Shipping Label**: This creates a label with the necessary information for shipping the package. In this diagram, it leads back to "Prepare Shipment", skipping the actual shipping step.
+- **Order Complete**: This signifies that the order has been processed, shipped, and delivered. In this diagram, it is reached prematurely after cancellation and refund.
+- **Update Inventory**: This updates the stock levels after an order is processed. In this diagram, it happens after the order is marked as complete, which is a reversed sequence.
+- **Feedback Request Sent?**: This checks if a request for feedback has been sent to the customer. In this diagram, a 'No' outcome incorrectly restarts the entire order process.
+- **Close Customer Account**: This is the process of terminating a customer's account. In this diagram, it happens by default after feedback, which is incorrect.
+- **Log Account Closure**: This records the details of the account closure. In this diagram, it leads back to "User Submits Order", which is incorrect.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a user submitting an order (`A`), which leads to a payment verification check (`B`). If payment is received (`B -- Yes --> C`), the shipment is prepared; otherwise (`B -- No --> H`), an order confirmation is sent (incorrectly, should be a cancellation email), followed by sending a cancellation email and refunding the payment. After preparing the shipment, inventory availability is checked (`C --> D`). If inventory is available (`D -- Yes --> F`), the items are packaged, a shipping label is generated, and the process loops back to preparing the shipment (`G --> C`), skipping the actual shipping. If inventory is unavailable (`D -- No --> E`), the order is cancelled. Both the refund payment and cancellation paths lead to marking the order as complete (`J --> K`, `E --> K`). After the order is marked as complete, the inventory is updated, and the order data is archived. Finally, the system checks if a feedback request has been sent (`M --> N`). If feedback has been requested (`N -- Yes --> O`), the customer account is closed and logged, restarting the process with "User Submits Order" (`P --> A`). If feedback has not been requested (`N -- No --> A`), the process restarts with "User Submits Order", creating an illogical loop. The standard e-commerce process of order submission, payment, and shipment is distorted by reversed sequences, illogical loops, and incorrect branch outcomes.

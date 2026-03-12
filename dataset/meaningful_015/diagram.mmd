@@ -1,0 +1,21 @@
+graph TD
+    subgraph User Authentication
+    A[User Login] --> B{Authentication Successful?};
+    B -- Yes --> C(Retrieve User Roles);
+    B -- No --> X[Display Authentication Error];
+    end
+    C --> D{User Role Lookup};
+    D --> E(Role Validation Service);
+    E --> F{Role Valid Against Request?};
+    F -- Yes --> G(Permission Validation Service);
+    F -- No --> Z[Display Unauthorized Role Error];
+    G --> H{Permission Check};
+    H --> I{Permission Allowed?};
+    I -- Yes --> J(Record Audit Log);
+    I -- No --> AA[Display Access Denied Error];
+    J --> K(Grant Access);
+    subgraph Resource Server
+    K --> L[Serve Resource];
+    end
+    classDef error fill:#f9d2d0,stroke:#333,stroke-width:2px;
+    class X,Z,AA error;

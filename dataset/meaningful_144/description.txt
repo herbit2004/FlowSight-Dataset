@@ -1,0 +1,71 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the client request flow and circuit breaker management in a distributed system. It depicts how client requests are processed, rate-limited, and handled by an upstream service, incorporating a circuit breaker pattern to prevent cascading failures. The diagram serves as a visual representation of the system's resilience and fault tolerance mechanisms.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into two subgraphs: "Client Request Flow" and "Circuit Breaker Management". The start node is "Client Request", and the end nodes are "Return Upstream Response", "Return 429 - Too Many Requests", and "Reset Failure Count".
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Client Request Flow**: This subgraph describes the initial processing of a client request, including rate limiting, circuit breaker checks, and forwarding to the upstream service.
+- **Circuit Breaker Management**: This subgraph details the logic for managing the circuit breaker, including setting timeouts, handling half-open circuits, and resetting failure counts.
+
+## Node-by-Node Description
+- **A / Client Request**: Represents an incoming request from a client. visible in diagram; no further repository context available.
+- **B / Rate Limit Check**: Checks if the client has exceeded the allowed request rate. visible in diagram; no further repository context available.
+- **C / Forward to Upstream Service**: Forwards the request to the upstream service. visible in diagram; no further repository context available.
+- **D / Return 429 - Too Many Requests**: Returns a 429 HTTP status code indicating that the client has sent too many requests. visible in diagram; no further repository context available.
+- **E / Circuit Breaker Check**: Checks the state of the circuit breaker (open or closed). visible in diagram; no further repository context available.
+- **F / Send Request to Upstream**: Sends the request to the upstream service. visible in diagram; no further repository context available.
+- **G / Return 503 - Service Unavailable**: Returns a 503 HTTP status code indicating that the service is unavailable due to the circuit breaker being open. visible in diagram; no further repository context available.
+- **H / Upstream Response**: Represents the response received from the upstream service. visible in diagram; no further repository context available.
+- **I / Return Upstream Response**: Returns the response from the upstream service to the client. visible in diagram; no further repository context available.
+- **J / Increment Failure Count**: Increments the failure count when an upstream request fails. visible in diagram; no further repository context available.
+- **K / Check Failure Threshold**: Checks if the failure count has exceeded a predefined threshold. visible in diagram; no further repository context available.
+- **L / Open Circuit**: Opens the circuit breaker, preventing further requests from being sent to the upstream service. visible in diagram; no further repository context available.
+- **M / Set Circuit Open Timeout**: Sets a timeout period for the circuit breaker to remain open. visible in diagram; no further repository context available.
+- **N / Timeout Expired?**: Checks if the circuit open timeout has expired. visible in diagram; no further repository context available.
+- **O / Half-Open Circuit - Allow Test Requests**: Allows a limited number of test requests to be sent to the upstream service to check its availability. visible in diagram; no further repository context available.
+- **P / Circuit Remains Open**: Indicates that the circuit remains open because the timeout has not expired. visible in diagram; no further repository context available.
+- **Q / Send Trial Request to Upstream**: Sends a trial request to the upstream service. visible in diagram; no further repository context available.
+- **R / Trial Request Successful?**: Checks if the trial request to the upstream service was successful. visible in diagram; no further repository context available.
+- **S / Close Circuit**: Closes the circuit breaker, allowing normal traffic to flow to the upstream service. visible in diagram; no further repository context available.
+- **T / Reset Failure Count**: Resets the failure count after the circuit breaker is closed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: A client request is sent to the rate limit check.
+- `B -- Below Limit --> C`: If the request rate is below the limit, the request is forwarded to the upstream service.
+- `B -- Over Limit --> D`: If the request rate is over the limit, a 429 error is returned.
+- `C --> E`: The request is subjected to a circuit breaker check.
+- `E -- Circuit Closed --> F`: If the circuit is closed, the request is sent to the upstream service.
+- `E -- Circuit Open --> G`: If the circuit is open, a 503 error is returned.
+- `F --> H`: The upstream service processes the request and returns a response.
+- `H -- Success --> I`: If the upstream response is successful, the response is returned to the client.
+- `H -- Failure --> J`: If the upstream response is a failure, the failure count is incremented.
+- `J --> K`: The failure count is checked against a threshold.
+- `K -- Threshold Reached --> L`: If the threshold is reached, the circuit is opened.
+- `K -- Below Threshold --> I`: If the threshold is not reached, the upstream response is returned to the client.
+- `L --> M`: When the circuit opens, a timeout is set.
+- `M --> N`: The system checks if the timeout has expired.
+- `N -- Yes --> O`: If the timeout has expired, the circuit enters a half-open state, allowing test requests.
+- `N -- No --> P`: If the timeout has not expired, the circuit remains open.
+- `P --> N`: The system continues to check if the timeout has expired.
+- `O --> Q`: A trial request is sent to the upstream service.
+- `Q --> R`: The system checks if the trial request was successful.
+- `R -- Yes --> S`: If the trial request is successful, the circuit is closed.
+- `R -- No --> L`: If the trial request fails, the circuit is reopened.
+- `S --> T`: When the circuit closes, the failure count is reset.
+- `T --> E`: After resetting the failure count, the system returns to the circuit breaker check.
+- `G --> D`: Returning a 503 error leads to returning a 429 error.
+
+## Repository Context & Terminology
+- **Rate Limiting**: A technique to control the rate of requests a client can make to a service, preventing abuse and ensuring fair usage.
+- **Circuit Breaker**: A design pattern used to prevent cascading failures in distributed systems by temporarily blocking requests to a failing service.
+- **Upstream Service**: A service that is called by another service (the downstream service) to fulfill a request.
+- **HTTP Status Codes**: Standard codes used in HTTP communication to indicate the outcome of a request (e.g., 429 for Too Many Requests, 503 for Service Unavailable).
+- **Timeout**: A period after which a system will stop waiting for a response and assume a failure.
+- **Half-Open Circuit**: A state in the circuit breaker pattern where a limited number of test requests are allowed to check the availability of the upstream service.
+- **Failure Count**: A metric used to track the number of failed requests to an upstream service.
+- **Threshold**: A predefined value that, when exceeded, triggers a specific action (e.g., opening the circuit breaker).
+
+## High-Density QA Ground Truth Summary
+The client request flow begins with a "Client Request" (A) that proceeds to a "Rate Limit Check" (B). If the request is "Below Limit", it's forwarded to the "Upstream Service" (C); otherwise, a "429 - Too Many Requests" error (D) is returned. After forwarding, a "Circuit Breaker Check" (E) determines if the circuit is "Circuit Closed", allowing the request to be sent to the "Upstream" (F), or "Circuit Open", resulting in a "503 - Service Unavailable" error (G). The "Upstream Response" (H) then dictates whether the flow ends successfully with "Return Upstream Response" (I) or increments the "Failure Count" (J). The "Check Failure Threshold" (K) then either returns the upstream response if "Below Threshold" or "Opens Circuit" (L) if the "Threshold Reached". The circuit breaker management subgraph handles the open circuit by setting a "Circuit Open Timeout" (M). If the "Timeout Expired?" (N), the circuit enters a "Half-Open Circuit" (O) allowing "Trial Request to Upstream" (Q). A successful trial closes the circuit ("Close Circuit" (S)) and resets the "Failure Count" (T), while a failed trial reopens the circuit (L). The circuit breaker pattern is a key element, preventing cascading failures by monitoring request success and temporarily blocking requests to failing services, thus enhancing system resilience.

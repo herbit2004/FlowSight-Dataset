@@ -1,0 +1,94 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the leader election process and lock acquisition mechanism in a distributed system. It outlines the steps involved in electing a leader node, handling node failures, and managing lock requests from clients. The diagram serves as a visual representation of the system's control flow and decision-making processes.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It is divided into three main sections: Failure Detection, Leader Actions, and Lock Acquisition, with the Leader Election Process acting as a central orchestrator. The start nodes are "Candidate Node: Start" and "Node Failure". The end nodes are "Notify Waiting Queue" and "Detect Failure: Trigger new election".
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Failure Detection**: Focuses on detecting node failures using consensus protocols.
+- **Leader Actions**: Describes the actions performed by the elected leader node.
+- **Lock Acquisition**: Illustrates the process of acquiring a lock by a client.
+
+## Node-by-Node Description
+- **A / Candidate Node: Start**: Represents the initiation of a leader election process by a candidate node.
+  visible in diagram; no further repository context available.
+- **B / Quorum Check**: Represents the process of checking if a quorum has been achieved during the election.
+  visible in diagram; no further repository context available.
+- **C / Propose Leadership**: Represents the action of proposing leadership by a candidate node.
+  visible in diagram; no further repository context available.
+- **D / Acceptance Wait: Timeout**: Represents a waiting period for acceptance messages from other nodes, with a timeout.
+  visible in diagram; no further repository context available.
+- **E / Become Leader: Update State**: Represents the action of a node becoming the leader and updating its state.
+  visible in diagram; no further repository context available.
+- **F / Heartbeat Broadcast**: Represents the leader broadcasting heartbeat messages to other nodes.
+  visible in diagram; no further repository context available.
+- **G / Other Nodes Alive?**: Represents a check to determine if other nodes are still alive.
+  visible in diagram; no further repository context available.
+- **H / Detect Failure: Trigger new election**: Represents the detection of a failure and the triggering of a new election.
+  visible in diagram; no further repository context available.
+- **I / Client Request: Lock Key**: Represents a client requesting a lock.
+  visible in diagram; no further repository context available.
+- **J / Lock Available?**: Represents a check to determine if the requested lock is available.
+  visible in diagram; no further repository context available.
+- **K / Attempt Lock Acquisition**: Represents the attempt to acquire the lock.
+  visible in diagram; no further repository context available.
+- **M / Acquisition Successful?**: Represents a check to determine if the lock acquisition was successful.
+  visible in diagram; no further repository context available.
+- **N / Lock Acquired: Return success**: Represents the successful acquisition of the lock and the return of a success message.
+  visible in diagram; no further repository context available.
+- **L / Enter Waiting Queue**: Represents the action of entering a waiting queue when the lock is not available.
+  visible in diagram; no further repository context available.
+- **O / Monitor Lock State**: Represents the process of monitoring the lock state while in the waiting queue.
+  visible in diagram; no further repository context available.
+- **P / Perform Action with Lock**: Represents the action performed after acquiring the lock.
+  visible in diagram; no further repository context available.
+- **Q / Node Failure**: Represents the detection of a node failure.
+  visible in diagram; no further repository context available.
+- **R / RAFT/Paxos/ZAB**: Represents the consensus protocols used for failure detection and leader election.
+  visible in diagram; no further repository context available.
+- **S / Release Lock**: Represents the action of releasing the lock.
+  visible in diagram; no further repository context available.
+- **T / Notify Waiting Queue**: Represents the action of notifying the waiting queue after releasing the lock.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Candidate node starts the quorum check.
+- `B -- Majority achieved? --> C`: If a majority is achieved, propose leadership.
+- `B -- Quorum failed --> A`: If a quorum fails, restart the election process.
+- `C --> D`: Propose leadership and wait for acceptance.
+- `D -- All acceptances received --> E`: If all acceptances are received, become the leader.
+- `D -- Timeout expired --> A`: If the acceptance wait times out, restart the election process.
+- `E --> F`: The leader broadcasts heartbeat messages.
+- `F --> G`: Check if other nodes are alive.
+- `G -- Yes --> F`: If other nodes are alive, continue broadcasting heartbeats.
+- `G -- No --> H`: If no other nodes are alive, detect failure and trigger a new election.
+- `H --> A`: Triggering a new election returns to the start.
+- `I --> J`: Client requests a lock.
+- `J -- Yes --> K`: If the lock is available, attempt lock acquisition.
+- `J -- No --> L`: If the lock is not available, enter the waiting queue.
+- `K --> M`: Check if the lock acquisition was successful.
+- `M -- Yes --> N`: If the acquisition was successful, return success.
+- `M -- No --> L`: If the acquisition was not successful, enter the waiting queue.
+- `L --> O`: Monitor the lock state while in the waiting queue.
+- `O --> J`: Monitoring the lock state leads back to checking lock availability.
+- `N --> P`: Perform action with the acquired lock.
+- `P --> S`: Release the lock after performing the action.
+- `S --> T`: Notify the waiting queue after releasing the lock.
+- `T --> J`: Notifying the waiting queue leads back to checking lock availability.
+- `Q --> H`: Node failure triggers the detection of failure and a new election.
+- `R --> B`: Consensus protocols contribute to the quorum check.
+- `R --> G`: Consensus protocols contribute to checking if other nodes are alive.
+- `R --> M`: Consensus protocols contribute to checking if the lock acquisition was successful.
+
+## Repository Context & Terminology
+- **RAFT/Paxos/ZAB**: Consensus algorithms used in distributed systems to achieve agreement among nodes, especially in the presence of failures.
+- **Quorum**: The minimum number of nodes that must agree on a decision for it to be considered valid in a distributed system.
+- **Leader Election**: The process of selecting a leader node in a distributed system, often using consensus algorithms.
+- **Heartbeat**: A periodic signal sent by a node to indicate that it is still alive and functioning.
+- **Lock Acquisition**: The process of obtaining exclusive access to a shared resource.
+- **Waiting Queue**: A queue where clients wait for a lock to become available.
+- **Node Failure**: The event when a node in the distributed system becomes unavailable or unresponsive.
+
+## High-Density QA Ground Truth Summary
+The leader election process begins with a `Candidate Node: Start`, initiating a `Quorum Check`. If `Majority achieved?` is true, the node proceeds to `Propose Leadership`; otherwise, if `Quorum failed`, the process loops back to `Candidate Node: Start`. After proposing leadership, the system enters an `Acceptance Wait: Timeout` state. If `All acceptances received`, the node `Become Leader: Update State`; if `Timeout expired`, the process restarts at `Candidate Node: Start`. The elected leader then performs `Heartbeat Broadcast` to check `Other Nodes Alive?`. If `Yes`, heartbeats continue; if `No`, the system `Detect Failure: Trigger new election`, returning to the start. Concurrently, a `Client Request: Lock Key` initiates the lock acquisition process. The system checks `Lock Available?`. If `Yes`, it attempts `Attempt Lock Acquisition`; if `No`, the client `Enter Waiting Queue` and `Monitor Lock State` until the lock becomes available, looping back to `Lock Available?`. If `Acquisition Successful?` is true, the system `Lock Acquired: Return success` and proceeds to `Perform Action with Lock`, then `Release Lock` and `Notify Waiting Queue`, which loops back to `Lock Available?`. The RAFT/Paxos/ZAB consensus protocols are used in the Quorum Check, checking if other nodes are alive, and checking if the lock acquisition was successful. The process ends with either `Notify Waiting Queue` after releasing a lock or `Detect Failure: Trigger new election` after detecting a node failure.

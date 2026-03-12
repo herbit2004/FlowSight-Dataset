@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the infrastructure setup within an AWS environment, likely provisioned using Terraform. It illustrates the relationships and dependencies between various AWS resources, such as load balancers, EC2 instances, security groups, subnets, S3 buckets, and VPCs. The diagram serves as a visual representation of the infrastructure's architecture, aiding in understanding the system's components and their interactions.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It shows a hierarchical structure with the load balancer listener at the top and various AWS resources branching out below. There isn't a single defined start or end node, but the `aws_lb_listener.web` node can be considered a logical starting point, and the S3 buckets and EC2 instances can be considered endpoints.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Terraform**: Encloses the AWS subgraph, indicating that the infrastructure is managed using Terraform.
+- **Aws**: Encloses all the AWS resources, indicating that the infrastructure is deployed on AWS.
+
+## Node-by-Node Description
+- **aws_lb_listener.web**: Represents an AWS Load Balancer Listener for the web application. visible in diagram; no further repository context available.
+- **aws_lb.web**: Represents an AWS Load Balancer for the web application. visible in diagram; no further repository context available.
+- **aws_lb_target_group_attachment.web**: Represents the attachment of a target group to the load balancer. visible in diagram; no further repository context available.
+- **aws_lb_target_group.web**: Represents an AWS Load Balancer Target Group for the web application. visible in diagram; no further repository context available.
+- **aws_instance.web_server**: Represents an EC2 instance acting as a web server. visible in diagram; no further repository context available.
+- **aws_instance.app_server**: Represents an EC2 instance acting as an application server. visible in diagram; no further repository context available.
+- **aws_db_instance.main_db**: Represents an AWS RDS database instance. visible in diagram; no further repository context available.
+- **aws_security_group.db**: Represents a security group for the database instance. visible in diagram; no further repository context available.
+- **aws_security_group.web**: Represents a security group for the web application. visible in diagram; no further repository context available.
+- **aws_subnet.public**: Represents a public subnet within the VPC. visible in diagram; no further repository context available.
+- **aws_subnet.private**: Represents a private subnet within the VPC. visible in diagram; no further repository context available.
+- **aws_vpc.main**: Represents the main VPC (Virtual Private Cloud). visible in diagram; no further repository context available.
+- **aws_s3_bucket.logs**: Represents an S3 bucket for storing logs. visible in diagram; no further repository context available.
+- **aws_s3_bucket.test**: Represents an S3 bucket for testing purposes. visible in diagram; no further repository context available.
+- **aws_s3_bucket_policy.logs_policy**: Represents an S3 bucket policy for the logs bucket. visible in diagram; no further repository context available.
+- **aws_s3_bucket_policy.test_policy**: Represents an S3 bucket policy for the test bucket. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `aws_lb_listener.web --> aws_lb.web`: Traffic is routed from the listener to the load balancer.
+- `aws_lb_listener.web --> aws_lb_target_group.web`: Traffic is also routed from the listener to the target group.
+- `aws_lb.web --> aws_security_group.web`: The load balancer is associated with the web security group.
+- `aws_lb.web --> aws_subnet.public`: The load balancer is associated with the public subnet.
+- `aws_lb_target_group_attachment.web --> aws_instance.web_server`: The target group attachment connects the load balancer to the web server instance.
+- `aws_lb_target_group_attachment.web --> aws_lb_target_group.web`: The target group attachment is associated with the target group.
+- `aws_lb_target_group.web --> aws_vpc.main`: The target group is associated with the main VPC.
+- `aws_s3_bucket_policy.logs_policy --> aws_s3_bucket.logs`: The logs bucket policy is applied to the logs bucket.
+- `aws_s3_bucket_policy.test_policy --> aws_s3_bucket.test`: The test bucket policy is applied to the test bucket.
+- `aws_security_group.db --> aws_security_group.web`: The database security group is associated with the web security group.
+- `aws_security_group.web --> aws_vpc.main`: The web security group is associated with the main VPC.
+- `aws_subnet.private --> aws_vpc.main`: The private subnet is associated with the main VPC.
+- `aws_subnet.public --> aws_vpc.main`: The public subnet is associated with the main VPC.
+
+## Repository Context & Terminology
+- **Terraform**: An infrastructure-as-code tool used to define and provision infrastructure.
+- **AWS**: Amazon Web Services, a cloud computing platform.
+- **Load Balancer**: Distributes incoming network traffic across multiple servers to ensure no single server is overwhelmed.
+- **Listener**: Checks for connection requests from clients, using the protocol and port that you configure.
+- **Target Group**: A group of targets (instances, IP addresses, Lambda functions) that receive traffic from a load balancer.
+- **EC2 Instance**: A virtual server in AWS's Elastic Compute Cloud (EC2) for running applications.
+- **Security Group**: A virtual firewall that controls the traffic allowed in and out of EC2 instances.
+- **Subnet**: A range of IP addresses in a VPC that enables you to isolate different EC2 resources.
+- **VPC**: A virtual private cloud, a logically isolated section of the AWS cloud where you can launch AWS resources in a defined virtual network.
+- **S3 Bucket**: A storage service in AWS for storing objects.
+- **S3 Bucket Policy**: A resource-based policy that grants specified AWS accounts or AWS services access to the bucket and the objects in it.
+- **RDS**: Relational Database Service, a distributed relational database service by Amazon Web Services (AWS).
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a Terraform-managed AWS infrastructure, starting with the `aws_lb_listener.web` which directs traffic to both `aws_lb.web` (the load balancer) and `aws_lb_target_group.web` (the target group). The load balancer is associated with `aws_security_group.web` and `aws_subnet.public`, while the target group is linked to `aws_vpc.main`. The `aws_lb_target_group_attachment.web` connects the target group to the `aws_instance.web_server`. The `aws_vpc.main` is also connected to `aws_subnet.private`, `aws_subnet.public`, and `aws_security_group.web`. Database resources include `aws_db_instance.main_db` and `aws_security_group.db`, with the latter linked to `aws_security_group.web`. For logging and testing, `aws_s3_bucket_policy.logs_policy` is applied to `aws_s3_bucket.logs`, and `aws_s3_bucket_policy.test_policy` is applied to `aws_s3_bucket.test`. Finally, `aws_instance.app_server` is present, but its direct connections are not shown in the diagram. The diagram provides a high-level overview of the infrastructure's components and their relationships, essential for understanding the system's architecture and dependencies within the AWS cloud environment. The use of Terraform suggests an infrastructure-as-code approach, enabling automated provisioning and management of these resources.

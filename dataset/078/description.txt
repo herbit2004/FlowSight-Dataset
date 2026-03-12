@@ -1,0 +1,61 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the layered structure of a software and hardware system. It depicts the flow of data and control between different layers, from the user interface to the hardware. The diagram serves as a high-level overview of the system's components and their interactions.
+
+## Overall Layout
+The diagram is laid out from left to right, representing the flow of data and control from the user interface layer to the hardware layer. It is divided into four layers: User Interface Layer, Application Layer, Data Layer, and Hardware Layer. The User Interface Layer is the start node, and the Hardware Layer containing the USRP X310 is the end node.
+
+## Subgraphs / Stages
+The diagram contains four explicit subgraphs, each representing a layer in the system: User Interface Layer, Application Layer, Data Layer, and Hardware Layer.
+
+## Node-by-Node Description
+- **index.html / index.html**: Represents the main HTML file for the user interface, containing 1120+ lines of code.
+  In the repository this corresponds to the main HTML file for the user interface.
+- **JavaScript / JavaScript**: Represents the JavaScript code responsible for providing real-time updates to the user interface.
+  In the repository this corresponds to the JavaScript code for real-time updates.
+- **Bootstrap CSS / Bootstrap CSS**: Represents the Bootstrap CSS framework used for responsive design in the user interface.
+  In the repository this corresponds to the Bootstrap CSS framework.
+- **app.py / app.py**: Represents the main Flask application file, containing 605 lines of code and providing a REST API.
+  In the repository this corresponds to the main Flask application file.
+- **config.py / config.py**: Represents the configuration file, containing 135 lines of code and responsible for settings management.
+  In the repository this corresponds to the configuration file.
+- **gscn_calculator.py / gscn_calculator.py**: Represents the GSCN calculator module, containing 176 lines of code and responsible for frequency calculation.
+  In the repository this corresponds to the GSCN calculator module.
+- **usrp_controller.py / usrp_controller.py**: Represents the USRP controller module, containing 301 lines of code and responsible for hardware control.
+  In the repository this corresponds to the USRP controller module.
+- **config.json / config.json**: Represents the configuration data stored in JSON format.
+  In the repository this corresponds to the configuration data file.
+- **detected_frequencies.json / detected_frequencies.json**: Represents the detected frequencies data stored in JSON format.
+  In the repository this corresponds to the detected frequencies data file.
+- **\*.dat files / \*.dat files**: Represents the signal data files.
+  In the repository this corresponds to the signal data files.
+- **init_ssb_block / init_ssb_block**: Represents the RFNoC application.
+  In the repository this corresponds to the RFNoC application.
+- **FPGA Bitstream / FPGA Bitstream**: Represents the FPGA bitstream for custom processing.
+  In the repository this corresponds to the FPGA bitstream.
+- **USRP X310 / USRP X310**: Represents the USRP X310 SDR hardware.
+  In the repository this corresponds to the USRP X310 SDR hardware.
+
+## Edges, Branches & Convergence
+- `HTML <--> JS`: Represents the interaction between the HTML and JavaScript components for real-time updates.
+- `JS <--> FLASK`: Represents the interaction between the JavaScript and Flask application through the REST API.
+- `FLASK --> CONFIG_MGR`: Represents the Flask application accessing the configuration manager for settings.
+- `FLASK --> GSCN_CALC`: Represents the Flask application using the GSCN calculator for frequency calculation.
+- `FLASK --> USRP_CTRL`: Represents the Flask application controlling the USRP hardware.
+- `CONFIG_MGR <--> CONFIG_JSON`: Represents the configuration manager reading and writing the configuration data in JSON format.
+- `USRP_CTRL --> EXEC`: Represents the USRP controller initiating the RFNoC application.
+- `USRP_CTRL <--> FREQ_JSON`: Represents the USRP controller reading and writing the detected frequencies data in JSON format.
+- `USRP_CTRL --> SIGNAL_DATA`: Represents the USRP controller reading and writing the signal data files.
+- `EXEC --> FPGA_BIN`: Represents the RFNoC application loading the FPGA bitstream.
+- `FPGA_BIN --> X310`: Represents the FPGA bitstream configuring the USRP X310 hardware.
+
+## Repository Context & Terminology
+- **Flask**: A micro web framework written in Python. It is used to build the REST API in the application layer.
+- **REST API**: An architectural style for designing networked applications. It relies on a stateless, client-server communication protocol, typically HTTP.
+- **RFNoC**: Radio Frequency Network on Chip. A framework for building high-performance SDR applications on FPGAs.
+- **FPGA**: Field-Programmable Gate Array. An integrated circuit that can be configured by the user after manufacturing.
+- **USRP X310**: A software-defined radio (SDR) platform manufactured by Ettus Research. It is used for transmitting and receiving radio signals.
+- **GSCN**: Global System Cell Network.
+- **Bootstrap**: A popular CSS framework for developing responsive and mobile-first websites.
+
+## High-Density QA Ground Truth Summary
+The system architecture begins with the `index.html` file in the User Interface Layer, which interacts with JavaScript for real-time updates. Bootstrap CSS provides responsive design. The JavaScript communicates with the `app.py` Flask application via a REST API. The Flask application then interacts with several modules: `config.py` for settings management, which reads from and writes to `config.json`; `gscn_calculator.py` for frequency calculation, which writes to `detected_frequencies.json`; and `usrp_controller.py` for hardware control. The `usrp_controller.py` module interacts with the Data Layer, reading and writing `detected_frequencies.json` and `*.dat` files containing signal data. It also initiates the `init_ssb_block` RFNoC application in the Hardware Layer. The RFNoC application loads the `FPGA Bitstream` for custom processing, which configures the `USRP X310` SDR hardware. The USRP X310 is the final hardware component. The `config.py` file manages settings, demonstrating a key aspect of the application layer's role in configuring the system's behavior.

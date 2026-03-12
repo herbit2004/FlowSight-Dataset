@@ -1,0 +1,20 @@
+graph TD
+    subgraph Order Processing
+        A(Start Order) --> B{Item in Stock?};
+        B -- No --> C(Notify Customer: Out of Stock);
+        C --> F(Cancel Order);
+        B -- Yes --> D(Calculate Total);
+        D --> E{Payment Received?};
+        E -- Yes --> G(Package Items);
+        G --> H(Print Shipping Label);
+        H --> I(Ship Order);
+        I --> J{Delivery Confirmed?};
+        J -- No --> K(Investigate Delivery Failure);
+        K --> H;
+        J -- Yes --> L(Update Inventory);
+        L --> M(Send Confirmation Email);
+        M --> F;
+        E -- No --> L;
+        F --> N(Order Completed);
+
+    end

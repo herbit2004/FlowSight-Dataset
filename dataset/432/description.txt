@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the structure and data flow within a Lightning Web Component (LWC) application. It illustrates the interaction between different layers, including the UI, controller, core engine, and data layers. The diagram provides a high-level overview of the system's components and their relationships.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner, with the UI Layer at the top and the Data Layer at the bottom. It shows a hierarchical structure, starting with the main orchestrator in the UI Layer and branching down to the data sources. The start node is `jtQueryViewer`, and the end nodes are `Custom Metadata` and `Salesforce DB`.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing different layers of the application:
+- **UI Layer - Lightning**: Contains UI components built with Lightning Web Components.
+- **Controller Layer - Apex**: Contains Apex controllers that handle business logic.
+- **Core Engine**: Contains the core logic and caching mechanisms.
+- **Data Layer**: Represents the data storage locations.
+
+## Node-by-Node Description
+- **QV / jtQueryViewer Main Orchestrator**: The main orchestrator component in the UI Layer, responsible for coordinating the other UI components. visible in diagram; no further repository context available.
+- **CB / jtSearchableCombobox Config Selector**: A UI component that allows users to select configurations. visible in diagram; no further repository context available.
+- **EB / jtExecuteButton Smart Button**: A UI component that triggers the execution of a query. visible in diagram; no further repository context available.
+- **QR / jtQueryResults Multi-View Display**: A UI component that displays the query results in multiple views. visible in diagram; no further repository context available.
+- **CM / jtCacheModal Cache Manager**: A UI component that manages the cache. visible in diagram; no further repository context available.
+- **QVC / JT_QueryViewerController Query Execution**: An Apex controller responsible for executing the query. visible in diagram; no further repository context available.
+- **MC / JT_MetadataCreator Config Management**: An Apex class responsible for managing metadata configurations. visible in diagram; no further repository context available.
+- **UF / JT_UsageFinder Usage Search**: An Apex class responsible for searching usage data. visible in diagram; no further repository context available.
+- **DS / JT_DataSelector Singleton + Caching**: A core engine component that acts as a singleton and provides caching functionality. visible in diagram; no further repository context available.
+- **MD / Custom Metadata**: Represents the custom metadata storage. visible in diagram; no further repository context available.
+- **DB / Salesforce DB**: Represents the Salesforce database. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `QV --> CB`: The `jtQueryViewer` orchestrates the `jtSearchableCombobox`.
+- `QV --> EB`: The `jtQueryViewer` orchestrates the `jtExecuteButton`.
+- `QV --> QR`: The `jtQueryViewer` orchestrates the `jtQueryResults`.
+- `QV --> CM`: The `jtQueryViewer` orchestrates the `jtCacheModal`.
+- `CB --> QVC`: The `jtSearchableCombobox` triggers the `JT_QueryViewerController`.
+- `EB --> QVC`: The `jtExecuteButton` triggers the `JT_QueryViewerController`.
+- `CM --> QVC`: The `jtCacheModal` interacts with the `JT_QueryViewerController`.
+- `QVC --> DS`: The `JT_QueryViewerController` uses the `JT_DataSelector`.
+- `MC --> MD`: The `JT_MetadataCreator` writes to `Custom Metadata`.
+- `UF --> DB`: The `JT_UsageFinder` searches the `Salesforce DB`.
+- `DS --> DB`: The `JT_DataSelector` reads from/writes to the `Salesforce DB`.
+- `DS --> MD`: The `JT_DataSelector` reads from/writes to `Custom Metadata`.
+
+## Repository Context & Terminology
+- **Lightning Web Components (LWC)**: A web standard-based programming model for building user interfaces on the Salesforce platform.
+- **Apex**: A proprietary programming language developed by Salesforce, used to execute business logic on the Salesforce platform.
+- **Singleton**: A design pattern that restricts the instantiation of a class to one object.
+- **Caching**: A technique used to store frequently accessed data in a temporary storage location to improve performance.
+- **Custom Metadata**: Customizable, deployable, packageable, and upgradeable metadata. It allows developers to create custom application configurations.
+- **Salesforce DB**: The database used by the Salesforce platform to store data.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with the `jtQueryViewer` component in the UI Layer, acting as the main orchestrator. It initiates interactions with `jtSearchableCombobox`, `jtExecuteButton`, `jtQueryResults`, and `jtCacheModal` components. The `jtSearchableCombobox` and `jtExecuteButton` components trigger the `JT_QueryViewerController` in the Controller Layer, which is responsible for query execution. The `jtCacheModal` also interacts with the `JT_QueryViewerController`. The `JT_QueryViewerController` then utilizes the `JT_DataSelector` in the Core Engine, which implements a singleton pattern and caching mechanisms. The `JT_DataSelector` interacts with both the `Salesforce DB` and `Custom Metadata` in the Data Layer. Separately, the `JT_MetadataCreator` manages configurations in `Custom Metadata`, and the `JT_UsageFinder` searches for usage data in the `Salesforce DB`. The data flow culminates in the `Salesforce DB` and `Custom Metadata`, representing the data storage locations. The `JT_DataSelector` component, central to the Core Engine, exemplifies the use of caching to optimize data retrieval from both the `Salesforce DB` and `Custom Metadata`.

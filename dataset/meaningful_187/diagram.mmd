@@ -1,0 +1,73 @@
+graph TD
+    subgraph Application Environment Release Gate
+    A[Start Release Process] --> B{Environment Check};
+    B -- Production Environment? --> C{Compliance Check};
+    B -- Staging Environment? --> D{Regression Test Suite};
+    B -- Development Environment? --> E{Unit Test Suite};
+
+    C -- Compliant? --> F{Security Scan};
+    C -- Not Compliant --> G[Failure: Compliance Issues];
+
+    D -- Tests Passed? --> H{Performance Benchmark};
+    D -- Tests Failed --> I[Failure: Regression Tests];
+
+    E -- Tests Passed? --> J{Code Coverage Analysis};
+    E -- Tests Failed --> K[Failure: Unit Tests];
+
+    F -- Vulnerabilities Found? --> L[Failure: Security Scan];
+    F -- No Vulnerabilities --> M{Infrastructure Provisioning};
+
+    H -- Meets Threshold? --> N{Smoke Test};
+    H -- Below Threshold --> O[Failure: Performance Issues];
+
+    J -- Sufficient Coverage? --> P{Package Build};
+    J -- Insufficient Coverage --> Q[Failure: Code Coverage];
+
+    M --> R{Deployment};
+    R -- Successful? --> S{Post-Deployment Validation};
+    R -- Failed --> T[Failure: Deployment];
+
+    N -- Tests Passed? --> P;
+    N -- Tests Failed --> U[Failure: Smoke Tests];
+
+    P --> V{Artifact Repository Metadata Update};
+    V --> R;
+
+    S -- Validation Passed? --> W[Success: Release Completed];
+    S -- Validation Failed --> X[Failure: Post-Deployment Validation];
+
+    G --> Z[Rollback & Alert];
+    I --> Z;
+    K --> Z;
+    L --> Z;
+    O --> Z;
+    T --> Z;
+    U --> Z;
+    X --> Z;
+
+    Z --> AA[Notify Engineering & Security];
+    AA --> AB[Log Failure Event];
+
+    W --> AC[Release Complete Notification];
+    AC --> AD[Update Release Tracking System];
+
+    subgraph Advanced Features
+        AE[Canary Deployment Trigger] --> AF{Canary Healthy?}
+        AF -- Yes --> AG[Promote Canary];
+        AF -- No --> AH[Rollback Canary];
+        AG --> AI[Monitor Production];
+        AI --> AJ{Stability Maintained?}
+        AJ -- Yes --> AK[Full Release];
+        AJ -- No --> AL[Rollback & Alert];
+        M --> AE;
+        AI --> AL;
+        AK --> AC
+        AL --> Z;
+
+    end
+    end
+
+    classDef failure fill:#f9d2d0,stroke:#333,stroke-width:2px;
+    class G,I,K,L,O,T,U,X,Z,AH,AL failure;
+    classDef success fill:#d4edda,stroke:#333,stroke-width:2px;
+    class W,AK success;

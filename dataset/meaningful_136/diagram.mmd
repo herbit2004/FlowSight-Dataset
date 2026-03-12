@@ -1,0 +1,20 @@
+graph TD
+    A[Document Ingestion] --> B{Document Type?};
+    B -- PDF --> C[PDF Parser];
+    B -- Text --> D[Text Preprocessor];
+    C --> D;
+    D --> E[Tokenization & POS Tagging];
+    E --> F[Named Entity Recognition];
+    F --> G{Entity linking available?};
+    G -- Yes --> H[Wikidata Lookup];
+    G -- No --> I[Contextual Entity Linking];
+    H --> J[Entity Normalization];
+    I --> J;
+    J --> K[Relationship Extraction];
+    K --> L{Valid Relationship?};
+    L -- Yes --> M[Triple Generation];
+    L -- No --> N[Discarded Relationship];
+    M --> O[Knowledge Graph Store];
+    style O fill:#f9f,stroke:#333,stroke-width:2px
+    classDef highlighted fill:#f9f,stroke:#333,stroke-width:2px
+    class O highlighted

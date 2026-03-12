@@ -1,0 +1,10 @@
+graph TD
+    A[Start: Initiating CoreSync Validation] --> B{FluxBridge Router Status?}
+    B -- Status: OK --> C[VaultNode Handshake: Request Auth Token]
+    B -- Status: Error --> E[ArcLane Distributor: Redirection to SpectraQueue Flush]
+    C --> D{ZenithGate Auth Layer: Token Valid?}
+    D -- Valid --> F[VaultNode Handshake: Initiate DataSync]
+    D -- Invalid --> E
+    F --> G[CoreSync Validation Complete]
+    E --> G
+    G --> H[End: CoreSync Operational]

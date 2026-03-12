@@ -1,0 +1,51 @@
+## Diagram Type & Purpose
+This is a graph diagram depicting the relationships between different types of nodes in a Neo4j graph database, specifically in the context of BBOT (presumably a security or network analysis tool). It illustrates how events detected by BBOT are represented as nodes in the graph and how they relate to other entities like hosts, domains, and technologies. The diagram serves as a visual representation of the data model used by BBOT and Neo4j.
+
+## Overall Layout
+The diagram is laid out from left to right. It shows BBOT Events on the left, which are then linked to Neo4j Nodes on the right. There is no explicit hierarchy, but the flow generally moves from events to related entities in the Neo4j graph.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs: "BBOT Events" and "Neo4j Nodes".
+
+## Node-by-Node Description
+- **E1 / DNS_NAME**: Represents a DNS name event detected by BBOT. visible in diagram; no further repository context available.
+- **E2 / OPEN_TCP_PORT**: Represents an open TCP port event detected by BBOT. visible in diagram; no further repository context available.
+- **E3 / TECHNOLOGY**: Represents a technology event detected by BBOT. visible in diagram; no further repository context available.
+- **E4 / URL**: Represents a URL event detected by BBOT. visible in diagram; no further repository context available.
+- **E5 / EMAIL**: Represents an email event detected by BBOT. visible in diagram; no further repository context available.
+- **N1 / Host**: Represents a host in the network. visible in diagram; no further repository context available.
+- **N2 / Domain**: Represents a domain. visible in diagram; no further repository context available.
+- **N3 / DNS_NAME**: Represents a DNS name node in the Neo4j graph. visible in diagram; no further repository context available.
+- **N4 / OPEN_TCP_PORT**: Represents an open TCP port node in the Neo4j graph. visible in diagram; no further repository context available.
+- **N5 / TECHNOLOGY**: Represents a technology node in the Neo4j graph. visible in diagram; no further repository context available.
+- **N6 / IP**: Represents an IP address. visible in diagram; no further repository context available.
+- **N7 / URL**: Represents a URL node in the Neo4j graph. visible in diagram; no further repository context available.
+- **N8 / Email**: Represents an email node in the Neo4j graph. visible in diagram; no further repository context available.
+- **N9 / Module**: Represents a module. visible in diagram; no further repository context available.
+- **N10 / Event**: Represents an event node in the Neo4j graph. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `E1 --> N3`: A DNS_NAME event from BBOT is linked to a DNS_NAME node in Neo4j.
+- `E2 --> N4`: An OPEN_TCP_PORT event from BBOT is linked to an OPEN_TCP_PORT node in Neo4j.
+- `E3 --> N5`: A TECHNOLOGY event from BBOT is linked to a TECHNOLOGY node in Neo4j.
+- `E4 --> N7`: A URL event from BBOT is linked to a URL node in Neo4j.
+- `E5 --> N8`: An EMAIL event from BBOT is linked to an Email node in Neo4j.
+- `N1 --> N2`: A Host is PART_OF a Domain.
+- `N3 --> N1`: A DNS_NAME RESOLVES_TO a Host.
+- `N4 --> N1`: An OPEN_TCP_PORT is ON_HOST a Host.
+- `N1 --> N5`: A Host USES_TECH a TECHNOLOGY.
+- `N10 --> N1`: An Event is ABOUT a Host.
+- `N10 --> N2`: An Event is ABOUT a Domain.
+- `N10 --> N9`: An Event is EMITTED_BY a Module.
+
+## Repository Context & Terminology
+- **BBOT Events**: Events detected by the BBOT system, likely related to network security or monitoring.
+- **Neo4j**: A graph database used to store and analyze the relationships between different entities.
+- **Host**: Represents a computer or server in the network.
+- **Domain**: Represents a domain name.
+- **Technology**: Represents a technology used by a host.
+- **Event**: A generic event node in the Neo4j graph, linked to other nodes to represent relationships.
+- **Module**: A software module that emits events.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the data flow from BBOT events into a Neo4j graph database. The process begins with BBOT detecting events such as OPEN_TCP_PORT, URL, EMAIL, DNS_NAME, and TECHNOLOGY. These events are then represented as corresponding nodes within the "BBOT Events" subgraph. Each of these BBOT event nodes is linked to a corresponding node within the "Neo4j Nodes" subgraph, representing the same entity within the Neo4j graph database. For example, an OPEN_TCP_PORT event in BBOT is linked to an OPEN_TCP_PORT node in Neo4j. The Neo4j nodes are then interconnected to represent relationships between entities. A DNS_NAME node RESOLVES_TO a Host node, an OPEN_TCP_PORT node is ON_HOST a Host node, and a Host node USES_TECH a TECHNOLOGY node. Furthermore, an Event node can be ABOUT a Host or a Domain, and it is EMITTED_BY a Module. The Host node is also PART_OF a Domain node. The IP node is visible in the diagram but has no further repository context available. The Domain and Technology nodes represent the end points of certain relationships, illustrating how BBOT events are used to build a graph of interconnected entities within Neo4j.

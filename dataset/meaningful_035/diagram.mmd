@@ -1,0 +1,26 @@
+graph TD
+    subgraph Loyalty System
+    A[Client Request: Earn Points] --> B{Tier Check Required?};
+    B -- Yes --> C[Tier Eligibility Service];
+    C --> D{Eligible for Higher Tier?};
+    D -- Yes --> E[Update Tier Status];
+    D -- No --> F[Log Tier Eligibility Check];
+    E --> G[Tier Change Notification];
+    G --> H[Points Processor];
+    B -- No --> H;
+    H --> I[Points Ledger Update];
+    I --> J[Points Balance Update];
+    J --> K[Activity Log: Points Earned];
+    K --> L[Notification Service: Points Earned];
+    L --> M[Reward Points Data Store];
+    M --> N{Sufficient Points for Reward?};
+    N -- Yes --> O[Reward Redemption Service];
+    O --> P[Reward Fulfillment Process];
+    P --> Q[Inventory Management System];
+    Q --> R[Transaction Log: Reward Redeemed];
+    N -- No --> R;
+    F --> K;
+    end
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    classDef default fill:#fff,stroke:#333,stroke-width:1px;
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R default

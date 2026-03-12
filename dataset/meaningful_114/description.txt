@@ -1,0 +1,93 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the data flow for index updates and user queries within a search system. It illustrates the process of ingesting data, validating it, updating the index, and handling user queries by either retrieving cached results or performing a full retrieval, scoring, and ranking process. The diagram serves as a high-level overview of the system's architecture and data processing pipeline.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It consists of two main sections: the "Index Update Flow" on the left and the "User Query" flow on the right, which converge at the "Search Index Reader". The start nodes are "Data Ingest API" and "User Query", and the end nodes are "Return Results" and "Dead Letter Queue".
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Index Update Flow". The rest of the diagram is logically divided into stages:
+1. **Index Update Flow**: Data ingestion, validation, and index writing.
+2. **Query Parsing**: User query processing and validation.
+3. **Cache Lookup**: Checking for cached results.
+4. **Retrieval & Ranking**: Retrieving, scoring, and ranking results if not found in the cache.
+5. **Result Handling**: Returning results to the user.
+
+## Node-by-Node Description
+- **Data Ingest API**: Entry point for data to be indexed.
+  visible in diagram; no further repository context available.
+- **Data Validation**: Validates the incoming data.
+  visible in diagram; no further repository context available.
+- **Record Processor**: Processes validated data records.
+  visible in diagram; no further repository context available.
+- **Dead Letter Queue**: Stores invalid data records.
+  visible in diagram; no further repository context available.
+- **Index Writer**: Writes processed data to the index.
+  visible in diagram; no further repository context available.
+- **Index Committer**: Commits the changes to the index.
+  visible in diagram; no further repository context available.
+- **Notifications**: Sends notifications about index updates.
+  visible in diagram; no further repository context available.
+- **Search Index Reader Refresh Listener**: Listens for index updates and refreshes the search index reader.
+  visible in diagram; no further repository context available.
+- **User Query**: Represents a query submitted by a user.
+  visible in diagram; no further repository context available.
+- **Query Parser**: Parses the user query.
+  visible in diagram; no further repository context available.
+- **Error Handler: Log & Return**: Handles invalid queries by logging the error and returning an error message.
+  visible in diagram; no further repository context available.
+- **Search Index Reader**: Reads data from the index.
+  visible in diagram; no further repository context available.
+- **Cache Hit?**: Checks if the query results are available in the cache.
+  visible in diagram; no further repository context available.
+- **Return Cached Results**: Returns the cached results to the user.
+  visible in diagram; no further repository context available.
+- **Retrieval Engine**: Retrieves relevant documents from the index.
+  visible in diagram; no further repository context available.
+- **Scorer**: Scores the retrieved documents based on relevance.
+  visible in diagram; no further repository context available.
+- **Ranker**: Ranks the scored documents.
+  visible in diagram; no further repository context available.
+- **Result Assembler**: Assembles the ranked results.
+  visible in diagram; no further repository context available.
+- **Result Cache Writer**: Writes the results to the cache.
+  visible in diagram; no further repository context available.
+- **Return Results**: Returns the results to the user.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Data Ingest API --> Data Validation`: Data flows from the API to the validation stage.
+- `Data Validation -- Validated --> Record Processor`: Validated data is sent to the record processor.
+- `Data Validation -- Invalidated --> Dead Letter Queue`: Invalid data is sent to the dead letter queue.
+- `Record Processor --> Index Writer`: Processed data is sent to the index writer.
+- `Index Writer --> Index Committer`: Index writer sends data to the index committer.
+- `Index Committer --> Notifications`: Index committer triggers notifications.
+- `Notifications --> Search Index Reader Refresh Listener`: Notifications trigger a refresh of the search index reader.
+- `Search Index Reader Refresh Listener --> Search Index Reader`: Refreshed search index reader is available for queries.
+- `User Query --> Query Parser`: User query is sent to the query parser.
+- `Query Parser -- Valid Query --> Search Index Reader`: Valid query is sent to the search index reader.
+- `Query Parser -- Invalid Query --> Error Handler: Log & Return`: Invalid query is sent to the error handler.
+- `Search Index Reader --> Cache Hit?`: The search index reader checks for a cache hit.
+- `Cache Hit? -- Yes --> Return Cached Results`: If there is a cache hit, the cached results are returned.
+- `Cache Hit? -- No --> Retrieval Engine`: If there is no cache hit, the retrieval engine is used.
+- `Retrieval Engine --> Scorer`: Retrieved documents are sent to the scorer.
+- `Scorer --> Ranker`: Scored documents are sent to the ranker.
+- `Ranker --> Result Assembler`: Ranked documents are assembled.
+- `Result Assembler --> Result Cache Writer`: Assembled results are written to the cache.
+- `Result Cache Writer --> Return Results`: Results are returned to the user.
+
+## Repository Context & Terminology
+- **Data Ingest API**: An Application Programming Interface (API) that allows external systems to submit data for indexing.
+- **Data Validation**: The process of ensuring that the ingested data conforms to predefined schemas and rules.
+- **Record Processor**: A component responsible for transforming and preparing data records for indexing.
+- **Dead Letter Queue**: A message queue used to store messages that could not be processed.
+- **Index Writer**: A component that writes data to the search index.
+- **Index Committer**: A component that commits changes to the search index, making them visible to search queries.
+- **Search Index Reader**: A component that reads data from the search index to fulfill search queries.
+- **Retrieval Engine**: The core component responsible for retrieving relevant documents from the index based on a search query.
+- **Scorer**: A component that assigns relevance scores to retrieved documents based on the query.
+- **Ranker**: A component that ranks the scored documents to present the most relevant results first.
+- **Result Assembler**: A component that combines and formats the ranked results into a user-friendly format.
+- **Result Cache Writer**: A component that writes the search results to a cache for faster retrieval in the future.
+
+## High-Density QA Ground Truth Summary
+The process begins with either the "Data Ingest API" receiving data for indexing or a "User Query" being submitted. For index updates, the data flows through "Data Validation". If the data is "Validated", it proceeds to the "Record Processor", "Index Writer", "Index Committer", and "Notifications", eventually refreshing the "Search Index Reader". If the data is "Invalidated", it is sent to the "Dead Letter Queue". For user queries, the query is processed by the "Query Parser". If the query is "Valid Query", it proceeds to the "Search Index Reader"; otherwise, an "Invalid Query" is handled by the "Error Handler: Log & Return". The "Search Index Reader" then checks for a "Cache Hit?". If "Yes", the "Return Cached Results" node is reached. If "No", the query proceeds through the "Retrieval Engine", "Scorer", "Ranker", and "Result Assembler" before being written to the "Result Cache Writer" and finally "Return Results". The "Index Writer" is responsible for writing processed data to the index, while the "Retrieval Engine" is the core component for retrieving relevant documents based on a search query. The system uses a cache to improve performance by storing frequently accessed results.

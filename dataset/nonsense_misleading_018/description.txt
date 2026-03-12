@@ -1,0 +1,52 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a support ticket resolution process. It depicts the steps involved from the initial submission of a support ticket by a user to the eventual closure of the ticket. The diagram serves as a visual representation of the workflow, outlining the various stages and decision points in the ticket resolution process.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "User submits support ticket" node at the top and flows downwards through a series of decision diamonds and process rectangles. The process ends with the "Close ticket" node, which loops back to the start.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Ticket Submission & SLA Check, Initial Triage, Knowledge Base Resolution, Specialist Escalation, Resolution & Closure, and Knowledge Base Update.
+
+## Node-by-Node Description
+- **A / User submits support ticket**: Represents the initial action of a user submitting a support ticket. visible in diagram; no further repository context available.
+- **B / SLA breached?**: A decision point to determine if the Service Level Agreement (SLA) has been breached. visible in diagram; no further repository context available.
+- **C / Triage and Categorization**: Represents the process of triaging and categorizing the support ticket. visible in diagram; no further repository context available.
+- **D / Knowledge base available?**: A decision point to determine if a relevant knowledge base article is available. visible in diagram; no further repository context available.
+- **E / Escalate to specialist team**: Represents the action of escalating the ticket to a specialist team. visible in diagram; no further repository context available.
+- **F / Specialist resolution successful?**: A decision point to determine if the specialist team successfully resolved the issue. visible in diagram; no further repository context available.
+- **G / Acknowledge user receipt**: Represents acknowledging the user's receipt of the resolution. visible in diagram; no further repository context available.
+- **I / Provide KB article to user**: Represents providing a knowledge base article to the user. visible in diagram; no further repository context available.
+- **J / User confirms resolution?**: A decision point to determine if the user confirms the resolution provided in the KB article. visible in diagram; no further repository context available.
+- **H / Resolve issue & close ticket**: Represents resolving the issue and closing the ticket. visible in diagram; no further repository context available.
+- **K / Update knowledge base**: Represents updating the knowledge base with the resolution. visible in diagram; no further repository context available.
+- **L / Close ticket**: Represents the final action of closing the ticket. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits a support ticket, initiating the process.
+- `B -- No --> C`: If the SLA is not breached, the ticket proceeds to triage and categorization.
+- `B -- Yes --> H`: If the SLA is breached, the issue is immediately resolved and the ticket is closed.
+- `C --> D`: After triage, the process checks for knowledge base availability.
+- `D -- No --> E`: If no knowledge base article is available, the ticket is escalated to a specialist team.
+- `D -- Yes --> I`: If a knowledge base article is available, it is provided to the user.
+- `I --> J`: The user is provided with a KB article.
+- `J -- No --> E`: If the user does not confirm the resolution, the ticket is escalated to a specialist team.
+- `J -- Yes --> H`: If the user confirms the resolution, the issue is resolved and the ticket is closed.
+- `E --> F`: The specialist team attempts to resolve the issue.
+- `F -- No --> G`: If the specialist resolution is unsuccessful, user receipt is acknowledged.
+- `F -- Yes --> H`: If the specialist resolution is successful, the issue is resolved and the ticket is closed.
+- `H --> K`: After resolving the issue and closing the ticket, the knowledge base is updated.
+- `K --> L`: The knowledge base update leads to closing the ticket.
+- `L --> A`: Closing the ticket restarts the process at ticket submission.
+- `G --> L`: Acknowledging user receipt leads directly to closing the ticket.
+
+## Repository Context & Terminology
+- **SLA (Service Level Agreement)**: A commitment between a service provider and a client. In this diagram, an SLA breach immediately leads to issue resolution, bypassing triage, which is an error.
+- **Triage**: The process of prioritizing and categorizing support tickets. In this diagram, triage occurs only if the SLA is not breached.
+- **Knowledge Base (KB)**: A repository of information and solutions to common problems. In this diagram, the KB is consulted after triage.
+- **Specialist Team**: A team of experts who handle escalated support tickets. In this diagram, escalation occurs if no KB article is available or if the user doesn't confirm resolution.
+- **Ticket Resolution**: The process of resolving the user's issue. In this diagram, resolution can occur through KB articles or specialist intervention.
+- **Ticket Closure**: The final step in the support process. In this diagram, closing the ticket restarts the entire process.
+- **User Receipt Acknowledgement**: A confirmation to the user that their issue has been received. In this diagram, this leads directly to ticket closure without resolution.
+
+## High-Density QA Ground Truth Summary
+The support ticket process begins with a user submitting a support ticket (A). The first decision point is whether the SLA has been breached (B). If the SLA has been breached (B -- Yes --> H), the issue is immediately resolved and the ticket is closed, bypassing triage and knowledge base checks. If the SLA has not been breached (B -- No --> C), the ticket undergoes triage and categorization (C). Next, the system checks if a knowledge base article is available (D). If a KB article is available (D -- Yes --> I), it is provided to the user (I), who then confirms whether the resolution is adequate (J). If the user confirms (J -- Yes --> H), the issue is resolved and the ticket is closed. If the user does not confirm (J -- No --> E), or if no KB article is initially available (D -- No --> E), the ticket is escalated to a specialist team (E). The specialist team attempts to resolve the issue (F). If the specialist resolution is successful (F -- Yes --> H), the issue is resolved and the ticket is closed. If the specialist resolution is unsuccessful (F -- No --> G), the user receipt is acknowledged (G), which then leads directly to closing the ticket (L). After the ticket is closed (H --> K), the knowledge base is updated (K), and the process restarts at ticket submission (L --> A). Acknowledging user receipt (G) also leads directly to closing the ticket (L). This process contains several errors, including an SLA breach leading directly to resolution, closing the ticket restarting the process, and acknowledging user receipt leading to ticket closure without resolution.

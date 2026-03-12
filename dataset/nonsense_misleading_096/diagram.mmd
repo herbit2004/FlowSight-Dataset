@@ -1,0 +1,15 @@
+graph TD
+    A[Customer Places Order] --> B{Inventory Available?};
+    B -- No --> C[Process Payment];
+    B -- Yes --> D[Generate Picking List];
+    D --> E[Pick Items];
+    E --> F[Pack Items];
+    F --> G{Payment Successful?};
+    G -- No --> H[Cancel Order];
+    G -- Yes --> I[Ship Items];
+    I --> J[Order Delivered];
+    J --> K[Archive Order Data];
+    H --> A;
+    C --> L[Notify Customer of Backorder]
+    L --> I
+    K -->E

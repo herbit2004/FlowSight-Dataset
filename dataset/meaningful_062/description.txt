@@ -1,0 +1,88 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting a data processing pipeline, organized into tiers based on data temperature (hot, warm, cold). It illustrates the flow of transaction data from ingestion through processing, storage, and eventual analysis. The diagram serves as a high-level overview of the data lifecycle within the system.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) fashion, with data flowing from the top (Data Ingestion) to the bottom (Data Science and Reporting). It is divided into tiers representing different stages of data processing and storage. The start node is "Transaction Event Stream" and the end nodes are "API - Real-time Reporting", "Data Science - Model Training", and "Scheduled Reporting".
+
+## Subgraphs / Stages
+The diagram contains four explicit subgraphs:
+- **Data Ingestion**: Handles the initial intake and validation of transaction data.
+- **Hot Tier**: Processes recent, frequently accessed transaction data.
+- **Warm Tier**: Stores and processes aggregated, less frequently accessed data.
+- **Cold Tier**: Archives historical data for long-term storage and infrequent access.
+
+## Node-by-Node Description
+- **Transaction Event Stream**: Represents the source of incoming transaction data.
+  visible in diagram; no further repository context available.
+- **Data Stream Processor - Flink**: A data stream processing engine (Apache Flink) used for real-time data processing.
+  visible in diagram; no further repository context available.
+- **Schema Registry**: Stores and manages the schema of the transaction data.
+  visible in diagram; no further repository context available.
+- **Data Validation Rules**: Defines the rules for validating the incoming transaction data.
+  visible in diagram; no further repository context available.
+- **Dead Letter Queue**: A queue for storing invalid or failed transaction data.
+  visible in diagram; no further repository context available.
+- **Hot Data - Recent Transactions**: Represents the storage of recent transaction data.
+  visible in diagram; no further repository context available.
+- **Indexing Engine - Lucene**: An indexing engine (Apache Lucene) used for fast data retrieval.
+  visible in diagram; no further repository context available.
+- **Query Router**: Routes queries to the appropriate data source.
+  visible in diagram; no further repository context available.
+- **API - Real-time Reporting**: An API for accessing real-time data.
+  visible in diagram; no further repository context available.
+- **Data Science - Model Training**: Represents the use of data for training data science models.
+  visible in diagram; no further repository context available.
+- **Warm Data - Monthly Aggregations**: Represents the storage of monthly aggregated data.
+  visible in diagram; no further repository context available.
+- **Spark Processing**: A data processing engine (Apache Spark) used for batch processing.
+  visible in diagram; no further repository context available.
+- **Data Lake - Parquet**: A data lake storing data in Parquet format.
+  visible in diagram; no further repository context available.
+- **Scheduled Reporting**: Represents the generation of scheduled reports.
+  visible in diagram; no further repository context available.
+- **Cold Data - Historical Archive**: Represents the storage of historical data.
+  visible in diagram; no further repository context available.
+- **Data Migration Tool**: A tool for migrating data between storage tiers.
+  visible in diagram; no further repository context available.
+- **Object Storage - Glacier**: Object storage (AWS Glacier) for long-term archival.
+  visible in diagram; no further repository context available.
+- **Data Enrichment - AWS Glue**: A data enrichment service (AWS Glue) for transforming and enriching data.
+  visible in diagram; no further repository context available.
+- **Data Aging Policy**: A policy that defines how data is moved between storage tiers based on age.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Transaction Event Stream --> Data Stream Processor - Flink`: Incoming transaction data is processed by Flink.
+- `Data Stream Processor - Flink --> Schema Registry`: Flink uses the schema registry to validate data.
+- `Data Stream Processor - Flink --> Data Validation Rules`: Flink validates data against defined rules.
+- `Data Validation Rules -- Yes --> Hot Data - Recent Transactions`: Valid data is stored in the hot tier.
+- `Data Validation Rules -- No --> Dead Letter Queue`: Invalid data is sent to the dead letter queue.
+- `Hot Data - Recent Transactions --> Indexing Engine - Lucene`: Hot data is indexed for fast retrieval.
+- `Indexing Engine - Lucene --> Query Router`: Indexed data is sent to the query router.
+- `Query Router --> API - Real-time Reporting`: Queries are routed to the API for real-time reporting.
+- `Query Router --> Data Science - Model Training`: Queries are routed to data science for model training.
+- `Warm Data - Monthly Aggregations --> Spark Processing`: Monthly aggregated data is processed by Spark.
+- `Spark Processing --> Data Lake - Parquet`: Processed data is stored in the data lake.
+- `Data Lake - Parquet --> Query Router`: Data from the data lake is sent to the query router.
+- `Data Lake - Parquet --> Scheduled Reporting`: Data from the data lake is used for scheduled reporting.
+- `Cold Data - Historical Archive -- Infrequent Access --> Data Migration Tool`: Infrequently accessed data is migrated.
+- `Data Migration Tool --> Object Storage - Glacier`: Migrated data is stored in Glacier.
+- `Object Storage - Glacier --> Data Enrichment - AWS Glue`: Data from Glacier is enriched using AWS Glue.
+- `Data Enrichment - AWS Glue --> Data Lake - Parquet`: Enriched data is stored in the data lake.
+- `Data Aging Policy --> Data Migration Tool`: The data aging policy triggers data migration.
+- `Data Aging Policy --> Spark Processing`: The data aging policy triggers spark processing.
+- `Data Aging Policy --> Indexing Engine - Lucene`: The data aging policy triggers indexing engine.
+- Paths converge at `Query Router` from `Indexing Engine - Lucene` and `Data Lake - Parquet`.
+
+## Repository Context & Terminology
+- **Data Lake**: A centralized repository that allows you to store all your structured and unstructured data at any scale.
+- **Data Tiering**: A strategy for storing data in different tiers based on factors such as access frequency, performance requirements, and cost.
+- **Apache Flink**: A stream processing framework for real-time data processing.
+- **Apache Spark**: A unified analytics engine for large-scale data processing.
+- **Apache Lucene**: A high-performance, full-featured text search engine library.
+- **Parquet**: A columnar storage format optimized for query performance.
+- **AWS Glacier**: A low-cost object storage service for long-term archiving.
+- **AWS Glue**: A fully managed extract, transform, and load (ETL) service.
+
+## High-Density QA Ground Truth Summary
+The data pipeline begins with the `Transaction Event Stream`, which feeds into the `Data Stream Processor - Flink` for real-time processing. Flink validates the incoming data against a `Schema Registry` and `Data Validation Rules`. If validation fails (`No` branch), the data is sent to a `Dead Letter Queue`; otherwise (`Yes` branch), it proceeds to the `Hot Data - Recent Transactions` storage. The `Hot Data` is then indexed by `Indexing Engine - Lucene` and routed through the `Query Router`. The `Query Router` directs queries to either the `API - Real-time Reporting` or `Data Science - Model Training`. Concurrently, `Warm Data - Monthly Aggregations` are processed by `Spark Processing` and stored in a `Data Lake - Parquet`. This data lake also feeds into the `Query Router` and is used for `Scheduled Reporting`. `Cold Data - Historical Archive` is migrated to `Object Storage - Glacier` via a `Data Migration Tool` based on a `Data Aging Policy`. Data from Glacier can be enriched using `Data Enrichment - AWS Glue` and then stored back in the `Data Lake - Parquet`. The data lake, leveraging the Parquet columnar storage format, optimizes query performance for both real-time and scheduled reporting.

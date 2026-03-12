@@ -1,0 +1,85 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the workflow of an order processing system. It illustrates the steps involved from when a user submits an order to the final analytics update, including parallel processing steps and decision points for payment, inventory, and delivery. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with "User Submits Order" and proceeds through various stages of processing, branching based on conditions, and ultimately converging towards "Order Completed" before ending with "Analytics Update". The "Parallel Processing" subgraph is positioned on the left side of the diagram.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Parallel Processing". This subgraph includes steps that occur in parallel with the main order processing flow.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of checking the inventory for the ordered items.
+  visible in diagram; no further repository context available.
+- **D / Sufficient Stock?**: A decision point to determine if there is sufficient stock available for the order.
+  visible in diagram; no further repository context available.
+- **E / Order Cancellation**: Represents the cancellation of the order due to insufficient stock.
+  visible in diagram; no further repository context available.
+- **F / Create Shipping Label**: Represents the creation of a shipping label for the order.
+  visible in diagram; no further repository context available.
+- **G / Packing Order**: Represents the process of packing the order for shipment.
+  visible in diagram; no further repository context available.
+- **H / Delivery Successful?**: A decision point to determine if the delivery of the order was successful.
+  visible in diagram; no further repository context available.
+- **I / Order Delivered**: Represents the successful delivery of the order to the customer.
+  visible in diagram; no further repository context available.
+- **J / Send Payment Reminder**: Represents sending a reminder to the user to make the payment.
+  visible in diagram; no further repository context available.
+- **K / Process Refund**: Represents the process of refunding the payment to the user.
+  visible in diagram; no further repository context available.
+- **L / Order Completed**: Represents the final stage where the order is marked as completed.
+  visible in diagram; no further repository context available.
+- **M / Update Inventory System**: Represents updating the inventory system to reflect the changes due to the order.
+  visible in diagram; no further repository context available.
+- **N / Send Confirmation Email**: Represents sending a confirmation email to the user.
+  visible in diagram; no further repository context available.
+- **O / Analytics Update**: Represents updating the analytics system with the order information.
+  visible in diagram; no further repository context available.
+- **P / Generate Invoice**: Represents the generation of an invoice for the order.
+  visible in diagram; no further repository context available.
+- **Q / Alert Warehouse Staff**: Represents alerting the warehouse staff about the order.
+  visible in diagram; no further repository context available.
+- **R / Invoice Approved**: Represents the approval of the invoice.
+  visible in diagram; no further repository context available.
+- **S / Warehouse Acknowledged**: Represents the warehouse acknowledging the order.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, leading to a payment check.
+- `B -- Yes --> C`: Payment is received, leading to an inventory check.
+- `B -- No --> J`: Payment is not received, leading to sending a payment reminder.
+- `J --> A`: Payment reminder leads back to the user submitting the order (loop).
+- `C --> D`: Inventory check leads to a stock sufficiency check.
+- `D -- Yes --> F`: Sufficient stock is available, leading to creating a shipping label.
+- `D -- No --> E`: Insufficient stock is available, leading to order cancellation.
+- `F --> G`: Shipping label creation leads to packing the order.
+- `G --> H`: Packing the order leads to a delivery success check.
+- `H -- Yes --> I`: Delivery is successful, leading to order delivered.
+- `H -- No --> K`: Delivery is unsuccessful, leading to processing a refund.
+- `I --> L`: Order delivered leads to order completed.
+- `E --> L`: Order cancellation leads to order completed.
+- `K --> C`: Process refund leads to inventory check.
+- `L --> M`: Order completed leads to updating the inventory system.
+- `M --> N`: Updating the inventory system leads to sending a confirmation email.
+- `N --> O`: Sending a confirmation email leads to updating analytics.
+- `O --> B`: Analytics update leads back to payment received check (loop).
+- `P --> R`: Generate Invoice leads to Invoice Approved.
+- `R --> Q`: Invoice Approved leads to Alert Warehouse Staff.
+- `Q --> S`: Alert Warehouse Staff leads to Warehouse Acknowledged.
+- `S --> F`: Warehouse Acknowledged leads to Create Shipping Label.
+
+## Repository Context & Terminology
+- **User Submits Order**: In standard practice, this is the initial action by a customer. In this diagram, it can also be re-triggered after a payment reminder.
+- **Payment Received?**: In standard practice, this verifies if payment was successful. In this diagram, it's a decision point that can be re-entered after analytics update, creating a loop.
+- **Inventory Check**: In standard practice, this verifies stock levels. In this diagram, it's triggered after payment and also after processing a refund.
+- **Sufficient Stock?**: In standard practice, this determines if the order can be fulfilled. In this diagram, a 'No' leads to order cancellation.
+- **Order Completed**: In standard practice, this is the final stage of order processing. In this diagram, it occurs *before* updating the inventory system.
+- **Update Inventory System**: In standard practice, this updates stock levels. In this diagram, it occurs after order completion.
+- **Analytics Update**: In standard practice, this updates analytics data. In this diagram, it loops back to the "Payment Received?" step.
+- **Parallel Processing**: In standard practice, this refers to tasks executed simultaneously. In this diagram, it includes invoice generation, approval, warehouse alerting, and acknowledgement, all occurring before shipping label creation.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with the "User Submits Order" node, which then proceeds to the "Payment Received?" decision. If payment is received ("Yes" branch), the flow moves to "Inventory Check" and "Sufficient Stock?". If payment is not received ("No" branch), a "Send Payment Reminder" action loops back to "User Submits Order". If sufficient stock is available ("Yes" branch), the flow creates a shipping label, packs the order, and checks "Delivery Successful?". If stock is insufficient ("No" branch), the order is cancelled. The "Delivery Successful?" decision branches to "Order Delivered" if successful ("Yes" branch), or "Process Refund" if unsuccessful ("No" branch). Both "Order Delivered" and "Order Cancellation" converge to "Order Completed". The "Order Completed" node then triggers "Update Inventory System" and "Send Confirmation Email", followed by "Analytics Update". Critically, "Analytics Update" loops back to "Payment Received?", creating a potential reprocessing cycle. The "Parallel Processing" subgraph, involving invoice generation, approval, warehouse alerting, and acknowledgement, runs before shipping label creation. The "Order Completed" node occurs *before* the "Update Inventory System" node, which is counter to standard practice.

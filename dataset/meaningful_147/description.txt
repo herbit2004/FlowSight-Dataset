@@ -1,0 +1,57 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a real-time dashboard data pipeline. It illustrates the flow of data from its source through various stages of processing, aggregation, and storage, ultimately leading to the presentation of information on a real-time dashboard and an admin monitoring UI. The diagram serves as a high-level architectural overview of the data processing steps involved in providing real-time insights.
+
+## Overall Layout
+The diagram's primary direction is left to right (LR). It shows a linear flow with branching and convergence. The start node is "Sensor Data Source," and the end nodes are "Real-Time Dashboard," "Admin Monitoring UI," and "Operations Team."
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Sensor Data Ingestion, Data Quality Check, Data Transformation and Feature Extraction, Aggregation, Data Storage, and Presentation.
+
+## Node-by-Node Description
+- **A / Sensor Data Source**: Represents the origin of the data, which could be various sensors or data feeds. visible in diagram; no further repository context available.
+- **B / Raw Data Ingestion**: Represents the process of collecting and initially storing the raw sensor data. visible in diagram; no further repository context available.
+- **C / Data Quality Check**: Represents a decision point where the ingested data is validated for quality and integrity. visible in diagram; no further repository context available.
+- **D / Real-Time Transformation**: Represents the process of transforming the valid data into a suitable format for feature extraction. visible in diagram; no further repository context available.
+- **E / Alerting System**: Represents a system that generates alerts based on invalid data. visible in diagram; no further repository context available.
+- **F / Feature Extraction**: Represents the process of extracting relevant features from the transformed data. visible in diagram; no further repository context available.
+- **G / Aggregation Logic**: Represents a decision point where data is aggregated based on different criteria. visible in diagram; no further repository context available.
+- **H / Widget Data Store**: Represents a data store for widget-specific aggregated data. visible in diagram; no further repository context available.
+- **I / System Performance Store**: Represents a data store for system-wide performance data. visible in diagram; no further repository context available.
+- **J / Dashboard API Endpoint**: Represents an API endpoint that serves data for the real-time dashboard. visible in diagram; no further repository context available.
+- **K / Monitoring API Endpoint**: Represents an API endpoint that serves data for the admin monitoring UI. visible in diagram; no further repository context available.
+- **L / Real-Time Dashboard**: Represents the user interface displaying real-time data. visible in diagram; no further repository context available.
+- **M / Admin Monitoring UI**: Represents the user interface for administrative monitoring. visible in diagram; no further repository context available.
+- **N / Operations Team**: Represents the team responsible for handling alerts and operational issues. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Data flows from the sensor data source to raw data ingestion.
+- `B --> C`: Raw data is passed to the data quality check.
+- `C -- Valid Data --> D`: Valid data is passed to real-time transformation.
+- `C -- Invalid Data --> E`: Invalid data triggers the alerting system.
+- `E --> N`: The alerting system notifies the operations team.
+- `D --> F`: Transformed data is passed to feature extraction.
+- `F --> G`: Extracted features are passed to aggregation logic.
+- `G -- Per-Widget Aggregation --> H`: Data is aggregated for specific widgets and stored in the widget data store.
+- `G -- System-Wide Aggregation --> I`: Data is aggregated for system-wide performance metrics and stored in the system performance store.
+- `H --> J`: Widget data is served through the dashboard API endpoint.
+- `I --> K`: System performance data is served through the monitoring API endpoint.
+- `J --> L`: The dashboard API endpoint provides data to the real-time dashboard.
+- `K --> M`: The monitoring API endpoint provides data to the admin monitoring UI.
+
+## Repository Context & Terminology
+- **Sensor Data Source**: The origin of the data being processed, typically physical sensors or external data feeds.
+- **Raw Data Ingestion**: The process of receiving and initially storing data in its original format.
+- **Data Quality Check**: A process to ensure data meets predefined quality standards, including completeness, accuracy, and consistency.
+- **Real-Time Transformation**: Converting data into a format suitable for analysis and feature extraction with minimal latency.
+- **Feature Extraction**: Identifying and isolating relevant attributes or characteristics from the transformed data.
+- **Aggregation Logic**: Combining data points to produce summary statistics or metrics.
+- **Widget Data Store**: A database or storage system optimized for serving data to individual dashboard widgets.
+- **System Performance Store**: A database or storage system optimized for storing and retrieving system-wide performance metrics.
+- **API Endpoint**: A specific URL that provides access to data or functionality.
+- **Real-Time Dashboard**: A user interface that displays data with minimal delay, providing up-to-date insights.
+- **Admin Monitoring UI**: A user interface that allows administrators to monitor the health and performance of the system.
+- **Alerting System**: A system that automatically generates notifications when predefined conditions are met, indicating potential issues.
+- **Operations Team**: The team responsible for maintaining the system and responding to alerts.
+
+## High-Density QA Ground Truth Summary
+The real-time dashboard data pipeline begins with the "Sensor Data Source," which feeds into "Raw Data Ingestion." The ingested data then undergoes a "Data Quality Check." If the data is valid, it proceeds to "Real-Time Transformation" and "Feature Extraction." If the data is invalid, the "Alerting System" is triggered, notifying the "Operations Team." After feature extraction, the data reaches "Aggregation Logic," where it branches into "Per-Widget Aggregation" and "System-Wide Aggregation." Per-widget aggregated data is stored in the "Widget Data Store," while system-wide data is stored in the "System Performance Store." The "Widget Data Store" feeds the "Dashboard API Endpoint," which in turn populates the "Real-Time Dashboard." Similarly, the "System Performance Store" feeds the "Monitoring API Endpoint," which populates the "Admin Monitoring UI." The "Data Quality Check" acts as a crucial gatekeeper, ensuring only valid data proceeds through the pipeline, while invalid data triggers alerts for operational intervention. The use of separate data stores for widgets and system performance allows for optimized data retrieval for their respective user interfaces. The API endpoints serve as abstraction layers, decoupling the data stores from the presentation layers.

@@ -1,0 +1,61 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts a process for handling findings, potentially related to software quality assurance or security. The diagram outlines the steps involved in triaging, assigning, and resolving issues, including escalation paths.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom. It starts with a "기능 QA + 보안 QA" node at the top and flows down through decision points and processing steps, eventually leading to either a loop back to the start or an "사용자 에스컬레이션" end node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages:
+1. Initial QA: "기능 QA + 보안 QA"
+2. Finding Analysis: "FINDINGS 파싱" and "CRITICAL/HIGH?"
+3. Assignment: "Finding → Specialist 매핑" and component assignments (UI, API, DB, PERF, SEC, TYPE)
+4. Build and Validation: "빌드/타입 검증"
+5. Cycle Check and Escalation: "Cycle < 3?" and "사용자 에스컬레이션"
+
+## Node-by-Node Description
+- **QA / 기능 QA + 보안 QA**: Initial Quality Assurance and Security Assurance step. visible in diagram; no further repository context available.
+- **PARSE / FINDINGS 파싱**: Parsing of findings. visible in diagram; no further repository context available.
+- **CHECK / CRITICAL/HIGH?**: A decision point to determine if the finding is critical or high priority. visible in diagram; no further repository context available.
+- **DONE / 루프 종료 ✅**: Indicates the end of the loop. visible in diagram; no further repository context available.
+- **MAP / Finding → Specialist 매핑**: Mapping the finding to a specialist. visible in diagram; no further repository context available.
+- **UI / UI → frontend**: Assignment to the UI/frontend team. visible in diagram; no further repository context available.
+- **API / API → backend**: Assignment to the API/backend team. visible in diagram; no further repository context available.
+- **DB / DB → supabase**: Assignment to the database/Supabase team. visible in diagram; no further repository context available.
+- **PERF / PERF → optimizer**: Assignment to the performance/optimizer team. visible in diagram; no further repository context available.
+- **SEC / SEC → security**: Assignment to the security team. visible in diagram; no further repository context available.
+- **BUG / TYPE → bug-fixer**: Assignment to the bug-fixer team. visible in diagram; no further repository context available.
+- **BUILD / 빌드/타입 검증**: Build and type validation. visible in diagram; no further repository context available.
+- **CYCLE / Cycle < 3?**: A decision point to check if the cycle count is less than 3. visible in diagram; no further repository context available.
+- **ESC / 사용자 에스컬레이션 ⚠️**: User escalation. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `QA --> PARSE`: Initial QA leads to parsing findings.
+- `PARSE --> CHECK`: Findings parsing leads to a criticality check.
+- `CHECK -- Yes --> MAP`: If the finding is critical/high, it's mapped to a specialist.
+- `CHECK -- No --> DONE`: If the finding is not critical/high, the loop ends.
+- `MAP --> UI`: Specialist mapping leads to UI assignment.
+- `MAP --> API`: Specialist mapping leads to API assignment.
+- `MAP --> DB`: Specialist mapping leads to DB assignment.
+- `MAP --> PERF`: Specialist mapping leads to PERF assignment.
+- `MAP --> SEC`: Specialist mapping leads to SEC assignment.
+- `MAP --> BUG`: Specialist mapping leads to bug-fixer assignment.
+- `UI --> BUILD`: UI assignment leads to build validation.
+- `API --> BUILD`: API assignment leads to build validation.
+- `DB --> BUILD`: DB assignment leads to build validation.
+- `PERF --> BUILD`: PERF assignment leads to build validation.
+- `SEC --> BUILD`: SEC assignment leads to build validation.
+- `BUG --> BUILD`: Bug-fixer assignment leads to build validation.
+- All paths from UI, API, DB, PERF, SEC, and BUG converge at `BUILD`.
+- `BUILD --> CYCLE`: Build validation leads to a cycle check.
+- `CYCLE -- Yes --> QA`: If the cycle count is less than 3, the process loops back to initial QA.
+- `CYCLE -- No --> ESC`: If the cycle count is not less than 3, user escalation occurs.
+
+## Repository Context & Terminology
+- **QA (Quality Assurance)**: A process to ensure that a developed product meets defined quality standards.
+- **Supabase**: An open-source Firebase alternative.
+- **UI (User Interface)**: The means by which the user and a computer system interact, in particular the use of input devices and software.
+- **API (Application Programming Interface)**: A set of defined rules that enable different applications to communicate with each other.
+- **Escalation**: The process of raising an issue to a higher level of support or management.
+
+## High-Density QA Ground Truth Summary
+The process begins with "기능 QA + 보안 QA," representing initial quality and security checks. The findings are then parsed ("FINDINGS 파싱") and assessed for criticality ("CRITICAL/HIGH?"). If deemed critical, the finding is mapped to a specialist ("Finding → Specialist 매핑"), leading to assignments across various teams: UI/frontend, API/backend, DB/Supabase, performance optimizer, security, and bug-fixers. These assignments converge at "빌드/타입 검증," where the build and types are validated. A cycle check ("Cycle < 3?") determines if the process should loop back to the initial QA phase, allowing for iterative improvements. If the cycle count exceeds 3, indicating persistent issues, the process escalates to "사용자 에스컬레이션," potentially involving higher-level support or management intervention. The Supabase assignment suggests a modern web application stack, where the database layer is managed by Supabase. The cycle count check is a mechanism to prevent infinite loops and ensure timely resolution of issues.

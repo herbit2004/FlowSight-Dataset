@@ -1,0 +1,90 @@
+graph TD
+    subgraph Archival and Cleanup Policy - Data Lake
+    A[Start: Policy Engine Triggered] --> B{Data Lake Active?};
+    B -- Yes --> C{Compliance Check Required?};
+    B -- No --> Z[End: Data Lake Inactive];
+    C -- Yes --> D[Initiate Compliance Scan];
+    C -- No --> E[Direct Archival Process];
+    D --> F{Sensitive Data Found?};
+    F -- Yes --> G[Data Masking Application];
+    F -- No --> H[Metadata Enrichment];
+    G --> H;
+    H --> I[Archival Readiness Check];
+    I --> J{Pass Readiness Check?};
+    J -- Yes --> E;
+    J -- No --> K[Incident Log with Error Details];
+    K --> L[Alert Security Team];
+    L --> Z;
+    E --> M[Data Movement to Archive Storage];
+    M --> N[Archive Metadata Update];
+    N --> O{Replication to DR Site Required?};
+    O -- Yes --> P[Replicate to Disaster Recovery Archive];
+    O -- No --> Q[Verify Data Integrity in Archive];
+    P --> Q;
+    Q --> R{Integrity Verification Success?};
+    R -- Yes --> S[Cleanup Staging Area];
+    R -- No --> T[Retry Data Archival];
+    T --> E;
+    S --> U[Index Archive Data];
+    U --> V[Update Data Retention Policy];
+    V --> W[Generate Archival Report];
+    W --> X[Purge Data from Data Lake based on Policy];
+    X --> Y[End: Archival Complete];
+    Y --> Z;
+
+    subgraph Data Lake
+    DL1[Data Lake - Raw Zone];
+    DL2[Data Lake - Curated Zone];
+    DL3[Data Lake - Reporting Zone];
+    DL1 --> DL2;
+    DL2 --> DL3;
+    end
+
+    subgraph Archive Storage
+    AS1[Nearline Archive];
+    AS2[Cold Storage Archive];
+    M --> AS1;
+    P --> AS2;
+    end
+
+    subgraph Incident Response
+    IR1[Security Team Escalation];
+    IR2[Automated Remediation];
+    L --> IR1;
+
+    end
+
+    subgraph Compliance & Security
+    CS1[Compliance Rules Engine];
+    CS2[Data Masking Module];
+    CS3[Data Encryption Service];
+    D --> CS1;
+    G --> CS2;
+    CS2 --> CS3;
+
+    end
+
+    subgraph Monitoring & Reporting
+    MR1[Archival Status Dashboard];
+    MR2[Data Retention Policy Monitor];
+    W --> MR1;
+    V --> MR2;
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style Z fill:#f9f,stroke:#333,stroke-width:2px
+    style DL1 fill:#ccf,stroke:#333,stroke-width:1px
+    style DL2 fill:#ccf,stroke:#333,stroke-width:1px
+    style DL3 fill:#ccf,stroke:#333,stroke-width:1px
+    style AS1 fill:#ccf,stroke:#333,stroke-width:1px
+    style AS2 fill:#ccf,stroke:#333,stroke-width:1px
+    style IR1 fill:#ccf,stroke:#333,stroke-width:1px
+    style CS1 fill:#ccf,stroke:#333,stroke-width:1px
+    style CS2 fill:#ccf,stroke:#333,stroke-width:1px
+    style CS3 fill:#ccf,stroke:#333,stroke-width:1px
+    style MR1 fill:#ccf,stroke:#333,stroke-width:1px
+    style MR2 fill:#ccf,stroke:#333,stroke-width:1px
+
+    classDef process fill:#ffffee,stroke:#333,stroke-width:1px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y process
+    end

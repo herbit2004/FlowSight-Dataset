@@ -1,0 +1,45 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the data flow and processing steps within Liquid Haskell, a tool for verifying Haskell code. The diagram illustrates how Liquid Haskell takes various inputs, processes them through internal stages, and produces verified outputs. It serves as a high-level overview of the Liquid Haskell verification pipeline.
+
+## Overall Layout
+The diagram's primary direction is left to right. It is structured with nested subgraphs representing the main components of Liquid Haskell: Inputs and Outputs. The start nodes are `DepsOfA_LHAssumptions`, `DepsOfA.hi`, and `A.hs`, and the end nodes are `liquid-fixpoint` and `A.hi`.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Inputs**: Represents the input data sources for Liquid Haskell.
+- **Outputs**: Represents the output data produced by Liquid Haskell after verification.
+
+## Node-by-Node Description
+- **DepsOfA_LHAssumptions**: Represents the dependencies of A, specifically the LHAssumptions. visible in diagram; no further repository context available.
+- **DepsOfA.hi**: Represents the dependencies of A, specifically the .hi files. visible in diagram; no further repository context available.
+- **A.hs**: Represents the Haskell source code file A.hs. visible in diagram; no further repository context available.
+- **Dependencies of A LifttedSpecs**: Represents the lifted specifications derived from the dependencies of A. visible in diagram; no further repository context available.
+- **CoreBinds**: Represents the core bindings extracted from the input Haskell code. visible in diagram; no further repository context available.
+- **BarseSpec**: Represents the parsed specifications. visible in diagram; no further repository context available.
+- **TargetSpec**: Represents the target specifications to be verified. visible in diagram; no further repository context available.
+- **Verification Constraints**: Represents the verification constraints generated for the code. visible in diagram; no further repository context available.
+- **LiftedSpec**: Represents the lifted specifications. visible in diagram; no further repository context available.
+- **liquid-fixpoint**: Represents the liquid-fixpoint solver used to check the verification constraints. visible in diagram; no further repository context available.
+- **A.hi**: Represents the output Haskell interface file containing the verified specifications. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `DepsOfA_LHAssumptions --> Dependencies of A LifttedSpecs`: Data flow from LHAssumptions dependencies to lifted specifications.
+- `DepsOfA.hi --> Dependencies of A LifttedSpecs`: Data flow from .hi dependencies to lifted specifications.
+- `A.hs --> CoreBinds`: Data flow from the Haskell source code to core bindings extraction.
+- `A.hs --> BarseSpec`: Data flow from the Haskell source code to parsed specifications.
+- `Dependencies of A LifttedSpecs --> TargetSpec`: Data flow from lifted specifications to target specifications.
+- `CoreBinds --> TargetSpec`: Data flow from core bindings to target specifications.
+- `BarseSpec --> TargetSpec`: Data flow from parsed specifications to target specifications.
+- `TargetSpec --> Verification Constraints`: Data flow from target specifications to verification constraints.
+- `Verification Constraints --> liquid-fixpoint`: The verification constraints are checked by the liquid-fixpoint solver.
+- `LiftedSpec --> A.hi`: If verified, the lifted specifications are serialized into the output Haskell interface file A.hi.
+
+## Repository Context & Terminology
+- **Liquid Haskell**: A refinement type checker for Haskell. It uses SMT solvers to automatically verify program correctness.
+- **LHAssumptions**: Assumptions about the types and properties of external functions or modules used by the code being verified.
+- **.hi file**: Haskell interface file, which contains type signatures and other information about a Haskell module.
+- **CoreBinds**: Core bindings are the essential bindings extracted from the Haskell code, representing the core logic of the program.
+- **liquid-fixpoint**: An SMT solver used by Liquid Haskell to discharge verification conditions.
+
+## High-Density QA Ground Truth Summary
+The Liquid Haskell verification process begins with three inputs: `DepsOfA_LHAssumptions`, `DepsOfA.hi`, and `A.hs`. The `DepsOfA_LHAssumptions` and `DepsOfA.hi` files feed into the "Dependencies of A LifttedSpecs" node, while `A.hs` feeds into both `CoreBinds` and `BarseSpec`. These three nodes then converge into the `TargetSpec` node within the "Outputs" subgraph. From `TargetSpec`, the process moves to `Verification Constraints`, which are then "checked by" the `liquid-fixpoint` solver. Simultaneously, `LiftedSpec` is generated, and if the verification is successful, the `LiftedSpec` is serialized into the output file `A.hi`. The `liquid-fixpoint` solver is a crucial component, acting as the backend that determines the validity of the generated verification constraints. The final output, `A.hi`, represents the verified Haskell interface file, containing the refined type signatures that guarantee the correctness of the code.

@@ -1,0 +1,26 @@
+graph TD
+    A[User Places Order] --> B{Payment Received?};
+    B -- Yes --> C[Prepare Order];
+    B -- No --> F[Cancel Order];
+    C --> D[Order Shipped];
+
+    E[Order Delivered] -- Success --> A
+    D --> E
+    D --> G{Shipping Error?};
+    G -- Yes --> I[Issue Refund];
+    G -- No --> I
+    I --> H[Notify Customer of Cancellation];
+
+    F --> H
+    H --> K[Update Inventory];
+    K --> L[Generate Invoice];
+    L --> M[Archive Order Data];
+    M --> N[Analyze Sales Data];
+    N --> O{Restock Needed?};
+    O -- No --> P[End Process];
+    O -- Yes --> Q[Restock Inventory];
+    Q --> C
+
+    subgraph Order Processing
+    A --> P
+    end

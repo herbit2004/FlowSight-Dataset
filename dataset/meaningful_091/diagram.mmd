@@ -1,0 +1,30 @@
+graph TD
+    subgraph Source Code Analysis
+        A[Git Repository Checkout] --> B(Language Detection);
+        B -- Python --> C{Poetry Project?};
+        B -- Java --> D{Maven Project?};
+        C -- Yes --> E[Poetry Lockfile Parsing];
+        C -- No --> F[Scan requirements.txt];
+        D -- Yes --> G[Maven POM Parsing];
+        D -- No --> H[Fallback: Naive JAR Scan];
+        E --> I(Dependency Extraction);
+        F --> I;
+        G --> I;
+        H --> I;
+    end
+    subgraph License Validation
+        I --> J[Dependency Fingerprinting];
+        J --> K{Known Package Database?};
+        K -- Yes --> L[License Lookup];
+        K -- No --> M[Heuristic Analysis of JAR/Package];
+        L --> N{License Acceptable?};
+        M --> N;
+        N -- Yes --> O[Add to Allowed Dependencies];
+        N -- No --> P[Raise Security Alert];
+    end
+
+    O --> Q(Generate Report);
+    P --> Q;
+
+    classDef warning fill:#f9f,stroke:#333,stroke-width:2px
+    P:::warning

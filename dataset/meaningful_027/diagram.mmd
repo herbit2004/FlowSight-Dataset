@@ -1,0 +1,32 @@
+graph TD
+    classDef important fill:#f9f,stroke:#333,stroke-width:2px;
+
+    A[Order Received] --> B{Validate Order};
+    B -- Valid Order --> C[Create Order Event];
+    B -- Invalid Order --> Z[Reject Order Event];
+    C --> D[Order Event Bus];
+    D --> E[Order Service];
+    D --> F[Inventory Service];
+    D --> G[Reporting Service];
+
+    E --> H{Apply Order Event};
+    H -- New Order --> I[Order Aggregate: Create];
+    H -- Order Update --> J[Order Aggregate: Update];
+    I --> K[Order Snapshot];
+    J --> K;
+    K --> L[Order Store];
+
+    F --> M{Update Inventory};
+    M -- Sufficient Stock --> N[Reserve Stock];
+    M -- Insufficient Stock --> O[Backorder Creation Event];
+    N --> P[Inventory Store];
+    O --> D;  style O fill:#fbb;
+
+    G --> Q{Update Report};
+    Q --> R[Sales Report];
+    Q --> S[Inventory Report];
+    R --> T[Reporting Database];
+    S --> T;
+
+    E:::important;
+    F:::important;

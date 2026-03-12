@@ -1,0 +1,34 @@
+graph TD
+    subgraph "Data Backup & Restore v1.0"
+    A[Backup Orchestrator] --> B{Backup Trigger?};
+    B -- Yes --> C[Snapshot Agent Initiation];
+    B -- No --> D[Idle State - Waits];
+    C --> E{Volume Lock Acquired?};
+    E -- Yes --> F[Data Volume Snapshot];
+    E -- No --> G[Retry Volume Lock];
+    G --> E;
+    F --> H[Metadata Capture];
+    H --> I[Backup Package Creation];
+    I --> J[Storage Repository Upload];
+    J --> K[Backup Metadata Update];
+    K --> L[Snapshot Agent Release];
+    L --> M[Volume Unlock Request];
+    M --> N[Backup Complete Notification];
+    N --> D;
+
+    subgraph "Restore Sequence"
+        P[Restore Request Received] --> Q{Backup ID Valid?};
+        Q -- Yes --> R[Metadata Retrieval];
+        Q -- No --> S[Error - Invalid Backup ID];
+        R --> T[Volume Preparation];
+        T --> U[Data Restore from Repository];
+        U --> V[Metadata Re-application];
+        V --> W[Restore Verification];
+        W --> X[Restore Complete Notification];
+    end
+
+    A --> P;
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class S error
+    end

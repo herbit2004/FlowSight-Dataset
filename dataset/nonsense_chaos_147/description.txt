@@ -1,0 +1,68 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process flow for CoreFlux Ingress. It outlines the steps involved in validating a MetaFrame signature, acquiring a NexusGuard lease, routing payloads, performing integrity checks, and handling potential failures through recovery protocols. The diagram serves as a visual representation of the system's operational logic and error handling mechanisms.
+
+## Overall Layout
+The diagram flows from top to bottom (TB). It starts with the "Initiate CoreFlux Ingress" node and ends with the "End Process" node. The diagram includes decision points that create branching paths, eventually converging towards the finalization and completion stages.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Ingress Initiation & Validation, Lease Acquisition & Distribution, Payload Routing & Flushing, Integrity Checks & Recovery, and Finalization & Completion.
+
+## Node-by-Node Description
+- **A / Initiate CoreFlux Ingress**: Represents the starting point of the CoreFlux Ingress process. visible in diagram; no further repository context available.
+- **B / Validate MetaFrame Signature**: Represents the validation of the MetaFrame signature. visible in diagram; no further repository context available.
+- **C / Acquire NexusGuard Lease**: Represents the acquisition of a NexusGuard lease. visible in diagram; no further repository context available.
+- **D / NexusGuard Lease Granted?**: A decision point to determine if the NexusGuard lease was granted. visible in diagram; no further repository context available.
+- **E / Dispatch Alert to ZenithGate Auth Layer**: Represents dispatching an alert to the ZenithGate authentication layer. visible in diagram; no further repository context available.
+- **F / Engage ArcLane Distributor**: Represents engaging the ArcLane distributor. visible in diagram; no further repository context available.
+- **G / Route Payload via FluxBridge Router**: Represents routing the payload through the FluxBridge router. visible in diagram; no further repository context available.
+- **H / Pass to SpectraQueue Flush**: Represents passing the payload to the SpectraQueue for flushing. visible in diagram; no further repository context available.
+- **I / SpectraQueue Flush Successful?**: A decision point to determine if the SpectraQueue flush was successful. visible in diagram; no further repository context available.
+- **J / Perform VaultNode Integrity Check**: Represents performing an integrity check on the VaultNode. visible in diagram; no further repository context available.
+- **K / Trigger DeltaSync Recovery Protocol**: Represents triggering the DeltaSync recovery protocol. visible in diagram; no further repository context available.
+- **L / VaultNode Integrity OK?**: A decision point to determine if the VaultNode integrity is OK. visible in diagram; no further repository context available.
+- **M / Initiate CoreSync Validation**: Represents initiating CoreSync validation. visible in diagram; no further repository context available.
+- **N / Finalize CoreFlux Transmit**: Represents finalizing the CoreFlux transmission. visible in diagram; no further repository context available.
+- **O / Log Incident in ShadowTrace Ledger**: Represents logging an incident in the ShadowTrace ledger. visible in diagram; no further repository context available.
+- **P / Activate TemporalRewind Buffer**: Represents activating the TemporalRewind buffer. visible in diagram; no further repository context available.
+- **Q / Acknowledge Ingress Completion**: Represents acknowledging the completion of the ingress process. visible in diagram; no further repository context available.
+- **R / End Process**: Represents the end of the process. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Initiates the validation of the MetaFrame signature.
+- `B -- Valid Signature --> C`: Proceeds to acquire a NexusGuard lease if the signature is valid.
+- `B -- Invalid Signature --> E`: Dispatches an alert to ZenithGate Auth Layer if the signature is invalid.
+- `C --> D`: Checks if the NexusGuard lease was granted.
+- `D -- Yes --> F`: Engages the ArcLane distributor if the lease was granted.
+- `D -- No --> E`: Dispatches an alert to ZenithGate Auth Layer if the lease was not granted.
+- `F --> G`: Routes the payload via the FluxBridge router.
+- `G --> H`: Passes the payload to SpectraQueue Flush.
+- `H --> I`: Checks if the SpectraQueue flush was successful.
+- `I -- Yes --> J`: Performs VaultNode Integrity Check if the flush was successful.
+- `I -- No --> K`: Triggers DeltaSync Recovery Protocol if the flush was not successful.
+- `J --> L`: Checks if the VaultNode integrity is OK.
+- `L -- Yes --> M`: Initiates CoreSync Validation if the integrity is OK.
+- `L -- No --> K`: Triggers DeltaSync Recovery Protocol if the integrity is not OK.
+- `E --> O`: Logs an incident in ShadowTrace Ledger after dispatching an alert.
+- `O --> N`: Proceeds to finalize CoreFlux transmit after logging the incident.
+- `K --> P`: Activates TemporalRewind Buffer after triggering the recovery protocol.
+- `P --> N`: Proceeds to finalize CoreFlux transmit after activating the buffer.
+- `M --> N`: Proceeds to finalize CoreFlux transmit after initiating CoreSync validation.
+- `N --> Q`: Acknowledges Ingress Completion after finalizing the transmit.
+- `Q --> R`: Ends the process after acknowledging completion.
+
+## Repository Context & Terminology
+- **CoreFlux Ingress**: The initial process of receiving and processing data.
+- **MetaFrame Signature**: A digital signature used to verify the integrity and authenticity of the MetaFrame.
+- **NexusGuard Lease**: A lease acquired from NexusGuard, likely granting access or permissions to a protected resource.
+- **ArcLane Distributor**: A component responsible for distributing data or tasks within the ArcLane system.
+- **FluxBridge Router**: A router within the FluxBridge system, responsible for directing data traffic.
+- **SpectraQueue Flush**: The process of flushing or clearing the SpectraQueue, likely involving data persistence or processing.
+- **VaultNode Integrity Check**: A check to ensure the integrity and validity of a VaultNode, likely a secure storage or processing node.
+- **DeltaSync Recovery Protocol**: A protocol used to recover from failures or inconsistencies, potentially involving data synchronization.
+- **TemporalRewind Buffer**: A buffer used to rewind or revert to a previous state, likely for error recovery or debugging.
+- **CoreSync Validation**: A validation process for CoreSync, likely involving data consistency or synchronization checks.
+- **ShadowTrace Ledger**: A ledger used to record incidents or events for auditing or debugging purposes.
+- **ZenithGate Auth Layer**: An authentication layer within the ZenithGate system, responsible for verifying user identities and permissions.
+
+## High-Density QA Ground Truth Summary
+The CoreFlux Ingress process begins by initiating the ingress and validating the MetaFrame signature. If the signature is valid, the system attempts to acquire a NexusGuard lease; otherwise, an alert is dispatched to the ZenithGate Auth Layer, and an incident is logged in the ShadowTrace Ledger before proceeding to finalize the CoreFlux transmit. If the NexusGuard lease is granted, the ArcLane Distributor is engaged, and the payload is routed via the FluxBridge Router, then passed to SpectraQueue Flush. A key decision point is whether the SpectraQueue flush is successful. If successful, a VaultNode Integrity Check is performed; otherwise, the DeltaSync Recovery Protocol is triggered, activating the TemporalRewind Buffer before finalizing the transmit. Another branch occurs after the VaultNode Integrity Check: if the VaultNode integrity is OK, CoreSync Validation is initiated; otherwise, the DeltaSync Recovery Protocol is triggered. The ZenithGate Auth Layer and ShadowTrace Ledger are used for security and auditing. Finally, after either CoreSync Validation or TemporalRewind Buffer activation, the CoreFlux transmit is finalized, the ingress completion is acknowledged, and the process ends.

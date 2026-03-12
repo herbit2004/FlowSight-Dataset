@@ -1,0 +1,67 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the AstroPulse cycle. It outlines the sequence of operations, decision points, and error handling mechanisms involved in initiating, executing, and terminating the AstroPulse process. The diagram serves as a visual representation of the workflow, aiding in understanding and troubleshooting the system.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TB). It starts with the "Initiate AstroPulse Trigger" node and ends with the "AstroPulse Cycle Terminated" node. The flowchart illustrates a series of processes and conditional checks, forming a linear progression with loops for error handling and retries.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: CoreSync Stabilization, VaultNode Handshake & ZenithGate Authentication, ArcLane Distribution, DeltaWave Modulation, and Chronosync Integrity Check.
+
+## Node-by-Node Description
+- **A / Start: Initiate AstroPulse Trigger**: Represents the beginning of the AstroPulse cycle. visible in diagram; no further repository context available.
+- **B / Is CoreSync Stabilized?**: A decision point to check if the CoreSync process is stable. visible in diagram; no further repository context available.
+- **C / Engage VaultNode Handshake**: Initiates a handshake with the VaultNode. visible in diagram; no further repository context available.
+- **D / Activate FluxBridge Router**: Activates the FluxBridge Router. visible in diagram; no further repository context available.
+- **E / Perform SpectraQueue Flush**: Flushes the SpectraQueue. visible in diagram; no further repository context available.
+- **F / SpectraQueue Empty?**: A decision point to check if the SpectraQueue is empty. visible in diagram; no further repository context available.
+- **G / Validate ZenithGate Auth Layer**: Validates the ZenithGate Authentication Layer. visible in diagram; no further repository context available.
+- **H / ZenithGate Pass?**: A decision point to check if the ZenithGate authentication passed. visible in diagram; no further repository context available.
+- **I / Execute ArcLane Distributor**: Executes the ArcLane Distributor. visible in diagram; no further repository context available.
+- **J / Retrigger CoreSync Validation**: Retriggers the CoreSync validation process. visible in diagram; no further repository context available.
+- **K / AstroPulse Delivered?**: A decision point to check if the AstroPulse was delivered. visible in diagram; no further repository context available.
+- **L / Complete DeltaWave Modulation**: Completes the DeltaWave Modulation process. visible in diagram; no further repository context available.
+- **M / Buffer ArcLane Distributor**: Buffers the ArcLane Distributor. visible in diagram; no further repository context available.
+- **N / Initiate Chronosync Integrity Check**: Initiates the Chronosync Integrity Check. visible in diagram; no further repository context available.
+- **O / Chronosync OK?**: A decision point to check if the Chronosync is OK. visible in diagram; no further repository context available.
+- **P / Finalize VectorSpan Compilation**: Finalizes the VectorSpan Compilation. visible in diagram; no further repository context available.
+- **Q / Revert DeltaWave Modulation**: Reverts the DeltaWave Modulation process. visible in diagram; no further repository context available.
+- **R / End: AstroPulse Cycle Terminated**: Represents the end of the AstroPulse cycle. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Initiates the AstroPulse cycle.
+- `B -- Yes --> C`: CoreSync is stabilized, proceeds to VaultNode handshake.
+- `B -- No --> D`: CoreSync is not stabilized, activates FluxBridge Router.
+- `D --> E`: Activates FluxBridge Router, then performs SpectraQueue Flush.
+- `E --> F`: Performs SpectraQueue Flush, then checks if SpectraQueue is empty.
+- `F -- Yes --> C`: SpectraQueue is empty, proceeds to VaultNode handshake.
+- `F -- No --> D`: SpectraQueue is not empty, loops back to activate FluxBridge Router and perform SpectraQueue Flush again.
+- `C --> G`: Engages VaultNode Handshake, then validates ZenithGate Auth Layer.
+- `G --> H`: Validates ZenithGate Auth Layer, then checks if ZenithGate passed.
+- `H -- Yes --> I`: ZenithGate passed, executes ArcLane Distributor.
+- `H -- No --> J`: ZenithGate did not pass, retriggers CoreSync Validation.
+- `J --> B`: Retriggers CoreSync Validation, loops back to check CoreSync stabilization.
+- `I --> K`: Executes ArcLane Distributor, then checks if AstroPulse was delivered.
+- `K -- Yes --> L`: AstroPulse was delivered, completes DeltaWave Modulation.
+- `K -- No --> M`: AstroPulse was not delivered, buffers ArcLane Distributor.
+- `M --> I`: Buffers ArcLane Distributor, loops back to execute ArcLane Distributor again.
+- `L --> N`: Completes DeltaWave Modulation, then initiates Chronosync Integrity Check.
+- `N --> O`: Initiates Chronosync Integrity Check, then checks if Chronosync is OK.
+- `O -- Yes --> P`: Chronosync is OK, finalizes VectorSpan Compilation.
+- `O -- No --> Q`: Chronosync is not OK, reverts DeltaWave Modulation.
+- `Q --> L`: Reverts DeltaWave Modulation, loops back to complete DeltaWave Modulation again.
+- `P --> R`: Finalizes VectorSpan Compilation, ends the AstroPulse cycle.
+
+## Repository Context & Terminology
+- **AstroPulse**: The overall process or cycle being described in the flowchart. It seems to involve data delivery and synchronization.
+- **CoreSync**: A process that needs to be stabilized before proceeding with the AstroPulse cycle. Its validation can be retriggered if it fails.
+- **FluxBridge Router**: A component activated when CoreSync is not stabilized, possibly for routing or managing data flow.
+- **SpectraQueue**: A queue that needs to be flushed and emptied, likely containing data related to the AstroPulse process.
+- **VaultNode**: A node requiring a handshake, suggesting a secure connection or authentication process.
+- **ZenithGate**: An authentication layer that needs to pass validation for the process to continue.
+- **ArcLane Distributor**: A component responsible for distributing data or tasks within the AstroPulse cycle.
+- **DeltaWave Modulation**: A modulation process that needs to be completed and can be reverted if Chronosync fails.
+- **Chronosync**: An integrity check that determines whether the DeltaWave Modulation was successful.
+- **VectorSpan Compilation**: The final compilation step before the AstroPulse cycle is terminated.
+
+## High-Density QA Ground Truth Summary
+The AstroPulse cycle begins with initiating the AstroPulse Trigger, immediately checking if CoreSync is stabilized. If CoreSync is not stabilized, the FluxBridge Router is activated, and the SpectraQueue is flushed iteratively until empty, looping back to the router activation if the queue remains non-empty. Once CoreSync is stabilized or the SpectraQueue is empty, the VaultNode Handshake is engaged, followed by validating the ZenithGate Auth Layer. If ZenithGate authentication fails, CoreSync validation is retriggered, looping back to the initial CoreSync check. Upon successful ZenithGate authentication, the ArcLane Distributor is executed, and the system checks if AstroPulse was delivered. If not, the ArcLane Distributor is buffered, looping back to execution. If AstroPulse is delivered, DeltaWave Modulation is completed, followed by a Chronosync Integrity Check. A failed Chronosync reverts DeltaWave Modulation, looping back to its completion. A successful Chronosync finalizes VectorSpan Compilation, terminating the AstroPulse cycle. The CoreSync stabilization and ZenithGate authentication steps are crucial for secure and reliable data processing within the AstroPulse cycle.

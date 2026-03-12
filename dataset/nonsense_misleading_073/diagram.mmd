@@ -1,0 +1,20 @@
+graph TD
+    A[User Places Order] --> B{Payment Received?};
+    B -- No --> C[Order Rejected];
+    B -- Yes --> D[Inventory Check];
+    D -- Available --> E[Packing Order];
+    D -- Unavailable --> F[Backorder Placed];
+    F --> G[Notify Customer];
+    G --> H{Customer Accepts Delay?};
+    H -- Yes --> I[Update Order Status];
+    I --> E
+    H -- No --> C;
+    E --> J[Shipping Label Generated];
+    J --> K{Shipping Label Valid?};
+    K -- Yes --> L[Order Shipped];
+    L --> M[Send Shipping Confirmation];
+    K -- No --> L;
+    M --> N[Customer Receives Order];
+    N --> O[Order Completed];
+    C --> O;
+    O --> A;

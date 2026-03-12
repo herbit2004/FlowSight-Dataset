@@ -1,0 +1,74 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of data and control within a research engine system. It illustrates the interaction between the user interface, backend, search engines, LLM providers, storage layer, and output formats. The diagram serves as a high-level overview of the system's components and their relationships.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It is hierarchically structured, starting with the user interface at the top and progressing through the backend, research engine, search engines, LLM providers, storage layer, and finally the output formats at the bottom. The start node is the User Interface, and the end nodes are the various output formats (Markdown, PDF Export, LaTeX, Quarto, RIS/BibTeX).
+
+## Subgraphs / Stages
+The diagram contains the following explicit subgraphs:
+- **User Interface**: Represents the user-facing component of the system.
+- **Flask Backend**: Represents the server-side logic and API endpoints.
+- **Research Engine**: Represents the core research processing pipeline.
+- **LLM Providers**: Represents the various Large Language Model services used.
+- **Search Engines**: Represents the different search engines used to retrieve information.
+- **Storage Layer**: Represents the data storage components.
+- **Output**: Represents the different output formats.
+
+## Node-by-Node Description
+- **User Interface / Web Browser**: Represents the user's web browser interacting with the system via localhost:5000. visible in diagram; no further repository context available.
+- **Flask Backend / REST API + WebSocket**: Represents the Flask backend providing REST API and WebSocket endpoints. visible in diagram; no further repository context available.
+- **Flask Backend / Authentication CSRF Protection**: Represents the authentication and CSRF protection mechanisms in the backend. visible in diagram; no further repository context available.
+- **Flask Backend / Research Routes**: Represents the API routes related to research functionalities. visible in diagram; no further repository context available.
+- **Research Engine / Strategy Selector**: Selects the appropriate research strategy (20+ strategies). visible in diagram; no further repository context available.
+- **Research Engine / Question Generator**: Generates research questions. visible in diagram; no further repository context available.
+- **Research Engine / Search Executor**: Executes searches using various search engines and LLM providers. visible in diagram; no further repository context available.
+- **Research Engine / Report Synthesizer**: Synthesizes the research report. visible in diagram; no further repository context available.
+- **LLM Providers / Local LLMs / Ollama**: Represents the Ollama local LLM provider. visible in diagram; no further repository context available.
+- **LLM Providers / Local LLMs / LM Studio**: Represents the LM Studio local LLM provider. visible in diagram; no further repository context available.
+- **LLM Providers / Cloud LLMs / OpenAI**: Represents the OpenAI cloud LLM provider. visible in diagram; no further repository context available.
+- **LLM Providers / Cloud LLMs / Anthropic**: Represents the Anthropic cloud LLM provider. visible in diagram; no further repository context available.
+- **LLM Providers / Cloud LLMs / Google Gemini**: Represents the Google Gemini cloud LLM provider. visible in diagram; no further repository context available.
+- **LLM Providers / Cloud LLMs / OpenRouter**: Represents the OpenRouter cloud LLM provider with 100+ models. visible in diagram; no further repository context available.
+- **Search Engines / Local Search / SearXNG**: Represents the SearXNG local search engine. visible in diagram; no further repository context available.
+- **Search Engines / Web Search / Tavily**: Represents the Tavily web search engine. visible in diagram; no further repository context available.
+- **Search Engines / Academic / ArXiv**: Represents the ArXiv academic search engine. visible in diagram; no further repository context available.
+- **Search Engines / Elasticsearch**: Represents the Elasticsearch search engine. visible in diagram; no further repository context available.
+- **Search Engines / Document Library**: Represents a document library. visible in diagram; no further repository context available.
+- **Search Engines / Brave**: Represents the Brave search engine. visible in diagram; no further repository context available.
+- **Search Engines / DuckDuckGo**: Represents the DuckDuckGo search engine. visible in diagram; no further repository context available.
+- **Search Engines / PubMed**: Represents the PubMed search engine. visible in diagram; no further repository context available.
+- **Search Engines / Semantic Scholar**: Represents the Semantic Scholar search engine. visible in diagram; no further repository context available.
+- **Storage Layer / SQLCipher DB**: Represents the SQLCipher database, AES-256 encrypted. visible in diagram; no further repository context available.
+- **Storage Layer / Vector Store**: Represents the vector store for embeddings. visible in diagram; no further repository context available.
+- **Storage Layer / File Storage**: Represents the file storage for PDFs and Docs. visible in diagram; no further repository context available.
+- **Output / Markdown**: Represents the Markdown output format. visible in diagram; no further repository context available.
+- **Output / PDF Export**: Represents the PDF export output format. visible in diagram; no further repository context available.
+- **Output / LaTeX**: Represents the LaTeX output format. visible in diagram; no further repository context available.
+- **Output / Quarto**: Represents the Quarto output format. visible in diagram; no further repository context available.
+- **Output / RIS/BibTeX**: Represents the RIS/BibTeX output format. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Web Browser --> REST API + WebSocket`: User interaction triggers a request to the backend.
+- `REST API + WebSocket --> Authentication CSRF Protection`: The backend authenticates the request and protects against CSRF attacks.
+- `Authentication CSRF Protection --> Research Routes`: Validated requests are routed to the research routes.
+- `Research Routes --> Strategy Selector`: Research routes trigger the strategy selection process.
+- `Strategy Selector --> Question Generator`: The selected strategy initiates the question generation process.
+- `Question Generator --> Search Executor`: The generated questions are passed to the search executor.
+- `Search Executor --> Ollama, LM Studio, OpenAI, Anthropic, Google Gemini, OpenRouter, SearXNG, Elasticsearch, Document Library, Tavily, Brave, DuckDuckGo, ArXiv, PubMed, Semantic Scholar`: The search executor queries various LLM providers and search engines.
+- `Search Executor --> Report Synthesizer`: Search results are passed to the report synthesizer.
+- `Report Synthesizer --> SQLCipher DB`: The report synthesizer stores data in the SQLCipher database.
+- `Document Library --> Vector Store`: The document library stores vector embeddings.
+- `Document Library --> File Storage`: The document library stores PDFs and Docs.
+- `Report Synthesizer --> Markdown, PDF Export, LaTeX, Quarto, RIS/BibTeX`: The report synthesizer generates output in various formats.
+
+## Repository Context & Terminology
+- **Flask Backend**: The backend is implemented using the Flask framework, a Python web framework.
+- **REST API**: The backend exposes a RESTful API for communication with the frontend.
+- **WebSocket**: The backend uses WebSockets for real-time communication.
+- **CSRF Protection**: Cross-Site Request Forgery (CSRF) protection is implemented to prevent malicious attacks.
+- **SQLCipher**: SQLCipher is an extension to SQLite that provides AES-256 encryption.
+- **Vector Store**: A database or storage system optimized for storing and querying vector embeddings.
+- **Ollama**: Ollama is a tool for running large language models locally.
+
+## High-Density QA Ground Truth Summary
+The process begins with a user interacting with the Web Browser at localhost:5000, which sends a request to the Flask Backend via REST API and WebSocket. The backend then performs Authentication and CSRF Protection. Upon successful authentication, the request is routed to the Research Routes. The Research Routes trigger the Strategy Selector, which selects from 20+ strategies to initiate the Question Generator. The generated questions are then passed to the Search Executor. The Search Executor queries a variety of LLM Providers including local LLMs like Ollama and LM Studio, and cloud LLMs like OpenAI, Anthropic, Google Gemini, and OpenRouter. It also queries various Search Engines including SearXNG, Elasticsearch, Document Library, Tavily, Brave, DuckDuckGo, ArXiv, PubMed, and Semantic Scholar. The Document Library stores Vector Store Embeddings and PDFs & Docs in File Storage. The search results are then passed to the Report Synthesizer, which stores data in the SQLCipher DB (AES-256 Encrypted) and generates output in various formats: Markdown, PDF Export, LaTeX, Quarto, and RIS/BibTeX. The SQLCipher DB provides encrypted storage for sensitive research data.

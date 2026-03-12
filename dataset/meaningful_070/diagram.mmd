@@ -1,0 +1,27 @@
+graph TD
+    subgraph Edge Ingress
+        A[Ingest Server: RTMP] --> B(Transcoder: x264/AAC)
+    end
+
+    subgraph CDN Origin
+        B --> C{Manifest Generator: HLS/DASH}
+        C -- HLS --> D[Origin Storage: S3 Bucket]
+        C -- DASH --> E[Origin Storage: Azure Blob]
+    end
+    
+    subgraph CDN Edge
+        F[Edge Cache: Akamai/Cloudflare]
+    end
+
+    subgraph Viewer
+        G[Web/Mobile Player]
+    end
+    
+    D -- HLS Request --> F
+    E -- DASH Request --> F
+    F -- Cache Hit --> G
+    F -- Cache Miss --> D[[Origin Storage: S3 Bucket]]
+    F -- Cache Miss --> E[[Origin Storage: Azure Blob]]
+
+    classDef cdn fill:#f9f,stroke:#333,stroke-width:2px
+	class F,D,E,C cdn

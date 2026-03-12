@@ -1,0 +1,47 @@
+graph TD
+    subgraph User Request Flow
+        A[User Request] --> B{Ingress Router};
+        B --Route based on model name--> C[Model A Endpoint];
+        B --Route based on model name--> D[Model B Endpoint];
+        C --> E[Request Validator A];
+        D --> F[Request Validator B];
+    end
+
+    subgraph Model A Inference
+        E --Valid Request--> G[Pre-processor A];
+        G --> H[Feature Extractor A];
+        H --> I[Model A Inference Engine];
+        I --> J[Post-processor A];
+        J --> K[Response Aggregator];
+        E --Invalid Request-->ErrorA[(Error Handler A)];
+    end
+
+    subgraph Model B Inference
+        F --Valid Request--> L[Pre-processor B];
+        L --> M[Feature Extractor B];
+        M --> N[Model B Inference Engine];
+        N --> O[Post-processor B];
+        O --> K;
+        F --Invalid Request--> ErrorB[(Error Handler B)];
+    end
+
+    subgraph Response & Logging
+        K --> P[Response Formatter];
+        P --> Q[API Gateway];
+        Q --> R[User Response];
+        I --> S[Inference Logger A];
+        N --> T[Inference Logger B];
+        ErrorA --> UA[Error Logger A];
+        ErrorB --> UB[Error Logger B];
+    end
+
+    subgraph Monitoring and Alerting
+         S --> V[Monitoring System];
+         T --> V;
+         UA --> W[Alerting System];
+         UB --> W;
+         V --> W;
+    end
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class ErrorA,ErrorB error

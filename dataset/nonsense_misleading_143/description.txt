@@ -1,0 +1,56 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow. It depicts the sequence of steps from when a user initiates an order to when feedback is requested, including payment checks, inventory management, shipping, and delivery confirmation. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The flow starts with "User initiates order" at the top and progresses downwards through various stages to "Feedback Request Sent" at the bottom. The diagram includes decision points and loops, indicating conditional flows and iterative processes.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Initiation & Payment, Inventory Check, Shipment Preparation, Order Delivery, Issue Resolution, and Feedback.
+
+## Node-by-Node Description
+- **A / User initiates order**: Represents the starting point of the order process, where a user places an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Send Payment Reminder**: Represents the action of sending a reminder to the user if the payment has not been received. visible in diagram; no further repository context available.
+- **D / Payment Received?**: A second decision point to check if the payment for the order has been received, after a reminder was sent. visible in diagram; no further repository context available.
+- **E / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **F / Prepare Shipment**: Represents the process of preparing the order for shipment. visible in diagram; no further repository context available.
+- **G / Ship Order**: Represents the action of shipping the order to the customer. visible in diagram; no further repository context available.
+- **H / Send Shipping Confirmation**: Represents the action of sending a confirmation message to the customer after the order has been shipped. visible in diagram; no further repository context available.
+- **I / Customer Receives Order?**: A decision point to check if the customer has received the order. visible in diagram; no further repository context available.
+- **J / Investigate Delivery Issue**: Represents the action of investigating the delivery issue if the customer has not received the order. visible in diagram; no further repository context available.
+- **K / Order Complete**: Represents the final state where the order is successfully completed. visible in diagram; no further repository context available.
+- **L / Create Shipping Label**: Represents the action of creating a shipping label for the order. visible in diagram; no further repository context available.
+- **M / Feedback Request Sent**: Represents the action of sending a feedback request to the customer after the order is completed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User initiates an order, leading to a payment check.
+- `B -- No --> C`: If payment is not received, send a payment reminder.
+- `B -- Yes --> E`: If payment is received, proceed to inventory check.
+- `C --> D`: After sending a payment reminder, check if payment has been received.
+- `D -- Yes --> F`: If payment is received after the reminder, prepare shipment.
+- `D -- No --> A`: If payment is still not received, the flow returns to "User initiates order".
+- `E -- Available --> G`: If inventory is available, ship the order.
+- `E -- Unavailable --> F`: If inventory is unavailable, proceed directly to "Prepare Shipment".
+- `F --> L`: After preparing the shipment, create a shipping label.
+- `L --> G`: After creating the shipping label, ship the order.
+- `G --> H`: After shipping the order, send a shipping confirmation.
+- `H --> I`: After sending shipping confirmation, check if the customer has received the order.
+- `I -- Yes --> K`: If the customer receives the order, the order is complete.
+- `I -- No --> J`: If the customer does not receive the order, investigate the delivery issue.
+- `J --> I`: After investigating the delivery issue, check again if the customer has received the order.
+- `K --> M`: After the order is complete, send a feedback request.
+- `M --> A`: After sending the feedback request, the flow returns to "User initiates order".
+
+## Repository Context & Terminology
+- **User initiates order**: Standard meaning is a customer placing an order for a product or service. In this diagram, it's the starting point of the workflow, but also illogically the endpoint of the feedback loop.
+- **Payment Received?**: Standard meaning is a check to verify if the payment for the order has been successfully processed. In this diagram, the "Yes" branch from the first check goes to inventory, while the "Yes" branch from the second check goes to shipment preparation.
+- **Send Payment Reminder**: Standard meaning is sending a notification to the customer to remind them to complete the payment. In this diagram, it is sent *before* the initial payment check.
+- **Inventory Check**: Standard meaning is verifying the availability of the ordered items in the warehouse. In this diagram, if unavailable, the flow proceeds directly to "Prepare Shipment", skipping steps.
+- **Prepare Shipment**: Standard meaning is packaging and preparing the order for shipping. In this diagram, it occurs *before* creating the shipping label.
+- **Create Shipping Label**: Standard meaning is generating a label with the shipping address and tracking information. In this diagram, it occurs *after* preparing the shipment.
+- **Ship Order**: Standard meaning is the process of sending the order to the customer via a shipping carrier. In this diagram, there is no tracking link provided to the customer.
+- **Customer Receives Order?**: Standard meaning is verifying if the customer has received the order. In this diagram, if not received, the flow loops back to investigate the delivery issue.
+- **Feedback Request Sent**: Standard meaning is sending a request to the customer to provide feedback on their order experience. In this diagram, it loops back to "User initiates order", starting a new order.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with the "User initiates order" node, which immediately transitions to the "Payment Received?" decision. If payment is not received, a "Send Payment Reminder" is triggered, which then leads to another "Payment Received?" check. If payment is still not received, the flow loops back to the "User initiates order" node. If payment is received (either initially or after the reminder), the process moves to "Inventory Check". If inventory is available, the order is "Ship Order" after which a "Send Shipping Confirmation" is sent. If inventory is unavailable, the process proceeds directly to "Prepare Shipment", skipping steps. After shipping confirmation, the workflow checks "Customer Receives Order?". If the customer receives the order, it's marked as "Order Complete"; otherwise, the system "Investigate Delivery Issue" and loops back to check if the customer received the order. Once the order is complete, a "Feedback Request Sent", which then illogically loops back to "User initiates order", restarting the entire process. The "Create Shipping Label" step is misplaced, occurring after "Prepare Shipment".

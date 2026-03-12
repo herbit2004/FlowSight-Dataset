@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is a flowchart diagram comparing two approaches to answering a user query about dependencies in a codebase. It contrasts the "GitNexus Smart Tools" approach with a "Traditional Graph RAG" (Retrieval-Augmented Generation) method. The diagram illustrates the steps involved in each approach to provide a complete answer to the user's question.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TB). It consists of two subgraphs, one for each approach. Each subgraph starts with a user query and ends with an answer.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+
+- **GitNexus Smart Tools**: This subgraph represents the workflow of the GitNexus Smart Tools in answering the user's query.
+- **Traditional Graph RAG**: This subgraph represents the workflow of a traditional Graph RAG approach in answering the user's query.
+
+## Node-by-Node Description
+- **U1 / User: What depends on UserService?** (Traditional Graph RAG): Represents the initial user query asking about the dependencies of the UserService. visible in diagram; no further repository context available.
+- **LLM1 / LLM receives raw graph** (Traditional Graph RAG): Represents the Large Language Model receiving the raw graph data of the codebase. visible in diagram; no further repository context available.
+- **Q1 / Query 1: Find callers** (Traditional Graph RAG): Represents the first query to find the callers of UserService. visible in diagram; no further repository context available.
+- **Q2 / Query 2: What files?** (Traditional Graph RAG): Represents the second query to identify the relevant files. visible in diagram; no further repository context available.
+- **Q3 / Query 3: Filter tests?** (Traditional Graph RAG): Represents the third query to filter out tests. visible in diagram; no further repository context available.
+- **Q4 / Query 4: High-risk?** (Traditional Graph RAG): Represents the fourth query to identify high-risk areas. visible in diagram; no further repository context available.
+- **OUT1 / Answer after 4+ queries** (Traditional Graph RAG): Represents the final answer provided after multiple queries. visible in diagram; no further repository context available.
+- **U2 / User: What depends on UserService?** (GitNexus Smart Tools): Represents the initial user query asking about the dependencies of the UserService. visible in diagram; no further repository context available.
+- **TOOL / impact UserService upstream** (GitNexus Smart Tools): Represents the impact analysis of UserService upstream. visible in diagram; no further repository context available.
+- **PRECOMP / Pre-structured response: 8 callers, 3 clusters, all 90%+ confidence** (GitNexus Smart Tools): Represents the pre-structured response with information about callers, clusters, and confidence level. visible in diagram; no further repository context available.
+- **OUT2 / Complete answer, 1 query** (GitNexus Smart Tools): Represents the complete answer provided after a single query. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `U1 --> LLM1` (Traditional Graph RAG): The user query is passed to the LLM.
+- `LLM1 --> Q1` (Traditional Graph RAG): The LLM initiates the first query to find callers.
+- `Q1 --> Q2` (Traditional Graph RAG): The result of the first query leads to the second query to identify relevant files.
+- `Q2 --> Q3` (Traditional Graph RAG): The result of the second query leads to the third query to filter tests.
+- `Q3 --> Q4` (Traditional Graph RAG): The result of the third query leads to the fourth query to identify high-risk areas.
+- `Q4 --> OUT1` (Traditional Graph RAG): After multiple queries, the final answer is provided.
+- `U2 --> TOOL` (GitNexus Smart Tools): The user query triggers the impact analysis.
+- `TOOL --> PRECOMP` (GitNexus Smart Tools): The impact analysis results in a pre-structured response.
+- `PRECOMP --> OUT2` (GitNexus Smart Tools): The pre-structured response leads to a complete answer.
+
+## Repository Context & Terminology
+- **Graph RAG (Retrieval-Augmented Generation)**: A technique that combines the strengths of graph-based knowledge representation with the generative capabilities of large language models. It involves retrieving relevant information from a graph and using it to augment the generation of responses.
+- **UserService**: A service within the codebase that the user is querying about. The diagram focuses on understanding the dependencies of this service.
+- **Callers**: Functions or modules that call or depend on the UserService. Identifying callers is a key step in understanding the impact of changes to UserService.
+- **Clusters**: Groups of related callers or dependencies. Clustering helps to organize and understand the relationships between different parts of the codebase.
+- **Confidence Level**: A measure of the certainty or accuracy of the pre-structured response. A high confidence level indicates that the information provided is likely to be correct.
+- **LLM (Large Language Model)**: A type of artificial intelligence model that is trained on a large dataset of text and code. LLMs can be used for a variety of tasks, including question answering, code generation, and text summarization.
+
+## High-Density QA Ground Truth Summary
+The diagram contrasts two approaches to answering the question "What depends on UserService?". The "Traditional Graph RAG" approach begins with the user query being passed to a Large Language Model (LLM) which receives the raw graph data. The LLM then initiates a series of queries: "Find callers", "What files?", "Filter tests?", and "High-risk?". These queries are executed sequentially, and the final answer is provided after these multiple queries. In contrast, the "GitNexus Smart Tools" approach begins with the same user query, which triggers an impact analysis of the UserService upstream. This analysis results in a pre-structured response containing information such as the number of callers (8), clusters (3), and a confidence level (90%+). This pre-structured response then directly leads to a complete answer, requiring only a single query. The key difference lies in the pre-structuring of information by GitNexus Smart Tools, enabling a more direct and efficient response compared to the iterative query process of the traditional Graph RAG approach. The diagram highlights the potential benefits of specialized tools in providing more efficient and accurate answers to dependency-related questions in a codebase.

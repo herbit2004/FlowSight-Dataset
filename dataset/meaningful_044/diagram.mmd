@@ -1,0 +1,41 @@
+graph TD
+    subgraph Tenant A
+        TA_Request[User: Tenant A Request] --> TA_AuthZ{Authorization Check};
+    end
+
+    subgraph Tenant B
+        TB_Request[User: Tenant B Request] --> TB_AuthZ{Authorization Check};
+    end
+
+    TA_AuthZ -- Allowed --> TA_DataAccess[Data Access Layer: Tenant A];
+    TA_AuthZ -- Denied --> TA_Error[Return Error: Unauthorized];
+    TB_AuthZ -- Allowed --> TB_DataAccess[Data Access Layer: Tenant B];
+    TB_AuthZ -- Denied --> TB_Error[Return Error: Unauthorized];
+
+    subgraph Shared Infrastructure
+        DataAccessRouter[Data Access Router]
+        Database[Multi-Tenant Database]
+    end
+
+    TA_DataAccess --> DataAccessRouter;
+    TB_DataAccess --> DataAccessRouter;
+
+    DataAccessRouter -- Tenant A ID --> FilterA[Filter Data by Tenant A];
+    DataAccessRouter -- Tenant B ID --> FilterB[Filter Data by Tenant B];
+
+    FilterA --> Database;
+    FilterB --> Database;
+
+    Database -- Data: Tenant A Requested --> ReturnA[Return Filtered Data: Tenant A];
+    Database -- Data: Tenant B Requested --> ReturnB[Return Filtered Data: Tenant B];
+
+    ReturnA --> TA_Response[Application: Tenant A Response];
+    ReturnB --> TB_Response[Application: Tenant B Response];
+
+    TA_Error --> TA_Response;
+    TB_Error --> TB_Response;
+
+    classDef tenantA fill:#e6ffe6,stroke:#333,stroke-width:2px;
+    classDef tenantB fill:#e6f2ff,stroke:#333,stroke-width:2px;
+    class TA_Request,TA_AuthZ,TA_DataAccess,TA_Error,TA_Response tenantA;
+    class TB_Request,TB_AuthZ,TB_DataAccess,TB_Error,TB_Response tenantB;

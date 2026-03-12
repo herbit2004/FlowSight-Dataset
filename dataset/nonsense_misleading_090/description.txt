@@ -1,0 +1,82 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating an incident management process. It depicts the steps involved in reporting, triaging, resolving, and closing incidents within a system. The diagram serves as a visual guide for incident responders and stakeholders to understand the workflow and their respective roles.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with a user initiating an incident report and progresses through various stages of assessment, resolution, and closure. The start node is "User Initiates Incident Report," and the end node is "Incident Closed in System."
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Incident Reporting & Triage, Incident Resolution, Verification, Backlog Management, and Closure.
+
+## Node-by-Node Description
+- **A / User Initiates Incident Report**: Represents the starting point of the process where a user reports an incident. visible in diagram; no further repository context available.
+- **B / Severity Level?**: A decision point to determine the severity of the incident. visible in diagram; no further repository context available.
+- **C / Automated Alert System Triggered**: Indicates that an automated alert system has been activated due to the incident. visible in diagram; no further repository context available.
+- **D / Incident Assigned to First Available Responder**: The incident is assigned to the first available responder for investigation and resolution. visible in diagram; no further repository context available.
+- **E / Incident Placed in Backlog**: The incident is placed in a backlog for later review and resolution. visible in diagram; no further repository context available.
+- **F / SLA Breach Imminent?**: A decision point to determine if the incident is likely to breach the Service Level Agreement (SLA). visible in diagram; no further repository context available.
+- **G / Resolution Possible?**: A decision point to determine if a resolution is possible. visible in diagram; no further repository context available.
+- **H / Escalate to Incident Manager**: The incident is escalated to the incident manager for further action. visible in diagram; no further repository context available.
+- **I / Incident Closure**: The incident is closed after resolution and verification. visible in diagram; no further repository context available.
+- **J / Implement Fix**: A fix is implemented to resolve the incident. visible in diagram; no further repository context available.
+- **K / Fix Successful?**: A decision point to determine if the implemented fix was successful. visible in diagram; no further repository context available.
+- **L / Verify Resolution**: The resolution is verified to ensure it has resolved the incident. visible in diagram; no further repository context available.
+- **M / Verification Passed?**: A decision point to determine if the verification passed. visible in diagram; no further repository context available.
+- **N / Periodic Review**: The incident is periodically reviewed while in the backlog. visible in diagram; no further repository context available.
+- **O / Resolution Possible?**: A decision point to determine if a resolution is possible after periodic review. visible in diagram; no further repository context available.
+- **P / Incident Marked as Resolved**: The incident is marked as resolved after periodic review, even without a clear resolution path. visible in diagram; no further repository context available.
+- **Q / Document Incident Details**: Incident details are documented. visible in diagram; no further repository context available.
+- **R / Incident Commander Activated**: The Incident Commander is activated. visible in diagram; no further repository context available.
+- **S / Resource Mobilization**: Resources are mobilized to address the incident. visible in diagram; no further repository context available.
+- **T / Coordinate Response Efforts**: Response efforts are coordinated. visible in diagram; no further repository context available.
+- **U / Resolution Achieved?**: A decision point to determine if a resolution has been achieved. visible in diagram; no further repository context available.
+- **V / Incident Metrics Analyzed**: Incident metrics are analyzed. visible in diagram; no further repository context available.
+- **W / Communicate Resolution to User**: The resolution is communicated to the user. visible in diagram; no further repository context available.
+- **X / User Confirms Resolution?**: A decision point to determine if the user confirms the resolution. visible in diagram; no further repository context available.
+- **Y / Incident Closed in System**: The incident is closed in the system. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User initiates an incident report, leading to severity assessment.
+- `B -- High --> C`: High severity incident triggers the automated alert system.
+- `B -- Medium --> D`: Medium severity incident is assigned to a responder.
+- `B -- Low --> E`: Low severity incident is placed in the backlog.
+- `C --> F`: Automated alert system leads to SLA breach assessment.
+- `F -- Yes --> H`: Imminent SLA breach escalates to the incident manager.
+- `F -- No --> D`: No imminent SLA breach incorrectly assigns to a responder.
+- `D --> G`: Responder assignment leads to resolution possibility assessment.
+- `G -- No --> I`: No resolution possible leads to incident closure.
+- `G -- Yes --> J`: Resolution possible leads to fix implementation.
+- `J --> K`: Fix implementation leads to success assessment.
+- `K -- Yes --> L`: Successful fix leads to resolution verification.
+- `K -- No --> D`: Unsuccessful fix incorrectly assigns back to a responder.
+- `L --> M`: Resolution verification leads to verification pass assessment.
+- `M -- No --> J`: Verification fails, leading back to fix implementation.
+- `M -- Yes --> I`: Verification passes, leading to incident closure.
+- `E --> N`: Backlogged incident leads to periodic review.
+- `N --> O`: Periodic review leads to resolution possibility assessment.
+- `O -- Yes --> J`: Resolution possible leads to fix implementation.
+- `O -- No --> P`: No resolution possible leads to incident marked as resolved.
+- `P --> Q`: Incident marked as resolved leads to documenting incident details.
+- `Q --> I`: Documenting incident details leads to incident closure.
+- `H --> R`: Escalation to incident manager activates the incident commander.
+- `R --> S`: Incident commander activation leads to resource mobilization.
+- `S --> T`: Resource mobilization leads to coordination of response efforts.
+- `T --> U`: Coordination of response efforts leads to resolution achievement assessment.
+- `U -- Yes --> L`: Resolution achieved leads to resolution verification.
+- `U -- No --> S`: Resolution not achieved leads back to resource mobilization.
+- `I --> V`: Incident closure leads to incident metrics analysis.
+- `V --> W`: Incident metrics analysis leads to communication of resolution to the user.
+- `W --> X`: Communication of resolution leads to user confirmation assessment.
+- `X -- No --> A`: User denies resolution, incorrectly leading back to initiating a new incident report.
+- `X -- Yes --> Y`: User confirms resolution, leading to incident closure in the system.
+
+## Repository Context & Terminology
+- **Incident**: A disruption or potential disruption to normal service. In this diagram, it represents a generic issue being tracked, but the flow contains errors.
+- **SLA (Service Level Agreement)**: An agreement between a service provider and a customer that defines the level of service expected. In this diagram, it's a decision point, but the "No" branch is incorrectly routed.
+- **Incident Manager**: The person responsible for managing the incident response process. In this diagram, escalation to the Incident Manager occurs incorrectly when an SLA breach is *not* imminent.
+- **Incident Commander**: A role responsible for directing incident response activities. In this diagram, resource mobilization happens *before* the Incident Commander is activated, which is counterintuitive.
+- **Responder**: The person assigned to investigate and resolve the incident. In this diagram, an unsuccessful fix incorrectly re-assigns the incident to the first available responder instead of re-attempting the fix.
+- **Backlog**: A list of incidents that are not immediately addressed but are reviewed periodically. In this diagram, incidents in the backlog can be marked as resolved without a clear resolution path.
+- **Resolution**: The process of fixing the incident and restoring normal service. In this diagram, the user denying resolution incorrectly restarts the entire incident reporting process.
+
+## High-Density QA Ground Truth Summary
+The incident management process starts with a user initiating an incident report (A), which then proceeds to severity level assessment (B). Based on severity, the flow branches: high-severity triggers an automated alert (C), medium-severity assigns to a responder (D), and low-severity places in a backlog (E). If an SLA breach is imminent (F - Yes), the incident escalates to the Incident Manager (H); counterfactually, if not (F - No), it also incorrectly assigns to a responder (D). Resource mobilization (S) happens *before* the Incident Commander is activated (R). The core loop involves implementing a fix (J), assessing its success (K), and verifying the resolution (L). If the fix is unsuccessful (K - No), the flow incorrectly returns to assigning a responder (D). If verification fails (M - No), the flow returns to implementing a fix (J). Incidents in the backlog undergo periodic review (N), and can be marked as resolved (P) without a clear resolution path. Incident closure (I) occurs *before* documenting incident details (Q) for low-severity incidents. When a user confirms resolution (X - Yes), the incident is closed (Y); however, if the user denies resolution (X - No), the flow incorrectly restarts the entire process at the user initiating a new incident report (A).

@@ -1,0 +1,56 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the selection pipeline of a system. It illustrates the flow of data and processes involved in selecting the most suitable model based on hardware, available catalogs, local models, and user-defined policies. The diagram serves as a high-level overview of the model selection process.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It is divided into three main stages: Inputs, Selection Pipeline, and Outputs. The flow starts from the Inputs subgraph, proceeds through the Selection Pipeline subgraph, and ends at the Outputs subgraph.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Inputs**: Represents the various sources of information used in the selection process.
+- **Selection Pipeline**: Represents the core processing stages involved in selecting the model.
+- **Outputs**: Represents the results of the selection process.
+
+## Node-by-Node Description
+- **HW / Hardware detector CPU/GPU/RAM/backend**: Detects the hardware specifications (CPU, GPU, RAM) and backend. visible in diagram; no further repository context available.
+- **REG / Dynamic Ollama catalog (curated fallback if unavailable)**: Represents a dynamic catalog of Ollama models, with a curated fallback mechanism if the primary catalog is unavailable. visible in diagram; no further repository context available.
+- **LOCAL / Installed local models**: Represents the locally installed models. visible in diagram; no further repository context available.
+- **FLAGS / CLI options use-case/runtime/limits/policy**: Represents command-line options that specify the use case, runtime limits, and policy. visible in diagram; no further repository context available.
+- **NORMALIZE / Normalize and deduplicate model pool**: Normalizes and deduplicates the model pool. visible in diagram; no further repository context available.
+- **PROFILE / Hardware profile and memory budget**: Represents the hardware profile and memory budget. visible in diagram; no further repository context available.
+- **FILTER / Use-case/category filtering**: Filters models based on the use case and category. visible in diagram; no further repository context available.
+- **QUANT / Quantization fit selection**: Selects the quantization fit for the models. visible in diagram; no further repository context available.
+- **SCORE / Deterministic 4D scoring Q/S/F/C**: Performs deterministic 4D scoring (Q/S/F/C) on the models. visible in diagram; no further repository context available.
+- **POLICY / Policy evaluation (optional) audit or enforce**: Evaluates the models based on the defined policy, with optional auditing or enforcement. visible in diagram; no further repository context available.
+- **RANK / Rank and explain candidates**: Ranks the candidate models and provides explanations for the ranking. visible in diagram; no further repository context available.
+- **REC / check / recommend output**: Provides the recommended model output. visible in diagram; no further repository context available.
+- **AUDIT / audit export JSON / CSV / SARIF**: Exports the audit data in JSON, CSV, or SARIF format. visible in diagram; no further repository context available.
+- **RUN / pull/run-ready commands**: Generates pull/run-ready commands for the selected model. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `REG --> NORMALIZE`: The dynamic Ollama catalog feeds into the normalization and deduplication process.
+- `LOCAL --> NORMALIZE`: Installed local models also feed into the normalization and deduplication process.
+- `HW --> PROFILE`: The hardware detector provides information to create the hardware profile and memory budget.
+- `FLAGS --> FILTER`: CLI options influence the use-case/category filtering.
+- `FLAGS --> POLICY`: CLI options also influence the policy evaluation.
+- `NORMALIZE --> FILTER`: The normalized and deduplicated model pool is used for use-case/category filtering.
+- `PROFILE --> QUANT`: The hardware profile and memory budget are used for quantization fit selection.
+- `FILTER --> QUANT`: The use-case/category filtering results are used for quantization fit selection.
+- `QUANT --> SCORE`: The quantization fit selection results are used for deterministic 4D scoring.
+- `SCORE --> POLICY`: The deterministic 4D scoring results are used for policy evaluation.
+- `SCORE --> RANK`: The deterministic 4D scoring results are used for ranking the candidates.
+- `POLICY --> RANK`: The policy evaluation results are used for ranking the candidates.
+- `RANK --> REC`: The ranked candidates lead to the check/recommend output.
+- `POLICY --> AUDIT`: The policy evaluation results are used for audit export.
+- `RANK --> RUN`: The ranked candidates lead to the pull/run-ready commands.
+
+## Repository Context & Terminology
+- **Ollama**: Ollama is a tool for running large language models locally.
+- **JSON**: JavaScript Object Notation, a lightweight data-interchange format.
+- **CSV**: Comma-Separated Values, a file format for storing tabular data.
+- **SARIF**: Static Analysis Results Interchange Format, a standard format for static analysis tool results.
+- **4D Scoring (Q/S/F/C)**: visible in diagram; no further repository context available.
+- **Hardware Detector**: Detects the hardware specifications (CPU, GPU, RAM) and backend. visible in diagram; no further repository context available.
+- **Policy Evaluation**: Evaluates the models based on the defined policy, with optional auditing or enforcement. visible in diagram; no further repository context available.
+
+## High-Density QA Ground Truth Summary
+The selection pipeline begins with several inputs: the hardware detector which identifies CPU, GPU, RAM, and backend; a dynamic Ollama catalog with a curated fallback; installed local models; and CLI options specifying use-case, runtime limits, and policy. The hardware detector feeds into the "Hardware profile and memory budget" node. The Ollama catalog and installed local models are normalized and deduplicated. CLI options directly influence both "Use-case/category filtering" and "Policy evaluation". The normalized model pool and hardware profile then proceed to "Quantization fit selection". The filtered models also feed into "Quantization fit selection". The "Quantization fit selection" results are then used for "Deterministic 4D scoring (Q/S/F/C)". The 4D scoring and policy evaluation results are used to "Rank and explain candidates". Finally, based on the ranking, the system provides a check/recommend output and pull/run-ready commands. Policy evaluation also leads to an audit export in JSON, CSV, or SARIF format. The CLI options allow users to specify policies, which are then enforced during the policy evaluation stage, influencing the final ranking and audit trail.

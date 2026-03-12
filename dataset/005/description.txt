@@ -1,0 +1,40 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the structure and interaction of components within a Kubernetes Pod, including a main application container, a sidecar container, shared resources, and external traffic/services. It depicts how these components communicate and share resources within the pod environment. The diagram serves to visualize the pod's internal architecture and its interaction with the external world.
+
+## Overall Layout
+The diagram uses a left-to-right (LR) direction. It has a hierarchical structure with a Kubernetes Pod subgraph containing the main application container, sidecar container, and a shared resources subgraph. The start node is "ExternalTraffic," and the end node is "ExternalServices."
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Kubernetes Pod**: This subgraph encapsulates the main application container, sidecar container, and shared resources, representing the pod's environment.
+- **Shared Resources**: This subgraph encapsulates the shared network namespace and shared volumes.
+
+## Node-by-Node Description
+- **ExternalTraffic**: Represents external traffic entering the system. visible in diagram; no further repository context available.
+- **Kubernetes Pod**: Represents a Kubernetes Pod, which is a group of one or more containers, with shared storage/network, and a specification for how to run the containers. visible in diagram; no further repository context available.
+- **Main Application Container**: Represents the main application container running within the Kubernetes Pod. visible in diagram; no further repository context available.
+- **Sidecar Container**: Represents a sidecar container running alongside the main application container within the Kubernetes Pod. visible in diagram; no further repository context available.
+- **Shared Network Namespace**: Represents the shared network namespace within the Kubernetes Pod. visible in diagram; no further repository context available.
+- **Shared Volumes**: Represents the shared volumes within the Kubernetes Pod. visible in diagram; no further repository context available.
+- **ExternalServices**: Represents external services that the application interacts with. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `ExternalTraffic --> Shared Network Namespace`: External traffic flows into the shared network namespace.
+- `Main Application Container -- localhost --> Sidecar Container`: The main application container communicates with the sidecar container via localhost.
+- `Sidecar Container -- localhost --> Main Application Container`: The sidecar container communicates with the main application container via localhost.
+- `Main Application Container --> Shared Network Namespace`: The main application container accesses the shared network namespace.
+- `Sidecar Container --> Shared Network Namespace`: The sidecar container accesses the shared network namespace.
+- `Main Application Container --> Shared Volumes`: The main application container accesses the shared volumes.
+- `Sidecar Container --> Shared Volumes`: The sidecar container accesses the shared volumes.
+- `Shared Network Namespace --> ExternalServices`: The shared network namespace connects to external services.
+
+## Repository Context & Terminology
+- **Kubernetes Pod**: A Kubernetes Pod is the smallest deployable unit in Kubernetes, representing a single instance of an application. It can contain one or more containers that share network and storage resources.
+- **Container**: A standard unit of software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another.
+- **Sidecar Pattern**: A design pattern where a secondary container (the sidecar) augments and supports the main application container. This is often used for tasks like logging, monitoring, or security.
+- **localhost**: A hostname that refers to the current computer being used to access it. It is used to access network services that are running on the host via the loopback network interface.
+- **Shared Network Namespace**: A Linux kernel feature that allows containers within a pod to share the same network interface and IP address.
+- **Shared Volumes**: A directory, possibly backed by different types of storage, that is accessible to all containers in a pod.
+
+## High-Density QA Ground Truth Summary
+The diagram begins with "ExternalTraffic" flowing into the "Shared Network Namespace" within a "Kubernetes Pod." Inside the pod, the "Main Application Container" and "Sidecar Container" communicate with each other via "localhost." Both containers access "Shared Network Namespace" and "Shared Volumes," which are resources shared within the pod. The "Shared Network Namespace" then connects to "ExternalServices." The "Kubernetes Pod" encapsulates the application and its sidecar, enabling them to share network and storage resources. The sidecar pattern, represented by the "Sidecar Container," augments the main application, potentially handling tasks like logging or monitoring. The communication between the main application and the sidecar via "localhost" indicates a close, co-located interaction. The shared network namespace allows both containers to operate under the same network identity, while shared volumes provide a common storage space. Finally, the "Shared Network Namespace" connects to "ExternalServices," representing the pod's interaction with the outside world.

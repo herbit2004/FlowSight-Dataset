@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the layered structure of an application, likely a .NET application based on the terminology used. It illustrates the relationship between different layers of the application, separating concerns into business logic ("YourSolution.XXX") and system administration ("NetAdmin") components. The diagram aims to provide a high-level overview of the application's architecture and dependencies.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It shows a layered architecture, starting with host layers at the top and infrastructure layers at the bottom. There are multiple start nodes, representing different entry points or perspectives (business vs. system administration). The end node is the infrastructure layer.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into five stages: Host Layer, Cache Layer, Application Layer, Domain Layer, and Infrastructure Layer.
+
+## Node-by-Node Description
+- **biz-host / YourSolution.XXX.Host**: Represents the host layer for the business solution.
+- **biz-cache / YourSolution.XXX.Cache**: Represents the cache layer for the business solution.
+- **biz-app / YourSolution.XXX.Application**: Represents the application layer for the business solution.
+- **biz-domain / YourSolution.XXX.Domain**: Represents the domain (data entity) layer for the business solution.
+- **biz-infra / YourSolution.XXX.Infrastructure**: Represents the infrastructure layer for the business solution.
+- **sys-host / NetAdmin.SysComponent.Host**: Represents the host layer for the system administration component.
+- **sys-cache / NetAdmin.SysComponent.Cache**: Represents the cache layer for the system administration component.
+- **sys-app / NetAdmin.SysComponent.Application**: Represents the application layer for the system administration component.
+- **host / NetAdmin.Host**: Represents the host layer framework, including .Net self-hosting, input/output formatting, data validation, and HTTP pipeline filters.
+- **cache / NetAdmin.Cache**: Represents the cache layer framework, based on Redis or MemoryCache caching strategies.
+- **app / NetAdmin.Application**: Represents the application layer framework, including internal and external service CRUD operations, and modularization of business logic.
+- **domain / NetAdmin.Domain**: Represents the domain (data entity) layer framework, including database relational entity mapping, DTOs, and data model abstraction and encapsulation.
+- **infra / NetAdmin.Infrastructure**: Represents the infrastructure layer framework, including third-party components and NuGet package references, common build and runtime configurations, common constant enumeration exception definitions, globalization and multilingual support, and common utility tools.
+
+## Edges, Branches & Convergence
+- `biz-host --> biz-cache`: Represents the flow from the business solution host layer to the cache layer.
+- `biz-cache --> biz-app`: Represents the flow from the business solution cache layer to the application layer.
+- `biz-app --> biz-domain`: Represents the flow from the business solution application layer to the domain layer.
+- `biz-domain --> biz-infra`: Represents the flow from the business solution domain layer to the infrastructure layer.
+- `sys-host --> sys-cache`: Represents the flow from the system administration host layer to the cache layer.
+- `sys-cache --> sys-app`: Represents the flow from the system administration cache layer to the application layer.
+- `sys-app --> domain`: Represents the flow from the system administration application layer to the domain layer.
+- `domain --> infra`: Represents the flow from the domain layer to the infrastructure layer.
+- `host --> cache`: Represents the flow from the host layer framework to the cache layer framework.
+- `cache --> app`: Represents the flow from the cache layer framework to the application layer framework.
+- `app --> domain`: Represents the flow from the application layer framework to the domain layer.
+- `biz-host --> sys-host`: Represents the dependency of the business solution host layer on the system administration host layer.
+- `biz-host --> host`: Represents the dependency of the business solution host layer on the host layer framework.
+- `sys-host --> host`: Represents the dependency of the system administration host layer on the host layer framework.
+- `biz-cache --> sys-cache`: Represents the dependency of the business solution cache layer on the system administration cache layer.
+- `biz-cache --> cache`: Represents the dependency of the business solution cache layer on the cache layer framework.
+- `sys-cache --> cache`: Represents the dependency of the system administration cache layer on the cache layer framework.
+- `biz-app --> sys-app`: Represents the dependency of the business solution application layer on the system administration application layer.
+- `biz-app --> app`: Represents the dependency of the business solution application layer on the application layer framework.
+- `sys-app --> app`: Represents the dependency of the system administration application layer on the application layer framework.
+- `biz-domain --> domain`: Represents the dependency of the business solution domain layer on the domain layer framework.
+- `biz-infra --> infra`: Represents the dependency of the business solution infrastructure layer on the infrastructure layer framework.
+
+## Repository Context & Terminology
+- **.Net Self-Hosting**: Refers to the capability of a .NET application to host its own runtime environment, rather than relying on an external web server like IIS.
+- **Redis/MemoryCache**: These are caching technologies used to improve application performance by storing frequently accessed data in memory.
+- **DTO (Data Transfer Object)**: A design pattern used to transfer data between application layers, often used to encapsulate data for transport.
+- **NuGet Packages**: Packages of reusable .NET code that can be easily added to a project.
+- **HTTP Pipeline Filters**: Components that intercept and process HTTP requests and responses, used for tasks like authentication, authorization, and logging.
+- **CRUD Operations**: Create, Read, Update, and Delete operations, which are fundamental data manipulation operations in applications.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a layered architecture, starting with the `YourSolution.XXX.Host` and `NetAdmin.SysComponent.Host` nodes, representing the business solution and system administration host layers respectively. These host layers depend on the `NetAdmin.Host` framework, which handles .NET self-hosting, input/output formatting, data validation, and HTTP pipeline filtering. The business solution layers then flow through `YourSolution.XXX.Cache` and `YourSolution.XXX.Application`, which depend on the `NetAdmin.SysComponent.Cache` and `NetAdmin.SysComponent.Application` layers, respectively. These layers, in turn, rely on the `NetAdmin.Cache` (Redis/MemoryCache based) and `NetAdmin.Application` frameworks (internal/external service CRUD operations). The application layer connects to the `YourSolution.XXX.Domain` and `NetAdmin.Domain` layers, representing the data entity layer. The `NetAdmin.Domain` framework handles database relational entity mapping and DTOs. Finally, all paths converge at the `YourSolution.XXX.Infrastructure` and `NetAdmin.Infrastructure` layers, which depend on the `NetAdmin.Infrastructure` framework, managing third-party components, NuGet packages, common configurations, globalization, and utility tools. The use of NuGet packages in the infrastructure layer highlights the modular and extensible nature of the application.

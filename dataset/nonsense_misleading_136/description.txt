@@ -1,0 +1,80 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating an order processing workflow. It depicts the steps involved from when a user places an order to the order's completion, including payment processing, inventory management, shipping, and potential refunds. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User Places Order" node at the top and flows downwards through various decision points and processes, eventually converging to the "End" node at the bottom. The diagram does not have a strict hierarchy, but rather a sequence of steps with branching logic.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement & Payment (A-E), Order Processing & Inventory (F-L), Shipping & Delivery (M-Q), Order Resolution (O-R), Post-Order Actions (S-W), and Completion (AA-BB).
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action of a user submitting an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Send Payment Reminder**: Action to send a reminder to the user if payment has not been received. visible in diagram; no further repository context available.
+- **D / Payment Received?**: A second decision point to check if the payment for the order has been received after the reminder. visible in diagram; no further repository context available.
+- **E / Cancel Order - Refund Payment**: Action to cancel the order and refund the payment if payment is not received after the reminder. visible in diagram; no further repository context available.
+- **F / Order Processing Started**: Indicates the start of the order processing workflow. visible in diagram; no further repository context available.
+- **G / Inventory Check**: Action to check the availability of items in the inventory. visible in diagram; no further repository context available.
+- **H / Notify Customer of Delay**: Action to notify the customer of a delay if items are not available. visible in diagram; no further repository context available.
+- **I / Issue Partial Refund for Unavailable Items**: Action to issue a partial refund for items that are unavailable. visible in diagram; no further repository context available.
+- **J / Ship Remaining Items**: Action to ship the remaining items in the order. visible in diagram; no further repository context available.
+- **K / Allocate Inventory**: Action to allocate the available inventory for the order. visible in diagram; no further repository context available.
+- **L / Packaging**: Action to package the order for shipping. visible in diagram; no further repository context available.
+- **M / Order Shipped**: Indicates that the order has been shipped. visible in diagram; no further repository context available.
+- **N / Customer Received Order?**: A decision point to check if the customer has received the order. visible in diagram; no further repository context available.
+- **O / Close Order**: Action to close the order. visible in diagram; no further repository context available.
+- **P / Investigate Delivery Issue**: Action to investigate delivery issues if the customer has not received the order. visible in diagram; no further repository context available.
+- **Q / Delivery Issue Resolved?**: A decision point to check if the delivery issue has been resolved. visible in diagram; no further repository context available.
+- **R / Issue Full Refund**: Action to issue a full refund if the delivery issue cannot be resolved. visible in diagram; no further repository context available.
+- **S / Archive Order Data**: Action to archive the order data. visible in diagram; no further repository context available.
+- **T / Generate Sales Report**: Action to generate a sales report. visible in diagram; no further repository context available.
+- **U / Stock Replenishment Triggered**: Indicates that stock replenishment has been triggered. visible in diagram; no further repository context available.
+- **V / Contact Supplier**: Action to contact the supplier for restocking. visible in diagram; no further repository context available.
+- **W / Receive Restock**: Action to receive the restocked items. visible in diagram; no further repository context available.
+- **AA / Update Inventory Levels**: Action to update the inventory levels after restocking. visible in diagram; no further repository context available.
+- **BB / End**: Indicates the end of the order processing workflow. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, initiating the payment check.
+- `B -- No --> C`: Payment not received; send a payment reminder.
+- `B -- Yes --> F`: Payment received; start order processing.
+- `C --> D`: After sending a reminder, check for payment again.
+- `D -- No --> E`: Payment still not received; cancel the order and refund payment.
+- `D -- Yes --> F`: Payment received after reminder; start order processing.
+- `F --> G`: Order processing starts, leading to inventory check.
+- `G -- Not Available --> H`: Inventory check fails; notify the customer of a delay.
+- `G -- Available --> K`: Inventory check successful; allocate inventory.
+- `H --> I`: Customer notified of delay, issue a partial refund for unavailable items.
+- `I --> J`: After issuing a partial refund, ship the remaining items.
+- `K --> L`: Inventory allocated, proceed to packaging.
+- `L --> J`: Order packaged, proceed to ship remaining items.
+- `J --> M`: Remaining items shipped, order is marked as shipped.
+- `M --> N`: Order shipped, check if the customer received the order.
+- `N -- Yes --> O`: Customer received the order; close the order.
+- `N -- No --> P`: Customer did not receive the order; investigate the delivery issue.
+- `P --> Q`: Delivery issue investigated, check if the issue is resolved.
+- `Q -- Yes --> M`: Delivery issue resolved; loops back to Order Shipped.
+- `Q -- No --> R`: Delivery issue not resolved; issue a full refund.
+- `O --> S`: Order closed, archive order data.
+- `R --> S`: Full refund issued, archive order data.
+- `S --> T`: Order data archived, generate a sales report.
+- `T --> U`: Sales report generated, stock replenishment is triggered.
+- `U --> V`: Stock replenishment triggered, contact the supplier.
+- `V --> W`: Supplier contacted, receive restock.
+- `W --> AA`: Restock received, update inventory levels.
+- `AA --> BB`: Inventory levels updated, end the process.
+- `E --> BB`: Order cancelled and payment refunded, end the process.
+- `R --> BB`: Full refund issued, end the process.
+- `AA --> BB`: Inventory levels updated, end the process.
+
+## Repository Context & Terminology
+- **Order Processing**: The series of actions taken to fulfill a customer's order. In this diagram, it encompasses inventory checks, allocation, packaging, and shipping.
+- **Inventory Check**: Verifying the availability of items in stock. In this diagram, it's performed *before* allocating inventory, which is a reversed sequence.
+- **Partial Refund**: A refund issued for a portion of the order, typically due to unavailable items. In this diagram, it's issued *before* packaging or allocating inventory.
+- **Full Refund**: A refund issued for the entire order amount. In this diagram, it's issued if a delivery issue cannot be resolved.
+- **Stock Replenishment**: The process of restocking inventory. In this diagram, it's triggered by the generation of a sales report, which is an incorrect causal direction.
+- **Archive Order Data**: Storing the order information for future reference. In this diagram, it occurs after closing the order or issuing a full refund.
+- **Delivery Issue**: Problems encountered during the delivery of an order. In this diagram, if the delivery issue is resolved, the flow loops back to "Order Shipped," which is illogical.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Places Order" (A), which leads to a "Payment Received?" check (B). If payment is not received, a "Send Payment Reminder" (C) is triggered, followed by another "Payment Received?" check (D). If payment fails again, the "Cancel Order - Refund Payment" (E) action is taken, leading to the "End" (BB). If payment is received at either B or D, "Order Processing Started" (F), followed by "Inventory Check" (G). If items are "Not Available," the customer is notified (H), and a "Issue Partial Refund for Unavailable Items" (I) is issued, then "Ship Remaining Items" (J). If items are "Available," inventory is allocated (K), packaged (L), and then "Ship Remaining Items" (J). After shipping, the diagram checks "Customer Received Order?" (N). If "Yes," the "Close Order" (O) action is taken. If "No," the "Investigate Delivery Issue" (P) action is triggered, followed by "Delivery Issue Resolved?" (Q). If resolved, it loops back to "Order Shipped" (M), which is contradictory. If not resolved, a "Issue Full Refund" (R) is issued. Both "Close Order" (O) and "Issue Full Refund" (R) lead to "Archive Order Data" (S), then "Generate Sales Report" (T), which incorrectly triggers "Stock Replenishment Triggered" (U), followed by contacting the supplier (V), receiving restock (W), updating inventory levels (AA), and finally "End" (BB). The "Cancel Order - Refund Payment" (E), "Issue Full Refund" (R), and "Update Inventory Levels" (AA) actions all lead to the "End" (BB). The diagram contains several errors, including performing the inventory check before allocating inventory, and triggering stock replenishment from sales reports.

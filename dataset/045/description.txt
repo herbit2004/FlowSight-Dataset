@@ -1,0 +1,44 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the high-level components and data flow within a software system. It depicts the interaction between the command-line interface (CLI), a terminal user interface (TUI), a server, an agent, and various backend services like language model providers, a tool registry, and session persistence. The diagram serves as a visual representation of the system's architecture, aiding in understanding the relationships between different modules and their responsibilities.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It presents a hierarchical structure, starting with the CLI and TUI at the top, flowing down to the server and agent, and finally branching out to the provider, tool registry, and session persistence components. There is a single start node (CLI) and multiple end nodes (Provider, Tool Registry, Session Persistence).
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into four stages:
+1.  **Interface**: CLI and TUI.
+2.  **Communication**: Server.
+3.  **Agent**: Agent.
+4.  **Backend Services**: Provider, Tool Registry, Session Persistence.
+
+## Node-by-Node Description
+- **CLI (main.rs)**: Represents the command-line interface of the application, implemented in `main.rs`. It accepts commands such as `serve`, `connect`, and `run`. In the repository this corresponds to the main entry point of the application.
+- **Standalone Agent Loop**: Represents a standalone loop for the agent. visible in diagram; no further repository context available.
+- **TUI (app.rs / ui.rs)**: Represents the terminal user interface, implemented in `app.rs` and `ui.rs`. In the repository this corresponds to the files responsible for rendering the user interface in the terminal.
+- **Server (Unix Socket)**: Represents the server component, which communicates using Unix sockets. visible in diagram; no further repository context available.
+- **Agent (agent.rs)**: Represents the agent component, implemented in `agent.rs`. In the repository this corresponds to the file containing the agent's logic.
+- **Provider (Claude / Copilot / OpenAI / OpenRouter)**: Represents the language model providers that the agent can use, including Claude, Copilot, OpenAI, and OpenRouter. visible in diagram; no further repository context available.
+- **Tool Registry (30+ tools)**: Represents a registry of available tools that the agent can utilize. It contains 30+ tools. visible in diagram; no further repository context available.
+- **Session Persistence**: Represents the session persistence mechanism for storing and retrieving session data. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `CLI --> TUI`: Represents the interaction between the CLI and the TUI.
+- `CLI --> Server`: Represents the CLI's connection to the server.
+- `CLI --> Standalone Agent Loop`: Represents the CLI's connection to the standalone agent loop.
+- `TUI <--> Server`: Represents the bidirectional communication between the TUI and the server, with "events" flowing between them.
+- `Server --> Agent`: Represents the server's connection to the agent.
+- `Agent --> Provider`: Represents the agent's usage of language model providers.
+- `Agent --> Tool Registry`: Represents the agent's access to the tool registry.
+- `Agent --> Session Persistence`: Represents the agent's interaction with the session persistence mechanism.
+
+## Repository Context & Terminology
+- **CLI (main.rs)**: The command-line interface, typically the entry point of the application, defined in `src/main.rs`.
+- **TUI (app.rs / ui.rs)**: The terminal user interface, likely implemented using a framework like `tui-rs`, with core logic in `src/app.rs` and UI rendering in `src/ui.rs`.
+- **Agent (agent.rs)**: The core agent logic, responsible for orchestrating tools and interacting with language model providers, defined in `src/agent.rs`.
+- **Provider (Claude / Copilot / OpenAI / OpenRouter)**: Refers to different language model APIs or services that the agent can use to generate responses or perform tasks.
+- **Tool Registry**: A collection of tools or functions that the agent can use to perform specific tasks.
+- **Session Persistence**: A mechanism for saving and restoring the agent's state, allowing it to resume conversations or tasks.
+- **Unix Socket**: A type of inter-process communication (IPC) that allows the server and other components to communicate locally.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with the CLI (implemented in `main.rs`) which serves as the primary entry point, offering commands like `serve`, `connect`, and `run`. The CLI can interact with either a Standalone Agent Loop or a Server component. Alternatively, a TUI (defined in `app.rs` and `ui.rs`) can interact with the Server via events. The Server, communicating via Unix sockets, then connects to the central Agent (`agent.rs`). The Agent orchestrates interactions with various backend services. It branches out to several end nodes: the Provider (supporting models like Claude, Copilot, OpenAI, and OpenRouter), the Tool Registry (containing 30+ tools), and the Session Persistence mechanism. The choice of Provider determines which language model the agent uses for generating responses. The Tool Registry provides a set of utilities the agent can leverage. Session Persistence ensures the agent's state is maintained across interactions. The TUI and Server communicate bidirectionally, allowing for real-time updates and user input.

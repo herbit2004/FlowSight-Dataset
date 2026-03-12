@@ -1,0 +1,12 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- Yes, Insufficient --> C[Order Cancelled];
+    B -- No, Sufficient --> D[Order Placed in Queue];
+    D --> E{Inventory Available?};
+    E -- No, Available --> F[Notify Customer of Delay];
+    E -- Yes, Unavailable --> G[Pick, Pack & Ship];
+    G --> H{Shipping Successful?};
+    H -- Yes, Failure --> D;
+    H -- No, Success --> I[Update Inventory Levels];
+    I --> J[Send Confirmation Email];
+    J --> K[Order Completed];

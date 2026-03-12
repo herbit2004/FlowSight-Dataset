@@ -1,0 +1,46 @@
+graph TD
+    subgraph Shipment Tracking and Delivery System
+    A[Order Placement] --> B{Inventory Check};
+    B -- Available --> C[Create Shipment Record];
+    B -- Out of Stock --> D[Backorder Placement];
+    D --> E[Inventory Replenishment];
+    E --> B;
+    C --> F{Shipping Address Valid?};
+    F -- Yes --> G[Route Optimization];
+    F -- No --> H[Address Verification];
+    H --> I[Customer Contact];
+    I -- Address Confirmed --> F;
+    I -- Address Invalid --> J[Order Cancellation];
+    G --> K[Delivery Vehicle Assignment];
+    K --> L[Loading and Dispatch];
+    L --> M[In Transit];
+    M --> N{Location Update Received?};
+    N -- Yes --> O[Update Shipment Location];
+    N -- No --> P[Timeout - Check Vehicle Status];
+    O --> M;
+    P --> Q[Communication System Check];
+    Q -- OK --> M;
+    Q -- Failure --> R[Alert System Administrator];
+    M --> S{Delivery Zone Arrival};
+    S -- Yes --> T[Delivery Attempt];
+    S -- No --> M;
+    T --> U{Delivery Successful?};
+    U -- Yes --> V[Update Shipment Status to Delivered];
+    U -- No --> W{Customer Available?};
+    W -- Yes --> X[Reschedule Delivery];
+    W -- No --> Y[Delivery to Holding Location];
+    X --> L;
+    Y --> V;
+    V --> Z[Payment Confirmation];
+    Z --> AA[Order Completion];
+    J --> AA;
+    AA --> BB[Generate Delivery Report];
+    BB --> CC[Close Shipment Record];
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px
+    class A,C,E,G,H,K,L,M,O,P,Q,T,V,X,Y,Z,BB,I,D process
+    class B,F,N,S,U,W decision
+    class J,AA,CC process
+    class R process
+    end

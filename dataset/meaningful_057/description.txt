@@ -1,0 +1,82 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of configuration change and rollback in a system. It outlines the steps involved in applying a new configuration, verifying its success, and rolling back to a previous configuration if necessary. The diagram serves as a visual guide for understanding the configuration management process.
+
+## Overall Layout
+The diagram flows from left to right. It starts with a "User Initiates Config Change" node and ends with an "End" node. The diagram includes decision diamonds that represent conditional branching based on the success or failure of various steps.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Configuration Change and Rollback".
+
+## Node-by-Node Description
+- **A / User Initiates Config Change**: Represents the starting point of the process, where a user requests a configuration change.
+  visible in diagram; no further repository context available.
+- **B / Pre-Change Validation?**: Represents a decision point where pre-change validation scripts are run.
+  visible in diagram; no further repository context available.
+- **C / Run Validation Scripts**: Represents the execution of validation scripts to check the new configuration before application.
+  visible in diagram; no further repository context available.
+- **D / Backup Current Config**: Represents the step of backing up the current configuration before applying the new one.
+  visible in diagram; no further repository context available.
+- **F / Apply New Config**: Represents the step of applying the new configuration to the system.
+  visible in diagram; no further repository context available.
+- **G / Config Application Successful?**: Represents a decision point where the success of the configuration application is checked.
+  visible in diagram; no further repository context available.
+- **H / Post-Change Verification**: Represents the step of verifying the new configuration after application.
+  visible in diagram; no further repository context available.
+- **J / Post-Change Verification Passed?**: Represents a decision point where the success of the post-change verification is checked.
+  visible in diagram; no further repository context available.
+- **K / Log Change Event**: Represents the step of logging the successful configuration change event.
+  visible in diagram; no further repository context available.
+- **L / Mark Change as Success**: Represents the step of marking the configuration change as successful.
+  visible in diagram; no further repository context available.
+- **I / Initiate Rollback**: Represents the step of initiating a rollback to the previous configuration.
+  visible in diagram; no further repository context available.
+- **M / Restore Previous Config**: Represents the step of restoring the previous configuration.
+  visible in diagram; no further repository context available.
+- **N / Rollback Successful?**: Represents a decision point where the success of the rollback is checked.
+  visible in diagram; no further repository context available.
+- **O / Notify User of Rollback**: Represents the step of notifying the user about the rollback.
+  visible in diagram; no further repository context available.
+- **P / Escalate: Manual Intervention Required**: Represents the step of escalating the issue for manual intervention.
+  visible in diagram; no further repository context available.
+- **Q / Mark Change as Failed**: Represents the step of marking the configuration change as failed.
+  visible in diagram; no further repository context available.
+- **E / Reject Change & Notify User**: Represents the step of rejecting the configuration change and notifying the user.
+  visible in diagram; no further repository context available.
+- **Z / End**: Represents the end of the process.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User initiates a configuration change.
+- `B -- Yes --> C`: Pre-change validation is required.
+- `B -- No --> D`: Pre-change validation is not required.
+- `C --> D`: Validation passed.
+- `C -- Validation Failed --> E`: Validation failed.
+- `D --> F`: Backup current configuration.
+- `F --> G`: Apply new configuration.
+- `G -- Yes --> H`: Configuration application successful.
+- `G -- No --> I`: Configuration application failed.
+- `H --> J`: Post-change verification.
+- `J -- Yes --> K`: Post-change verification passed.
+- `J -- No --> I`: Post-change verification failed.
+- `K --> L`: Log change event.
+- `I --> M`: Initiate rollback.
+- `M --> N`: Restore previous configuration.
+- `N -- Yes --> O`: Rollback successful.
+- `N -- No --> P`: Rollback failed.
+- `L --> Z`: Mark change as success, then end.
+- `O --> Q`: Notify user of rollback.
+- `Q --> Z`: Mark change as failed, then end.
+- `E --> Z`: Reject change and notify user, then end.
+- `P --> Z`: Escalate: manual intervention required, then end.
+
+## Repository Context & Terminology
+- **Configuration Change**: Modification of system settings or parameters.
+- **Rollback**: Reverting to a previous configuration state.
+- **Pre-Change Validation**: Validation performed before applying a configuration change.
+- **Post-Change Verification**: Verification performed after applying a configuration change.
+- **Backup**: Creating a copy of the current configuration for restoration purposes.
+- **Manual Intervention**: Requiring human involvement to resolve an issue.
+- **Log Change Event**: Recording details of a configuration change in a log.
+
+## High-Density QA Ground Truth Summary
+The configuration change and rollback process begins when a user initiates a configuration change (A). The system then checks if pre-change validation is required (B). If yes, validation scripts are run (C); if validation fails, the change is rejected, and the user is notified (E), leading to the end (Z). If validation passes or pre-change validation is not required, the current configuration is backed up (D), and the new configuration is applied (F). The system then checks if the configuration application was successful (G). If not, a rollback is initiated (I). If the application was successful, post-change verification is performed (H). If post-change verification fails, a rollback is initiated (I); otherwise, the change event is logged (K), marked as successful (L), and the process ends (Z). During rollback, the previous configuration is restored (M), and the system checks if the rollback was successful (N). If successful, the user is notified (O), the change is marked as failed (Q), and the process ends (Z). If the rollback fails, manual intervention is required (P), and the process ends (Z). The "Configuration Change" refers to the modification of system settings, while "Rollback" refers to reverting to a previous state, ensuring system stability.

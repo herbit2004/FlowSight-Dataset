@@ -1,0 +1,66 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the build and release processes of a software application. It outlines the steps involved in building a container image from source code, testing it, and deploying it to production, including vulnerability scanning and integration tests. The diagram serves as a visual representation of the CI/CD pipeline and release management workflow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into two subgraphs: "Build Process" and "Release Process". The start node is "Developer Pushes Code to Repo", and the end nodes are "Release Complete!" and "Notify Developer & Halt".
+
+## Subgraphs / Stages
+- **Build Process**: This subgraph encompasses the steps required to build a container image from the source code. It includes code analysis, unit tests, image building, vulnerability scanning, and tagging.
+- **Release Process**: This subgraph outlines the steps involved in deploying the built container image to production. It includes pushing the image to a container registry, updating release metadata, deploying to a staging environment, running integration tests, and promoting the image to production.
+
+## Node-by-Node Description
+- **A / Developer Pushes Code to Repo**: Represents the initial step where a developer commits and pushes code changes to a source code repository. visible in diagram; no further repository context available.
+- **B / Trigger CI/CD Pipeline**: Represents the automated triggering of the Continuous Integration/Continuous Delivery pipeline upon code changes. visible in diagram; no further repository context available.
+- **C / Code Analysis and Linting**: Represents the automated process of analyzing the code for quality, style, and potential errors using linting tools. visible in diagram; no further repository context available.
+- **D / Unit Tests**: Represents the execution of automated unit tests to verify the functionality of individual code components. visible in diagram; no further repository context available.
+- **F / Build Container Image**: Represents the process of building a container image from the application code and dependencies. visible in diagram; no further repository context available.
+- **G / Image Build Successful?**: A decision node that checks if the container image build was successful. visible in diagram; no further repository context available.
+- **H / Tag Image with Version and Commit SHA**: Represents the tagging of the container image with a version number and the commit SHA for traceability. visible in diagram; no further repository context available.
+- **I / Scan Image for Vulnerabilities**: Represents the process of scanning the container image for known security vulnerabilities. visible in diagram; no further repository context available.
+- **J / Vulnerability Scan: Critical Issues Found?**: A decision node that checks if the vulnerability scan found any critical issues. visible in diagram; no further repository context available.
+- **K / Push Image to Container Registry**: Represents the process of pushing the container image to a container registry. visible in diagram; no further repository context available.
+- **L / Image Push Successful?**: A decision node that checks if the image push to the container registry was successful. visible in diagram; no further repository context available.
+- **M / Update Release Metadata**: Represents the process of updating release metadata with information about the new release. visible in diagram; no further repository context available.
+- **N / Deploy to Staging Environment**: Represents the deployment of the container image to a staging environment for testing. visible in diagram; no further repository context available.
+- **O / Staging: Integration Tests Pass?**: A decision node that checks if the integration tests in the staging environment passed. visible in diagram; no further repository context available.
+- **P / Promote Image to Production**: Represents the promotion of the container image to the production environment. visible in diagram; no further repository context available.
+- **Q / Update Production Load Balancer**: Represents the process of updating the production load balancer to direct traffic to the new release. visible in diagram; no further repository context available.
+- **R / Release Complete!**: Represents the successful completion of the release process. visible in diagram; no further repository context available.
+- **E / Notify Developer & Halt**: Represents the notification of the developer and halting of the process due to a failure. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Developer push triggers the CI/CD pipeline.
+- `B --> C`: CI/CD pipeline initiates code analysis and linting.
+- `C -- Pass --> D`: Code analysis and linting passes, proceeding to unit tests.
+- `C -- Fail --> E`: Code analysis and linting fails, notifying the developer and halting the process.
+- `D -- Pass --> F`: Unit tests pass, proceeding to build the container image.
+- `D -- Fail --> E`: Unit tests fail, notifying the developer and halting the process.
+- `F --> G`: Container image build is initiated.
+- `G -- Yes --> H`: Image build is successful, proceeding to tag the image.
+- `G -- No --> E`: Image build fails, notifying the developer and halting the process.
+- `H --> I`: Image is tagged, proceeding to scan for vulnerabilities.
+- `I --> J`: Image is scanned for vulnerabilities.
+- `J -- Yes --> E`: Critical vulnerabilities are found, notifying the developer and halting the process.
+- `J -- No --> K`: No critical vulnerabilities are found, proceeding to push the image to the container registry.
+- `K --> L`: Image is pushed to the container registry.
+- `L -- Yes --> M`: Image push is successful, proceeding to update release metadata.
+- `L -- No --> E`: Image push fails, notifying the developer and halting the process.
+- `M --> N`: Release metadata is updated, proceeding to deploy to the staging environment.
+- `N --> O`: Image is deployed to the staging environment.
+- `O -- Yes --> P`: Integration tests pass in staging, proceeding to promote the image to production.
+- `O -- No --> E`: Integration tests fail in staging, notifying the developer and halting the process.
+- `P --> Q`: Image is promoted to production.
+- `Q --> R`: Production load balancer is updated.
+
+## Repository Context & Terminology
+- **CI/CD Pipeline**: An automated process that integrates code changes, builds, tests, and deploys software applications.
+- **Container Image**: A lightweight, standalone executable package that includes everything needed to run an application: code, runtime, system tools, system libraries, and settings.
+- **Container Registry**: A repository for storing and managing container images.
+- **Unit Tests**: Automated tests that verify the functionality of individual code components.
+- **Integration Tests**: Automated tests that verify the interaction between different components of the application.
+- **Staging Environment**: A pre-production environment used for testing and validating software releases before deploying to production.
+- **Production Environment**: The live environment where the application is deployed and used by end-users.
+- **Load Balancer**: A device or software that distributes network traffic across multiple servers to ensure high availability and performance.
+
+## High-Density QA Ground Truth Summary
+The build and release process begins when a developer pushes code to a repository, triggering the CI/CD pipeline. The pipeline first performs code analysis and linting. If this fails, the developer is notified, and the process halts. If it passes, unit tests are executed; failure here also halts the process. Upon successful unit tests, a container image is built. If the image build fails, the developer is notified. A successful build leads to tagging the image with version and commit SHA, followed by a vulnerability scan. Critical vulnerabilities trigger a halt. If no critical issues are found, the image is pushed to a container registry. A failed push halts the process. After a successful push, release metadata is updated, and the image is deployed to a staging environment. Integration tests are then run. Failure here halts the process. Passing integration tests result in promoting the image to production and updating the production load balancer, completing the release. The CI/CD pipeline automates the build, test, and deployment phases, ensuring code quality and security through automated checks and vulnerability scanning. The container registry stores the built images, enabling efficient deployment and scaling. The load balancer distributes traffic across multiple instances of the application, ensuring high availability and performance. The process terminates either with a successful release or by notifying the developer and halting the process in case of failures at any stage.

@@ -1,0 +1,27 @@
+graph TD
+    subgraph User Authentication
+        A[User] --> B{Authentication Server};
+    end
+
+    B -- Valid Credentials --> C{Session Manager};
+    B -- Invalid Credentials --> D[Authentication Error];
+
+    C --> E{Authorization Service};
+    E --> F{Role Provider};
+
+    F -- User Role(s) --> G[Role Definition Repository];
+    G --> H{Permission Validator};
+    H --> I{Resource Access Request};
+
+    I -- Requires Permission --> J{Permission Check};
+
+    subgraph Permission Evaluation
+        J -- Allowed for Role --> K[Access Granted];
+        J -- Not Allowed --> L[Access Denied];
+    end
+
+    K --> M[Resource Handler];
+    L --> N[Authorization Error];
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class D,N error

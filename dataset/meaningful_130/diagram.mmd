@@ -1,0 +1,29 @@
+graph TD
+    subgraph User Engagement Platform
+        A[User Action Triggers Event] --> B(Event Router);
+        B --> C{Check User Opt-In};
+        C -- Yes --> D(Notification Service);
+        C -- No --> E[Log Opt-Out Event];
+        D --> F{AB Test Group?};
+        F -- Yes --> G(AB Test Configuration);
+        G --> H{Variant Assignment};
+        H -- Variant A --> I(Prepare Variant A Payload);
+        H -- Variant B --> J(Prepare Variant B Payload);
+        I --> K(Send Notification - Variant A);
+        J --> K;
+        F -- No --> L(Prepare Standard Payload);
+        L --> K;
+        K --> M{Delivery Confirmation Received?};
+        M -- Yes --> N(Record Delivery Success);
+        M -- No --> O{Retry Attempt Limit?};
+        O -- No --> P(Retry Notification);
+        P --> K;
+        O -- Yes --> Q(Record Delivery Failure);
+        N --> R[Update User Engagement Metrics];
+        Q --> R;
+        R --> S[Analytics Dashboard];
+    end
+    classDef step fill:#f9f,stroke:#333,stroke-width:2px
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S step
+    class C,F,H,M,O decision

@@ -1,0 +1,31 @@
+graph TD
+    subgraph User Interaction
+        A[User Request: Submit Order] --> B(Frontend Gateway);
+    end
+
+    subgraph Backend Services
+        B --> C{Order Service: Receive Request};
+        C -- Validate Order --> D[Inventory Service: Check Stock];
+        D -- Sufficient Stock --> E[Payment Service: Authorize Payment];
+        D -- Insufficient Stock --> ErrorHandling(Error Handling: Notify User);
+        E -- Payment Approved --> F[Shipping Service: Schedule Shipment];
+        E -- Payment Declined --> ErrorHandling;
+        F --> G[Notification Service: Send Shipment Confirmation];
+        G --> H(Order Service: Update Order Status to 'Shipped');
+        H --> I(Workflow Engine: Trigger Post-Shipment Tasks);
+        I --> J[Loyalty Service: Award Points];
+        I --> K[Analytics Service: Log Shipment Data];
+        J --> L(Order Service: Update User Profile);
+        K --> M(Data Warehouse: Store Analytics);
+        C -- Database Error --> ErrorHandling;
+        F -- Shipping Error --> ErrorHandling;
+    end
+
+    subgraph Messaging
+        N[Event Bus]
+        H --> N;
+        N --> O(Recommendation Service: Prepare New Offers);
+    end
+    
+    classDef error red
+    class ErrorHandling error

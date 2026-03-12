@@ -1,0 +1,37 @@
+graph TD
+    subgraph Inventory System
+        A[Receive Order Request] --> B{Validate Order};
+        B -- Valid --> C[Reserve Inventory];
+        B -- Invalid --> I[Reject Order: Inventory Unavailable];
+        C --> D{Inventory Reservation Successful?};
+        D -- Yes --> E[Deduct Inventory];
+        D -- No (Partial Failure) --> F[Rollback Inventory Reservation];
+        E --> G[Update Order Status: Processing];
+        G --> H[Ship Order];
+        H --> J[Update Order Status: Shipped];
+        F --> I[Reject Order: Inventory Unavailable];
+        subgraph Event Queue
+            K[Order Rejected Event] --> L[Notify Customer of Rejection];
+            M[Inventory Deduction Failure Event] --> N[Start Inventory Recovery];
+        end
+        E -- Inventory Deduction Error --> M;
+        N --> O{Identify Failed Deduction};
+        O --> P[Compensate Inventory Levels];
+        P --> Q{Compensation Successful?};
+        Q -- Yes --> R[Log Recovery Success];
+        Q -- No --> S[Alert Operations Team: Manual Intervention];
+        L --> T[Send Rejection Email];
+        T --> U[Create Refund Request];
+        subgraph Order Management
+            R --> V[Update Order History: Recovery Logged];
+            S --> W[Create Incident Ticket];
+        end
+    end
+
+    classDef critical fill:#f9f,stroke:#333,stroke-width:2px;
+    M:::critical
+    N:::critical
+    O:::critical
+    P:::critical
+    Q:::critical
+    S:::critical

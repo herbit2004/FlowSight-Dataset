@@ -1,0 +1,19 @@
+graph TD
+    A[Start: Order Received] --> B{Inventory Check: In Stock?};
+    B -- No --> C[Send Out-of-Stock Notification];
+    C --> F[End: Order Cancelled];
+    B -- Yes --> D[Process Payment];
+    D --> E{Payment Successful?};
+    E -- No --> I[Send Failed Payment Notification];
+    I --> J[End: Order Rejected];
+    E -- Yes --> H[Ship Order];
+    H --> G{Customer Received Order?};
+    G -- No --> K[Request Customer Feedback];
+    K --> H
+    G -- Yes -->  L[Update Inventory];
+    L --> M[Generate Invoice];
+    M --> N[Send Order Confirmation Email];
+    N --> F[End: Order Cancelled];
+    F --> O[Log Order Completion];
+    O --> A
+    J --> O

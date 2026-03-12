@@ -1,0 +1,41 @@
+graph TD
+    subgraph Frontend
+        A[User Interaction] --> B(Event Trigger);
+        B --> C{Is Event Type Supported?};
+    end
+
+    C -- Yes --> D[Event Enrichment];
+    C -- No --> E[Discard Event];
+
+    D --> F(Beacon Transmission);
+
+    subgraph Backend
+        F --> G{Data Ingestion};
+        G --> H{Schema Validation};
+
+        H -- Valid --> I[Event Router];
+        H -- Invalid --> J[Dead-Letter Queue];
+
+        I --> K{Filter: Bot Traffic};
+        K -- Yes (Bot) --> L[Discard Event];
+        K -- No (Human) --> M(Behavioral Profiling);
+
+        M --> N(Session Aggregation);
+        N --> O(User Segmentation);
+
+        O --> P{Trigger A/B Test};
+        P -- Yes --> Q[A/B Test Engine];
+        P -- No --> R[Reporting & Dashboards];
+
+        Q --> R;
+    end
+
+    J --> Z[Error Logging];
+    L --> Z;
+
+    classDef trafficFill fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef segmentFill fill:#ccf,stroke:#333,stroke-width:2px;
+    classDef discardFill fill:#fcc,stroke:#333,stroke-width:2px;
+    class K,L trafficFill;
+    class O segmentFill;
+    class E,J discardFill;

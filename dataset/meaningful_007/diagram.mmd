@@ -1,0 +1,30 @@
+graph TD
+    subgraph Frontend App
+        FA[Frontend App];
+        FA -- API Request --> API_GW
+    end
+
+    subgraph Backend Services
+        API_GW[API Gateway];
+        API_GW -- Route to User Service --> UserSvc;
+        UserSvc[User Service];
+        UserSvc -- Verify User --> AuthSvc;
+        AuthSvc[Auth Service];
+        AuthSvc -- User Validated --> UserSvc;
+        UserSvc -- Get User Profile --> ProfileSvc;
+        ProfileSvc[Profile Service];
+        %% Condition: Profile Missing
+        ProfileSvc -- Profile Not Found --> UserSvc;
+        UserSvc -- Create Default Profile --> ProfileSvc;
+        ProfileSvc -- Profile Created --> UserSvc;
+        ProfileSvc -- Return Profile Data --> UserSvc;
+        UserSvc -- Return User Data --> API_GW;
+        API_GW -- Enrich Response --> FA;
+    end
+
+    classDef microservice fill:#f9f,stroke:#333,stroke-width:2px
+    class UserSvc,AuthSvc,ProfileSvc microservice
+    classDef gateway fill:#ccf,stroke:#333,stroke-width:2px
+    class API_GW gateway
+    classDef client fill:#cfc,stroke:#333,stroke-width:2px
+    class FA client

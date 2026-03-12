@@ -1,0 +1,54 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the order processing workflow, from when a user places an order to the final stage. This diagram serves as a visual representation of the steps involved in processing an order, including payment verification, inventory check, and shipping.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "User Places Order" node at the top and flows downwards through the various stages of order processing, ending with the "End" node. The diagram has a single start node and a single end node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Placement, Payment Verification, Inventory Management, Fulfillment, and Completion.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action where a user submits an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of verifying the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **D / Inventory Available?**: A decision point to check if the inventory is available. visible in diagram; no further repository context available.
+- **E / Shipping Label Created**: Represents the action of generating a shipping label for the order. visible in diagram; no further repository context available.
+- **F / Cancel Order**: Represents the action of canceling the order. visible in diagram; no further repository context available.
+- **H / Notify User of Delay**: Represents the action of informing the user about a delay in their order. visible in diagram; no further repository context available.
+- **I / Package Shipped**: Represents the action of shipping the package. visible in diagram; no further repository context available.
+- **J / Fulfill Backorder**: Represents the action of fulfilling a backorder. visible in diagram; no further repository context available.
+- **K / Order Confirmation**: Represents the action of confirming the order. visible in diagram; no further repository context available.
+- **L / Send Confirmation Email**: Represents the action of sending a confirmation email to the user. visible in diagram; no further repository context available.
+- **M / End**: Represents the end of the order processing workflow. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, initiating the payment verification process.
+- `B -- Yes --> C`: If payment is received, proceed to inventory check.
+- `B -- No --> F`: If payment is not received, cancel the order.
+- `C --> D`: After inventory check, determine if the inventory is available.
+- `D -- Yes --> E`: If inventory is available, create a shipping label.
+- `D -- No --> H`: If inventory is not available, notify the user of the delay.
+- `E --> I`: After creating the shipping label, the package is shipped.
+- `I --> C`: After the package is shipped, the process loops back to the inventory check.
+- `H --> J`: After notifying the user of the delay, fulfill the backorder.
+- `J --> I`: After fulfilling the backorder, the package is shipped.
+- `F --> K`: After canceling the order, provide order confirmation.
+- `K --> L`: After order confirmation, send a confirmation email.
+- `L --> M`: After sending the confirmation email, the process ends.
+
+## Repository Context & Terminology
+- **User Places Order**: Standard meaning is a customer initiating a purchase. In this diagram, it's the starting point of the workflow.
+- **Payment Received?**: Standard meaning is verifying if payment has been successfully processed. In this diagram, it's a decision point that determines whether to proceed with the order or cancel it.
+- **Inventory Check**: Standard meaning is verifying the availability of items in stock. In this diagram, it's a process to check if the ordered items are available.
+- **Inventory Available?**: Standard meaning is determining if there is sufficient stock to fulfill the order. In this diagram, it's a decision point that determines whether to create a shipping label or notify the user of a delay.
+- **Shipping Label Created**: Standard meaning is generating a label for shipping the package. In this diagram, it's an action taken when the inventory is available.
+- **Cancel Order**: Standard meaning is terminating the order process. In this diagram, it's an action taken when payment is not received.
+- **Notify User of Delay**: Standard meaning is informing the customer about a delay in their order. In this diagram, it's an action taken when the inventory is not available.
+- **Package Shipped**: Standard meaning is the act of sending the package to the customer. In this diagram, it leads back to the inventory check, which is an illogical loop.
+- **Fulfill Backorder**: Standard meaning is processing an order that could not be fulfilled immediately due to lack of stock. In this diagram, it leads to the package being shipped.
+- **Order Confirmation**: Standard meaning is confirming the order details. In this diagram, it occurs *before* sending the confirmation email, which is a reversed sequence.
+- **Send Confirmation Email**: Standard meaning is sending an email to the customer confirming their order. In this diagram, it's the final step before the process ends, after order confirmation.
+- **End**: Standard meaning is the termination of a process. In this diagram, it signifies the completion of the order processing workflow.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Places Order," which then proceeds to the "Payment Received?" decision node. If the payment is received ("Yes" branch), the process moves to "Inventory Check." If not ("No" branch), the order is "Cancel Order," followed by "Order Confirmation" and "Send Confirmation Email," before reaching the "End" node. After the "Inventory Check," the "Inventory Available?" decision node determines the next step. If inventory is available ("Yes" branch), a "Shipping Label Created." If inventory is unavailable ("No" branch), the user is "Notify User of Delay," and then the system proceeds to "Fulfill Backorder." Both "Shipping Label Created" and "Fulfill Backorder" lead to "Package Shipped." Critically, "Package Shipped" then loops back to "Inventory Check," creating an illogical cycle. "Fulfill Backorder" feeds directly into "Package Shipped," skipping the expected step of creating a shipping label. The "Order Confirmation" step is incorrectly placed before "Send Confirmation Email," reversing the logical sequence. The "Inventory Available?" "No" branch incorrectly leads to "Notify User of Delay" instead of initiating a backorder or cancellation process.

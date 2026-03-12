@@ -1,0 +1,49 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process flow of an order processing system. It depicts the steps involved from when a user submits an order to when the order is completed, including inventory checks, payment processing, shipping, and handling of potential issues. The diagram serves as a visual representation of the order fulfillment workflow.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "User Submits Order" node at the top and flows downwards through various processes and decision points. The diagram concludes with "Notify User of Delay", "File Complaint", and "Update Inventory" nodes.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Inventory Check, Payment Processing, Shipping Label Creation, Package Delivery, Order Completion/Complaint, and Inventory Update/Delay Notification.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order. visible in diagram; no further repository context available.
+- **B / Inventory Available?**: A decision point to check if the requested items are in stock. visible in diagram; no further repository context available.
+- **C / Notify User of Delay**: Indicates that the user is informed about a delay in their order. visible in diagram; no further repository context available.
+- **D / Payment Processed**: Represents the step where the user's payment is processed. visible in diagram; no further repository context available.
+- **E / Shipping Label Created**: Indicates that a shipping label has been generated for the order. visible in diagram; no further repository context available.
+- **F / Package Arrived?**: A decision point to check if the package has been delivered to the customer. visible in diagram; no further repository context available.
+- **G / Order Completed**: Represents the successful completion of the order. visible in diagram; no further repository context available.
+- **H / Send Order Confirmation**: Indicates that an order confirmation is sent to the user. visible in diagram; no further repository context available.
+- **I / File Complaint**: Represents the action of filing a complaint, presumably by the customer. visible in diagram; no further repository context available.
+- **J / Update Inventory**: Represents the process of updating the inventory levels after an order is completed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the inventory check.
+- `B -- No --> C`: If inventory is not available, the user is notified of a delay.
+- `B -- Yes --> D`: If inventory is available, payment processing begins.
+- `D -- Success --> E`: Successful payment processing leads to shipping label creation.
+- `D -- Failure --> A`: Failed payment processing loops back to the "User Submits Order" node.
+- `E --> F`: A shipping label is created, leading to a check for package arrival.
+- `F -- Yes --> G`: If the package has arrived, the order is marked as completed.
+- `F -- No --> H`: If the package has not arrived, an order confirmation is sent.
+- `H --> I`: Sending order confirmation leads to filing a complaint.
+- `I --> D`: Filing a complaint loops back to payment processing.
+- `G --> J`: Order completion triggers inventory update.
+- `J --> C`: Inventory update leads to notifying the user of a delay.
+
+## Repository Context & Terminology
+- **User Submits Order**: In standard e-commerce, this refers to the customer initiating a purchase. In this diagram, it's the starting point of the order processing workflow, but can be re-entered if payment fails.
+- **Inventory Available?**: This is a standard check to ensure products are in stock. In this diagram, a 'No' outcome leads to notifying the user of a delay.
+- **Payment Processed**: This refers to the transaction where the customer's payment is authorized and captured. In this diagram, failure loops back to the start.
+- **Shipping Label Created**: This is the process of generating a label with the customer's address and shipping information. In this diagram, it follows successful payment.
+- **Package Arrived?**: This is a check to confirm if the package has been delivered. In this diagram, a 'No' outcome leads to sending an order confirmation, which is counterintuitive.
+- **Order Completed**: This signifies the successful fulfillment of the order. In this diagram, it triggers inventory update.
+- **Send Order Confirmation**: Typically sent after an order is placed, in this diagram, it's sent if the package hasn't arrived, which is incorrect.
+- **File Complaint**: This represents the action of a customer lodging a complaint. In this diagram, it loops back to payment processing.
+- **Update Inventory**: This is the process of adjusting stock levels. In this diagram, it triggers notifying the user of a delay.
+- **Notify User of Delay**: This informs the user about a delay in their order. In this diagram, it's triggered by inventory unavailability and also after inventory update, which is illogical.
+
+## High-Density QA Ground Truth Summary
+The order processing flowchart begins with the "User Submits Order" node, which initiates an "Inventory Available?" check. If inventory is unavailable ("No" branch), the user is notified of a delay. If inventory is available ("Yes" branch), the system proceeds to "Payment Processed". A failed payment loops back to "User Submits Order". Upon successful payment, a "Shipping Label Created". Next, the system checks "Package Arrived?". If "Yes", the "Order Completed" node is reached, triggering "Update Inventory", which then incorrectly leads to "Notify User of Delay". If the package has not arrived ("No" branch), an "Send Order Confirmation" is sent, which then leads to "File Complaint", which then loops back to "Payment Processed". The end nodes are "Notify User of Delay", "File Complaint", and "Update Inventory". The illogical flow of sending an order confirmation *after* the package is expected to have arrived, and the subsequent filing of a complaint looping back to payment processing, highlight the diagram's counterfactual nature.

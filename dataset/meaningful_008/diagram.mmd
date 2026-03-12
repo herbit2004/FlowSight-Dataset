@@ -1,0 +1,53 @@
+graph TD
+    subgraph Data Origin
+        A[Application Server: Generates Logs];
+        B[Database Server: Audit Logs];
+        C[Network Device: Syslog];
+    end
+
+    subgraph Log Ingestion
+        D[Fluentd Agent: Collects Logs];
+        E[Kafka Broker: Message Queue];
+    end
+
+    subgraph Log Processing & Enrichment
+        F[Logstash Instance 1: Filter & Enhance];
+        G[Logstash Instance 2: Geo-IP Lookup];
+        H[Spark Streaming Job: Aggregation];
+    end
+
+    subgraph Storage & Search
+        I[Elasticsearch Cluster: Stores Indices];
+        J[Kibana Dashboard: Visualization];
+        K[S3 Bucket: Archive Storage];
+    end
+
+    A --> D
+    B --> D
+    C --> D
+
+    D --> E
+
+    E -- High Volume --> F
+    E -- Audit Logs --> G
+
+    F --> H
+    G --> H
+
+    H --> I
+    H --> K
+
+    I --> J
+
+    subgraph Alerting & Monitoring
+        L[Prometheus: Monitors Metrics];
+        M[Alertmanager: Manages Alerts];
+    end
+
+    I -- Metric: Indexing Rate --> L
+    L --> M
+
+    classDef filled fill:#f9f,stroke:#333,stroke-width:2px;
+    class A,B,C filled
+    class I,J,K filled
+    class L,M filled

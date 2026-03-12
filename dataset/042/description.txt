@@ -1,0 +1,49 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the high-level components and data flow within a system. It illustrates the interaction between clients, services, background workers, and databases. The diagram serves to provide a visual representation of the system's architecture, aiding in understanding the relationships and dependencies between different parts.
+
+## Overall Layout
+The diagram uses a left-to-right (LR) layout. It is hierarchically structured into four main areas: Client, Services, Background, and Database. The Client section represents the entry point, and the Database section represents the data storage layer.
+
+## Subgraphs / Stages
+The diagram contains four explicit subgraphs: Client, Services, Background, and Database.
+- **Client**: Represents the user-facing applications that interact with the system.
+- **Services**: Represents the core application logic and APIs.
+- **Background**: Represents background processes and workers.
+- **Database**: Represents the data storage layer.
+
+## Node-by-Node Description
+- **Browser**: Represents a web browser client. visible in diagram; no further repository context available.
+- **Mobile App**: Represents a mobile application client. visible in diagram; no further repository context available.
+- **Admin UI**: Represents an administrative user interface. visible in diagram; no further repository context available.
+- **api-server :3001**: Represents the API server, running on port 3001. visible in diagram; no further repository context available.
+- **websocket-service :3002**: Represents the WebSocket service, running on port 3002. visible in diagram; no further repository context available.
+- **admin :3003**: Represents the admin service, running on port 3003. visible in diagram; no further repository context available.
+- **worker (No Port)**: Represents a background worker process. visible in diagram; no further repository context available.
+- **MongoDB**: Represents a MongoDB database. visible in diagram; no further repository context available.
+- **PostgreSQL**: Represents a PostgreSQL database. visible in diagram; no further repository context available.
+- **MySQL**: Represents a MySQL database. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Browser --> api-server :3001`: Browser sends HTTP/REST requests to the API server.
+- `Mobile App --> api-server :3001`: Mobile App sends HTTP/REST requests to the API server.
+- `Browser --> websocket-service :3002`: Browser establishes a WebSocket connection with the WebSocket service.
+- `Admin UI --> admin :3003`: Admin UI sends HTTP/REST requests to the admin service.
+- `api-server :3001 --> MongoDB`: API server reads/writes data to MongoDB.
+- `api-server :3001 --> PostgreSQL`: API server reads/writes data to PostgreSQL.
+- `websocket-service :3002 --> MongoDB`: WebSocket service reads/writes data to MongoDB.
+- `admin :3003 --> PostgreSQL`: Admin service reads/writes data to PostgreSQL.
+- `admin :3003 --> MySQL`: Admin service reads/writes data to MySQL.
+- `worker (No Port) --> MongoDB`: Worker process reads/writes data to MongoDB.
+- `api-server :3001 -.-> websocket-service :3002`: API server sends events to the WebSocket service.
+- `worker (No Port) -.-> api-server :3001`: Worker process triggers a process in the API server.
+
+## Repository Context & Terminology
+- **HTTP/REST**: A common architectural style for building web services, using HTTP protocol for communication.
+- **WebSocket**: A communication protocol that provides full-duplex communication channels over a single TCP connection.
+- **API Server**: A server that provides an interface for clients to access data and functionality.
+- **MongoDB**: A NoSQL document database.
+- **PostgreSQL**: An open-source relational database management system (RDBMS).
+- **MySQL**: An open-source relational database management system (RDBMS).
+
+## High-Density QA Ground Truth Summary
+The system architecture begins with clients (Browser, Mobile App, Admin UI) initiating requests. The Browser and Mobile App communicate with the `api-server :3001` via HTTP/REST, while the Browser also uses WebSockets to communicate with the `websocket-service :3002`. The Admin UI communicates with the `admin :3003` service via HTTP/REST. The `api-server :3001` sends events to the `websocket-service :3002`. A background `worker (No Port)` triggers processes in the `api-server :3001`. All three services (`api-server :3001`, `websocket-service :3002`, `admin :3003`) and the `worker (No Port)` perform read/write operations on the databases (MongoDB, PostgreSQL, MySQL). The `api-server :3001`, running on port 3001, acts as a central point for handling client requests and interacting with the databases. The databases (MongoDB, PostgreSQL, MySQL) serve as the end nodes, storing and managing the system's data. The choice of database (MongoDB, PostgreSQL, MySQL) for each service depends on the specific data requirements and access patterns.

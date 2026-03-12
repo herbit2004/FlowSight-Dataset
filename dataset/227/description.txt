@@ -1,0 +1,41 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of messages and API calls between different components of a system, likely a chatbot or AI agent platform. The diagram visualizes the interaction between chat platforms, a gateway service, a deep code engine, and an LLM router. It serves to illustrate the system's architecture and how different modules communicate with each other.
+
+## Overall Layout
+The diagram is laid out from left to right. It is divided into distinct subgraphs representing different components of the system. The flow starts with messages originating from chat platforms, which are then processed by the nanobot Gateway, and subsequently passed to the DeepCode Engine and OpenRouter.
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Chat Platforms**: Represents the various chat platforms from which messages originate.
+- **nanobot Gateway**: Acts as a central hub for processing and routing messages.
+- **DeepCode Engine**: Contains modules for code generation and task tracking.
+- **OpenRouter**: Provides routing for LLM API calls.
+
+## Node-by-Node Description
+- **Feishu / WebSocket**: Represents the Feishu chat platform, utilizing WebSocket for communication. visible in diagram; no further repository context available.
+- **Telegram / Polling**: Represents the Telegram chat platform, utilizing polling for message retrieval. visible in diagram; no further repository context available.
+- **Discord / Gateway**: Represents the Discord chat platform, accessed through a gateway. visible in diagram; no further repository context available.
+- **Agent Loop / LLM + Tool Calls**: Represents the core logic within the nanobot Gateway, involving a loop that uses an LLM and tool calls. visible in diagram; no further repository context available.
+- **Paper → Code**: Represents a module within the DeepCode Engine responsible for generating code from research papers. visible in diagram; no further repository context available.
+- **Chat → Code**: Represents a module within the DeepCode Engine responsible for generating code from chat messages. visible in diagram; no further repository context available.
+- **Task Tracking**: Represents a module within the DeepCode Engine responsible for tracking tasks. visible in diagram; no further repository context available.
+- **OpenRouter**: Represents a service for routing LLM API calls. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Feishu --> Agent Loop`: Messages from Feishu are sent to the Agent Loop.
+- `Telegram --> Agent Loop`: Messages from Telegram are sent to the Agent Loop.
+- `Discord --> Agent Loop`: Messages from Discord are sent to the Agent Loop.
+- `Agent Loop --> Paper → Code`: HTTP API calls are sent from the Agent Loop to the Paper → Code module.
+- `Agent Loop --> Chat → Code`: HTTP API calls are sent from the Agent Loop to the Chat → Code module.
+- `Agent Loop --> Task Tracking`: HTTP API calls are sent from the Agent Loop to the Task Tracking module.
+- `Agent Loop -.-> OpenRouter`: LLM API calls are sent from the Agent Loop to OpenRouter.
+
+## Repository Context & Terminology
+- **LLM (Large Language Model)**: A deep learning model trained on a massive amount of text data, capable of generating human-quality text, translating languages, and answering questions.
+- **API (Application Programming Interface)**: A set of rules and specifications that software programs can follow to communicate with each other.
+- **WebSocket**: A communication protocol that provides full-duplex communication channels over a single TCP connection.
+- **Polling**: A technique where the client repeatedly requests new data from the server.
+- **Gateway**: A server that acts as an intermediary between a client and a server.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the architecture of a system that integrates chat platforms with a deep code engine. The process begins with messages originating from Feishu (via WebSocket), Telegram (via Polling), and Discord (via a Gateway). These messages are then routed to the Agent Loop within the nanobot Gateway. The Agent Loop, which incorporates an LLM and tool calls, processes these messages and makes HTTP API calls to different modules within the DeepCode Engine: Paper → Code, Chat → Code, and Task Tracking. Additionally, the Agent Loop can make LLM API calls to OpenRouter. The DeepCode Engine modules perform specific tasks such as generating code from research papers (Paper → Code) or chat messages (Chat → Code), and tracking tasks. OpenRouter likely handles the routing of LLM requests to various LLM providers. The nanobot Gateway acts as a central hub, orchestrating the flow of information between the chat platforms and the DeepCode Engine, leveraging LLMs and tool calls to facilitate code generation and task management.

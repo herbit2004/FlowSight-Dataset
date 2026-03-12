@@ -1,0 +1,21 @@
+graph TD
+    A[User Places Order] --> B{Payment Received?};
+    B -- No --> C[Send Order Cancellation Email];
+    C --> H;
+    B -- Yes --> D[Inventory Check];
+    D -- In Stock --> E[Packaging];
+    D -- Out of Stock --> H;
+    E --> F{Address Valid?};
+    F -- No --> G[Hold Order];
+    G --> H;
+
+    F -- Yes --> K[Update Inventory Count];
+    K --> L[Shipping];
+    L --> M{Delivery Attempted?};
+
+    M -- Yes --> N[Delivery Success Email];
+    N --> O;
+    M -- No --> L;
+
+    H[End: Order Cancelled];
+    O[End: Order Delivered];

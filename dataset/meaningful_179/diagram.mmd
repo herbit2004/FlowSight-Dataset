@@ -1,0 +1,21 @@
+graph TD
+    A[Customer Initiates Claim] --> B{Claim Validation Rules};
+    B -- Valid Claim --> C[Calculate Estimated Compensation];
+    B -- Invalid Claim --> D[Reject Claim & Notify Customer];
+    C --> E{Compensation Matrix Lookup};
+    E -- Found Match --> F[Apply Compensation Rules];
+    E -- No Match --> G[Escalate to Compensation Specialist];
+    F --> H[Generate Compensation Offer];
+    G --> H;
+    H --> I{Customer Accepts Offer?};
+    I -- Yes --> J[Approve Compensation Request];
+    I -- No --> K[Negotiate Offer with Customer];
+    K --> I;
+    J --> L[Create Compensation Payment Record];
+    L --> M[Trigger Payment Processing];
+    M --> N[Update Claim Status to 'Completed'];
+    N --> O(End);
+    D --> O;
+
+    classDef approved fill:#ccffcc,stroke:#333,stroke-width:2px;
+    class J approved;

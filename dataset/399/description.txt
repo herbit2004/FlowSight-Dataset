@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the deployment and interaction of various components within a Google Cloud Platform environment. It depicts the flow of data and API calls between the user interface, backend services, AI agent engine, and AI models. The diagram serves as a high-level overview of the system's architecture and dependencies.
+
+## Overall Layout
+The diagram has a top-to-bottom (TB) layout. It is hierarchically structured, with the user interface at the top, followed by Google Cloud Run, Google Cloud Platform, and AI Models at the bottom. The user interaction with the web browser initiates the process, leading to interactions with the backend, AI agents, and finally, the AI models.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs:
+- **User Interface**: Represents the web browser used by the user.
+- **Google Cloud Run**: Contains the combined service, including the React frontend and FastAPI backend.
+- **Google Cloud Platform**: Encompasses the Vertex AI Agent Engine and Infrastructure components.
+- **Vertex AI Agent Engine**: Contains the Master Orchestrator Agent, Content Creation Coordinator, and Content Analyzer Agent.
+- **Infrastructure**: Includes the Artifact Registry, Cloud Storage, and Cloud Logging & Monitoring.
+- **AI Models**: Represents the Google Gemini 2.5 Flash model accessed via Vertex AI.
+
+## Node-by-Node Description
+- **Web Browser**: Represents the user's web browser. visible in diagram; no further repository context available.
+- **React Frontend Static Files**: Represents the React frontend application, built with Vite and React 18, serving static files. visible in diagram; no further repository context available.
+- **FastAPI Backend API Server**: Represents the backend API server, built with Python 3.11 and Uvicorn. visible in diagram; no further repository context available.
+- **Master Orchestrator Agent**: The main agent within the Vertex AI Agent Engine, version gemini-2.5-flash. visible in diagram; no further repository context available.
+- **Content Creation Coordinator**: An agent responsible for content creation, version gemini-2.5-flash. visible in diagram; no further repository context available.
+- **Content Analyzer Agent**: An agent responsible for content analysis, version gemini-2.5-flash. visible in diagram; no further repository context available.
+- **Artifact Registry Docker Images**: Represents the Docker image registry within Google Cloud Platform. visible in diagram; no further repository context available.
+- **Cloud Storage Staging Bucket**: Represents the Cloud Storage bucket used for staging data. visible in diagram; no further repository context available.
+- **Cloud Logging & Monitoring**: Represents the Cloud Logging and Monitoring service within Google Cloud Platform. visible in diagram; no further repository context available.
+- **Google Gemini 2.5 Flash via Vertex AI**: Represents the Google Gemini 2.5 Flash AI model accessed via Vertex AI. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Web Browser --> React Frontend Static Files`: The user interacts with the web browser, which sends HTTPS requests to the React frontend.
+- `React Frontend Static Files --> FastAPI Backend API Server`: The React frontend sends API requests to the FastAPI backend via the `/api/*` endpoint.
+- `FastAPI Backend API Server --> Master Orchestrator Agent`: The FastAPI backend communicates with the Master Orchestrator Agent via RemoteRunner.
+- `Master Orchestrator Agent --> Content Creation Coordinator`: The Master Orchestrator Agent triggers the Content Creation Coordinator.
+- `Master Orchestrator Agent --> Content Analyzer Agent`: The Master Orchestrator Agent triggers the Content Analyzer Agent.
+- `Content Creation Coordinator --> Google Gemini 2.5 Flash via Vertex AI`: The Content Creation Coordinator makes API calls to the Google Gemini 2.5 Flash model.
+- `Content Analyzer Agent --> Google Gemini 2.5 Flash via Vertex AI`: The Content Analyzer Agent makes API calls to the Google Gemini 2.5 Flash model.
+- `FastAPI Backend API Server -.logs.-> Cloud Logging & Monitoring`: The FastAPI backend sends logs to Cloud Logging & Monitoring.
+- `Artifact Registry Docker Images -.deploys.-> FastAPI Backend API Server`: Docker images from the Artifact Registry are deployed to the FastAPI backend.
+- `Content Creation Coordinator -.stores.-> Cloud Storage Staging Bucket`: The Content Creation Coordinator stores data in the Cloud Storage Staging Bucket.
+
+## Repository Context & Terminology
+- **Google Cloud Run**: A fully managed serverless execution environment for deploying containerized applications.
+- **React Frontend**: A user interface built using the React JavaScript library.
+- **FastAPI Backend**: A backend API server built using the FastAPI Python framework.
+- **Vertex AI**: Google Cloud's unified platform for machine learning.
+- **Docker Images**: Container images used for deploying applications.
+- **Cloud Storage**: Google Cloud's object storage service.
+- **Cloud Logging & Monitoring**: Google Cloud's logging and monitoring service.
+
+## High-Density QA Ground Truth Summary
+The process begins with a user interacting with the **Web Browser**, which sends an HTTPS request to the **React Frontend Static Files** hosted within the **Google Cloud Run Combined Service**. The frontend, built using Vite and React 18, then communicates with the **FastAPI Backend API Server** via the `/api/*` endpoint. The backend, implemented in Python 3.11 with Uvicorn, deploys from **Artifact Registry Docker Images**. The backend then triggers the **Master Orchestrator Agent** within the **Vertex AI Agent Engine** using RemoteRunner. The Master Orchestrator Agent, version gemini-2.5-flash, then initiates both the **Content Creation Coordinator** and the **Content Analyzer Agent**, also version gemini-2.5-flash. The Content Creation Coordinator stores data in the **Cloud Storage Staging Bucket**. Both the Content Creation Coordinator and Content Analyzer Agent make API calls to the **Google Gemini 2.5 Flash via Vertex AI** model. Logs from the FastAPI backend are sent to **Cloud Logging & Monitoring**. The agents leverage the Gemini 2.5 Flash model via Vertex AI to perform content creation and analysis tasks.

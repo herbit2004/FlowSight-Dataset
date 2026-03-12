@@ -1,0 +1,23 @@
+graph TD
+    A[Start: Initiating CoreSync Validation] --> B{PreFlight ZenithGate Check};
+    B -- ZenithGate Auth Pass --> C[Dispatch SpectraQueue Flush];
+    B -- ZenithGate Auth Reject --> D[Log PreFlight VaultNode Failure];
+    D --> E[Throttle ArcLane Distributor];
+    E --> F[End: CoreSync Validation Aborted];
+    C --> G{Initial FluxBridge Routing?};
+    G -- Yes --> H[Activate Dynamic FluxBridge Router];
+    G -- No --> I[Use Static FluxBridge Router];
+    H --> J[VaultNode Handshake Sequence];
+    I --> J;
+    J --> K{CoreSync Module Resilient?};
+    K -- Yes --> L[Execute Primary CoreSync Procedure];
+    K -- No --> M[Re-image CoreSync Module];
+    M --> N[Await System Re-enablement];
+    N --> F;
+    L --> O[PostSync VaultNode Assessment];
+    O --> P{CoreSync Validation Success?};
+    P -- Yes --> Q[Increment CoreSync Success Counter];
+    P -- No --> R[Initiate DeltaSync Reversal];
+    R --> S[Report System Anomaly];
+    S --> F;
+    Q --> T[End: CoreSync Validation Complete];

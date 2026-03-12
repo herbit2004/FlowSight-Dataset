@@ -1,0 +1,18 @@
+graph TD
+    subgraph Monitoring & Scaling
+        A[Metrics Collector] --> B{Threshold Exceeded?};
+        B -- Yes --> C(Scaling Decision Engine);
+        C --> D[Auto-Scaler];
+        D --> E[Container Orchestrator API];
+    end
+
+    subgraph Container Orchestration
+        E --> F[Request New Pod];
+        F --> G((Schedule Pod));
+        G --> H{Resource Available?};
+        H -- Yes --> I[Deploy Container];
+        H -- No --> J[Pending State];
+        J -- Retry Schedule --> G;
+    end
+      classDef orange fill:#f96,stroke:#333,stroke-width:2px;
+      class J orange;

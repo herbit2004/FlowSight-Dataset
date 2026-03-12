@@ -1,0 +1,61 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of heartbeat monitoring for devices in a distributed system. It depicts the flow of heartbeat signals from a device, through a broker and backend, to an offline detection service. The diagram's purpose is to visualize the steps involved in detecting device failures based on missing heartbeat signals.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured into stages representing different components of the system. The start node is "Heartbeat Sender" and the end nodes are "Notify Admin" and "Do Nothing".
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing different components: Device, Broker, Backend, and Offline Detection Service.
+- **Device**: Represents the source of the heartbeat signal.
+- **Broker**: Acts as an intermediary for transmitting heartbeat data.
+- **Backend**: Processes and stores heartbeat information.
+- **Offline Detection Service**: Monitors heartbeat data and detects offline devices.
+
+## Node-by-Node Description
+- **A / Heartbeat Sender**: Represents the component on the device responsible for sending heartbeat signals. visible in diagram; no further repository context available.
+- **B / Send HB**: Represents the decision point where the device determines whether to send a heartbeat. visible in diagram; no further repository context available.
+- **C / Transmit HB to Broker**: Represents the transmission of the heartbeat signal from the device to the broker. visible in diagram; no further repository context available.
+- **D / HB Receiver**: Represents the component on the broker that receives heartbeat signals. visible in diagram; no further repository context available.
+- **E / Queue HB Data**: Represents the queuing of heartbeat data within the broker. visible in diagram; no further repository context available.
+- **F / HB Processor**: Represents the component in the backend that processes heartbeat data. visible in diagram; no further repository context available.
+- **G / Store HB Timestamp**: Represents the storage of the heartbeat timestamp in the backend. visible in diagram; no further repository context available.
+- **H / Device Status Updater**: Represents the component that updates the device status based on heartbeat data. visible in diagram; no further repository context available.
+- **I / Update Device Table**: Represents the updating of the device table with the latest device status. visible in diagram; no further repository context available.
+- **J / Offline Detector**: Represents the component in the Offline Detection Service that detects offline devices. visible in diagram; no further repository context available.
+- **K / Query DB for Stale Heartbeats**: Represents the querying of the database for stale heartbeat records. visible in diagram; no further repository context available.
+- **L / Calculate Last HB Age**: Represents the calculation of the age of the last heartbeat received from a device. visible in diagram; no further repository context available.
+- **M / Mark Device Offline**: Represents the marking of a device as offline. visible in diagram; no further repository context available.
+- **N / Device OK**: Represents the state where the device is considered online. visible in diagram; no further repository context available.
+- **O / Raise Alert**: Represents the raising of an alert when a device is marked offline. visible in diagram; no further repository context available.
+- **P / Notify Admin**: Represents the notification of the administrator about the offline device. visible in diagram; no further repository context available.
+- **Q / Do Nothing**: Represents the action of doing nothing when a device is considered online. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The Heartbeat Sender initiates the sending of a heartbeat.
+- `B -- Every 60s --> C`: Heartbeats are transmitted to the broker every 60 seconds.
+- `C --> D`: The heartbeat is transmitted from the device to the HB Receiver in the broker.
+- `D --> E`: The HB Receiver queues the heartbeat data.
+- `E --> F`: The queued heartbeat data is passed to the HB Processor in the backend.
+- `F --> G`: The HB Processor stores the heartbeat timestamp.
+- `G --> H`: The stored timestamp is used by the Device Status Updater.
+- `H --> I`: The Device Status Updater updates the Device Table.
+- `I --> J`: The updated Device Table information is used by the Offline Detection Service's Offline Detector.
+- `J -- Scheduled Task --> K`: The Offline Detector queries the database for stale heartbeats as a scheduled task.
+- `K --> L`: The query results are used to calculate the last heartbeat age.
+- `L -- Device Age > Threshold? --> M`: If the device age is greater than the threshold, the device is marked offline.
+- `L -- Device Age <= Threshold? --> N`: If the device age is less than or equal to the threshold, the device is considered OK.
+- `M --> O`: When a device is marked offline, an alert is raised.
+- `O --> P`: The alert triggers a notification to the administrator.
+- `N --> Q`: If the device is OK, no action is taken.
+
+## Repository Context & Terminology
+- **Heartbeat**: A periodic signal sent by a device to indicate that it is active and functioning correctly.
+- **Broker**: A message broker that facilitates communication between different components of the system.
+- **Backend**: The server-side component responsible for processing and storing data.
+- **Offline Detection**: The process of identifying devices that are no longer sending heartbeat signals.
+- **Stale Heartbeat**: A heartbeat signal that has not been received within a specified time period.
+- **Threshold**: A predefined value used to determine whether a device is considered offline based on the age of its last heartbeat.
+- **Device Table**: A database table that stores the status of each device in the system.
+
+## High-Density QA Ground Truth Summary
+The heartbeat monitoring process begins with the "Heartbeat Sender" on a device, which periodically initiates the "Send HB" decision. If the decision is positive, the "Transmit HB to Broker" node sends the heartbeat signal to the broker every 60 seconds. The "HB Receiver" in the broker receives the signal and "Queue HB Data". The "HB Processor" in the backend then processes this data, storing the "HB Timestamp" and using the "Device Status Updater" to "Update Device Table". The "Offline Detection Service" then runs a "Scheduled Task" to "Query DB for Stale Heartbeats". The "Calculate Last HB Age" node determines the age of the last heartbeat. A crucial branch occurs: if "Device Age > Threshold?", the flow proceeds to "Mark Device Offline", "Raise Alert", and "Notify Admin"; otherwise, if "Device Age <= Threshold?", the flow goes to "Device OK" and "Do Nothing". The "Threshold" represents a critical configuration parameter defining the acceptable duration of heartbeat absence before a device is considered offline, directly impacting the sensitivity of the failure detection mechanism. The process terminates at either "Notify Admin" (indicating a detected failure) or "Do Nothing" (indicating normal operation).

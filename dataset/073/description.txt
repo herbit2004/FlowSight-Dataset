@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow and processing steps in a question-answering system. It depicts two main pipelines: an ingestion pipeline for processing and storing data, and a query pipeline for retrieving and generating answers based on user questions. The diagram serves as a high-level architecture overview, outlining the key components and their interactions within the system.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It consists of two main subgraphs: "Ingestion" and "Query". The "Ingestion" subgraph represents the data preparation process, starting with tracking files and ending with storing chunks in a database. The "Query" subgraph represents the question answering process, starting with asking a question and ending with getting an answer.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Ingestion**: This subgraph describes the process of ingesting data, chunking it semantically, embedding the chunks, and storing them in a local Qdrant database.
+- **Query**: This subgraph describes the process of taking a user question, embedding it, retrieving relevant chunks from the database, re-ranking them, expanding the context, generating an answer, and providing the answer to the user.
+
+## Node-by-Node Description
+- **A / Track and Commit Files**: Tracks and commits files, supporting profiles. visible in diagram; no further repository context available.
+- **B / Ingest Files**: Ingests files using automatic OCR strategy and image entity extraction. visible in diagram; no further repository context available.
+- **C / Semantic Chunking**: Performs semantic chunking with context headers, with 100 lines per block and 200 words per chunk. visible in diagram; no further repository context available.
+- **D / Embed Chunks**: Embeds chunks using the "text-embedding-3-large" model, with a vector size of 3072. visible in diagram; no further repository context available.
+- **E / Store Chunks**: Stores chunks in a local Qdrant database. visible in diagram; no further repository context available.
+- **F / Ask Question**: Represents the user asking a question. visible in diagram; no further repository context available.
+- **G / Embed Question**: Embeds the question using the "text-embedding-3-large" model. visible in diagram; no further repository context available.
+- **H / Retrieve Nearest Chunks**: Retrieves the nearest chunks with a minimum score of 0.1 and a maximum of 30 chunks. visible in diagram; no further repository context available.
+- **I / Rerank by Relevance**: Reranks the retrieved chunks by relevance, with a maximum of 8 chunks. visible in diagram; no further repository context available.
+- **J / Expand Context**: Expands the context around the selected chunks, with a radius of 1 chunk. visible in diagram; no further repository context available.
+- **K / Generate Answer**: Generates an answer based on the expanded context. visible in diagram; no further repository context available.
+- **L / Get Answer**: Provides the answer in CLI, GUI, or MCP. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Tracks and commits files, then ingests them.
+- `B --> C`: Ingests files, then performs semantic chunking.
+- `C --> D`: Performs semantic chunking, then embeds the chunks.
+- `D --> E`: Embeds the chunks, then stores them.
+- `F --> G`: Asks a question, then embeds the question.
+- `G --> H`: Embeds the question, then retrieves the nearest chunks.
+- `E --> H`: Stored chunks are used to retrieve the nearest chunks. This is a convergence point.
+- `H --> I`: Retrieves the nearest chunks, then reranks them by relevance.
+- `I --> J`: Reranks the chunks, then expands the context.
+- `J --> K`: Expands the context, then generates an answer.
+- `K --> L`: Generates an answer, then provides the answer.
+
+## Repository Context & Terminology
+- **OCR (Optical Character Recognition)**: A technology that converts scanned or photographed images of text into machine-readable text.
+- **Image Entity Extraction**: The process of identifying and extracting entities (e.g., people, organizations, locations) from images.
+- **Semantic Chunking**: Dividing text into meaningful segments based on semantic content, often using context headers to maintain coherence.
+- **text-embedding-3-large**: A specific text embedding model used to convert text into numerical vectors.
+- **Qdrant**: A vector database used for storing and retrieving high-dimensional vectors, suitable for similarity search.
+- **CLI (Command Line Interface)**: A text-based interface for interacting with a computer system.
+- **GUI (Graphical User Interface)**: A visual interface for interacting with a computer system.
+- **MCP**: visible in diagram; no further repository context available.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "Ingestion" subgraph, where the system "Tracks and Commits Files," supporting profiles, and then "Ingests Files" using an automatic OCR strategy and image entity extraction. The ingested files undergo "Semantic Chunking" with context headers, configured for 100 lines per block and 200 words per chunk. These chunks are then embedded using the "text-embedding-3-large" model, resulting in vectors of size 3072, and subsequently stored in a local Qdrant database. The "Query" subgraph starts with the user "Asking a Question," which is then embedded using the same "text-embedding-3-large" model. The system "Retrieves Nearest Chunks" from the Qdrant database, based on a minimum score of 0.1 and a maximum of 30 chunks. The retrieved chunks are then "Reranked by Relevance," limited to a maximum of 8 chunks, and the context is "Expanded" with a radius of 1 chunk. Finally, the system "Generates Answer" based on the expanded context and presents the "Get Answer" in CLI, GUI, or MCP. The Qdrant database serves as a central repository for the embedded chunks, enabling efficient similarity search during the question answering process.

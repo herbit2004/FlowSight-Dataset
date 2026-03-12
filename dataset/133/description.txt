@@ -1,0 +1,49 @@
+## Diagram Type & Purpose
+This is a flowchart depicting the architecture of a safety-related system. It illustrates the data flow and interactions between different components, including independent services, databases, and administrative interfaces. The diagram provides a high-level overview of the system's structure and how its various parts work together.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the `quickstart/脚本` node at the top, flows through the `safety-admin` node, and then branches out to various independent services and databases. The end nodes are the `MySQL/Redis` and `Vearch 向量库` databases.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages:
+1. Initialization: `quickstart/脚本` to `safety-admin`.
+2. Service Registration: `safety-admin` to `safety-bert`, `safety-fasttext`, `safety-keywords`, and `safety-knowledge`.
+3. Configuration and Strategy: `safety-admin` to `防御策略编排` and `业务场景配置`.
+4. Data Storage: Independent services and configuration components writing to `MySQL/Redis` and `Vearch 向量库`.
+
+## Node-by-Node Description
+- **quickstart/脚本**: Represents the quickstart script, the entry point for initializing and registering the system. visible in diagram; no further repository context available.
+- **safety-admin / 后台管理**: Represents the safety administration backend, responsible for managing the system's configuration and registering atomic capabilities. visible in diagram; no further repository context available.
+- **safety-bert / 独立服务**: Represents the safety-bert independent service. visible in diagram; no further repository context available.
+- **safety-fasttext / 独立服务**: Represents the safety-fasttext independent service. visible in diagram; no further repository context available.
+- **safety-keywords / 独立服务**: Represents the safety-keywords independent service. visible in diagram; no further repository context available.
+- **safety-knowledge / 独立服务**: Represents the safety-knowledge independent service. visible in diagram; no further repository context available.
+- **MySQL/Redis**: Represents the MySQL/Redis database used for storing model configurations and sensitive data. visible in diagram; no further repository context available.
+- **Vearch 向量库**: Represents the Vearch vector database used for storing vector embeddings and performing similarity searches. visible in diagram; no further repository context available.
+- **防御策略编排**: Represents the defense strategy orchestration component. visible in diagram; no further repository context available.
+- **业务场景配置**: Represents the business scenario configuration component. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Quickstart --> Admin`: Initialization and registration process.
+- `Admin --> Bert`: Registration of atomic capability for safety-bert.
+- `Admin --> FastText`: Registration of atomic capability for safety-fasttext.
+- `Admin --> Keywords`: Registration of atomic capability for safety-keywords.
+- `Admin --> Knowledge`: Registration of atomic knowledge base management and business scenario configuration for safety-knowledge.
+- `Admin --> Strategy`: Strategy orchestration.
+- `Admin --> Business`: Business scenario configuration.
+- `Admin --> DB`: Configuration writing.
+- `Bert --> DB`: Model configuration.
+- `FastText --> DB`: Model configuration.
+- `Keywords --> DB`: Sensitive data.
+- `Knowledge --> DB`: Knowledge configuration.
+- `Knowledge --> Vearch`: Vector retrieval.
+
+## Repository Context & Terminology
+- **Quickstart Script**: The initial script used to set up and configure the safety system.
+- **Safety-Admin**: The backend administrative interface for managing the safety system.
+- **Atomic Capability**: A fundamental unit of functionality or service provided by the system.
+- **Vector Database**: A database designed for storing and querying vector embeddings, often used in machine learning and information retrieval applications.
+- **Vearch**: A high-performance vector similarity search engine.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the architecture of a safety system, starting with the `quickstart/脚本` which initializes and registers the system with the `safety-admin` backend. The `safety-admin` then registers atomic capabilities for the independent services: `safety-bert`, `safety-fasttext`, `safety-keywords`, and `safety-knowledge`. Each of these services represents a distinct component of the safety system. The `safety-admin` also handles strategy orchestration (`防御策略编排`) and business scenario configuration (`业务场景配置`). The `safety-bert` and `safety-fasttext` services write model configurations to the `MySQL/Redis` database, while `safety-keywords` stores sensitive data there. The `safety-knowledge` service stores knowledge configurations in `MySQL/Redis` and performs vector retrieval from the `Vearch 向量库`. The `Vearch 向量库` likely stores vector embeddings used for similarity searches, a common task in knowledge retrieval systems. The system uses a combination of `MySQL/Redis` for structured data and `Vearch` for unstructured vector data, allowing for a comprehensive safety management solution. The `safety-admin` component acts as the central control point, managing the configuration and registration of the various independent services.

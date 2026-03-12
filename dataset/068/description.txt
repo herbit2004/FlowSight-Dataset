@@ -1,0 +1,75 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the data flow and dependencies within an Azure Data Factory (ADF) pipeline. It illustrates the relationships between pipelines, data flows, datasets, linked services, and triggers, showcasing how data is processed and moved between different Azure services. The diagram serves as a visual representation of the ADF configuration, aiding in understanding and debugging the data integration process.
+
+## Overall Layout
+The diagram has a top-down (TD) layout, with pipelines and linked services at the top, data flows in the middle, and datasets at the bottom. The start nodes are the pipelines and triggers, and the end node is the `linkedService.BlobSampleData`.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages:
+1. Pipelines: `pipeline.PL_StoredProc`, `pipeline.Currency_Converter`, `pipeline.MovieDemoPipeline`, `pipeline.TaxiDemo`, `pipeline.PL_Wait5sec`.
+2. Linked Services: `linkedService.LS_AzureSqlDb_AW2014_SqlAuth`, `linkedService.LS_AzureKeyVault`, `linkedService.LS_SqlServer_DEV19_AW2017`, `linkedService.BlobSampleData`, `integrationRuntime.SharedIR-DEV2019`.
+3. Data Flows: `dataFlow.Currency_Converter`, `dataFlow.MovieDemo`, `dataFlow.TaxiDemo`.
+4. Datasets: Various `dataset.*` nodes.
+
+## Node-by-Node Description
+- **pipeline.PL_StoredProc**: Represents an Azure Data Factory pipeline that executes a stored procedure. visible in diagram; no further repository context available.
+- **linkedService.LS_AzureSqlDb_AW2014_SqlAuth**: Represents a linked service in Azure Data Factory that connects to an Azure SQL Database using SQL authentication. visible in diagram; no further repository context available.
+- **linkedService.LS_AzureKeyVault**: Represents a linked service in Azure Data Factory that connects to an Azure Key Vault. visible in diagram; no further repository context available.
+- **pipeline.Currency_Converter**: Represents an Azure Data Factory pipeline responsible for currency conversion. visible in diagram; no further repository context available.
+- **linkedService.LS_SqlServer_DEV19_AW2017**: Represents a linked service in Azure Data Factory that connects to a SQL Server instance. visible in diagram; no further repository context available.
+- **dataFlow.Currency_Converter**: Represents a data flow in Azure Data Factory that performs currency conversion transformations. visible in diagram; no further repository context available.
+- **integrationRuntime.SharedIR-DEV2019**: Represents a shared integration runtime in Azure Data Factory, used for executing data flows and activities. visible in diagram; no further repository context available.
+- **pipeline.MovieDemoPipeline**: Represents an Azure Data Factory pipeline for a movie demo. visible in diagram; no further repository context available.
+- **dataFlow.MovieDemo**: Represents a data flow in Azure Data Factory for a movie demo. visible in diagram; no further repository context available.
+- **pipeline.TaxiDemo**: Represents an Azure Data Factory pipeline for a taxi demo. visible in diagram; no further repository context available.
+- **dataFlow.TaxiDemo**: Represents a data flow in Azure Data Factory for a taxi demo. visible in diagram; no further repository context available.
+- **dataset.taxi_trip_fare_input**: Represents a dataset in Azure Data Factory for taxi trip fare input data. visible in diagram; no further repository context available.
+- **dataset.taxi_trip_data_input**: Represents a dataset in Azure Data Factory for taxi trip data input. visible in diagram; no further repository context available.
+- **dataset.TaxiDemoTotalByPaymentType**: Represents a dataset in Azure Data Factory for taxi demo total by payment type data. visible in diagram; no further repository context available.
+- **dataset.TaxiDemoDayStatsSink**: Represents a dataset in Azure Data Factory for taxi demo day statistics sink data. visible in diagram; no further repository context available.
+- **dataset.TaxiDemoVendorStatsSink**: Represents a dataset in Azure Data Factory for taxi demo vendor statistics sink data. visible in diagram; no further repository context available.
+- **dataset.movie_dataflow_source**: Represents a dataset in Azure Data Factory for movie data flow source data. visible in diagram; no further repository context available.
+- **dataset.movie_dataflow_sink**: Represents a dataset in Azure Data Factory for movie data flow sink data. visible in diagram; no further repository context available.
+- **dataset.CurrencyDatasetCAD**: Represents a dataset in Azure Data Factory for currency dataset in CAD. visible in diagram; no further repository context available.
+- **dataset.CurrencyDatasetUSD**: Represents a dataset in Azure Data Factory for currency dataset in USD. visible in diagram; no further repository context available.
+- **dataset.CADOutput1**: Represents a dataset in Azure Data Factory for CAD output 1. visible in diagram; no further repository context available.
+- **dataset.USDOutput**: Represents a dataset in Azure Data Factory for USD output. visible in diagram; no further repository context available.
+- **trigger.TR_RunEveryDay**: Represents a trigger in Azure Data Factory that runs every day. visible in diagram; no further repository context available.
+- **trigger.TR_AlwaysDisabled**: Represents a trigger in Azure Data Factory that is always disabled. visible in diagram; no further repository context available.
+- **pipeline.PL_Wait5sec**: Represents an Azure Data Factory pipeline that waits for 5 seconds. visible in diagram; no further repository context available.
+- **linkedService.BlobSampleData**: Represents a linked service in Azure Data Factory that connects to a Blob Storage account for sample data. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `pipeline.PL_StoredProc --> linkedService.LS_AzureSqlDb_AW2014_SqlAuth`: Pipeline uses the linked service to connect to Azure SQL DB.
+- `linkedService.LS_AzureSqlDb_AW2014_SqlAuth --> linkedService.LS_AzureKeyVault`: Azure SQL DB linked service uses Azure Key Vault linked service for authentication.
+- `linkedService.LS_SqlServer_DEV19_AW2017 --> integrationRuntime.SharedIR-DEV2019`: SQL Server linked service uses the shared integration runtime.
+- `linkedService.LS_SqlServer_DEV19_AW2017 --> linkedService.LS_AzureKeyVault`: SQL Server linked service uses Azure Key Vault for authentication.
+- `pipeline.Currency_Converter --> dataFlow.Currency_Converter`: Pipeline executes the currency converter data flow.
+- `pipeline.MovieDemoPipeline --> dataFlow.MovieDemo`: Pipeline executes the movie demo data flow.
+- `pipeline.TaxiDemo --> dataFlow.TaxiDemo`: Pipeline executes the taxi demo data flow.
+- `dataFlow.Currency_Converter --> dataset.USDOutput`: Data flow writes to the USD output dataset.
+- `dataFlow.Currency_Converter --> dataset.CADOutput1`: Data flow writes to the CAD output 1 dataset.
+- `dataFlow.Currency_Converter --> dataset.CurrencyDatasetUSD`: Data flow writes to the currency dataset in USD.
+- `dataFlow.Currency_Converter --> dataset.CurrencyDatasetCAD`: Data flow writes to the currency dataset in CAD.
+- `dataFlow.MovieDemo --> dataset.movie_dataflow_sink`: Data flow writes to the movie data flow sink dataset.
+- `dataFlow.MovieDemo --> dataset.movie_dataflow_source`: Data flow reads from the movie data flow source dataset.
+- `dataFlow.TaxiDemo --> dataset.TaxiDemoVendorStatsSink`: Data flow writes to the taxi demo vendor statistics sink dataset.
+- `dataFlow.TaxiDemo --> dataset.TaxiDemoDayStatsSink`: Data flow writes to the taxi demo day statistics sink dataset.
+- `dataFlow.TaxiDemo --> dataset.TaxiDemoTotalByPaymentType`: Data flow writes to the taxi demo total by payment type dataset.
+- `dataFlow.TaxiDemo --> dataset.taxi_trip_data_input`: Data flow reads from the taxi trip data input dataset.
+- `dataFlow.TaxiDemo --> dataset.taxi_trip_fare_input`: Data flow reads from the taxi trip fare input dataset.
+- `trigger.TR_RunEveryDay --> pipeline.PL_Wait5sec`: Trigger initiates the pipeline.
+- `trigger.TR_AlwaysDisabled --> pipeline.PL_Wait5sec`: Trigger initiates the pipeline.
+- Multiple datasets converge to `linkedService.BlobSampleData`: Various datasets are written to the Blob Storage linked service.
+
+## Repository Context & Terminology
+- **Azure Data Factory (ADF)**: A cloud-based data integration service that allows you to create data-driven workflows for orchestrating data movement and transforming data at scale.
+- **Pipeline**: A logical grouping of activities that performs a unit of work. Activities in a pipeline define actions to perform on your data.
+- **Data Flow**: A visually designed data transformation process within ADF, allowing for complex data transformations without coding.
+- **Dataset**: Represents data storage within ADF, defining the structure, location, and format of the data.
+- **Linked Service**: Defines the connection information needed for ADF to connect to external resources, such as databases or storage accounts.
+- **Integration Runtime**: The compute infrastructure used by ADF to execute data flows and activities.
+- **Trigger**: Represents the event or schedule that starts a pipeline execution.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates an Azure Data Factory setup, starting with pipelines such as `pipeline.PL_StoredProc`, `pipeline.Currency_Converter`, `pipeline.MovieDemoPipeline`, and `pipeline.TaxiDemo`. The `pipeline.PL_StoredProc` pipeline directly connects to the `linkedService.LS_AzureSqlDb_AW2014_SqlAuth` linked service, which in turn uses `linkedService.LS_AzureKeyVault` for authentication. The `pipeline.Currency_Converter` executes the `dataFlow.Currency_Converter` data flow, which then outputs data to four different datasets: `dataset.USDOutput`, `dataset.CADOutput1`, `dataset.CurrencyDatasetUSD`, and `dataset.CurrencyDatasetCAD`. Similarly, `pipeline.MovieDemoPipeline` triggers `dataFlow.MovieDemo`, writing to `dataset.movie_dataflow_sink` and reading from `dataset.movie_dataflow_source`. The `pipeline.TaxiDemo` executes `dataFlow.TaxiDemo`, which interacts with several taxi-related datasets, including `dataset.taxi_trip_fare_input`, `dataset.taxi_trip_data_input`, `dataset.TaxiDemoTotalByPaymentType`, `dataset.TaxiDemoDayStatsSink`, and `dataset.TaxiDemoVendorStatsSink`. Finally, the `trigger.TR_RunEveryDay` and `trigger.TR_AlwaysDisabled` triggers both initiate the `pipeline.PL_Wait5sec` pipeline. All the datasets, including `dataset.CADOutput1`, `dataset.CurrencyDatasetCAD`, `dataset.CurrencyDatasetUSD`, `dataset.movie_dataflow_sink`, `dataset.movie_dataflow_source`, `dataset.taxi_trip_data_input`, `dataset.taxi_trip_fare_input`, `dataset.TaxiDemoDayStatsSink`, `dataset.TaxiDemoTotalByPaymentType`, `dataset.TaxiDemoVendorStatsSink`, and `dataset.USDOutput`, ultimately feed into the `linkedService.BlobSampleData`, indicating that the processed data is stored in a Blob Storage account. The `integrationRuntime.SharedIR-DEV2019` is used by the `linkedService.LS_SqlServer_DEV19_AW2017` for executing data flows.

@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the layered structure of an application, likely a microservice or a module within a larger system. It illustrates the flow of data and control between different layers (Adapter, Application, Domain, and Infrastructure) and their respective components. The diagram serves as a high-level overview of the system's architecture, aiding in understanding the relationships and dependencies between its various parts.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) fashion, with the Adapter Layer at the top and the Infrastructure Layer at the bottom. It represents a layered architecture, with dependencies generally flowing downwards. The start nodes are the RPC Provider and REST Controller in the Adapter Layer, and the end nodes are Data Object in the Infrastructure Layer and Anti-corruption Layer Interface in the Domain Layer.
+
+## Subgraphs / Stages
+The diagram is explicitly divided into four subgraphs, representing the different layers of the application:
+- **Adapter Layer**: Handles external communication (e.g., REST API, RPC).
+- **Application Layer**: Contains application-specific logic and orchestrates domain operations.
+- **Domain Layer**: Represents the core business logic and data models.
+- **Infrastructure Layer**: Provides supporting services like data access and event handling.
+
+## Node-by-Node Description
+- **REST Controller**: Handles incoming REST requests. visible in diagram; no further repository context available.
+- **RPC Provider**: Handles incoming RPC calls. visible in diagram; no further repository context available.
+- **Application Service**: Contains the main application logic and orchestrates operations. visible in diagram; no further repository context available.
+- **Command Executor**: Executes commands that modify the system state. visible in diagram; no further repository context available.
+- **Query Executor**: Executes queries to retrieve data. visible in diagram; no further repository context available.
+- **DTO Assembler**: Assembles Data Transfer Objects (DTOs) for returning data to the client. visible in diagram; no further repository context available.
+- **Aggregate Root/Entity**: Represents a cluster of associated objects that are treated as a single unit for the purpose of data changes. visible in diagram; no further repository context available.
+- **Domain Service**: Contains domain logic that doesn't naturally fit within an entity or value object. visible in diagram; no further repository context available.
+- **Value Object**: Represents a conceptual whole whose attributes fully describe it. visible in diagram; no further repository context available.
+- **Domain Event**: Represents a significant occurrence within the domain. visible in diagram; no further repository context available.
+- **Anti-corruption Layer Interface**: Acts as a facade to isolate the domain from external systems or legacy code. visible in diagram; no further repository context available.
+- **Gateway Implementation**: Implements the interface for accessing external systems or databases. visible in diagram; no further repository context available.
+- **Data Mapper**: Maps between domain objects and data objects. visible in diagram; no further repository context available.
+- **Data Object**: Represents data stored in a database or external system. visible in diagram; no further repository context available.
+- **Event Handler**: Handles domain events. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `REST Controller --> Application Service`: REST request is passed to the application service.
+- `RPC Provider --> Application Service`: RPC call is passed to the application service.
+- `Application Service --> Command Executor`: Application service delegates command execution.
+- `Application Service --> Query Executor`: Application service delegates query execution.
+- `Command Executor --> Aggregate Root/Entity`: Command executor interacts with an aggregate root/entity.
+- `Command Executor --> Domain Service`: Command executor invokes a domain service.
+- `Command Executor --> Anti-corruption Layer Interface`: Command executor uses the anti-corruption layer.
+- `Query Executor --> Data Mapper`: Query executor uses the data mapper to retrieve data.
+- `Aggregate Root/Entity --> Value Object`: Aggregate root/entity contains value objects.
+- `Aggregate Root/Entity --> Domain Event`: Aggregate root/entity publishes a domain event.
+- `Domain Service --> Anti-corruption Layer Interface`: Domain service uses the anti-corruption layer.
+- `Gateway Implementation -.-> Anti-corruption Layer Interface`: Gateway implementation implements the anti-corruption layer interface.
+- `Gateway Implementation --> Data Mapper`: Gateway implementation uses the data mapper.
+- `Data Mapper --> Data Object`: Data mapper maps to a data object.
+- `Event Handler --> Domain Event`: Event handler handles a domain event.
+
+## Repository Context & Terminology
+- **Adapter Layer**: This layer is responsible for adapting external requests (e.g., REST, RPC) to the application's internal representation. It decouples the application from specific communication protocols.
+- **Application Layer**: This layer contains the application's use cases and orchestrates the interaction between the domain and infrastructure layers.
+- **Domain Layer**: This layer represents the core business logic and data models of the application. It should be independent of any specific technology or framework.
+- **Infrastructure Layer**: This layer provides supporting services such as data access, event handling, and logging.
+- **Aggregate Root**: An aggregate root is a cluster of associated objects that are treated as a single unit for the purpose of data changes. It ensures data consistency within the aggregate.
+- **Anti-corruption Layer**: This layer acts as a facade to isolate the domain from external systems or legacy code. It translates data and logic between the two systems.
+- **Data Transfer Object (DTO)**: A DTO is an object that carries data between processes. It is often used to reduce the number of calls between client and server.
+
+## High-Density QA Ground Truth Summary
+The architecture diagram illustrates a layered application design, starting with the Adapter Layer's REST Controller and RPC Provider receiving external requests. These requests are then passed to the Application Service within the Application Layer. The Application Service orchestrates operations by delegating to either the Command Executor (for state-modifying operations) or the Query Executor (for data retrieval). The Command Executor interacts with the Domain Layer's Aggregate Root/Entity and Domain Service, potentially utilizing the Anti-corruption Layer Interface to interact with external systems. The Query Executor uses the Data Mapper in the Infrastructure Layer to retrieve Data Objects. The Aggregate Root/Entity contains Value Objects and publishes Domain Events, which are handled by the Event Handler in the Infrastructure Layer. The Gateway Implementation implements the Anti-corruption Layer Interface and interacts with the Data Mapper. The data flow terminates at the Data Object and Anti-corruption Layer Interface. The Anti-corruption Layer serves as a crucial boundary, isolating the core Domain Layer from external dependencies and legacy systems, ensuring maintainability and reducing the impact of changes in external systems.

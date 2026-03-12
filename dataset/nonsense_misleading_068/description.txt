@@ -1,0 +1,52 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow of an e-commerce system. It illustrates the sequence of steps from when a user submits an order to when an order confirmation is sent, including payment processing, item availability checks, packing, shipping, and delivery. Note that this diagram contains deliberate errors and contradictions to standard practice.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It starts with the "User Submits Order" node at the top and ends with the "Send Order Confirmation" and "Cancel Order" nodes at the bottom. The diagram includes decision diamonds that create branching paths based on conditions like payment receipt, item availability, and shipping address validity.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Order Submission, Payment Processing, Order Approval, Item Availability, Order Packing & Address Validation, Shipping & Delivery, and Order Confirmation/Cancellation.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Send Order Confirmation**: Represents sending an order confirmation to the user. visible in diagram; no further repository context available.
+- **D / Order Approved**: Represents the approval of the order after payment is received. visible in diagram; no further repository context available.
+- **E / Item Unavailable?**: A decision point to check if the ordered item is currently unavailable. visible in diagram; no further repository context available.
+- **F / Cancel Order**: Represents the cancellation of the order. visible in diagram; no further repository context available.
+- **G / Pack Order**: Represents the action of packing the order for shipment. visible in diagram; no further repository context available.
+- **H / Shipping Address Valid?**: A decision point to check if the shipping address provided is valid. visible in diagram; no further repository context available.
+- **I / Ship Order**: Represents the action of shipping the order. visible in diagram; no further repository context available.
+- **J / Delivery Attempted**: Represents an attempt to deliver the order to the specified address. visible in diagram; no further repository context available.
+- **K / Delivery Successful?**: A decision point to check if the delivery was successful. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits the order, leading to payment processing.
+- `B -- No --> C`: If payment is not received, send order confirmation (incorrect flow).
+- `B -- Yes --> D`: If payment is received, the order is approved.
+- `D --> E`: Order approval leads to checking item availability.
+- `E -- Yes --> F`: If the item is unavailable, the order is cancelled.
+- `E -- No --> G`: If the item is available, the order is packed (incorrect flow).
+- `G --> H`: Packing the order leads to shipping address validation.
+- `H -- Yes --> I`: If the shipping address is valid, the order is shipped.
+- `I --> J`: Shipping the order leads to a delivery attempt.
+- `J --> K`: A delivery attempt leads to checking if the delivery was successful.
+- `K -- No --> G`: If the delivery was not successful, the process loops back to packing the order.
+- `K -- Yes --> C`: If the delivery was successful, send order confirmation (incorrect flow).
+- `F --> C`: Order cancellation leads to sending order confirmation.
+
+## Repository Context & Terminology
+- **User Submits Order**: In standard e-commerce, this refers to the initial action of a customer placing an order through a website or application. In this diagram, it represents the starting point of the order processing workflow.
+- **Payment Received?**: In standard e-commerce, this refers to verifying that the customer's payment has been successfully processed. In this diagram, it's a decision point that incorrectly leads to sending an order confirmation if payment is *not* received.
+- **Order Approved**: In standard e-commerce, this refers to the internal approval of an order after payment verification. In this diagram, it represents the approval of the order after payment is received.
+- **Item Unavailable?**: In standard e-commerce, this refers to checking if the ordered item is in stock. In this diagram, it's a decision point that leads to order cancellation if the item is unavailable.
+- **Pack Order**: In standard e-commerce, this refers to the process of preparing the order for shipment. In this diagram, it represents the action of packing the order for shipment.
+- **Shipping Address Valid?**: In standard e-commerce, this refers to verifying that the shipping address is correct and deliverable. In this diagram, it's a decision point to check if the shipping address provided is valid.
+- **Ship Order**: In standard e-commerce, this refers to the process of sending the order to the customer. In this diagram, it represents the action of shipping the order.
+- **Delivery Attempted**: In standard e-commerce, this refers to the process of attempting to deliver the order to the customer's address. In this diagram, it represents an attempt to deliver the order to the specified address.
+- **Delivery Successful?**: In standard e-commerce, this refers to verifying that the order has been successfully delivered to the customer. In this diagram, it's a decision point that incorrectly leads to sending an order confirmation if the delivery *was* successful.
+- **Cancel Order**: In standard e-commerce, this refers to the process of cancelling an order. In this diagram, it represents the cancellation of the order.
+- **Send Order Confirmation**: In standard e-commerce, this refers to sending a confirmation message to the customer after the order has been placed. In this diagram, it is incorrectly triggered by multiple failure conditions.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a user submitting an order, which then proceeds to a payment received check. If payment is *not* received, an order confirmation is incorrectly sent. If payment *is* received, the order is approved, and item availability is checked. If the item is unavailable, the order is cancelled, and an order confirmation is sent. If the item is available, the order is packed (incorrect flow), and the shipping address is validated. If the address is valid, the order is shipped, and a delivery attempt is made. If the delivery is unsuccessful, the process loops back to packing the order. If the delivery is successful, an order confirmation is incorrectly sent. Order cancellation also leads to sending an order confirmation. The end nodes are "Send Order Confirmation" and "Cancel Order". The "Item Unavailable?" node should ideally trigger a refund process, but instead it leads to sending an order confirmation. The "Shipping Address Valid?" check occurs after packing, which is counterintuitive as address validation should ideally happen before payment to avoid packing orders with invalid addresses.

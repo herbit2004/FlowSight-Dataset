@@ -1,0 +1,53 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow for an e-commerce system. It outlines the steps involved from when a user submits an order to when the order is delivered, including payment verification, inventory updates, shipping address validation, and shipment notification. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "User Submits Order" node at the top and flows downwards through a series of processes and decision points, ultimately leading to the "Update Order Status: Delivered" node. The diagram contains an illogical loop, where the final node feeds back into the start node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Order Submission, Payment Processing, Inventory Update, Address Validation, Shipping Label Creation & Package Shipping, Shipment Notification, and Order Delivery.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Inventory Updated**: Represents the process of updating the inventory after payment is received. visible in diagram; no further repository context available.
+- **H / Order Canceled**: Represents the cancellation of the order if payment is not received. visible in diagram; no further repository context available.
+- **D / Shipping Address Valid?**: A decision point to check if the shipping address provided by the user is valid. visible in diagram; no further repository context available.
+- **E / Create Shipping Label**: Represents the process of creating a shipping label for the order. visible in diagram; no further repository context available.
+- **F / Contact User**: Represents the action of contacting the user if the shipping address is invalid. visible in diagram; no further repository context available.
+- **G / User Responds?**: A decision point to check if the user has responded after being contacted about the shipping address. visible in diagram; no further repository context available.
+- **I / Package Shipped**: Represents the event of the package being shipped. visible in diagram; no further repository context available.
+- **J / Notify User of Shipment**: Represents the action of notifying the user that their package has been shipped. visible in diagram; no further repository context available.
+- **K / Order Delivered**: Represents the event of the order being delivered to the user. visible in diagram; no further repository context available.
+- **L / Update Order Status: Delivered**: Represents the action of updating the order status to "Delivered". visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the payment verification process.
+- `B -- Yes --> C`: If payment is received, the inventory is updated. Note: This is an error in the diagram, as inventory update should occur *after* payment.
+- `B -- No --> H`: If payment is not received, the order is canceled.
+- `C --> D`: After inventory update, the shipping address is validated.
+- `D -- Yes --> E`: If the shipping address is valid, a shipping label is created.
+- `D -- No --> F`: If the shipping address is invalid, the user is contacted.
+- `F --> G`: The system waits for the user to respond.
+- `G -- No --> C`: If the user does not respond, the process loops back to Inventory Updated. Note: This is an error in the diagram; it should not loop back to inventory.
+- `G -- Yes --> D`: If the user responds, the process loops back to Shipping Address Valid?. Note: This is an error in the diagram; it should proceed to order processing.
+- `E --> I`: After creating the shipping label, the package is shipped.
+- `I --> J`: After the package is shipped, the user is notified.
+- `J --> K`: After notification, the order is delivered.
+- `K --> L`: After delivery, the order status is updated to "Delivered".
+- `L --> A`: The process loops back to "User Submits Order". Note: This is an error in the diagram; the process should end.
+
+## Repository Context & Terminology
+- **Order**: A request from a user to purchase goods or services. In this diagram, it represents the entire process from submission to delivery, including illogical loops.
+- **Payment Received**: Verification that the user has paid for the order. In this diagram, it's a decision point that incorrectly precedes inventory updates.
+- **Inventory Updated**: The process of adjusting stock levels after an order is placed. In this diagram, it's incorrectly placed before payment confirmation and is part of an illogical loop.
+- **Shipping Address Valid**: Verification that the provided shipping address is correct and deliverable. In this diagram, it leads to a contact user step, and then loops back to itself.
+- **Create Shipping Label**: The process of generating a label with the shipping address and other relevant information. In this diagram, it follows a successful address validation.
+- **Contact User**: The action of reaching out to the user, typically to resolve issues with the order. In this diagram, it's triggered by an invalid shipping address.
+- **Package Shipped**: The event of the package leaving the warehouse or fulfillment center. In this diagram, it follows label creation.
+- **Notify User of Shipment**: The action of informing the user that their package has been shipped. In this diagram, it follows the package shipped event.
+- **Order Delivered**: The event of the order arriving at the user's shipping address. In this diagram, it follows shipment notification.
+- **Update Order Status: Delivered**: The action of marking the order as delivered in the system. In this diagram, it incorrectly loops back to the start of the process.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Submits Order," which leads to the "Payment Received?" decision. If payment is received ("Yes" branch), the "Inventory Updated" node is reached; if not ("No" branch), the "Order Canceled" node is reached. After "Inventory Updated," the flow proceeds to "Shipping Address Valid?" If the address is valid ("Yes" branch), "Create Shipping Label" is executed, followed by "Package Shipped" and "Notify User of Shipment," eventually leading to "Order Delivered." If the address is invalid ("No" branch), the "Contact User" node is reached, leading to "User Responds?". If the user responds ("Yes" branch), the flow loops back to "Shipping Address Valid?". If the user does not respond ("No" branch), the flow loops back to "Inventory Updated". After "Order Delivered," the "Update Order Status: Delivered" node is reached, which then incorrectly loops back to the "User Submits Order" node, creating an infinite loop. The "Inventory Updated" node is incorrectly placed before payment confirmation, and the "User Responds?" decision incorrectly loops back to address validation regardless of the response.

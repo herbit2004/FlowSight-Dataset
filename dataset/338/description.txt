@@ -1,0 +1,40 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of data and operations between several microservices in an order processing system. It depicts the interactions between the order service, product service, shipment service, and payment service, mediated by RabbitMQ message brokers. The diagram serves as a high-level architectural overview of the system's components and their communication pathways.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) fashion. It starts with the `order-service` node at the top and flows downwards through RabbitMQ brokers to the `product-service`, `shipment-service`, and finally the `payment-service` at the bottom. The diagram illustrates a pipeline-like structure with branching and convergence.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 3 stages:
+1. Order creation and initial message brokering.
+2. Product and shipment processing.
+3. Payment processing and completion.
+
+## Node-by-Node Description
+- **A / order-service**: Represents the order service, which acts as a producer. It listens on port 2222. visible in diagram; no further repository context available.
+- **B / RabbitMQ Broker**: Represents a RabbitMQ message broker. It facilitates communication between the order service and the product/shipment services. visible in diagram; no further repository context available.
+- **C / product-service**: Represents the product service, which acts as a function. It listens on port 2223. visible in diagram; no further repository context available.
+- **D / shipment-service**: Represents the shipment service, which acts as a function. It listens on port 2224. visible in diagram; no further repository context available.
+- **E / RabbitMQ Broker**: Represents a second RabbitMQ message broker. It facilitates communication between the product/shipment services and the payment service. visible in diagram; no further repository context available.
+- **F / payment-service**: Represents the payment service, which acts as a consumer. It listens on port 2225. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The `order-service` sends a message to the first `RabbitMQ Broker` via `ex.stream.out`.
+- `B --> C`: The first `RabbitMQ Broker` sends a message to the `product-service` via `ex.stream.out`.
+- `B --> D`: The first `RabbitMQ Broker` sends a message to the `shipment-service` via `ex.stream.out`.
+- `C --> E`: The `product-service` sends a message to the second `RabbitMQ Broker` via `ex.stream.out2`.
+- `D --> E`: The `shipment-service` sends a message to the second `RabbitMQ Broker` via `ex.stream.out2`.
+- `E --> F`: The second `RabbitMQ Broker` sends a message to the `payment-service` via `ex.stream.out2`.
+
+## Repository Context & Terminology
+- **order-service**: A microservice responsible for handling order creation and management.
+- **product-service**: A microservice responsible for handling product-related operations.
+- **shipment-service**: A microservice responsible for handling shipment-related operations.
+- **payment-service**: A microservice responsible for handling payment-related operations.
+- **RabbitMQ Broker**: A message broker used for asynchronous communication between microservices.
+- **Producer**: A service that sends messages to a message broker.
+- **Consumer**: A service that receives messages from a message broker.
+- **Function**: A service that performs a specific task or operation.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a microservice architecture for order processing, beginning with the `order-service` acting as a producer on port 2222. The `order-service` sends messages via `ex.stream.out` to a `RabbitMQ Broker`. From this broker, the flow branches out to both the `product-service` (port 2223) and the `shipment-service` (port 2224), both acting as functions. Each of these services then sends messages via `ex.stream.out2` to a second `RabbitMQ Broker`. This second broker acts as a convergence point, combining the outputs from the `product-service` and `shipment-service`. Finally, the second `RabbitMQ Broker` forwards messages via `ex.stream.out2` to the `payment-service` (port 2225), which acts as a consumer. The use of RabbitMQ brokers enables asynchronous communication between the services, decoupling them and improving the system's resilience. The `order-service` initiates the process, and the `payment-service` completes it.

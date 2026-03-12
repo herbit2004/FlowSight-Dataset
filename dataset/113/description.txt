@@ -1,0 +1,30 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of requests from a browser to different applications via a portless proxy. It depicts the routing mechanism based on ports and application names. The diagram likely serves to explain the request handling architecture of a local development environment.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The "Browser" node is the start node, and the ":4123\myapp" and ":4567\napi" nodes are the end nodes. The "portless proxy" node sits in the middle, acting as a router.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into three stages: browser request, proxy routing, and application handling.
+
+## Node-by-Node Description
+- **Browser / Browser\nmyapp.localhost:1355**: Represents a web browser accessing the application at the specified localhost address and port. visible in diagram; no further repository context available.
+- **Proxy / portless proxy\n(port 1355)**: Represents a portless proxy server listening on port 1355. This proxy routes requests to different applications based on the port. visible in diagram; no further repository context available.
+- **App1 / :4123\nmyapp**: Represents an application named "myapp" running on port 4123. visible in diagram; no further repository context available.
+- **App2 / :4567\napi**: Represents an application named "api" running on port 4567. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Browser --> Proxy`: A request from the browser is sent to the portless proxy on port 1355.
+- `Proxy --> App1`: The proxy routes the request to the "myapp" application running on port 4123.
+- `Proxy --> App2`: The proxy routes the request to the "api" application running on port 4567.
+
+## Repository Context & Terminology
+- **Portless Proxy**: A proxy server that doesn't require a specific port to be defined for each application it routes to. It likely uses other mechanisms, such as hostnames or URL paths, to determine the destination application.
+- **localhost**: A hostname that refers to the local computer.
+- **Port 1355**: The port on which the portless proxy is listening for incoming requests.
+- **Port 4123**: The port on which the "myapp" application is running.
+- **Port 4567**: The port on which the "api" application is running.
+- **myapp.localhost**: A domain name that resolves to the local computer. This is often used for local development.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a request flow starting from a browser accessing `myapp.localhost:1355`. This request is then routed to a "portless proxy" listening on port 1355. The proxy acts as a central point for directing traffic to different applications. The core function of the proxy is to route incoming requests to the appropriate backend application based on the port specified in the request. If the request is intended for the "myapp" application, the proxy forwards it to port 4123. Alternatively, if the request targets the "api" application, the proxy directs it to port 4567. The diagram highlights a common setup for local development environments where a single proxy manages traffic to multiple applications running on different ports. The use of "localhost" indicates that this setup is intended for local testing and development, allowing developers to easily access and test their applications without deploying them to a remote server. The "portless proxy" likely uses request headers or URL paths to differentiate between the applications, as it is not directly bound to specific ports for each application.

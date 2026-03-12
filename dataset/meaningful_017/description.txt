@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of a payment gateway callback process. It outlines the steps involved in validating the callback, processing the payment status, updating the payment record, and triggering a reconciliation job. The diagram serves as a visual representation of the payment processing logic.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "Payment Gateway Callback" node at the top and flows downwards through decision points and processing steps, ultimately converging at the "Trigger Reconciliation Job" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages:
+1. Callback Validation
+2. Payment Status Evaluation
+3. Payment Record Update
+4. Reconciliation Trigger
+
+## Node-by-Node Description
+- **A / Payment Gateway Callback**: Represents the initial entry point when a callback is received from a payment gateway. visible in diagram; no further repository context available.
+- **B / Validate Signature & Timestamp**: Represents the process of validating the signature and timestamp of the callback to ensure its authenticity and prevent replay attacks. visible in diagram; no further repository context available.
+- **C / Deserialize Callback Data**: Represents the process of converting the received callback data from a serialized format (e.g., JSON) into a usable data structure. visible in diagram; no further repository context available.
+- **D / Payment Status: Success?**: Represents a decision point where the payment status is checked to determine if the payment was successful. visible in diagram; no further repository context available.
+- **E / Log Security Alert**: Represents the action of logging a security alert if the signature or timestamp validation fails. visible in diagram; no further repository context available.
+- **F / Update Payment Record: 'Settled'**: Represents the action of updating the payment record to indicate that the payment has been settled. visible in diagram; no further repository context available.
+- **G / Payment Status: Pending?**: Represents a decision point where the payment status is checked to determine if the payment is pending. visible in diagram; no further repository context available.
+- **H / Update Payment Record: 'Pending'**: Represents the action of updating the payment record to indicate that the payment is pending. visible in diagram; no further repository context available.
+- **I / Update Payment Record: 'Failed'**: Represents the action of updating the payment record to indicate that the payment has failed. visible in diagram; no further repository context available.
+- **J / Trigger Reconciliation Job**: Represents the action of triggering a reconciliation job to ensure that the payment records are consistent with the payment gateway's records. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The payment gateway callback triggers the signature and timestamp validation process.
+- `B -- Valid --> C`: If the signature and timestamp are valid, the callback data is deserialized.
+- `B -- Invalid --> E`: If the signature and timestamp are invalid, a security alert is logged.
+- `C --> D`: The deserialized callback data is used to determine the payment status.
+- `D -- Yes --> F`: If the payment status is "Success", the payment record is updated to "Settled".
+- `D -- No --> G`: If the payment status is not "Success", the payment status is checked for "Pending".
+- `G -- Yes --> H`: If the payment status is "Pending", the payment record is updated to "Pending".
+- `G -- No --> I`: If the payment status is not "Pending", the payment record is updated to "Failed".
+- `F --> J`: After updating the payment record to "Settled", a reconciliation job is triggered.
+- `I --> J`: After updating the payment record to "Failed", a reconciliation job is triggered.
+- `H --> J`: After updating the payment record to "Pending", a reconciliation job is triggered.
+Multiple paths converge at node J.
+
+## Repository Context & Terminology
+- **Payment Gateway Callback**: A notification sent by a payment gateway to a merchant's system to inform about the status of a payment transaction.
+- **Signature Validation**: The process of verifying the authenticity of a message or data by checking its digital signature.
+- **Timestamp Validation**: The process of verifying that a message or data was created within a reasonable timeframe to prevent replay attacks.
+- **Deserialize**: The process of converting data from a serialized format (e.g., JSON, XML) back into its original data structure.
+- **Payment Status**: The current state of a payment transaction (e.g., Success, Pending, Failed).
+- **Reconciliation Job**: A process that compares and matches payment records between different systems (e.g., merchant's system and payment gateway) to ensure consistency and accuracy.
+- **Security Alert**: A notification indicating a potential security issue or threat.
+
+## High-Density QA Ground Truth Summary
+The process begins with the "Payment Gateway Callback," triggering the "Validate Signature & Timestamp" node. If the signature and timestamp are deemed "Invalid," a "Log Security Alert" is triggered, halting further processing along that branch. If "Valid," the flow proceeds to "Deserialize Callback Data," preparing the data for evaluation. The next key decision point is "Payment Status: Success?". A "Yes" branch leads to "Update Payment Record: 'Settled'," while a "No" branch proceeds to "Payment Status: Pending?". If "Yes" at the pending status check, the "Update Payment Record: 'Pending'" node is activated; if "No," the "Update Payment Record: 'Failed'" node is triggered. Regardless of whether the payment record is updated to 'Settled', 'Failed', or 'Pending', the process converges at the "Trigger Reconciliation Job" node. The reconciliation job is crucial for ensuring data consistency between the merchant's system and the payment gateway, a standard practice in payment processing to mitigate discrepancies and potential financial losses. The signature validation step protects against malicious actors replaying old payment requests.

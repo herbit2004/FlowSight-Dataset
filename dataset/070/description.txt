@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the data flow and component interaction within the `claude-relay` system. It depicts how client requests from different terminals are processed through a Unix socket, a daemon process, an HTTP/WS server, and finally interact with project-specific data. The diagram serves as a high-level overview of the system's architecture and the flow of data between its components.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) fashion. It presents a hierarchical structure, starting with client terminals at the top and progressing through the backend components to data storage at the bottom. The start nodes are the `npx claude-relay` instances in Terminal 1 and Terminal 2, and the end nodes are the `sessions/*.jsonl` files for Project A and Project B.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages:
+1. Client Terminals: `npx claude-relay` instances.
+2. Inter-Process Communication: Unix Socket `daemon.sock`.
+3. Daemon Processing: `lib/daemon.js`.
+4. HTTP/WS Server.
+5. Project Data Storage: `sessions/*.jsonl`.
+
+## Node-by-Node Description
+- **CLI1 / npx claude-relay (Terminal 1)**: Represents a client instance of `npx claude-relay` running in Terminal 1. visible in diagram; no further repository context available.
+- **CLI2 / npx claude-relay (Terminal 2)**: Represents a client instance of `npx claude-relay` running in Terminal 2. visible in diagram; no further repository context available.
+- **IPC / Unix Socket daemon.sock**: Represents a Unix socket used for inter-process communication between the `npx claude-relay` clients and the daemon process. visible in diagram; no further repository context available.
+- **Daemon / Daemon Process lib/daemon.js**: Represents the daemon process, implemented in `lib/daemon.js`, which handles requests from the clients. visible in diagram; no further repository context available.
+- **HTTP / HTTP/WS Server :2633**: Represents an HTTP/WebSocket server running on port 2633, responsible for routing requests to specific projects. visible in diagram; no further repository context available.
+- **P1 / Project A**: Represents the data and logic associated with Project A. visible in diagram; no further repository context available.
+- **P2 / Project B**: Represents the data and logic associated with Project B. visible in diagram; no further repository context available.
+- **Sessions1 / sessions/*.jsonl**: Represents the session data files for Project A, stored as JSONL files. visible in diagram; no further repository context available.
+- **Sessions2 / sessions/*.jsonl**: Represents the session data files for Project B, stored as JSONL files. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `CLI1 <--> IPC`: Represents the IPC communication between the `npx claude-relay` client in Terminal 1 and the Unix socket.
+- `CLI2 <--> IPC`: Represents the IPC communication between the `npx claude-relay` client in Terminal 2 and the Unix socket.
+- `IPC <--> Daemon`: Represents the communication between the Unix socket and the daemon process.
+- `Daemon --> HTTP`: Represents the daemon process sending requests to the HTTP/WS server.
+- `HTTP --> P1`: Represents the HTTP/WS server routing requests to Project A via the `/p/project-a/` path.
+- `HTTP --> P2`: Represents the HTTP/WS server routing requests to Project B via the `/p/project-b/` path.
+- `P1 --> Sessions1`: Represents Project A storing session data in `sessions/*.jsonl` files.
+- `P2 --> Sessions2`: Represents Project B storing session data in `sessions/*.jsonl` files.
+
+## Repository Context & Terminology
+- **npx claude-relay**: A command-line interface (CLI) tool, likely used to interact with the `claude-relay` system. The diagram shows two instances running in separate terminals.
+- **IPC (Inter-Process Communication)**: A mechanism for processes to communicate with each other. In this case, it's facilitated by a Unix socket.
+- **Unix Socket (daemon.sock)**: A file-based inter-process communication endpoint. The `npx claude-relay` clients communicate with the daemon process via this socket.
+- **Daemon Process (lib/daemon.js)**: A background process responsible for handling requests and managing the system's core logic. The diagram indicates that the daemon is implemented in `lib/daemon.js`.
+- **HTTP/WS Server (:2633)**: An HTTP/WebSocket server that listens on port 2633. It likely handles incoming requests and routes them to the appropriate project.
+- **/p/project-a/, /p/project-b/**: URL paths used to differentiate requests for Project A and Project B.
+- **sessions/*.jsonl**: JSON Lines files used to store session data for each project.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the architecture of the `claude-relay` system, starting with two instances of `npx claude-relay` running in separate terminals. These clients communicate with a central `Unix Socket daemon.sock` using inter-process communication (IPC). The daemon process, implemented in `lib/daemon.js`, receives requests from the socket and forwards them to an `HTTP/WS Server` listening on port 2633. The server acts as a router, directing requests to either `Project A` or `Project B` based on the URL path: `/p/project-a/` for Project A and `/p/project-b/` for Project B. Each project then stores its session data in `sessions/*.jsonl` files. The use of a Unix socket for IPC suggests a design where the client and server components may run on the same machine, while the HTTP/WS server allows for potential expansion to handle web-based interactions. The `daemon.sock` file acts as a central communication point, enabling the daemon process to manage requests from multiple client instances.

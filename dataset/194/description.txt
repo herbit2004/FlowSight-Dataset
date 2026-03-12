@@ -1,0 +1,44 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the process of translating a schema, specifically focusing on validation, jq filter creation, and JSON validation. The diagram outlines the steps involved in transforming an input schema into a jq query string, including error handling and retry mechanisms.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the `Start translate_schema` node at the top and flows downwards through a series of processes, decision points, and error handling steps, ultimately leading to either a successful `Return jq query string` or a `Throw RuntimeError` end state.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: schema validation, jq filter creation, jq filter compilation and testing, JSON validation, and final return or error handling.
+
+## Node-by-Node Description
+- **A / Start translate_schema**: The starting point of the schema translation process. visible in diagram; no further repository context available.
+- **B / Validate input schema**: Validates the input schema. visible in diagram; no further repository context available.
+- **C / For each key, create a jq filter query**: Creates a jq filter query for each key in the schema. visible in diagram; no further repository context available.
+- **D / Throw RuntimeError**: Throws a runtime error, indicating a failure in the process. visible in diagram; no further repository context available.
+- **E / Compile and Test jq Filter**: Compiles and tests the jq filter. visible in diagram; no further repository context available.
+- **F / Validate JSON**: Validates the JSON data. visible in diagram; no further repository context available.
+- **G / Retry Create jq Filter**: Retries the creation of the jq filter. visible in diagram; no further repository context available.
+- **H / Throw RuntimeError**: Throws a runtime error after multiple failed attempts to create the jq filter. visible in diagram; no further repository context available.
+- **I / Return jq query string**: Returns the final jq query string, indicating a successful translation. visible in diagram; no further repository context available.
+- **J / Retry Validate JSON**: Retries the JSON validation process. visible in diagram; no further repository context available.
+- **K / Throw RuntimeError**: Throws a runtime error after multiple failed attempts to validate the JSON. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Starts the schema translation process and moves to input schema validation.
+- `B -- Valid --> C`: If the input schema is valid, proceed to create a jq filter query for each key.
+- `B -- Invalid --> D`: If the input schema is invalid, throw a runtime error.
+- `C --> E`: After creating the jq filter query, compile and test it.
+- `E -- Success --> F`: If the jq filter compilation and testing is successful, proceed to validate the JSON.
+- `E -- Fail --> G`: If the jq filter compilation and testing fails, retry creating the jq filter.
+- `G -- Success --> E`: If retrying the jq filter creation is successful, return to compiling and testing the jq filter.
+- `G -- Fail n times --> H`: If retrying the jq filter creation fails multiple times, throw a runtime error.
+- `F -- Success --> I`: If the JSON validation is successful, return the jq query string.
+- `F -- Fail --> J`: If the JSON validation fails, retry validating the JSON.
+- `J -- Success --> I`: If retrying the JSON validation is successful, return the jq query string.
+- `J -- Fail n times --> K`: If retrying the JSON validation fails multiple times, throw a runtime error.
+
+## Repository Context & Terminology
+- **jq**: A lightweight and flexible command-line JSON processor. It is used to slice, filter, map and transform structured data.
+- **Schema**: A formal description of the structure and type constraints of data.
+- **RuntimeError**: An exception raised during the execution of a program, indicating an error condition.
+- **JSON**: JavaScript Object Notation, a lightweight data-interchange format.
+
+## High-Density QA Ground Truth Summary
+The `translate_schema` process begins by validating the input schema. If the schema is invalid, a `RuntimeError` is thrown, terminating the process. If the schema is valid, the process iterates through each key, creating a `jq` filter query. The compiled `jq` filter is then tested. A successful compilation leads to JSON validation; a failure triggers a retry mechanism for `jq` filter creation, which, after `n` failed attempts, results in a `RuntimeError`. Successful JSON validation leads to returning the `jq` query string. Failed JSON validation initiates a retry, and after `n` failed attempts, a `RuntimeError` is thrown. The process either culminates in returning a `jq` query string or throwing a `RuntimeError` after repeated failures in filter creation or JSON validation. The use of `jq` highlights the process's focus on manipulating JSON data based on a defined schema, with error handling and retry mechanisms in place to ensure robustness.

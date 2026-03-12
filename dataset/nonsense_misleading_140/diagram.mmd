@@ -1,0 +1,16 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- Yes --> C[Inventory Check];
+    B -- No --> K[Send Payment Reminder];
+    C -- Available --> D{Shipping Address Valid?};
+    C -- Unavailable --> F[Reorder Inventory];
+    D -- No --> E[Cancel Order];
+    D -- Yes --> H[Package Items];
+    H --> G[Generate Shipping Label];
+    G --> I[Send Shipping Confirmation];
+    I --> J[Order Delivered];
+    J --> A;
+    F --> C;
+    K --> L[Refund Payment];
+    L --> E;
+    E --> K;

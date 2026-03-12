@@ -1,0 +1,28 @@
+graph TD
+    A[Start: Ticket Creation] --> B{Ticket Type?};
+    B -- "General Inquiry" --> C[Route to Helpdesk Queue];
+    B -- "Technical Issue" --> D{Hardware or Software?};
+    D -- "Hardware" --> E{Asset Tag Present?};
+    E -- "Yes" --> F[Lookup Asset Owner & Support Team];
+    E -- "No" --> G[Route to Hardware Support Queue];
+    D -- "Software" --> H{Service Impacting?};
+    H -- "Yes" --> I[Severity Escalation Check];
+    I --> J{High Impact Threshold?};
+    J -- "Yes" --> K[Notify Incident Management];
+    J -- "No" --> L[Analyze Error Code & Logs];
+    H -- "No" --> L;
+    L --> M{Known Error?};
+    M -- "Yes" --> N[Apply Known Solution & Auto-Resolve];
+    M -- "No" --> O[Route to Software Support Queue];
+    F --> P[Predict Skillset Need];
+    P --> Q[Find Available Agent with Matching Skills];
+    Q --> R[Auto-Assign Ticket to Agent];
+    R --> S[Notify Agent via Slack and Email];
+    S --> T[End: Ticket Assigned];
+    C --> T;
+    G --> Q;
+    O --> Q;
+    K --> Q;
+    N --> T;
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px
+    class A,T highlight

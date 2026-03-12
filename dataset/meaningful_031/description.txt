@@ -1,0 +1,75 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a data pipeline. It depicts the flow of data from various sources through different stages of processing, validation, transformation, and storage, ultimately leading to data analytics and machine learning applications. The diagram serves as a high-level architecture overview of a data lake or data warehouse system.
+
+## Overall Layout
+The diagram flows from top to bottom (TB). It is hierarchically organized into stages representing different layers of data processing. The start nodes are the data sources, and the end nodes are the data analytics dashboard and machine learning models.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing different layers of the data pipeline:
+- **Ingestion**: The initial stage where data is collected from various sources.
+- **Bronze Layer**: The stage where raw data is stored and deduplicated.
+- **Silver Layer**: The stage where data is cleansed, normalized, and transformed.
+- **Gold Layer**: The stage where data is aggregated and curated for specific use cases.
+- **Tiering Workflow**: A separate workflow for managing the lifecycle of data in the data lake based on its age.
+
+## Node-by-Node Description
+- **A / Data Source: Application Logs**: Represents application logs as a data source. visible in diagram; no further repository context available.
+- **C / Data Source: CRM System**: Represents a CRM system as a data source. visible in diagram; no further repository context available.
+- **D / Data Source: Sensor Feeds**: Represents sensor feeds as a data source. visible in diagram; no further repository context available.
+- **B / Raw Data Landing Zone**: Represents a storage area where raw data is initially landed. visible in diagram; no further repository context available.
+- **E / Data Validation & Profiling**: Represents the process of validating and profiling the data. visible in diagram; no further repository context available.
+- **F / Quarantine Area**: Represents an area where invalid data is stored. visible in diagram; no further repository context available.
+- **G / Bronze Layer: Raw Data Storage**: Represents the storage of raw data in the bronze layer. visible in diagram; no further repository context available.
+- **H / Data Deduplication**: Represents the process of removing duplicate data. visible in diagram; no further repository context available.
+- **I / Duplicates Archive**: Represents an archive where duplicate data is stored. visible in diagram; no further repository context available.
+- **Silver / Silver Layer: Cleansed & Normalized Data**: Represents cleansed and normalized data in the silver layer. visible in diagram; no further repository context available.
+- **J / Data Transformation: Customer Segmentation**: Represents the process of transforming data for customer segmentation. visible in diagram; no further repository context available.
+- **K / Feature Engineering Pipeline**: Represents a pipeline for engineering features from the data. visible in diagram; no further repository context available.
+- **L / Silver Data Storage**: Represents the storage of data in the silver layer. visible in diagram; no further repository context available.
+- **M / Aggregate Data: Monthly KPIs**: Represents the process of aggregating data to calculate monthly KPIs. visible in diagram; no further repository context available.
+- **N / Gold Layer: Curated Data - Customer 360**: Represents curated data in the gold layer, providing a customer 360 view. visible in diagram; no further repository context available.
+- **O / Access Control & Security**: Represents the process of controlling access to the data and ensuring its security. visible in diagram; no further repository context available.
+- **P / Data Analytics Dashboard**: Represents a dashboard for data analytics. visible in diagram; no further repository context available.
+- **Q / Machine Learning Models**: Represents machine learning models that use the data. visible in diagram; no further repository context available.
+- **R / Data Lake Age > 30 days?**: Represents a decision point based on the age of the data in the data lake. visible in diagram; no further repository context available.
+- **S / Move to Warm Storage**: Represents moving data to warm storage. visible in diagram; no further repository context available.
+- **T / Data Lake Age > 365 days?**: Represents a decision point based on the age of the data in the data lake. visible in diagram; no further repository context available.
+- **U / Move to Cold Storage - Glacier**: Represents moving data to cold storage (Glacier). visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Application logs are ingested into the raw data landing zone.
+- `C --> B`: CRM system data is ingested into the raw data landing zone.
+- `D --> B`: Sensor feeds are ingested into the raw data landing zone.
+- `B --> E`: Raw data flows to data validation and profiling.
+- `E -- Invalid Data --> F`: Invalid data is sent to the quarantine area.
+- `E -- Valid Data --> G`: Valid data is sent to the bronze layer for raw data storage.
+- `G --> H`: Raw data is processed for deduplication.
+- `H -- Duplicates Found --> I`: Duplicate data is sent to the duplicates archive.
+- `H -- Clean Data --> Silver`: Clean data is sent to the silver layer for cleansing and normalization.
+- `Silver --> J`: Cleansed and normalized data is transformed for customer segmentation.
+- `J --> K`: Data is processed through a feature engineering pipeline.
+- `K --> L`: Engineered features are stored in the silver data storage.
+- `L --> M`: Data is aggregated to calculate monthly KPIs.
+- `M --> N`: Aggregated data is curated to create a customer 360 view in the gold layer.
+- `N --> O`: Access control and security measures are applied to the curated data.
+- `O --> P`: Data is used for data analytics dashboards.
+- `O --> Q`: Data is used for machine learning models.
+- `N --> R`: Data age is checked as part of the tiering workflow.
+- `R -- Yes --> S`: If data lake age is greater than 30 days, move to warm storage.
+- `R -- No --> N`: If data lake age is not greater than 30 days, return to the gold layer.
+- `S --> T`: Data age is checked again.
+- `T -- Yes --> U`: If data lake age is greater than 365 days, move to cold storage (Glacier).
+- `T -- No --> S`: If data lake age is not greater than 365 days, return to warm storage.
+
+## Repository Context & Terminology
+- **Data Lake**: A centralized repository that allows you to store all your structured and unstructured data at any scale.
+- **Data Warehouse**: A type of data management system that is designed to enable and support business intelligence (BI) activities, especially analytics.
+- **Bronze Layer**: The initial layer in a data lake where raw, unprocessed data is stored.
+- **Silver Layer**: The layer in a data lake where data is cleansed, normalized, and transformed.
+- **Gold Layer**: The layer in a data lake where data is curated and aggregated for specific use cases.
+- **Customer 360**: A holistic view of a customer, encompassing all interactions and data points.
+- **KPI (Key Performance Indicator)**: A measurable value that demonstrates how effectively a company is achieving key business objectives.
+- **Glacier**: A low-cost cloud storage service for archiving and long-term backup.
+
+## High-Density QA Ground Truth Summary
+The data pipeline begins with data ingestion from various sources, including application logs, CRM systems, and sensor feeds, all landing in the Raw Data Landing Zone. From there, data undergoes Data Validation & Profiling; invalid data is directed to the Quarantine Area, while valid data proceeds to the Bronze Layer for Raw Data Storage. Data Deduplication occurs in the Bronze Layer, with duplicates archived separately. Clean data moves to the Silver Layer for cleansing and normalization. In the Silver Layer, Data Transformation, specifically Customer Segmentation, takes place, followed by a Feature Engineering Pipeline and storage in Silver Data Storage. The data then progresses to the Gold Layer, where it's aggregated to calculate Monthly KPIs and curated to create a Customer 360 view. Access Control & Security measures are applied before the data is utilized for Data Analytics Dashboards and Machine Learning Models. A Tiering Workflow manages data lifecycle: if Data Lake Age exceeds 30 days, data moves to Warm Storage; if it exceeds 365 days, it's moved to Cold Storage (Glacier) for long-term archiving, optimizing storage costs based on data access frequency, a common practice in data lake management.

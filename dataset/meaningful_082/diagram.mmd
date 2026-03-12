@@ -1,0 +1,23 @@
+graph TD
+    subgraph Inbound Receiving
+        A[ASN Received] --> B{Validate ASN Details};
+        B -- Valid ASN --> C[Create Receiving Task];
+        B -- Invalid ASN --> E[Alert: ASN Exception];
+        C --> D[Expected Goods Received];
+        D --> F{Goods Match ASN?};
+        F -- Yes --> G[Update Inventory];
+        F -- No --> H[Investigate Discrepancy];
+        H --> E;
+        G --> I[Putaway Task Creation];
+    end
+    subgraph Outbound Shipping
+        J[Order Received] --> K{Inventory Available?};
+        K -- Yes --> L[Create Picking Task];
+        K -- No --> M[Backorder Management];
+        L --> N[Goods Picked & Staged];
+        N --> O[Packing & Labeling];
+        O --> P[Shipment Confirmation];
+    end
+    I --> K;
+    classDef task fill:#fbf7db,stroke:#333,stroke-width:2px;
+    class C,I,L task;

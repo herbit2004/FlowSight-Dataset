@@ -1,0 +1,31 @@
+graph TD
+    A[Customer Support Ticket Received] --> B{Ticket Classification Engine};
+    B -- "High Priority" --> C[Escalation Manager];
+    B -- "Low Priority" --> D{Knowledge Base Lookup};
+    C --> E[Create Escalation Task];
+    E --> F[Assign Escalation to Tier 2 Support];
+    F --> G[Tier 2 Support Notified];
+    G --> H{Tier 2 Availability?};
+    H -- "Available" --> I[Assign Ticket];
+    H -- "Unavailable" --> J[Queue Ticket for Tier 2];
+    D -- "Article Found" --> K[Send Relevant Article to Customer];
+    D -- "No Article Found" --> L[Route to Tier 1 Support];
+    K --> M[Close Ticket - Resolved];
+    L --> N{Ticket Handling Time > Threshold?};
+    N -- "Yes" --> O[Flag for Supervisor Review];
+    N -- "No" --> P[Continue Tier 1 Support];
+    I --> U[Assign Ticket to Agent];
+    U --> P;
+    P --> Q{Customer Satisfied?};
+    Q -- "Yes" --> M;
+    Q -- "No" --> R[Re-open Ticket - Escalate Details];
+    R --> S[Add details to Escalation Context];
+    S --> F;
+    O --> V[Supervisor Review];
+    V --> W{Escalate to Tier 2?};
+    W -- "Yes" --> S;
+    W -- "No" --> P;
+    J --> H;
+    I --> P;
+    classDef priorityHigh fill:#f9f,stroke:#333,stroke-width:2px
+    class C,E,F priorityHigh

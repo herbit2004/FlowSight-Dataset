@@ -1,0 +1,82 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process flow of a dialogue system. It depicts the various stages involved in processing user input, interacting with large language models, and generating speech output. The diagram serves as a visual representation of the system's architecture and control flow.
+
+## Overall Layout
+The diagram's primary direction is left to right, with some feedback loops. The start node is "开始对话" (Start Dialogue), and the end node is "是否连续对话" (Whether to continue the dialogue), which loops back to the start or ends the process.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Dialogue Initialization, Speech-to-Text Processing, Command Handling, Large Language Model Interaction, and Text-to-Speech Output.
+
+## Node-by-Node Description
+- **A / 开始对话 (Start Dialogue)**: Represents the beginning of a dialogue session.
+  visible in diagram; no further repository context available.
+- **B / 语音唤醒 (Voice Wake-up)**: Represents the voice wake-up process.
+  visible in diagram; no further repository context available.
+- **Q / 按下BOOT键 (Press BOOT Key)**: Represents pressing the BOOT key.
+  visible in diagram; no further repository context available.
+- **C / 系统进入录音状态 (System enters recording state)**: Represents the system entering the recording state.
+  visible in diagram; no further repository context available.
+- **D / INMP441麦克风录音 (INMP441 Microphone Recording)**: Represents audio recording using the INMP441 microphone.
+  visible in diagram; no further repository context available.
+- **E / 讯飞STT服务 (iFlytek STT Service)**: Represents the use of iFlytek's Speech-to-Text service.
+  visible in diagram; no further repository context available.
+- **F / 识别结果 (Recognition Result)**: Represents the result of the speech recognition process.
+  visible in diagram; no further repository context available.
+- **G / 是否为指令 (Is it a command?)**: Represents a decision point to determine if the recognized speech is a command.
+  visible in diagram; no further repository context available.
+- **H / 提示重新说话 (Prompt to speak again)**: Represents prompting the user to speak again.
+  visible in diagram; no further repository context available.
+- **I / 发送至大模型 (Send to Large Model)**: Represents sending the recognized speech to a large language model.
+  visible in diagram; no further repository context available.
+- **J / 接收大模型回复 (Receive Large Model Reply)**: Represents receiving a reply from the large language model.
+  visible in diagram; no further repository context available.
+- **K / 回复内容分段 (Reply Content Segmentation)**: Represents segmenting the reply content.
+  visible in diagram; no further repository context available.
+- **N / 百度TTS服务 (Baidu TTS Service)**: Represents the use of Baidu's Text-to-Speech service.
+  visible in diagram; no further repository context available.
+- **O / 语音输出 (Voice Output)**: Represents the voice output.
+  visible in diagram; no further repository context available.
+- **P / 一轮对话完成 (One round of dialogue completed)**: Represents the completion of one round of dialogue.
+  visible in diagram; no further repository context available.
+- **R / 是否连续对话 (Whether to continue the dialogue)**: Represents a decision point to determine if the dialogue should continue.
+  visible in diagram; no further repository context available.
+- **M / 通过串口发送消息 (Send message via serial port)**: Represents sending a message via the serial port.
+  visible in diagram; no further repository context available.
+- **L / 本地函数处理 (Local function processing)**: Represents processing using a local function.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Start dialogue leads to voice wake-up.
+- `A --> M`: Start dialogue leads to sending a message via serial port.
+- `A --> Q`: Start dialogue leads to pressing the BOOT key.
+- `Q --> C`: Pressing the BOOT key leads to the system entering recording state.
+- `B --> C`: Voice wake-up leads to the system entering recording state.
+- `C --> D`: System entering recording state leads to microphone recording.
+- `D --> E`: Microphone recording leads to iFlytek STT service.
+- `E --> F`: iFlytek STT service leads to recognition result.
+- `F -- 有效 (Valid) --> G`: If the recognition result is valid, it leads to checking if it's a command.
+- `F -- 无效 (Invalid) --> H`: If the recognition result is invalid, it leads to prompting to speak again.
+- `H --> C`: Prompting to speak again leads back to the system entering recording state.
+- `G -- 否 (No) --> I`: If it's not a command, it's sent to a large model.
+- `G -- 是 (Yes) --> L`: If it is a command, it's processed by a local function.
+- `I --> J`: Sending to a large model leads to receiving a reply from the large model.
+- `J --> K`: Receiving a reply from the large model leads to reply content segmentation.
+- `K --> N`: Reply content segmentation leads to Baidu TTS service.
+- `N --> O`: Baidu TTS service leads to voice output.
+- `O --> P`: Voice output leads to one round of dialogue completed.
+- `P --> R`: One round of dialogue completed leads to checking if the dialogue should continue.
+- `R -- 是 (Yes) --> C`: If the dialogue should continue, it loops back to the system entering recording state.
+- `R -- 否 (No) --> A`: If the dialogue should not continue, it goes back to the start dialogue.
+- `M --> G`: Sending a message via serial port leads to checking if it's a command.
+- `L --> R`: Local function processing leads to checking if the dialogue should continue.
+
+## Repository Context & Terminology
+- **INMP441**: A type of microphone used for audio recording.
+- **讯飞STT服务 (iFlytek STT Service)**: A speech-to-text service provided by iFlytek.
+- **百度TTS服务 (Baidu TTS Service)**: A text-to-speech service provided by Baidu.
+- **串口 (Serial Port)**: A communication interface used for sending messages.
+- **大模型 (Large Model)**: Refers to a large language model used for processing and generating text.
+- **BOOT键 (BOOT Key)**: A button used to initiate the system boot process.
+
+## High-Density QA Ground Truth Summary
+The dialogue process begins at the "开始对话 (Start Dialogue)" node, which can be triggered by "语音唤醒 (Voice Wake-up)", "按下BOOT键 (Press BOOT Key)", or a negative response from "是否连续对话 (Whether to continue the dialogue)". Upon initiation, the system enters the "系统进入录音状态 (System enters recording state)" and records audio using the "INMP441麦克风录音 (INMP441 Microphone Recording)". The recorded audio is then processed by "讯飞STT服务 (iFlytek STT Service)" to convert it into text. The "识别结果 (Recognition Result)" is then evaluated. If the recognition is "有效 (Valid)", the system checks "是否为指令 (Is it a command?)". If it's a command ("是 (Yes)"), it's processed by "本地函数处理 (Local function processing)"; otherwise ("否 (No)"), it's sent to a "大模型 (Large Model)" for processing. The "接收大模型回复 (Receive Large Model Reply)" is segmented into parts by "回复内容分段 (Reply Content Segmentation)" and converted to speech using "百度TTS服务 (Baidu TTS Service)", resulting in "语音输出 (Voice Output)". If the initial recognition is "无效 (Invalid)", the system prompts the user to "提示重新说话 (Prompt to speak again)". After "一轮对话完成 (One round of dialogue completed)", the system asks "是否连续对话 (Whether to continue the dialogue)", looping back to the recording state if "是 (Yes)" or restarting the dialogue if "否 (No)". The INMP441 microphone and iFlytek STT service are key components in the speech recognition pipeline.

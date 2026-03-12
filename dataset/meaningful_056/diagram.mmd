@@ -1,0 +1,31 @@
+graph TD
+    subgraph Build Process
+        A[Developer Pushes Code to Repo] --> B(Trigger CI/CD Pipeline)
+        B --> C{Code Analysis and Linting}
+        C -- Pass --> D(Unit Tests)
+        C -- Fail --> E[Notify Developer & Halt]
+        D -- Pass --> F(Build Container Image)
+        D -- Fail --> E
+        F --> G{Image Build Successful?}
+        G -- Yes --> H(Tag Image with Version and Commit SHA)
+        G -- No --> E
+        H --> I(Scan Image for Vulnerabilities)
+    end
+
+    subgraph Release Process
+        I --> J{Vulnerability Scan: Critical Issues Found?}
+        J -- Yes --> E
+        J -- No --> K(Push Image to Container Registry)
+        K --> L{Image Push Successful?}
+        L -- Yes --> M(Update Release Metadata)
+        L -- No --> E
+        M --> N(Deploy to Staging Environment)
+        N --> O{Staging: Integration Tests Pass?}
+        O -- Yes --> P(Promote Image to Production)
+        O -- No --> E
+        P --> Q(Update Production Load Balancer)
+        Q --> R[Release Complete!]
+    end
+
+   classDef error fill:#f9f,stroke:#333,stroke-width:2px
+   class E error

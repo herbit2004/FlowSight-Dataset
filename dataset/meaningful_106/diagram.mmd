@@ -1,0 +1,19 @@
+graph TD
+    A[Client Application] --> B{Upload Request};
+    B -- Valid Token & Size < Limit --> C[API Gateway];
+    B -- Invalid Token OR Size >= Limit --> Z[Error Response to Client];
+    C --> D[Authentication Service: Verify Token];
+    D -- Token Valid --> E[Request Router];
+    D -- Token Invalid --> Z;
+    E --> F{Content Type Check};
+    F -- Accepted Type --> G[Pre-Signed URL Generator];
+    F -- Rejected Type --> Z;
+    G --> H[Return Pre-Signed URL to Client];
+    H --> I[Client Uploads to Object Storage];
+    I --> J[Object Storage: Store Object];
+    J --> K[Event Queue: Object Uploaded];
+    K --> L[Metadata Service: Update Metadata];
+    L --> M[Cache Invalidator: Invalidate CDN Cache];
+    M --> N[Indexer: Update Search Index];
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class Z error

@@ -1,0 +1,62 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the OmniPhase calibration process. It outlines the steps involved in initiating, validating, and completing the calibration, including error handling and authentication procedures. The diagram serves as a visual guide for understanding the workflow and dependencies within the OmniPhase calibration system.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "Start: Initiating OmniPhase Calibration" node at the top and flows downwards through a series of process and decision nodes, eventually ending at the "End: OmniPhase Calibration Complete" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages:
+1. **Initiation**: Start OmniPhase Calibration.
+2. **Validation**: OmniPhase Validity Check.
+3. **Retry**: Reflexive DeltaRetry Activation and Max Attempts Check.
+4. **Core Processes**: CoreSync Harmonizer and ZenithGate Auth Layer triggering.
+5. **Completion**: VaultNode Handshake, ArcLane Distribution, SpectraQueue Flush, and OmniPhase Calibration Completion.
+
+## Node-by-Node Description
+- **A / Start: Initiating OmniPhase Calibration**: Represents the beginning of the OmniPhase calibration process.
+  visible in diagram; no further repository context available.
+- **B / Is OmniPhase Valid?**: A decision node that checks the validity of the OmniPhase.
+  visible in diagram; no further repository context available.
+- **C / Engage CoreSync Harmonizer**: Represents the engagement of the CoreSync Harmonizer.
+  visible in diagram; no further repository context available.
+- **D / Activate Reflexive DeltaRetry**: Represents the activation of the Reflexive DeltaRetry mechanism.
+  visible in diagram; no further repository context available.
+- **E / DeltaRetry Max Attempts?**: A decision node that checks if the maximum number of DeltaRetry attempts has been reached.
+  visible in diagram; no further repository context available.
+- **F / Trigger ZenithGate Auth Layer**: Represents triggering the ZenithGate Authentication Layer.
+  visible in diagram; no further repository context available.
+- **G / Perform VaultNode Handshake**: Represents performing a handshake with the VaultNode.
+  visible in diagram; no further repository context available.
+- **H / Dispatch ArcLane Distributor**: Represents dispatching the ArcLane Distributor.
+  visible in diagram; no further repository context available.
+- **I / Execute SpectraQueue Flush**: Represents executing a flush of the SpectraQueue.
+  visible in diagram; no further repository context available.
+- **J / End: OmniPhase Calibration Complete**: Represents the completion of the OmniPhase calibration process.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Initiates the OmniPhase calibration process.
+- `B -- Yes --> C`: If OmniPhase is valid, engage the CoreSync Harmonizer.
+- `B -- No --> D`: If OmniPhase is not valid, activate the Reflexive DeltaRetry.
+- `D --> E`: Proceeds to check the DeltaRetry Max Attempts.
+- `E -- Yes --> F`: If DeltaRetry Max Attempts has been reached, trigger the ZenithGate Auth Layer.
+- `E -- No --> D`: If DeltaRetry Max Attempts has not been reached, retry by activating Reflexive DeltaRetry.
+- `C --> G`: After engaging CoreSync Harmonizer, perform VaultNode Handshake.
+- `F --> G`: After triggering ZenithGate Auth Layer, perform VaultNode Handshake.
+- `G --> H`: After performing VaultNode Handshake, dispatch the ArcLane Distributor.
+- `H --> I`: After dispatching the ArcLane Distributor, execute SpectraQueue Flush.
+- `I --> J`: After executing SpectraQueue Flush, the OmniPhase Calibration is complete.
+- Paths from `C` and `F` converge at `G`.
+
+## Repository Context & Terminology
+- **OmniPhase**: The primary process being calibrated. Its validity is checked at the beginning of the flow.
+- **CoreSync Harmonizer**: A component engaged when OmniPhase is valid, likely responsible for synchronizing core components.
+- **Reflexive DeltaRetry**: A retry mechanism activated when OmniPhase is invalid, suggesting an attempt to correct a delta or difference.
+- **DeltaRetry Max Attempts**: A limit on the number of retry attempts, preventing infinite loops.
+- **ZenithGate Auth Layer**: An authentication layer triggered after exceeding the maximum retry attempts, implying a security or authorization check.
+- **VaultNode Handshake**: A handshake process with a VaultNode, likely involving secure communication or data exchange.
+- **ArcLane Distributor**: A distributor for ArcLane, suggesting a distribution or routing mechanism.
+- **SpectraQueue Flush**: A process to flush the SpectraQueue, likely clearing or finalizing queued data.
+
+## High-Density QA Ground Truth Summary
+The OmniPhase calibration process begins with the "Start: Initiating OmniPhase Calibration" node, immediately followed by a check for OmniPhase validity at the "Is OmniPhase Valid?" decision node. If OmniPhase is valid, the process branches to "Engage CoreSync Harmonizer," otherwise, it proceeds to "Activate Reflexive DeltaRetry." The DeltaRetry path includes a loop controlled by the "DeltaRetry Max Attempts?" decision node; if the maximum attempts are reached, the process branches to "Trigger ZenithGate Auth Layer," otherwise, it loops back to "Activate Reflexive DeltaRetry." Both the "Engage CoreSync Harmonizer" and "Trigger ZenithGate Auth Layer" paths converge at "Perform VaultNode Handshake." After the handshake, the process continues with "Dispatch ArcLane Distributor" and "Execute SpectraQueue Flush," culminating in the "End: OmniPhase Calibration Complete" node. The Reflexive DeltaRetry mechanism suggests a self-correcting attempt to resolve inconsistencies before resorting to ZenithGate authentication, indicating a layered approach to error handling and security within the OmniPhase calibration system. The VaultNode Handshake likely establishes a secure channel for subsequent data distribution and queue management.

@@ -1,0 +1,77 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the security scan and patching process. It outlines the steps involved in identifying vulnerabilities, analyzing their severity, attempting automated patching, and escalating to a security team if necessary. The diagram serves as a visual representation of the workflow, aiding in understanding and optimizing the security process.
+
+## Overall Layout
+The diagram flows from left to right. It starts with a "Start: Scan Request" node and ends with an "End: Scan Complete" node. The diagram contains decision diamonds that create branching paths based on conditions.
+
+## Subgraphs / Stages
+The diagram contains one subgraph: "Security Scan & Patching Process".
+
+## Node-by-Node Description
+- **A / Start: Scan Request**: Represents the initiation of a security scan.
+  visible in diagram; no further repository context available.
+- **B / Scan Type?**: A decision point to determine the type of scan to be performed.
+  visible in diagram; no further repository context available.
+- **C / Dynamic Scan: OWASP ZAP**: Represents a dynamic scan using OWASP ZAP, typically for web applications.
+  visible in diagram; no further repository context available.
+- **D / Nessus Scan**: Represents a scan using Nessus, typically for infrastructure.
+  visible in diagram; no further repository context available.
+- **E / Vulnerabilities Found?**: A decision point to determine if vulnerabilities were found during the scan.
+  visible in diagram; no further repository context available.
+- **F / Create JIRA Ticket**: Represents the creation of a JIRA ticket to track the vulnerability.
+  visible in diagram; no further repository context available.
+- **G / Severity Analysis**: Represents the analysis of the severity of the vulnerability.
+  visible in diagram; no further repository context available.
+- **H / Severity >= High?**: A decision point to determine if the severity of the vulnerability is high.
+  visible in diagram; no further repository context available.
+- **I / Automated Patching Attempt**: Represents an attempt to automatically patch the vulnerability.
+  visible in diagram; no further repository context available.
+- **J / Manual Review Required**: Represents the need for manual review of the vulnerability.
+  visible in diagram; no further repository context available.
+- **K / Patch Successful?**: A decision point to determine if the automated patching was successful.
+  visible in diagram; no further repository context available.
+- **L / Verification Scan**: Represents a scan to verify that the patch was successful.
+  visible in diagram; no further repository context available.
+- **N / Verification Pass?**: A decision point to determine if the verification scan passed.
+  visible in diagram; no further repository context available.
+- **M / Escalate to Security Team**: Represents the escalation of the vulnerability to the security team.
+  visible in diagram; no further repository context available.
+- **O / Close JIRA Ticket**: Represents the closure of the JIRA ticket.
+  visible in diagram; no further repository context available.
+- **Z / End: Scan Complete**: Represents the completion of the security scan process.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Start the scan process.
+- `B -- Web App Scan --> C`: Perform a dynamic scan using OWASP ZAP.
+- `B -- Infrastructure Scan --> D`: Perform a Nessus scan.
+- `C --> E`: Analyze the results of the dynamic scan.
+- `D --> E`: Analyze the results of the Nessus scan.
+- `E -- Yes --> F`: Create a JIRA ticket if vulnerabilities are found.
+- `E -- No --> O`: Close the JIRA ticket if no vulnerabilities are found.
+- `F --> G`: Perform severity analysis on the vulnerability.
+- `G --> H`: Determine if the severity is high.
+- `H -- Yes --> I`: Attempt automated patching if the severity is high.
+- `H -- No --> J`: Require manual review if the severity is not high.
+- `I --> K`: Determine if the automated patching was successful.
+- `J --> K`: Manual review leads to patch success determination.
+- `K -- Yes --> L`: Perform a verification scan if the patch was successful.
+- `K -- No --> M`: Escalate to the security team if the patch was not successful.
+- `L --> N`: Determine if the verification scan passed.
+- `N -- Yes --> O`: Close the JIRA ticket if the verification scan passed.
+- `N -- No --> M`: Escalate to the security team if the verification scan did not pass.
+- `M --> O`: Escalate to security team leads to closing the JIRA ticket.
+- `O --> Z`: End the scan process.
+
+## Repository Context & Terminology
+- **OWASP ZAP**: Open Web Application Security Project Zed Attack Proxy, a free, open-source web application security scanner.
+- **Nessus**: A proprietary vulnerability scanner.
+- **JIRA Ticket**: An issue tracking ticket in the JIRA software, used to manage and track vulnerabilities.
+- **Dynamic Scan**: A type of security scan that analyzes a running application.
+- **Infrastructure Scan**: A type of security scan that analyzes the network and systems infrastructure.
+- **Severity Analysis**: The process of determining the impact and risk associated with a vulnerability.
+- **Automated Patching**: The process of automatically applying security patches to fix vulnerabilities.
+- **Verification Scan**: A scan performed to confirm that a patch has successfully addressed a vulnerability.
+
+## High-Density QA Ground Truth Summary
+The security scan and patching process begins with a "Start: Scan Request" node, which immediately leads to a "Scan Type?" decision. Based on the scan type, either a "Dynamic Scan: OWASP ZAP" (for web applications) or a "Nessus Scan" (for infrastructure) is performed. The results of either scan converge at the "Vulnerabilities Found?" decision. If vulnerabilities are found, a "Create JIRA Ticket" node is triggered, followed by "Severity Analysis" to determine the risk level. If the "Severity >= High?", an "Automated Patching Attempt" is made; otherwise, "Manual Review Required". The success of patching is evaluated at "Patch Successful?". A successful patch leads to a "Verification Scan" and a "Verification Pass?" decision. If verification fails or the initial patch attempt was unsuccessful, the process escalates to the "Escalate to Security Team" node. Regardless of the path taken, the process eventually converges at the "Close JIRA Ticket" node before reaching the "End: Scan Complete" node. The use of OWASP ZAP and Nessus highlights the focus on both web application and infrastructure security scanning, while the JIRA ticket integration emphasizes issue tracking and remediation workflow.

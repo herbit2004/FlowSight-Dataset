@@ -1,0 +1,52 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the interaction between Claude Code, a Claude-Gemini Bridge, and external Gemini APIs. It depicts the flow of requests and responses between these components, highlighting the decision-making process and caching mechanisms involved in integrating Claude and Gemini functionalities. The diagram serves as a high-level architectural overview of the system.
+
+## Overall Layout
+The diagram is arranged vertically (top-to-bottom). It is divided into three subgraphs representing different components of the system. The flow starts with the Claude Code CLI and ends with the interaction between Gemini CLI and Gemini API, with a feedback loop involving the Cache Layer.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Claude Code**: Represents the Claude Code environment, including the Claude Code CLI and Tool Call.
+- **Claude-Gemini Bridge**: Represents the bridge component responsible for translating and routing requests between Claude and Gemini. It includes the Hook System, Path Converter, Decision Engine, and Cache Layer.
+- **External APIs**: Represents the external Gemini APIs, including the Gemini CLI and Gemini API.
+
+## Node-by-Node Description
+- **Claude Code CLI**: Represents the Claude Code Command Line Interface, the entry point for requests.
+  visible in diagram; no further repository context available.
+- **Tool Call**: Represents a call to a tool within the Claude Code environment.
+  visible in diagram; no further repository context available.
+- **Hook System**: Represents a system of hooks within the Claude-Gemini Bridge, used for pre- and post-processing of requests.
+  visible in diagram; no further repository context available.
+- **Path Converter**: Represents a component responsible for converting paths or data formats between Claude and Gemini.
+  visible in diagram; no further repository context available.
+- **Decision Engine**: Represents a component that makes decisions about routing or processing requests based on certain criteria.
+  visible in diagram; no further repository context available.
+- **Cache Layer**: Represents a caching mechanism used to store and retrieve responses, potentially improving performance and reducing API calls.
+  visible in diagram; no further repository context available.
+- **Gemini CLI**: Represents the Gemini Command Line Interface, used to interact with the Gemini API.
+  visible in diagram; no further repository context available.
+- **Gemini API**: Represents the Gemini API, providing access to Gemini functionalities.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Claude Code CLI --> Hook System`: A PreToolUse Hook triggers the transition from Claude Code CLI to the Hook System.
+- `Hook System --> Path Converter`: The Hook System passes the request to the Path Converter.
+- `Path Converter --> Decision Engine`: The Path Converter passes the converted path to the Decision Engine.
+- `Decision Engine --> Cache Layer`: The Decision Engine delegates the request to the Cache Layer if the "Delegate?" condition is "Yes".
+- `Cache Layer --> Gemini CLI`: The Cache Layer forwards the request to the Gemini CLI.
+- `Gemini CLI --> Gemini API`: The Gemini CLI calls the Gemini API.
+- `Gemini API --> Cache Layer`: The Gemini API returns an Analysis to the Cache Layer.
+- `Cache Layer --> Hook System`: The Cache Layer returns a Response to the Hook System.
+- `Hook System --> Claude Code CLI`: The Hook System returns a Result to the Claude Code CLI.
+- `Decision Engine -- No --> Claude Code CLI`: If the "Delegate?" condition is "No", the Decision Engine directly returns to the Claude Code CLI.
+
+## Repository Context & Terminology
+- **Claude Code**: Refers to the codebase and environment associated with Claude, likely a large language model or AI assistant.
+- **Gemini**: Refers to Google's Gemini family of large language models.
+- **CLI**: Command Line Interface, a text-based interface for interacting with a system.
+- **API**: Application Programming Interface, a set of protocols and tools for building software applications.
+- **Hook System**: A mechanism to intercept and modify the behavior of a system at specific points (hooks).
+- **Cache Layer**: A component that stores frequently accessed data to improve performance.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the Claude Code CLI, which triggers the Hook System via a PreToolUse Hook. The Hook System then passes the request to the Path Converter, followed by the Decision Engine. The Decision Engine determines whether to delegate the request. If the "Delegate?" condition is "Yes", the request is passed to the Cache Layer. The Cache Layer then forwards the request to the Gemini CLI, which interacts with the Gemini API. The Gemini API returns an Analysis to the Cache Layer, which in turn returns a Response to the Hook System. The Hook System then returns a Result back to the Claude Code CLI, completing the loop. If the Decision Engine's "Delegate?" condition is "No", the flow bypasses the Cache Layer and Gemini APIs, returning directly to the Claude Code CLI. The Cache Layer serves to store and retrieve responses, potentially improving performance and reducing API calls to the external Gemini APIs. The Hook System allows for pre- and post-processing of requests, enabling flexible integration between Claude and Gemini.

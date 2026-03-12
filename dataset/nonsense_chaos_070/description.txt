@@ -1,0 +1,80 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the ArcWave protocol initiation and execution process within the Stratum system. It outlines the steps involved in activating ArcNode, establishing a VaultNode handshake, performing integrity checks, and handling transmission of data. The diagram serves as a visual representation of the protocol's workflow, decision points, and error handling mechanisms.
+
+## Overall Layout
+The diagram flows primarily from top to bottom (TB). It starts with the "Stratum Initiator" node and ends with the "Process End" node. The diagram includes decision diamonds that create branching paths based on conditions.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages:
+1. ArcNode Activation and Handshake: Initializing the ArcWave protocol and establishing a connection with VaultNode.
+2. CoreSync Validation and Integrity Check: Validating the data integrity before transmission.
+3. Payload Transmission: Executing the data transmission process.
+4. Data Commit and Finalization: Finalizing the data commit process after successful transmission.
+5. Error Handling: Logging errors and restarting the process if necessary.
+
+## Node-by-Node Description
+- **A / Stratum Initiator**: Represents the starting point of the process, where the Stratum system initiates the ArcWave protocol. visible in diagram; no further repository context available.
+- **B / Invoke ArcWave Protocol**: Represents the action of invoking the ArcWave protocol. visible in diagram; no further repository context available.
+- **C / Is ArcNode Active?**: A decision point to check if ArcNode is active. visible in diagram; no further repository context available.
+- **D / Activate FluxBridge Router**: Represents the activation of the FluxBridge Router. visible in diagram; no further repository context available.
+- **E / Establish VaultNode Handshake**: Represents the process of establishing a handshake with VaultNode. visible in diagram; no further repository context available.
+- **F / Handshake Successful?**: A decision point to check if the VaultNode handshake was successful. visible in diagram; no further repository context available.
+- **G / Retry VaultNode Handshake**: Represents the action of retrying the VaultNode handshake. visible in diagram; no further repository context available.
+- **H / Retry Limit Reached?**: A decision point to check if the retry limit for the VaultNode handshake has been reached. visible in diagram; no further repository context available.
+- **I / Log Error to SpectraQueue**: Represents the action of logging an error to the SpectraQueue. visible in diagram; no further repository context available.
+- **J / Begin CoreSync Validation**: Represents the beginning of the CoreSync validation process. visible in diagram; no further repository context available.
+- **K / Perform Temporal Integrity Check**: Represents the action of performing a temporal integrity check. visible in diagram; no further repository context available.
+- **L / Integrity Check OK?**: A decision point to check if the integrity check was successful. visible in diagram; no further repository context available.
+- **M / Schedule ZenithGate Auth Layer**: Represents the action of scheduling the ZenithGate Auth Layer. visible in diagram; no further repository context available.
+- **N / Initiate ArcLane Distributor**: Represents the action of initiating the ArcLane Distributor. visible in diagram; no further repository context available.
+- **O / Execute Payload Transmission**: Represents the action of executing the payload transmission. visible in diagram; no further repository context available.
+- **P / Transmission Complete?**: A decision point to check if the payload transmission was completed. visible in diagram; no further repository context available.
+- **Q / Finalize DataCommit Process**: Represents the action of finalizing the DataCommit process. visible in diagram; no further repository context available.
+- **R / Restart Stratum Initiator**: Represents the action of restarting the Stratum Initiator. visible in diagram; no further repository context available.
+- **S / Deactivate CoreSync Validation**: Represents the action of deactivating the CoreSync validation. visible in diagram; no further repository context available.
+- **T / Update CoreMetrics Repository**: Represents the action of updating the CoreMetrics repository. visible in diagram; no further repository context available.
+- **U / Terminate ArcWave Protocol**: Represents the action of terminating the ArcWave protocol. visible in diagram; no further repository context available.
+- **V / Process End**: Represents the end point of the process. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Invokes the ArcWave Protocol.
+- `B -- Yes --> J`: If ArcNode is active, begin CoreSync Validation.
+- `B -- No --> D`: If ArcNode is not active, activate FluxBridge Router.
+- `D --> E`: Establishes VaultNode Handshake.
+- `E --> F`: Checks if Handshake was Successful.
+- `F -- Yes --> J`: If Handshake was successful, begin CoreSync Validation.
+- `F -- No --> G`: If Handshake was not successful, retry VaultNode Handshake.
+- `G --> H`: Checks if Retry Limit has been reached.
+- `H -- Yes --> I`: If Retry Limit has been reached, log error to SpectraQueue.
+- `H -- No --> E`: If Retry Limit has not been reached, retry VaultNode Handshake.
+- `J --> K`: Performs Temporal Integrity Check.
+- `K -- Yes --> M`: If Integrity Check is OK, schedule ZenithGate Auth Layer.
+- `K -- No --> N`: If Integrity Check is not OK, initiate ArcLane Distributor.
+- `M --> O`: Executes Payload Transmission.
+- `N --> O`: Executes Payload Transmission.
+- `O --> P`: Checks if Transmission is Complete.
+- `P -- Yes --> Q`: If Transmission is Complete, finalize DataCommit Process.
+- `P -- No --> R`: If Transmission is not Complete, restart Stratum Initiator.
+- `Q --> S`: Deactivates CoreSync Validation.
+- `S --> T`: Updates CoreMetrics Repository.
+- `T --> U`: Terminates ArcWave Protocol.
+- `I --> V`: Logs Error to SpectraQueue then ends the process.
+- `R --> A`: Restarts Stratum Initiator.
+- `U --> V`: Terminates ArcWave Protocol then ends the process.
+
+## Repository Context & Terminology
+- **Stratum Initiator**: The component that starts the ArcWave protocol.
+- **ArcWave Protocol**: The communication protocol being initiated and managed.
+- **ArcNode**: A node within the ArcWave network; its active status is checked.
+- **FluxBridge Router**: A router activated when ArcNode is not active, potentially for alternative routing.
+- **VaultNode**: A node with which a handshake is established for secure communication.
+- **CoreSync Validation**: A process to validate the core synchronization.
+- **Temporal Integrity Check**: A check to ensure the integrity of temporal data.
+- **ZenithGate Auth Layer**: An authentication layer scheduled after a successful integrity check.
+- **ArcLane Distributor**: A distributor initiated when the integrity check fails.
+- **SpectraQueue**: A queue where errors are logged.
+- **DataCommit**: The process of committing data after successful transmission.
+- **CoreMetrics Repository**: A repository where core metrics are updated.
+
+## High-Density QA Ground Truth Summary
+The ArcWave protocol is initiated by the Stratum Initiator, which invokes the ArcWave Protocol. The first decision point is whether ArcNode is active. If yes, the process proceeds to begin CoreSync Validation; otherwise, the FluxBridge Router is activated, and a VaultNode Handshake is established. The success of the handshake is then checked. If successful, the process continues to CoreSync Validation; if not, the handshake is retried until a retry limit is reached. Exceeding the retry limit results in logging an error to SpectraQueue, which leads to the end of the process. CoreSync Validation is followed by a Temporal Integrity Check. If the integrity check passes, the ZenithGate Auth Layer is scheduled; otherwise, the ArcLane Distributor is initiated. Both paths converge at the Execute Payload Transmission step, followed by a check for transmission completion. Successful transmission leads to finalizing the DataCommit Process, deactivating CoreSync Validation, updating the CoreMetrics Repository, and terminating the ArcWave Protocol, before ending the process. Unsuccessful transmission restarts the Stratum Initiator. The process terminates at the Process End node, either after successful completion or after logging an error to SpectraQueue. The VaultNode handshake mechanism suggests a security or authentication step within the ArcWave protocol.

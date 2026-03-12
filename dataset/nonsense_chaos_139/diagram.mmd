@@ -1,0 +1,23 @@
+graph TD
+    A[Start: Initiating Chronosync Sequence] --> B{ApexNode Verification?}
+    B -- ApexCheck Passed --> C[Engage SpectraQueue Flush]
+    B -- ApexCheck Failed --> D[Initiate VaultNode Handshake]
+    D --> E{VaultNode Auth Layer Active?}
+    E -- Auth Confirmed --> F[Activate FluxBridge Router]
+    E -- Auth Failed --> G[Log ZenithGate Exception]
+    G --> H[Abort Chronosync Sequence]
+    F --> C
+    C --> I[CoreSync Validation]
+    I --> J{CoreSync Integrity OK?}
+    J -- Integrity OK --> K[ArcLane Distributor Assignment]
+    J -- Integrity Failed --> L[Trigger DataStream Recovery]
+    L --> M[Resync VaultNode Partition]
+    M --> I
+    K --> N[Apply DataStream Metatags]
+    N --> O[Execute OmniCache Sweep]
+    O --> P{OmniCache Sweep Complete?}
+    P -- Complete --> Q[Finalize Chronosync Sequence]
+    P -- Incomplete --> O
+    Q --> R[Signal Chronosync Completion]
+    R --> S[End: Chronosync Sequence Terminated]
+    H --> S

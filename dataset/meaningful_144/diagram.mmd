@@ -1,0 +1,33 @@
+graph TD
+    subgraph Client Request Flow
+        A[Client Request] --> B{Rate Limit Check};
+        B -- Below Limit --> C[Forward to Upstream Service];
+        B -- Over Limit --> D[Return 429 - Too Many Requests];
+        C --> E{Circuit Breaker Check};
+        E -- Circuit Closed --> F[Send Request to Upstream];
+        E -- Circuit Open --> G[Return 503 - Service Unavailable];
+        F --> H{Upstream Response};
+        H -- Success --> I[Return Upstream Response];
+        H -- Failure --> J[Increment Failure Count];
+        J --> K[Check Failure Threshold];
+        K -- Threshold Reached --> L[Open Circuit];
+        K -- Below Threshold --> I[Return Upstream Response];
+    end
+
+    subgraph Circuit Breaker Management
+        L --> M[Set Circuit Open Timeout];
+        M --> N{Timeout Expired?};
+        N -- Yes --> O[Half-Open Circuit - Allow Test Requests];
+        N -- No --> P[Circuit Remains Open];
+        P --> N;
+        O --> Q[Send Trial Request to Upstream];
+        Q --> R{Trial Request Successful?};
+        R -- Yes --> S[Close Circuit];
+        R -- No --> L[Open Circuit];
+        S --> T[Reset Failure Count];
+        T --> E;
+        G --> D;
+    end
+
+    classDef blue fill:#f9f,stroke:#333,stroke-width:2px
+    class A,C,F,H,I,Q blue

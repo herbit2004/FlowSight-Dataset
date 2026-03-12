@@ -1,0 +1,13 @@
+graph TD
+    A[User Submits Order] --> B{Inventory Available?};
+    B -- No --> C[Notify User of Delay];
+    B -- Yes --> D[Payment Processed];
+    D -- Success --> E[Shipping Label Created];
+    D -- Failure --> A;
+    E --> F{Package Arrived?};
+    F -- Yes --> G[Order Completed];
+    F -- No --> H[Send Order Confirmation];
+    H --> I[File Complaint];
+    I --> D
+    G --> J[Update Inventory];
+    J --> C

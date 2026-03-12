@@ -1,0 +1,94 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a software development workflow, specifically focusing on the process from feature branch creation to deployment in production. It outlines the steps involved in coding, testing, code review, security analysis, and integration, providing a visual representation of the software release pipeline. The diagram serves as a guide for developers and other stakeholders involved in the software development lifecycle.
+
+## Overall Layout
+The diagram flows from top to bottom (TB). It starts with the creation of a feature branch and ends with deployment to production. The diagram is structured as a series of connected nodes representing different stages of the development process, with decision diamonds indicating branching points based on specific conditions.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Feature Development, Code Review, Security Analysis, Integration Testing, Staging, and Production Deployment.
+
+## Node-by-Node Description
+- **A / Dev: Start Feature Branch**: Represents the beginning of the development process where a developer creates a new branch for a specific feature.
+  visible in diagram; no further repository context available.
+- **B / Code Complete?**: A decision point to determine if the code for the feature is complete.
+  visible in diagram; no further repository context available.
+- **C / CI: Automated Tests**: Represents the execution of automated tests in a Continuous Integration environment.
+  visible in diagram; no further repository context available.
+- **D / Create Pull Request**: Represents the creation of a pull request to merge the feature branch into the main branch.
+  visible in diagram; no further repository context available.
+- **E / Dev: Fix Test Failures**: Represents the process of fixing any test failures identified by the automated tests.
+  visible in diagram; no further repository context available.
+- **F / Code Review Assigned?**: A decision point to determine if a code reviewer has been assigned to the pull request.
+  visible in diagram; no further repository context available.
+- **G / Reviewer: Review Code Changes**: Represents the process of a reviewer examining the code changes in the pull request.
+  visible in diagram; no further repository context available.
+- **H / Assign Code Reviewer**: Represents the process of assigning a code reviewer to the pull request.
+  visible in diagram; no further repository context available.
+- **I / Review OK?**: A decision point to determine if the code review is satisfactory.
+  visible in diagram; no further repository context available.
+- **J / PR: LGTM Received**: Represents the pull request receiving a "Looks Good To Me" (LGTM) approval from the reviewer.
+  visible in diagram; no further repository context available.
+- **K / Dev: Address Review Comments**: Represents the process of the developer addressing the comments and feedback from the code review.
+  visible in diagram; no further repository context available.
+- **L / Approvals >= 2?**: A decision point to determine if the pull request has received at least two approvals.
+  visible in diagram; no further repository context available.
+- **M / Security: Static Analysis Scan**: Represents the execution of a static analysis scan to identify potential security vulnerabilities.
+  visible in diagram; no further repository context available.
+- **N / Dev: Fix Security Issues**: Represents the process of fixing any security issues identified by the static analysis scan.
+  visible in diagram; no further repository context available.
+- **O / Infra: Trigger Integration Tests**: Represents the triggering of integration tests to ensure the feature integrates correctly with the rest of the system.
+  visible in diagram; no further repository context available.
+- **P / Merge to Main Branch**: Represents the merging of the feature branch into the main branch.
+  visible in diagram; no further repository context available.
+- **Q / Dev: Debug Integration Failures**: Represents the process of debugging any integration failures identified by the integration tests.
+  visible in diagram; no further repository context available.
+- **R / Deploy to Staging**: Represents the deployment of the application to a staging environment.
+  visible in diagram; no further repository context available.
+- **S / QA: Validate Staging**: Represents the process of Quality Assurance (QA) validating the application in the staging environment.
+  visible in diagram; no further repository context available.
+- **T / Deploy to Production**: Represents the deployment of the application to the production environment.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Developer starts a feature branch, leading to the code completion check.
+- `B -- Yes --> C`: If the code is complete, automated tests are triggered.
+- `B -- No --> A`: If the code is not complete, the developer continues working on the feature branch.
+- `C -- Tests Pass --> D`: If the automated tests pass, a pull request is created.
+- `C -- Tests Fail --> E`: If the automated tests fail, the developer fixes the test failures.
+- `E --> C`: After fixing test failures, automated tests are run again.
+- `D --> F`: A pull request is created, leading to the code review assignment check.
+- `F -- Yes --> G`: If a code reviewer is assigned, the code changes are reviewed.
+- `F -- No --> H`: If a code reviewer is not assigned, a reviewer is assigned.
+- `H --> F`: After assigning a reviewer, the process returns to the code review assignment check.
+- `G --> I`: The code changes are reviewed, leading to the review approval check.
+- `I -- Yes --> J`: If the review is approved, an LGTM is received.
+- `I -- No --> K`: If the review is not approved, the developer addresses review comments.
+- `K --> G`: After addressing review comments, the code changes are reviewed again.
+- `J --> L`: An LGTM is received, leading to the approval count check.
+- `L -- Yes --> M`: If the approval count is sufficient, a static analysis scan is performed.
+- `L -- No --> G`: If the approval count is insufficient, the code changes are reviewed again.
+- `M -- Vulnerabilities Found --> N`: If vulnerabilities are found, the developer fixes the security issues.
+- `M -- No Vulnerabilities --> O`: If no vulnerabilities are found, integration tests are triggered.
+- `N --> M`: After fixing security issues, a static analysis scan is performed again.
+- `O -- Integration Tests Pass --> P`: If the integration tests pass, the code is merged to the main branch.
+- `O -- Integration Tests Fail --> Q`: If the integration tests fail, the developer debugs the integration failures.
+- `Q --> O`: After debugging integration failures, integration tests are triggered again.
+- `P --> R`: The code is merged to the main branch, leading to deployment to staging.
+- `R --> S`: The application is deployed to staging, leading to QA validation.
+- `S -- QA Passed --> T`: If QA validation passes, the application is deployed to production.
+- `S -- QA Failed --> L`: If QA validation fails, the process returns to the approval count check.
+
+## Repository Context & Terminology
+- **Feature Branch**: A branch in a version control system (e.g., Git) created for developing a specific feature in isolation.
+- **CI (Continuous Integration)**: A practice of frequently integrating code changes into a shared repository and running automated tests to detect integration issues early.
+- **Pull Request**: A request to merge changes from a feature branch into another branch (e.g., the main branch).
+- **Code Review**: The process of having other developers review code changes before they are merged.
+- **LGTM (Looks Good To Me)**: A common abbreviation used in code reviews to indicate that the reviewer approves the changes.
+- **Static Analysis Scan**: An automated process of analyzing code to identify potential security vulnerabilities and code quality issues.
+- **Integration Tests**: Tests that verify the interaction between different components or systems.
+- **Staging Environment**: An environment that mirrors the production environment and is used for final testing and validation before deployment to production.
+- **QA (Quality Assurance)**: The process of testing and validating software to ensure it meets the required quality standards.
+- **Production Environment**: The live environment where the application is deployed and used by end-users.
+
+## High-Density QA Ground Truth Summary
+The development workflow begins with a developer starting a feature branch. The first decision point is whether the code is complete; if not, the developer continues working on it. Once complete, automated tests are run in a CI environment. If tests fail, the developer fixes them and reruns the tests. Passing tests lead to the creation of a pull request, which then requires code review assignment. After assignment, a reviewer examines the code changes. If the review is not satisfactory, the developer addresses the comments and resubmits for review. An approved review (LGTM) leads to a check for sufficient approvals (>= 2). Insufficient approvals loop back to the code review stage. With sufficient approvals, a static analysis scan is performed for security vulnerabilities. Found vulnerabilities require fixing, followed by another scan. If no vulnerabilities are found, integration tests are triggered. Failing integration tests require debugging and retesting. Passing integration tests allow merging to the main branch and deployment to a staging environment. QA then validates the staging environment. If QA fails, the process loops back to the approval count check. Successful QA validation leads to the final step: deployment to the production environment. The use of static analysis tools and integration tests are key to ensuring code quality and security before deployment.

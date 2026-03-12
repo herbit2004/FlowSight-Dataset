@@ -1,0 +1,84 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture and flow of an experiment service. It illustrates how user requests are processed through experiment eligibility checks, traffic splitting logic, and data logging, ultimately feeding into a data pipeline for metric aggregation and monitoring. The diagram serves as a visual representation of the system's decision-making process and data flow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured into three main subgraphs: Experiment Service, Data Pipeline, and Monitoring. The start node is "User Request," and the end nodes are "Alerting System" and "Experiment Results Database."
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Experiment Service**: Handles user requests, experiment eligibility, traffic splitting, and feature variant assignment.
+- **Data Pipeline**: Processes experiment events, aggregates metrics, and stores results.
+- **Monitoring**: Provides dashboards and alerting based on experiment results.
+
+## Node-by-Node Description
+- **User Request**: Represents an incoming request from a user to the Experiment Service.
+  visible in diagram; no further repository context available.
+- **Experiment Active?**: A decision point to determine if the experiment is currently active.
+  visible in diagram; no further repository context available.
+- **Experiment Eligible?**: A decision point to determine if the user is eligible for the experiment.
+  visible in diagram; no further repository context available.
+- **Traffic Split Logic**: A decision point to split traffic between different experiment groups (A and B).
+  visible in diagram; no further repository context available.
+- **Control Group**: Represents the control group, which receives the standard feature.
+  visible in diagram; no further repository context available.
+- **Standard Feature**: Represents the standard feature presented to the control group.
+  visible in diagram; no further repository context available.
+- **Feature A Variant**: Represents the feature variant A presented to Group A.
+  visible in diagram; no further repository context available.
+- **Feature B Variant**: Represents the feature variant B presented to Group B.
+  visible in diagram; no further repository context available.
+- **Record Impression: A**: Represents the recording of an impression for Feature A.
+  visible in diagram; no further repository context available.
+- **Record Impression: B**: Represents the recording of an impression for Feature B.
+  visible in diagram; no further repository context available.
+- **Return Response**: Represents the return of a response to the user.
+  visible in diagram; no further repository context available.
+- **Log Service**: Represents the service responsible for logging experiment events.
+  visible in diagram; no further repository context available.
+- **Kafka Topic: Experiment Events**: Represents the Kafka topic where experiment events are published.
+  visible in diagram; no further repository context available.
+- **Spark Streaming Job**: Represents the Spark streaming job that processes experiment events.
+  visible in diagram; no further repository context available.
+- **Aggregate Metrics**: Represents the aggregation of metrics from experiment events.
+  visible in diagram; no further repository context available.
+- **Experiment Results Database**: Represents the database where experiment results are stored.
+  visible in diagram; no further repository context available.
+- **Dashboard Service**: Represents the service that provides dashboards for monitoring experiment results.
+  visible in diagram; no further repository context available.
+- **Alerting System**: Represents the system that generates alerts based on experiment results.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Request --> Experiment Active?`: A user request is sent to determine if the experiment is active.
+- `Experiment Active? -- No --> Control Group`: If the experiment is not active, the user is assigned to the control group.
+- `Experiment Active? -- Yes --> Experiment Eligible?`: If the experiment is active, the system checks if the user is eligible.
+- `Experiment Eligible? -- No --> Control Group`: If the user is not eligible, the user is assigned to the control group.
+- `Experiment Eligible? -- Yes --> Traffic Split Logic`: If the user is eligible, the traffic split logic is applied.
+- `Traffic Split Logic -- Group A (50%) --> Feature A Variant`: 50% of eligible users are assigned to Group A and receive Feature A Variant.
+- `Traffic Split Logic -- Group B (50%) --> Feature B Variant`: 50% of eligible users are assigned to Group B and receive Feature B Variant.
+- `Control Group --> Standard Feature`: Users in the control group receive the standard feature.
+- `Feature A Variant --> Record Impression: A`: An impression is recorded for users receiving Feature A Variant.
+- `Feature B Variant --> Record Impression: B`: An impression is recorded for users receiving Feature B Variant.
+- `Standard Feature --> Return Response`: The standard feature is returned in the response.
+- `Record Impression: A --> Return Response`: After recording the impression, a response is returned.
+- `Record Impression: B --> Return Response`: After recording the impression, a response is returned.
+- `Return Response --> Log Service`: The response information is sent to the Log Service.
+- `Log Service --> Kafka Topic: Experiment Events`: Experiment events are published to the Kafka topic.
+- `Kafka Topic: Experiment Events --> Spark Streaming Job`: Experiment events are processed by the Spark streaming job.
+- `Spark Streaming Job --> Aggregate Metrics`: Metrics are aggregated from the experiment events.
+- `Aggregate Metrics --> Experiment Results Database`: Aggregated metrics are stored in the experiment results database.
+- `Experiment Results Database --> Dashboard Service`: Experiment results are used by the dashboard service.
+- `Dashboard Service --> Alerting System`: The dashboard service triggers the alerting system based on experiment results.
+- Paths converge at `Return Response`: Paths from `Record Impression: A`, `Record Impression: B`, and `Standard Feature` all converge at the `Return Response` node.
+
+## Repository Context & Terminology
+- **Experiment Service**: A software component responsible for managing and running experiments, including user assignment, feature variant delivery, and data logging.
+- **A/B Testing**: A common experimentation method where two versions (A and B) of a feature are compared to determine which performs better.
+- **Traffic Splitting**: The process of dividing user traffic between different experiment groups to ensure statistically significant results.
+- **Kafka**: A distributed streaming platform used for building real-time data pipelines and streaming applications.
+- **Spark Streaming**: An extension of Apache Spark that enables scalable, high-throughput, fault-tolerant stream processing of live data streams.
+- **Metrics Aggregation**: The process of summarizing and combining raw data points into meaningful metrics for analysis.
+- **Dashboard Service**: A user interface that provides visualizations and insights into experiment results.
+
+## High-Density QA Ground Truth Summary
+The experiment service begins with a "User Request," which is then evaluated for experiment activity via the "Experiment Active?" decision diamond. If the experiment is inactive, the flow branches "No" to the "Control Group," which receives the "Standard Feature" before returning a response. If the experiment is active, the flow branches "Yes" to "Experiment Eligible?" If the user is ineligible, the flow again branches "No" to the "Control Group." If the user is eligible, the flow branches "Yes" to "Traffic Split Logic," where the user is randomly assigned to either "Group A (50%)" or "Group B (50%)." "Group A" receives "Feature A Variant," and "Group B" receives "Feature B Variant." Each variant then records an impression before returning a response. All response paths converge at "Return Response," which then feeds into the "Log Service." The "Log Service" publishes events to a "Kafka Topic: Experiment Events," which are processed by a "Spark Streaming Job" to "Aggregate Metrics." These metrics are stored in the "Experiment Results Database" and used by the "Dashboard Service" for monitoring, which can trigger the "Alerting System." The traffic splitting logic ensures a balanced distribution of users between experiment groups, a key aspect of A/B testing.

@@ -1,0 +1,39 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow and interactions between different components in a system, likely related to a Claude agent. It depicts the process from user interaction in a browser to the Claude Code Process, including real-time stream, WebSocket, HTTP server, project context, Claude Agent SDK, and push service. The diagram serves as a high-level architecture overview.
+
+## Overall Layout
+The diagram's layout is primarily left-to-right. It starts with the "Browser" node on the left and ends with the "Claude Code Process" node on the right. There is a feedback loop from the "Push Service" back to the "Browser."
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Browser Interaction, WebSocket Communication, HTTP Server Routing, Project Context Handling, Claude Agent SDK Interaction, and Push Notification.
+
+## Node-by-Node Description
+- **Browser (Phone / Desktop)**: Represents the user's browser, which can be either on a phone or a desktop. visible in diagram; no further repository context available.
+- **WebSocket**: Represents the WebSocket connection. visible in diagram; no further repository context available.
+- **HTTP Server lib/server.js**: Represents the HTTP server, with the associated file `lib/server.js`.
+- **Project Context lib/project.js**: Represents the project context, with the associated file `lib/project.js`.
+- **Claude Agent SDK**: Represents the Claude Agent SDK. visible in diagram; no further repository context available.
+- **Claude Code Process**: Represents the Claude Code Process. visible in diagram; no further repository context available.
+- **Push Service**: Represents the Push Service. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Browser --> WebSocket`: Represents the real-time stream from the browser to the WebSocket.
+- `WebSocket --> HTTP Server lib/server.js`: Represents the communication between the WebSocket and the HTTP server.
+- `HTTP Server lib/server.js --> Project Context lib/project.js`: Represents the slug routing from the HTTP server to the project context.
+- `Project Context lib/project.js --> Claude Agent SDK`: Represents the async iterable data flow from the project context to the Claude Agent SDK.
+- `Claude Agent SDK --> Claude Code Process`: Represents the prompt/response flow from the Claude Agent SDK to the Claude Code Process.
+- `Project Context lib/project.js --> Push Service`: Represents the approval request from the project context to the push service.
+- `Push Service --> Browser`: Represents the notification from the push service back to the browser.
+- `Claude Agent SDK --> Project Context lib/project.js`: Represents the async iterable data flow from the Claude Agent SDK back to the project context.
+
+## Repository Context & Terminology
+- **HTTP Server (lib/server.js)**: The HTTP server component, likely implemented in `lib/server.js`, handles incoming HTTP requests and routes them to the appropriate handlers.
+- **Project Context (lib/project.js)**: The project context component, likely implemented in `lib/project.js`, manages the context of the current project or task.
+- **Slug Routing**: A routing mechanism that uses slugs (human-readable, URL-friendly identifiers) to map requests to specific resources or handlers.
+- **Async Iterable**: A data structure that allows asynchronous iteration over a sequence of values.
+- **Claude Agent SDK**: A software development kit for interacting with the Claude agent.
+- **Push Service**: A service that sends push notifications to the browser.
+- **Notification**: A message sent from the server to the browser to notify the user of an event.
+
+## High-Density QA Ground Truth Summary
+The process starts with the Browser (Phone / Desktop) sending a real-time stream to the WebSocket. The WebSocket communicates with the HTTP Server (implemented in `lib/server.js`). The HTTP Server then performs slug routing to the Project Context (implemented in `lib/project.js`). From the Project Context, an async iterable data flow goes to the Claude Agent SDK. The Claude Agent SDK interacts with the Claude Code Process using a prompt/response mechanism. The Claude Agent SDK also sends an async iterable data flow back to the Project Context. In parallel, the Project Context sends an approval request to the Push Service. Finally, the Push Service sends a notification back to the Browser, creating a feedback loop. The `lib/server.js` and `lib/project.js` files suggest a modular design where the HTTP server and project context are separated into distinct modules. The end nodes are the Browser and the Claude Code Process.

@@ -1,0 +1,40 @@
+## Diagram Type & Purpose
+This is a flowchart diagram comparing two approaches to Retrieval-Augmented Generation (RAG): "AutoMem Graph + Vector" and "Traditional RAG Vector Only." The diagram illustrates the data flow and components involved in each approach, highlighting the differences in search strategies and the resulting capabilities. It serves to visually compare the architectures and outcomes of these two RAG implementations.
+
+## Overall Layout
+The diagram is arranged vertically (TB). It consists of two main subgraphs, one for each RAG approach. Each subgraph starts with a query node and ends with a result node, showcasing the end-to-end process.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Traditional RAG Vector Only**: Represents the traditional RAG approach using only vector search.
+- **AutoMem Graph + Vector**: Represents an enhanced RAG approach utilizing both graph and vector databases with hybrid search.
+
+## Node-by-Node Description
+- **Query1 / Query: What database?** (in Traditional RAG Vector Only subgraph): Represents the initial query input to the RAG system. visible in diagram; no further repository context available.
+- **VectorDB1 / Vector DB** (in Traditional RAG Vector Only subgraph): Represents the vector database used for similarity search. visible in diagram; no further repository context available.
+- **Result1 / ✅ PostgreSQL memory ❌ No reasoning ❌ No connections** (in Traditional RAG Vector Only subgraph): Represents the outcome of the traditional RAG approach, indicating that while it can retrieve PostgreSQL memory, it lacks reasoning and connections. visible in diagram; no further repository context available.
+- **Query2 / Query: What database?** (in AutoMem Graph + Vector subgraph): Represents the initial query input to the AutoMem RAG system. visible in diagram; no further repository context available.
+- **VectorDB2 / Qdrant Vectors** (in AutoMem Graph + Vector subgraph, within Hybrid Search subgraph): Represents the Qdrant vector database used for vector-based search. visible in diagram; no further repository context available.
+- **GraphDB2 / FalkorDB Graph** (in AutoMem Graph + Vector subgraph, within Hybrid Search subgraph): Represents the FalkorDB graph database used for graph-based search. visible in diagram; no further repository context available.
+- **Result2 / ✅ PostgreSQL memory ✅ PREFERS_OVER MongoDB ✅ RELATES_TO team expertise ✅ DERIVED_FROM boring tech** (in AutoMem Graph + Vector subgraph): Represents the outcome of the AutoMem RAG approach, indicating that it retrieves PostgreSQL memory, prefers it over MongoDB, relates to team expertise, and is derived from boring tech. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Query1 --> VectorDB1`: Represents the flow of the query to the vector database for similarity search in the Traditional RAG approach.
+- `VectorDB1 --> Result1`: Represents the flow of results from the vector database to the final outcome in the Traditional RAG approach.
+- `Query2 --> VectorDB2`: Represents the flow of the query to the Qdrant vector database for hybrid search in the AutoMem RAG approach.
+- `Query2 --> GraphDB2`: Represents the flow of the query to the FalkorDB graph database for hybrid search in the AutoMem RAG approach.
+- `VectorDB2 --> Result2`: Represents the flow of results from the Qdrant vector database to the final outcome in the AutoMem RAG approach.
+- `GraphDB2 --> Result2`: Represents the flow of results from the FalkorDB graph database to the final outcome in the AutoMem RAG approach.
+
+## Repository Context & Terminology
+- **RAG (Retrieval-Augmented Generation)**: A framework where a language model retrieves information from an external knowledge source before generating a response.
+- **Vector Database**: A database that stores data as high-dimensional vectors, enabling similarity searches based on vector embeddings.
+- **Graph Database**: A database that uses graph structures with nodes, edges, and properties to store and query relationships.
+- **Qdrant**: A vector similarity search engine.
+- **FalkorDB**: A graph database.
+- **Hybrid Search**: A search strategy that combines vector-based and graph-based search methods.
+- **PostgreSQL**: A relational database management system.
+- **MongoDB**: A NoSQL document database.
+
+## High-Density QA Ground Truth Summary
+The diagram contrasts two RAG approaches. The "Traditional RAG Vector Only" subgraph begins with a "Query: What database?" node, which flows into a "Vector DB" node via "Similarity search." The output is represented by the "Result1" node, indicating that while PostgreSQL memory is retrieved, there's "No reasoning" and "No connections." In contrast, the "AutoMem Graph + Vector" subgraph also starts with the same query, but this time the query is processed by both "Qdrant Vectors" and "FalkorDB Graph" databases within a "Hybrid Search" stage. The results from both databases converge at the "Result2" node. This node highlights the advantages of the AutoMem approach: it retrieves "PostgreSQL memory," "PREFERS_OVER MongoDB," "RELATES_TO team expertise," and is "DERIVED_FROM boring tech," showcasing enhanced reasoning and connectivity compared to the traditional vector-only method. The use of Qdrant and FalkorDB in the AutoMem approach enables a more comprehensive search by combining vector similarity and graph relationships, leading to richer and more context-aware results.

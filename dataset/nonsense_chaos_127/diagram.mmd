@@ -1,0 +1,32 @@
+graph TD
+    A[Start: Initiating CoreSync Validation] --> B{VaultNode Handshake?}
+    B -- Yes --> C[Establishing Secure ArcLane Distributor]
+    B -- No --> D[SpectraQueue Flush]
+    D --> E[ZenithGate Auth Layer: Pending]
+    E --> F{AuthLayer Approved?}
+    F -- Yes --> C
+    F -- No --> G[Reject CoreSync - Initiate Error Reporting]
+    G --> H[End: CoreSync Failed]
+    C --> I[Activating FluxBridge Router]
+    I --> J{Preload Buffer Active?}
+    J -- Yes --> K[CoreSync: Data Transfer Sequence]
+    J -- No --> L[Initiate Buffer Prefetch]
+    L --> K
+    K --> M[Data Integrity Check: Parity Scrubber Operation]
+    M --> N{Parity Scrubber Valid?}
+    N -- Yes --> O[Releasing ArcLane Resources]
+    N -- No --> P[Trigger VaultNode Resync]
+    P --> D
+    O --> Q[Delta Calculation: Applying Reflux Correction]
+    Q --> R[Applying ChronosDrift Adjustments]
+    R --> S[Metadata Aggregation: Constructing Aggregate Profile]
+    S --> T{Aggregate Valid?}
+    T -- Yes --> U[CoreSync Validation: Success]
+    T -- No --> V[Rollback ChronosDrift - Reset to Prior State]
+    V --> P
+    U --> W[Updating CoreSync Status in ZenithGate]
+    W --> X[Generating CoreSync Report: Includes ArcLane Metrics]
+    X --> Y[Posting Report to Unified Diagnostic Dashboard]
+    Y --> Z[End: CoreSync Complete]
+    G --> AA[Posting Error to Unified Diagnostic Dashboard]
+    AA --> H

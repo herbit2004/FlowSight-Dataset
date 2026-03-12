@@ -1,0 +1,104 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the infrastructure and components of a cloud-based application, specifically a "coffeeshop" application deployed on Amazon Web Services (AWS). It depicts the system's architecture, including its various services, their interactions, and the flow of data between them. The diagram serves as a high-level overview of the application's deployment and infrastructure.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner. It shows the overall architecture, starting with external actors (Users, Developers) and the CI/CD pipeline at the top, flowing through the AWS infrastructure (VPC, EKS, Lambda), and ending with the data layer and monitoring components at the bottom.
+
+## Subgraphs / Stages
+The diagram contains several explicit subgraphs:
+- **Amazon VPC**: Represents the Virtual Private Cloud, the network environment for the application. It contains Public and Private Subnets.
+- **Public Subnet**: Contains the Application Load Balancer and NAT Gateway.
+- **Private Subnet**: Contains the Amazon EKS Cluster and AWS Lambda functions.
+- **Amazon EKS Cluster**: Represents the Kubernetes cluster where the application's microservices are deployed.
+- **coffeeshop namespace**: A logical grouping within the EKS cluster containing the application's web services (Orders Web, Coffee Web, Inventory Web).
+- **System Components**: Components within the EKS cluster that support the operation of the cluster itself (Cluster Autoscaler, Metrics Server, AWS Load Balancer Controller, EBS CSI Driver).
+- **AWS Lambda**: Contains the serverless functions (Coffee Order Handler, Inventory Handler).
+- **Data Layer**: Contains the DynamoDB tables for storing data (Order Table, Coffee Table, Inventory Table).
+- **Event-Driven Architecture**: Contains the Amazon EventBridge Event Bus.
+- **API Layer**: Contains the Amazon API Gateway REST API.
+- **Monitoring & Observability**: Contains the components for monitoring the application (Amazon CloudWatch Metrics & Logs, CloudWatch Dashboard, Amazon SNS Alarm Notifications).
+- **CI/CD Pipeline**: Represents the automated deployment pipeline.
+
+## Node-by-Node Description
+- **Users**: Represents the end-users of the application. visible in diagram; no further repository context available.
+- **Developers**: Represents the development team. visible in diagram; no further repository context available.
+- **Amazon VPC**: Represents the Virtual Private Cloud on AWS. visible in diagram; no further repository context available.
+- **Public Subnet**: A subnet within the VPC that has access to the internet. visible in diagram; no further repository context available.
+- **Application Load Balancer**: Distributes incoming traffic to the application's web services. visible in diagram; no further repository context available.
+- **NAT Gateway**: Allows instances in the private subnet to connect to the internet. visible in diagram; no further repository context available.
+- **Private Subnet**: A subnet within the VPC that does not have direct access to the internet. visible in diagram; no further repository context available.
+- **Amazon EKS Cluster**: The Kubernetes cluster where the application's microservices are deployed. visible in diagram; no further repository context available.
+- **coffeeshop namespace**: A Kubernetes namespace for the application's microservices. visible in diagram; no further repository context available.
+- **Orders Web**: A microservice responsible for handling orders (Spring Boot 3.4.1, Java 21). visible in diagram; no further repository context available.
+- **Coffee Web**: A microservice responsible for handling coffee-related requests (Spring Boot 3.4.1, Java 21). visible in diagram; no further repository context available.
+- **Inventory Web**: A microservice responsible for managing inventory (Spring Boot 3.4.1, Java 21). visible in diagram; no further repository context available.
+- **System Components**: A grouping of components that support the EKS cluster. visible in diagram; no further repository context available.
+- **Cluster Autoscaler**: Automatically adjusts the size of the EKS cluster based on demand. visible in diagram; no further repository context available.
+- **Metrics Server**: Collects resource usage metrics from the EKS cluster. visible in diagram; no further repository context available.
+- **AWS Load Balancer Controller**: Manages the Application Load Balancer for the EKS cluster. visible in diagram; no further repository context available.
+- **EBS CSI Driver**: Provides persistent storage for the EKS cluster. visible in diagram; no further repository context available.
+- **AWS Lambda**: Represents the AWS Lambda service. visible in diagram; no further repository context available.
+- **Inventory Handler**: A Lambda function for handling inventory-related tasks (Java 21). visible in diagram; no further repository context available.
+- **Coffee Order Handler**: A Lambda function for handling coffee order-related tasks (Java 21). visible in diagram; no further repository context available.
+- **Data Layer**: Represents the data storage layer. visible in diagram; no further repository context available.
+- **DynamoDB Order Table**: A DynamoDB table for storing order data. visible in diagram; no further repository context available.
+- **DynamoDB Coffee Table**: A DynamoDB table for storing coffee data. visible in diagram; no further repository context available.
+- **DynamoDB Inventory Table**: A DynamoDB table for storing inventory data. visible in diagram; no further repository context available.
+- **Event-Driven Architecture**: Represents the event-driven architecture components. visible in diagram; no further repository context available.
+- **Amazon EventBridge Event Bus**: An event bus for routing events between services. visible in diagram; no further repository context available.
+- **API Layer**: Represents the API layer. visible in diagram; no further repository context available.
+- **Amazon API Gateway REST API**: An API gateway for exposing REST APIs. visible in diagram; no further repository context available.
+- **Monitoring & Observability**: Represents the monitoring and observability components. visible in diagram; no further repository context available.
+- **Amazon CloudWatch Metrics & Logs**: A service for collecting metrics and logs. visible in diagram; no further repository context available.
+- **CloudWatch Dashboard**: A dashboard for visualizing metrics and logs. visible in diagram; no further repository context available.
+- **Amazon SNS Alarm Notifications**: A service for sending alarm notifications. visible in diagram; no further repository context available.
+- **CI/CD Pipeline**: Represents the CI/CD pipeline. visible in diagram; no further repository context available.
+- **EKS Pipeline Stack Automated Deployment**: An automated deployment pipeline for the EKS cluster. visible in diagram; no further repository context available.
+- **Amazon ECR Container Registry**: A container registry for storing container images. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Users --> Application Load Balancer`: Users access the application through the Application Load Balancer.
+- `Application Load Balancer --> Orders Web`: The Application Load Balancer routes traffic to the Orders Web microservice.
+- `Application Load Balancer --> Coffee Web`: The Application Load Balancer routes traffic to the Coffee Web microservice.
+- `Application Load Balancer --> Inventory Web`: The Application Load Balancer routes traffic to the Inventory Web microservice.
+- `Orders Web --> DynamoDB Order Table`: The Orders Web microservice stores order data in the DynamoDB Order Table.
+- `Orders Web --> Amazon EventBridge Event Bus`: The Orders Web microservice sends events to the Amazon EventBridge Event Bus.
+- `Coffee Web --> DynamoDB Coffee Table`: The Coffee Web microservice stores coffee data in the DynamoDB Coffee Table.
+- `Inventory Web --> DynamoDB Inventory Table`: The Inventory Web microservice stores inventory data in the DynamoDB Inventory Table.
+- `Amazon API Gateway REST API --> Coffee Order Handler`: The API Gateway routes requests to the Coffee Order Handler Lambda function.
+- `Amazon API Gateway REST API --> Inventory Handler`: The API Gateway routes requests to the Inventory Handler Lambda function.
+- `Coffee Order Handler --> DynamoDB Order Table`: The Coffee Order Handler Lambda function interacts with the DynamoDB Order Table.
+- `Coffee Order Handler --> DynamoDB Coffee Table`: The Coffee Order Handler Lambda function interacts with the DynamoDB Coffee Table.
+- `Inventory Handler --> DynamoDB Coffee Table`: The Inventory Handler Lambda function interacts with the DynamoDB Coffee Table.
+- `Amazon EventBridge Event Bus --> Coffee Order Handler`: The Event Bus triggers the Coffee Order Handler Lambda function.
+- `Orders Web -.-> Amazon EventBridge Event Bus`: The Orders Web microservice sends events to the Event Bus.
+- `Amazon ECR Container Registry --> Orders Web`: The Orders Web microservice uses container images from the ECR.
+- `Amazon ECR Container Registry --> Coffee Web`: The Coffee Web microservice uses container images from the ECR.
+- `Amazon ECR Container Registry --> Inventory Web`: The Inventory Web microservice uses container images from the ECR.
+- `Orders Web --> Amazon CloudWatch Metrics & Logs`: The Orders Web microservice sends metrics and logs to CloudWatch.
+- `Coffee Web --> Amazon CloudWatch Metrics & Logs`: The Coffee Web microservice sends metrics and logs to CloudWatch.
+- `Inventory Web --> Amazon CloudWatch Metrics & Logs`: The Inventory Web microservice sends metrics and logs to CloudWatch.
+- `Coffee Order Handler --> Amazon CloudWatch Metrics & Logs`: The Coffee Order Handler Lambda function sends metrics and logs to CloudWatch.
+- `Inventory Handler --> Amazon CloudWatch Metrics & Logs`: The Inventory Handler Lambda function sends metrics and logs to CloudWatch.
+- `Amazon EKS Cluster --> Amazon CloudWatch Metrics & Logs`: The EKS cluster sends metrics and logs to CloudWatch.
+- `Amazon CloudWatch Metrics & Logs --> CloudWatch Dashboard`: CloudWatch metrics and logs are visualized in the CloudWatch Dashboard.
+- `Amazon CloudWatch Metrics & Logs --> Amazon SNS Alarm Notifications`: CloudWatch triggers alarm notifications via SNS.
+- `EKS Pipeline Stack Automated Deployment --> Amazon ECR Container Registry`: The CI/CD pipeline pushes images to ECR.
+- `EKS Pipeline Stack Automated Deployment --> Amazon EKS Cluster`: The CI/CD pipeline deploys updates to the EKS cluster.
+- `Metrics Server --> Orders Web`: The Metrics Server provides metrics to the Orders Web microservice.
+- `Metrics Server --> Coffee Web`: The Metrics Server provides metrics to the Coffee Web microservice.
+- `Metrics Server --> Inventory Web`: The Metrics Server provides metrics to the Inventory Web microservice.
+- `Cluster Autoscaler --> Amazon EKS Cluster`: The Cluster Autoscaler scales the EKS cluster.
+
+## Repository Context & Terminology
+- **Amazon EKS (Elastic Kubernetes Service)**: A managed Kubernetes service that makes it easy to run Kubernetes on AWS without needing to install, operate, and maintain your own Kubernetes control plane.
+- **AWS Lambda**: A serverless compute service that lets you run code without provisioning or managing servers.
+- **Amazon DynamoDB**: A fully managed NoSQL database service that provides fast and predictable performance with seamless scalability.
+- **Amazon EventBridge**: A serverless event bus that makes it easy to connect applications together using data from your own applications, integrated Software-as-a-Service (SaaS) applications, and AWS services.
+- **Amazon API Gateway**: A fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale.
+- **Amazon CloudWatch**: A monitoring and observability service that provides data and actionable insights to monitor your applications, respond to system-wide performance changes, and optimize resource utilization.
+- **Amazon SNS (Simple Notification Service)**: A fully managed messaging service for both application-to-application (A2A) and application-to-person (A2P) communication.
+- **Spring Boot**: An open-source Java-based framework used to create stand-alone, production-grade Spring-based Applications.
+
+## High-Density QA Ground Truth Summary
+The architecture diagram illustrates a cloud-based "coffeeshop" application deployed on AWS. The flow begins with `Users` accessing the application via the `Application Load Balancer` in the `Public Subnet` of the `Amazon VPC`. The ALB routes traffic to the `Orders Web`, `Coffee Web`, and `Inventory Web` microservices running within the `coffeeshop namespace` inside the `Amazon EKS Cluster` in the `Private Subnet`. These microservices, built with Spring Boot 3.4.1 and Java 21, interact with `DynamoDB` tables (`Order Table`, `Coffee Table`, `Inventory Table`) for data persistence. The `Orders Web` microservice also publishes events to the `Amazon EventBridge Event Bus`, triggering the `Coffee Order Handler` Lambda function. The `API Layer` exposes REST APIs via `Amazon API Gateway`, which invokes the `Coffee Order Handler` and `Inventory Handler` Lambda functions. The `EKS Pipeline Stack Automated Deployment` in the `CI/CD Pipeline` pushes container images to `Amazon ECR` and deploys updates to the `Amazon EKS Cluster`. Monitoring is handled by `Amazon CloudWatch Metrics & Logs`, with dashboards and alarms via `CloudWatch Dashboard` and `Amazon SNS Alarm Notifications`. The `Cluster Autos

@@ -1,0 +1,68 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the process of analyzing CVs for a job offer. It illustrates the data flow and processing steps involved in extracting information from CVs and job offers, analyzing them, and matching candidates to job requirements. The diagram likely serves as a high-level overview of a candidate matching system.
+
+## Overall Layout
+The diagram is laid out from left to right. It has a hierarchical structure with nested subgraphs representing different stages of the process. The start nodes are `job_offer_pdf` and `cv_pdf` documents, and the end node is `match_analyses`.
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **batch_analyze_cvs_for_job_offer**: The outermost subgraph, encompassing the entire process.
+- **process_cv_batch**: Contains multiple instances of the `process_cv` subgraph, indicating a batch processing of CVs.
+- **process_cv**: Represents the processing of a single CV, including extraction, analysis, and matching. There are three instances of this subgraph.
+- **prepare_job_offer**: Represents the process of extracting and analyzing job offer information.
+
+## Node-by-Node Description
+- **job_offer_pdf / Document**: Represents the job offer document in PDF format.
+  visible in diagram; no further repository context available.
+- **cv_pdf / Document**: Represents a candidate's CV document in PDF format.
+  visible in diagram; no further repository context available.
+- **extract_one_job_offer**: Extracts information from the job offer document.
+  visible in diagram; no further repository context available.
+- **job_offer_pages / Page**: Represents the extracted pages from the job offer.
+  visible in diagram; no further repository context available.
+- **analyze_job_requirements**: Analyzes the job requirements from the extracted pages.
+  visible in diagram; no further repository context available.
+- **job_requirements / JobRequirements**: Represents the analyzed job requirements.
+  visible in diagram; no further repository context available.
+- **extract_one_cv**: Extracts information from a single CV document.
+  visible in diagram; no further repository context available.
+- **cv_pages / Page**: Represents the extracted pages from a CV.
+  visible in diagram; no further repository context available.
+- **analyze_one_cv**: Analyzes the extracted CV pages.
+  visible in diagram; no further repository context available.
+- **candidate_profile / CandidateProfile**: Represents the analyzed candidate profile.
+  visible in diagram; no further repository context available.
+- **analyze_match**: Analyzes the match between a candidate profile and job requirements.
+  visible in diagram; no further repository context available.
+- **match_analysis / CandidateMatch**: Represents the result of the match analysis for a single candidate.
+  visible in diagram; no further repository context available.
+- **match_analyses / CandidateMatch**: Represents the aggregated match analyses for all candidates.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `job_offer_pdf --> extract_one_job_offer`: The job offer document is passed to the extraction process.
+- `extract_one_job_offer --> job_offer_pages`: Extracted pages are passed for further analysis.
+- `job_offer_pages --> analyze_job_requirements`: Extracted pages are analyzed to determine job requirements.
+- `analyze_job_requirements --> job_requirements`: The analyzed job requirements are stored.
+- `cv_pdf --> extract_one_cv`: A CV document is passed to the extraction process.
+- `extract_one_cv --> cv_pages`: Extracted pages are passed for further analysis.
+- `cv_pages --> analyze_one_cv`: Extracted pages are analyzed to create a candidate profile.
+- `analyze_one_cv --> candidate_profile`: The analyzed candidate profile is stored.
+- `candidate_profile --> analyze_match`: The candidate profile is passed for match analysis.
+- `job_requirements --> analyze_match`: The job requirements are passed for match analysis.
+- `analyze_match --> match_analysis`: The result of the match analysis is stored.
+- `match_analysis --[0]--> match_analyses`: The match analysis result from the first `process_cv` subgraph is aggregated.
+- `match_analysis --[1]--> match_analyses`: The match analysis result from the second `process_cv` subgraph is aggregated.
+- `match_analysis --[2]--> match_analyses`: The match analysis result from the third `process_cv` subgraph is aggregated.
+
+## Repository Context & Terminology
+- **CandidateProfile**: Represents the structured data extracted and inferred from a candidate's CV.
+- **JobRequirements**: Represents the structured data extracted and inferred from a job offer document.
+- **CandidateMatch**: Represents the result of comparing a CandidateProfile against JobRequirements, indicating the degree of fit.
+- **process_cv**: A subgraph representing the steps to process a single CV, including extraction, analysis, and matching.
+- **process_cv_batch**: A subgraph representing the batch processing of multiple CVs.
+- **prepare_job_offer**: A subgraph representing the steps to prepare a job offer for matching, including extraction and analysis.
+- **analyze_match**: A node representing the analysis of the match between a candidate profile and job requirements.
+
+## High-Density QA Ground Truth Summary
+The process begins with two input documents: `job_offer_pdf` and multiple `cv_pdf` documents. The `job_offer_pdf` is processed by `extract_one_job_offer` to produce `job_offer_pages`, which are then analyzed by `analyze_job_requirements` to create `job_requirements`. Concurrently, each `cv_pdf` document undergoes a similar process within the `process_cv_batch` subgraph. Each CV is processed by `extract_one_cv` to produce `cv_pages`, which are then analyzed by `analyze_one_cv` to create a `candidate_profile`. The `candidate_profile` and `job_requirements` are then fed into `analyze_match` to produce a `match_analysis` for each candidate. The `job_requirements` are passed to each `analyze_match` node. The results of each `match_analysis` are aggregated into a final `match_analyses` node, indexed as [0], [1], and [2] corresponding to each `process_cv` subgraph. The `CandidateMatch` represents the degree of fit between a candidate and the job, and the `match_analyses` node represents the collection of these matches for all processed CVs. The final `match_analyses` node represents the culmination of the entire process, providing a consolidated view of candidate-job matches.

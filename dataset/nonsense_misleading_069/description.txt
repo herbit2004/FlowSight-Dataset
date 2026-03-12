@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow of an e-commerce system. It illustrates the sequence of steps involved from when an order is placed to when it is delivered, including inventory checks, payment processing, shipping, and handling of out-of-stock situations and refunds. This diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with a single "Start: Order Placed" node and includes multiple potential end points, including "Deliver Order" and looping back to "Start: Order Placed" after a refund. The diagram does not have a clear end state, as delivery loops back to inventory check, and refunds loop back to the start.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement, Inventory & Payment, Shipping, Out-of-Stock Handling, Refund, and Delivery.
+
+## Node-by-Node Description
+- **Start: Order Placed**: Represents the beginning of the order processing workflow, when a customer places an order.
+  visible in diagram; no further repository context available.
+- **Inventory Check**: Represents the process of verifying if the ordered items are in stock.
+  visible in diagram; no further repository context available.
+- **Process Payment**: Represents the step of charging the customer for the order.
+  visible in diagram; no further repository context available.
+- **Generate Shipping Label**: Represents the creation of a label for shipping the order.
+  visible in diagram; no further repository context available.
+- **Pack Order**: Represents the step of preparing the order for shipment.
+  visible in diagram; no further repository context available.
+- **Order Shipped**: Represents the point when the order has left the warehouse and is in transit.
+  visible in diagram; no further repository context available.
+- **Deliver Order**: Represents the final step of the process, when the order reaches the customer.
+  visible in diagram; no further repository context available.
+- **Refund Payment**: Represents the process of returning money to the customer, typically when an order cannot be fulfilled.
+  visible in diagram; no further repository context available.
+- **Notify Customer: Out of Stock**: Represents the action of informing the customer that an item they ordered is not available.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Start: Order Placed --> Inventory Check`: Indicates the start of the process, moving to inventory verification.
+- `Inventory Check -- Available --> Process Payment`: If the inventory is available, the process moves to payment processing.
+- `Inventory Check -- Unavailable --> Notify Customer: Out of Stock`: If the inventory is unavailable, the customer is notified.
+- `Process Payment -- Success --> Generate Shipping Label`: If the payment is successful, a shipping label is generated.
+- `Process Payment -- Failure --> Refund Payment`: If the payment fails, a refund is initiated.
+- `Generate Shipping Label --> Pack Order`: After generating the shipping label, the order is packed.
+- `Pack Order --> Order Shipped`: After packing, the order is shipped.
+- `Order Shipped --> Deliver Order`: After shipping, the order is delivered.
+- `Deliver Order --> Inventory Check`: After delivery, the process loops back to the inventory check.
+- `Refund Payment --> Start: Order Placed`: After a refund, the process loops back to the start.
+- `Notify Customer: Out of Stock --> Order Shipped`: After notifying the customer about the unavailability of the order, the order is shipped.
+
+## Repository Context & Terminology
+- **Order Placed**: In standard e-commerce, this refers to the initial action of a customer submitting an order. In this diagram, it's the starting point of the workflow.
+- **Inventory Check**: In standard practice, this verifies the availability of items. Here, it's a decision point that influences the subsequent steps.
+- **Process Payment**: In standard practice, this involves authorizing and capturing funds from the customer. Here, it's a step that can either succeed or fail.
+- **Generate Shipping Label**: In standard practice, this creates a label with the customer's address and shipping information. Here, it's a step after successful payment.
+- **Pack Order**: In standard practice, this involves preparing the items for shipment. Here, it's a step before the order is marked as shipped.
+- **Order Shipped**: In standard practice, this indicates that the order has left the warehouse. Here, it's a step that can be reached even after notifying the customer about unavailability.
+- **Deliver Order**: In standard practice, this is the final step where the customer receives the order. Here, it loops back to the inventory check, which is illogical.
+- **Refund Payment**: In standard practice, this returns funds to the customer. Here, it loops back to the start of the process.
+- **Notify Customer: Out of Stock**: In standard practice, this informs the customer that an item is unavailable. Here, it leads to the order being shipped, which is counterintuitive.
+
+## High-Density QA Ground Truth Summary
+The order processing flowchart begins with "Start: Order Placed," immediately followed by an "Inventory Check." If the inventory is "Available," the process proceeds to "Process Payment"; otherwise, if "Unavailable," the system proceeds to "Notify Customer: Out of Stock," which then incorrectly leads to "Order Shipped." Upon successful payment ("Success"), the system "Generate Shipping Label," then "Pack Order," and then "Order Shipped." Payment failure ("Failure") triggers "Refund Payment," which then illogically loops back to "Start: Order Placed." After the "Order Shipped" step, the system proceeds to "Deliver Order," which then creates an illogical loop back to "Inventory Check." The standard e-commerce concept of order placement initiates the workflow, but the subsequent steps deviate from typical practices, particularly with the circular flow after delivery and the shipping of out-of-stock items. The diagram lacks a proper termination point, with processes looping back to earlier stages, creating a non-terminating workflow.

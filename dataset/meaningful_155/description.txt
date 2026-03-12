@@ -1,0 +1,68 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating a multi-region application deployment with failover capabilities. It depicts the flow of user requests, load balancing, application server interactions, and database replication across two regions (Region A and Region B). The diagram highlights the failover mechanism from Region A to Region B in case of failures.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TB). It is divided into subgraphs representing different regions and monitoring components. The primary flow starts with a user request in Region A and can end with data being written to the primary database or the request being handled by Region B in a failover scenario, with data replicated to the read replica database.
+
+## Subgraphs / Stages
+The diagram contains three subgraphs:
+- **Region A**: Represents the primary region handling user requests.
+- **Region B**: Represents the standby region used during failover.
+- **Monitoring**: Represents the monitoring system responsible for health checks and failure detection.
+
+## Node-by-Node Description
+- **User Request**: Represents an incoming user request to the system.
+  visible in diagram; no further repository context available.
+- **Load Balancer A**: Distributes incoming user requests across available application servers in Region A.
+  visible in diagram; no further repository context available.
+- **Application Server A1**: An application server instance in Region A.
+  visible in diagram; no further repository context available.
+- **Application Server A2**: Another application server instance in Region A.
+  visible in diagram; no further repository context available.
+- **Failover**: Represents the failover process triggered when Region A is unhealthy.
+  visible in diagram; no further repository context available.
+- **Standby User Request - Rarely Used**: Represents a user request directed to Region B, typically during failover or maintenance.
+  visible in diagram; no further repository context available.
+- **Load Balancer B**: Distributes incoming user requests across available application servers in Region B.
+  visible in diagram; no further repository context available.
+- **Application Server B1**: An application server instance in Region B.
+  visible in diagram; no further repository context available.
+- **Application Server B2**: Another application server instance in Region B.
+  visible in diagram; no further repository context available.
+- **Database Primary**: The primary database instance that handles read and write operations.
+  visible in diagram; no further repository context available.
+- **Database Read Replica**: A read-only replica of the primary database, used for read-only operations and failover scenarios.
+  visible in diagram; no further repository context available.
+- **Health Checks & Metrics**: Represents the monitoring system that performs health checks and collects metrics.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Request --> Load Balancer A`: A user request is sent to the load balancer in Region A.
+- `Load Balancer A -- Healthy Instance --> Application Server A1`: The load balancer forwards the request to a healthy application server instance in Region A.
+- `Load Balancer A -- Healthy Instance --> Application Server A2`: The load balancer forwards the request to another healthy application server instance in Region A.
+- `Load Balancer A -- No Healthy Instances --> Failover`: If no healthy instances are available, the load balancer triggers a failover.
+- `Failover -- Signal Failover --> Load Balancer B`: The failover process signals the load balancer in Region B.
+- `Standby User Request - Rarely Used --> Load Balancer B`: A standby user request is sent to the load balancer in Region B.
+- `Load Balancer B -- Healthy Instance --> Application Server B1`: The load balancer forwards the request to a healthy application server instance in Region B.
+- `Load Balancer B -- Healthy Instance --> Application Server B2`: The load balancer forwards the request to another healthy application server instance in Region B.
+- `Application Server A1 -- DB Read/Write --> Database Primary`: Application server A1 performs read/write operations on the primary database.
+- `Application Server A2 -- DB Read/Write --> Database Primary`: Application server A2 performs read/write operations on the primary database.
+- `Application Server B1 -- DB Read Only --> Database Read Replica`: Application server B1 performs read-only operations on the database read replica.
+- `Application Server B2 -- DB Read Only --> Database Read Replica`: Application server B2 performs read-only operations on the database read replica.
+- `Database Primary -- Asynchronous Replication --> Database Read Replica`: The primary database asynchronously replicates data to the read replica.
+- `Health Checks & Metrics --> Load Balancer A`: The monitoring system checks the health of Region A and its components.
+- `Health Checks & Metrics --> Load Balancer B`: The monitoring system checks the health of Region B and its components.
+- `Health Checks & Metrics -- Detects region failure --> Failover`: The monitoring system detects a region failure and triggers the failover process.
+
+## Repository Context & Terminology
+- **Load Balancer**: A network device or software that distributes network traffic across multiple servers to ensure no single server is overwhelmed.
+- **Application Server**: A server that hosts and runs applications.
+- **Database Primary**: The main database server that handles read and write operations.
+- **Database Read Replica**: A read-only copy of the primary database, used to offload read operations and improve performance.
+- **Failover**: The process of automatically switching to a redundant or standby system upon the failure of a primary system.
+- **Asynchronous Replication**: A method of database replication where changes to the primary database are applied to the replica database with a delay.
+- **Health Checks**: Automated tests to verify the availability and performance of a system or component.
+- **Metrics**: Quantifiable measurements used to track and assess the performance and health of a system.
+
+## High-Density QA Ground Truth Summary
+The process begins with a `User Request` directed to `Load Balancer A` in `Region A`. The `Load Balancer A` then routes the request to either `Application Server A1` or `Application Server A2`, assuming healthy instances are available. If `Load Balancer A` detects no healthy instances, a `Failover` is triggered. The `Monitoring` system continuously performs `Health Checks & Metrics` on both regions, and if it `Detects region failure`, it also initiates the `Failover`. The `Failover` process then signals `Load Balancer B` in `Region B`. Alternatively, a `Standby User Request - Rarely Used` can directly target `Load Balancer B`. `Load Balancer B` distributes requests to `Application Server B1` or `Application Server B2`. `Application Server A1` and `Application Server A2` perform `DB Read/Write` operations against the `Database Primary`, while `Application Server B1` and `Application Server B2` perform `DB Read Only` operations against the `Database Read Replica`. The `Database Primary` asynchronously replicates its data to the `Database Read Replica` to maintain data consistency. The system architecture ensures high availability by utilizing a standby region and database replication, allowing the application to continue serving requests even if the primary region experiences failures.

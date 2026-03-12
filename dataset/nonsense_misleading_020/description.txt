@@ -1,0 +1,67 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow of an e-commerce system. It depicts the steps involved from when a user submits an order to when the delivery confirmation is sent. The diagram serves as a visual representation of the order fulfillment process, highlighting decision points and actions taken at each stage.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User Submits Order" node at the top and flows downwards through a series of processes and decision points. The end node is "Send Delivery Confirmation", which then loops back to the start.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Payment, Inventory Check, Shipping Address Validation, Order Fulfillment, Delivery Confirmation, and Delivery Issue Handling.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **C / Order Cancelled**: Represents the cancellation of the order if payment is not received.
+  visible in diagram; no further repository context available.
+- **D / Notify User of Delay**: Represents notifying the user about a delay in order processing due to insufficient inventory.
+  visible in diagram; no further repository context available.
+- **E / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory.
+  visible in diagram; no further repository context available.
+- **F / Update Inventory**: Represents the process of updating the inventory after the order is processed.
+  visible in diagram; no further repository context available.
+- **G / Shipping Address Valid?**: A decision point to check if the shipping address provided by the user is valid.
+  visible in diagram; no further repository context available.
+- **H / Ship Order**: Represents the action of shipping the order.
+  visible in diagram; no further repository context available.
+- **I / Package Items**: Represents the action of packaging the items for shipping.
+  visible in diagram; no further repository context available.
+- **J / Print Shipping Label**: Represents the action of printing the shipping label for the package.
+  visible in diagram; no further repository context available.
+- **K / Order Delivered?**: A decision point to check if the order has been delivered to the user.
+  visible in diagram; no further repository context available.
+- **L / Investigate Delivery Issues**: Represents the action of investigating delivery issues if the order has not been delivered.
+  visible in diagram; no further repository context available.
+- **M / Send Delivery Confirmation**: Represents sending a confirmation to the user that the order has been delivered.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the payment check.
+- `B -- No --> C`: If payment is not received, the order is cancelled.
+- `B -- Yes --> E`: If payment is received, proceed to inventory check.
+- `E -- Insufficient --> D`: If inventory is insufficient, notify the user of the delay.
+- `D --> F`: After notifying the user, update the inventory.
+- `E -- Sufficient --> F`: If inventory is sufficient, update the inventory.
+- `F --> G`: After updating inventory, check if the shipping address is valid.
+- `G -- No --> H`: If the shipping address is invalid, ship the order.
+- `G -- Yes --> I`: If the shipping address is valid, package the items.
+- `I --> J`: After packaging the items, print the shipping label.
+- `J --> H`: After printing the shipping label, ship the order.
+- `H --> K`: After shipping the order, check if the order has been delivered.
+- `K -- No --> L`: If the order has not been delivered, investigate delivery issues.
+- `L --> K`: After investigating delivery issues, re-check if the order has been delivered.
+- `K -- Yes --> M`: If the order has been delivered, send a delivery confirmation.
+- `M --> A`: After sending the delivery confirmation, loop back to the "User Submits Order" node.
+- `C --> M`: After the order is cancelled, send a delivery confirmation.
+
+## Repository Context & Terminology
+- **User Submits Order**: In a real-world e-commerce system, this refers to the action of a customer placing an order through the website or app. In this diagram, it's the starting point of the workflow.
+- **Payment Received?**: In a real-world system, this checks if the customer's payment has been successfully processed. In this diagram, it's a decision point that determines whether the order proceeds or is cancelled. The diagram skips the "Charge Card" step.
+- **Inventory Check**: In a real-world system, this verifies if the ordered items are available in stock. In this diagram, it determines if the order can be fulfilled immediately or if there will be a delay.
+- **Notify User of Delay**: In a real-world system, this informs the customer about any delays in order processing. In this diagram, it's triggered by insufficient inventory, but occurs *before* inventory is updated, which is illogical.
+- **Update Inventory**: In a real-world system, this adjusts the stock levels after an order is placed. In this diagram, it occurs after notifying the user of a delay, which is a reversed sequence.
+- **Shipping Address Valid?**: In a real-world system, this verifies if the provided shipping address is correct and deliverable. In this diagram, the "Yes" and "No" branches are swapped, leading to incorrect flow.
+- **Send Delivery Confirmation**: In a real-world system, this confirms to the customer that their order has been delivered. In this diagram, it incorrectly loops back to the "User Submits Order" node, restarting the order cycle, and is also triggered after order cancellation.
+
+## High-Density QA Ground Truth Summary
+The order processing flowchart begins with the "User Submits Order," which leads to the "Payment Received?" decision. If payment is not received ("No"), the "Order Cancelled" node is reached, which then incorrectly flows to "Send Delivery Confirmation." If payment is received ("Yes"), the process moves to "Inventory Check." If the inventory is "Insufficient," the user is notified of a delay ("Notify User of Delay") *before* the inventory is updated ("Update Inventory"). If the inventory is "Sufficient," the process skips directly to "Update Inventory." After updating inventory, the "Shipping Address Valid?" decision is made, but the "Yes" and "No" branches are swapped. If the address is deemed "Valid" (incorrectly), the process moves to "Package Items," then "Print Shipping Label," and finally "Ship Order." If the address is deemed "Invalid" (incorrectly), the process skips directly to "Ship Order." After shipping, the "Order Delivered?" decision is made. If "No," the process goes to "Investigate Delivery Issues" and loops back to "Order Delivered?". If "Yes," the process ends with "Send Delivery Confirmation," which then loops back to "User Submits Order," restarting the entire process. The "Send Delivery Confirmation" node is also reached after an "Order Cancelled" state, which is an incorrect merge of parallel paths. The diagram is missing a "Charge Card" step after "Payment Received?".

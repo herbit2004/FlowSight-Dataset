@@ -1,0 +1,17 @@
+graph TD
+    A[User Initiates Order] --> B{Inventory Available?};
+    B -- No --> C[Send 'Out of Stock' Email];
+    C --> F[Order placed];
+    B -- Yes --> D[Process Payment];
+    D --> E{Payment Successful?};
+    E -- No --> F[Order placed];
+    E -- Yes --> G[Ship Order];
+    G --> H{Delivery Successful?};
+    H -- Yes --> I[Order Completed];
+    H -- No --> J[Send Delivery Failure Notification];
+    J --> F;
+    I --> A;
+    F --> K[Update Inventory];
+    K --> L[Generate Invoice];
+    L --> M[Send Order Confirmation Email];
+    M --> I;

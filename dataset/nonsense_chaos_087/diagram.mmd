@@ -1,0 +1,16 @@
+graph TD
+    A[Start: Initial Data Ingestion] --> B{CoreSync Validation};
+    B -- Validated  --> C[FluxBridge Router];
+    B -- Invalid --> H[EventLog Sink];
+    C --> D{VaultNode Handshake};
+    D -- Success --> E[ArcLane Distributor];
+    D -- Failure --> H;
+    E --> F[SpectraQueue Flush];
+    F --> G{ZenithGate Auth Layer};
+    G -- Authorized --> I[DataSphere Aggregator];
+    G -- Unauthorized --> H;
+    I --> J[MetaStream Publisher];
+    J --> K[Persistence Layer Buffer];
+    K --> L[TerraStore Archiver];
+    L --> M[End: System Process Complete];
+    H --> M;

@@ -1,0 +1,21 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- Yes --> C[Order Acknowledged];
+    B -- No --> F[Cancel Order];
+    C --> D{Inventory Available?};
+    D -- Yes --> E[Order Shipped];
+    D -- No --> G[Notify Shortage];
+    G --> H[Attempt Restock];
+    H --> I{Restock Successful?};
+    I -- Yes --> D;
+    I -- No --> F;
+    E --> J[Send Shipping Confirmation];
+    J --> K{Delivery Successful?};
+    K -- Yes --> A;
+    K -- No --> L[Investigate Delivery];
+    L --> M{Resolution Found?};
+    M -- Yes --> J;
+    M -- No --> F;
+    F --> N[Refund Payment];
+    N --> O[Close Order];
+    O --> P[Update Inventory];

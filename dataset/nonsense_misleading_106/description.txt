@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow of an e-commerce system. It outlines the steps involved from when a user submits an order to when the order details are archived, including payment processing, shipping, and customer support interactions. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User Submits Order" node at the top and flows downwards through a series of processes and decision points, eventually converging at the "Archive Order Details" node at the bottom. The start node is "User Submits Order" and the end node is "Archive Order Details".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Submission & Payment (`A`, `B`), Order Fulfillment (`D`, `E`), Delivery Confirmation (`G`, `H`, `I`), Issue Resolution (`F`, `L`), and Order Completion (`C`, `J`, `K`, `M`, `N`).
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Cancel Order & Notify User**: Represents the action of canceling the order and notifying the user if payment is not received. visible in diagram; no further repository context available.
+- **D / Ship Order**: Represents the action of shipping the order to the user. visible in diagram; no further repository context available.
+- **E / Shipping Successful?**: A decision point to check if the shipping of the order was successful. visible in diagram; no further repository context available.
+- **F / Contact Customer Support**: Represents the action of contacting customer support if shipping was not successful. visible in diagram; no further repository context available.
+- **G / Order Delivered**: Represents the state where the order has been successfully delivered. visible in diagram; no further repository context available.
+- **H / Send Delivery Confirmation Email**: Represents the action of sending a delivery confirmation email to the user. visible in diagram; no further repository context available.
+- **I / User Confirms Receipt?**: A decision point to check if the user has confirmed receipt of the order. visible in diagram; no further repository context available.
+- **J / Mark Order as Delivered**: Represents the action of marking the order as delivered if the user does not confirm receipt. visible in diagram; no further repository context available.
+- **K / Update Inventory**: Represents the action of updating the inventory after the user confirms receipt. visible in diagram; no further repository context available.
+- **L / Refund Payment**: Represents the action of refunding the payment if shipping was not successful. visible in diagram; no further repository context available.
+- **M / Update Inventory**: Represents the action of updating the inventory after a refund. visible in diagram; no further repository context available.
+- **N / Archive Order Details**: Represents the final action of archiving the order details. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, triggering the payment check.
+- `B -- No --> C`: If payment is not received, cancel the order and notify the user.
+- `B -- Yes --> D`: If payment is received, ship the order.
+- `D --> E`: Shipping the order leads to a check for shipping success.
+- `E -- No --> F`: If shipping is not successful, contact customer support.
+- `E -- Yes --> G`: If shipping is successful, the order is delivered.
+- `G --> H`: Order delivered triggers sending a delivery confirmation email.
+- `H --> I`: Sending a delivery confirmation email leads to checking if the user confirms receipt.
+- `I -- No --> J`: If the user does not confirm receipt, mark the order as delivered.
+- `I -- Yes --> K`: If the user confirms receipt, update the inventory.
+- `K --> A`: After updating inventory, the process loops back to the user submitting another order.
+- `F --> L`: Contacting customer support leads to refunding the payment.
+- `L --> M`: Refunding the payment leads to updating the inventory.
+- `M --> N`: Updating the inventory after a refund leads to archiving order details.
+- `C --> N`: Canceling the order and notifying the user leads to archiving order details.
+- `J --> N`: Marking the order as delivered leads to archiving order details.
+
+## Repository Context & Terminology
+- **User Submits Order**: The initial action where a customer places an order through the system's interface. In this diagram, it starts the entire order processing workflow.
+- **Payment Received?**: A check to verify if the payment for the order has been successfully processed. In this diagram, it determines whether the order proceeds to fulfillment or is canceled.
+- **Ship Order**: The process of preparing and sending the order to the customer. In this diagram, it occurs *before* payment is confirmed, which is an error.
+- **Shipping Successful?**: A check to verify if the order was successfully delivered to the customer. In this diagram, it determines whether to proceed with delivery confirmation or contact customer support.
+- **Contact Customer Support**: The action of reaching out to customer support for assistance, typically when shipping fails. In this diagram, it leads to a refund *before* any resolution.
+- **Refund Payment**: The process of returning the payment to the customer, usually when an order cannot be fulfilled. In this diagram, it happens *after* contacting customer support due to shipping failure.
+- **Update Inventory**: The process of adjusting the stock levels based on the order. In this diagram, it happens both after successful delivery confirmation and after a refund, and also loops back to the start.
+- **Archive Order Details**: The final step of storing the order information for record-keeping. In this diagram, it represents the end of the order processing workflow.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Submits Order" (A), which immediately proceeds to a "Payment Received?" check (B). If payment is not received (B -- No --> C), the order is canceled, the user is notified, and the process ends by archiving the order details (C --> N). If payment is received (B -- Yes --> D), the system proceeds to "Ship Order" (D), which is an illogical sequence. The next step is "Shipping Successful?" (E). If shipping fails (E -- No --> F), customer support is contacted, and then a refund is issued (F --> L). The inventory is then updated (L --> M) before archiving the order details (M --> N). If shipping is successful (E -- Yes --> G), the order is marked as delivered (G), a delivery confirmation email is sent (H), and the system checks if the user confirms receipt (I). If the user does not confirm receipt (I -- No --> J), the order is marked as delivered (J) and archived (J --> N). If the user confirms receipt (I -- Yes --> K), the inventory is updated (K), and the process loops back to the "User Submits Order" node (K --> A), creating an illogical loop. The final step for all paths (except the illogical loop) is to "Archive Order Details" (N), representing the end of the order processing workflow. The diagram contains several errors, including shipping before payment, refunding before attempting to resolve shipping issues, and looping back to the start after updating inventory.

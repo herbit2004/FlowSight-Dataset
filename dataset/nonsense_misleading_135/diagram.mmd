@@ -1,0 +1,17 @@
+graph TD
+    A[User Initiates Order] --> B{Payment Received?};
+    B -- No --> C[Display Error Message];
+    C --> A;
+    B -- Yes --> D[Inventory Check];
+    D -- Available --> E[Shipping Label Generated];
+    D -- Unavailable --> F[Notify Stock Manager];
+    F --> G[Order Fulfilled];
+    E --> H[Package Shipped];
+    H --> I{Delivery Successful?};
+    I -- No --> J[Send Confirmation Email];
+    I -- Yes --> K[Process Refund];
+    K --> A;
+    G --> L[Update Inventory];
+    L --> M[Archive Order];
+    M --> Z[End];
+    J --> Z;

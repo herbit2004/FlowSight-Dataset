@@ -1,0 +1,75 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the configuration process for a system, likely related to network proxy settings and the `graftcp` component. The diagram serves as a visual guide to the configuration steps, branching based on system checks and user input.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with a "开始" (Start) node at the top and progresses through a series of checks, configurations, and dependencies, eventually leading to a "配置完成 🎉" (Configuration Complete 🎉) node at the bottom.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages:
+1. Initial system check and proxy configuration.
+2. Proxy address input and validation.
+3. DNS resolution and lightweight proxy detection.
+4. Dependency check and installation.
+5. `graftcp` component handling (cloning/compiling if needed).
+6. Language server setup and proxy connectivity testing.
+
+## Node-by-Node Description
+- **A / 开始 (Start)**: The starting point of the configuration process. visible in diagram; no further repository context available.
+- **B / 检测系统 (Detect System)**: Checks the operating system. visible in diagram; no further repository context available.
+- **C / 询问代理配置 (Ask Proxy Configuration)**: Prompts the user for proxy settings. visible in diagram; no further repository context available.
+- **Z1 / 显示替代方案提示并退出 (Show Alternative Solutions and Exit)**: Displays alternative solutions and exits the script, triggered if the system is macOS/Windows. visible in diagram; no further repository context available.
+- **D / 用户输入代理地址 (User Input Proxy Address)**: Asks the user to enter a proxy address. visible in diagram; no further repository context available.
+- **Z2 / 退出脚本 (Exit Script)**: Exits the configuration script. visible in diagram; no further repository context available.
+- **E / 解析并校验代理格式 (Parse and Validate Proxy Format)**: Parses and validates the entered proxy address format. visible in diagram; no further repository context available.
+- **E1 / 配置 graftcp-local 端口 (Configure graftcp-local Port)**: Configures the `graftcp-local` port. visible in diagram; no further repository context available.
+- **E2 / 选择 DNS 解析策略 (Select DNS Resolution Strategy)**: Selects a DNS resolution strategy. visible in diagram; no further repository context available.
+- **F / 轻量级代理探测 (Lightweight Proxy Detection)**: Performs a lightweight proxy detection. visible in diagram; no further repository context available.
+- **G1 / 导出 HTTP_PROXY 等环境变量 (Export HTTP_PROXY and Other Environment Variables)**: Exports the `HTTP_PROXY` and other environment variables if the proxy detection is successful. visible in diagram; no further repository context available.
+- **G2 / 继续使用镜像下载策略 (Continue Using Image Download Strategy)**: Continues using the image download strategy if the proxy detection fails or times out. visible in diagram; no further repository context available.
+- **H / 检查/安装依赖 (Check/Install Dependencies)**: Checks and installs necessary dependencies. visible in diagram; no further repository context available.
+- **I / GRAFTCP_DIR 环境变量? (GRAFTCP_DIR Environment Variable?)**: Checks if the `GRAFTCP_DIR` environment variable is set. visible in diagram; no further repository context available.
+- **J1 / 跳过编译，使用现有 graftcp (Skip Compilation, Use Existing graftcp)**: Skips compilation and uses the existing `graftcp` if `GRAFTCP_DIR` is set and valid, or if a local `graftcp` is found. visible in diagram; no further repository context available.
+- **J2 / 本地已有 graftcp? (Local graftcp?)**: Checks if `graftcp` is already present locally. visible in diagram; no further repository context available.
+- **K / 克隆 graftcp 仓库 (Clone graftcp Repository)**: Clones the `graftcp` repository if it's not found locally. visible in diagram; no further repository context available.
+- **L / 编译 graftcp (Compile graftcp)**: Compiles `graftcp`. visible in diagram; no further repository context available.
+- **M / 查找 language_server (Find language_server)**: Searches for the `language_server`. visible in diagram; no further repository context available.
+- **N / 备份原始文件并生成 wrapper (Backup Original File and Generate Wrapper)**: Backs up the original file and generates a wrapper. visible in diagram; no further repository context available.
+- **O / 测试代理连通性 (Test Proxy Connectivity)**: Tests the proxy connectivity. visible in diagram; no further repository context available.
+- **P / 配置完成 🎉 (Configuration Complete 🎉)**: Indicates that the configuration is complete. visible in diagram; no further repository context available.
+- **Z3 / 显示手动安装指引并退出 (Show Manual Installation Guide and Exit)**: Displays a manual installation guide and exits if `graftcp` compilation fails. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Start the system detection process.
+- `B -- Linux --> C`: If the system is Linux, ask for proxy configuration.
+- `B -- macOS/Windows --> Z1`: If the system is macOS/Windows, show alternative solutions and exit.
+- `C --> D`: Ask the user to input a proxy address.
+- `D -- 跳过 (Skip) --> Z2`: If the user skips entering a proxy address, exit the script.
+- `D -- 输入代理 (Input Proxy) --> E`: If the user enters a proxy address, parse and validate it.
+- `F -- 成功 (Success) --> G1`: If the lightweight proxy detection is successful, export environment variables.
+- `F -- 失败/超时 (Failure/Timeout) --> G2`: If the lightweight proxy detection fails or times out, continue using the image download strategy.
+- `G1 --> H`: Check and install dependencies.
+- `G2 --> H`: Check and install dependencies.
+- `H --> I`: Check the `GRAFTCP_DIR` environment variable.
+- `I -- 已设置且有效 (Set and Valid) --> J1`: If `GRAFTCP_DIR` is set and valid, skip compilation and use the existing `graftcp`.
+- `I -- 未设置 (Not Set) --> J2`: If `GRAFTCP_DIR` is not set, check if `graftcp` is available locally.
+- `J2 -- 是 (Yes) --> J1`: If `graftcp` is available locally, skip compilation and use the existing `graftcp`.
+- `J2 -- 否 (No) --> K`: If `graftcp` is not available locally, clone the `graftcp` repository.
+- `K --> L`: Compile `graftcp`.
+- `L -- 成功 (Success) --> M`: If `graftcp` compilation is successful, find the `language_server`.
+- `L -- 失败 (Failure) --> Z3`: If `graftcp` compilation fails, show a manual installation guide and exit.
+- `J1 --> M`: Find the `language_server`.
+- `M --> N`: Backup the original file and generate a wrapper.
+- `N --> O`: Test proxy connectivity.
+- `O --> P`: Configuration complete.
+
+## Repository Context & Terminology
+- **graftcp**: A component or tool, likely related to network traffic interception or proxying.
+- **HTTP_PROXY**: An environment variable used to specify the HTTP proxy server.
+- **GRAFTCP_DIR**: An environment variable that specifies the directory where `graftcp` is located.
+- **language_server**: A server that provides language-specific features to editors and IDEs.
+- **wrapper**: A piece of code that adapts the interface of a component or system.
+- **DNS 解析策略 (DNS Resolution Strategy)**: The method used to resolve domain names.
+- **轻量级代理探测 (Lightweight Proxy Detection)**: A quick check to see if a proxy is working.
+
+## High-Density QA Ground Truth Summary
+The configuration process starts with "开始 (Start)" and immediately proceeds to "检测系统 (Detect System)" to determine the operating system. If the system is macOS/Windows, the process branches to "显示替代方案提示并退出 (Show Alternative Solutions and Exit)". For Linux, the flow continues to "询问代理配置 (Ask Proxy Configuration)", prompting the user for proxy details. The user can either "跳过 (Skip)" and exit the script or "输入代理 (Input Proxy)", leading to proxy format validation. Successful proxy detection results in exporting `HTTP_PROXY` environment variables; failure leads to using image download strategies. The process then checks for the `GRAFTCP_DIR` environment variable. If set, it skips compilation and uses the existing `graftcp`. Otherwise, it checks for a local `graftcp`; if absent, it clones and compiles the `graftcp` repository. Compilation failure results in displaying a manual installation guide. Successful compilation or skipping compilation leads to finding the `language_server`, creating a wrapper, testing proxy connectivity, and finally reaching "配置完成 🎉 (Configuration Complete 🎉)". The `graftcp` component appears central, with its presence and successful compilation being crucial for the configuration to complete.

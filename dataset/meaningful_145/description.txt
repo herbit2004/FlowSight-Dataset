@@ -1,0 +1,83 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of a request through a distributed system, including trace context propagation and span emission for distributed tracing. It depicts the interactions between a client application, two backend services (A and B), and a trace collector. The diagram serves as a visual representation of how distributed tracing is implemented across different services in a microservices architecture.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It is hierarchically structured into four subgraphs: Client Application, Backend Service A, Backend Service B, and Trace Collector. The start node is "Initiate Request" in the Client Application, and the end node is "Ingest into Backend Storage" in the Trace Collector.
+
+## Subgraphs / Stages
+- **Client Application**: Represents the initial point of the request.
+- **Backend Service A**: Represents the first backend service to handle the request.
+- **Backend Service B**: Represents a downstream backend service called by Backend Service A.
+- **Trace Collector**: Represents the component responsible for collecting and processing trace data.
+
+## Node-by-Node Description
+- **A / Initiate Request**: Represents the initiation of a request within the client application.
+  visible in diagram; no further repository context available.
+- **B / Trace Context Propagation**: Represents the propagation of trace context from the client application.
+  visible in diagram; no further repository context available.
+- **C / HTTP Request**: Represents the HTTP request being sent.
+  visible in diagram; no further repository context available.
+- **D / Receive HTTP Request**: Represents Backend Service A receiving the HTTP request.
+  visible in diagram; no further repository context available.
+- **E / Extract Trace Context**: Represents Backend Service A extracting the trace context from the HTTP request.
+  visible in diagram; no further repository context available.
+- **F / Perform Business Logic**: Represents Backend Service A performing its core business logic.
+  visible in diagram; no further repository context available.
+- **G / Emit Span: Business Logic**: Represents Backend Service A emitting a span related to its business logic.
+  visible in diagram; no further repository context available.
+- **H / Outgoing Request to Service B**: Represents Backend Service A making an outgoing request to Backend Service B.
+  visible in diagram; no further repository context available.
+- **I / Receive HTTP Request**: Represents Backend Service B receiving the HTTP request.
+  visible in diagram; no further repository context available.
+- **J / Extract Trace Context**: Represents Backend Service B extracting the trace context from the HTTP request.
+  visible in diagram; no further repository context available.
+- **K / Database Query**: Represents Backend Service B performing a database query.
+  visible in diagram; no further repository context available.
+- **L / Emit Span: Database Query**: Represents Backend Service B emitting a span related to the database query.
+  visible in diagram; no further repository context available.
+- **M / Return Result**: Represents Backend Service B returning the result.
+  visible in diagram; no further repository context available.
+- **N / Span Events**: Represents the collection of span events in the Trace Collector.
+  visible in diagram; no further repository context available.
+- **O / Agent Buffering**: Represents the buffering of span events by an agent.
+  visible in diagram; no further repository context available.
+- **P / Batch Processing**: Represents the batch processing of span events.
+  visible in diagram; no further repository context available.
+- **Q / Data Validation & Enrichment**: Represents the validation and enrichment of trace data.
+  visible in diagram; no further repository context available.
+- **R / Ingest into Backend Storage**: Represents the ingestion of trace data into backend storage.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The client application propagates the trace context.
+- `B --> C`: The client application sends an HTTP request.
+- `C --> D`: Backend Service A receives the HTTP request.
+- `D --> E`: Backend Service A extracts the trace context.
+- `E --> F`: Backend Service A performs business logic.
+- `F --> G`: Backend Service A emits a span for the business logic.
+- `G --> H`: Backend Service A makes an outgoing request to Backend Service B.
+- `H --> I`: Backend Service B receives the HTTP request.
+- `I --> J`: Backend Service B extracts the trace context.
+- `J --> K`: Backend Service B performs a database query.
+- `K --> L`: Backend Service B emits a span for the database query.
+- `L --> M`: Backend Service B returns the result.
+- `H --> N`: Backend Service A sends span events to the Trace Collector.
+- `G --> N`: Backend Service A sends span events to the Trace Collector.
+- `L --> N`: Backend Service B sends span events to the Trace Collector.
+- `N --> O`: Span events are buffered by an agent.
+- `O --> P`: Span events are batch processed.
+- `P --> Q`: Trace data is validated and enriched.
+- `Q --> R`: Trace data is ingested into backend storage.
+
+## Repository Context & Terminology
+- **Trace Context Propagation**: The mechanism by which trace identifiers are passed between services, allowing for the correlation of spans across different services.
+- **Span**: A unit of work in a distributed system, representing a single operation or request.
+- **Span Events**: Records of specific events that occur within a span, such as timestamps, logs, and attributes.
+- **Trace Collector**: A service that receives spans from various services in the system and aggregates them into traces.
+- **Agent Buffering**: A technique used to temporarily store span events before sending them to the trace collector, improving performance and reliability.
+- **Batch Processing**: Processing span events in batches to improve efficiency and reduce overhead.
+- **Data Validation & Enrichment**: The process of verifying the accuracy and completeness of trace data, and adding additional information to it.
+- **Backend Storage**: The storage system used to store trace data, such as a database or object storage.
+
+## High-Density QA Ground Truth Summary
+The process begins with the Client Application initiating a request, which then undergoes Trace Context Propagation to ensure distributed tracing. An HTTP Request is then sent to Backend Service A. Backend Service A receives the request, extracts the trace context, and performs its business logic. A span is emitted for the business logic, and the service makes an Outgoing Request to Service B. Backend Service A also sends span events to the Trace Collector. Backend Service B receives the HTTP request, extracts the trace context, performs a Database Query, and emits a span for the query. It then returns the result and sends span events to the Trace Collector. The Trace Collector receives span events from both Backend Service A and Backend Service B. These events are then subject to Agent Buffering, followed by Batch Processing. After batch processing, Data Validation & Enrichment occurs, and finally, the trace data is Ingested into Backend Storage. The trace context propagation ensures that the entire flow, from the initial request to the final storage of trace data, is correlated and can be analyzed for performance monitoring and debugging. The use of spans allows for detailed insights into the execution of each service and the interactions between them.

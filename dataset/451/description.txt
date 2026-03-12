@@ -1,0 +1,68 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the reasoning and planning process within a LangGraph-based system, likely for an AI assistant or similar application. It illustrates the flow of control and data between different components, from user input to generating a final result, incorporating memory, feedback, and external tools. The diagram serves as a high-level architecture overview, outlining the key steps in the system's decision-making process.
+
+## Overall Layout
+The diagram's primary direction is left-to-right, with some top-to-bottom elements within subgraphs. It's hierarchically structured into several subgraphs representing different layers: Experience Layer, Reasoning and Planning, Memory and Feedback, and Tool and API Layer. The process starts with a "START" node and ends with a "FINALIZE result" node.
+
+## Subgraphs / Stages
+The diagram contains the following explicit subgraphs:
+- **Experience Layer FastAPI SSE**: Handles user interaction, rate limiting, and streaming tokens and feedback.
+- **Reasoning and Planning LangGraph**: The core logic for planning, decision-making, and tool execution.
+- **Memory and Feedback**: Stores messages, vector embeddings, and citations for long-term memory and learning.
+- **Tool and API Layer**: Provides access to external tools like web search, knowledge base search, and email.
+
+## Node-by-Node Description
+- **User prompt**: Represents the initial input from the user. visible in diagram; no further repository context available.
+- **Rate limit check**: Checks if the user has exceeded the rate limit. visible in diagram; no further repository context available.
+- **Backoff and retry**: Handles rate limit errors by backing off and retrying the request. visible in diagram; no further repository context available.
+- **START**: The starting point of the reasoning and planning process. visible in diagram; no further repository context available.
+- **PLAN create plan**: Creates an initial plan based on the user's input. visible in diagram; no further repository context available.
+- **DECIDE next action**: Determines the next action to take based on the current plan. visible in diagram; no further repository context available.
+- **ACT bind tool emit call**: Binds a tool and emits a call to it. visible in diagram; no further repository context available.
+- **ToolNode executes call**: Executes the call to the selected tool. visible in diagram; no further repository context available.
+- **REFLECT briefing or next**: Reflects on the results of the tool call and decides whether to continue or finalize. visible in diagram; no further repository context available.
+- **FINALIZE result**: Finalizes the result and returns it to the user. visible in diagram; no further repository context available.
+- **Token stream SSE**: Streams tokens to the user interface using Server-Sent Events (SSE). visible in diagram; no further repository context available.
+- **Feedback API**: Receives feedback from the user. visible in diagram; no further repository context available.
+- **SQLite messages**: Stores messages in an SQLite database. visible in diagram; no further repository context available.
+- **Chroma vector KB**: Stores vector embeddings in a Chroma database. visible in diagram; no further repository context available.
+- **Citations store**: Stores citations. visible in diagram; no further repository context available.
+- **web search**: Tool for performing web searches. visible in diagram; no further repository context available.
+- **web fetch**: Tool for fetching web content. visible in diagram; no further repository context available.
+- **kb search**: Tool for searching the knowledge base. visible in diagram; no further repository context available.
+- **kb add**: Tool for adding to the knowledge base. visible in diagram; no further repository context available.
+- **calculator**: Tool for performing calculations. visible in diagram; no further repository context available.
+- **file write**: Tool for writing to a file. visible in diagram; no further repository context available.
+- **emailer**: Tool for sending emails. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User prompt --> Rate limit check`: The user's input is checked against the rate limit.
+- `Rate limit check -- ok --> START`: If the rate limit is not exceeded, the process starts.
+- `Rate limit check -- 429 --> Backoff and retry`: If the rate limit is exceeded, the process backs off and retries.
+- `START --> PLAN create plan`: The process starts by creating a plan.
+- `PLAN create plan --> DECIDE next action`: The plan is used to decide the next action.
+- `DECIDE next action --> ACT bind tool emit call`: Based on the decision, a tool is selected and a call is emitted. (Multiple edges: search, fetch, kb_search, calculate, write_file, draft_email)
+- `ACT bind tool emit call --> ToolNode executes call`: The tool call is executed.
+- `ToolNode executes call --> REFLECT briefing or next`: The results of the tool call are reflected upon.
+- `REFLECT briefing or next -- done --> FINALIZE result`: If the process is complete, the result is finalized.
+- `REFLECT briefing or next -- not done --> DECIDE next action`: If the process is not complete, the next action is decided.
+- `PLAN -. use kb hits .-> Chroma vector KB`: The plan uses knowledge base hits from the Chroma vector KB.
+- `ToolNode executes call --> web search`: The tool node executes a web search. (Multiple edges: query, url, semantic, ingest, expr, path content, to subject body)
+- `web search --> web fetch`: Web search results are used to fetch web content.
+- `web fetch --> PLAN create plan`: Fetched web content is used to create a plan.
+- `web fetch --> Citations store`: Fetched web content is stored in the citations store.
+- `FINALIZE result --> SQLite messages`: The finalized result is saved to SQLite messages.
+- `Feedback API --> SQLite messages`: Feedback is saved to SQLite messages.
+
+## Repository Context & Terminology
+- **FastAPI**: A modern, high-performance web framework for building APIs with Python. The "Experience Layer FastAPI SSE" subgraph suggests that FastAPI is used for the user-facing API.
+- **SSE (Server-Sent Events)**: A server push technology enabling real-time data streaming from the server to the client. Used here for streaming tokens to the user interface.
+- **LangGraph**: A framework for building complex, multi-agent systems. The "Reasoning and Planning LangGraph" subgraph indicates that LangGraph is used for the core reasoning and planning logic.
+- **Chroma**: An open-source embedding database. The "Chroma vector KB" subgraph suggests that Chroma is used for storing and retrieving vector embeddings for knowledge base search.
+- **ToolNode**: A node in the LangGraph that executes a tool. The "ToolNode executes call" node represents the execution of a tool within the LangGraph.
+- **Knowledge Base (KB)**: A repository of information used by the system. The "kb search" and "kb add" tools interact with the knowledge base.
+- **Vector embeddings**: Numerical representations of text or other data that capture semantic meaning. Used for efficient similarity search in the knowledge base.
+- **Rate Limiting**: A mechanism to limit the number of requests a user can make within a given time period. The "Rate limit check" node implements rate limiting.
+
+## High-Density QA Ground Truth Summary
+The process begins with a `User prompt` that undergoes a `Rate limit check`. If the rate limit is exceeded (429), the system enters a `Backoff and retry` state; otherwise, the process proceeds to `START`. From `START`, the system `PLAN create plan`, which then feeds into `DECIDE next action`. This decision node branches based on several criteria: `search`, `fetch`, `kb_search`, `calculate`, `write_file`, and `draft_email`, each triggering an `ACT bind tool emit call`. The selected tool call is then executed by `ToolNode executes call`. The `ToolNode executes call` node then branches to different tools in the `Tool and API Layer` based on the type of call: `web search`, `web fetch`, `kb search`, `kb add`, `calculator`, `file write`, and `emailer`. The results of the tool execution are then passed to `REFLECT briefing or next`. This reflection node determines whether the process is `done`, leading to `FINALIZE result`, or `not done`, looping back to `DECIDE next action`. The `FINALIZE result` node represents the end of the process. The system uses `Chroma vector KB` for knowledge base searches, with `web fetch` populating the `Citations store`. The `Experience Layer FastAPI SSE` handles user interaction and streams tokens using Server-Sent Events.

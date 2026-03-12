@@ -1,0 +1,49 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the infrastructure and data flow of a web application deployed on AWS. It shows how user requests are handled, how the application scales, and how data is stored and monitored. The diagram provides a high-level overview of the system's components and their interactions.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It shows a hierarchical structure, starting with the user and monitoring components at the top, flowing through various AWS services, and ending with data storage and caching solutions at the bottom.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: User Access & Content Delivery, Application Load Balancing & Scaling, Compute Resources & Data Storage, and Monitoring & Alerting.
+
+## Node-by-Node Description
+- **User**: Represents the end-user accessing the application. visible in diagram; no further repository context available.
+- **All**: Represents all components being monitored. visible in diagram; no further repository context available.
+- **CloudFront CDN**: AWS Content Delivery Network, used for caching and delivering content to users with low latency. visible in diagram; no further repository context available.
+- **CloudWatch Monitoring**: AWS monitoring service, used for collecting and tracking metrics, collecting and monitoring log files, and setting alarms. visible in diagram; no further repository context available.
+- **ALB/NLB**: Application Load Balancer or Network Load Balancer, used for distributing incoming traffic across multiple EC2 instances or other targets. visible in diagram; no further repository context available.
+- **SNS Alerts**: AWS Simple Notification Service, used for sending notifications based on CloudWatch alarms. visible in diagram; no further repository context available.
+- **Auto Scaling Group**: AWS Auto Scaling Group, used for automatically scaling the number of EC2 instances based on demand. visible in diagram; no further repository context available.
+- **EC2 Instances**: Amazon Elastic Compute Cloud instances, virtual servers in the cloud. visible in diagram; no further repository context available.
+- **ECS Fargate**: AWS Elastic Container Service Fargate, a serverless compute engine for containers. visible in diagram; no further repository context available.
+- **RDS Multi-AZ**: Amazon Relational Database Service with Multi-AZ deployment for high availability. visible in diagram; no further repository context available.
+- **DynamoDB**: Amazon DynamoDB, a NoSQL database service. visible in diagram; no further repository context available.
+- **ElastiCache Redis**: Amazon ElastiCache for Redis, an in-memory data store. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User --> CloudFront CDN`: User requests are routed to CloudFront for content delivery.
+- `CloudFront CDN --> ALB/NLB`: Cached content is served from CloudFront; uncached requests are forwarded to the load balancer.
+- `ALB/NLB --> Auto Scaling Group`: The load balancer distributes traffic to the Auto Scaling Group.
+- `Auto Scaling Group --> EC2 Instances`: The Auto Scaling Group manages EC2 instances.
+- `Auto Scaling Group --> ECS Fargate`: The Auto Scaling Group also manages ECS Fargate containers.
+- `EC2 Instances --> RDS Multi-AZ`: EC2 instances interact with the RDS database.
+- `ECS Fargate --> DynamoDB`: ECS Fargate containers interact with the DynamoDB database.
+- `RDS Multi-AZ --> ElastiCache Redis`: RDS data is cached in ElastiCache Redis.
+- `All --> CloudWatch Monitoring`: All components are monitored by CloudWatch.
+- `CloudWatch Monitoring --> SNS Alerts`: CloudWatch triggers SNS alerts based on defined metrics.
+
+## Repository Context & Terminology
+- **CloudFront CDN**: A content delivery network (CDN) service that caches static and dynamic web content to reduce latency and improve performance for users around the world.
+- **ALB/NLB**: Application Load Balancer (ALB) distributes HTTP/HTTPS traffic to EC2 instances, containers, and IP addresses. Network Load Balancer (NLB) distributes TCP, UDP, and TLS traffic to EC2 instances, containers, and IP addresses.
+- **Auto Scaling Group**: An Auto Scaling group contains a collection of EC2 instances that are treated as a logical grouping for the purposes of automatic scaling and management.
+- **EC2 Instances**: Virtual servers in Amazon's Elastic Compute Cloud (EC2) for running applications.
+- **ECS Fargate**: A serverless compute engine for containers that works with Amazon Elastic Container Service (ECS).
+- **RDS Multi-AZ**: A managed relational database service (RDS) with a Multi-AZ deployment option that provides high availability and failover support.
+- **DynamoDB**: A fully managed NoSQL database service that provides fast and predictable performance with seamless scalability.
+- **ElastiCache Redis**: A fully managed, in-memory data store service that supports the Redis data structure.
+- **CloudWatch Monitoring**: A monitoring and observability service that provides data and actionable insights to monitor applications, respond to performance changes, and optimize resource utilization.
+- **SNS Alerts**: A fully managed messaging service for both application-to-application (A2A) and application-to-person (A2P) communication.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with a `User` accessing the application, with requests first hitting `CloudFront CDN` for content caching and delivery. Uncached requests are then forwarded to `ALB/NLB`, which distributes traffic to an `Auto Scaling Group`. The `Auto Scaling Group` manages both `EC2 Instances` and `ECS Fargate` containers, providing scalability. `EC2 Instances` interact with `RDS Multi-AZ` for relational database operations, while `ECS Fargate` interacts with `DynamoDB` for NoSQL data storage. Data from `RDS Multi-AZ` is cached in `ElastiCache Redis` to improve read performance. Separately, `All` components are monitored by `CloudWatch Monitoring`, which triggers `SNS Alerts` based on predefined metrics and thresholds. The system leverages AWS managed services like CloudFront, ALB/NLB, Auto Scaling Groups, EC2, ECS Fargate, RDS, DynamoDB, ElastiCache, CloudWatch, and SNS to provide a scalable, highly available, and monitored application environment. The architecture supports both relational and NoSQL data storage, with caching implemented to optimize performance.

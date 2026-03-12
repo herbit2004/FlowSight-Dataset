@@ -1,0 +1,68 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the flow of an order processing system. The diagram outlines the steps involved in processing a customer order, from the initial placement of the order to its eventual closure or investigation of non-delivery.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It presents a linear flow with branching decision points. The start node is "Start: Customer Places Order" and the end node is "Close Order".
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Order Processing Flow".
+
+## Node-by-Node Description
+- **A / Start: Customer Places Order**: Represents the beginning of the order processing flow, when a customer places an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to determine if payment has been received for the order.
+  visible in diagram; no further repository context available.
+- **C / Send Order Confirmation**: Sends a confirmation message to the customer regarding their order.
+  visible in diagram; no further repository context available.
+- **D / Update Inventory**: Updates the inventory system to reflect the items ordered.
+  visible in diagram; no further repository context available.
+- **E / Inventory Sufficient?**: A decision point to determine if there is sufficient inventory to fulfill the order.
+  visible in diagram; no further repository context available.
+- **F / Send 'Out of Stock' Notification**: Sends a notification to the customer informing them that one or more items in their order are out of stock.
+  visible in diagram; no further repository context available.
+- **G / Cancel Order**: Cancels the order due to payment failure or insufficient inventory.
+  visible in diagram; no further repository context available.
+- **H / Pack Order**: Packs the order for shipment.
+  visible in diagram; no further repository context available.
+- **I / Ship Order**: Ships the order to the customer.
+  visible in diagram; no further repository context available.
+- **J / Generate Invoice**: Generates an invoice for the order.
+  visible in diagram; no further repository context available.
+- **K / Customer Received Order?**: A decision point to determine if the customer has received the order.
+  visible in diagram; no further repository context available.
+- **L / Close Order**: Represents the end of the order processing flow, when the order is successfully completed.
+  visible in diagram; no further repository context available.
+- **M / Investigate Non-Delivery**: Investigates the non-delivery of the order.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The customer order triggers the payment check.
+- `B -- No --> C`: If payment is not received, send order confirmation.
+- `B -- Yes --> D`: If payment is received, update inventory.
+- `D --> E`: Inventory update leads to checking inventory sufficiency.
+- `E -- No --> F`: If inventory is not sufficient, send an 'Out of Stock' notification.
+- `E -- Yes --> H`: If inventory is sufficient, pack the order.
+- `F --> G`: 'Out of Stock' notification leads to order cancellation.
+- `H --> I`: Packing the order leads to shipping the order.
+- `I --> J`: Shipping the order leads to generating an invoice.
+- `J --> K`: Invoice generation leads to checking if the customer received the order.
+- `K -- Yes --> L`: If the customer received the order, close the order.
+- `K -- No --> M`: If the customer did not receive the order, investigate non-delivery.
+- `M --> D`: Investigating non-delivery leads back to updating inventory.
+- `G --> L`: Order cancellation leads to closing the order.
+- `C --> G`: Sending order confirmation leads to order cancellation.
+
+## Repository Context & Terminology
+- **Order Processing Flow**: Generally refers to the sequence of steps involved in fulfilling a customer order. In this diagram, it represents the entire process from order placement to closure, including error handling and inventory management.
+- **Payment Received?**: A standard check to ensure payment has been processed. In this diagram, a 'No' outcome incorrectly leads to sending an order confirmation.
+- **Update Inventory**: A standard process to adjust stock levels based on orders. In this diagram, it is also illogically triggered after investigating non-delivery.
+- **Inventory Sufficient?**: A check to ensure enough stock is available. In this diagram, a 'No' outcome correctly leads to an 'Out of Stock' notification and order cancellation.
+- **Pack Order**: Preparing the order for shipment. In this diagram, this step lacks a corresponding customer notification.
+- **Ship Order**: Sending the order to the customer. In this diagram, this step is followed by invoice generation, which is unusual.
+- **Generate Invoice**: Creating a bill for the order. In this diagram, it occurs after shipping, which is not standard practice.
+- **Customer Received Order?**: A check to confirm delivery. In this diagram, a 'No' outcome triggers an illogical loop back to updating inventory.
+- **Close Order**: Marking the order as complete. In this diagram, this is the final step after successful delivery or cancellation.
+- **Investigate Non-Delivery**: Process of determining why an order was not delivered. In this diagram, this process incorrectly leads to updating inventory.
+
+## High-Density QA Ground Truth Summary
+The order processing flow begins with the customer placing an order (A). The first decision point is whether payment has been received (B). If payment has *not* been received (B -- No), the system *incorrectly* sends an order confirmation (C), which then leads to order cancellation (G). If payment *has* been received (B -- Yes), the system updates the inventory (D). Next, the system checks if the inventory is sufficient (E). If inventory is *not* sufficient (E -- No), an 'Out of Stock' notification is sent (F), leading to order cancellation (G). If inventory *is* sufficient (E -- Yes), the order is packed (H) and shipped (I), followed by generating an invoice (J). The system then checks if the customer received the order (K). If the customer *did* receive the order (K -- Yes), the order is closed (L). If the customer *did not* receive the order (K -- No), the system investigates non-delivery (M), which *illogically* loops back to updating the inventory (D). Order cancellation (G) also leads to closing the order (L). The start node is 'Start: Customer Places Order' and the end node is 'Close Order'. The 'Update Inventory' node (D) is reached both after payment confirmation and after investigating non-delivery, creating an illogical loop. The system lacks a notification step after shipping the order.

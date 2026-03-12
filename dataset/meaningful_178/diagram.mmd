@@ -1,0 +1,63 @@
+graph TD
+    subgraph Customer_Initiation
+        A[Customer Initiates Return/Exchange] --> B{Order Eligibility Check};
+        B -- Eligible --> C[Request Form Submission];
+        B -- Ineligible --> D[Display Ineligibility Reason];
+        C --> E{Request Validation};
+    end
+
+    subgraph Request_Processing
+        E -- Valid --> F[Return Label Generation];
+        E -- Invalid --> G[Notify Customer of Rejection];
+        F --> H[Email Return Label to Customer];
+        H --> I[Customer Ships Item];
+        I --> J[Warehouse Receives Item];
+    end
+
+    subgraph Item_Inspection
+        J --> K{Item Condition Verification};
+        K -- Acceptable --> L[Approve Return/Exchange];
+        K -- Unacceptable --> M[Reject Return/Exchange, Send Back];
+        M --> N[Notify Customer of Rejection, Reason];
+    end
+
+    subgraph Return_Processing
+        L -- Return --> O[Initiate Refund];
+        O --> P[Refund Processed];
+        P --> Q[Notify Customer of Refund];
+
+        L -- Exchange --> R[Verify Stock Availability];
+        R -- Available --> S[Create New Order for Exchange];
+        R -- Unavailable --> T[Notify Customer of Stock Issue, Alternative Options];
+        S --> U[Ship Exchange Item];
+        U --> V[Notify Customer of Shipment];
+    end
+
+    subgraph Logistics_Updates
+        I --> AA[Logistics Provider Updates Shipment Status];
+        AA --> BB{Shipment Arrived at Warehouse?};
+        BB -- Yes --> J;
+        BB -- No --> CC[Monitor Shipment Status];
+        CC --> AA;
+        U --> DD[Logistics Provider Updates Exchange Shipment Status];
+        DD --> EE[Notify Customer of Exchange Shipment Progress];
+    end
+
+    subgraph System_Updates
+    Q --> FF[Update Order History Database];
+    V --> GG[Update Order History Database];
+    N --> HH[Update Order History Database - Rejection];
+
+    end
+    FF --> ZZ[Close the Loop];
+    GG --> ZZ;
+    HH --> ZZ;
+    ZZ[Process Completed];
+
+    classDef failure fill:#f9d2d0,stroke:#333,stroke-width:2px;
+    classDef success fill:#a7f3d0,stroke:#333,stroke-width:2px;
+    classDef pending fill:#fef08a,stroke:#333,stroke-width:2px;
+
+    class D,G,M,T failure;
+    class P,V success;
+    class I,J,K,R pending;

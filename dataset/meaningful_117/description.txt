@@ -1,0 +1,70 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of canary release management. It depicts the steps involved in deploying a new version of software to a canary environment, monitoring its performance, and either promoting it to production or rolling it back. The diagram serves as a visual representation of the canary deployment strategy.
+
+## Overall Layout
+The diagram is arranged in a top-down (TD) layout. It consists of two main subgraphs: "Canary Release Management" and "User Request Flow." The "Canary Release Management" subgraph starts with "New Version Deployed to Canary" and ends with "End of Cycle."
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **User Request Flow**: This subgraph illustrates how user requests are routed to either the production or canary cluster based on the traffic router.
+- **Canary Release Management**: This subgraph details the steps involved in deploying, monitoring, and promoting or rolling back a canary release.
+
+## Node-by-Node Description
+- **A / User Request**: Represents an incoming user request.
+- **B / Traffic Router**: Routes user requests to either the production or canary cluster.
+- **C / Production Cluster**: Represents the production environment.
+- **D / Canary Cluster**: Represents the canary environment where the new version is deployed.
+- **E / New Version Deployed to Canary**: Represents the initial deployment of a new version to the canary environment.
+- **F / Monitoring System**: Monitors the performance of the canary deployment.
+- **G / Automated Verification**: Performs automated tests on the canary deployment.
+- **H / Rollback Canary**: Rolls back the canary deployment if issues are detected.
+- **I / Golden Metrics Check**: Checks if the canary deployment meets the defined golden metrics.
+- **J / Incremental Traffic Shift**: Gradually increases the traffic routed to the canary deployment.
+- **K / Traffic Shifter API**: An API used to control the traffic shift between production and canary environments.
+- **L / Sustained Success?**: A decision point to determine if the canary deployment has been successful over a sustained period.
+- **M / Promote Canary to Production**: Promotes the canary deployment to the production environment.
+- **N / Production Update Orchestrator**: Orchestrates the update of the production environment with the canary release.
+- **O / Deploy Canary Version to Production**: Deploys the canary version to production.
+- **P / Verify Production Stability**: Verifies the stability of the production environment after the canary deployment.
+- **Q / Decommission Canary**: Decommissions the canary environment after the successful promotion.
+- **R / Alerting System**: Sends alerts to the on-call engineer if issues are detected.
+- **S / Notify On-Call Engineer**: Notifies the on-call engineer about any issues.
+- **Z / End of Cycle**: Represents the end of the canary release cycle.
+
+## Edges, Branches & Convergence
+- `A --> B`: A user request is sent to the traffic router.
+- `B -- Route to Prod --> C`: The traffic router routes the request to the production cluster.
+- `B -- Route to Canary --> D`: The traffic router routes the request to the canary cluster.
+- `E --> F`: The monitoring system starts monitoring the canary deployment.
+- `F -- Initial Metrics Pass --> G`: The initial metrics pass the monitoring system.
+- `F -- Detects anomalies --> H`: The monitoring system detects anomalies, triggering a rollback.
+- `G -- All Tests Pass --> I`: All automated tests pass.
+- `G -- Test Failure --> H`: Automated tests fail, triggering a rollback.
+- `I -- Golden Metrics Achieved --> J`: The canary deployment meets the golden metrics.
+- `I -- Golden Metrics Breach --> H`: The canary deployment fails to meet the golden metrics, triggering a rollback.
+- `J --> K`: An incremental traffic shift is initiated.
+- `K -- Increase Canary Traffic % --> B`: The traffic shifter API increases the traffic to the canary environment.
+- `B -- Canary Traffic at Max Threshold --> L`: Canary traffic reaches the maximum threshold.
+- `L -- Yes (24 hours) --> M`: The canary deployment has been successful over a sustained period (24 hours), leading to promotion.
+- `L -- No --> H`: The canary deployment has not been successful over a sustained period, triggering a rollback.
+- `M --> N`: The canary deployment is promoted to production, triggering the production update orchestrator.
+- `N --> O`: The production update orchestrator deploys the canary version to production.
+- `O --> P`: The production environment's stability is verified.
+- `P -- Stable --> Q`: The production environment is stable, leading to decommissioning of the canary.
+- `P -- Unstable --> H`: The production environment is unstable, triggering a rollback.
+- `H --> R`: A rollback is initiated, triggering the alerting system.
+- `R --> S`: The alerting system notifies the on-call engineer.
+- `Q --> Z`: The canary environment is decommissioned, ending the cycle.
+- `O --> Z`: The canary version is deployed to production, ending the cycle.
+
+## Repository Context & Terminology
+- **Canary Release**: A deployment strategy where a new version of software is rolled out to a small subset of users before being released to the entire user base.
+- **Golden Metrics**: Key performance indicators (KPIs) used to evaluate the health and performance of the canary deployment.
+- **Traffic Shifter API**: An API used to dynamically adjust the percentage of traffic routed to the canary environment.
+- **Production Cluster**: The main environment where the stable version of the software is running.
+- **Canary Cluster**: A separate environment where the new version of the software is deployed for testing and monitoring.
+- **Rollback**: The process of reverting to the previous stable version of the software.
+- **Production Update Orchestrator**: A component responsible for managing and coordinating the update of the production environment.
+
+## High-Density QA Ground Truth Summary
+The canary release management process begins with a "New Version Deployed to Canary," after which a "Monitoring System" tracks its performance. If the "Monitoring System" detects anomalies, it triggers a "Rollback Canary," which then activates an "Alerting System" to "Notify On-Call Engineer." If initial metrics pass, "Automated Verification" runs tests; failure also triggers a rollback. Passing tests lead to a "Golden Metrics Check." A breach of these metrics also triggers a rollback. If golden metrics are achieved, an "Incremental Traffic Shift" is initiated via a "Traffic Shifter API," gradually increasing traffic to the canary. Once "Canary Traffic at Max Threshold," a "Sustained Success?" check determines if the canary has performed well over 24 hours. A negative result triggers a rollback. A positive result triggers "Promote Canary to Production" via a "Production Update Orchestrator," followed by "Deploy Canary Version to Production." "Verify Production Stability" then determines whether to "Decommission Canary" (if stable) or "Rollback Canary" (if unstable). Both "Decommission Canary" and "Deploy Canary Version to Production" lead to "End of Cycle." User requests are routed by a "Traffic Router" to either the "Production Cluster" or "Canary Cluster," forming a separate "User Request Flow." The "Traffic Shifter API" is crucial for controlling the traffic distribution during the canary deployment.

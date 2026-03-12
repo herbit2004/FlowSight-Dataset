@@ -1,0 +1,37 @@
+graph TD
+    subgraph Trade Capture System [Trade Capture System]
+        A[Receive Trade Data] --> B(Trade Validation)
+        B -- Valid Trade --> C{Enrich Trade}
+        B -- Invalid Trade --> Z[Reject Trade]
+        C --> D(Store in Trade Repository)
+    end
+
+    subgraph Reconciliation Engine [Reconciliation Engine]
+        E[Fetch Trade Data from Trade Repository] --> F(Fetch Settlement Data from Payment System)
+        F --> G{Reconciliation Logic}
+        G -- Match Found --> H(Generate Reconciliation Report)
+        G -- No Match --> I(Investigate Discrepancies)
+    end
+
+    subgraph Payment System [Payment System]
+        J[Receive Settlement Instructions] --> K(Validate Settlement Details)
+        K -- Valid Details --> L[Execute Payment]
+        K -- Invalid Details --> M[Reject Payment]
+        L --> F
+        M --> N(Log Payment Failure)
+    end
+
+    H --> P[Update Trade Status in Trade Repository]
+    I --> Q(Escalate to Operations Team)
+
+    D --> E
+    Q --> R(Manual Investigation)
+    R --> G
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px
+    classDef data fill:#fff,stroke:#333,stroke-width:2px
+
+    class A,C,D,E,F,H,J,L,N,P,Q,R process
+    class B,G,K decision
+    class Z,M data

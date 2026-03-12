@@ -1,0 +1,20 @@
+graph TD
+    subgraph Order Processing
+        A[Start] --> B{Order Received?};
+        B -- No --> A;
+        B -- Yes --> C[Check Inventory];
+        C -- Available --> D{Payment Successful?};
+        C -- Unavailable --> K[Notify Customer of Shortage]; 
+        D -- No --> E[Refund Payment];
+        E --> L[Close Order];
+        D -- Yes --> F[Ship Order];
+        F --> G{Order Delivered?};
+        G -- No --> H[Investigate Delay];
+        H --> F;
+        G -- Yes --> I[Invoice Customer];
+        I --> J[Record Sale];
+        J --> K;
+        K --> L[Close Order];
+
+
+    end

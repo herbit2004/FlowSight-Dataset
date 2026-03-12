@@ -1,0 +1,21 @@
+graph TD
+    subgraph Rule Matching and Action Execution
+    A[Event Ingestion] --> B{Pre-Filtering};
+    B -- Type A Event? --> C[Rule Engine: Type A Rules];
+    B -- Type B Event? --> D[Rule Engine: Type B Rules];
+    C --> E{Match Found?};
+    D --> F{Match Found?};
+    E -- Yes --> G[Action Executor];
+    E -- No --> H[Audit Log: No Match];
+    F -- Yes --> G;
+    F -- No --> I[Audit Log: No Match];
+    G --> J[Action: Data Transformation];
+    J --> K[Action: External API Call];
+    K --> L[Action: Save to Database];
+    L --> M[Post-Processing];
+    M --> N[Event Completion];
+    end
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    H:::error
+    I:::error

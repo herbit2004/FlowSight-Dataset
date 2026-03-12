@@ -1,0 +1,42 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the vulnerability scanning and policy enforcement process for uploaded artifacts. It illustrates the steps involved in identifying vulnerabilities in artifacts, scoring them, and determining whether they should be stored or quarantined based on policy evaluation. The diagram serves as a visual representation of the artifact security pipeline.
+
+## Overall Layout
+The diagram flows from left to right. It starts with "Artifact Upload" and ends with either "Stored" or "Quarantined." The core process involves deduplication, scanning for vulnerabilities using multiple tools, scoring the vulnerabilities, and then applying a policy engine.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Artifact Upload & Deduplication, Vulnerability Scanning, Vulnerability Scoring, Policy Evaluation, and Storage/Quarantine.
+
+## Node-by-Node Description
+- **Artifact Upload**: Represents the initial step where an artifact is uploaded into the system. visible in diagram; no further repository context available.
+- **SHA-256 Dedup**: Represents the deduplication process using SHA-256 hashing to avoid rescanning already scanned artifacts. visible in diagram; no further repository context available.
+- **Trivy FS Scanner**: Represents the Trivy file system scanner, which scans the artifact's file system for vulnerabilities. visible in diagram; no further repository context available.
+- **Grype Dependency Scanner**: Represents the Grype dependency scanner, which scans the artifact's dependencies for vulnerabilities. visible in diagram; no further repository context available.
+- **Cached Results**: Represents the storage of previously scanned results. visible in diagram; no further repository context available.
+- **Vulnerability Score A-F**: Represents the process of assigning a vulnerability score (A-F) based on the findings from the scanners. visible in diagram; no further repository context available.
+- **Policy Engine**: Represents the policy engine that evaluates the vulnerability score against defined policies. visible in diagram; no further repository context available.
+- **Stored**: Represents the final state where the artifact is stored after passing the policy evaluation. visible in diagram; no further repository context available.
+- **Quarantined**: Represents the final state where the artifact is quarantined after failing the policy evaluation. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Artifact Upload --> SHA-256 Dedup`: An artifact is uploaded and passed to the deduplication process.
+- `SHA-256 Dedup --> Trivy FS Scanner`: If the artifact is new, it is sent to the Trivy FS Scanner.
+- `SHA-256 Dedup --> Grype Dependency Scanner`: If the artifact is new, it is sent to the Grype Dependency Scanner.
+- `SHA-256 Dedup --> Cached Results`: If the artifact has already been scanned, the cached results are retrieved.
+- `Trivy FS Scanner --> Vulnerability Score A-F`: Trivy FS Scanner results are fed into the vulnerability scoring process.
+- `Grype Dependency Scanner --> Vulnerability Score A-F`: Grype Dependency Scanner results are fed into the vulnerability scoring process.
+- `Cached Results --> Vulnerability Score A-F`: Cached results are fed into the vulnerability scoring process.
+- `Vulnerability Score A-F --> Policy Engine`: The vulnerability score is passed to the policy engine for evaluation.
+- `Policy Engine -- Pass --> Stored`: If the policy engine evaluation passes, the artifact is stored.
+- `Policy Engine -- Fail --> Quarantined`: If the policy engine evaluation fails, the artifact is quarantined.
+- Trivy FS Scanner, Grype Dependency Scanner, and Cached Results all converge at Vulnerability Score A-F.
+
+## Repository Context & Terminology
+- **SHA-256**: A cryptographic hash function used for deduplication, ensuring that identical artifacts are not scanned multiple times.
+- **Trivy**: A comprehensive and easy-to-use security scanner. Trivy scans for vulnerabilities in container images, file systems, and Git repositories, as well as secrets, misconfigurations, and SBOM.
+- **Grype**: A vulnerability scanner for container images and file systems. More specifically, Grype will scan a software artifact and produce a Software Bill of Materials (SBOM). Grype will then cross-reference the discovered packages and versions against its vulnerability database.
+- **Vulnerability Score**: A numerical or categorical representation of the severity of identified vulnerabilities, often using scales like A-F or CVSS scores.
+- **Policy Engine**: A component that evaluates artifacts against predefined security policies, determining whether they meet the required standards for storage or require quarantine.
+
+## High-Density QA Ground Truth Summary
+The process begins with an "Artifact Upload," which is immediately followed by "SHA-256 Dedup." If the artifact is new (determined by the deduplication process), it branches to both "Trivy FS Scanner" and "Grype Dependency Scanner" for vulnerability scanning. If the artifact has already been scanned, the process retrieves "Cached Results." The outputs of "Trivy FS Scanner," "Grype Dependency Scanner," and "Cached Results" all converge at "Vulnerability Score A-F," where a vulnerability score is assigned. This score is then fed into the "Policy Engine," which evaluates the artifact against predefined security policies. Based on the policy evaluation, the process branches: if the artifact "Passes," it is "Stored"; if it "Fails," it is "Quarantined." Trivy and Grype are vulnerability scanners used to identify security flaws in the artifact's file system and dependencies, respectively. The SHA-256 deduplication step ensures that identical artifacts are not rescanned, optimizing the scanning process.

@@ -1,0 +1,61 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the process of mesh processing, including cutting, feature calculation, field tracing, quadrangulation, smoothing, and mirroring. The diagram outlines the steps involved in generating a symmetrical, smoothed, and quadrangulated mesh, potentially for use in 3D modeling or simulation.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with a "Start" node and progresses through a series of processing steps, ending with the addition of a mirror modifier. The diagram includes a decision point for using a cache, which affects the flow of the process.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: initialisation, symmetry cut, feature calculation and preprocessing, field tracing and splitting, quadrangulation and smoothing, and final mirroring.
+
+## Node-by-Node Description
+- **Start**: The starting point of the mesh processing workflow.
+  visible in diagram; no further repository context available.
+- **Use cache?**: A decision node that determines whether to use a cached version of the mesh or to perform the processing steps from scratch.
+  visible in diagram; no further repository context available.
+- **Cut mesh in half on specified axes for symmetry**: This node represents the step of cutting the mesh in half along specified axes to enforce symmetry.
+  visible in diagram; no further repository context available.
+- **mesh.obj**: Represents the mesh object file.
+  visible in diagram; no further repository context available.
+- **Calculate sharp features**: This node represents the calculation of sharp features on the mesh.
+  visible in diagram; no further repository context available.
+- **QuadWild built-in preprocessing and field calculation**: This node represents the preprocessing and field calculation steps performed using QuadWild.
+  visible in diagram; no further repository context available.
+- **mesh_rem.obj**: Represents the mesh object file after preprocessing.
+  visible in diagram; no further repository context available.
+- **QuadWild field tracing and splitting into patches**: This node represents the field tracing and splitting of the mesh into patches using QuadWild.
+  visible in diagram; no further repository context available.
+- **mesh_rem_p0.obj**: Represents the mesh object file after field tracing and splitting into patches.
+  visible in diagram; no further repository context available.
+- **QuadWild quadrangulation and smoothing**: This node represents the quadrangulation and smoothing of the mesh using QuadWild.
+  visible in diagram; no further repository context available.
+- **mesh_rem_p0_0_quadrangulation.obj, mesh_rem_p0_0_quadrangulation_smooth.obj**: Represents the mesh object files after quadrangulation and smoothing.
+  visible in diagram; no further repository context available.
+- **Add mirror modifier on specified axes for symmetry**: This node represents the final step of adding a mirror modifier to the mesh along specified axes to enforce symmetry.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Start --> Use cache?`: Initiates the mesh processing workflow.
+- `Use cache? -- False --> Cut mesh in half on specified axes for symmetry`: Proceeds to cut the mesh if the cache is not used.
+- `Cut mesh in half on specified axes for symmetry --> mesh.obj`: Represents the mesh after cutting.
+- `mesh.obj --> Calculate sharp features`: Calculates sharp features on the mesh.
+- `Calculate sharp features --> QuadWild built-in preprocessing and field calculation`: Performs preprocessing and field calculation using QuadWild.
+- `mesh.obj --> QuadWild built-in preprocessing and field calculation`: Performs preprocessing and field calculation using QuadWild.
+- `QuadWild built-in preprocessing and field calculation --> mesh_rem.obj`: Represents the mesh after preprocessing.
+- `mesh_rem.obj --> QuadWild field tracing and splitting into patches`: Performs field tracing and splitting into patches using QuadWild.
+- `QuadWild field tracing and splitting into patches --> mesh_rem_p0.obj`: Represents the mesh after field tracing and splitting.
+- `mesh_rem_p0.obj --> QuadWild quadrangulation and smoothing`: Performs quadrangulation and smoothing using QuadWild.
+- `Use cache? -- True --> QuadWild quadrangulation and smoothing`: Proceeds directly to quadrangulation and smoothing if the cache is used.
+- `QuadWild quadrangulation and smoothing --> mesh_rem_p0_0_quadrangulation.obj, mesh_rem_p0_0_quadrangulation_smooth.obj`: Represents the mesh after quadrangulation and smoothing.
+- `mesh_rem_p0_0_quadrangulation.obj, mesh_rem_p0_0_quadrangulation_smooth.obj --> Add mirror modifier on specified axes for symmetry`: Adds a mirror modifier to the mesh.
+
+## Repository Context & Terminology
+- **QuadWild**: A software or library used for mesh processing, specifically for preprocessing, field calculation, field tracing, splitting into patches, quadrangulation, and smoothing. Further repository context unavailable.
+- **mesh.obj**: A common file format for representing 3D meshes. Further repository context unavailable.
+- **mesh_rem.obj**: Likely represents a mesh file that has been remeshed or had some parts removed. Further repository context unavailable.
+- **mesh_rem_p0.obj**: Likely represents a mesh file that has been remeshed and split into patches. Further repository context unavailable.
+- **mesh_rem_p0_0_quadrangulation.obj**: Likely represents a mesh file that has been remeshed, split into patches, and then quadrangulated. Further repository context unavailable.
+- **mesh_rem_p0_0_quadrangulation_smooth.obj**: Likely represents a mesh file that has been remeshed, split into patches, quadrangulated, and smoothed. Further repository context unavailable.
+- **Mirror Modifier**: A 3D modeling tool feature that creates a symmetrical copy of a mesh across a specified axis. Further repository context unavailable.
+
+## High-Density QA Ground Truth Summary
+The mesh processing workflow begins at the "Start" node, immediately branching based on the "Use cache?" decision. If the cache is not used ("False" branch), the process proceeds to "Cut mesh in half on specified axes for symmetry," resulting in the intermediate state "mesh.obj." From here, the workflow calculates sharp features and then performs "QuadWild built-in preprocessing and field calculation," leading to "mesh_rem.obj." Subsequently, "QuadWild field tracing and splitting into patches" is executed, producing "mesh_rem_p0.obj." If the cache *is* used ("True" branch), the workflow skips the initial cutting, feature calculation, and preprocessing steps, and jumps directly to "QuadWild quadrangulation and smoothing." This step, whether reached via the cache or the full processing path, results in "mesh_rem_p0_0_quadrangulation.obj" and "mesh_rem_p0_0_quadrangulation_smooth.obj." Finally, "Add mirror modifier on specified axes for symmetry" is applied, completing the process. QuadWild is a key component used for various mesh processing tasks, including preprocessing, field calculation, tracing, splitting, quadrangulation, and smoothing, indicating its central role in shaping the mesh geometry. The workflow ensures symmetry either by initial cutting or by applying a mirror modifier at the end.

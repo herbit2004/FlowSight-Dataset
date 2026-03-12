@@ -1,0 +1,41 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a file upload and scanning process within a web application. It illustrates the steps involved in receiving a file from a client, applying pre-filters, checking if it's a ZIP archive, iterating through entries (if ZIP), scanning the bytes for malicious content, and returning an appropriate HTTP response. The diagram serves as a visual representation of the file validation and security measures implemented in the system.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "Client uploads file(s)" node at the top and flows downwards through a series of processing steps, ultimately leading to either a success ("HTTP 200 ok + results") or failure ("HTTP 4xx" or "HTTP 422 blocked") response.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: upload and routing, pre-filtering, ZIP archive handling, byte scanning, and response generation.
+
+## Node-by-Node Description
+- **A / Client uploads file(s)**: Represents the initial action of a client uploading one or more files to the web application. visible in diagram; no further repository context available.
+- **B / Web App Route**: Represents the web application route that handles the file upload request. visible in diagram; no further repository context available.
+- **C / Pre-filters (ext, size, MIME)**: Represents a stage where pre-filters are applied to the uploaded file(s) based on extension, size, and MIME type. visible in diagram; no further repository context available.
+- **X / HTTP 4xx**: Represents an HTTP 4xx error response, indicating a client-side error due to pre-filter failure. visible in diagram; no further repository context available.
+- **D / Is ZIP?**: Represents a check to determine if the uploaded file is a ZIP archive. visible in diagram; no further repository context available.
+- **E / Iterate entries (limits & scan)**: Represents the process of iterating through the entries within a ZIP archive, applying limits and scanning each entry. visible in diagram; no further repository context available.
+- **F / Scan bytes**: Represents the process of scanning the bytes of the file (or ZIP entries) for malicious content. visible in diagram; no further repository context available.
+- **Y / HTTP 422 blocked**: Represents an HTTP 422 error response, indicating that the file has been blocked due to malicious or suspicious content. visible in diagram; no further repository context available.
+- **Z / HTTP 200 ok + results**: Represents an HTTP 200 OK response, indicating that the file has been successfully processed and the results are available. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The client's file upload request is routed to the web application.
+- `B --> C`: The web application route passes the uploaded file(s) to the pre-filtering stage.
+- `C -- fail --> X`: If the pre-filters fail (e.g., invalid extension, size, or MIME type), an HTTP 4xx error response is returned.
+- `C -- pass --> D`: If the pre-filters pass, the file proceeds to the ZIP archive check.
+- `D -- yes --> E`: If the file is a ZIP archive, the entries are iterated and scanned.
+- `D -- no --> F`: If the file is not a ZIP archive, the bytes are scanned directly.
+- `E --> F`: After iterating through the ZIP entries, the process proceeds to the byte scanning stage.
+- `F -- malicious/suspicious --> Y`: If the byte scanning detects malicious or suspicious content, an HTTP 422 blocked response is returned.
+- `F -- clean --> Z`: If the byte scanning finds no malicious content, an HTTP 200 OK response is returned with the results.
+
+## Repository Context & Terminology
+- **HTTP 4xx**: A class of HTTP status codes indicating client-side errors, such as invalid requests or unauthorized access.
+- **HTTP 422**: The HTTP 422 (Unprocessable Entity) status code means the server understands the content type of the request entity, and the syntax of the request entity is correct, but it was unable to process the contained instructions.
+- **HTTP 200 OK**: A standard HTTP response indicating that the request was successful.
+- **MIME Type**: A Multipurpose Internet Mail Extensions (MIME) type is a standard way of classifying file types on the Internet.
+- **Pre-filters**: Initial checks applied to uploaded files to quickly reject invalid or potentially malicious files based on simple criteria like file extension, size, and MIME type.
+- **ZIP Archive**: A file format used to compress and archive multiple files into a single file.
+
+## High-Density QA Ground Truth Summary
+The process begins with the client uploading file(s), which are then routed to the web application. The first step is applying pre-filters based on extension, size, and MIME type. If these filters fail, an HTTP 4xx error is returned, terminating the process. If the pre-filters pass, the system checks if the uploaded file is a ZIP archive. If it is a ZIP archive, the system iterates through each entry, applying limits and scanning each entry. If the file is not a ZIP archive, the system proceeds directly to byte scanning. After either iterating through ZIP entries or directly receiving a non-ZIP file, the system scans the bytes for malicious or suspicious content. If malicious content is detected, an HTTP 422 blocked response is returned. If the scan finds no malicious content, an HTTP 200 OK response is returned along with the results. The pre-filters (ext, size, MIME) act as a first line of defense, rejecting files that are obviously invalid or too large, preventing unnecessary processing. The ZIP archive handling ensures that compressed files are also scanned for malicious content, preventing attackers from hiding malicious files within archives.

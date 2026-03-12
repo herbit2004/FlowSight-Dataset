@@ -1,0 +1,62 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a device heartbeat monitoring system. It depicts the process of a device sending heartbeat signals to a cloud platform, which then monitors these signals to determine the device's online/offline status. The diagram serves as a visual representation of the system's logic and workflow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into two main subgraphs: "Device" and "Cloud Platform". The start node is "Device Heartbeat Timer" and the end nodes are "Set Device Status: Offline", "Update Device Status: Online", and "Notify Operations: Device Offline", which all converge to "Display Device Status & Alerts".
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Device**: Represents the device-side logic for sending heartbeat signals.
+- **Cloud Platform**: Represents the cloud-side logic for receiving and processing heartbeat signals to determine device status.
+
+## Node-by-Node Description
+- **Device Heartbeat Timer**: Represents the timer on the device that triggers the sending of heartbeat signals. visible in diagram; no further repository context available.
+- **Heartbeat Due?**: A decision point to determine if a heartbeat signal is due to be sent. visible in diagram; no further repository context available.
+- **Send Heartbeat Signal**: Represents the action of the device sending a heartbeat signal. visible in diagram; no further repository context available.
+- **Heartbeat Sent OK?**: A decision point to determine if the heartbeat signal was successfully sent. visible in diagram; no further repository context available.
+- **Increment Failed Attempts**: Represents the action of incrementing a counter for failed heartbeat attempts. visible in diagram; no further repository context available.
+- **Attempts > MaxRetries?**: A decision point to determine if the number of failed attempts exceeds the maximum allowed retries. visible in diagram; no further repository context available.
+- **Set Device Status: Offline**: Represents the action of setting the device status to offline. visible in diagram; no further repository context available.
+- **Receive Heartbeat Signal**: Represents the action of the cloud platform receiving a heartbeat signal. visible in diagram; no further repository context available.
+- **Heartbeat Received Within Tolerance?**: A decision point to determine if the heartbeat signal was received within the expected tolerance. visible in diagram; no further repository context available.
+- **Increment Offline Counter**: Represents the action of incrementing a counter for missed heartbeats. visible in diagram; no further repository context available.
+- **Counter > Offline Threshold?**: A decision point to determine if the number of missed heartbeats exceeds the offline threshold. visible in diagram; no further repository context available.
+- **Reset Offline Timer**: Represents the action of resetting the offline timer. visible in diagram; no further repository context available.
+- **Store Last Seen Timestamp**: Represents the action of storing the timestamp of the last received heartbeat. visible in diagram; no further repository context available.
+- **Update Device Status: Online**: Represents the action of updating the device status to online. visible in diagram; no further repository context available.
+- **Notify Operations: Device Offline**: Represents the action of notifying operations that the device is offline. visible in diagram; no further repository context available.
+- **Display Device Status & Alerts**: Represents the action of displaying the device status and any alerts. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Device Heartbeat Timer --> Heartbeat Due?`: The timer triggers the check for whether a heartbeat is due.
+- `Heartbeat Due? -- Yes --> Send Heartbeat Signal`: If a heartbeat is due, send the signal.
+- `Heartbeat Due? -- No --> Device Heartbeat Timer`: If a heartbeat is not due, return to the timer.
+- `Send Heartbeat Signal --> Heartbeat Sent OK?`: After sending the signal, check if it was sent successfully.
+- `Heartbeat Sent OK? -- Yes --> Device Heartbeat Timer`: If the signal was sent successfully, return to the timer.
+- `Heartbeat Sent OK? -- No --> Increment Failed Attempts`: If the signal was not sent successfully, increment the failed attempts counter.
+- `Increment Failed Attempts --> Attempts > MaxRetries?`: After incrementing the counter, check if the maximum retries have been exceeded.
+- `Attempts > MaxRetries? -- Yes --> Set Device Status: Offline`: If the maximum retries have been exceeded, set the device status to offline.
+- `Attempts > MaxRetries? -- No --> Device Heartbeat Timer`: If the maximum retries have not been exceeded, return to the timer.
+- `Receive Heartbeat Signal --> Heartbeat Received Within Tolerance?`: After receiving a signal, check if it was received within tolerance.
+- `Heartbeat Received Within Tolerance? -- Yes --> Reset Offline Timer`: If the signal was received within tolerance, reset the offline timer.
+- `Heartbeat Received Within Tolerance? -- No --> Increment Offline Counter`: If the signal was not received within tolerance, increment the offline counter.
+- `Increment Offline Counter --> Counter > Offline Threshold?`: After incrementing the counter, check if the offline threshold has been exceeded.
+- `Counter > Offline Threshold? -- Yes --> Notify Operations: Device Offline`: If the offline threshold has been exceeded, notify operations that the device is offline.
+- `Counter > Offline Threshold? -- No --> Reset Offline Timer`: If the offline threshold has not been exceeded, reset the offline timer.
+- `Reset Offline Timer --> Store Last Seen Timestamp`: After resetting the timer, store the last seen timestamp.
+- `Store Last Seen Timestamp --> Update Device Status: Online`: After storing the timestamp, update the device status to online.
+- `Set Device Status: Offline --> Display Device Status & Alerts`: After setting the device status to offline, display the status and alerts.
+- `Update Device Status: Online --> Display Device Status & Alerts`: After updating the device status to online, display the status and alerts.
+- `Notify Operations: Device Offline --> Display Device Status & Alerts`: After notifying operations, display the status and alerts.
+
+## Repository Context & Terminology
+- **Heartbeat Signal**: A periodic signal sent by a device to indicate that it is still active and connected.
+- **Tolerance**: The acceptable range of variation in the timing of heartbeat signals.
+- **Offline Counter**: A counter that tracks the number of missed heartbeat signals.
+- **Offline Threshold**: The maximum number of missed heartbeat signals before a device is considered offline.
+- **MaxRetries**: The maximum number of attempts to send a heartbeat signal before considering the device offline.
+- **Device Status**: The current state of the device (online or offline).
+- **Operations**: The team or system responsible for monitoring and managing devices.
+
+## High-Density QA Ground Truth Summary
+The device heartbeat monitoring system begins with the "Device Heartbeat Timer" on the device side, which triggers a check to see if a "Heartbeat Due?". If the heartbeat is due, the device sends a "Send Heartbeat Signal". The system then checks "Heartbeat Sent OK?". If the heartbeat was sent successfully, the process returns to the "Device Heartbeat Timer". If the heartbeat was not sent successfully, the "Increment Failed Attempts" counter is incremented. The system then checks "Attempts > MaxRetries?". If the maximum retries have been exceeded, the "Set Device Status: Offline" action is triggered. On the cloud platform side, the process begins with "Receive Heartbeat Signal". The system then checks "Heartbeat Received Within Tolerance?". If the heartbeat was received within tolerance, the "Reset Offline Timer" and "Store Last Seen Timestamp" actions are triggered, followed by "Update Device Status: Online". If the heartbeat was not received within tolerance, the "Increment Offline Counter" is incremented. The system then checks "Counter > Offline Threshold?". If the offline threshold has been exceeded, the "Notify Operations: Device Offline" action is triggered. Both "Set Device Status: Offline", "Update Device Status: Online", and "Notify Operations: Device Offline" converge to "Display Device Status & Alerts". The "Heartbeat Signal" is a key component, representing the periodic communication used to determine device availability. The "Offline Threshold" is a critical parameter that determines when a device is considered unreachable.

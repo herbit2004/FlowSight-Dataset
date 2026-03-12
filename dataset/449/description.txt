@@ -1,0 +1,41 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of data and requests through a system, highlighting security zones and components involved in processing content. It illustrates how an AI Agent interacts with external web resources via a firewall, incorporating security measures like content scanning and filtering. The diagram serves to visualize the system's architecture, emphasizing security and data flow.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It is divided into three main zones: a Privileged Zone, a Firewall Zone, and the Internet. The flow starts with the AI Agent in the Privileged Zone, proceeds through the Firewall Zone for processing, interacts with the Web in the Internet zone, and returns processed content back to the AI Agent.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Privileged Zone**: Contains the AI Agent and represents a secure, internal environment.
+- **Firewall Zone**: Contains the Pipelock and Scanner Pipeline components, representing a security perimeter.
+- **Internet**: Contains the Web component, representing external resources.
+
+## Node-by-Node Description
+- **AI Agent (has API keys)**: Represents an AI agent residing in the Privileged Zone, possessing API keys for authentication and authorization.
+  visible in diagram; no further repository context available.
+- **Pipelock (NO secrets)**: Represents a component within the Firewall Zone responsible for managing pipelines, explicitly stated to not contain secrets.
+  visible in diagram; no further repository context available.
+- **Scanner Pipeline (SSRF · Blocklist · Rate Limit · DLP · Env Leak · Entropy · Length)**: Represents a component within the Firewall Zone responsible for scanning and filtering content based on various criteria, including SSRF protection, blocklist enforcement, rate limiting, DLP (Data Loss Prevention), environment variable leak detection, entropy analysis, and content length.
+  visible in diagram; no further repository context available.
+- **Web**: Represents a web resource residing in the Internet zone.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `AI Agent --> Pipelock`: Represents the AI Agent fetching a URL, connecting, or using a WebSocket to send data to the Pipelock.
+- `Pipelock --> Scanner`: Represents the Pipelock passing data to the Scanner Pipeline.
+- `Scanner --> AI Agent`: Represents the Scanner Pipeline sending cleaned content back to the AI Agent.
+- `Scanner --> Web`: Represents the Scanner Pipeline sending a request to the Web.
+- `Web --> Scanner`: Represents the Web sending a response back to the Scanner Pipeline.
+
+## Repository Context & Terminology
+- **SSRF (Server-Side Request Forgery)**: A security vulnerability where an attacker can induce the server to make HTTP requests to arbitrary domains. The Scanner Pipeline aims to mitigate this.
+- **Blocklist**: A list of prohibited items (e.g., URLs, domains, IP addresses) used to prevent access to malicious or undesirable content.
+- **Rate Limit**: A mechanism to control the number of requests a user or client can make within a given time frame, preventing abuse and ensuring fair resource allocation.
+- **DLP (Data Loss Prevention)**: A set of technologies and processes used to prevent sensitive data from leaving the organization's control.
+- **Env Leak**: The unintentional exposure of environment variables, which may contain sensitive information such as API keys or database credentials.
+- **Entropy**: A measure of randomness or unpredictability in data, used to detect potentially malicious or obfuscated content.
+- **Privileged Zone**: A network segment or environment with stricter security controls and limited access, typically housing sensitive resources and applications.
+- **Firewall Zone**: A network segment protected by a firewall, controlling network traffic and enforcing security policies.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a data flow starting with an AI Agent residing in a Privileged Zone. The agent initiates a connection to an external resource by fetching a URL, connecting, or using a WebSocket, sending data to the Pipelock component within the Firewall Zone. The Pipelock, explicitly stated to not contain secrets, then passes the data to the Scanner Pipeline. The Scanner Pipeline is responsible for a series of security checks, including SSRF protection, blocklist enforcement, rate limiting, DLP, environment variable leak detection, entropy analysis, and content length validation. The Scanner Pipeline also sends requests to the Web in the Internet zone and receives responses. After processing, the Scanner Pipeline sends cleaned content back to the AI Agent. The Firewall Zone acts as a security perimeter, protecting the Privileged Zone from potentially malicious content originating from the Internet. The AI Agent's API keys, stored within the Privileged Zone, are used for authentication when interacting with external resources. The system's architecture emphasizes security by incorporating a multi-layered approach, including content scanning and filtering within the Firewall Zone.

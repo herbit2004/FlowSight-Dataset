@@ -1,0 +1,62 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting an order processing workflow. It illustrates the steps involved from when a customer places an order to when the order is either shipped or cancelled. The diagram serves as a visual representation of the order fulfillment process, highlighting decision points and potential outcomes.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "Customer Places Order" node at the top and branches out to various processing steps, ultimately leading to order confirmation, cancellation, or refund.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Placement & Payment, Inventory Check & Backorder, Shipping Preparation, Delivery & Confirmation, and Order Resolution.
+
+## Node-by-Node Description
+- **A / Customer Places Order**: Represents the initial step where a customer submits an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Check Inventory**: Represents the action of checking the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **Z / Send Order Confirmation**: Represents sending an order confirmation to the customer. visible in diagram; no further repository context available.
+- **E / Notify Customer Backorder**: Represents notifying the customer that the order is on backorder due to unavailability of items. visible in diagram; no further repository context available.
+- **F / Customer Accepts Backorder?**: A decision point to determine if the customer accepts the backorder. visible in diagram; no further repository context available.
+- **D / Create Shipping Label**: Represents the action of creating a shipping label for the order. visible in diagram; no further repository context available.
+- **G / Ship Order**: Represents the action of shipping the order. visible in diagram; no further repository context available.
+- **I / Delivery Successful?**: A decision point to check if the delivery of the order was successful. visible in diagram; no further repository context available.
+- **J / Refund Payment**: Represents the action of refunding the payment to the customer. visible in diagram; no further repository context available.
+- **K / Investigate Delivery Issue**: Represents the action of investigating a delivery issue. visible in diagram; no further repository context available.
+- **L / Send Order Confirmation**: Represents sending an order confirmation to the customer. visible in diagram; no further repository context available.
+- **H / Cancel Order**: Represents the action of cancelling the order. visible in diagram; no further repository context available.
+- **M / Update Inventory**: Represents the action of updating the inventory. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Customer places an order, initiating the payment check.
+- `B -- Yes --> C`: If payment is received, check the inventory.
+- `B -- No --> Z`: If payment is not received, send order confirmation.
+- `C -- Available --> D`: If inventory is available, create a shipping label.
+- `C -- Unavailable --> E`: If inventory is unavailable, notify the customer about the backorder.
+- `E --> F`: Notify customer of backorder, leading to acceptance decision.
+- `F -- No --> H`: If the customer does not accept the backorder, cancel the order.
+- `F -- Yes --> D`: If the customer accepts the backorder, create a shipping label.
+- `D --> G`: After creating the shipping label, ship the order.
+- `G --> I`: After shipping the order, check if the delivery was successful.
+- `I -- No --> J`: If the delivery was not successful, refund the payment.
+- `I -- No --> K`: If the delivery was not successful, investigate the delivery issue.
+- `K --> G`: After investigating the delivery issue, ship the order.
+- `I -- Yes --> L`: If the delivery was successful, send order confirmation.
+- `H --> M`: After cancelling the order, update the inventory.
+- `J --> M`: After refunding the payment, update the inventory.
+- `Z --> A`: After sending the order confirmation, the process returns to the start.
+- Paths converge at node M (Update Inventory) from nodes H (Cancel Order) and J (Refund Payment).
+
+## Repository Context & Terminology
+- **Customer Places Order**: Standard e-commerce term; in this diagram, it's the starting point of the order processing workflow.
+- **Payment Received?**: Standard e-commerce term; in this diagram, it's a decision point to check if the payment has been received.
+- **Check Inventory**: Standard inventory management term; in this diagram, it's a step to verify the availability of ordered items.
+- **Send Order Confirmation**: Standard e-commerce term; in this diagram, it's sending a confirmation to the customer, even before payment is received.
+- **Notify Customer Backorder**: Standard e-commerce term; in this diagram, it's informing the customer about a backorder situation.
+- **Customer Accepts Backorder?**: Standard e-commerce term; in this diagram, it's a decision point to determine if the customer accepts the backorder.
+- **Create Shipping Label**: Standard logistics term; in this diagram, it's preparing the shipping label for the order.
+- **Ship Order**: Standard logistics term; in this diagram, it's the process of shipping the order to the customer.
+- **Delivery Successful?**: Standard logistics term; in this diagram, it's a decision point to check if the delivery was successful.
+- **Refund Payment**: Standard e-commerce term; in this diagram, it's refunding the payment to the customer after a failed delivery.
+- **Investigate Delivery Issue**: Standard logistics term; in this diagram, it's investigating the reason for a failed delivery.
+- **Cancel Order**: Standard e-commerce term; in this diagram, it's cancelling the order if the customer does not accept the backorder.
+- **Update Inventory**: Standard inventory management term; in this diagram, it's updating the inventory after cancellation or refund.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins when a customer places an order (A). The first decision point is whether the payment has been received (B). If payment has *not* been received (B-No), an order confirmation is sent (Z), and the process loops back to the beginning (A). If payment *has* been received (B-Yes), the inventory is checked (C). If the inventory is available (C-Available), a shipping label is created (D); if unavailable (C-Unavailable), the customer is notified about a backorder (E). If the customer accepts the backorder (F-Yes), a shipping label is created (D); otherwise (F-No), the order is cancelled (H), and the inventory is updated (M). After creating the shipping label (D), the order is shipped (G). If the delivery is successful (I-Yes), an order confirmation is sent (L). If the delivery is *not* successful (I-No), a refund is issued (J), and the delivery issue is investigated (K). After investigating the delivery issue (K), the process returns to shipping the order (G). Both order cancellation (H) and refund (J) lead to updating the inventory (M), which is the end of those respective paths. The process includes illogical flows such as sending an order confirmation before receiving payment and refunding payment immediately after a failed delivery, without attempting re-delivery.

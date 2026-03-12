@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the steps in an order processing system. It depicts the flow of an order from receipt to confirmation, including payment and delivery status checks. The diagram serves as a visual representation of the order processing logic, but contains intentional errors and illogical loops.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with "Order Received" at the top and progresses downwards through decision points and actions. The diagram contains illogical loops, meaning there is no clear end node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: Order Reception & Payment, Order Fulfillment, Delivery Confirmation, and Post-Delivery Actions.
+
+## Node-by-Node Description
+- **A / Order Received**: Represents the initial state when an order is received.
+  visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision node that checks if the payment for the order was successful.
+  visible in diagram; no further repository context available.
+- **C / Cancel Order**: Represents the action of canceling the order if the payment was not successful.
+  visible in diagram; no further repository context available.
+- **D / Ship Order**: Represents the action of shipping the order.
+  visible in diagram; no further repository context available.
+- **E / Delivery Successful?**: A decision node that checks if the order delivery was successful.
+  visible in diagram; no further repository context available.
+- **F / Send Confirmation Email**: Represents the action of sending a confirmation email to the customer.
+  visible in diagram; no further repository context available.
+- **G / Refund Customer**: Represents the action of refunding the customer if the delivery was not successful.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: An order received triggers a payment success check.
+- `B -- No --> C`: If payment is not successful, the order is canceled.
+- `B -- Yes --> D`: If payment is successful, the order is shipped.
+- `D --> E`: Shipping the order triggers a delivery success check.
+- `E -- No --> G`: If delivery is not successful, the customer is refunded.
+- `E -- Yes --> F`: If delivery is successful, a confirmation email is sent.
+- `F --> A`: Sending a confirmation email triggers a new order (illogical loop).
+- `G --> D`: Refunding the customer triggers another shipment (illogical merge).
+
+## Repository Context & Terminology
+- **Order Received**: In standard practice, this signifies the start of the order processing workflow. In this diagram, it's the starting point, but also an illogical loop destination from "Send Confirmation Email".
+- **Payment Successful?**: A standard check to ensure payment before shipping. In this diagram, it occurs *after* "Order Received" but *before* "Ship Order".
+- **Cancel Order**: Standard action when payment fails. In this diagram, it's a terminal action for the "No" branch of the payment check.
+- **Ship Order**: Standard action to send the order to the customer. In this diagram, it occurs after a successful payment check, but also after a refund (illogical).
+- **Delivery Successful?**: Standard check to confirm delivery. In this diagram, it determines whether to refund the customer or send a confirmation email.
+- **Send Confirmation Email**: Standard action to notify the customer of successful delivery. In this diagram, it triggers a new order (illogical loop).
+- **Refund Customer**: Standard action when delivery fails. In this diagram, it triggers another shipment (illogical).
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Order Received," which immediately proceeds to the "Payment Successful?" decision. If payment fails ("No" branch), the "Cancel Order" action is triggered. If payment succeeds ("Yes" branch), the "Ship Order" action is triggered. Following shipment, the "Delivery Successful?" decision determines the next step. A failed delivery ("No" branch) results in "Refund Customer," which *illogically* triggers another "Ship Order". A successful delivery ("Yes" branch) leads to "Send Confirmation Email," which *illogically* loops back to "Order Received," initiating a new order. The standard practice of payment verification before shipment is reversed in this diagram. The confirmation email should terminate the flow, but instead restarts the process. The refund action should resolve the current order, but instead triggers a reshipment.

@@ -1,0 +1,62 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating an order processing workflow. It depicts the sequence of steps involved in handling a user order, from placement to closure, including payment verification, inventory checks, shipping, and user satisfaction. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "User Places Order" node at the top and flows downward through various decision points and processes, ultimately converging to the "Close Order" node at the bottom.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement, Payment Verification, Inventory Check, Shipping, Delivery, and Order Closure.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action of a user submitting an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **C / Cancel Order**: Represents the action of canceling the order.
+  visible in diagram; no further repository context available.
+- **D / Shipping Label Generated**: Represents the process of generating a shipping label for the order.
+  visible in diagram; no further repository context available.
+- **E / Inventory Available?**: A decision point to check if the required inventory is available to fulfill the order.
+  visible in diagram; no further repository context available.
+- **F / Order Confirmed**: Represents the confirmation of the order.
+  visible in diagram; no further repository context available.
+- **G / Notify User of Delay**: Represents the action of notifying the user about a delay in the order.
+  visible in diagram; no further repository context available.
+- **H / Package Shipped**: Represents the action of shipping the package.
+  visible in diagram; no further repository context available.
+- **I / Package Delivered**: Represents the event of the package being delivered to the user.
+  visible in diagram; no further repository context available.
+- **J / User Satisfied?**: A decision point to check if the user is satisfied with the order.
+  visible in diagram; no further repository context available.
+- **K / Process Refund**: Represents the action of processing a refund for the order.
+  visible in diagram; no further repository context available.
+- **L / Close Order**: Represents the final action of closing the order.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `A --> B`: User places an order, initiating the payment verification process.
+  `B -- No --> C`: If payment is not received, the order is canceled.
+  `B -- Yes --> D`: If payment is received, a shipping label is generated.
+  `C --> F`: After canceling the order, the order is confirmed. This is a contradictory step.
+  `D --> E`: After generating the shipping label, the system checks for inventory availability.
+  `E -- No --> G`: If inventory is not available, the user is notified of a delay.
+  `E -- Yes --> H`: If inventory is available, the package is shipped.
+  `G --> I`: Notification of delay leads directly to package delivered, skipping all other shipping steps.
+  `H --> F`: After shipping the package, the order is confirmed.
+  `F --> I`: Order confirmation leads to package delivered.
+  `I --> J`: After the package is delivered, the system checks if the user is satisfied.
+  `J -- Yes --> K`: If the user is satisfied, a refund is processed. This is a reversed outcome.
+  `J -- No --> L`: If the user is not satisfied, the order is closed.
+  `K --> L`: After processing a refund, the order is closed.
+
+## Repository Context & Terminology
+- **User Places Order**: Standard meaning is the initial action of a customer submitting an order. In this diagram, it's the starting point of the workflow.
+- **Payment Received?**: Standard meaning is a check to verify if payment has been successfully processed. In this diagram, it's a decision point that determines whether to proceed with the order or cancel it.
+- **Shipping Label Generated**: Standard meaning is the creation of a label containing shipping information. In this diagram, it's a step taken after payment is received.
+- **Inventory Available?**: Standard meaning is a check to see if the product is in stock. In this diagram, it's a decision point that determines whether to ship the package or notify the user of a delay.
+- **Package Shipped**: Standard meaning is the action of sending the package to the customer. In this diagram, it's a step taken after inventory is confirmed to be available.
+- **Package Delivered**: Standard meaning is the event of the package arriving at the customer's address. In this diagram, it's a step that follows order confirmation and also directly follows notification of delay, which is an error.
+- **User Satisfied?**: Standard meaning is a check to see if the customer is happy with their order. In this diagram, it's a decision point that, incorrectly, leads to a refund if the user is satisfied.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Places Order," which leads to the "Payment Received?" decision. If payment is not received ("No" branch), the "Cancel Order" action is triggered, followed by "Order Confirmed," which is contradictory. If payment is received ("Yes" branch), a "Shipping Label Generated." This leads to the "Inventory Available?" decision. If inventory is unavailable ("No" branch), the "Notify User of Delay" action is triggered, which then incorrectly leads directly to "Package Delivered," skipping shipping steps. If inventory is available ("Yes" branch), the "Package Shipped" action is triggered, followed by "Order Confirmed," and then "Package Delivered." After "Package Delivered," the "User Satisfied?" decision is made. If the user is satisfied ("Yes" branch), a "Process Refund" action is triggered, which is a reversed outcome. If the user is not satisfied ("No" branch), the "Close Order" action is triggered. The "Process Refund" action also leads to "Close Order." The workflow concludes with the "Close Order" node. The "Order Confirmed" step appears after order cancellation, which is a reversed sequence.

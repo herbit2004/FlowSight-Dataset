@@ -1,0 +1,33 @@
+graph TD
+    subgraph Training Pipeline
+      A[Data Ingestion: Raw Logs] --> B(Data Validation & Cleaning);
+      B --> C{Feature Engineering};
+      C -- "New Features" --> D[Feature Store: Online/Offline];
+      C -- "Existing Features" --> D;
+      D --> E{Model Training};
+    end
+
+    subgraph Model Registry
+        E --> F[Model Versioning & Metadata];
+        F --> G{Model Evaluation};
+    end
+
+    G -- "Passes Thresholds" --> H[Model Registry: Staging Area];
+    G -- "Fails Thresholds" --> I[Alerting System];
+    I --> J[Engineering Review];
+    J --> E;
+
+    subgraph Deployment Pipeline
+        H --> K[Pre-Deployment Checks];
+        K -- "All Checks Pass" --> L[Shadow Deployment];
+        K -- "Checks Fail" --> I;
+        L --> M{Real-time Traffic Mirroring};
+        M --> N[Model Performance Monitoring];
+        N -- "Performance Stable" --> O[Promote to Production];
+        N -- "Performance Degrades" --> P[Rollback to Previous Version];
+        O --> Q[Live Model Serving];
+        P --> Q;
+    end
+
+    classDef blue fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q blue

@@ -1,0 +1,72 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the installation process for a software application, likely named "Claude Code" based on the text within the diagram. The flowchart outlines the steps involved in setting up the environment, installing necessary components, and verifying the installation through automated tests. It serves as a visual guide for users to follow during the installation process and provides troubleshooting steps in case of failure.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It presents a sequential flow of steps, starting with the "Start Installation" node at the top and progressing downwards. The process culminates in either a successful installation or a troubleshooting path that loops back to re-test the installation.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages:
+1. **Initialization**: Start Installation, Clone Repository, Run install-complete.sh
+2. **Environment Setup**: Detect Environment, Check Prerequisites, Install 14 Hook Scripts
+3. **Configuration**: Configure Settings, Set Permissions
+4. **Verification**: Verify Audio Files, Run Tests
+5. **Completion/Troubleshooting**: Success?, Installation Complete / Run Diagnostics, Apply Fixes
+
+## Node-by-Node Description
+- **Start / Start Installation**: The beginning of the installation process.
+  visible in diagram; no further repository context available.
+- **Clone / Clone Repository**: Cloning the application's repository, presumably from a Git-based source.
+  visible in diagram; no further repository context available.
+- **Run / Run install-complete.sh**: Executing the `install-complete.sh` script, likely responsible for automating the initial setup.
+  visible in diagram; no further repository context available.
+- **Detect / Detect Environment**: Identifying the operating system and environment (WSL/Git, Bash/Cygwin/macOS/Linux).
+  visible in diagram; no further repository context available.
+- **Check / Check Prerequisites**: Verifying that the necessary software (Claude Code, Python, Git) is installed.
+  visible in diagram; no further repository context available.
+- **Install / Install 14 Hook Scripts**: Installing hook scripts to the `~/.claude/hooks/` directory.
+  visible in diagram; no further repository context available.
+- **Config / Configure Settings**: Configuring application settings using `settings.json` and `settings.local.json` files.
+  visible in diagram; no further repository context available.
+- **Perms / Set Permissions**: Setting execute permissions for the installed hook scripts using `chmod +x hooks`.
+  visible in diagram; no further repository context available.
+- **Audio / Verify Audio Files**: Verifying the presence of 14 MP3 audio files.
+  visible in diagram; no further repository context available.
+- **Test / Run Tests**: Running automated validation tests to ensure the application is functioning correctly.
+  visible in diagram; no further repository context available.
+- **Success? / Success?**: A decision point to determine if the tests were successful.
+  visible in diagram; no further repository context available.
+- **Done / Installation Complete**: Indicates a successful installation. The application, Claude Code, should be restarted.
+  visible in diagram; no further repository context available.
+- **Diagnose / Run Diagnostics**: Running diagnostic checks and examining the installation log in case of failure.
+  visible in diagram; no further repository context available.
+- **Fix / Apply Fixes**: Applying fixes based on troubleshooting information.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Start --> Clone`: Initiates the repository cloning process.
+- `Clone --> Run`: Proceeds to execute the installation script after cloning.
+- `Run --> Detect`: Proceeds to environment detection after running the installation script.
+- `Detect --> Check`: Proceeds to prerequisite checking after environment detection.
+- `Check --> Install`: Proceeds to hook script installation after prerequisite checking.
+- `Install --> Config`: Proceeds to settings configuration after hook script installation.
+- `Config --> Perms`: Proceeds to setting permissions after settings configuration.
+- `Perms --> Audio`: Proceeds to audio file verification after setting permissions.
+- `Audio --> Test`: Proceeds to running tests after audio file verification.
+- `Test --> Success?`: The outcome of the tests determines the next step.
+- `Success? -- Yes --> Done`: If the tests are successful, the installation is complete.
+- `Success? -- No --> Diagnose`: If the tests fail, diagnostics are run.
+- `Diagnose --> Fix`: Applies fixes after running diagnostics.
+- `Fix --> Test`: After applying fixes, the tests are run again, creating a loop.
+- `Fix --> Test`: The troubleshooting path converges back to the "Run Tests" node.
+
+## Repository Context & Terminology
+- **install-complete.sh**: A shell script designed to automate the installation process. It likely handles tasks such as dependency installation, configuration file setup, and environment variable configuration.
+- **settings.json & settings.local.json**: Configuration files used to store application settings. `settings.local.json` likely overrides settings in `settings.json` for local development or specific environments.
+- **~/.claude/hooks/**: A directory where hook scripts are installed. These scripts are likely executed at specific points in the application's lifecycle, such as before or after certain events.
+- **chmod +x hooks**: A command used to set execute permissions on the hook scripts, allowing them to be run.
+- **Claude Code**: The name of the software application being installed.
+- **WSL/Git, Bash/Cygwin/macOS/Linux**: Supported environments for the application.
+- **14 MP3 files**: Audio files required by the application.
+
+## High-Density QA Ground Truth Summary
+The installation process begins with "Start Installation," immediately followed by "Clone Repository" to obtain the application's source code. The `install-complete.sh` script is then executed to automate initial setup. The installer detects the environment (WSL/Git, Bash/Cygwin/macOS/Linux) and checks for prerequisites like Claude Code itself, Python, and Git. Next, 14 hook scripts are installed into the `~/.claude/hooks/` directory, and configuration settings are applied using `settings.json` and `settings.local.json`. Execute permissions are set for the hooks via `chmod +x hooks`. The installer verifies the presence of 14 MP3 audio files before running automated validation tests. If the tests are successful ("Success? -- Yes"), the installation is complete, and Claude Code should be restarted. If the tests fail ("Success? -- No"), diagnostics are run, and the installation log is checked. Applying fixes then loops back to re-run the tests. The process concludes at "Installation Complete" after successful testing, indicating a fully installed and operational Claude Code environment. The use of `settings.local.json` suggests a configuration override mechanism for environment-specific settings.

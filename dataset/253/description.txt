@@ -1,0 +1,69 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the relationships between different elements in a cyber attack chain. It illustrates how vulnerabilities, exploits, and other components are connected to form a complete attack path. The diagram serves as a visual representation of the attack surface and can be used for threat modeling and security analysis.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It shows a hierarchical structure starting from the `AttackChain` node at the top and branching down to various components like `Domain`, `IP`, `Service`, `Vulnerability`, and ultimately `Capec` at the bottom. There is no single end node, but `Capec` represents a final stage in the chain.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into several stages:
+1. **Reconnaissance**: `Domain`, `Subdomain`, `IP`, `Port`.
+2. **Service Identification**: `Service`, `BaseURL`.
+3. **Vulnerability Assessment**: `Vulnerability`, `Endpoint`, `Parameter`.
+4. **Exploitation**: `Technology`, `CVE`.
+5. **Mitigation**: `MitreData`, `Capec`.
+
+## Node-by-Node Description
+- **AttackChain**: Represents the overall attack chain. visible in diagram; no further repository context available.
+- **ChainStep**: Represents a step within the attack chain. visible in diagram; no further repository context available.
+- **ChainFinding**: Represents a finding or discovery made during the attack chain. visible in diagram; no further repository context available.
+- **Domain**: Represents a domain name. visible in diagram; no further repository context available.
+- **Subdomain**: Represents a subdomain of a domain. visible in diagram; no further repository context available.
+- **IP**: Represents an IP address. visible in diagram; no further repository context available.
+- **Port**: Represents a network port. visible in diagram; no further repository context available.
+- **Service**: Represents a network service running on a port. visible in diagram; no further repository context available.
+- **BaseURL**: Represents the base URL of a web application. visible in diagram; no further repository context available.
+- **Vulnerability**: Represents a security vulnerability. visible in diagram; no further repository context available.
+- **Endpoint**: Represents an API endpoint or web page. visible in diagram; no further repository context available.
+- **Parameter**: Represents a parameter in a URL or API request. visible in diagram; no further repository context available.
+- **Header**: Represents an HTTP header. visible in diagram; no further repository context available.
+- **Technology**: Represents a technology used by a web application. visible in diagram; no further repository context available.
+- **CVE**: Represents a Common Vulnerabilities and Exposures entry. visible in diagram; no further repository context available.
+- **MitreData**: Represents data from the MITRE ATT&CK framework. visible in diagram; no further repository context available.
+- **Capec**: Represents a Common Attack Pattern Enumeration and Classification entry. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Domain --> Subdomain`: Represents the relationship where a domain has subdomains (HAS_SUBDOMAIN).
+- `Subdomain --> IP`: Represents the resolution of a subdomain to an IP address (RESOLVES_TO).
+- `IP --> Port`: Represents the relationship where an IP address has open ports (HAS_PORT).
+- `Port --> Service`: Represents a service running on a port (RUNS_SERVICE).
+- `Service --> BaseURL`: Represents a service powering a base URL (POWERED_BY).
+- `Port --> BaseURL`: Represents a service serving a base URL (SERVES_URL).
+- `BaseURL --> Endpoint`: Represents a base URL having endpoints (HAS_ENDPOINT).
+- `BaseURL --> Technology`: Represents a base URL using a technology (USES_TECHNOLOGY).
+- `BaseURL --> Header`: Represents a base URL having headers (HAS_HEADER).
+- `Endpoint --> Parameter`: Represents an endpoint having parameters (HAS_PARAMETER).
+- `Technology --> CVE`: Represents a technology having known CVEs (HAS_KNOWN_CVE).
+- `CVE --> MitreData`: Represents a CVE relating to MITRE data (HAS_CWE).
+- `MitreData --> Capec`: Represents MITRE data relating to CAPEC (HAS_CAPEC).
+- `Vulnerability --> Endpoint`: Represents a vulnerability found at an endpoint (FOUND_AT).
+- `Vulnerability --> Parameter`: Represents a vulnerability affecting a parameter (AFFECTS_PARAMETER).
+- `AttackChain --> ChainStep`: Represents an attack chain having steps (HAS_STEP).
+- `ChainStep --> ChainFinding`: Represents a chain step producing a finding (PRODUCED).
+- `AttackChain -.-> IP`: Represents an attack chain targeting an IP (CHAIN_TARGETS).
+- `ChainStep -.-> IP`: Represents a chain step targeting an IP (STEP_TARGETED).
+- `ChainStep -.-> CVE`: Represents a chain step exploiting a CVE (STEP_EXPLOITED).
+- `ChainFinding -.-> IP`: Represents a chain finding found on an IP (FOUND_ON).
+- `ChainFinding -.-> CVE`: Represents a chain finding relating to a CVE (FINDING_RELATES_CVE).
+
+## Repository Context & Terminology
+- **AttackChain**: A sequence of actions or events that constitute an attack.
+- **ChainStep**: An individual action or event within an attack chain.
+- **ChainFinding**: A piece of information discovered during an attack chain, such as a vulnerability or misconfiguration.
+- **CVE (Common Vulnerabilities and Exposures)**: A dictionary of publicly known information security vulnerabilities and exposures.
+- **MitreData**: Data related to the MITRE ATT&CK framework, which is a knowledge base of adversary tactics and techniques.
+- **Capec (Common Attack Pattern Enumeration and Classification)**: A catalog of common attack patterns used by adversaries.
+- **Domain/Subdomain**: A domain name or its subdomain, used to identify a network or resource.
+- **IP/Port**: An IP address and port number, used to identify a specific network service.
+
+## High-Density QA Ground Truth Summary
+The diagram starts with the `AttackChain`, which `HAS_STEP` to `ChainStep`. The `ChainStep` `PRODUCED` a `ChainFinding`. The `AttackChain` can target an `IP` address, as indicated by the `CHAIN_TARGETS` edge. Similarly, a `ChainStep` can target an `IP` via `STEP_TARGETED`. The `IP` address `HAS_PORT` to a `Port`, which `RUNS_SERVICE` to a `Service`. The `Service` is `POWERED_BY` a `BaseURL`, which `HAS_ENDPOINT` to an `Endpoint` and `USES_TECHNOLOGY` to a `Technology`. The `BaseURL` also `HAS_HEADER` to a `Header`. The `Endpoint` `HAS_PARAMETER` to a `Parameter`. A `Vulnerability` can be `FOUND_AT` an `Endpoint` and `AFFECTS_PARAMETER`. The `Technology` `HAS_KNOWN_CVE` to a `CVE`, which `HAS_CWE` to `MitreData`. Finally, `MitreData` `HAS_CAPEC` to `Capec`. A `ChainFinding` is `FOUND_ON` an `IP` and `FINDING_RELATES_CVE` to a `CVE`. The diagram illustrates how an attack chain can progress from initial reconnaissance (`Domain`, `IP`) to exploitation (`CVE`) and ultimately to attack patterns (`Capec`).

@@ -1,0 +1,46 @@
+graph TD
+    subgraph Client Request Flow
+        A[Client Request] --> B{CDN Edge Cache Hit?};
+        B -- Yes --> C[Serve Cached Content];
+        B -- No --> D[Origin Fetch Initiated];
+    end
+
+    subgraph Origin Fetch Process
+        D --> E{Capacity Check: Fetch Slots Available?};
+        E -- No --> F[Queue Request];
+        F --> G[Wait for Slot Availability];
+        G --> E;
+        E -- Yes --> H[Assign Fetch Slot];
+        H --> I[Origin Authentication];
+        I -- Auth Success --> J[Request Origin Server];
+        I -- Auth Failure --> K[Return 502 Gateway Error];
+        J --> L{Origin Response Received?};
+        L -- Headers Only --> M[Process Headers];
+        L -- Full Response --> M;
+        M --> N{Response Code Valid?};
+        N -- Yes --> O[Store in CDN Cache];
+        N -- 404 Not Found --> P[Store Negative Cache];
+        N -- 5xx Error --> Q[Handle Origin Error];
+        O --> R[Serve Content to Client];
+        P --> R;
+        Q --> K;
+    end
+
+    subgraph Error Handling & Monitoring
+        K --> S[Log Error & Increment Error Rate];
+        Q --> S;
+        S --> T[Notify Monitoring System];
+        T --> U(Alert Operations Team);
+    end
+
+    R --> V[Log Request & Latency];
+
+    subgraph Asynchronous Cache Update
+        W[Cache Invalidation Event] --> X[Trigger Asynchronous Fetch];
+        X --> I;
+    end
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    K:::error
+    Q:::error
+    U:::error

@@ -1,0 +1,62 @@
+graph TD
+    subgraph User Session
+        A[User ID] --> B(Session Data Retrieval)
+        B --> C{Has Recent Activity?}
+        C -- Yes --> D(Context Enrichment)
+        C -- No --> E(Cold Start Profile)
+        E --> D
+    end
+
+    subgraph Candidate Generation
+        F[Catalog Data] --> G(Collaborative Filtering)
+        H[Query Keywords] --> I(Semantic Similarity Search)
+        J[Promoted Items] --> K(Priority Promotion)
+
+        G --> L(Candidate Set Merge)
+        I --> L
+        K --> L
+    end
+
+    D --> M(Feature Engineering)
+    L --> M
+    M --> N(Ranking Model Input)
+
+    subgraph Ranking & Filtering
+        N --> O(Pre-rank Prediction)
+        O --> P{Score > Threshold T1?}
+        P -- Yes --> Q(Re-Ranking Model)
+        P -- No --> R(Discard)
+
+        Q --> S(Personalized Re-ranking)
+        S --> T{Score > Threshold T2?}
+        T -- Yes --> U(Diversity Filter)
+        T -- No --> R
+
+        U --> V(Fairness Filter)
+        V --> W(Business Rule Filter)
+        W --> X(Post-rank Evaluation)
+        X --> Y(Ranked Item List)
+    end
+
+    subgraph Logging & A/B Testing
+        Y --> Z{A/B Test Variant?}
+        Z -- Control --> AA(Control Log)
+        Z -- Treatment --> BB(Treatment Log)
+
+        AA --> CC(Performance Metrics)
+        BB --> CC
+        CC --> DD(Model Retraining)
+    end
+
+    classDef input fill:#f9f,stroke:#333,stroke-width:2px
+    classDef process fill:#ccf,stroke:#333,stroke-width:2px
+    classDef decision fill:#fcf,stroke:#333,stroke-width:2px
+    classDef output fill:#fcc,stroke:#333,stroke-width:2px
+
+    class A,F,H,J input
+    class B,D,G,I,K,L,M,O,Q,S,U,V,W,X process
+    class C,P,T,Z decision
+    class Y output
+    class AA,BB,CC,DD process
+    class E process
+    class R process

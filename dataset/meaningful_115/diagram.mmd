@@ -1,0 +1,15 @@
+graph TD
+    A[Cron Scheduler] --> B{Job Ready?};
+    B -- Yes --> C[Job Dispatcher];
+    B -- No --> A;
+    C --> D{Pre-Dispatch Checks};
+    D -- Passed --> E[Resource Allocator];
+    D -- Failed --> F[Error Logger];
+    E --> G[Job Executor];
+    G --> H{Post-Execution Status};
+    H -- Success --> I[Result Processor];
+    H -- Failure --> J[Retry Manager];
+    I --> K[Event Publisher];
+    J --> B;
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K default

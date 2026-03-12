@@ -1,0 +1,18 @@
+graph TD
+    A[User Initiates Order] --> B{Item in Stock?};
+    B -- No --> C[Cancel Order];
+    C --> H[Order End];
+    B -- Yes --> D[Process Payment];
+    D -- Success --> E[Shipping Label Created];
+    D -- Failure --> F[Email sent to customer];
+    F --> G[Attempt Refund];
+    G --> D;
+    E --> I{Package Delivered?};
+    I -- Yes --> H;
+    I -- No --> J[Update Tracking Info];
+    J --> E;
+    H[Order End];
+    K[Send Confirmation Email] --> A;
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style H fill:#ccf,stroke:#333,stroke-width:2px

@@ -1,0 +1,17 @@
+graph TD
+    subgraph Order Processing
+    A[Receive Order] --> B{Inventory Check};
+    B -- Yes --> C[Create Order];
+    B -- No --> H[Notify Customer of Delay];
+    H --> I{Customer Accepts Delay?};
+    I -- Yes --> C;
+    I -- No --> J[Cancel Order & Refund];
+    C --> D[Payment Processing];
+    D -- Success --> E[Shipping Preparation];
+    D -- Failure --> C;
+    E --> F[Shipping Confirmation];
+    F --> G[Order Delivered];
+    K[Send Order to Warehouse] --> E;
+    end
+    style G fill:#f9f,stroke:#333,stroke-width:2px
+    style J fill:#f9f,stroke:#333,stroke-width:2px

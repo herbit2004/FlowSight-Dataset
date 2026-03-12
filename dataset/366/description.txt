@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the data flow and component interaction within a system involving a GPTAnon-2API worker, client applications, and an upstream API service. It depicts how client requests are processed, transformed, and routed through the system, highlighting the roles of different components in handling and converting data formats. The diagram serves as a high-level overview of the system's architecture and data processing pipeline.
+
+## Overall Layout
+The diagram is laid out from left to right, with three main subgraphs representing different stages of the process. The "客户端生态" (Client Ecosystem) subgraph is on the left, followed by the "GPTAnon-2API Worker" in the middle, and the "上游服务" (Upstream Service) on the right. The client applications initiate requests that flow through the GPTAnon-2API Worker, potentially interacting with the upstream service, and ultimately returning data to the clients.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **客户端生态 (Client Ecosystem)**: Represents the client-side applications that initiate requests to the system.
+- **GPTAnon-2API Worker**: Represents the core processing unit that handles requests, performs transformations, and routes data.
+- **上游服务 (Upstream Service)**: Represents an external API service that provides data or functionality to the GPTAnon-2API Worker.
+
+## Node-by-Node Description
+- **A / 🤖 LobeChat**: A client application, LobeChat, that sends standard OpenAI API requests and receives standard SSE format data and model list JSON. visible in diagram; no further repository context available.
+- **B / 🚪 /v1/chat/completions**: An endpoint that receives standard OpenAI API requests from client applications. In the repository this likely corresponds to an API route handling chat completions.
+- **C / 🌐 ChatGPT-Next-Web**: A client application, ChatGPT-Next-Web, that sends standard OpenAI API requests and receives standard SSE format data and model list JSON. visible in diagram; no further repository context available.
+- **D / 🐍 Python SDK**: A Python SDK client that sends standard OpenAI API requests and receives standard SSE format data and model list JSON. visible in diagram; no further repository context available.
+- **E / 🖥️ cURL/终端**: A cURL terminal client that sends standard OpenAI API requests and receives standard SSE format data. visible in diagram; no further repository context available.
+- **F / {请求路由器} (Request Router)**: A component within the GPTAnon-2API Worker that routes incoming requests based on their type. visible in diagram; no further repository context available.
+- **G / 🎯 代理引擎 (Proxy Engine)**: A component that acts as a proxy, potentially modifying or forwarding requests. visible in diagram; no further repository context available.
+- **H / 📋 /v1/models**: An endpoint that provides a list of available models. In the repository this likely corresponds to an API route handling model listing.
+- **I / 🖥️ 开发者驾驶舱 (Developer Cockpit)**: A component providing a user interface or tools for developers. visible in diagram; no further repository context available.
+- **J / 🔄 格式转换器 TransformStream (Format Converter TransformStream)**: A component that transforms data from one format to another. visible in diagram; no further repository context available.
+- **K / 📤 SSE 响应流 (SSE Response Stream)**: The output stream in Server-Sent Events (SSE) format. visible in diagram; no further repository context available.
+- **L / 🔧 配置管理 CONFIG + env (Configuration Management CONFIG + env)**: A component responsible for managing configuration settings, likely using environment variables. visible in diagram; no further repository context available.
+- **M / 🛡️ 认证中间件 (Authentication Middleware)**: A component that handles authentication. visible in diagram; no further repository context available.
+- **N / 🌊 gptanon.com API**: An external API service. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: LobeChat sends a standard OpenAI API request to the /v1/chat/completions endpoint.
+- `C --> B`: ChatGPT-Next-Web sends a standard OpenAI API request to the /v1/chat/completions endpoint.
+- `D --> B`: Python SDK sends a standard OpenAI API request to the /v1/chat/completions endpoint.
+- `E --> B`: cURL/终端 sends a standard OpenAI API request to the /v1/chat/completions endpoint.
+- `B --> F`: The /v1/chat/completions endpoint forwards the request to the Request Router.
+- `F --> G`: The Request Router routes a streaming request to the Proxy Engine.
+- `F --> H`: The Request Router routes a model list request to the /v1/models endpoint.
+- `F --> I`: The Request Router routes a root path access to the Developer Cockpit.
+- `G --> J`: The Proxy Engine sends a transformed request to the Format Converter TransformStream.
+- `J --> K`: The Format Converter TransformStream transforms the data and outputs an SSE response stream.
+- `G --> N`: The Proxy Engine sends a transformed request to the gptanon.com API.
+- `N --> J`: The gptanon.com API sends custom JSON data to the Format Converter TransformStream.
+- `K --> A`: The SSE response stream is sent to LobeChat.
+- `K --> C`: The SSE response stream is sent to ChatGPT-Next-Web.
+- `K --> D`: The SSE response stream is sent to Python SDK.
+- `K --> E`: The SSE response stream is sent to cURL/终端.
+- `H --> A`: The /v1/models endpoint sends model list JSON to LobeChat.
+- `H --> C`: The /v1/models endpoint sends model list JSON to ChatGPT-Next-Web.
+- `H --> D`: The /v1/models endpoint sends model list JSON to Python SDK.
+
+## Repository Context & Terminology
+- **OpenAI API**: A set of APIs provided by OpenAI for accessing their AI models.
+- **SSE (Server-Sent Events)**: A server push technology enabling real-time data streaming from a server to a client.
+- **/v1/chat/completions**: An API endpoint for generating chat completions using a language model.
+- **/v1/models**: An API endpoint for retrieving a list of available models.
+- **CONFIG + env**: Configuration settings managed through a combination of configuration files and environment variables.
+- **TransformStream**: A component that transforms data streams.
+- **GPTAnon-2API Worker**: The core processing unit responsible for handling API requests and data transformations.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a system where client applications (LobeChat, ChatGPT-Next-Web, Python SDK, cURL/终端) initiate requests to the `/v1/chat/completions` endpoint. These requests, formatted as standard OpenAI API requests, are then routed by the Request Router within the GPTAnon-2API Worker. The router decides where to send the request based on its type: streaming requests go to the Proxy Engine, model list requests go to the `/v1/models` endpoint, and root path access goes to the Developer Cockpit. The Proxy Engine interacts with the gptanon.com API, potentially transforming the request before forwarding it. The Format Converter TransformStream converts data between different formats, including custom JSON from the upstream API and SSE. The final output is an SSE response stream sent back to the client applications. The `/v1/models` endpoint provides model list JSON to the client applications. Configuration management (CONFIG + env) influences the behavior of the Proxy Engine, Developer Cockpit and the `/v1/models` endpoint. Authentication Middleware protects the Request Router. The system leverages SSE for real-time data streaming to the clients, and the GPTAnon-2API Worker acts as a central hub for request processing and data transformation.

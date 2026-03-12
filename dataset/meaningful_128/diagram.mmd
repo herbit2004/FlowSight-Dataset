@@ -1,0 +1,29 @@
+graph TD
+    subgraph Coupon Issuance
+        A[User Request Coupon] --> B(Eligibility Check);
+        B -- Eligible? --> C{Coupon Pool Available?};
+        B -- Not Eligible --> X[Reject Coupon Request];
+        C -- Yes --> D[Allocate Coupon];
+        C -- No --> E[Generate New Coupon];
+        E --> F(Store New Coupon);
+        F --> D;
+        D --> G[Send Coupon to User];
+    end
+
+    subgraph Coupon Redemption
+        H[User Submits Coupon Code] --> I(Validate Coupon);
+        I -- Valid? --> J{Sufficient Funds?};
+        I -- Invalid --> Y[Reject Redemption];
+        J -- Yes --> K[Apply Discount];
+        K --> L(Update Order Total);
+        L --> M[Record Redemption];
+        M --> N(Release Coupon);
+        J -- No --> Z[Insufficient Funds Message];
+        Z --> Y;
+    end
+
+    G --> H;
+    N --> O[Update Coupon Pool];
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class X,Y,Z error

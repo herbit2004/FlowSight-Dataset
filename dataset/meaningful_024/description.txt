@@ -1,0 +1,62 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the architecture of a system that handles read and write requests, incorporating caching and data replication. The diagram visualizes the flow of requests through different components, including routers, databases, caches, and replication mechanisms. It serves as a high-level overview of the system's data handling process.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It is hierarchically structured, with a Client Application subgraph at the top and a Data Layer subgraph towards the bottom. The start node is "Incoming Request," and the end node is "Return to Client."
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Client Application**: Represents the initial stage where requests are received and routed.
+- **Data Layer**: Encapsulates the components responsible for data storage, retrieval, and caching.
+
+## Node-by-Node Description
+- **A / Incoming Request**: Represents the entry point of a request into the system. visible in diagram; no further repository context available.
+- **B / Read or Write?**: A decision point that determines whether the incoming request is a read or write operation. visible in diagram; no further repository context available.
+- **C / Read Router**: Routes read requests to the appropriate data source. visible in diagram; no further repository context available.
+- **D / Cache Hit?**: A decision point that checks if the requested data is available in the cache. visible in diagram; no further repository context available.
+- **E / Return Cached Data**: Returns data from the cache. visible in diagram; no further repository context available.
+- **F / Read Replica 1**: Reads data from the first read replica. visible in diagram; no further repository context available.
+- **G / Return Data**: Returns data from the data layer. visible in diagram; no further repository context available.
+- **H / Write Router**: Routes write requests to the primary database. visible in diagram; no further repository context available.
+- **I / Primary Database**: The main database where write operations are performed. visible in diagram; no further repository context available.
+- **J / Replication Queuer**: Queues replication tasks for the read replicas. visible in diagram; no further repository context available.
+- **K / Cache Invalidation**: Invalidates the cache when data is updated. visible in diagram; no further repository context available.
+- **L / Read Replica 2**: Reads data from the second read replica. visible in diagram; no further repository context available.
+- **M / Cache Server**: The caching server. visible in diagram; no further repository context available.
+- **N / Return to Client**: Returns the response to the client. visible in diagram; no further repository context available.
+- **O / Replication Worker**: Processes replication tasks and updates the read replicas. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: An incoming request is sent to the Read or Write decision point.
+- `B -- Is Read --> C`: If the request is a read operation, it is routed to the Read Router.
+- `B -- Is Write --> H`: If the request is a write operation, it is routed to the Write Router.
+- `C --> D`: The Read Router sends the request to check for a cache hit.
+- `D -- Yes --> E`: If there is a cache hit, the cached data is returned.
+- `D -- No --> F`: If there is no cache hit, the request is sent to Read Replica 1.
+- `F --> L`: Read Replica 1 sends a request to Read Replica 2.
+- `L --> G`: Read Replica 2 returns data to Return Data.
+- `F --> G`: Read Replica 1 returns data to Return Data.
+- `G --> E`: The data returned from the data layer converges with the cached data path.
+- `E --> N`: The cached data is returned to the client.
+- `H --> I`: The Write Router sends the write request to the Primary Database.
+- `I --> N`: The Primary Database returns to the client.
+- `I --> J`: The Primary Database sends replication tasks to the Replication Queuer.
+- `J --> K`: The Replication Queuer sends cache invalidation requests to Cache Invalidation.
+- `J --> O`: The Replication Queuer sends replication tasks to the Replication Worker.
+- `O --> L`: The Replication Worker updates Read Replica 2.
+- `O --> F`: The Replication Worker updates Read Replica 1.
+- `G --> K`: The data returned from the data layer triggers a cache invalidation.
+- `K --> M`: The Cache Invalidation sends a request to the Cache Server.
+- `M --> N`: The Cache Server returns to the client.
+
+## Repository Context & Terminology
+- **Read Replica**: A read-only copy of the primary database, used to distribute read load and improve performance.
+- **Write Router**: A component responsible for routing write requests to the appropriate database instance.
+- **Primary Database**: The main database where all write operations are performed.
+- **Replication Queuer**: A component that queues replication tasks to be processed by replication workers.
+- **Replication Worker**: A component that processes replication tasks and updates the read replicas.
+- **Cache Invalidation**: The process of removing stale data from the cache when the underlying data is updated.
+- **Cache Server**: A server that stores frequently accessed data for faster retrieval.
+
+## High-Density QA Ground Truth Summary
+The system begins with an "Incoming Request" which is immediately classified by the "Read or Write?" decision diamond. If the request is a read, it proceeds to the "Read Router"; if it's a write, it goes to the "Write Router." Read requests then check for a "Cache Hit?". A positive cache hit immediately returns "Return Cached Data" to the client. A cache miss directs the request to "Read Replica 1" within the "Data Layer," which then requests data from "Read Replica 2" before returning data. Write requests are routed to the "Primary Database," triggering a "Replication Queuer" to update the read replicas via "Replication Worker" and invalidate the "Cache Server." Both read and write paths ultimately converge at "Return to Client." The "Data Layer" subgraph contains the "Read Replica 1", "Read Replica 2", "Return Data", "Cache Invalidation", and "Cache Server" components, managing data retrieval and caching. The replication process ensures data consistency across the primary database and read replicas, enhancing system reliability and performance.

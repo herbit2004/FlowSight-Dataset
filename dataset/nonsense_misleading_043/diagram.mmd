@@ -1,0 +1,22 @@
+graph TD
+    A[Start: Order Received] --> B{Payment Successful?};
+    B -- No --> C[Send Payment Reminder];
+    C --> G[Order Cancelled];
+    B -- Yes --> D[Package Items];
+    D --> E{All Items in Stock?};
+    E -- Yes --> F[Set Shipping Address];
+    F --> K{Shipping Address Valid?};
+    K -- No --> L[Order Shipped];
+    E -- No --> H[Notify Customer of Delay];
+    H --> I[Customer Cancels Order?];
+    I -- No --> J[Backorder Items];
+    J --> D;
+    I -- Yes --> G;
+    K -- Yes --> L;
+    L --> M[Send Shipping Notification];
+    M --> N[Order Delivered];
+    N --> O[Request Customer Feedback];
+    O --> A;
+    G --> P[Refund Payment];
+    P --> Q[End: Order Complete];
+    L --> Q;

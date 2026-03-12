@@ -1,0 +1,42 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating a multi-region deployment of an application using AWS services. It shows the flow of traffic and data replication between regions, focusing on EKS clusters, Aurora Global Databases, and ElastiCache Global instances. The diagram serves to visualize the architecture for intelligent traffic management and data consistency across different geographical locations.
+
+## Overall Layout
+The diagram is laid out from top to bottom. It features a global layer at the top, with two regional deployments (Taiwan and Japan) below. The global layer acts as the entry point, directing traffic to the regional clusters.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Global Layer**: Represents the global routing and traffic management component.
+- **Taiwan Region (ap-east-2)**: Represents the primary application deployment in the Taiwan region.
+- **Japan Region (ap-northeast-1)**: Represents the secondary application deployment in the Japan region.
+
+## Node-by-Node Description
+- **Global / Route 53 DNS Intelligent Traffic Management**: Represents the global DNS service (Route 53) responsible for intelligent traffic management. visible in diagram; no further repository context available.
+- **Taiwan / EKS Cluster 5 nodes x 3 AZs**: Represents an Elastic Kubernetes Service (EKS) cluster in the Taiwan region, consisting of 5 nodes distributed across 3 Availability Zones. visible in diagram; no further repository context available.
+- **Taiwan / Aurora Global DB Primary Writer**: Represents an Aurora Global Database instance in the Taiwan region, acting as the primary writer. visible in diagram; no further repository context available.
+- **Taiwan / ElastiCache Global**: Represents a global ElastiCache instance in the Taiwan region. visible in diagram; no further repository context available.
+- **Japan / EKS Cluster 5 nodes x 3 AZs**: Represents an EKS cluster in the Japan region, consisting of 5 nodes distributed across 3 Availability Zones. visible in diagram; no further repository context available.
+- **Japan / Aurora Global DB Write Forwarding**: Represents an Aurora Global Database instance in the Japan region, configured for write forwarding. visible in diagram; no further repository context available.
+- **Japan / ElastiCache Global**: Represents a global ElastiCache instance in the Japan region. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Global --> Taiwan EKS Cluster`: Traffic is routed from the global DNS to the EKS cluster in the Taiwan region.
+- `Global --> Japan EKS Cluster`: Traffic is routed from the global DNS to the EKS cluster in the Japan region.
+- `Taiwan EKS Cluster --> Taiwan Aurora Global DB`: The EKS cluster in Taiwan interacts with the Aurora Global DB primary writer.
+- `Taiwan EKS Cluster --> Taiwan ElastiCache Global`: The EKS cluster in Taiwan interacts with the ElastiCache Global instance.
+- `Japan EKS Cluster --> Japan Aurora Global DB`: The EKS cluster in Japan interacts with the Aurora Global DB instance configured for write forwarding.
+- `Japan EKS Cluster --> Japan ElastiCache Global`: The EKS cluster in Japan interacts with the ElastiCache Global instance.
+- `Taiwan Aurora Global DB --> Japan Aurora Global DB`: Data is replicated from the primary Aurora Global DB in Taiwan to the instance in Japan, with a replication latency of less than 1 second.
+- `Taiwan ElastiCache Global --> Japan ElastiCache Global`: Data is replicated from the ElastiCache Global instance in Taiwan to the instance in Japan, with a replication latency of less than 1 second.
+
+## Repository Context & Terminology
+- **Route 53 DNS**: A scalable and highly available Domain Name System (DNS) web service provided by AWS. It's used to route end-user requests to internet resources.
+- **EKS Cluster**: Elastic Kubernetes Service, a managed Kubernetes service that makes it easy to run, scale, and manage containerized applications on AWS.
+- **Aurora Global DB**: A distributed, fault-tolerant, self-healing database system compatible with MySQL and PostgreSQL. It allows for low-latency global reads and disaster recovery.
+- **ElastiCache Global**: A fully managed, in-memory data store service by AWS, compatible with Redis and Memcached. It provides caching to improve application performance.
+- **Availability Zones (AZs)**: Distinct locations within an AWS region that are engineered to be isolated from failures in other Availability Zones.
+- **Write Forwarding**: A database configuration where writes are forwarded from a secondary region to the primary region for consistency.
+- **Replication Latency**: The time it takes for data changes to be replicated from one database instance to another.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with Route 53 DNS at the Global Layer, which intelligently routes traffic to either the EKS Cluster in the Taiwan Region or the EKS Cluster in the Japan Region. Traffic distribution is implied, with Taiwan handling a primary 60% and Japan a secondary 40%. The EKS Clusters in both regions, each composed of 5 nodes across 3 Availability Zones, interact with their respective Aurora Global DB instances and ElastiCache Global instances. In Taiwan, the Aurora Global DB acts as the Primary Writer, while in Japan, it's configured for Write Forwarding. Data replication occurs between the Aurora Global DB instances and ElastiCache Global instances in Taiwan and Japan, with a replication latency of less than 1 second. This setup ensures data consistency and low-latency access across regions. The architecture leverages AWS managed services like EKS, Aurora, and ElastiCache to provide a scalable and resilient application deployment. The end nodes are the Aurora Global DB and ElastiCache Global instances in both Taiwan and Japan, representing the data storage and caching layers of the application.

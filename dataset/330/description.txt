@@ -1,0 +1,57 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of a system that processes user input, potentially leveraging AI SDK tools, and generates a response. The diagram outlines the different paths the input can take based on its type (text, file) and whether a tool call is required. It serves as a visual representation of the system's logic and data flow.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TB). It starts with "User Input" at the top and flows down through various processing stages, branching based on input type and tool call decisions, eventually converging at the "Display Response" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: User Input & Type Handling, File Parsing, AI Processing, Tool Call Handling, and Response Generation.
+
+## Node-by-Node Description
+- **A / User Input**: Represents the initial user-provided data. visible in diagram; no further repository context available.
+- **B / Input Type**: A decision node that determines the type of user input (File or Text). visible in diagram; no further repository context available.
+- **C / Text Processing**: Processes text-based input. visible in diagram; no further repository context available.
+- **D / File Parsing**: Parses file-based input. visible in diagram; no further repository context available.
+- **E / PDF.js Parsing**: Parses PDF files. visible in diagram; no further repository context available.
+- **F / Base64 Encoding**: Encodes image files using Base64. visible in diagram; no further repository context available.
+- **G / API Route**: Represents the API endpoint where the processed data is routed. visible in diagram; no further repository context available.
+- **H / AI SDK**: Represents the AI Software Development Kit used for processing. visible in diagram; no further repository context available.
+- **I / Tool Call?**: A decision node that determines whether a tool call is required. visible in diagram; no further repository context available.
+- **J / suggest_enhancements**: Suggests enhancements based on the input. visible in diagram; no further repository context available.
+- **K / propose_prompt**: Proposes a prompt based on the input. visible in diagram; no further repository context available.
+- **L / Streaming Text Response**: Generates a streaming text response. visible in diagram; no further repository context available.
+- **M / Interactive Form**: Presents an interactive form to the user. visible in diagram; no further repository context available.
+- **N / User Selection**: Captures user selections from the interactive form. visible in diagram; no further repository context available.
+- **O / Structured Prompt**: Generates a structured prompt. visible in diagram; no further repository context available.
+- **P / Display Response**: Displays the final response to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User input is passed to determine its type.
+- `B -- Text --> C`: If the input type is Text, it goes to Text Processing.
+- `B -- File --> D`: If the input type is File, it goes to File Parsing.
+- `D -- PDF --> E`: If the file is a PDF, it goes to PDF.js Parsing.
+- `D -- Image --> F`: If the file is an Image, it goes to Base64 Encoding.
+- `C --> G`: Processed text data is routed to the API Route.
+- `E --> G`: Parsed PDF data is routed to the API Route.
+- `F --> G`: Encoded image data is routed to the API Route.
+- `G --> H`: Data from the API Route is passed to the AI SDK.
+- `H --> I`: The AI SDK determines if a tool call is needed.
+- `I -- Yes --> J`: If a tool call is required, and the path taken is "suggest_enhancements".
+- `I -- Yes --> K`: If a tool call is required, and the path taken is "propose_prompt".
+- `I -- No --> L`: If a tool call is not required, a Streaming Text Response is generated.
+- `J --> M`: Enhancement suggestions lead to an Interactive Form.
+- `M --> N`: User selections from the Interactive Form are captured.
+- `N --> G`: User selections are routed back to the API Route.
+- `K --> O`: A prompt is proposed, resulting in a Structured Prompt.
+- `L --> P`: The Streaming Text Response is displayed.
+- `O --> P`: The Structured Prompt is displayed.
+- `L` and `O` converge at `P`.
+
+## Repository Context & Terminology
+- **API Route**: An endpoint that receives and processes data, potentially triggering further actions within the system.
+- **AI SDK**: A software development kit that provides tools and libraries for integrating AI functionalities into the system.
+- **Base64 Encoding**: A method of encoding binary data into an ASCII string format.
+- **PDF.js Parsing**: A library used for parsing and rendering PDF documents.
+
+## High-Density QA Ground Truth Summary
+The workflow begins with "User Input" (A), which is immediately classified by "Input Type" (B). If the input is "Text", it proceeds to "Text Processing" (C), then to "API Route" (G). If the input is a "File", it goes to "File Parsing" (D), branching to "PDF.js Parsing" (E) for PDFs or "Base64 Encoding" (F) for images, both eventually reaching "API Route" (G). From "API Route" (G), the data flows to "AI SDK" (H), which decides whether a "Tool Call?" (I) is necessary. If "Yes", the process branches to either "suggest_enhancements" (J) leading to "Interactive Form" (M) and "User Selection" (N) which loops back to "API Route" (G), or to "propose_prompt" (K) resulting in a "Structured Prompt" (O). If "No", a "Streaming Text Response" (L) is generated. Finally, both "Structured Prompt" (O) and "Streaming Text Response" (L) converge at "Display Response" (P), which presents the final output to the user. The "API Route" serves as a central hub, receiving processed data from various input types and directing it towards AI processing or other actions.

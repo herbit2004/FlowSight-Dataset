@@ -1,0 +1,75 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the shard routing process in a distributed system. It illustrates the flow of a request from the API Gateway through various stages of validation, authentication, shard mapping, and finally to the appropriate data shard within a shard cluster. The diagram serves as a high-level architectural overview of the routing logic.
+
+## Overall Layout
+The diagram's primary direction is left to right (LR). It features an overall hierarchy with a main "Shard Router" process containing a nested "Shard Cluster" subgraph. The start node is the "API Gateway," and the end nodes are "Data Storage" (within the Shard Cluster), "Monitoring Dashboard," "Reject Request," and "Return Auth Error."
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Shard Cluster**: This subgraph represents the cluster of data shards and the shard coordinator responsible for directing requests to the appropriate shard.
+
+## Node-by-Node Description
+- **API Gateway**: Entry point for incoming requests. visible in diagram; no further repository context available.
+- **Rate Limiter**: Checks if the request is within the defined rate limits. visible in diagram; no further repository context available.
+- **Request Validator**: Validates the incoming request. visible in diagram; no further repository context available.
+- **Authentication Service**: Authenticates the request. visible in diagram; no further repository context available.
+- **Session Manager**: Manages user sessions. visible in diagram; no further repository context available.
+- **Consistent Hash**: Applies a consistent hashing algorithm to determine the appropriate shard. visible in diagram; no further repository context available.
+- **Shard Map Lookup**: Looks up the shard mapping information. visible in diagram; no further repository context available.
+- **Shard Region ID**: Identifies the region of the shard. visible in diagram; no further repository context available.
+- **Router Cache Layer**: Caches routing information. visible in diagram; no further repository context available.
+- **Shard Discovery Service**: Discovers the shard endpoint. visible in diagram; no further repository context available.
+- **Shard Endpoint**: The endpoint of the shard. visible in diagram; no further repository context available.
+- **Update Router Cache**: Updates the router cache with new shard information. visible in diagram; no further repository context available.
+- **Route to Shard**: Routes the request to the appropriate shard. visible in diagram; no further repository context available.
+- **Shard Coordinator**: Coordinates requests within the shard cluster. visible in diagram; no further repository context available.
+- **Data Shard 1**: Represents the first data shard. visible in diagram; no further repository context available.
+- **Data Shard 2**: Represents the second data shard. visible in diagram; no further repository context available.
+- **Data Shard 3**: Represents the third data shard. visible in diagram; no further repository context available.
+- **Data Storage**: Stores the data. visible in diagram; no further repository context available.
+- **Metrics Pipeline**: Processes metrics data. visible in diagram; no further repository context available.
+- **Monitoring Dashboard**: Displays monitoring information. visible in diagram; no further repository context available.
+- **Reject Request**: Rejects the request if rate limit is exceeded. visible in diagram; no further repository context available.
+- **Return Error**: Returns an error if the request is invalid. visible in diagram; no further repository context available.
+- **Return Auth Error**: Returns an authentication error. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `API Gateway --> Rate Limiter`: Incoming request enters the rate limiter.
+- `Rate Limiter -- Within Limit? --> Request Validator`: If the request is within the rate limit, it proceeds to the request validator.
+- `Rate Limiter -- Exceeded Limit --> Reject Request`: If the request exceeds the rate limit, it is rejected.
+- `Request Validator -- Valid Request? --> Authentication Service`: If the request is valid, it proceeds to the authentication service.
+- `Request Validator -- Invalid Request --> Return Error`: If the request is invalid, an error is returned.
+- `Authentication Service -- Authenticated? --> Session Manager`: If the request is authenticated, the session is managed.
+- `Authentication Service -- Not Authenticated --> Return Auth Error`: If the request is not authenticated, an authentication error is returned.
+- `Session Manager --> Consistent Hash`: The session manager passes the request to the consistent hash function.
+- `Consistent Hash --> Shard Map Lookup`: The consistent hash output is used for shard map lookup.
+- `Shard Map Lookup --> Shard Region ID`: The shard map lookup returns the shard region ID.
+- `Shard Region ID --> Router Cache Layer`: The shard region ID is passed to the router cache layer.
+- `Router Cache Layer -- Cache Hit? --> Route to Shard`: If the shard information is in the cache, the request is routed to the shard.
+- `Router Cache Layer -- Cache Miss? --> Shard Discovery Service`: If the shard information is not in the cache, the shard discovery service is called.
+- `Shard Discovery Service --> Shard Endpoint`: The shard discovery service returns the shard endpoint.
+- `Shard Endpoint --> Update Router Cache`: The shard endpoint is used to update the router cache.
+- `Update Router Cache --> Route to Shard`: After updating the cache, the request is routed to the shard.
+- `Route to Shard --> Shard Coordinator`: The request is routed to the shard coordinator.
+- `Shard Coordinator --> Data Shard 1`: The shard coordinator routes the request to data shard 1.
+- `Shard Coordinator --> Data Shard 2`: The shard coordinator routes the request to data shard 2.
+- `Shard Coordinator --> Data Shard 3`: The shard coordinator routes the request to data shard 3.
+- `Data Shard 1 --> Data Storage`: Data shard 1 stores the data.
+- `Data Shard 2 --> Data Storage`: Data shard 2 stores the data.
+- `Data Shard 3 --> Data Storage`: Data shard 3 stores the data.
+- `Route to Shard --> Metrics Pipeline`: The route to shard also sends data to the metrics pipeline.
+- `Metrics Pipeline --> Monitoring Dashboard`: The metrics pipeline sends data to the monitoring dashboard.
+
+## Repository Context & Terminology
+- **API Gateway**: A server that acts as a single entry point for a system, used to handle routing, composition, and protocol translation.
+- **Rate Limiter**: A mechanism to control the rate of requests to prevent abuse or overload.
+- **Authentication Service**: Verifies the identity of a user or service.
+- **Session Manager**: Manages user sessions, typically involving storing session data and handling session lifecycle.
+- **Consistent Hash**: A hashing technique that minimizes the impact of adding or removing nodes in a distributed system.
+- **Shard Map Lookup**: A process to determine the correct shard based on the consistent hash.
+- **Shard Discovery Service**: A service that provides information about available shards and their endpoints.
+- **Shard Coordinator**: A component responsible for managing and coordinating operations across multiple shards.
+- **Metrics Pipeline**: A system for collecting, processing, and storing metrics data.
+
+## High-Density QA Ground Truth Summary
+The shard routing process begins at the API Gateway, where incoming requests are first subjected to rate limiting. If the request exceeds the defined rate limits, it is immediately rejected, terminating the flow at the "Reject Request" node. Otherwise, the request proceeds to the Request Validator, which checks for validity. Invalid requests are routed to the "Return Error" node. Valid requests are then passed to the Authentication Service, which determines if the request is authenticated. Unauthenticated requests are directed to the "Return Auth Error" node. Authenticated requests proceed to the Session Manager, which manages the user session. The core routing logic involves a Consistent Hash function to map the request to a specific shard. This hash is used in a Shard Map Lookup to identify the Shard Region ID. The Router Cache Layer checks if the shard information is cached. A cache hit routes the request directly to the Route to Shard node. A cache miss triggers the Shard Discovery Service to find the Shard Endpoint, which then updates the Router Cache. Finally, the Route to Shard node directs the request to the appropriate Data Shard (1, 2, or 3) via the Shard Coordinator within the Shard Cluster. Each Data Shard stores data in its respective Data Storage. The Route to Shard also feeds data into a Metrics Pipeline, which ultimately populates the Monitoring Dashboard. The use of consistent hashing ensures even distribution of data across shards, a common technique in distributed databases.

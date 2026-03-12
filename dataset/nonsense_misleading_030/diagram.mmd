@@ -1,0 +1,24 @@
+graph TD
+    A[User Initiates Order] --> B{Check Inventory};
+    B -- No --> C[Notify User of Out of Stock];
+    B -- Yes --> D[Process Payment];
+    D -- Success --> E[Order Placed Confirmation];
+    D -- Failure --> Q[Refund Initiated];
+    E --> F{Address Valid?};
+    F -- Yes --> G[Prepare Shipment];
+    F -- No --> C;
+    G --> H[Package Item];
+    H --> I[Shipping Label Printed];
+    I --> J[Shipment Dispatched];
+    J --> K[Update Order Status];
+    K --> L{Delivery Received?};
+    L -- No --> M[Investigate Delay];
+    M --> J
+    L -- Yes --> N[Order Delivered];
+    N --> O[Close Order];
+    Q --> P[Payment Reversed];
+    P --> A
+    C --> R[Notify User of Payment Failure];
+    R --> A
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style O fill:#f9f,stroke:#333,stroke-width:2px

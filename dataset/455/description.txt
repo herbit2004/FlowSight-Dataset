@@ -1,0 +1,49 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of an automated testing process. It depicts the sequence of operations from parsing a markdown test case to exporting the generated test code. The diagram serves as a high-level overview of the test generation and execution pipeline.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It presents a linear flow with a single start node and multiple end nodes representing different outputs of the process. The flow branches towards the end, representing different types of artifacts generated.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Markdown Test Case, Parser, Claude Agent SDK, MCP Browser Tools, Playwright Engine, Artifacts/Action IR, and Export Code.
+
+## Node-by-Node Description
+- **A / Markdown Test Case**: Represents the initial markdown file containing the test case definition.
+  visible in diagram; no further repository context available.
+- **B / Parser Extract Preconditions & Steps**: Represents the parsing stage where preconditions and steps are extracted from the markdown test case.
+  visible in diagram; no further repository context available.
+- **C / Claude Agent SDK ReAct Loop Execution**: Represents the execution of the ReAct loop using the Claude Agent SDK.
+  visible in diagram; no further repository context available.
+- **D / MCP Browser Tools snapshot/navigate/click/fill**: Represents the usage of MCP Browser Tools for browser interactions such as taking snapshots, navigating, clicking, and filling forms.
+  visible in diagram; no further repository context available.
+- **E / Playwright Engine Actual Browser Operations**: Represents the Playwright engine performing actual browser operations based on the extracted steps.
+  visible in diagram; no further repository context available.
+- **F / Artifacts Screenshots/Snapshots/Logs/Traces**: Represents the generation of artifacts such as screenshots, snapshots, logs, and traces.
+  visible in diagram; no further repository context available.
+- **G / Action IR .autoqa/runs//ir.jsonl**: Represents the generation of Action Intermediate Representation (IR) stored in a `.jsonl` file. The path includes `.autoqa/runs/<runId>/ir.jsonl`.
+  visible in diagram; no further repository context available.
+- **H / Export Code tests/autoqa/*.spec.ts**: Represents the export of the generated test code into a `.spec.ts` file, located in the `tests/autoqa/` directory.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `A --> B`: Represents the flow from the markdown test case to the parser.
+  `B --> C`: Represents the flow from the parser to the Claude Agent SDK for ReAct loop execution.
+  `C --> D`: Represents the flow from the Claude Agent SDK to the MCP Browser Tools.
+  `D --> E`: Represents the flow from the MCP Browser Tools to the Playwright Engine.
+  `E --> F`: Represents the generation of artifacts from the Playwright Engine.
+  `E --> G`: Represents the generation of Action IR from the Playwright Engine.
+  `G --> H`: Represents the export of code from the Action IR.
+
+## Repository Context & Terminology
+- **Markdown Test Case**: The initial input for the test generation process, defining the test scenario in a human-readable format.
+- **Parser**: A component responsible for extracting structured information (preconditions and steps) from the Markdown Test Case.
+- **Claude Agent SDK**: A software development kit used to interact with the Claude agent, likely for decision-making or task orchestration within the ReAct loop.
+- **ReAct Loop Execution**: A process involving reasoning and acting, where the agent observes the environment, reasons about the next action, and then executes it.
+- **MCP Browser Tools**: A set of tools used for browser automation, providing functionalities such as taking snapshots, navigating web pages, clicking elements, and filling forms.
+- **Playwright Engine**: A browser automation framework used to perform actual browser operations.
+- **Action IR**: An intermediate representation of the actions to be performed, stored in a `.jsonl` file.
+- **.autoqa/runs//ir.jsonl**: Path to the Action IR file, where `<runId>` is a placeholder for the specific test run identifier.
+- **tests/autoqa/*.spec.ts**: The location where the generated test code is exported, using the TypeScript file extension `.spec.ts`.
+
+## High-Density QA Ground Truth Summary
+The automated testing process begins with a Markdown Test Case (A), which is then fed into a Parser (B) to extract preconditions and steps. The extracted information is used by the Claude Agent SDK (C) to execute a ReAct loop. This loop leverages MCP Browser Tools (D) for browser interactions, including snapshotting, navigation, clicking, and form filling. The Playwright Engine (E) then performs the actual browser operations. From the Playwright Engine, the process branches into two paths: one generates Artifacts (F) like screenshots, snapshots, logs, and traces, and the other generates an Action IR (G) file located at `.autoqa/runs/<runId>/ir.jsonl`. Finally, the Action IR is used to export the generated test code (H) to `tests/autoqa/*.spec.ts`. The `.autoqa/runs/<runId>/ir.jsonl` path suggests that each test run has a unique identifier, allowing for organized storage and retrieval of test execution data. The final output is a Typescript file that can be executed by a test runner.

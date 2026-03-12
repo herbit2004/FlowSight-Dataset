@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow for an e-commerce system. It illustrates the sequence of steps involved from receiving an order to logging its completion, including inventory checks, payment processing, shipping, and customer feedback. The diagram serves as a visual representation of the order fulfillment process, but contains intentional errors.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with a single "Start: Order Received" node at the top and flows downwards through various processing steps, decision points, and ultimately converges to "Log Order Completion" at the bottom. There are multiple end states representing different outcomes of the order process.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Initiation (A), Inventory Check (B, C), Payment Processing (D, E, I, J), Order Fulfillment (H, G, K, L, M, N), Order Completion (F, O).
+
+## Node-by-Node Description
+- **A / Start: Order Received**: Represents the beginning of the order processing workflow, triggered when a new order is placed. visible in diagram; no further repository context available.
+- **B / Inventory Check: In Stock?**: A decision point to determine if the ordered items are currently in stock. visible in diagram; no further repository context available.
+- **C / Send Out-of-Stock Notification**: Sends a notification to the customer if the ordered items are out of stock. visible in diagram; no further repository context available.
+- **D / Process Payment**: Initiates the payment processing procedure for the order. visible in diagram; no further repository context available.
+- **E / Payment Successful?**: A decision point to determine if the payment was successfully processed. visible in diagram; no further repository context available.
+- **F / End: Order Cancelled**: Represents the end of the order process when the order is cancelled, reached either due to out-of-stock items or after sending the order confirmation email. visible in diagram; no further repository context available.
+- **G / Customer Received Order?**: A decision point to determine if the customer has received the order. visible in diagram; no further repository context available.
+- **H / Ship Order**: Represents the action of shipping the order to the customer. visible in diagram; no further repository context available.
+- **I / Send Failed Payment Notification**: Sends a notification to the customer if the payment failed. visible in diagram; no further repository context available.
+- **J / End: Order Rejected**: Represents the end of the order process when the order is rejected due to payment failure. visible in diagram; no further repository context available.
+- **K / Request Customer Feedback**: Requests feedback from the customer if they have not received the order. visible in diagram; no further repository context available.
+- **L / Update Inventory**: Updates the inventory levels after the order has been shipped and received. visible in diagram; no further repository context available.
+- **M / Generate Invoice**: Generates an invoice for the order. visible in diagram; no further repository context available.
+- **N / Send Order Confirmation Email**: Sends an email to the customer confirming their order. visible in diagram; no further repository context available.
+- **O / Log Order Completion**: Logs the completion of the order processing workflow. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The order processing workflow starts with an inventory check.
+- `B -- No --> C`: If the items are not in stock, send an out-of-stock notification.
+- `C --> F`: Sending the out-of-stock notification leads to order cancellation.
+- `B -- Yes --> D`: If the items are in stock, proceed to process the payment.
+- `D --> E`: After processing the payment, check if it was successful.
+- `E -- No --> I`: If the payment failed, send a failed payment notification.
+- `I --> J`: Sending the failed payment notification leads to order rejection.
+- `E -- Yes --> H`: If the payment was successful, ship the order.
+- `H --> G`: After shipping the order, check if the customer received it.
+- `G -- No --> K`: If the customer did not receive the order, request customer feedback.
+- `K --> H`: Requesting customer feedback loops back to shipping the order.
+- `G -- Yes --> L`: If the customer received the order, update the inventory.
+- `L --> M`: After updating the inventory, generate an invoice.
+- `M --> N`: After generating the invoice, send an order confirmation email.
+- `N --> F`: Sending the order confirmation email leads to order cancellation.
+- `F --> O`: Order cancellation leads to logging order completion.
+- `J --> O`: Order rejection leads to logging order completion.
+- `O --> A`: Logging order completion loops back to the start of the order processing workflow.
+
+## Repository Context & Terminology
+- **Order Received**: In standard e-commerce, this refers to the initial event when a customer places an order. In this diagram, it's the starting point of the workflow, but the completion of the order loops back to this point, which is not standard.
+- **Inventory Check**: In standard e-commerce, this verifies if the ordered items are available in stock. In this diagram, the 'No' branch from 'In Stock?' leads to sending an out-of-stock notification and cancelling the order, which is correct. However, the 'Yes' branch is taken when items are *not* in stock, which is an error.
+- **Process Payment**: In standard e-commerce, this involves securely processing the customer's payment. In this diagram, it's a step in the workflow, but there's no address validation step, which is a critical omission.
+- **Ship Order**: In standard e-commerce, this refers to the physical shipment of the order to the customer. In this diagram, it follows successful payment, but the flow loops back to this step from customer feedback, which is unusual.
+- **Update Inventory**: In standard e-commerce, this updates the stock levels after an order is fulfilled. In this diagram, it occurs *before* logging order completion, and before generating the invoice and sending the order confirmation email, which is an incorrect sequence.
+- **Generate Invoice**: In standard e-commerce, this creates a bill for the order. In this diagram, it happens after inventory update, which is out of order.
+- **Send Order Confirmation Email**: In standard e-commerce, this confirms the order details to the customer. In this diagram, it leads to order cancellation, which is contradictory.
+- **Log Order Completion**: In standard e-commerce, this records the successful completion of the order. In this diagram, it loops back to the start, which is not standard.
+
+## High-Density QA Ground Truth Summary
+The order processing flowchart begins with "Start: Order Received" (A), immediately followed by an "Inventory Check: In Stock?" (B) decision. If the items are incorrectly determined to be out of stock ('No' branch), a "Send Out-of-Stock Notification" (C) is triggered, leading to "End: Order Cancelled" (F). Conversely, if the items are incorrectly determined to be in stock ('Yes' branch), the process continues to "Process Payment" (D). A "Payment Successful?" (E) decision follows. If payment fails ('No' branch), a "Send Failed Payment Notification" (I) is sent, resulting in "End: Order Rejected" (J). If payment is successful ('Yes' branch), the "Ship Order" (H) step is initiated. Subsequently, the system checks "Customer Received Order?" (G). If the customer hasn't received the order ('No' branch), "Request Customer Feedback" (K), which then loops back to "Ship Order" (H). If the customer has received the order ('Yes' branch), "Update Inventory" (L) occurs, followed by "Generate Invoice" (M), and then "Send Order Confirmation Email" (N), which unexpectedly leads to "End: Order Cancelled" (F). Both "End: Order Cancelled" (F) and "End: Order Rejected" (J) lead to "Log Order Completion" (O), which then loops back to "Start: Order Received" (A), restarting the entire process. The standard e-commerce practice of address validation is skipped entirely.

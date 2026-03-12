@@ -1,0 +1,75 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the CoreSync protocol initiation and execution flow. It outlines the steps involved in a VaultNode handshake, authentication, buffer allocation, data transformation, and acknowledgement processes. The diagram serves as a visual representation of the protocol's logic, error handling, and overall workflow.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "Start: Initiating CoreSync Protocol" node at the top and flows downwards through various processes and decision points, eventually converging to the "End: CoreSync Protocol Completed" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Handshake and Authentication, Buffer Allocation, Data Transformation, Acknowledgement, and Termination.
+
+## Node-by-Node Description
+- **A / Start: Initiating CoreSync Protocol**: Represents the beginning of the CoreSync protocol execution. visible in diagram; no further repository context available.
+- **B / VaultNode Handshake Request**: Represents the initial handshake request from a VaultNode. visible in diagram; no further repository context available.
+- **C / ZenithGate Auth Layer: Authorize Request**: Represents the authorization request processed by the ZenithGate authentication layer. visible in diagram; no further repository context available.
+- **D / Error: SpectraKey Rejection**: Represents an error state when the SpectraKey is invalid. visible in diagram; no further repository context available.
+- **E / ArcLane Distributor: Log Rejection Event**: Represents the logging of a rejection event by the ArcLane Distributor. visible in diagram; no further repository context available.
+- **F / Terminate CoreSync Protocol**: Represents the termination of the CoreSync protocol. visible in diagram; no further repository context available.
+- **G / FluxBridge Router: Route Request**: Represents the routing of the request by the FluxBridge Router. visible in diagram; no further repository context available.
+- **H / Error: Authentication Failure**: Represents an error state when authentication fails. visible in diagram; no further repository context available.
+- **I / SpectraQueue Flush: Allocate Buffer**: Represents the allocation of a buffer by the SpectraQueue Flush. visible in diagram; no further repository context available.
+- **J / Buffer Allocation Successful?**: Represents a decision point to check if the buffer allocation was successful. visible in diagram; no further repository context available.
+- **K / CoreSync Validation: Validate Payload**: Represents the validation of the payload by CoreSync. visible in diagram; no further repository context available.
+- **L / Error: Insufficient Buffer Space**: Represents an error state when there is insufficient buffer space. visible in diagram; no further repository context available.
+- **M / ArcLane Distributor: Forward to Target Node**: Represents the forwarding of the payload to the target node by the ArcLane Distributor. visible in diagram; no further repository context available.
+- **N / Error: Payload Validation Failed**: Represents an error state when the payload validation fails. visible in diagram; no further repository context available.
+- **O / Target Node: Execute Data Transformation**: Represents the execution of data transformation by the target node. visible in diagram; no further repository context available.
+- **P / VaultNode Handshake Response: Acknowledge Completion**: Represents the acknowledgement of completion by the VaultNode in response to the handshake. visible in diagram; no further repository context available.
+- **Q / SpectraQueue Flush: Deallocate Buffer**: Represents the deallocation of the buffer by the SpectraQueue Flush. visible in diagram; no further repository context available.
+- **R / FluxBridge Router: Route Acknowledgement**: Represents the routing of the acknowledgement by the FluxBridge Router. visible in diagram; no further repository context available.
+- **S / CoreSync Validation: Verify Acknowledgement**: Represents the verification of the acknowledgement by CoreSync. visible in diagram; no further repository context available.
+- **T / Update CoreSync Metadata**: Represents the updating of CoreSync metadata. visible in diagram; no further repository context available.
+- **U / Error: Acknowledgement Verification Failure**: Represents an error state when the acknowledgement verification fails. visible in diagram; no further repository context available.
+- **V / Finalize CoreSync Protocol**: Represents the finalization of the CoreSync protocol. visible in diagram; no further repository context available.
+- **Z / End: CoreSync Protocol Completed**: Represents the completion of the CoreSync protocol. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Initiating CoreSync protocol leads to VaultNode handshake request.
+- `B -- Valid SpectraKey? --> C`: If the SpectraKey is valid, proceed to ZenithGate authentication.
+- `B -- Invalid SpectraKey --> D`: If the SpectraKey is invalid, proceed to SpectraKey rejection error.
+- `C -- Authentication Success --> G`: Successful authentication leads to routing the request via FluxBridge.
+- `C -- Authentication Failure --> H`: Authentication failure leads to an authentication failure error.
+- `G --> I`: Routing the request leads to buffer allocation by SpectraQueue.
+- `I --> J`: Buffer allocation leads to a check for successful allocation.
+- `J -- Yes --> K`: Successful buffer allocation leads to CoreSync payload validation.
+- `J -- No --> L`: Unsuccessful buffer allocation leads to an insufficient buffer space error.
+- `K -- Payload Valid --> M`: Valid payload leads to forwarding to the target node.
+- `K -- Payload Invalid --> N`: Invalid payload leads to a payload validation failed error.
+- `M --> O`: Forwarding to the target node leads to data transformation.
+- `O --> P`: Data transformation leads to VaultNode handshake response.
+- `P --> Q`: Handshake response leads to buffer deallocation.
+- `Q --> R`: Buffer deallocation leads to routing the acknowledgement.
+- `R --> S`: Routing the acknowledgement leads to CoreSync acknowledgement verification.
+- `S -- Verification Success --> T`: Successful verification leads to updating CoreSync metadata.
+- `S -- Verification Failure --> U`: Verification failure leads to an acknowledgement verification failure error.
+- `T --> V`: Updating metadata leads to finalizing the CoreSync protocol.
+- `D --> E`: SpectraKey rejection error leads to logging the rejection event.
+- `H --> E`: Authentication failure error leads to logging the rejection event.
+- `L --> E`: Insufficient buffer space error leads to logging the rejection event.
+- `N --> E`: Payload validation failed error leads to logging the rejection event.
+- `U --> E`: Acknowledgement verification failure error leads to logging the rejection event.
+- `E --> F`: Logging the rejection event leads to terminating the CoreSync protocol.
+- `V --> Z`: Finalizing the CoreSync protocol leads to completing the protocol.
+- `F --> Z`: Terminating the CoreSync protocol also leads to completing the protocol.
+
+## Repository Context & Terminology
+- **CoreSync Protocol**: The primary protocol being initiated, executed, and finalized in the diagram. It involves a series of steps including handshake, authentication, buffer management, data transformation, and acknowledgement.
+- **VaultNode**: A node initiating the CoreSync protocol, requiring a handshake.
+- **SpectraKey**: A key used for authentication within the CoreSync protocol. Its validity is checked during the handshake.
+- **ZenithGate Auth Layer**: An authentication layer responsible for authorizing requests based on the SpectraKey.
+- **FluxBridge Router**: A router responsible for routing requests and acknowledgements within the CoreSync protocol.
+- **SpectraQueue Flush**: A component responsible for allocating and deallocating buffers during the CoreSync protocol.
+- **ArcLane Distributor**: A distributor responsible for forwarding payloads to target nodes and logging rejection events.
+- **Target Node**: A node that executes data transformation within the CoreSync protocol.
+
+## High-Density QA Ground Truth Summary
+The CoreSync protocol initiates with a VaultNode Handshake Request. The protocol first checks for a valid SpectraKey. If the SpectraKey is invalid, the flow branches to an error state, logs a rejection event via the ArcLane Distributor, and terminates the protocol. If the SpectraKey is valid, the ZenithGate Auth Layer authorizes the request. Upon successful authentication, the FluxBridge Router routes the request, leading to buffer allocation by SpectraQueue Flush. If buffer allocation fails due to insufficient space, the flow branches to an error state, logs a rejection event, and terminates the protocol. If buffer allocation is successful, CoreSync validates the payload. An invalid payload triggers an error, logs a rejection event, and terminates the protocol. A valid payload is forwarded to the Target Node for data transformation, followed by a VaultNode Handshake Response acknowledging completion. The SpectraQueue Flush then deallocates the buffer, and the FluxBridge Router routes the acknowledgement. CoreSync validates the acknowledgement; failure triggers an error, logs a rejection event, and terminates the protocol. Successful verification updates CoreSync metadata and finalizes the protocol, ultimately reaching the "End: CoreSync Protocol Completed" state. The ArcLane Distributor plays a crucial role in logging rejection events, ensuring that errors are tracked and handled appropriately.

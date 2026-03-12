@@ -1,0 +1,38 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the flow of requests and data through a service-oriented architecture. It illustrates the different layers of services involved in processing a request, from the initial endpoint to the final data access layer. The diagram serves as a high-level overview of the system's architecture and helps understand the interactions between different service types.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It represents a linear flow of requests through different service layers, starting with Endpoints and ending with Brokers. There is a clear hierarchy, with each layer building upon the previous one.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Endpoints, Processing Services, Orchestration Services, Foundation Services, and Brokers.
+
+## Node-by-Node Description
+- **EP / Endpoints (Exposers)**: Represents the entry point for external requests, handling HTTP mapping and directing requests to a single processing service.
+  visible in diagram; no further repository context available.
+- **PS / Processing Services**: Represents services responsible for heavy computation and AI/ML tasks, potentially involving one or two orchestration services.
+  visible in diagram; no further repository context available.
+- **OS / Orchestration Services**: Represents services that coordinate and manage cross-cutting concerns, relying on two to three foundation services.
+  visible in diagram; no further repository context available.
+- **FS / Foundation Services**: Represents services providing CRUD operations, validation, and potentially interacting with one or two brokers.
+  visible in diagram; no further repository context available.
+- **BR / Brokers**: Represents external abstractions and thin wrappers for accessing external systems, explicitly stating that they contain no business logic.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `EP --> PS`: Represents the flow of a request from the endpoint to a processing service.
+- `PS --> OS`: Represents the invocation of an orchestration service by a processing service.
+- `OS --> FS`: Represents the invocation of foundation services by an orchestration service.
+- `FS --> BR`: Represents the interaction of a foundation service with a broker.
+
+## Repository Context & Terminology
+- **Endpoints (Exposers)**: The entry points of the system, responsible for receiving external requests and mapping them to internal services.
+- **HTTP Mapping**: The process of translating HTTP requests to internal service calls.
+- **Processing Services**: Services that perform computationally intensive tasks, often involving AI/ML algorithms.
+- **Orchestration Services**: Services that coordinate the execution of multiple foundation services to fulfill a request.
+- **Foundation Services**: Services that provide basic data access and validation functionalities.
+- **Brokers**: Components that abstract access to external systems, providing a simplified interface for internal services.
+- **CRUD**: An acronym for Create, Read, Update, and Delete operations, representing basic data manipulation functions.
+
+## High-Density QA Ground Truth Summary
+The diagram begins with the `Endpoints (Exposers)` node, which handles HTTP mapping and directs incoming requests to a single `Processing Service`. The `Processing Services` node performs heavy computation, potentially using AI/ML, and may invoke one or two `Orchestration Services`. The `Orchestration Services` node coordinates cross-cutting concerns and relies on two to three `Foundation Services`. `Foundation Services` handle CRUD operations and validation, potentially interacting with one or two `Brokers`. The flow culminates in the `Brokers` node, which provides external abstraction and thin wrappers, explicitly containing no business logic. The architecture emphasizes a layered approach, separating concerns from external exposure to data access. The `Endpoints` act as the system's entry point, while `Brokers` provide a consistent interface to external resources, shielding the core logic from direct external dependencies.

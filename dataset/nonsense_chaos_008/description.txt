@@ -1,0 +1,76 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the process of CoreMatrix synchronization. It outlines the steps involved in initiating, validating, and maintaining a CoreMatrix sync, including authentication, data transfer, and error handling. The diagram serves as a visual representation of the CoreMatrix sync process, aiding in understanding and troubleshooting.
+
+## Overall Layout
+The diagram flows from top to bottom (TB). It starts with initiating the CoreMatrix sync and progresses through various stages of validation, authentication, and data transfer, ultimately leading to successful completion, abortion, or failure.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Handshake, Authentication, CoreSync Validation, Data Stream, and Error Handling.
+
+## Node-by-Node Description
+- **A / Start: Initiating CoreMatrix Sync**: The starting point of the CoreMatrix synchronization process. visible in diagram; no further repository context available.
+- **B / PreQualify VaultNode Handshake**: A check to prequalify the VaultNode handshake. visible in diagram; no further repository context available.
+- **C / Activate FluxBridge Router**: Activates the FluxBridge router. visible in diagram; no further repository context available.
+- **D / Report VaultNode Breach**: Reports a breach in the VaultNode. visible in diagram; no further repository context available.
+- **E / Generate SpectraQueue Flush Request**: Generates a SpectraQueue flush request. visible in diagram; no further repository context available.
+- **F / Submit to ArcLane Distributor**: Submits the request to the ArcLane distributor. visible in diagram; no further repository context available.
+- **G / Transmit to ZenithGate Auth Layer**: Transmits the request to the ZenithGate authentication layer. visible in diagram; no further repository context available.
+- **H / Authentication Successful?**: A decision point to determine if authentication was successful. visible in diagram; no further repository context available.
+- **I / Grant CoreMatrix Access**: Grants access to CoreMatrix. visible in diagram; no further repository context available.
+- **J / Establish CoreSync Session**: Establishes a CoreSync session. visible in diagram; no further repository context available.
+- **K / CoreSync Validation OK?**: A decision point to determine if CoreSync validation is OK. visible in diagram; no further repository context available.
+- **L / Initiate Data Stream to VaultNode**: Initiates a data stream to the VaultNode. visible in diagram; no further repository context available.
+- **M / Monitor Data Channel Quality**: Monitors the quality of the data channel. visible in diagram; no further repository context available.
+- **N / Channel Stability Maintained?**: A decision point to determine if channel stability is maintained. visible in diagram; no further repository context available.
+- **O / Continue CoreMatrix Data Transfer**: Continues the CoreMatrix data transfer. visible in diagram; no further repository context available.
+- **P / Reduce Transmit Volume & Restore Transmission**: Reduces transmit volume and restores transmission. visible in diagram; no further repository context available.
+- **Q / Trigger Remedial CoreSync**: Triggers a remedial CoreSync. visible in diagram; no further repository context available.
+- **R / Deactivate FluxBridge Router**: Deactivates the FluxBridge router. visible in diagram; no further repository context available.
+- **S / Log Error - Re-Establish VaultNode Link**: Logs an error and re-establishes the VaultNode link. visible in diagram; no further repository context available.
+- **T / End: CoreMatrix Sync Failed**: The process ends with a failed CoreMatrix sync. visible in diagram; no further repository context available.
+- **U / Deny CoreMatrix Access**: Denies access to CoreMatrix. visible in diagram; no further repository context available.
+- **V / Record Auth Failure & Flag Suspect Node**: Records the authentication failure and flags the suspect node. visible in diagram; no further repository context available.
+- **W / End: CoreMatrix Sync Aborted**: The process ends with an aborted CoreMatrix sync. visible in diagram; no further repository context available.
+- **X / End: CoreMatrix Sync Completed**: The process ends with a completed CoreMatrix sync. visible in diagram; no further repository context available.
+- **Y / End: Aborted**: The process ends with an aborted state. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Initiating CoreMatrix Sync leads to prequalifying the VaultNode handshake.
+- `B -- Handshake Valid? (True) --> C`: If the handshake is valid, activate the FluxBridge Router.
+- `B -- Handshake Valid? (False) --> D`: If the handshake is invalid, report a VaultNode breach.
+- `D --> E`: Reporting a VaultNode breach leads to generating a SpectraQueue flush request.
+- `E --> F`: Generating a SpectraQueue flush request leads to submitting to the ArcLane distributor.
+- `F --> G`: Submitting to the ArcLane distributor leads to transmitting to the ZenithGate Auth Layer.
+- `G --> H`: Transmitting to the ZenithGate Auth Layer leads to authentication.
+- `H -- Yes --> I`: If authentication is successful, grant CoreMatrix access.
+- `H -- No --> U`: If authentication is unsuccessful, deny CoreMatrix access.
+- `I --> J`: Granting CoreMatrix access leads to establishing a CoreSync session.
+- `J --> K`: Establishing a CoreSync session leads to CoreSync validation.
+- `K -- Yes --> L`: If CoreSync validation is OK, initiate a data stream to the VaultNode.
+- `K -- No --> Q`: If CoreSync validation is not OK, trigger a remedial CoreSync.
+- `L --> M`: Initiating a data stream to the VaultNode leads to monitoring data channel quality.
+- `M --> N`: Monitoring data channel quality leads to checking channel stability.
+- `N -- Yes --> O`: If channel stability is maintained, continue CoreMatrix data transfer.
+- `N -- No --> P`: If channel stability is not maintained, reduce transmit volume and restore transmission.
+- `O --> N`: Continuing CoreMatrix data transfer loops back to checking channel stability.
+- `P --> N`: Reducing transmit volume and restoring transmission loops back to checking channel stability.
+- `Q --> R`: Triggering a remedial CoreSync leads to deactivating the FluxBridge router.
+- `R --> S`: Deactivating the FluxBridge router leads to logging an error and re-establishing the VaultNode link.
+- `S --> T`: Logging an error and re-establishing the VaultNode link leads to the end with a failed CoreMatrix sync.
+- `U --> V`: Denying CoreMatrix access leads to recording the authentication failure and flagging the suspect node.
+- `V --> W`: Recording the authentication failure and flagging the suspect node leads to the end with an aborted CoreMatrix sync.
+- `I --> X`: Grant CoreMatrix Access leads to End: CoreMatrix Sync Completed.
+- `D --> Y`: Report VaultNode Breach leads to End: Aborted.
+
+## Repository Context & Terminology
+- **CoreMatrix Sync**: The primary process depicted, involving data synchronization and validation.
+- **VaultNode**: A node requiring pre-qualification and data streaming.
+- **FluxBridge Router**: A router that is activated and deactivated during the process.
+- **SpectraQueue**: A queue for flush requests.
+- **ArcLane Distributor**: A distributor for submitted requests.
+- **ZenithGate Auth Layer**: An authentication layer.
+- **CoreSync Session**: A session established after granting CoreMatrix access.
+- **Remedial CoreSync**: A process triggered when CoreSync validation fails.
+
+## High-Density QA Ground Truth Summary
+The CoreMatrix Sync process begins with initiating the sync (A) and immediately pre-qualifying the VaultNode handshake (B). If the handshake is valid (B -- Yes --> C), the FluxBridge Router is activated; otherwise (B -- No --> D), a VaultNode breach is reported, leading to an aborted state (Y). A valid handshake proceeds to generate a SpectraQueue flush request (E), submitting it to the ArcLane Distributor (F), and transmitting it to the ZenithGate Auth Layer (G). Authentication success (H -- Yes --> I) grants CoreMatrix access, establishing a CoreSync session (J). If authentication fails (H -- No --> U), CoreMatrix access is denied, the authentication failure is recorded, and the suspect node is flagged (V), ultimately aborting the sync (W). CoreSync validation (K) determines whether to initiate a data stream to the VaultNode (L) if validation is OK (K -- Yes --> L), or trigger a remedial CoreSync (Q) if not (K -- No --> Q). The data stream's channel quality is monitored (M), and if stability is maintained (N -- Yes --> O), data transfer continues, looping back to monitor channel quality. If channel stability is lost (N -- No --> P), transmit volume is reduced, and transmission is restored, also looping back to monitor channel quality. The process can end successfully (X) after granting CoreMatrix Access, abort due to VaultNode breach (Y), abort due to authentication failure (W), or fail after remedial CoreSync (T). The ZenithGate Auth Layer plays a crucial role in determining access rights, influencing the subsequent flow of the process.

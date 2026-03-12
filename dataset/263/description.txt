@@ -1,0 +1,29 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the network communication flow between two gNodeB (gNB) nodes, representing a 5G base station, across a Local Area Network (LAN) and the Internet. The diagram illustrates how UDP payloads are encapsulated within TCP for transmission over the internet. It serves to visualize the network architecture and data transmission process.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It consists of two subgraphs, "LAN A" and "Internet," representing different network environments. The flow starts at "gnb nodeA" and ends at "gnb nodeB."
+
+## Subgraphs / Stages
+- **LAN A**: Represents the local area network where the first gNB node resides. It contains "gnb nodeA" and "upd_over_tcp" nodes.
+- **Internet**: Represents the internet network through which the communication passes. It contains "upd_over_tcp" and "gnb nodeB" nodes.
+
+## Node-by-Node Description
+- **nodeA / gnb nodeA**: Represents the first gNodeB (gNB) node, located in LAN A. visible in diagram; no further repository context available.
+- **upd_over_tcp_A / upd_over_tcp**: Represents a component responsible for encapsulating UDP payloads within TCP in LAN A. visible in diagram; no further repository context available.
+- **upd_over_tcp_B / upd_over_tcp**: Represents a component responsible for encapsulating UDP payloads within TCP in the Internet. visible in diagram; no further repository context available.
+- **nodeB / gnb nodeB**: Represents the second gNodeB (gNB) node, located in the Internet. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `nodeA --> upd_over_tcp_A`: UDP payload is sent from gnb nodeA to upd_over_tcp_A.
+- `upd_over_tcp_A --> upd_over_tcp_B`: TCP payload is sent from upd_over_tcp_A to upd_over_tcp_B.
+- `upd_over_tcp_B --> nodeB`: UDP payload is sent from upd_over_tcp_B to gnb nodeB.
+
+## Repository Context & Terminology
+- **gNodeB (gNB)**: A 5G base station, responsible for radio communication with user equipment (UE).
+- **UDP payload**: User Datagram Protocol payload, the data being transmitted using UDP.
+- **TCP payload**: Transmission Control Protocol payload, the data being transmitted using TCP.
+- **upd_over_tcp**: A component that encapsulates UDP payloads within TCP for transmission.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the flow of data between two gNB nodes, starting with `gnb nodeA` in `LAN A`. The initial step involves sending a `UDP payload` from `gnb nodeA` to `upd_over_tcp_A`. The `upd_over_tcp_A` component encapsulates the UDP payload within TCP. The resulting `TCP payload` is then transmitted over the Internet to `upd_over_tcp_B`. `upd_over_tcp_B` decapsulates the TCP payload to extract the original UDP payload. Finally, the UDP payload is sent from `upd_over_tcp_B` to `gnb nodeB`, which is located in the `Internet`. The diagram highlights the use of TCP encapsulation to facilitate UDP transmission across the Internet, likely to overcome network limitations or security concerns. The gNB nodes represent 5G base stations, crucial components in modern cellular networks. The encapsulation of UDP within TCP is a common technique for traversing firewalls or ensuring reliable delivery over unreliable networks.

@@ -1,0 +1,67 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow of an e-commerce system. It outlines the steps involved from receiving an order to updating inventory and handling customer feedback. The diagram serves as a visual representation of the order lifecycle, including inventory checks, payment processing, shipping, and customer satisfaction.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "Receive Order" node at the top and progresses downwards through various stages of order processing. The diagram contains an illogical loop where "Order Delivered" leads back to "Receive Order". The end node is "Update Inventory".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement & Inventory Check, Shipment Preparation & Payment, Order Fulfillment, Refund Processing, Customer Satisfaction, and Feedback Analysis & Inventory Update.
+
+## Node-by-Node Description
+- **A / Receive Order**: Represents the initial step where a customer places an order. visible in diagram; no further repository context available.
+- **B / Inventory Available?**: A decision point to check if the ordered items are in stock. visible in diagram; no further repository context available.
+- **C / Prepare Shipment**: Represents the process of packaging and preparing the order for shipping. visible in diagram; no further repository context available.
+- **D / Payment Received?**: A decision point to verify if the customer's payment has been successfully processed. visible in diagram; no further repository context available.
+- **E / Cancel Order**: Represents the action of canceling the order, typically due to payment failure or inventory issues. visible in diagram; no further repository context available.
+- **F / Ship Order**: Represents the action of sending the order to the customer. visible in diagram; no further repository context available.
+- **G / Order Delivered**: Represents the confirmation that the order has been successfully delivered to the customer. visible in diagram; no further repository context available.
+- **H / Notify Customer of Delay**: Represents informing the customer about a delay in order processing. visible in diagram; no further repository context available.
+- **I / Restock Items**: Represents the action of returning the items to the inventory after an order is cancelled. visible in diagram; no further repository context available.
+- **J / Calculate Refund Amount**: Represents the calculation of the refund amount to be issued to the customer. visible in diagram; no further repository context available.
+- **K / Issue Refund**: Represents the action of processing and issuing the refund to the customer. visible in diagram; no further repository context available.
+- **L / Archive Order Data**: Represents the process of storing the order information for record-keeping purposes. visible in diagram; no further repository context available.
+- **M / Customer Satisfied?**: A decision point to determine if the customer is satisfied with the order and service. visible in diagram; no further repository context available.
+- **N / Close Ticket**: Represents the action of closing the customer service ticket related to the order. visible in diagram; no further repository context available.
+- **O / Analyze Feedback**: Represents the process of analyzing customer feedback to improve the system. visible in diagram; no further repository context available.
+- **P / Update Inventory**: Represents the action of updating the inventory levels based on the order. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: An order is sent for inventory availability check.
+- `B -- Yes --> C`: If inventory is available, prepare the shipment.
+- `B -- No --> H`: If inventory is not available, notify the customer of the delay.
+- `C --> D`: After preparing shipment, check if payment is received.
+- `D -- Yes --> F`: If payment is received, ship the order.
+- `D -- No --> E`: If payment is not received, cancel the order.
+- `F --> G`: After shipping the order, confirm order delivery.
+- `G --> A`: After order delivery, a new order is received (illogical loop).
+- `H --> E`: After notifying the customer of the delay, cancel the order.
+- `E --> I`: After canceling the order, restock the items.
+- `I --> J`: After restocking items, calculate the refund amount.
+- `J --> K`: After calculating the refund amount, issue the refund.
+- `K --> L`: After issuing the refund, archive the order data.
+- `L --> M`: After archiving order data, check customer satisfaction.
+- `M -- No --> N`: If the customer is not satisfied, close the ticket.
+- `M -- Yes --> O`: If the customer is satisfied, analyze feedback.
+- `O --> N`: After analyzing feedback, close the ticket.
+- `N --> P`: After closing the ticket, update inventory.
+- `O --> N`: Analyze Feedback and Close Ticket converge at node P, which has no connection to them, or even the graph anymore.
+
+## Repository Context & Terminology
+- **Receive Order**: In standard practice, this refers to the initial step where the system captures the customer's order details. In this diagram, it's the starting point, but also illogically triggered after order delivery.
+- **Inventory Available?**: In standard practice, this is a check to ensure sufficient stock before proceeding. In this diagram, a "No" results in immediate order cancellation after notifying the customer of a delay.
+- **Prepare Shipment**: In standard practice, this involves picking, packing, and labeling the order. In this diagram, there's no address validation step before "Payment Received?".
+- **Payment Received?**: In standard practice, this verifies successful payment processing. In this diagram, a "No" leads to order cancellation.
+- **Cancel Order**: In standard practice, this involves reversing the order and initiating a refund. In this diagram, it leads to restocking items *before* calculating the refund amount.
+- **Ship Order**: In standard practice, this is the physical dispatch of the order. In this diagram, it follows payment confirmation.
+- **Order Delivered**: In standard practice, this confirms successful delivery to the customer. In this diagram, it triggers a new order (illogical loop).
+- **Restock Items**: In standard practice, this returns items to inventory after cancellation. In this diagram, it occurs *before* calculating the refund.
+- **Calculate Refund Amount**: In standard practice, this determines the refund amount. In this diagram, it happens after restocking.
+- **Issue Refund**: In standard practice, this processes the refund to the customer. In this diagram, it follows refund calculation.
+- **Archive Order Data**: In standard practice, this stores order information for record-keeping. In this diagram, it precedes customer satisfaction check.
+- **Customer Satisfied?**: In standard practice, this gauges customer satisfaction. In this diagram, a "Yes" leads to analyzing feedback *after* closing the ticket.
+- **Close Ticket**: In standard practice, this resolves the customer service ticket. In this diagram, it occurs after feedback analysis if the customer is satisfied.
+- **Analyze Feedback**: In standard practice, this reviews customer feedback for improvements. In this diagram, it happens *before* closing the ticket when the customer is satisfied.
+- **Update Inventory**: In standard practice, this adjusts inventory levels. In this diagram, it occurs *after* the ticket is closed.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Receive Order" (A), which transitions to "Inventory Available?" (B). If inventory is available ("Yes" branch), the process moves to "Prepare Shipment" (C), then to "Payment Received?" (D). If payment is received ("Yes" branch), the order is "Ship Order" (F), and then "Order Delivered" (G), which illogically loops back to "Receive Order" (A). If inventory is not available ("No" branch from B), the customer is notified of a delay (H), and the order is immediately cancelled (E). If payment is not received ("No" branch from D), the order is also cancelled (E). After cancellation, the process restocks items (I), calculates the refund amount (J), issues the refund (K), and archives the order data (L). The process then checks "Customer Satisfied?" (M). If the customer is not satisfied ("No" branch), the ticket is closed (N). If the customer is satisfied ("Yes" branch), feedback is analyzed (O), then the ticket is closed (N). Finally, inventory is updated (P). The "Analyze Feedback" (O) and "Close Ticket" (N) converge at node P, which has no connection to them, or even the graph anymore. The "Update Inventory" (P) step occurs after the ticket is closed, which is a reversed sequence.

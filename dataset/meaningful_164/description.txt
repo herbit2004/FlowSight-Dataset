@@ -1,0 +1,97 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting a media streaming pipeline. It illustrates the flow of media from ingestion through processing, storage, and delivery, including monitoring and error handling. The diagram serves as a high-level overview of the system's architecture and data flow.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It is organized into tiers representing different stages of the media pipeline. The start node is the Media Encoder, and the end nodes are the Viewer Request and Drop Stream nodes.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing different tiers:
+- **Ingest Tier**: Handles the initial ingestion of media streams.
+- **Processing Tier**: Processes and transcodes the media streams.
+- **Storage Tier**: Stores the processed media streams.
+- **Delivery Tier**: Delivers the media streams to viewers.
+- **Monitoring Tier**: Monitors the health and performance of the system.
+
+## Node-by-Node Description
+- **A / Media Encoder: RTMP Push**: Represents the media encoder pushing streams using the RTMP protocol.
+  visible in diagram; no further repository context available.
+- **B / Load Balancer: Ingest**: Represents a load balancer distributing incoming ingest traffic.
+  visible in diagram; no further repository context available.
+- **C / Ingest Servers: HAProxy**: Represents the ingest servers using HAProxy for high availability.
+  visible in diagram; no further repository context available.
+- **D / Ingest Server 1: Nginx RTMP Module**: Represents an ingest server running Nginx with the RTMP module.
+  visible in diagram; no further repository context available.
+- **E / Ingest Server 2: Nginx RTMP Module**: Represents another ingest server running Nginx with the RTMP module.
+  visible in diagram; no further repository context available.
+- **F / Stream Validator**: Validates the incoming stream.
+  visible in diagram; no further repository context available.
+- **G / Stream Validator**: Validates the incoming stream.
+  visible in diagram; no further repository context available.
+- **H / Transcoder: FFmpeg Cluster**: Represents a cluster of FFmpeg transcoders.
+  visible in diagram; no further repository context available.
+- **I / Adaptive Bitrate Packaging: HLS/DASH**: Packages the transcoded streams into HLS and DASH formats.
+  visible in diagram; no further repository context available.
+- **J / Origin Server: CDN**: Represents the origin server for the CDN.
+  visible in diagram; no further repository context available.
+- **K / Object Storage: S3-Compatible**: Represents object storage compatible with the S3 protocol.
+  visible in diagram; no further repository context available.
+- **L / CDN Edge Servers**: Represents the CDN edge servers.
+  visible in diagram; no further repository context available.
+- **M / Viewer Request**: Represents a viewer requesting a stream.
+  visible in diagram; no further repository context available.
+- **N / Prometheus**: Represents the Prometheus monitoring system.
+  visible in diagram; no further repository context available.
+- **O / Alertmanager**: Represents the Alertmanager component of Prometheus.
+  visible in diagram; no further repository context available.
+- **P / PagerDuty**: Represents PagerDuty for alerting.
+  visible in diagram; no further repository context available.
+- **Q / Drop Stream**: Represents dropping an invalid stream.
+  visible in diagram; no further repository context available.
+- **R / Drop Stream**: Represents dropping an invalid stream.
+  visible in diagram; no further repository context available.
+- **S / Failover to Backup Encoder**: Represents failing over to a backup encoder.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Media stream is pushed from the media encoder to the load balancer.
+- `B --> C`: Load balancer distributes the stream to ingest servers.
+- `C --> D`: Stream is sent to Ingest Server 1.
+- `C --> E`: Stream is sent to Ingest Server 2.
+- `D --> F`: Stream is sent to Stream Validator.
+- `E --> G`: Stream is sent to Stream Validator.
+- `F -- Valid Stream --> H`: Valid stream is sent to the transcoder.
+- `G -- Valid Stream --> H`: Valid stream is sent to the transcoder.
+- `F -- Invalid Stream --> Q`: Invalid stream is dropped.
+- `G -- Invalid Stream --> R`: Invalid stream is dropped.
+- `B -- Health Check Failed --> S`: Health check failure triggers failover.
+- `S --> A`: Failover redirects to the backup encoder.
+- `H --> I`: Transcoded stream is sent to the adaptive bitrate packager.
+- `I --> J`: Packaged stream is sent to the origin server.
+- `J --> K`: Origin server retrieves the stream from object storage (cache miss).
+- `K -- Returns Object --> J`: Object storage returns the stream to the origin server.
+- `J -- Cache Hit --> L`: Origin server serves the stream from cache.
+- `J -- Cache Miss --> K`: Origin server requests the stream from object storage.
+- `L --> M`: CDN edge server serves the stream to the viewer.
+- `M -- HLS Manifest Request --> L`: Viewer requests the HLS manifest.
+- `M -- Video Segment Request --> L`: Viewer requests a video segment.
+- `N -- Scrape metrics from --> C`: Prometheus scrapes metrics from the ingest servers.
+- `N -- Scrape metrics from --> H`: Prometheus scrapes metrics from the transcoder.
+- `N -- Scrape metrics from --> J`: Prometheus scrapes metrics from the origin server.
+- `N --> O`: Prometheus sends alerts to Alertmanager.
+- `O --> P`: Alertmanager sends alerts to PagerDuty.
+
+## Repository Context & Terminology
+- **RTMP (Real-Time Messaging Protocol)**: A protocol used for streaming audio, video, and data over the Internet.
+- **HAProxy**: A popular open-source load balancer and proxy server.
+- **Nginx**: A popular open-source web server and reverse proxy.
+- **FFmpeg**: A free and open-source software project consisting of a large suite of libraries and programs for handling video, audio, and other multimedia files and streams.
+- **HLS (HTTP Live Streaming)**: An adaptive bitrate streaming protocol developed by Apple.
+- **DASH (Dynamic Adaptive Streaming over HTTP)**: An adaptive bitrate streaming protocol.
+- **CDN (Content Delivery Network)**: A geographically distributed network of servers that caches content to deliver it to users with high availability and performance.
+- **S3 (Simple Storage Service)**: A scalable object storage service offered by Amazon Web Services (AWS).
+- **Prometheus**: An open-source systems monitoring and alerting toolkit.
+- **Alertmanager**: Handles alerts sent by Prometheus.
+- **PagerDuty**: An incident management platform.
+
+## High-Density QA Ground Truth Summary
+The media streaming pipeline begins with the Media Encoder pushing an RTMP stream to the Ingest Tier. The Load Balancer distributes this stream between Ingest Servers running Nginx with RTMP modules. Each Ingest Server passes its stream to a Stream Validator. If the stream is valid, it proceeds to the Processing Tier, specifically the FFmpeg Cluster for transcoding. An invalid stream is immediately dropped via the "Drop Stream" nodes. The Transcoder outputs a stream to the Adaptive Bitrate Packaging stage, creating HLS/DASH formats. This packaged stream is then sent to the Origin Server within the Storage Tier. The Origin Server either serves the stream from its cache (Cache Hit) directly to the CDN Edge Servers, or retrieves it from S3-compatible Object Storage (Cache Miss). The CDN Edge Servers deliver the stream to the Viewer upon request, handling both HLS Manifest Requests and Video Segment Requests. The Monitoring Tier, featuring Prometheus, scrapes metrics from the Ingest Servers, Transcoder, and Origin Server. Prometheus alerts are managed by Alertmanager, which then notifies PagerDuty. A health check failure at the Load Balancer triggers a failover to a backup encoder, redirecting the stream back to the Media Encoder. The pipeline terminates with either a Viewer Request being fulfilled or an invalid stream being dropped.

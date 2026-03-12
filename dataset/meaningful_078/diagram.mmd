@@ -1,0 +1,20 @@
+graph TD
+    A[User Initiates: 'My order is late'] --> B{Intent Classification: Determine Intent Type};
+    B -- Identify: Late Order Inquiry --> C[Route to: Order Status Module];
+    B -- Identify: Address Change Request --> D[Route to: Address Update Module];
+    B -- Identify: General Inquiry --> E[Route to: FAQ Retrieval System];
+    C --> F{Order Status Check: Retrieve Order Data};
+    F -- Order Found --> G[Generate Message: Provide Current Status];
+    F -- Order Not Found --> H[Generate Message: Check Order Number];
+    G --> I[Present to User: Order Status];
+    H --> I[Present to User: Order Status];
+    D --> J[Validate User Identity: MFA Required?];
+    J -- Yes --> K[Request MFA Challenge];
+    J -- No --> L[Update Address: Direct Update];
+    K --> L[Update Address: Post-MFA Update];
+    L --> M[Confirm Update: Display Confirmation];
+    E --> N[Search FAQs: Relevant Articles];
+    N --> O[Present to User: FAQ Articles];
+    I --> P[End Conversation];
+    M --> P[End Conversation];
+    O --> P[End Conversation];

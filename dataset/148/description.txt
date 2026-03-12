@@ -1,0 +1,53 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the logic for handling requests, specifically focusing on whether the request involves schemas and how the response is generated based on the request type and response status. The diagram serves as a visual representation of the request processing flow, aiding in understanding the system's behavior.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with a "Request" node at the top and flows down through a series of decision diamonds and processing steps, ultimately converging at the "Response" node at the bottom.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: Request Handling, Schema Check, Response Generation, and Metric Reporting.
+
+## Node-by-Node Description
+- **Request**: Represents the initial incoming request. visible in diagram; no further repository context available.
+- **Is it requesting Schemas?**: A decision node that checks if the request is for schemas. visible in diagram; no further repository context available.
+- **Fetch from GitHub**: Represents fetching schemas from GitHub. visible in diagram; no further repository context available.
+- **Was requesting a .json file?**: A decision node that checks if the request was for a .json file. visible in diagram; no further repository context available.
+- **Response Status?**: A decision node that checks the status of the response. visible in diagram; no further repository context available.
+- **OK**: Represents a successful response (2xx status code). visible in diagram; no further repository context available.
+- **Not Modified**: Represents a 304 Not Modified response. visible in diagram; no further repository context available.
+- **response_ko**: Represents an error response (any status code other than 2xx or 304). visible in diagram; no further repository context available.
+- **Set Response Content-Type header to application/schema+json**: Sets the Content-Type header of the response to "application/schema+json". visible in diagram; no further repository context available.
+- **Send success metric**: Sends a metric indicating a successful response. visible in diagram; no further repository context available.
+- **Send error metric**: Sends a metric indicating an error response. visible in diagram; no further repository context available.
+- **Let the original request go through**: Indicates that the original request is processed without schema handling. visible in diagram; no further repository context available.
+- **Response**: Represents the final response. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Request --> Is it requesting Schemas?`: The initial request is passed to the schema check.
+- `Is it requesting Schemas? -- Yes --> Fetch from GitHub`: If the request is for schemas, fetch them from GitHub.
+- `Is it requesting Schemas? -- No --> Let the original request go through`: If the request is not for schemas, process the original request.
+- `Fetch from GitHub --> Was requesting a .json file?`: After fetching from GitHub, check if the request was for a .json file.
+- `Was requesting a .json file? -- Yes --> Response Status?`: If the request was for a .json file, check the response status.
+- `Was requesting a .json file? -- No --> Response`: If the request was not for a .json file, return the response.
+- `Response Status? -- 2xx --> OK`: If the response status is 2xx, it's an OK response.
+- `Response Status? -- 304 --> Not Modified`: If the response status is 304, it's a Not Modified response.
+- `Response Status? -- Any other --> response_ko`: If the response status is anything else, it's an error response.
+- `OK --> Set Response Content-Type header to application/schema+json`: Set the content type header for a successful response.
+- `Set Response Content-Type header to application/schema+json --> Send success metric`: Send a success metric after setting the header.
+- `Not Modified -- cached:true --> Send success metric`: Send a success metric for a cached response.
+- `response_ko --> Send error metric`: Send an error metric for an error response.
+- `Send success metric --> Response`: The success metric leads to the final response.
+- `Send error metric --> Response`: The error metric leads to the final response.
+- `Let the original request go through --> Response`: The original request leads to the final response.
+
+## Repository Context & Terminology
+- **Schemas**: Refers to data schemas, likely in JSON format, used for validation or data structure definition.
+- **GitHub**: An online repository hosting service, used here as the source for fetching schemas.
+- **.json file**: A file containing data in JSON (JavaScript Object Notation) format.
+- **2xx**: HTTP status codes indicating success.
+- **304 Not Modified**: HTTP status code indicating that the requested resource has not been modified since the last time it was accessed.
+- **application/schema+json**: A MIME type used to indicate that the content is a JSON schema.
+- **cached:true**: Indicates that the response was served from a cache.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "Request," which is immediately evaluated by the "Is it requesting Schemas?" decision diamond. If the request targets schemas ("Yes" branch), the flow proceeds to "Fetch from GitHub" to retrieve the relevant schema. Otherwise ("No" branch), the flow bypasses schema handling and proceeds to "Let the original request go through" before generating a "Response". After fetching schemas, the "Was requesting a .json file?" decision diamond determines if the request specifically asked for a JSON file. If not ("No" branch), a "Response" is generated. If so ("Yes" branch), the "Response Status?" decision diamond checks the HTTP status code. A "2xx" status leads to "OK," setting the "Content-Type" header to "application/schema+json," and sending a "success metric" before generating the final "Response". A "304" status ("Not Modified") also triggers a "success metric" (marked as `cached:true`) before the "Response". Any other status code leads to "response_ko," triggering an "error metric" before the "Response". The "Send success metric" is annotated with "file served from raw GH" indicating the origin of the data. The "Send error metric" is annotated with "the errored response" indicating the type of metric sent. All paths converge at the final "Response" node.

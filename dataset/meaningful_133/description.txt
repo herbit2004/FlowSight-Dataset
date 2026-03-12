@@ -1,0 +1,64 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a fraud detection pipeline. It depicts the flow of data from raw logs and product catalogs through feature engineering and anomaly detection, ultimately leading to alerts and security team review. The diagram serves as a visual representation of the steps involved in identifying potentially fraudulent activities.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured into three main stages: Raw Data, Feature Engineering, and Endpoints. The start nodes are "Clickstream Logs" and "Product Catalog," and the end nodes are "Model Training," "Real-time Inference," and "Security Team Review."
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Raw Data**: This stage represents the initial data sources, including clickstream logs and product catalogs.
+- **Feature Engineering**: This stage encompasses the process of transforming raw data into features suitable for fraud detection.
+- **Endpoints**: This stage represents the final outputs and actions taken based on the fraud detection results.
+
+## Node-by-Node Description
+- **A / Clickstream Logs**: Represents the collection of user activity logs on a website or application. visible in diagram; no further repository context available.
+- **B / Session Aggregation**: Aggregates clickstream logs into user sessions. visible in diagram; no further repository context available.
+- **C / Product Catalog**: Represents the database of available products and their attributes. visible in diagram; no further repository context available.
+- **D / Price Lookup**: Retrieves price information for products from the product catalog. visible in diagram; no further repository context available.
+- **E / Sufficient Session Length?**: A decision point to determine if a user session is long enough for analysis. visible in diagram; no further repository context available.
+- **F / Enrich with Price Tier**: Adds price tier information to the user session data. visible in diagram; no further repository context available.
+- **G / Time-Based Features**: Extracts features based on the timing of user actions. visible in diagram; no further repository context available.
+- **H / Discard Session**: Discards user sessions that are too short for analysis. visible in diagram; no further repository context available.
+- **I / Geographic Features**: Extracts features based on the user's geographic location. visible in diagram; no further repository context available.
+- **J / Interaction Features**: Extracts features based on user interactions with the website or application. visible in diagram; no further repository context available.
+- **K / Fraud Suspect?**: A decision point to determine if a user session is suspected of being fraudulent. visible in diagram; no further repository context available.
+- **L / Behavioral Anomaly Detection**: Detects anomalies in user behavior. visible in diagram; no further repository context available.
+- **M / Feature Vector Store**: Stores the extracted features for model training and real-time inference. visible in diagram; no further repository context available.
+- **N / Generate Alert**: Generates an alert for suspected fraudulent activity. visible in diagram; no further repository context available.
+- **O / Model Training**: Trains a machine learning model to detect fraud. visible in diagram; no further repository context available.
+- **P / Real-time Inference**: Uses the trained model to detect fraud in real-time. visible in diagram; no further repository context available.
+- **Q / Security Team Review**: The security team reviews alerts and takes appropriate action. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Clickstream logs are passed to session aggregation.
+- `C --> D`: Product catalog data is used for price lookup.
+- `B --> E`: Aggregated session data is passed to the session length check.
+- `D --> F`: Price information is used to enrich session data with price tier.
+- `E -- Yes --> G`: If the session length is sufficient, time-based features are extracted.
+- `E -- No --> H`: If the session length is insufficient, the session is discarded.
+- `G --> I`: Time-based features are passed to geographic feature extraction.
+- `F --> I`: Price tier enriched data is passed to geographic feature extraction.
+- `H --> I`: Discarded sessions do not proceed further.
+- `I --> J`: Geographic features are passed to interaction feature extraction.
+- `J --> K`: Interaction features are passed to the fraud suspect determination.
+- `K -- Yes --> L`: If a session is suspected of fraud, behavioral anomaly detection is performed.
+- `K -- No --> M`: If a session is not suspected of fraud, the features are stored in the feature vector store.
+- `L --> N`: Behavioral anomaly detection results in an alert being generated.
+- `L --> M`: Behavioral anomaly detection results are stored in the feature vector store.
+- `M --> O`: Feature vector store data is used for model training.
+- `M --> P`: Feature vector store data is used for real-time inference.
+- `N --> Q`: Generated alerts are sent to the security team for review.
+
+## Repository Context & Terminology
+- **Clickstream Logs**: Records of user interactions on a website or application, including page views, clicks, and form submissions.
+- **Session Aggregation**: The process of grouping individual user actions into sessions based on time and user ID.
+- **Product Catalog**: A database containing information about products, including their names, descriptions, prices, and categories.
+- **Price Lookup**: The process of retrieving the price of a product from the product catalog.
+- **Feature Engineering**: The process of transforming raw data into features that can be used by machine learning models.
+- **Behavioral Anomaly Detection**: The process of identifying unusual patterns in user behavior that may indicate fraud.
+- **Feature Vector Store**: A database or storage system used to store feature vectors, which are numerical representations of data used for machine learning.
+- **Model Training**: The process of training a machine learning model using labeled data.
+- **Real-time Inference**: The process of using a trained machine learning model to make predictions on new data in real-time.
+
+## High-Density QA Ground Truth Summary
+The fraud detection pipeline begins with ingesting raw data from "Clickstream Logs" and "Product Catalog." "Session Aggregation" groups user actions into sessions, while "Price Lookup" retrieves product prices. The pipeline then enters the "Feature Engineering" stage. A key branch occurs at "Sufficient Session Length?": if 'Yes', "Time-Based Features" are extracted; if 'No', the "Discard Session" node is reached. "Enrich with Price Tier" enriches session data. "Geographic Features" and "Interaction Features" are then extracted. Another branch occurs at "Fraud Suspect?": if 'Yes', "Behavioral Anomaly Detection" is performed, leading to "Generate Alert"; if 'No', the process proceeds directly to "Feature Vector Store." The "Feature Vector Store" serves as a central repository for features used in both "Model Training" and "Real-time Inference." Finally, "Security Team Review" handles generated alerts. The "Clickstream Logs" capture user interactions, which are essential for identifying suspicious patterns, while the "Product Catalog" provides context for transactions, enabling the detection of fraudulent purchases.

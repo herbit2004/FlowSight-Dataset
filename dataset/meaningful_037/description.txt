@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of user events within a website or application, from initial user interaction to data storage and analytics. It depicts the event processing pipeline, showing how different types of events are routed, transformed, and stored for analysis. The diagram serves as a high-level architecture overview of the event processing system.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "User visits Website/App" node and flows through a series of decision points and processing steps, ultimately leading to data storage and real-time analytics. There is one start node and one end node, with conditional branching in between.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "User Interaction". Logically, the diagram can also be divided into the following stages:
+1. User Interaction and Event Triggering
+2. Event Routing and Queueing
+3. Data Enrichment and Transformation
+4. Data Storage and Analytics
+
+## Node-by-Node Description
+- **A / User visits Website/App**: Represents the initial user interaction with the website or application. visible in diagram; no further repository context available.
+- **B / Event Triggered?**: A decision point to determine if a user action has triggered an event. visible in diagram; no further repository context available.
+- **C / Event Collector API**: An API responsible for collecting events triggered by user actions. visible in diagram; no further repository context available.
+- **E / Continue Browsing**: Represents the scenario where no event is triggered and the user continues browsing the website/app. visible in diagram; no further repository context available.
+- **D / Event Router**: A component that routes events based on their type. visible in diagram; no further repository context available.
+- **F / Type = 'Transaction'?**: A decision point to determine if the event type is a "Transaction". visible in diagram; no further repository context available.
+- **G / Transaction Queue**: A queue for storing transaction-related events. visible in diagram; no further repository context available.
+- **H / Behavioral Event Queue**: A queue for storing behavioral events. visible in diagram; no further repository context available.
+- **I / Enrichment Service**: A service that enriches event data with additional information. visible in diagram; no further repository context available.
+- **J / Data Transformation Pipeline**: A pipeline responsible for transforming event data into a suitable format for storage and analysis. visible in diagram; no further repository context available.
+- **K / Write to Cold Storage?**: A decision point to determine if the transformed data should be written to cold storage. visible in diagram; no further repository context available.
+- **L / AWS S3 Bucket**: An Amazon Web Services (AWS) Simple Storage Service (S3) bucket used for storing cold data. visible in diagram; no further repository context available.
+- **N / Data Lake Processor**: A processor responsible for processing data stored in the data lake. visible in diagram; no further repository context available.
+- **M / Real-time Analytics DB**: A real-time analytics database used for analyzing event data. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User interaction triggers a check for an event.
+- `B -- Yes --> C`: If an event is triggered, it is sent to the Event Collector API.
+- `B -- No --> E`: If no event is triggered, the user continues browsing.
+- `C --> D`: The Event Collector API sends the event to the Event Router.
+- `D --> F`: The Event Router checks the event type.
+- `F -- Yes --> G`: If the event type is "Transaction", it is sent to the Transaction Queue.
+- `F -- No --> H`: If the event type is not "Transaction", it is sent to the Behavioral Event Queue.
+- `G --> I`: Transaction events are sent to the Enrichment Service.
+- `H --> I`: Behavioral events are sent to the Enrichment Service.
+- `I --> J`: Enriched events are sent to the Data Transformation Pipeline.
+- `J --> K`: Transformed data is checked for cold storage eligibility.
+- `K -- Yes --> L`: If eligible for cold storage, data is written to the AWS S3 Bucket.
+- `K -- No --> M`: If not eligible for cold storage, data is sent to the Real-time Analytics DB.
+- `L --> N`: Data in the AWS S3 Bucket is processed by the Data Lake Processor.
+- `N --> M`: Processed data from the Data Lake Processor is sent to the Real-time Analytics DB.
+- `G --> I` and `H --> I`: The Transaction Queue and Behavioral Event Queue paths converge at the Enrichment Service.
+
+## Repository Context & Terminology
+- **Event Collector API**: An API endpoint that receives event data from various sources.
+- **Event Router**: A service that directs events to the appropriate processing queue based on event type or other criteria.
+- **Transaction Queue**: A message queue specifically for handling transaction-related events, ensuring reliable processing.
+- **Behavioral Event Queue**: A message queue for handling user behavior events, such as clicks, page views, and form submissions.
+- **Enrichment Service**: A service that adds contextual information to event data, such as user demographics or product details.
+- **Data Transformation Pipeline**: A series of data processing steps that convert raw event data into a format suitable for analysis.
+- **AWS S3 Bucket**: A scalable object storage service provided by Amazon Web Services, often used for storing large volumes of data.
+- **Data Lake Processor**: A system for processing and analyzing data stored in a data lake, often using technologies like Apache Spark or Hadoop.
+- **Real-time Analytics DB**: A database optimized for real-time querying and analysis of streaming data, such as Apache Druid or ClickHouse.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a user visiting a website or application, which may trigger an event. If an event is triggered, it's captured by the Event Collector API; otherwise, the user continues browsing. The Event Collector API forwards the event to the Event Router, which determines the event type. If the event type is 'Transaction', it's enqueued in the Transaction Queue; if not, it's enqueued in the Behavioral Event Queue. Both queues feed into the Enrichment Service, where event data is augmented. The enriched data then flows into the Data Transformation Pipeline, preparing it for storage and analysis. A decision is made whether to write the transformed data to cold storage. If 'Yes', the data is stored in an AWS S3 Bucket, which is subsequently processed by a Data Lake Processor. If 'No', or after processing by the Data Lake Processor, the data is sent to the Real-time Analytics DB. The AWS S3 Bucket serves as a cost-effective storage solution for historical data, while the Real-time Analytics DB enables immediate insights from recent events. The system uses message queues to decouple components and ensure reliable event processing.

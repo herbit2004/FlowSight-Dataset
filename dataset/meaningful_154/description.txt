@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a cross-region data replication process. It depicts the flow of a user request from its initial reception in Region A, through data validation and transformation, to its eventual application in a secondary database in Region B. The diagram also includes error handling and acknowledgement mechanisms.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into three subgraphs representing different stages of the replication process. The start node is "User Request" and the end nodes are "Error Logging", "Alerting & Monitoring", "Dead Letter Queue", and "Update Status in Region A Metadata Store".
+
+## Subgraphs / Stages
+The diagram contains three subgraphs:
+- **Region A**: Represents the initial processing of the user request and writing to the primary database.
+- **Cross-Region Replication Service**: Handles data validation, transformation, and queuing for replication to Region B.
+- **Region B**: Represents the application of updates to the secondary database and acknowledgement processing.
+
+## Node-by-Node Description
+- **A / User Request**: Represents the initial user request received in Region A. visible in diagram; no further repository context available.
+- **B / API Gateway**: Represents the API Gateway that handles the user request. visible in diagram; no further repository context available.
+- **C / Write to Primary DB**: Represents the process of writing the data to the primary database. visible in diagram; no further repository context available.
+- **D / Replication Queue**: Represents the queue that stores data for replication to Region B. visible in diagram; no further repository context available.
+- **E / Error Logging**: Represents the error logging mechanism in Region A. visible in diagram; no further repository context available.
+- **F / Data Validation**: Represents the data validation process in the Cross-Region Replication Service. visible in diagram; no further repository context available.
+- **G / Transform Data**: Represents the data transformation process. visible in diagram; no further repository context available.
+- **H / Alerting & Monitoring**: Represents the alerting and monitoring system for invalid data. visible in diagram; no further repository context available.
+- **I / Message Queue in Region B**: Represents the message queue in Region B that receives the transformed data. visible in diagram; no further repository context available.
+- **J / Data Ingestion Service**: Represents the service in Region B that ingests the data from the message queue. visible in diagram; no further repository context available.
+- **K / Apply Updates to Secondary DB**: Represents the process of applying the updates to the secondary database. visible in diagram; no further repository context available.
+- **L / Acknowledgement Queue**: Represents the queue that stores acknowledgements for successful updates. visible in diagram; no further repository context available.
+- **M / Dead Letter Queue**: Represents the queue that stores messages that failed to be processed. visible in diagram; no further repository context available.
+- **N / Acknowledgement Processor**: Represents the processor that handles acknowledgements. visible in diagram; no further repository context available.
+- **O / Update Status in Region A Metadata Store**: Represents the process of updating the status in the Region A metadata store. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User request is sent to the API Gateway.
+- `B --> C`: API Gateway attempts to write to the Primary DB.
+- `C -- Success --> D`: If the write to the Primary DB is successful, the data is sent to the Replication Queue.
+- `C -- Failure --> E`: If the write to the Primary DB fails, an error is logged.
+- `D --> F`: Data from the Replication Queue is sent for Data Validation.
+- `F -- Valid --> G`: If the data is valid, it is transformed.
+- `F -- Invalid --> H`: If the data is invalid, an alert is triggered and monitoring is performed.
+- `G --> I`: Transformed data is sent to the Message Queue in Region B.
+- `I --> J`: Data from the Message Queue is ingested by the Data Ingestion Service.
+- `J --> K`: Data Ingestion Service attempts to apply updates to the Secondary DB.
+- `K -- Success --> L`: If the updates are applied successfully, an acknowledgement is sent to the Acknowledgement Queue.
+- `K -- Failure --> M`: If the updates fail, the message is sent to the Dead Letter Queue.
+- `L --> N`: Acknowledgements are processed by the Acknowledgement Processor.
+- `N --> O`: The status is updated in the Region A Metadata Store.
+
+## Repository Context & Terminology
+- **API Gateway**: A service that acts as a single entry point for all client requests, routing them to the appropriate backend services.
+- **Primary DB**: The main database where the original data is stored.
+- **Replication Queue**: A queue used to store data that needs to be replicated to another database or system.
+- **Cross-Region Replication**: The process of replicating data across different geographical regions for redundancy and disaster recovery.
+- **Data Validation**: The process of ensuring that data meets certain criteria and is accurate and consistent.
+- **Data Ingestion Service**: A service that ingests data from various sources and stores it in a database or data warehouse.
+- **Secondary DB**: A backup or replica of the primary database, often located in a different region.
+- **Dead Letter Queue**: A queue used to store messages that could not be processed successfully.
+- **Metadata Store**: A repository that stores metadata, which is data about data.
+
+## High-Density QA Ground Truth Summary
+The process begins with a "User Request" entering "Region A" and being routed through an "API Gateway". The gateway attempts to "Write to Primary DB". On "Success", the data is enqueued in a "Replication Queue"; on "Failure", the event is logged via "Error Logging". Data from the "Replication Queue" enters the "Cross-Region Replication Service" where "Data Validation" occurs. If "Valid", the data is sent to "Transform Data"; if "Invalid", "Alerting & Monitoring" is triggered. Transformed data is then placed in a "Message Queue in Region B". In "Region B", a "Data Ingestion Service" retrieves the data and attempts to "Apply Updates to Secondary DB". On "Success", an "Acknowledgement Queue" receives the acknowledgement; on "Failure", the message is sent to a "Dead Letter Queue". The "Acknowledgement Queue" feeds an "Acknowledgement Processor", which then "Update Status in Region A Metadata Store", completing the cycle. The use of queues ensures asynchronous processing and resilience in the face of network issues or service outages during cross-region replication.

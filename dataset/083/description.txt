@@ -1,0 +1,39 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of network traffic and observability data within a Kubernetes cluster, and how that data is processed by PolicyPilot to generate policies and reports. The diagram illustrates the interaction between Cilium, Hubble, and PolicyPilot components. It serves to visualize the data pipeline from network traffic capture to policy generation and reporting.
+
+## Overall Layout
+The diagram flows from left to right. It is divided into three main stages: Kubernetes Cluster, PolicyPilot, and Output. The flow starts with Kubernetes Pods with Cilium and ends with Policies YAML and HTML Report.
+
+## Subgraphs / Stages
+The diagram contains three subgraphs:
+- **Kubernetes Cluster**: Represents the Kubernetes environment where network traffic is captured and observability data is generated.
+- **PolicyPilot**: Represents the policy processing component that analyzes the observability data and generates policies and reports.
+- **Output**: Represents the final output of the system, including policies in YAML format and HTML reports.
+
+## Node-by-Node Description
+- **K8s / Kubernetes Pods with Cilium**: Represents Kubernetes pods that are running with Cilium for networking and security. visible in diagram; no further repository context available.
+- **Cilium / eBPF Dataplane**: Represents the Cilium component, which uses eBPF for network traffic filtering and monitoring. visible in diagram; no further repository context available.
+- **HubbleObs / Hubble Observability**: Represents the Hubble component, which provides network observability data. visible in diagram; no further repository context available.
+- **CLI2 / CLI Tool**: Represents a command-line interface tool within PolicyPilot. visible in diagram; no further repository context available.
+- **Process / Processing Engine**: Represents the processing engine within PolicyPilot that analyzes the data. visible in diagram; no further repository context available.
+- **YAML / Policies YAML**: Represents the output policies in YAML format. visible in diagram; no further repository context available.
+- **HTML / HTML Report**: Represents the output HTML report. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `K8s --> Cilium`: Network traffic flows from Kubernetes Pods to Cilium.
+- `Cilium --> HubbleObs`: Flow data is passed from Cilium to Hubble Observability.
+- `HubbleObs --> CLI2`: JSON export of data from Hubble Observability to the CLI Tool.
+- `CLI2 --> Process`: The CLI Tool feeds data to the Processing Engine.
+- `Process --> YAML`: The Processing Engine generates Policies YAML.
+- `Process --> HTML`: The Processing Engine generates an HTML Report.
+- `YAML -.-> K8s`: Policies YAML is applied to the Kubernetes Pods.
+
+## Repository Context & Terminology
+- **Kubernetes**: An open-source container orchestration system for automating application deployment, scaling, and management.
+- **Cilium**: An open-source project that provides networking, security, and observability for containerized workloads using eBPF.
+- **eBPF**: Extended Berkeley Packet Filter, a Linux kernel technology used for network traffic filtering and monitoring.
+- **Hubble**: An open-source observability platform built on top of Cilium, providing insights into network traffic and service connectivity.
+- **YAML**: A human-readable data serialization format commonly used for configuration files.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a data flow starting from Kubernetes Pods with Cilium, where network traffic is generated. This traffic is then processed by the Cilium eBPF Dataplane, which forwards flow data to Hubble Observability. Hubble exports this data in JSON format to the PolicyPilot component. Within PolicyPilot, a CLI Tool receives the JSON data and passes it to a Processing Engine. The Processing Engine then generates two outputs: Policies in YAML format and an HTML Report. The Policies YAML is then applied back to the Kubernetes Pods, creating a feedback loop. The core of the process lies in the Cilium and Hubble components within the Kubernetes cluster, which capture and provide network observability data. This data is then used by PolicyPilot to generate policies and reports. The final outputs are the Policies YAML, which is applied to the Kubernetes cluster, and the HTML Report, which provides a human-readable summary of the network activity and policies.

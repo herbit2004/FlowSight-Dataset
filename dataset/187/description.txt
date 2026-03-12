@@ -1,0 +1,66 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process flow of a system that handles user queries, retrieves relevant information, and generates responses using a Large Language Model (LLM). The diagram depicts the sequence of operations, branching logic, and data transformations involved in processing a user query and producing a final response. It serves as a visual representation of the system's architecture and workflow.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It starts with a "User Query" node at the top and flows down through various processing stages, eventually converging at the "End" node. The diagram includes parallel processing paths and decision points, creating a hierarchical structure.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Ingestion, Parallel Fan-Out, Governor Logic, Hydration (Assembly), and Generation.
+
+## Node-by-Node Description
+- **Start / User Query**: Represents the initial user input or question. visible in diagram; no further repository context available.
+- **Entry / process_user_message**: Processes the user message. visible in diagram; no further repository context available.
+- **ChunkEngine / Chunk & Embed**: Chunks the input and generates embeddings. visible in diagram; no further repository context available.
+- **ParallelStart / Launch Parallel Tasks**: Initiates parallel tasks for information retrieval and processing. visible in diagram; no further repository context available.
+- **Scribe / Scribe Agent**: Updates the user profile. visible in diagram; no further repository context available.
+- **UserProfile / User Profile JSON**: Stores the user profile in JSON format. visible in diagram; no further repository context available.
+- **FactScrubber / FactScrubber**: Extracts key-value pairs from the context. visible in diagram; no further repository context available.
+- **FactStore / Fact Store SQL**: Stores extracted facts in a SQL database. visible in diagram; no further repository context available.
+- **Crawler / LatticeCrawler**: Crawls and retrieves information. visible in diagram; no further repository context available.
+- **Candidates / Raw Candidates**: Represents the initial set of retrieved candidates. visible in diagram; no further repository context available.
+- **Governor / Governor: Router & Filter**: Routes and filters the retrieved candidates. visible in diagram; no further repository context available.
+- **ValidatedMems / Truly Relevant Memories**: Represents the filtered and validated memories. visible in diagram; no further repository context available.
+- **Decision / Routing Decision**: Makes a routing decision based on the context. visible in diagram; no further repository context available.
+- **ResumeBlock / Resume Bridge Block**: Creates a bridge block for resuming an active topic. visible in diagram; no further repository context available.
+- **CreateBlock / Create Bridge Block**: Creates a bridge block for a new topic. visible in diagram; no further repository context available.
+- **Hydrator / ContextHydrator**: Hydrates the context with relevant information. visible in diagram; no further repository context available.
+- **FinalPrompt / Final LLM Prompt**: Constructs the final prompt for the LLM. visible in diagram; no further repository context available.
+- **MainLLM / Response Generation**: Generates the final response using the LLM. visible in diagram; no further repository context available.
+- **End / End**: Represents the end of the process. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Start --> Entry`: User query is passed for initial processing.
+- `Entry --> ChunkEngine`: Processed user message is chunked and embedded.
+- `ChunkEngine --> ParallelStart`: Chunked input triggers the launch of parallel tasks.
+- `ParallelStart --> Scribe`: Task 1: Fire-and-Forget triggers the Scribe Agent.
+- `Scribe --> UserProfile`: Scribe Agent updates the User Profile JSON.
+- `ParallelStart --> FactScrubber`: Task 2: Async triggers the FactScrubber.
+- `FactScrubber --> FactStore`: FactScrubber extracts key-value pairs and stores them in Fact Store SQL.
+- `ParallelStart --> Crawler`: Task 3: Retrieval triggers the LatticeCrawler.
+- `Crawler --> Candidates`: LatticeCrawler retrieves raw candidates.
+- `Candidates --> Governor`: Raw candidates are passed to the Governor for routing and filtering.
+- `ParallelStart --> Governor`: Task 4: Main Logic triggers the Governor.
+- `Governor --> ValidatedMems`: Key 2: Context Filter filters the memories.
+- `Governor --> Decision`: Routing Logic triggers the Routing Decision.
+- `Decision -- Active Topic --> ResumeBlock`: If the topic is active, resume the bridge block.
+- `Decision -- New Topic --> CreateBlock`: If the topic is new, create a bridge block.
+- `ResumeBlock --> Hydrator`: Resume bridge block is passed to the ContextHydrator.
+- `CreateBlock --> Hydrator`: Create bridge block is passed to the ContextHydrator.
+- `ValidatedMems --> Hydrator`: Truly Relevant Memories are passed to the ContextHydrator.
+- `FactStore --> Hydrator`: Fact Store SQL data is passed to the ContextHydrator.
+- `UserProfile --> Hydrator`: User Profile JSON data is passed to the ContextHydrator.
+- `Hydrator --> FinalPrompt`: ContextHydrator creates the final LLM prompt.
+- `FinalPrompt --> MainLLM`: Final LLM prompt is passed to the Response Generation.
+- `MainLLM --> End`: Response Generation completes and the process ends.
+
+## Repository Context & Terminology
+- **ChunkEngine**: A component responsible for dividing the input text into smaller chunks and generating embeddings for each chunk.
+- **LatticeCrawler**: A component responsible for crawling and retrieving information from various sources.
+- **Governor**: A component that acts as a router and filter, deciding which information is relevant and how to route the process.
+- **FactScrubber**: A component that extracts key-value pairs from the context.
+- **Scribe Agent**: A component responsible for updating the user profile.
+- **ContextHydrator**: A component that combines various pieces of information to create a comprehensive context for the LLM.
+- **LLM (Large Language Model)**: A powerful language model used for generating responses.
+
+## High-Density QA Ground Truth Summary
+The process begins with a "User Query" which is then processed by `process_user_message` and passed to the "ChunkEngine" for chunking and embedding. The "ChunkEngine" triggers the "Launch Parallel Tasks" node, initiating four parallel tasks. Task 1, "Fire-and-Forget," involves the "Scribe Agent" updating the "User Profile JSON." Task 2, "Async," uses the "FactScrubber" to extract key-value pairs and store them in the "Fact Store SQL" database. Task 3, "Retrieval," employs the "LatticeCrawler" to retrieve "Raw Candidates" based on "Key 1: Vector Search." Task 4, "Main Logic," along with the "Raw Candidates," feeds into the "Governor: Router & Filter." The "Governor" filters the information using "Key 2: Context Filter" to produce "Truly Relevant Memories" and makes a "Routing Decision" based on "Routing Logic." If the topic is active, the "Resume Bridge Block" is used; otherwise, a "Create Bridge Block" is generated. All these context sources, including "Truly Relevant Memories," "Fact Store SQL," and "User Profile JSON," converge at the "ContextHydrator." The "ContextHydrator" creates the "Final LLM Prompt," which is then used by "Response Generation" to produce the final output, leading to the "End" node. The "ChunkEngine" and "LatticeCrawler" represent key components for information retrieval and context preparation, crucial for the LLM's response generation.

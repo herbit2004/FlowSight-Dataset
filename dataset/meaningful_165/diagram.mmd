@@ -1,0 +1,44 @@
+graph TD
+    subgraph "Video Ingestion"
+        A[Receive Upload] --> B(Validation Checks);
+        B -- Valid --> C{Is Prioritized?};
+        B -- Invalid --> Z[Reject & Notify Uploader];
+        C -- Yes --> D[Enqueue Priority Job];
+        C -- No --> E[Enqueue Standard Job];
+    end
+
+    subgraph "Transcoding Pipeline"
+        D --> F[Transcode: ProRes 422HQ];
+        E --> G[Transcode: H.264 High Profile];
+        F --> H{Transcode Success?};
+        G --> H;
+        H -- Yes --> I[Create Thumbnails]
+        H -- No --> ERR[(Error Handling & Retry)];
+        I --> J{Thumbnail Success?};
+        J -- Yes --> K[Store Transcoded Videos & Thumbnails];
+        J -- No --> ERR;
+        K --> L{Publish to CDN};
+    end
+
+    subgraph "Screenshot Service"
+        L --> M[Extract Midpoint Timestamp];
+        M --> N[Request Screenshot From Transcoded Video];
+        N --> O{Screenshot Generation Success?};
+        O -- Yes --> P[Store Screenshot];
+        O -- No --> ERR;
+        P --> L;
+    end
+
+    subgraph "Metadata Management"
+        L --> Q[Update Video Metadata];
+    end
+
+    subgraph "Notification Service"
+        Q --> R[Notify User: Processing Complete];
+    end
+
+    ERR --> S[Log Error & Alert Team];
+    S --> Z;
+
+    classDef success fill:#afa,stroke:#333,stroke-width:2px;
+    class K,P,L success;

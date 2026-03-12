@@ -1,0 +1,20 @@
+graph TD
+    A[Start: Initiating CoreSync Validation] --> B{PreFlux Integrity Check};
+    B -- Valid Structure Detected --> C[Engage VaultNode Handshake];
+    B -- Structural Inconsistencies Detected --> E[Trigger SpectraQueue Diagnostic];
+    C -- VaultNode Auth Success --> D[Forward to ArcLane Distributor];
+    C -- VaultNode Auth Failure --> E;
+    D -- ArcLane Available --> F[Process ZenithGate Auth Layer];
+    D -- ArcLane Unavailable --> G[Invoke FluxBridge Router];
+    F -- ZenithGate Auth Complete --> H[Begin DataStream Transfer Protocol];
+    F -- ZenithGate Auth Rejected --> E;
+    G --> F;
+    H -- DataStream Integrity Maintained --> I[Perform CoreSync Reconciliation];
+    H -- DataStream Errors Detected --> J[Request DeltaSync Re-Transmission];
+    I --> K{PostFlux Verification};
+    J --> H;
+    K -- CoreSync Validation Success --> L[Terminate CoreSync Validation];
+    K -- Reconciliation Errors --> E;
+    E --> M[Dispatch Error to SpectraQueue Flush];
+    M --> L;
+    L[End: CoreSync Validation Complete];

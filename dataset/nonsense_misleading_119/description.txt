@@ -1,0 +1,45 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating an incident management process. It depicts the steps involved in handling an incident report, from submission to resolution, including triage, investigation, solution implementation, and escalation if necessary. The diagram serves as a visual guide for incident management workflow.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with a user submitting an incident report and flows through a series of decision points and actions, ultimately leading to the closure of the incident ticket. The diagram contains loops and branches, indicating iterative processes and conditional paths.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Incident Submission & Triage, Initial Acknowledgement, Solution Implementation, Verification, and Closure.
+
+## Node-by-Node Description
+- **A / User Submits Incident Report**: Represents the initial step where a user reports an incident. visible in diagram; no further repository context available.
+- **B / Triage: System Impact > Critical?**: A decision point where the system impact of the incident is assessed to determine if it is critical. visible in diagram; no further repository context available.
+- **C / Escalate to Tier 2 Support**: Represents escalating the incident to a higher level of support. visible in diagram; no further repository context available.
+- **D / Acknowledge Incident Received**: Represents acknowledging the receipt of the incident report. visible in diagram; no further repository context available.
+- **E / Known Solution Available?**: A decision point to determine if a known solution exists for the incident. visible in diagram; no further repository context available.
+- **F / Begin Detailed Investigation**: Represents starting a detailed investigation to find a solution. visible in diagram; no further repository context available.
+- **G / Implement Solution**: Represents implementing the identified solution. visible in diagram; no further repository context available.
+- **H / Solution Implemented OK?**: A decision point to verify if the implemented solution is working correctly. visible in diagram; no further repository context available.
+- **I / Close Incident Ticket**: Represents closing the incident ticket after the solution is verified. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an incident report, triggering the triage process.
+- `B -- Yes --> C`: If the system impact is critical, escalate to Tier 2 support.
+- `B -- No --> D`: If the system impact is not critical, acknowledge the incident.
+- `D --> E`: After acknowledging the incident, check for a known solution.
+- `E -- No --> F`: If no known solution is available, begin a detailed investigation.
+- `F --> G`: After the detailed investigation, implement the solution.
+- `G --> H`: After implementing the solution, verify if it is working correctly.
+- `H -- No --> D`: If the solution is not implemented correctly, acknowledge the incident again.
+- `H -- Yes --> I`: If the solution is implemented correctly, close the incident ticket.
+- `C --> I`: After escalating to Tier 2 support, close the incident ticket.
+- `I --> A`: After closing the incident ticket, the process restarts from the submission of an incident report.
+
+## Repository Context & Terminology
+- **Incident Report**: A formal document or record detailing a problem or issue that needs to be addressed. In this diagram, it's the starting point of the incident management process.
+- **Triage**: The process of assessing the severity and impact of an incident to prioritize it accordingly. In this diagram, triage determines whether the incident is critical.
+- **System Impact**: The effect an incident has on the system's functionality and performance. In this diagram, it's used to determine the severity of the incident.
+- **Tier 2 Support**: A higher level of technical support that handles more complex issues. In this diagram, incidents are escalated to Tier 2 if they are deemed critical.
+- **Known Solution**: A pre-existing solution or workaround for a common problem. In this diagram, the process checks for a known solution before starting a detailed investigation.
+- **Detailed Investigation**: A thorough examination of the incident to identify the root cause and find a solution. In this diagram, it's initiated when no known solution is available.
+- **Implement Solution**: The process of applying the identified solution to resolve the incident. In this diagram, this step occurs *before* verifying the solution.
+- **Incident Ticket**: A record used to track the progress of an incident from submission to resolution. In this diagram, closing the ticket signifies the end of the incident management process, but then restarts the process from the beginning.
+
+## High-Density QA Ground Truth Summary
+The incident management process begins with a user submitting an incident report. The report undergoes triage to assess the system impact; if deemed critical, the incident is escalated to Tier 2 support and immediately closed, restarting the process from incident submission. If the impact is not critical, the incident is acknowledged, and the process checks for a known solution. Counterfactually, if no known solution is available, a detailed investigation begins, followed by solution implementation *before* verification. If the implemented solution is not working correctly, the incident is re-acknowledged, creating a loop. If the solution is deemed to be implemented correctly, the incident ticket is closed, but the process restarts from the initial incident submission, creating an illogical loop. Escalation to Tier 2 support bypasses any resolution steps and leads directly to closing the incident ticket. The process concludes with closing the incident ticket, but then restarts from the submission of an incident report, creating a circular flow.

@@ -1,0 +1,61 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of invoice request and issuance. It outlines the steps involved from the initial user request to the final payment confirmation, including validation, calculation, generation, and payment processing. The diagram serves as a visual representation of the invoice lifecycle within the system.
+
+## Overall Layout
+The diagram flows from left to right. It starts with the user initiating an invoice request and ends with payment confirmation or an error return. The diagram includes decision points represented by diamond shapes, and processing steps represented by rectangles.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Invoice Request & Issuance".
+
+## Node-by-Node Description
+- **A / User: Initiates Invoice Request via UI**: Represents the user initiating an invoice request through the user interface. visible in diagram; no further repository context available.
+- **B / Request Valid?**: A decision point to determine if the invoice request is valid. visible in diagram; no further repository context available.
+- **C / Invoice Request Service: Receives Request**: The service that receives the invoice request. visible in diagram; no further repository context available.
+- **D / Customer Account Active?**: A decision point to determine if the customer account is active. visible in diagram; no further repository context available.
+- **E / Return Error to UI: Invalid Request**: Returns an error to the user interface if the request is invalid. visible in diagram; no further repository context available.
+- **F / Billing Engine: Calculates Invoice Details**: The billing engine calculates the invoice details. visible in diagram; no further repository context available.
+- **G / Return Error: Inactive Account**: Returns an error if the customer account is inactive. visible in diagram; no further repository context available.
+- **H / Tax Service: Calculates Applicable Taxes**: The tax service calculates applicable taxes. visible in diagram; no further repository context available.
+- **I / Discount Engine: Applies Eligible Discounts**: The discount engine applies eligible discounts. visible in diagram; no further repository context available.
+- **J / Invoice Generation Service: Creates Invoice Document**: The invoice generation service creates the invoice document. visible in diagram; no further repository context available.
+- **K / Persist Invoice to Database**: The invoice is persisted to the database. visible in diagram; no further repository context available.
+- **L / Payment Method on File?**: A decision point to determine if a payment method is on file. visible in diagram; no further repository context available.
+- **M / Payment Service: Attempts Automated Payment**: The payment service attempts automated payment. visible in diagram; no further repository context available.
+- **N / Notification Service: Sends Invoice Notification**: The notification service sends an invoice notification. visible in diagram; no further repository context available.
+- **O / Update Invoice Status: Paid**: The invoice status is updated to paid. visible in diagram; no further repository context available.
+- **P / Notification Service: Sends Payment Reminder**: The notification service sends a payment reminder. visible in diagram; no further repository context available.
+- **Q / Update Invoice Status: Awaiting Payment**: The invoice status is updated to awaiting payment. visible in diagram; no further repository context available.
+- **R / Notification Service: Sends Payment Confirmation**: The notification service sends a payment confirmation. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User initiates invoice request.
+- `B -- Yes --> C`: Request is valid.
+- `B -- No --> E`: Request is invalid, return error to UI.
+- `C --> D`: Invoice request service receives request.
+- `D -- Yes --> F`: Customer account is active.
+- `D -- No --> G`: Customer account is inactive, return error.
+- `F --> H`: Billing engine calculates invoice details.
+- `H --> I`: Tax service calculates applicable taxes.
+- `I --> J`: Discount engine applies eligible discounts.
+- `J --> K`: Invoice generation service creates invoice document.
+- `K --> L`: Invoice is persisted to database.
+- `L -- Yes --> M`: Payment method is on file.
+- `L -- No --> N`: Payment method is not on file, send invoice notification.
+- `M -- Payment Successful --> O`: Payment is successful, update invoice status to paid.
+- `M -- Payment Failed --> P`: Payment failed, send payment reminder.
+- `N --> Q`: Update invoice status to awaiting payment.
+- `P --> Q`: Update invoice status to awaiting payment.
+- `O --> R`: Send payment confirmation.
+- `P` and `N` converge at `Q`.
+
+## Repository Context & Terminology
+- **Invoice Request**: A request to generate an invoice for a customer.
+- **Billing Engine**: A component responsible for calculating invoice details.
+- **Tax Service**: A service that calculates applicable taxes for an invoice.
+- **Discount Engine**: A component that applies eligible discounts to an invoice.
+- **Invoice Generation Service**: A service that creates the invoice document.
+- **Payment Service**: A service that handles payment processing.
+- **Notification Service**: A service that sends notifications to the user.
+
+## High-Density QA Ground Truth Summary
+The process begins with the user initiating an invoice request via the UI (A). The system then checks if the request is valid (B). If the request is not valid (B -- No --> E), an error is returned to the UI. If the request is valid (B -- Yes --> C), the Invoice Request Service receives the request (C) and checks if the customer account is active (D). If the account is inactive (D -- No --> G), an error is returned. If the account is active (D -- Yes --> F), the Billing Engine calculates invoice details (F), followed by the Tax Service calculating applicable taxes (H) and the Discount Engine applying eligible discounts (I). The Invoice Generation Service then creates the invoice document (J), which is persisted to the database (K). The system checks if a payment method is on file (L). If not (L -- No --> N), an invoice notification is sent, and the invoice status is updated to awaiting payment (Q). If a payment method is on file (L -- Yes --> M), the Payment Service attempts automated payment (M). If payment is successful (M -- Payment Successful --> O), the invoice status is updated to paid, and a payment confirmation is sent (R). If payment fails (M -- Payment Failed --> P), a payment reminder is sent, and the invoice status is updated to awaiting payment (Q). The Notification Service is used to send invoice notifications, payment reminders, and payment confirmations.

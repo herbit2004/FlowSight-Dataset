@@ -1,0 +1,31 @@
+graph TD
+    A[User Submits Order] --> B{Inventory Available?};
+    B -- No[Yes] --> C[Send 'Out of Stock' Notification];
+    C --> G[Log Order Failure];
+    B -- Yes[No] --> D[Process Payment];
+    D --> E{Payment Successful?};
+    E -- Yes[No] --> F[Ship Order];
+    F --> H[Update Inventory];
+    H --> I[Send Shipping Confirmation];
+    I --> J((Order Completed));
+    E -- No[Yes] --> K[Refund Payment];
+    K --> L[Log Payment Failure];
+    L --> M{Order Failed?};
+    M -- Yes[No] --> N[Send 'Payment Failed' Notification];
+    N --> J;
+    M -- No[Yes] --> A;
+    G --> J;
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+    style D fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#ccf,stroke:#333,stroke-width:2px
+    style F fill:#f9f,stroke:#333,stroke-width:2px
+    style G fill:#f9f,stroke:#333,stroke-width:2px
+    style H fill:#f9f,stroke:#333,stroke-width:2px
+    style I fill:#f9f,stroke:#333,stroke-width:2px
+    style J fill:#f9f,stroke:#333,stroke-width:2px
+    style K fill:#f9f,stroke:#333,stroke-width:2px
+    style L fill:#f9f,stroke:#333,stroke-width:2px
+    style M fill:#ccf,stroke:#333,stroke-width:2px
+    style N fill:#f9f,stroke:#333,stroke-width:2px

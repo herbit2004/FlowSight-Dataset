@@ -1,0 +1,13 @@
+graph TD
+    A[Real-Time Sensor Data] --> B{Time-Based Rolling Window};
+    B -- Window Full --> C[Pre-Aggregated Stats];
+    B -- Window Open --> B;
+    C --> D{Geo-Partitioning};
+    D -- Region 1 --> E[Average Temp Calc];
+    D -- Region 2 --> F[Anomaly Detection Module];
+    E --> G[Alert if Above Threshold];
+    F -- Anomaly Found --> H[Escalation Service];
+    F -- No Anomaly --> I[Store Baseline];
+    G --> J[Push to Dashboard];
+    classDef box fill:#f9f,stroke:#333,stroke-width:2px
+    style A,C,E,F,G,I box

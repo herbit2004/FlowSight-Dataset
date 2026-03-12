@@ -1,0 +1,71 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts a troubleshooting process for identifying the cause of website flagging issues in Firefox, potentially related to privacy or fingerprinting resistance. The diagram guides a developer through a series of tests and configuration changes to isolate the source of the problem.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom. It starts with a single "Start" node and branches out into different paths based on the results of website flagging tests. The diagram converges towards potential solutions or debugging steps.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Initial Firefox test, Headless mode test, Developer UI tests, Configuration changes, and Debugging/Deobfuscation.
+
+## Node-by-Node Description
+- **A / Start**: The starting point of the troubleshooting process.
+  visible in diagram; no further repository context available.
+- **B / Does website flag in the official Firefox?**: Checks if the website is flagged in the official Firefox distribution.
+  visible in diagram; no further repository context available.
+- **C / Likely bad IP/rate-limiting. If the website fails on both headless and headful mode on the official Firefox distribution, the issue is not with the browser.** : Indicates that the issue is likely due to IP or rate limiting if the website fails in both headless and headful modes on the official Firefox distribution.
+  visible in diagram; no further repository context available.
+- **D / Run make ff-dbg(1) and build(2) a clean distribution of Firefox. Does the website flag in Firefox headless mode(4)?**: Instructs to build a clean Firefox distribution using `make ff-dbg` and check if the website is flagged in headless mode.
+  visible in diagram; no further repository context available.
+- **E / Does the website flag in headful mode(3) AND headless mode(4)?**: Checks if the website is flagged in both headful and headless modes.
+  visible in diagram; no further repository context available.
+- **F / Open the developer UI(5), apply config.patch, then rebuild(2). Does the website still flag(3)?**: Instructs to open the developer UI, apply a `config.patch`, rebuild, and check if the website is still flagged.
+  visible in diagram; no further repository context available.
+- **G / Enable privacy.resistFingerprinting in the config(6). Does the website still flag(3)?**: Instructs to enable `privacy.resistFingerprinting` in the configuration and check if the website is still flagged.
+  visible in diagram; no further repository context available.
+- **H / In the config(6), enable FPP and start omitting overrides until you find the one that fixed the leak.** : Instructs to enable FPP (First-Party Protection) and omit overrides in the configuration until the one causing the leak is found.
+  visible in diagram; no further repository context available.
+- **I / If you get to this point, you may need to deobfuscate the Javascript behind the website to identify what it's testing.** : Suggests deobfuscating the JavaScript behind the website if the issue persists.
+  visible in diagram; no further repository context available.
+- **K / Open the developer UI, apply the playwright bootstrap patch, then rebuild. Does it still flag?**: Instructs to apply the Playwright bootstrap patch and check if the website is still flagged.
+  visible in diagram; no further repository context available.
+- **J / Omit options from camoufox.cfg(6) and rerun(3) until you find the one causing the leak.** : Instructs to omit options from `camoufox.cfg` and rerun until the one causing the leak is found.
+  visible in diagram; no further repository context available.
+- **L / The issue has nothing to do with Playwright. Apply the rest of the Camoufox patches one by one until the one causing the leak is found.** : Indicates the issue is not related to Playwright and suggests applying the remaining Camoufox patches one by one.
+  visible in diagram; no further repository context available.
+- **M / Juggler needs to be debugged to locate the leak.** : Indicates that Juggler needs to be debugged to locate the leak.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Start the troubleshooting process by checking if the website is flagged in the official Firefox.
+- `B -- Yes --> C`: If the website is flagged in the official Firefox, it's likely an IP/rate-limiting issue.
+- `B -- No --> D`: If the website is not flagged in the official Firefox, build a clean distribution and check in headless mode.
+- `D -- Yes --> E`: If the website is flagged in headless mode, check if it's flagged in both headful and headless modes.
+- `D -- No --> F`: If the website is not flagged in headless mode, open the developer UI and apply `config.patch`.
+- `E -- No --> G`: If the website is not flagged in both headful and headless modes, enable `privacy.resistFingerprinting`.
+- `E -- Yes --> C`: If the website is flagged in both headful and headless modes, it's likely an IP/rate-limiting issue.
+- `G -- No --> H`: If the website is still not flagged after enabling `privacy.resistFingerprinting`, enable FPP and omit overrides.
+- `G -- Yes --> I`: If the website is still flagged after enabling `privacy.resistFingerprinting`, consider deobfuscating the JavaScript.
+- `F -- Yes --> K`: If the website is still flagged after applying `config.patch`, apply the Playwright bootstrap patch.
+- `F -- No --> J`: If the website is not flagged after applying `config.patch`, omit options from `camoufox.cfg`.
+- `K -- No --> M`: If the website is still not flagged after applying the Playwright bootstrap patch, debug Juggler.
+- `K -- Yes --> L`: If the website is still flagged after applying the Playwright bootstrap patch, apply the remaining Camoufox patches.
+- `H --> I`: Convergence: After trying configuration changes, consider deobfuscating Javascript.
+- `J --> I`: Convergence: After trying configuration changes, consider deobfuscating Javascript.
+- `L --> I`: Convergence: After trying Camoufox patches, consider deobfuscating Javascript.
+- `M --> I`: Convergence: After debugging Juggler, consider deobfuscating Javascript.
+
+## Repository Context & Terminology
+- **ff-dbg**: Likely refers to a debug build target for Firefox.
+- **build**: Refers to the process of compiling and creating a Firefox distribution.
+- **headless mode**: Running Firefox without a graphical user interface.
+- **headful mode**: Running Firefox with a graphical user interface.
+- **Developer UI**: Firefox's built-in developer tools.
+- **config.patch**: A patch file containing configuration changes.
+- **privacy.resistFingerprinting**: A Firefox configuration option related to privacy and fingerprinting resistance.
+- **camoufox.cfg**: A configuration file likely related to the Camoufox project, which aims to enhance Firefox's privacy features.
+- **FPP (First-Party Protection)**: A security feature that isolates first-party data to prevent cross-site tracking.
+- **Playwright**: An automation framework for web browsers.
+- **Juggler**: visible in diagram; no further repository context available.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins at the "Start" node (A), initiating a diagnostic process for website flagging issues in Firefox. The first decision point (B) checks if the website is flagged in the official Firefox distribution. If "Yes", the process concludes that the issue is likely due to IP or rate limiting (C). If "No", the process proceeds to build a clean Firefox distribution using `make ff-dbg` and checks if the website is flagged in headless mode (D). If flagged in headless mode (D -- Yes --> E), the process checks if the website is flagged in both headful and headless modes (E). If not flagged in both modes (E -- No --> G), `privacy.resistFingerprinting` is enabled in the configuration. If still flagged (G -- Yes --> I), the process suggests deobfuscating the JavaScript. If not flagged after enabling `privacy.resistFingerprinting` (G -- No --> H), FPP is enabled, and overrides are omitted until the cause is found. If not flagged in headless mode initially (D -- No --> F), the developer UI is opened, `config.patch` is applied, and the process checks if the website is still flagged. If still flagged (F -- Yes --> K), the Playwright bootstrap patch is applied. If not (F -- No --> J), options from `camoufox.cfg` are omitted. If the Playwright bootstrap patch doesn't resolve the issue (K -- No --> M), Juggler needs debugging. If it does (K -- Yes --> L), the remaining Camoufox patches are applied. All paths eventually converge to the suggestion of deobfuscating the JavaScript (I) if the issue persists. The `camoufox.cfg` file suggests a focus on privacy enhancements within the Firefox configuration.

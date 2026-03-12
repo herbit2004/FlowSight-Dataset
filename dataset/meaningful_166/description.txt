@@ -1,0 +1,72 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a CDN (Content Delivery Network) origin fetch scenario. It outlines the process of handling client requests, checking for cache hits, and fetching content from origin servers (primary or secondary) when necessary. The diagram serves as a visual representation of the CDN's logic for content retrieval and delivery.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It depicts a hierarchical flow starting with a client request and branching based on cache availability and origin server health. The start node is "Client Request," and the end nodes are "Deliver Content to Client," "Deliver Cached Content," "Log Transaction," and "Return 503 Error."
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Secondary Origin**: Represents the secondary origin server and its selection process.
+- **Origin System**: Represents the primary origin server.
+
+## Node-by-Node Description
+- **A / Client Request**: Represents an incoming request from a client to the CDN. visible in diagram; no further repository context available.
+- **B / Cache Hit?**: A decision point to determine if the requested content is available in the CDN's cache. visible in diagram; no further repository context available.
+- **C / Deliver Cached Content**: Delivers the content directly from the CDN's cache to the client. visible in diagram; no further repository context available.
+- **D / Origin Fetch Initiator**: Initiates the process of fetching the content from the origin server(s). visible in diagram; no further repository context available.
+- **E / Request Routing Logic**: Determines the appropriate origin server to use for fetching the content. visible in diagram; no further repository context available.
+- **F / Select Origin Server**: Selects either the primary or secondary origin server based on routing logic. visible in diagram; no further repository context available.
+- **G / Origin Server Health Check**: Checks the health status of the primary origin server. visible in diagram; no further repository context available.
+- **H / Construct Origin Request**: Constructs the request to be sent to the origin server. visible in diagram; no further repository context available.
+- **I / Failover to Secondary Origin**: Initiates failover to the secondary origin server when the primary origin is unhealthy. visible in diagram; no further repository context available.
+- **J / Secondary Origin Health Check**: Checks the health status of the secondary origin server. visible in diagram; no further repository context available.
+- **K / Send Request to Origin**: Sends the constructed request to the selected origin server. visible in diagram; no further repository context available.
+- **L / Origin Response Received**: Represents the receipt of the response from the origin server. visible in diagram; no further repository context available.
+- **M / Response Validation**: Validates the response received from the origin server. visible in diagram; no further repository context available.
+- **N / Error: All Origins Down**: Indicates that both primary and secondary origin servers are unavailable. visible in diagram; no further repository context available.
+- **O / Return 503 Error**: Returns a 503 Service Unavailable error to the client. visible in diagram; no further repository context available.
+- **P / Cache Response**: Caches the valid response received from the origin server. visible in diagram; no further repository context available.
+- **Q / Error: Invalid Response**: Indicates that the response received from the origin server is invalid. visible in diagram; no further repository context available.
+- **R / Store in Cache**: Stores the content in the CDN's cache. visible in diagram; no further repository context available.
+- **S / Deliver Content to Client**: Delivers the content to the client. visible in diagram; no further repository context available.
+- **T / Log Transaction**: Logs the transaction details. visible in diagram; no further repository context available.
+- **X / Secondary Origin Server**: Represents the secondary origin server. visible in diagram; no further repository context available.
+- **W / Primary Origin Server**: Represents the primary origin server. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: A client request is sent to check for a cache hit.
+- `B -- Yes --> C`: If the content is in the cache, deliver it to the client.
+- `B -- No --> D`: If the content is not in the cache, initiate an origin fetch.
+- `D --> E`: The origin fetch initiator triggers request routing logic.
+- `E --> F`: Request routing logic selects an origin server.
+- `F --> G`: The selected origin server undergoes a health check.
+- `G -- Healthy --> H`: If the origin server is healthy, construct an origin request.
+- `G -- Unhealthy --> I`: If the origin server is unhealthy, failover to the secondary origin.
+- `I --> J`: The secondary origin server undergoes a health check.
+- `J -- Healthy --> H`: If the secondary origin server is healthy, construct an origin request.
+- `J -- Unhealthy --> N`: If the secondary origin server is unhealthy, indicate that all origins are down.
+- `H --> K`: The constructed origin request is sent to the origin server.
+- `K --> L`: The origin response is received.
+- `L --> M`: The origin response undergoes validation.
+- `M -- Valid --> P`: If the response is valid, cache it.
+- `M -- Invalid --> Q`: If the response is invalid, return an error.
+- `P --> R`: The valid response is stored in the cache.
+- `R --> S`: The content is delivered to the client.
+- `L --> S`: The content is delivered to the client directly from the origin.
+- `C --> T`: After delivering cached content, log the transaction.
+- `S --> T`: After delivering content to the client, log the transaction.
+- `N --> O`: If all origins are down, return a 503 error.
+- `Q --> O`: If the response is invalid, return a 503 error.
+
+## Repository Context & Terminology
+- **CDN (Content Delivery Network)**: A geographically distributed network of servers that caches content to deliver it to users with high availability and performance.
+- **Origin Server**: The original source of the content, which the CDN fetches and caches.
+- **Cache Hit**: When the requested content is found in the CDN's cache.
+- **Cache Miss**: When the requested content is not found in the CDN's cache, requiring a fetch from the origin server.
+- **Health Check**: A process to verify the availability and responsiveness of an origin server.
+- **Failover**: The automatic switching to a backup origin server when the primary origin server is unavailable.
+- **503 Service Unavailable**: An HTTP status code indicating that the server is temporarily unable to handle the request.
+- **Response Validation**: The process of verifying that the response received from the origin server is valid and meets the expected criteria.
+
+## High-Density QA Ground Truth Summary
+The CDN origin fetch scenario begins with a "Client Request" (A) that is immediately checked for a "Cache Hit?" (B). If the content is cached (`B -- Yes --> C`), it's delivered directly ("Deliver Cached Content") and the transaction is logged. If it's a cache miss (`B -- No --> D`), the "Origin Fetch Initiator" (D) triggers "Request Routing Logic" (E) to "Select Origin Server" (F). The selected origin undergoes a "Health Check" (G). A healthy origin (`G -- Healthy --> H`) leads to constructing ("Construct Origin Request") and sending ("Send Request to Origin") a request. An unhealthy origin (`G -- Unhealthy --> I`) triggers "Failover to Secondary Origin," which also has a "Health Check" (J). If both origins are unhealthy (`J -- Unhealthy --> N`), a "503 Error" is returned. A valid origin response (`M -- Valid --> P`) is cached ("Cache Response," "Store in Cache") before delivery. An invalid response (`M -- Invalid --> Q`) also results in a "503 Error." Finally, content is delivered ("Deliver Content to Client") and the transaction is logged. The CDN architecture uses health checks to ensure content is served from available origin servers, failing over to secondary origins when necessary to maintain availability.

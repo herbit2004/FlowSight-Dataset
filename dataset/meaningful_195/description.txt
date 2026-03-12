@@ -1,0 +1,62 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the payment processing flow within a system. It depicts the sequence of steps involved in handling a user's payment request, from initial submission to final confirmation or failure. The diagram serves as a visual representation of the payment workflow, aiding in understanding the system's architecture and identifying potential bottlenecks or failure points.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "User Request" subgraph at the top and flows downwards through various services and decision points, ultimately leading to either a "Payment Successful" or "Retry Message" end state.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **User Request**: This subgraph encapsulates the initial interaction between the user agent and the API gateway.
+
+## Node-by-Node Description
+- **UA / User Agent**: Represents the user's application or interface that initiates the payment request. visible in diagram; no further repository context available.
+- **API / API Gateway**: The entry point for the payment request, responsible for routing and managing API calls. visible in diagram; no further repository context available.
+- **AS / Auth Service**: Authenticates and authorizes the user making the payment request. visible in diagram; no further repository context available.
+- **PS / Payment Service**: Core service responsible for processing payment requests. visible in diagram; no further repository context available.
+- **RF / Risk Filter**: Evaluates the risk associated with the payment request. visible in diagram; no further repository context available.
+- **CC / Credit Check**: Verifies the user's credit or available funds. visible in diagram; no further repository context available.
+- **BA / Billing Adapter**: Adapts the payment request to a specific payment service provider. visible in diagram; no further repository context available.
+- **PSP1 / Payment Service Provider - API 1**: First payment service provider used to process the payment. visible in diagram; no further repository context available.
+- **PSP2 / Payment Service Provider - API 2**: Alternate payment service provider used if the first one fails. visible in diagram; no further repository context available.
+- **WP / Webhook Processor**: Handles webhook notifications from the payment service provider. visible in diagram; no further repository context available.
+- **UM / User Messaging**: Sends notifications to the user about the payment status. visible in diagram; no further repository context available.
+- **REJECT / Reject Transaction**: Indicates that the transaction was rejected due to high risk.
+- **INSUFFICIENT / Insufficient Funds**: Indicates that the transaction failed due to insufficient funds.
+- **FAILURE / Payment Failed**: Indicates that the payment failed after attempting both payment service providers.
+- **SUCCESS / Payment Successful**: Indicates that the payment was successfully processed.
+- **RETRY / Retry Message**: Indicates that a retry message is sent to the user after a failure.
+
+## Edges, Branches & Convergence
+- `UA --> API`: User agent sends a request to the API Gateway.
+- `API -- /payments --> AS`: API Gateway routes the payment request to the Authentication Service via the "/payments" endpoint.
+- `AS -- Validated User --> PS`: Authentication Service passes the validated user to the Payment Service.
+- `PS -- New Payment Request --> RF`: Payment Service sends a new payment request to the Risk Filter.
+- `RF -- Low Risk --> CC`: If the risk is low, the request is sent to the Credit Check.
+- `RF -- High Risk --> REJECT`: If the risk is high, the transaction is rejected.
+- `CC -- Sufficient Funds --> BA`: If sufficient funds are available, the request is sent to the Billing Adapter.
+- `CC -- Insufficient Funds --> INSUFFICIENT`: If insufficient funds are available, the transaction is marked as insufficient funds.
+- `BA -- Submit Charge --> PSP1`: Billing Adapter submits the charge to Payment Service Provider 1.
+- `BA -- Attempt Alternate PSP --> PSP2`: Billing Adapter attempts an alternate PSP, Payment Service Provider 2.
+- `PSP1 -- Success --> WP`: If Payment Service Provider 1 is successful, the request is sent to the Webhook Processor.
+- `PSP1 -- Failure --> PSP2`: If Payment Service Provider 1 fails, the request is sent to Payment Service Provider 2.
+- `PSP2 -- Success --> WP`: If Payment Service Provider 2 is successful, the request is sent to the Webhook Processor.
+- `PSP2 -- Failure --> FAILURE`: If Payment Service Provider 2 fails, the payment is marked as failed.
+- `WP --> UM`: Webhook Processor sends the payment status to the User Messaging service.
+- `UM -- Success --> SUCCESS`: If the payment is successful, a success message is sent to the user.
+- `UM -- Failure --> RETRY`: If the payment fails, a retry message is sent to the user.
+- Paths converge at the Webhook Processor (WP) from both PSP1 and PSP2 success paths.
+
+## Repository Context & Terminology
+- **User Agent**: The software application used by the user to interact with the system, typically a web browser or mobile app.
+- **API Gateway**: A service that acts as a single entry point for all API requests, providing routing, authentication, and rate limiting.
+- **Auth Service**: A service responsible for authenticating users and authorizing their access to resources.
+- **Payment Service**: The core service responsible for processing payment transactions, including interacting with payment gateways and managing payment records.
+- **Risk Filter**: A component that analyzes payment requests for potential fraud or other risks.
+- **Credit Check**: A process to verify the user's creditworthiness or available funds.
+- **Billing Adapter**: A component that adapts payment requests to different payment service providers' APIs.
+- **Payment Service Provider (PSP)**: A third-party company that provides payment processing services, such as credit card processing or bank transfers.
+- **Webhook Processor**: A component that handles asynchronous notifications from payment service providers, such as payment confirmations or failures.
+- **User Messaging**: A service responsible for sending notifications to users about the status of their payments.
+
+## High-Density QA Ground Truth Summary
+The payment processing flow begins with a `User Agent` sending a request to the `API Gateway` via the `/payments` endpoint. The `API Gateway` then forwards the request to the `Auth Service` for authentication. Upon successful validation, the `Payment Service` receives the request and passes it to the `Risk Filter`. The `Risk Filter` branches the flow based on risk assessment: high-risk transactions are immediately `Reject Transaction`, while low-risk transactions proceed to `Credit Check`. If `Credit Check` finds `Insufficient Funds`, the flow ends in `Insufficient Funds`. With `Sufficient Funds`, the `Billing Adapter` submits the charge to `Payment Service Provider - API 1`. A failure triggers an attempt with `Payment Service Provider - API 2`. Success from either PSP converges at the `Webhook Processor`, which then updates `User Messaging`. Finally, `User Messaging` informs the user, resulting in either a `Payment Successful` outcome or a `Retry Message` if the payment ultimately failed. The `API Gateway` is a critical component, acting as the single entry point and managing authentication before directing requests to the core `Payment Service`.

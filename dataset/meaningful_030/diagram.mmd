@@ -1,0 +1,31 @@
+graph TD
+    subgraph Batch Job: Data Enrichment Pipeline
+        A[Start: Data Intake] --> B(Validate Schema);
+        B -- Valid Schema --> C{Routing Logic: Source Type};
+        C -- Type A: Raw Log --> D[Transform: Log Parser A];
+        C -- Type B: Sensor Data --> E[Transform: Sensor Normalizer];
+        D --> F(Enrich: Geo-IP Lookup);
+        E --> F;
+        F --> G(Enrich: Customer Profile);
+        G --> H{Aggregation Needed?};
+        H -- Yes --> I[Aggregate: Sessionize];
+        H -- No --> J[Write: Enriched Data Sink];
+        I --> J;
+        J --> K{Publish to Data Lake?};
+        K -- Yes --> L[Publish: Data Lake];
+        K -- No --> M[End: Success];
+        L --> M;
+        B -- Invalid Schema --> N[Fail: Schema Error];
+        C -- Unknown Source --> O[Fail: Unsupported Source];
+        N --> P[Notify: Error Reporting];
+        O --> P;
+        P --> M;
+    end
+
+    classDef step fill:#f9f,stroke:#333,stroke-width:2px
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px
+    classDef terminal fill:#fcc,stroke:#333,stroke-width:2px
+
+    class A,B,D,E,F,G,I,J,L step;
+    class C,H,K decision;
+    class M,N,O,P terminal;

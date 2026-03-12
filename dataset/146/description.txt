@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the process of dependency injection (DI) analysis, type analysis, dependency graph creation, code generation, and compilation. It illustrates the flow of operations, decision points, and potential failure scenarios in a software development or build process. The diagram serves as a visual representation of the steps involved in ensuring code correctness and successful compilation.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with a "Start" node at the top and progresses through various analysis and generation stages, ultimately leading to either a "Success" or "Compilation failed" end node at the bottom. The "Dependency graph" section is represented as a subgraph.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Dependency graph**: This subgraph encapsulates the iterative process of selecting dependency sets, creating graph variants, and verifying them.
+
+## Node-by-Node Description
+- **start / Start**: The starting point of the process. visible in diagram; no further repository context available.
+- **setups / DI setups analysis**: Performs analysis of dependency injection setups. visible in diagram; no further repository context available.
+- **types / Types analysis constructors/methods/properties/fields**: Analyzes types, including constructors, methods, properties, and fields. visible in diagram; no further repository context available.
+- **option / Selecting a next dependency set**: Selects the next set of dependencies to be considered. visible in diagram; no further repository context available.
+- **creating / Creating a dependency graph variant**: Creates a variant of the dependency graph. visible in diagram; no further repository context available.
+- **verification / Verification**: Verifies the created dependency graph variant. visible in diagram; no further repository context available.
+- **codeGeneration / Code generation**: Generates code based on the verified dependency graph. visible in diagram; no further repository context available.
+- **compilation / Compilation**: Compiles the generated code. visible in diagram; no further repository context available.
+- **failed / Compilation failed**: Indicates that the compilation process has failed. visible in diagram; no further repository context available.
+- **success / Success**: Indicates that the compilation process has succeeded. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `start --> setups`: Starts the process and moves to DI setups analysis.
+- `setups -.-> failed`: If DI setups analysis has problems, the process goes to "Compilation failed".
+- `setups --> types`: Proceeds to type analysis after DI setups analysis.
+- `types -.-> failed`: If type analysis has problems, the process goes to "Compilation failed".
+- `types --> option`: Proceeds to selecting a next dependency set after type analysis.
+- `option --> creating`: Creates a dependency graph variant after selecting a dependency set.
+- `option -.-> failed`: If there are no other options when selecting a dependency set, the process goes to "Compilation failed".
+- `creating --> verification`: Verifies the dependency graph variant after creating it.
+- `verification --> option`: If verification has problems, the process loops back to selecting a next dependency set.
+- `verification --> codeGeneration`: If verification is correct, the process proceeds to code generation.
+- `codeGeneration --> compilation`: Proceeds to compilation after code generation.
+- `compilation -.-> failed`: If compilation has problems, the process goes to "Compilation failed".
+- `compilation --> success`: If compilation is successful, the process ends with "Success".
+
+## Repository Context & Terminology
+- **Dependency Injection (DI)**: A design pattern in which one or more dependencies (or services) are injected into a dependent object. This is a fundamental concept in modern software development, promoting loose coupling and testability.
+- **Type Analysis**: The process of examining the types of variables, expressions, and functions in a program to ensure type safety and correctness.
+- **Dependency Graph**: A directed graph representing dependencies between software components. Nodes represent components, and edges represent dependencies.
+- **Code Generation**: The process of automatically generating source code from a higher-level description or model.
+- **Compilation**: The process of translating source code into machine code or bytecode that can be executed by a computer.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins at the "Start" node, initiating the dependency analysis process. The first step is "DI setups analysis," which, if problematic, leads directly to "Compilation failed." Otherwise, the process proceeds to "Types analysis," examining constructors, methods, properties, and fields; problems here also lead to "Compilation failed." The core of the process lies within the "Dependency graph" subgraph. Here, the system iteratively "Selecting a next dependency set" and "Creating a dependency graph variant." The "Verification" diamond acts as a decision point: if the variant has problems, the process loops back to "Selecting a next dependency set." If "There are no other options" when selecting a dependency set, the process goes to "Compilation failed". A successful verification triggers "Code generation," followed by "Compilation." A failed compilation leads to the "Compilation failed" end node, while a successful compilation results in the "Success" end node. The dependency graph subgraph represents an iterative refinement of the dependency structure, crucial for resolving complex software dependencies, a common challenge addressed by dependency injection frameworks.

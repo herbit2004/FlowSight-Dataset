@@ -1,0 +1,90 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow in an e-commerce system. It depicts the sequence of steps from order creation to order fulfillment, including payment processing and notifications. The diagram serves as a visual representation of the system's logic and data flow, aiding in understanding and communication among stakeholders.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically divided into stages: Order Creation, Payment Processing, Order Fulfillment, and Notifications. The start node is "User Interaction: Order Entry," and the end node is "Order Completed."
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Order Creation**: Encompasses the initial steps of order entry, data validation, inventory check, and order persistence.
+- **Payment Processing**: Details the payment initiation, redirection to payment page, authorization, and capture.
+- **Order Fulfillment**: Covers the steps involved in fulfilling the order, from sending it to the warehouse to shipping and delivery.
+- **Notifications**: Describes the sending of confirmation and shipping notifications.
+
+## Node-by-Node Description
+- **A / User Interaction: Order Entry**: Represents the user entering order details.
+  visible in diagram; no further repository context available.
+- **B / Validate Order Data**: Represents the validation of the entered order data.
+  visible in diagram; no further repository context available.
+- **C / Inventory Check: Available Stock**: Represents the check for available stock.
+  visible in diagram; no further repository context available.
+- **D / Calculate Order Total**: Represents the calculation of the order total.
+  visible in diagram; no further repository context available.
+- **E / Notify User: Out of Stock**: Represents notifying the user if an item is out of stock.
+  visible in diagram; no further repository context available.
+- **F / Generate Order ID**: Represents the generation of a unique order ID.
+  visible in diagram; no further repository context available.
+- **G / Persist Order: Order Database**: Represents the persistence of the order in the order database.
+  visible in diagram; no further repository context available.
+- **H / Initiate Payment: Payment Gateway**: Represents the initiation of payment through a payment gateway.
+  visible in diagram; no further repository context available.
+- **I / Redirect User: Payment Page**: Represents redirecting the user to a payment page.
+  visible in diagram; no further repository context available.
+- **J / Payment Received?**: Represents the check for payment receipt.
+  visible in diagram; no further repository context available.
+- **K / Authorize Payment**: Represents the authorization of the payment.
+  visible in diagram; no further repository context available.
+- **L / Payment Timeout**: Represents the scenario where payment times out.
+  visible in diagram; no further repository context available.
+- **M / Capture Payment**: Represents the capture of the payment.
+  visible in diagram; no further repository context available.
+- **N / Update Order Status: Paid**: Represents updating the order status to paid.
+  visible in diagram; no further repository context available.
+- **O / Send Order to Warehouse**: Represents sending the order to the warehouse for fulfillment.
+  visible in diagram; no further repository context available.
+- **P / Warehouse Processing**: Represents the processing of the order in the warehouse.
+  visible in diagram; no further repository context available.
+- **Q / Shipping & Delivery**: Represents the shipping and delivery of the order.
+  visible in diagram; no further repository context available.
+- **R / Order Completed**: Represents the completion of the order.
+  visible in diagram; no further repository context available.
+- **S / Send Confirmation Email**: Represents sending a confirmation email to the user.
+  visible in diagram; no further repository context available.
+- **T / Send Shipping Notification**: Represents sending a shipping notification to the user.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User interaction triggers order data validation.
+- `B -- Valid --> C`: Order data is valid, proceed to inventory check.
+- `B -- Invalid --> A`: Order data is invalid, return to order entry.
+- `C -- Sufficient Stock --> D`: Sufficient stock is available, calculate order total.
+- `C -- Insufficient Stock --> E`: Insufficient stock is available, notify the user.
+- `E --> A`: User is notified of out-of-stock, return to order entry.
+- `D --> F`: Order total is calculated, generate order ID.
+- `F --> G`: Order ID is generated, persist order in the database.
+- `G --> H`: Order is persisted, initiate payment through the payment gateway.
+- `H --> I`: Payment is initiated, redirect user to payment page.
+- `I --> J`: User is redirected, check if payment is received.
+- `J -- Yes --> K`: Payment is received, authorize payment.
+- `J -- No --> L`: Payment is not received, payment timeout.
+- `L --> A`: Payment timeout, return to order entry.
+- `K --> M`: Payment is authorized, capture payment.
+- `M --> N`: Payment is captured, update order status to paid.
+- `N --> O`: Order status is updated, send order to warehouse.
+- `O --> P`: Order is sent to warehouse, warehouse processing.
+- `P --> Q`: Warehouse processing is complete, shipping and delivery.
+- `Q --> R`: Shipping and delivery is complete, order completed.
+- `N --> S`: Order status is updated, send confirmation email.
+- `O --> T`: Order is sent to warehouse, send shipping notification.
+
+## Repository Context & Terminology
+- **Order Creation**: The initial phase of the order processing workflow, involving user input and data validation.
+- **Payment Processing**: The phase where payment is initiated, authorized, and captured.
+- **Order Fulfillment**: The phase where the order is processed, shipped, and delivered.
+- **Payment Gateway**: A service that authorizes and processes payments for online transactions.
+- **Order Database**: A database that stores order information.
+- **Warehouse Processing**: The steps involved in picking, packing, and preparing the order for shipment in the warehouse.
+- **Shipping & Delivery**: The process of transporting the order to the customer's address.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with the "User Interaction: Order Entry" node, where the user inputs order details. The system then validates the entered data at the "Validate Order Data" node. If the data is invalid, the flow returns to the "User Interaction: Order Entry" node for correction. If valid, the system checks for available stock at the "Inventory Check: Available Stock" node. If stock is insufficient, the user is notified, and the flow returns to order entry. With sufficient stock, the "Calculate Order Total" node computes the order total, followed by "Generate Order ID" and "Persist Order: Order Database," storing the order. The process then moves to "Payment Processing," initiating payment via a gateway and redirecting the user to a payment page. A decision point, "Payment Received?," determines the next step. If payment is received, the system authorizes and captures the payment, updating the order status to "Paid." If not, a "Payment Timeout" occurs, returning the user to order entry. Once paid, the "Send Order to Warehouse" node triggers "Order Fulfillment," including warehouse processing and shipping. Finally, the "Order Completed" node marks the end of the process. Throughout, "Notifications" are sent, including order confirmations and shipping updates, ensuring customer communication. The "Payment Gateway" is a critical component, facilitating secure online transactions.

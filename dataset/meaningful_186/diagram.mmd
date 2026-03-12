@@ -1,0 +1,30 @@
+graph TD
+    A[Dev: Start Feature Branch] --> B{Code Complete?};
+    B -- Yes --> C[CI: Automated Tests];
+    B -- No --> A;
+    C -- Tests Pass --> D[Create Pull Request];
+    C -- Tests Fail --> E[Dev: Fix Test Failures];
+    E --> C;
+    D --> F{Code Review Assigned?};
+    F -- Yes --> G[Reviewer: Review Code Changes];
+    F -- No --> H[Assign Code Reviewer];
+    H --> F;
+    G --> I{Review OK?};
+    I -- Yes --> J[PR: LGTM Received];
+    I -- No --> K[Dev: Address Review Comments];
+    K --> G;
+    J --> L{Approvals >= 2?};
+    L -- Yes --> M[Security: Static Analysis Scan];
+    L -- No --> G;
+    M -- Vulnerabilities Found --> N[Dev: Fix Security Issues];
+    N --> M;
+    M -- No Vulnerabilities --> O[Infra: Trigger Integration Tests];
+    O -- Integration Tests Pass --> P[Merge to Main Branch];
+    O -- Integration Tests Fail --> Q[Dev: Debug Integration Failures];
+    Q --> O;
+    P --> R(Deploy to Staging);
+    R --> S(QA: Validate Staging);
+    S -- QA Passed --> T(Deploy to Production);
+    S -- QA Failed --> L;  style T fill:#f9f,stroke:#333,stroke-width:2px
+    classDef important fill:#f9f,stroke:#333,stroke-width:2px;
+    class T important;

@@ -1,0 +1,26 @@
+graph TD
+    subgraph Model Training Pipeline
+    A[Data Ingestion: Raw Sensor Data] --> B{Data Validation & Cleaning};
+    B -- Valid Data --> C[Feature Engineering];
+    B -- Invalid Data --> E[Data Anomaly Logging];
+    C --> D[Model Training: Gradient Boosted Trees];
+    D --> F{Model Evaluation};
+    F -- Pass Metrics Threshold --> G[Model Serialization];
+    F -- Fail Metrics Threshold --> H[Retrain with Modified Parameters];
+    H --> D;
+    G --> I[Model Registry: Versioned Artifacts];
+    end
+
+    subgraph Model Deployment
+    I --> J[A/B Testing Service];
+    J --> K{Real-Time Inference Request};
+    K -- Group A --> L[Model Instance A: Latest Stable];
+    K -- Group B --> M[Model Instance B: Canary Release];
+    L --> N[Prediction Response];
+    M --> N;
+    N --> O[Performance Monitoring];
+    O --> P{Data Dog Alerts};
+    end
+
+    classDef grey fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P fill:#fff,stroke:#333,stroke-width:2px

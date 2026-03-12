@@ -1,0 +1,57 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow for an e-commerce system. It illustrates the steps involved from when a user places an order to when feedback is processed. The diagram serves as a visual representation of the order lifecycle, highlighting key decision points and actions.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User Places Order" node at the top and flows downwards through various stages of order processing. The diagram concludes with "Customer Contacted" and "Process Feedback" as terminal nodes, which then loop back to the start.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Order Placement & Payment, Inventory Check, Customer Communication, Order Shipping, Delivery, Feedback Survey, and Feedback Processing.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action of a user submitting an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to determine if the payment for the order has been successfully received. visible in diagram; no further repository context available.
+- **C / Cancel Order**: Represents the action of canceling the order. visible in diagram; no further repository context available.
+- **D / Inventory Check**: Represents the process of verifying if the ordered items are available in the inventory. visible in diagram; no further repository context available.
+- **E / Order Shipped**: Represents the action of shipping the order to the customer. visible in diagram; no further repository context available.
+- **F / Notify Customer**: Represents the action of informing the customer about the unavailability of items. visible in diagram; no further repository context available.
+- **G / Wait for Customer Reply**: Represents the state where the system waits for the customer's response regarding the order. visible in diagram; no further repository context available.
+- **H / Delivery Attempted**: Represents the action of attempting to deliver the order to the customer. visible in diagram; no further repository context available.
+- **I / Order Completed**: Represents the final state where the order is successfully completed. visible in diagram; no further repository context available.
+- **J / Return to Sender**: Represents the action of returning the order to the sender due to delivery failure. visible in diagram; no further repository context available.
+- **K / Send Feedback Survey**: Represents the action of sending a feedback survey to the customer after the order is completed. visible in diagram; no further repository context available.
+- **L / Survey Completed?**: A decision point to determine if the customer has completed the feedback survey. visible in diagram; no further repository context available.
+- **M / Customer Contacted**: Represents the action of contacting the customer. visible in diagram; no further repository context available.
+- **N / Process Feedback**: Represents the action of processing the feedback received from the customer. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The user's order triggers the payment verification process.
+- `B -- No --> C`: If payment is not received, the order is canceled.
+- `B -- Yes --> D`: If payment is received, an inventory check is initiated.
+- `D -- Available --> E`: If the inventory is available, the order is shipped.
+- `D -- Unavailable --> F`: If the inventory is unavailable, the customer is notified.
+- `F --> G`: The system waits for the customer's reply after notification.
+- `G -- Accept Delay --> E`: If the customer accepts the delay, the order is shipped.
+- `G -- Cancel Order Request --> C`: If the customer cancels the order request, the order is canceled.
+- `E --> H`: After shipping, a delivery attempt is made.
+- `H -- Success --> I`: If the delivery is successful, the order is completed.
+- `H -- Failure --> J`: If the delivery fails, the order is returned to the sender.
+- `J --> D`: The returned order triggers another inventory check.
+- `C --> I`: The canceled order incorrectly leads to order completion.
+- `I --> K`: After order completion, a feedback survey is sent.
+- `K --> L`: Sending the feedback survey triggers the survey completion check.
+- `L -- No --> M`: If the survey is not completed, the customer is contacted.
+- `L -- Yes --> N`: If the survey is completed, the feedback is processed.
+- `N --> A`: Processing feedback incorrectly leads back to the user placing another order.
+- `M --> A`: Contacting the customer incorrectly leads back to the user placing another order.
+
+## Repository Context & Terminology
+- **User Places Order**: Standard meaning is a customer initiating a purchase. In this diagram, it's the starting point and also the end point of the feedback loop, which is unusual.
+- **Payment Received?**: Standard meaning is verifying successful payment. In this diagram, a negative outcome leads to order cancellation.
+- **Inventory Check**: Standard meaning is verifying product availability. In this diagram, unavailability triggers customer notification.
+- **Order Shipped**: Standard meaning is dispatching the order. In this diagram, it follows both inventory availability and customer acceptance of delay.
+- **Delivery Attempted**: Standard meaning is trying to deliver the order. In this diagram, failure leads to "Return to Sender" and another inventory check, creating a loop.
+- **Order Completed**: Standard meaning is the successful delivery of the order. In this diagram, it's reached after delivery success, but also incorrectly after order cancellation.
+- **Send Feedback Survey**: Standard meaning is requesting customer feedback. In this diagram, it's triggered *after* order completion, which is standard, but the diagram then loops back to the beginning.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Places Order," which then proceeds to a "Payment Received?" check. If payment fails ("No" branch), the order is canceled; however, the "Cancel Order" node incorrectly leads to "Order Completed." If payment is successful ("Yes" branch), an "Inventory Check" is performed. If the inventory is unavailable, the customer is notified, and the system waits for a reply. The customer can either accept the delay or cancel the order request; both options incorrectly lead to "Order Shipped" or "Cancel Order" respectively. After shipping, "Delivery Attempted" leads to either "Order Completed" upon success or "Return to Sender" upon failure. The "Return to Sender" node creates an illogical loop back to "Inventory Check." After "Order Completed," a "Send Feedback Survey" is triggered, and based on whether the survey is completed, the system either contacts the customer or processes the feedback. Critically, "Process Feedback" then incorrectly loops back to "User Places Order," restarting the process. The diagram contains several errors, including incorrect flow paths after cancellation and delivery failure, as well as an illogical feedback loop.

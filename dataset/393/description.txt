@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the components and data flow within a software system. It depicts the interactions between various front-end clients, back-end servers, databases, and external services. The diagram serves as a high-level overview of the system's architecture, aiding in understanding the relationships between different parts of the application.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with client-side components at the top, flows through the central Fastify API Server, and then branches out to various back-end services and databases at the bottom. There are two initial nodes: "Web Browser" and "Coding Agent / IDE". The diagram converges at the "Fastify API Server" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into four stages:
+1. Client Interaction: "Web Browser", "Coding Agent / IDE".
+2. Front-end and MCP Servers: "Next.js Frontend", "MCP Server".
+3. API Layer: "Fastify API Server".
+4. Back-end Services and Databases: "PostgreSQL + pgvector", "Redis", "Hocuspocus Collab Server", "GitHub App", "Slack Webhooks", "Jira API", "BullMQ Jobs", "Codebase Indexer", "Drift Detection".
+
+## Node-by-Node Description
+- **Web Browser**: Represents a user's web browser interacting with the application. visible in diagram; no further repository context available.
+- **Coding Agent / IDE**: Represents a coding agent or Integrated Development Environment used by developers. visible in diagram; no further repository context available.
+- **Next.js Frontend**: Represents the Next.js front-end application. visible in diagram; no further repository context available.
+- **MCP Server**: Represents the MCP (Management Control Plane) Server. visible in diagram; no further repository context available.
+- **Fastify API Server**: Represents the central Fastify API server that handles requests and routes them to appropriate services. visible in diagram; no further repository context available.
+- **PostgreSQL + pgvector**: Represents a PostgreSQL database with the pgvector extension for vector embeddings. visible in diagram; no further repository context available.
+- **Redis**: Represents a Redis in-memory data store. visible in diagram; no further repository context available.
+- **Hocuspocus Collab Server**: Represents a Hocuspocus collaborative server. visible in diagram; no further repository context available.
+- **GitHub App**: Represents a GitHub application. visible in diagram; no further repository context available.
+- **Slack Webhooks**: Represents Slack webhooks for sending notifications. visible in diagram; no further repository context available.
+- **Jira API**: Represents the Jira API for integration with Jira. visible in diagram; no further repository context available.
+- **BullMQ Jobs**: Represents BullMQ jobs for background processing. visible in diagram; no further repository context available.
+- **Codebase Indexer**: Represents a codebase indexer. visible in diagram; no further repository context available.
+- **Drift Detection**: Represents a drift detection service. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Web Browser --> Next.js Frontend`: User interaction triggers a request to the Next.js front-end.
+- `Coding Agent / IDE --> MCP Server`: Developer actions trigger requests to the MCP Server.
+- `Next.js Frontend --> Fastify API Server`: The Next.js front-end sends API requests to the Fastify API Server.
+- `MCP Server --> Fastify API Server`: The MCP Server sends API requests to the Fastify API Server.
+- `Fastify API Server --> PostgreSQL + pgvector`: The API server interacts with the PostgreSQL database.
+- `Fastify API Server --> Redis`: The API server interacts with the Redis data store.
+- `Fastify API Server --> Hocuspocus Collab Server`: The API server interacts with the Hocuspocus collaboration server.
+- `Fastify API Server --> GitHub App`: The API server interacts with the GitHub App.
+- `Fastify API Server --> Slack Webhooks`: The API server triggers Slack webhooks.
+- `Fastify API Server --> Jira API`: The API server interacts with the Jira API.
+- `Redis --> BullMQ Jobs`: Redis triggers BullMQ jobs.
+- `BullMQ Jobs --> Codebase Indexer`: BullMQ jobs trigger the codebase indexer.
+- `BullMQ Jobs --> Drift Detection`: BullMQ jobs trigger the drift detection service.
+- The "Fastify API Server" node is a convergence point, receiving requests from both "Next.js Frontend" and "MCP Server".
+
+## Repository Context & Terminology
+- **Fastify**: A fast and low overhead web framework for Node.js.
+- **Next.js**: A React framework for building web applications.
+- **PostgreSQL**: A powerful, open-source object-relational database system.
+- **pgvector**: An open-source PostgreSQL extension for storing vector embeddings.
+- **Redis**: An in-memory data structure store, used as a database, cache and message broker.
+- **BullMQ**: A Redis-based queue for background jobs.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with two entry points: the "Web Browser" which interacts with the "Next.js Frontend", and the "Coding Agent / IDE" which interacts with the "MCP Server". Both "Next.js Frontend" and "MCP Server" send requests to the central "Fastify API Server", acting as a convergence point. The "Fastify API Server" then fans out to various back-end services and databases. It interacts with "PostgreSQL + pgvector" for persistent data storage and vector embeddings, "Redis" for caching and message brokering, "Hocuspocus Collab Server" for collaborative features, "GitHub App" for GitHub integration, "Slack Webhooks" for notifications, and "Jira API" for Jira integration. "Redis" triggers "BullMQ Jobs" for background processing. "BullMQ Jobs" then triggers both the "Codebase Indexer" and "Drift Detection" services. The "Fastify API Server" is a central component, routing requests and managing interactions between the front-end and various back-end services. The use of "PostgreSQL + pgvector" suggests the system may be using vector embeddings for search or recommendation features.

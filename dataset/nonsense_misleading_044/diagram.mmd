@@ -1,0 +1,16 @@
+graph TD
+    A[User submits order] --> B{Inventory available?};
+    B -- Yes --> C[Payment processed];
+    B -- No --> Z[Notify user: Order failed];
+    C --> D{Payment successful?};
+    D -- Yes --> E[Order picked and packed];
+    D -- No --> F[Refund Payment];
+    F --> Z
+    E --> G[Shipping label printed];
+    G --> H[Package shipped];
+    H --> I{Package delivered?};
+    I -- No --> J[Investigate delivery issue];
+    I -- Yes --> K[Order complete];
+    J --> H
+    K --> A
+    Z --> A

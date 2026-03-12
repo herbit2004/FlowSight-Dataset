@@ -1,0 +1,77 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the workflow for handling user comments and likes in a system, from user interaction to data storage, feed aggregation, and delivery. It outlines the process of authenticating users, processing comments/likes, storing data, aggregating user feeds, and delivering the feeds to users, while also incorporating analytics and monitoring. The diagram serves as a visual representation of the system's architecture and data flow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured, starting with user interaction, then backend processing, feed aggregation, delivery to the user, and analytics & monitoring. The start node is "User Action: Comment/Like" and the end nodes are "User Client" and "Reporting Dashboard", "Monitoring Dashboard".
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs:
+- **User Interaction**: Represents the initial stage where users interact with the system by commenting or liking content.
+- **Backend Processing**: Covers the authentication, authorization, and processing of comments/likes.
+- **Feed Aggregation Pipeline**: Focuses on aggregating user activity and filtering relevant content for user feeds.
+- **Delivery to User**: Describes the process of delivering the aggregated user feeds to the user client.
+- **Analytics & Monitoring**: Details the analytics pipeline and metrics service for monitoring system performance.
+
+## Node-by-Node Description
+- **User Action: Comment/Like**: Represents a user action of commenting or liking content. visible in diagram; no further repository context available.
+- **API Gateway: /comments, /likes**: The API gateway endpoint for handling comment and like requests. In the repository this corresponds to a reverse proxy that routes incoming requests to the appropriate backend services.
+- **AuthN/AuthZ**: Authentication and authorization process to validate the user. In the repository this corresponds to a service that verifies user credentials and permissions.
+- **Comment/Like Service**: Service responsible for processing comment and like actions. In the repository this corresponds to a microservice that handles the logic for creating, updating, and deleting comments and likes.
+- **Error: Authentication Required**: Error state indicating that authentication is required. visible in diagram; no further repository context available.
+- **Data Store: Comment/Like DB**: Database for storing comment and like data. In the repository this corresponds to a database such as PostgreSQL or MySQL.
+- **Kafka Topic: user_activity**: Kafka topic used for publishing user activity events. In the repository this corresponds to a Kafka topic configured to receive user activity events.
+- **Error: DB Write Failed**: Error state indicating that writing to the database failed. visible in diagram; no further repository context available.
+- **Activity Processor**: Component responsible for processing user activity events. In the repository this corresponds to a service that consumes user activity events from Kafka and processes them.
+- **Filter: Relevance Score > Threshold**: Filters user activity based on a relevance score threshold. In the repository this corresponds to a component that calculates a relevance score for each activity and filters based on a threshold.
+- **Feed Aggregator**: Component responsible for aggregating user feed data. In the repository this corresponds to a service that aggregates user activity into a feed.
+- **Discard Event**: Represents the discarding of an event that is not relevant. visible in diagram; no further repository context available.
+- **Data Store: User Feed DB**: Database for storing user feed data. In the repository this corresponds to a database such as Cassandra or MongoDB.
+- **Cache Invalidator**: Component responsible for invalidating the cache. In the repository this corresponds to a service that invalidates the cache when user feed data changes.
+- **Error: Feed Update Failed**: Error state indicating that updating the feed failed. visible in diagram; no further repository context available.
+- **Redis Cache: User Feeds**: Redis cache for storing user feeds. In the repository this corresponds to a Redis instance used for caching user feeds.
+- **Feed Delivery Service**: Service responsible for delivering user feeds. In the repository this corresponds to a microservice that retrieves user feeds from the cache or database and delivers them to the user.
+- **API Gateway: /user/feed**: API gateway endpoint for retrieving user feeds. In the repository this corresponds to a reverse proxy that routes incoming requests to the appropriate backend services.
+- **User Client**: The user's client application. visible in diagram; no further repository context available.
+- **Analytics Pipeline**: Pipeline for processing analytics data. In the repository this corresponds to a data pipeline that extracts, transforms, and loads analytics data.
+- **Data Lake**: Data lake for storing analytics data. In the repository this corresponds to a data lake such as Amazon S3 or Hadoop.
+- **Reporting Dashboard**: Dashboard for reporting analytics data. In the repository this corresponds to a dashboard such as Grafana or Tableau.
+- **Metrics Service**: Service for collecting metrics. In the repository this corresponds to a service that collects metrics from various components of the system.
+- **Monitoring Dashboard**: Dashboard for monitoring system metrics. In the repository this corresponds to a dashboard such as Prometheus or Grafana.
+
+## Edges, Branches & Convergence
+- `User Action: Comment/Like --> API Gateway: /comments, /likes`: User action triggers a request to the API gateway.
+- `API Gateway: /comments, /likes --> AuthN/AuthZ`: API gateway forwards the request to the authentication and authorization service.
+- `AuthN/AuthZ -- Valid User --> Comment/Like Service`: If the user is valid, the request is forwarded to the comment/like service.
+- `AuthN/AuthZ -- Invalid User --> Error: Authentication Required`: If the user is invalid, an authentication error is returned.
+- `Comment/Like Service --> Data Store: Comment/Like DB`: The comment/like service attempts to write data to the database.
+- `Data Store: Comment/Like DB -- Success --> Kafka Topic: user_activity`: If the database write is successful, a user activity event is published to Kafka.
+- `Data Store: Comment/Like DB -- Failure --> Error: DB Write Failed`: If the database write fails, an error is returned.
+- `Kafka Topic: user_activity --> Activity Processor`: User activity events are consumed by the activity processor.
+- `Activity Processor --> Filter: Relevance Score > Threshold`: The activity processor filters events based on a relevance score.
+- `Filter: Relevance Score > Threshold -- Relevant --> Feed Aggregator`: Relevant events are forwarded to the feed aggregator.
+- `Filter: Relevance Score > Threshold -- Not Relevant --> Discard Event`: Irrelevant events are discarded.
+- `Feed Aggregator --> Data Store: User Feed DB`: The feed aggregator attempts to write data to the user feed database.
+- `Data Store: User Feed DB -- Success --> Cache Invalidator`: If the database write is successful, the cache is invalidated.
+- `Data Store: User Feed DB -- Failure --> Error: Feed Update Failed`: If the database write fails, an error is returned.
+- `Cache Invalidator --> Redis Cache: User Feeds`: The cache invalidator updates the Redis cache.
+- `Redis Cache: User Feeds --> Feed Delivery Service`: User feeds are retrieved from the Redis cache by the feed delivery service.
+- `Feed Delivery Service --> API Gateway: /user/feed`: The feed delivery service sends the user feeds to the API gateway.
+- `API Gateway: /user/feed --> User Client`: The API gateway forwards the user feeds to the user client.
+- `Kafka Topic: user_activity --> Analytics Pipeline`: User activity events are consumed by the analytics pipeline.
+- `Analytics Pipeline --> Data Lake`: Analytics data is stored in the data lake.
+- `Data Lake --> Reporting Dashboard`: Analytics data is used to generate reports on the reporting dashboard.
+- `Comment/Like Service --> Metrics Service`: The comment/like service sends metrics to the metrics service.
+- `Metrics Service --> Monitoring Dashboard`: System metrics are displayed on the monitoring dashboard.
+
+## Repository Context & Terminology
+- **API Gateway**: A reverse proxy that routes incoming requests to the appropriate backend services.
+- **AuthN/AuthZ**: Authentication and authorization processes to verify user identity and permissions.
+- **Kafka Topic**: A category or feed name to which records are published in Kafka, a distributed streaming platform.
+- **Data Lake**: A centralized repository that allows you to store all your structured and unstructured data at any scale.
+- **Redis Cache**: An in-memory data structure store, used as a distributed, in-memory key–value database, cache and message broker.
+- **Analytics Pipeline**: A set of data processing steps used to transform raw data into insights.
+- **Metrics Service**: A service that collects and aggregates metrics from various components of the system.
+- **Monitoring Dashboard**: A visual representation of system metrics used for monitoring system performance.
+
+## High-Density QA Ground Truth Summary
+The process begins with a `User Action: Comment/Like` which triggers a request to the `API Gateway: /comments, /likes`. The API Gateway then forwards the request to `AuthN/AuthZ` for authentication and authorization. If the user is valid, the flow proceeds to the `Comment/Like Service`; otherwise, an `Error: Authentication Required` is triggered. The `Comment/Like Service` attempts to write to the `Data Store: Comment/Like DB`. On success, a `Kafka Topic: user_activity` event is published; on failure, an `Error: DB Write Failed` occurs. The `Kafka Topic: user_activity` event triggers both the `Feed Aggregation Pipeline` and the `Analytics & Monitoring` subgraph. In the `Feed Aggregation Pipeline`, the `Activity Processor` filters events based on `Filter: Relevance Score > Threshold`. Relevant events are sent to the `Feed Aggregator`, while irrelevant events are discarded via `Discard Event`. The `Feed Aggregator` writes to the `Data Store: User Feed DB`. On success, the `Cache Invalidator` updates the `Redis Cache: User Feeds`; on failure, an `Error: Feed Update Failed` occurs. The `Redis Cache: User Feeds` then provides data to the `Feed Delivery Service`, which sends it to the `API Gateway: /user/feed`, and finally to the `User Client`. Simultaneously, the `Kafka Topic: user_activity` event triggers the `Analytics Pipeline`, which stores data in the `Data Lake` for the `Reporting Dashboard`, and the `Comment/Like Service` sends metrics to the `Metrics Service` for the `Monitoring Dashboard`. The API Gateway acts as a reverse proxy, routing requests to the appropriate backend services, while Kafka provides a distributed streaming platform for handling user activity events.

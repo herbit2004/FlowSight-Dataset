@@ -1,0 +1,22 @@
+graph TD
+    subgraph User Interaction
+        A[User visits Website/App] --> B{Event Triggered?};
+        B -- Yes --> C(Event Collector API);
+        B -- No --> E[Continue Browsing];
+    end
+
+    C --> D(Event Router);
+    D --> F{Type = 'Transaction' ?};
+    F -- Yes --> G[Transaction Queue];
+    F -- No --> H[Behavioral Event Queue];
+    G --> I(Enrichment Service);
+    H --> I;
+    I --> J(Data Transformation Pipeline);
+    J --> K{Write to Cold Storage ?};
+    K -- Yes --> L[AWS S3 Bucket];
+    K -- No --> M[Real-time Analytics DB];
+    L --> N(Data Lake Processor);
+    N --> M;
+
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px
+    class A,E highlight

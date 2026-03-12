@@ -1,0 +1,28 @@
+graph TD
+    A[Start: Initiating ChronFlux Sync] --> B{CoreSync Validation Needed?};
+    B -- Yes --> C[VaultNode Handshake Sequence];
+    B -- No --> D[ArcLane Distributor Prep];
+    C --> E{VaultNode Auth Approved?};
+    E -- Yes --> F[Establishing SpectraQueue Connection];
+    E -- No --> G[ZenithGate Auth Layer Activation];
+    G --> H[Retry VaultNode Handshake];
+    H --> E;
+    F --> I[FluxBridge Router Config];
+    I --> J[DeltaStream Buffer Allocation];
+    J --> K{CoreSync Data Present?};
+    K -- Yes --> L[Begin TransientFlow Transmission];
+    K -- No --> M[SpectraQueue Flush];
+    M --> J;
+    L --> N[Transmitting DeltaStream Packets];
+    N --> O{CoreSync Transmission Complete?};
+    O -- Yes --> P[Telematic Echo Confirmation];
+    O -- No --> Q[Re-engage TransientFlow Transmission];
+    Q --> N;
+    P --> R[ArcLane Distributor Post-Proc];
+    R --> S[TransientFlow Closure Request];
+    S --> T{TransientFlow Closed?};
+    T -- Yes --> U[CoreSync Completion Signal];
+    T -- No --> V[Force TransientFlow Termination];
+    V --> S;
+    U --> W[End: ChronFlux Sync Complete];
+    D --> I;

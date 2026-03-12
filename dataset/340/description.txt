@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the architecture of a system that leverages a Large Language Model (LLM) to answer user queries. The diagram depicts the flow of information from the user prompt, through various processing stages including prompt routing, external knowledge retrieval, and finally back to the user with an answer. It serves as a high-level overview of the system's components and their interactions.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured with the "User Prompt or Query" node at the top, followed by the "LLM Layer" and "External Knowledge Sources" subgraphs. The flow ends back at the "User Prompt or Query" node with the "Answer".
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **LLM Layer**: This subgraph encapsulates the core LLM components, including the "LLM Core Engine" and "Prompt Router / Engine". It represents the processing and reasoning capabilities of the system.
+- **External Knowledge Sources**: This subgraph groups the external knowledge sources that the system can access, such as "Search NCBI", "Search clinicaltrials.gov", and "Search medlineplus.gov". It represents the information retrieval aspect of the system.
+
+## Node-by-Node Description
+- **User Prompt or Query**: Represents the initial user input or question. visible in diagram; no further repository context available.
+- **LLM Core Engine**: Represents the core language model responsible for generating answers. visible in diagram; no further repository context available.
+- **Prompt Router / Engine**: Responsible for routing the user prompt to the appropriate processing modules. visible in diagram; no further repository context available.
+- **Decision Tree Tool**: A tool that uses deterministic logic to process the prompt. visible in diagram; no further repository context available.
+- **RAG / Vector Search (SurrealDB)**: A Retrieval-Augmented Generation module that uses vector search in SurrealDB to retrieve relevant information. visible in diagram; no further repository context available.
+- **Search NCBI**: Searches the NCBI database for relevant information. visible in diagram; no further repository context available.
+- **Search clinicaltrials.gov**: Searches the clinicaltrials.gov database for relevant information. visible in diagram; no further repository context available.
+- **Search medlineplus.gov**: Searches the medlineplus.gov database for relevant information. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `USER --> PROMPT`: The user prompt is sent to the Prompt Router / Engine.
+- `PROMPT --> DECISION_TREE`: The prompt is processed using deterministic logic by the Decision Tree Tool.
+- `PROMPT --> NCBI`: The prompt triggers a search in the NCBI database.
+- `PROMPT --> CLINICAL`: The prompt triggers a search in the clinicaltrials.gov database.
+- `PROMPT --> MEDLINE`: The prompt triggers a search in the medlineplus.gov database.
+- `PROMPT --> RAG`: The prompt triggers a vector search in SurrealDB.
+- `DECISION_TREE --> LLM`: The output of the Decision Tree Tool is sent to the LLM Core Engine.
+- `NCBI --> LLM`: The search results from NCBI are sent to the LLM Core Engine.
+- `CLINICAL --> LLM`: The search results from clinicaltrials.gov are sent to the LLM Core Engine.
+- `MEDLINE --> LLM`: The search results from medlineplus.gov are sent to the LLM Core Engine.
+- `RAG --> LLM`: The search results from RAG/Vector Search are sent to the LLM Core Engine.
+- `LLM --> USER`: The LLM Core Engine sends the generated answer back to the user.
+
+## Repository Context & Terminology
+- **LLM (Large Language Model)**: A deep learning model trained on a massive dataset of text and code, capable of generating human-quality text, translating languages, and answering questions.
+- **RAG (Retrieval-Augmented Generation)**: A framework that combines the strengths of pre-trained language models with information retrieval techniques to improve the accuracy and relevance of generated text.
+- **Vector Search**: A search technique that uses vector embeddings to find similar items in a database.
+- **SurrealDB**: A cloud, distributed, collaborative, graph database, suitable for RAG/Vector Search.
+- **NCBI (National Center for Biotechnology Information)**: A part of the United States National Library of Medicine (NLM), a branch of the National Institutes of Health (NIH). It hosts databases such as PubMed.
+- **clinicaltrials.gov**: A registry and results database of publicly and privately supported clinical studies of human participants conducted around the world.
+- **medlineplus.gov**: An online health information resource for patients and their families and friends. It is a service of the National Library of Medicine (NLM), the world's largest medical library, which is part of the National Institutes of Health (NIH).
+
+## High-Density QA Ground Truth Summary
+The process begins with a "User Prompt or Query" which is then passed to the "Prompt Router / Engine". From here, the prompt is routed to several modules in parallel: a "Decision Tree Tool" for deterministic logic processing, a "RAG / Vector Search (SurrealDB)" module for retrieving relevant information using vector search, and searches are initiated against external knowledge sources including "Search NCBI", "Search clinicaltrials.gov", and "Search medlineplus.gov". The "Decision Tree Tool" processes the prompt using deterministic logic, while the "RAG / Vector Search" module leverages SurrealDB to find relevant information. The external knowledge sources are queried to gather additional context. All the results from the "Decision Tree Tool", "RAG / Vector Search", "Search NCBI", "Search clinicaltrials.gov", and "Search medlineplus.gov" converge at the "LLM Core Engine". The "LLM Core Engine" then processes all the information and generates an "Answer", which is sent back to the "User Prompt or Query". The use of SurrealDB for vector search in the RAG module suggests an emphasis on efficient retrieval of semantically similar information to augment the LLM's knowledge.

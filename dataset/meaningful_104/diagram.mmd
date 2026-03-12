@@ -1,0 +1,54 @@
+graph TD
+    subgraph Configuration Service
+        A[Client Configuration Request] --> B(Request Validation);
+        B -- Valid --> C{Configuration Lookup};
+        C -- Cache Hit --> D[Return Cached Configuration];
+        C -- Cache Miss --> E[Fetch from Data Store];
+        E --> F[Transform Configuration Data];
+        F --> G[Cache Configuration];
+        G --> D;
+        B -- Invalid --> H[Reject Configuration Request];
+    end
+
+    subgraph Data Store
+        E --> I(Data Retrieval Logic);
+        I --> J[Configuration Data];
+    end
+
+    subgraph Event Listener
+        K[Configuration Change Event] --> L{Filter Event: Config for Tenant?};
+        L -- Yes --> M[Update Configuration Cache];
+        L -- No --> N[Discard Event];
+        M --> O[Trigger Push Notification];
+    end
+
+    subgraph Push Notification Service
+        O --> P[Client Connection Check];
+        P -- Connected --> Q[Send Configuration Update];
+        P -- Disconnected --> R[Queue Push Notification];
+        R --> S[Retry Mechanism];
+        S --> P;
+        Q --> T[Acknowledgement Received];
+        T --> U[Log Successful Push];
+    end
+
+    subgraph Pull Request Service
+      V[Client Pull Request] --> W{Throttle Check};
+      W -- Deny --> X[Reject Pull Request];
+      W -- Allow --> C;
+    end
+
+    subgraph Client Application
+        AA[Initiate Configuration Request] --> A;
+        AA --> V;
+        Q --> AB[Apply New Configuration];
+        H --> AC[Return Error to Application];
+	X --> AD[Return Throttling Error];
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style V fill:#f9f,stroke:#333,stroke-width:2px
+    style AA fill:#f9f,stroke:#333,stroke-width:2px
+    style AB fill:#f9f,stroke:#333,stroke-width:2px
+    style AC fill:#f9f,stroke:#333,stroke-width:2px
+    style AD fill:#f9f,stroke:#333,stroke-width:2px

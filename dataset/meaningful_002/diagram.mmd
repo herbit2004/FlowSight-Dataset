@@ -1,0 +1,35 @@
+graph TD
+    subgraph User Interaction
+        A[User: Search Query / Browsing] --> B(Search Service API);
+    end
+
+    subgraph Data Flow & Processing
+        B --> C{Query Parsing & Intent Extraction};
+        C -- Intent: Search --> D[Keyword Expansion & Spelling Correction];
+        C -- Intent: Browse --> E[Category & Facet Filtering];
+        D --> F[Vector Search Engine];
+        E --> F;
+        F --> G{Ranking & Scoring};
+        G -- Initial Ranking --> H[Personalization Engine];
+        H -- Personalized Ranking --> I[Diversity Promotion];
+		I --> J[Re-Ranking];
+    end
+
+    subgraph Catalog & Recommendation
+        J --> K(Product Catalog);
+        K -- Product Data --> L[Item Similarity Calculation];
+        L --> M{Collaborative Filtering};
+        M -- Candidate Products --> N[Cold Start Handling];
+        N --> J;
+    end
+
+    subgraph Output & Monitoring
+        subgraph A/B Testing
+        J -- Results --> O[A/B Test Service];
+        O --> P[Metrics Dashboard];
+        end
+        J --> Q[Search Results Display];
+    end
+
+    classDef internal fill:#f9f,stroke:#333,stroke-width:2px
+	class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q internal

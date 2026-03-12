@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow. It depicts the sequence of steps from when a user submits an order to when a delivery confirmation is sent. The diagram serves as a visual representation of the order fulfillment process, but contains logical errors.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with "User Submits Order" at the top and progresses downwards. The diagram contains loops, so there is no single end node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Submission, Payment Processing, Order Fulfillment, Shipping, and Delivery Confirmation.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial step where a user places an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Received?**: Represents a decision point to check if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **C / Acknowledge Order**: Represents the action of acknowledging the order after payment is received.
+  visible in diagram; no further repository context available.
+- **D / Fulfill Order**: Represents the process of preparing the order for shipment.
+  visible in diagram; no further repository context available.
+- **E / Inventory Available?**: Represents a decision point to check if the required inventory is available to fulfill the order.
+  visible in diagram; no further repository context available.
+- **F / Ship Order**: Represents the action of shipping the order to the customer.
+  visible in diagram; no further repository context available.
+- **G / Order Canceled**: Represents the action of canceling the order if inventory is not available.
+  visible in diagram; no further repository context available.
+- **H / Order Delivered**: Represents the state where the order has been delivered to the customer.
+  visible in diagram; no further repository context available.
+- **I / Send Delivery Confirmation**: Represents the action of sending a confirmation to the user that the order has been delivered.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `A --> B`: User submits an order, triggering payment verification.
+  `B -- Yes --> C`: If payment is received, the order is acknowledged.
+  `B -- No --> H`: If payment is not received, the order is marked as delivered (incorrect flow).
+  `C --> D`: Acknowledged order proceeds to fulfillment.
+  `D --> E`: Order fulfillment triggers inventory availability check.
+  `E -- Yes --> F`: If inventory is available, the order is shipped.
+  `E -- No --> G`: If inventory is not available, the order is canceled.
+  `F --> H`: Shipped order leads to order delivery.
+  `H --> I`: Order delivery triggers sending a delivery confirmation.
+  `I --> A`: Sending delivery confirmation loops back to user submitting a new order (incorrect flow).
+  `G --> C`: Order cancellation loops back to order acknowledgement (incorrect flow).
+
+## Repository Context & Terminology
+- **User Submits Order**: Typically, this refers to the action of a customer placing an order through a system. In this diagram, it's the starting point and also incorrectly the endpoint of the delivery confirmation process.
+- **Payment Received?**: This refers to the verification of payment for the order. In this diagram, a negative outcome incorrectly leads to the "Order Delivered" state.
+- **Acknowledge Order**: This refers to confirming the order to the customer. In this diagram, it's incorrectly looped back to from the "Order Canceled" state.
+- **Fulfill Order**: This refers to preparing the order for shipment. In this diagram, it follows order acknowledgement.
+- **Inventory Available?**: This refers to checking if the items in the order are in stock. In this diagram, a negative outcome leads to order cancellation.
+- **Ship Order**: This refers to sending the order to the customer. In this diagram, it follows a positive inventory check.
+- **Order Canceled**: This refers to the order being terminated. In this diagram, it incorrectly loops back to "Acknowledge Order".
+- **Order Delivered**: This refers to the order reaching the customer. In this diagram, it incorrectly happens after a failed payment.
+- **Send Delivery Confirmation**: This refers to notifying the customer that the order has been delivered. In this diagram, it incorrectly loops back to "User Submits Order".
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "User Submits Order" node, which then flows to the "Payment Received?" decision. If payment is received ("Yes" branch), the process moves to "Acknowledge Order" and then "Fulfill Order". If payment is not received ("No" branch), the diagram incorrectly flows directly to "Order Delivered", skipping order fulfillment and shipping. After fulfilling the order, the "Inventory Available?" decision determines whether to "Ship Order" ("Yes" branch) or "Order Canceled" ("No" branch). The "Ship Order" node then leads to "Order Delivered". The "Order Delivered" node then flows to "Send Delivery Confirmation", which incorrectly loops back to "User Submits Order". The "Order Canceled" node also incorrectly loops back to "Acknowledge Order". The standard process of order fulfillment, which should involve payment verification, inventory checks, shipping, and delivery confirmation, is misrepresented with incorrect branching and looping, particularly in the handling of failed payments and order cancellations. The diagram's logical errors make it an inaccurate representation of a typical order processing workflow.

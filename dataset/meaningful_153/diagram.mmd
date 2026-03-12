@@ -1,0 +1,35 @@
+graph TD
+    subgraph Backup Process
+        A[Backup Initiated] --> B{Check Backup Schedule}
+        B -- Yes, within window --> C[Snapshot Volume Group]
+        B -- No, outside window --> D[Skip Backup Cycle]
+        C --> E[Mount Snapshot Volume]
+        E --> F[Run Pre-Backup Scripts]
+        F --> G[Copy Data to Backup Repository]
+        G --> H[Run Post-Backup Scripts]
+        H --> I[Unmount Snapshot Volume]
+        I --> J[Delete Snapshot Volume]
+        J --> K[Update Backup Metadata]
+        K --> L[Backup Complete]
+        D --> L
+    end
+
+    subgraph Restore Process
+        M[Restore Initiated] --> N{Validate Restore Point}
+        N -- Valid restore point --> O[Mount Backup Volume]
+        N -- Invalid restore point --> P[Log Error and Abort]
+        O --> Q[Run Pre-Restore Scripts]
+        Q --> R[Copy Data from Backup Repository]
+        R --> S[Run Post-Restore Scripts]
+        S --> T[Unmount Backup Volume]
+        T --> U[Update Application Configuration]
+        U --> V[Restore Complete]
+        P --> V
+    end
+
+    L --> W[Trigger Catalog Update]
+    V --> W
+    W --> X[Success Notification]
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class P error

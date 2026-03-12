@@ -1,0 +1,37 @@
+graph TD
+    A[Start: Initiate DynaMesh Acquisition] --> B{PreGate Validation: Sector Integrity Check};
+    B -- Pass: Core Integrity Verified --> C[Engage HelixDrive Protocol];
+    B -- Fail: Sector Defragmentation Required --> D[Execute TeraVault Fragmentation Service];
+    D --> E{PostSync Validation: Delta Mapping};
+    E -- Verified: Delta Map Aligned --> C;
+    E -- Corrupted: Delta Map Rebuild --> F[Trigger SpectraQueue Flush];
+    F --> G[Initiate Replica VaultNode Handshake];
+    G -- Handshake Success: Node Synchronization Established --> C;
+    G -- Handshake Fail: VaultNode Offline --> H[Log Error with NexusBeacon Service];
+    H --> C;
+
+    C --> I{FluxBridge Router Availability};
+    I -- Available: Router Responsive --> J[Forward Packet: ZenithGate Auth Layer];
+    I -- Unavailable: Router Timeout --> K[Retry on Fallback ArcLane Distributor];
+    K --> L{Fallback Distributor Success?};
+    L -- Yes: Distributor Active --> J;
+    L -- No: Critical Path Failure --> M[Log Error with NexusBeacon Service];
+    M --> N[Abort DynaMesh Acquisition];
+    N --> Z[End: DynaMesh Acquisition Failed];
+
+    J --> O[Perform CoreSync Validation];
+    O -- Validation Success: CoreSync Completed --> P[Commit ZetaFrame Transformation];
+    O -- Validation Failure: Data Corruption Detected --> Q[Initiate Reverse ZetaFrame Protocol];
+    Q --> R[Rollback initiated];
+    R --> S[Restore Pre-Transformed State];
+    S --> T[Audit VaultNode for Anomalies];
+    T --> U[Notify HelixAdmin via DataFlare Interface];
+    U --> V[End: DynaMesh Acquisition Rollback Required];
+
+    P --> W[Replicate ZetaFrame to Auxiliary VaultNodes];
+    W --> X{VaultNode Replication Success?};
+    X -- Yes: ZetaFrame Replicated --> Y[Complete DynaMesh Partition];
+    X -- No: Re-attempt ZetaFrame Replication --> W;
+    Y --> Z[End: DynaMesh Acquisition Success];
+
+    V --> Z;

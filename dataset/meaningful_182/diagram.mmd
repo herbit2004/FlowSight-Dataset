@@ -1,0 +1,33 @@
+graph TD
+    subgraph User Referral & Growth System
+        A[New User Signup] --> B{Eligibility Check};
+        B -- Eligible --> C[Generate Referral Code];
+        B -- Not Eligible --> D[Show Standard Welcome];
+        C --> E[Store Referral Code];
+        E --> F[Display Referral Link/Code];
+        F --> G[User Shares Referral Link];
+        G --> H{Referral Link Clicked};
+        H -- Yes --> I[Track Referral Attribution];
+        H -- No --> J[No Attribution];
+        I --> K{Existing User?};
+        K -- Yes --> L[Apply Referral Reward - Existing User];
+        K -- No --> M[New User Signup - Referred];
+        M --> N[Attribute Referral to Referrer];
+        N --> O[Apply Referral Reward - New User];
+        O --> P[Update Referral Stats];
+        L --> P;
+        J --> P;
+        P --> Q[Trigger Engagement Campaign];
+        Q --> R{A/B Test Variant};
+        R -- Variant A --> S[Send Personalized Email];
+        R -- Variant B --> T[Push Notification];
+        S --> U[Monitor Email Engagement];
+        T --> V[Monitor Push Notification Engagement];
+        U --> W[Analyze Campaign Performance];
+        V --> W;
+        W --> X[Adjust Targeting/Messaging];
+        D --> Q;
+    end
+
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X default

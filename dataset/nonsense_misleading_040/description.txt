@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of order processing. It outlines the steps involved from receiving an order to closing it, including inventory checks, payment processing, shipping, and handling potential issues like delays or shortages. The diagram serves as a visual representation of the order fulfillment workflow.
+
+## Overall Layout
+The diagram flows from left to right. It starts with a "Start" node and ends with a "Close Order" node. The diagram contains decision diamonds that create branching paths based on conditions.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Order Processing".
+
+## Node-by-Node Description
+- **A / Start**: Represents the beginning of the order processing workflow. visible in diagram; no further repository context available.
+- **B / Order Received?**: A decision point to determine if an order has been received. visible in diagram; no further repository context available.
+- **C / Check Inventory**: Represents the process of checking if the ordered items are available in the inventory. visible in diagram; no further repository context available.
+- **D / Payment Successful?**: A decision point to determine if the payment for the order was successful. visible in diagram; no further repository context available.
+- **E / Refund Payment**: Represents the action of refunding the payment if it was unsuccessful. visible in diagram; no further repository context available.
+- **F / Ship Order**: Represents the process of shipping the order to the customer. visible in diagram; no further repository context available.
+- **G / Order Delivered?**: A decision point to determine if the order has been delivered to the customer. visible in diagram; no further repository context available.
+- **H / Investigate Delay**: Represents the process of investigating the reason for a delay in order delivery. visible in diagram; no further repository context available.
+- **I / Invoice Customer**: Represents the process of sending an invoice to the customer. visible in diagram; no further repository context available.
+- **J / Record Sale**: Represents the process of recording the sale. visible in diagram; no further repository context available.
+- **K / Notify Customer of Shortage**: Represents the action of notifying the customer about a shortage of items in their order. visible in diagram; no further repository context available.
+- **L / Close Order**: Represents the final step of closing the order. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Start the order processing workflow.
+- `B -- No --> A`: If an order is not received, loop back to the start.
+- `B -- Yes --> C`: If an order is received, check the inventory.
+- `C -- Available --> D`: If the inventory is available, check if the payment was successful.
+- `C -- Unavailable --> K`: If the inventory is unavailable, notify the customer of the shortage.
+- `D -- No --> E`: If the payment was not successful, refund the payment.
+- `D -- Yes --> F`: If the payment was successful, ship the order.
+- `E --> L`: After refunding the payment, close the order.
+- `F --> G`: After shipping the order, check if it was delivered.
+- `G -- No --> H`: If the order was not delivered, investigate the delay.
+- `H --> F`: After investigating the delay, loop back to ship the order again.
+- `G -- Yes --> I`: If the order was delivered, invoice the customer.
+- `I --> J`: After invoicing the customer, record the sale.
+- `J --> K`: After recording the sale, notify the customer of the shortage.
+- `K --> L`: After notifying the customer of the shortage, close the order.
+
+## Repository Context & Terminology
+- **Order Processing**: Generally refers to the entire process of receiving, fulfilling, and delivering customer orders. In this diagram, it encompasses all steps from order receipt to closing the order.
+- **Check Inventory**: Typically involves verifying the availability of items in stock. In this diagram, it determines whether to proceed with the order or notify the customer of a shortage.
+- **Payment Successful?**: Usually refers to the verification of payment authorization. In this diagram, it dictates whether to ship the order or refund the payment.
+- **Ship Order**: Generally means preparing and sending the order to the customer. In this diagram, it follows successful payment and precedes delivery confirmation.
+- **Order Delivered?**: Typically involves confirming that the customer has received the order. In this diagram, it determines whether to invoice the customer or investigate delays.
+- **Investigate Delay**: Usually involves identifying the cause of a shipping delay. In this diagram, it leads back to shipping the order again, creating a loop.
+- **Invoice Customer**: Generally refers to sending a bill to the customer for the order. In this diagram, it occurs *after* order delivery, which is an unusual sequence.
+- **Record Sale**: Typically involves documenting the transaction for accounting purposes. In this diagram, it precedes notifying the customer of a shortage.
+- **Notify Customer of Shortage**: Usually involves informing the customer about unavailable items *before* shipping. In this diagram, it occurs after recording the sale and invoicing the customer.
+- **Refund Payment**: Usually involves returning money to the customer. In this diagram, it occurs after a failed payment and leads directly to closing the order, skipping any notification.
+- **Close Order**: Generally refers to finalizing the order process. In this diagram, it is the final step after various paths, including refunds and shortage notifications.
+
+## High-Density QA Ground Truth Summary
+The order processing flowchart begins with the "Start" node, which transitions to the "Order Received?" decision. If an order is not received, the process loops back to the "Start" node. If an order is received, the process moves to "Check Inventory". If the inventory is unavailable, the customer is notified of the shortage, and the order is closed. If the inventory is available, the process proceeds to "Payment Successful?". If payment is unsuccessful, a refund is issued, and the order is immediately closed. If payment is successful, the order is "Ship Order", followed by a check for "Order Delivered?". If the order is not delivered, the process enters an "Investigate Delay" loop, returning to "Ship Order". If the order is delivered, the customer is "Invoice Customer", then the "Record Sale" step is performed, followed by "Notify Customer of Shortage", and finally, the "Close Order" step. The "Investigate Delay" node incorrectly loops back to "Ship Order" instead of resolving the root cause. The "Notify Customer of Shortage" step occurs after invoicing and recording the sale, which is counter-intuitive.

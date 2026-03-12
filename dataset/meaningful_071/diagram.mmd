@@ -1,0 +1,41 @@
+graph TD
+    subgraph Input Stage
+        A[Receive Video Upload] --> B(Validation Checks);
+        B -- Valid --> C{Transcoding Queue};
+        B -- Invalid --> Z[Reject + Notify User];
+    end
+
+    subgraph Transcoding Cluster
+        C --> D[Scheduler];
+        D --> E{Resource Available?};
+        E -- Yes --> F(Allocate Transcoder);
+        E -- No --> C;
+        F --> G[Start Transcoding Job];
+        G --> H{Transcoding Success?};
+        H -- Yes --> I(Store Transcoded Video);
+        H -- No --> J[Log Error + Retry Limit Check];
+        J -- Retry Allowed --> G;
+        J -- Retry Exhausted --> K[Notify Failure + Archive];
+    end
+
+    subgraph Thumbnail Generation
+        I --> L{Generate Thumbnails};
+        L --> M(Store Thumbnails);
+    end
+
+    subgraph Metadata Enrichment
+        I --> N[Extract Metadata];
+        N --> O(Store Metadata);
+    end
+
+    subgraph Output Stage
+        I --> P{Create Manifest};
+        M --> P;
+        O --> P;
+        P --> Q[Publish to CDN];
+    end
+
+    Q --> R(Update User Dashboard);
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class Z,K error

@@ -1,0 +1,20 @@
+graph TD
+    A[User Initiates Order] --> B{Inventory Available?};
+    B -- No --> C[Notify User: Out of Stock];
+    C --> A;
+    B -- Yes --> D[Process Payment];
+    D --> E{Payment Successful?};
+    E -- Yes --> F[Prepare Order for Shipment];
+    F --> G{Order Ready for Pickup?};
+    G -- No --> H[Set Status: Ready];
+    H --> I[Notify User Order Ready];
+    E -- No --> I;
+    I --> J[Deliver Order];
+    J --> K[Update Inventory Count];
+    K --> L{Inventory Count > Reorder Point?};
+    L -- No --> M[Reorder Inventory];
+    M --> A;
+    L -- Yes --> N[Set Status: Delivered];
+    N --> O[Send Thank You Note];
+    O --> A;
+    G -- Yes --> F;

@@ -1,0 +1,41 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the relationships between Kubernetes resources within the default namespace. It visualizes the dependencies and interactions between Services, Deployments, Secrets, and PersistentVolumeClaims required to deploy a WordPress application with a MySQL database. The diagram provides a high-level overview of the application's architecture and resource dependencies.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It shows two parallel flows, one for WordPress and one for MySQL, both converging at the `mysql-pass` Secret. The start nodes are `wordpress-mysql (Service)` and `wordpress (Service)`, and the end nodes are `mysql-pv-claim (PersistentVolumeClaim)` and `wp-pv-claim (PersistentVolumeClaim)`.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "default namespace". This represents the Kubernetes namespace where all the depicted resources are deployed.
+
+## Node-by-Node Description
+- **wordpress-mysql (Service)**: Represents the MySQL service in Kubernetes.
+  visible in diagram; no further repository context available.
+- **wordpress-mysql (Deployment)**: Represents the MySQL deployment in Kubernetes.
+  visible in diagram; no further repository context available.
+- **mysql-pass (Secret)**: Represents a Kubernetes Secret storing the MySQL password.
+  visible in diagram; no further repository context available.
+- **wordpress (Service)**: Represents the WordPress service in Kubernetes.
+  visible in diagram; no further repository context available.
+- **wordpress (Deployment)**: Represents the WordPress deployment in Kubernetes.
+  visible in diagram; no further repository context available.
+- **mysql-pv-claim (PersistentVolumeClaim)**: Represents a PersistentVolumeClaim for MySQL data storage.
+  visible in diagram; no further repository context available.
+- **wp-pv-claim (PersistentVolumeClaim)**: Represents a PersistentVolumeClaim for WordPress data storage.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `wordpress-mysql (Service) --> wordpress-mysql (Deployment)`: Represents the deployment of the MySQL service.
+- `wordpress-mysql (Deployment) --> mysql-pass (Secret)`: Indicates that the MySQL deployment requires the `mysql-pass` Secret.
+- `wordpress (Service) --> wordpress (Deployment)`: Represents the deployment of the WordPress service.
+- `wordpress (Deployment) --> mysql-pass (Secret)`: Indicates that the WordPress deployment requires the `mysql-pass` Secret.
+- `wordpress (Deployment) --> mysql-pv-claim (PersistentVolumeClaim)`: Indicates that the WordPress deployment requires the `mysql-pv-claim` PersistentVolumeClaim.
+- `wordpress (Deployment) --> wp-pv-claim (PersistentVolumeClaim)`: Indicates that the WordPress deployment requires the `wp-pv-claim` PersistentVolumeClaim.
+
+## Repository Context & Terminology
+- **Service (Kubernetes)**: An abstraction which defines a logical set of Pods and a policy by which to access them. Services enable loose coupling between dependent Pods.
+- **Deployment (Kubernetes)**: A Kubernetes object that manages a replicated application. Deployments ensure that a specified number of pod replicas are running at any given time.
+- **Secret (Kubernetes)**: A Kubernetes object used to store sensitive information, such as passwords, OAuth tokens, and SSH keys. Storing sensitive information in a Secret is safer and more flexible than putting it verbatim in a Pod definition or in a container image.
+- **PersistentVolumeClaim (Kubernetes)**: A request for storage by a user. It is similar to a Pod. Pods consume node resources and PVCs consume PV resources.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the Kubernetes resources required for deploying a WordPress application with a MySQL database within the "default namespace". The deployment starts with two services: `wordpress-mysql (Service)` and `wordpress (Service)`. The `wordpress-mysql (Service)` leads to the `wordpress-mysql (Deployment)`, which in turn depends on the `mysql-pass (Secret)` for database credentials. Similarly, the `wordpress (Service)` leads to the `wordpress (Deployment)`, which also depends on the `mysql-pass (Secret)`. The `wordpress (Deployment)` further requires two PersistentVolumeClaims: `mysql-pv-claim (PersistentVolumeClaim)` for MySQL data and `wp-pv-claim (PersistentVolumeClaim)` for WordPress data. The `mysql-pass` Secret serves as a central dependency for both the WordPress and MySQL deployments, ensuring secure access to the database. The PersistentVolumeClaims provide persistent storage for the application's data, ensuring data is not lost when pods are restarted or rescheduled. The diagram highlights the interdependencies between different Kubernetes resources, showcasing how they work together to form a complete application deployment.

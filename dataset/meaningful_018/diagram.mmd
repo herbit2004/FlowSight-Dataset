@@ -1,0 +1,33 @@
+graph TD
+    subgraph Risk Rule Engine
+        A[Incoming Transaction] --> B{Risk Assessment?}
+        B -- Yes --> C[Rule Evaluation Module]
+        B -- No --> I[Route to Processing]
+
+        C --> D{Match Rule 1?}
+        D -- Yes --> E[Apply Rule 1 Actions]
+        D -- No --> F{Match Rule 2?}
+
+        F -- Yes --> G[Apply Rule 2 Actions]
+        F -- No --> H[Default Handling]
+
+        E --> J[Audit Logging];
+        G --> J;
+        H --> J;
+        J --> I;
+    end
+    subgraph Post Processing
+        I --> K{Fraudulent?}
+        K -- Yes --> L[Escalate to Analyst]
+        K -- No --> M[Transaction Approved]
+
+        L --> N[Case Management System]
+        M --> O[Initiate Settlement];
+
+        N --> P[Await Review]
+        P --> O;
+
+    end
+
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,K,L,M,N,O,P default

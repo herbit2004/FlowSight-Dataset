@@ -1,0 +1,81 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the workflow of an order processing system. It illustrates the steps involved from when a user initiates an order to when the order is closed, including inventory checks, payment processing, shipment, and delivery. This diagram serves as a visual representation of the order fulfillment process, but contains intentional errors.
+
+## Overall Layout
+The diagram's primary direction is top-down. It starts with the "User Initiates Order" node at the top and progresses downwards through various stages of order processing. The end node is "Close Order" at the bottom.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Initiation & Validation, Payment Processing, Shipment Preparation, Shipment Dispatch, Delivery Confirmation, and Order Closure.
+
+## Node-by-Node Description
+- **A / User Initiates Order**: Represents the start of the order process when a user places an order.
+  visible in diagram; no further repository context available.
+- **B / Check Inventory**: Represents the step where the system checks if the ordered items are in stock.
+  visible in diagram; no further repository context available.
+- **D / Process Payment**: Represents the step where the system processes the user's payment.
+  visible in diagram; no further repository context available.
+- **E / Order Placed Confirmation**: Represents the confirmation message sent to the user after the order is successfully placed.
+  visible in diagram; no further repository context available.
+- **F / Address Valid?**: Represents the step where the system validates the user's shipping address.
+  visible in diagram; no further repository context available.
+- **G / Prepare Shipment**: Represents the step where the warehouse staff prepares the order for shipment.
+  visible in diagram; no further repository context available.
+- **H / Package Item**: Represents the step where the ordered items are packaged.
+  visible in diagram; no further repository context available.
+- **I / Shipping Label Printed**: Represents the step where the shipping label is printed for the package.
+  visible in diagram; no further repository context available.
+- **J / Shipment Dispatched**: Represents the step where the package is dispatched for delivery.
+  visible in diagram; no further repository context available.
+- **K / Update Order Status**: Represents the step where the order status is updated in the system.
+  visible in diagram; no further repository context available.
+- **L / Delivery Received?**: Represents the step where the system checks if the delivery has been received.
+  visible in diagram; no further repository context available.
+- **M / Investigate Delay**: Represents the step where the system investigates any delays in delivery.
+  visible in diagram; no further repository context available.
+- **N / Order Delivered**: Represents the step where the order is marked as delivered.
+  visible in diagram; no further repository context available.
+- **O / Close Order**: Represents the end of the order process when the order is closed.
+  visible in diagram; no further repository context available.
+- **Q / Refund Initiated**: Represents the step where a refund is initiated due to payment failure.
+  visible in diagram; no further repository context available.
+- **P / Payment Reversed**: Represents the step where the payment is reversed to the user.
+  visible in diagram; no further repository context available.
+- **C / Notify User of Out of Stock**: Represents the step where the user is notified that the ordered items are out of stock.
+  visible in diagram; no further repository context available.
+- **R / Notify User of Payment Failure**: Represents the step where the user is notified of a payment failure.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User initiates the order, leading to inventory check.
+- `B -- Yes --> D`: Inventory check is successful, leading to payment processing.
+- `B -- No --> C`: Inventory check fails, leading to notification of out-of-stock items.
+- `D -- Success --> E`: Payment processing is successful, leading to order confirmation.
+- `D -- Failure --> Q`: Payment processing fails, leading to refund initiation.
+- `E --> F`: Order is confirmed, leading to address validation.
+- `F -- Yes --> G`: Address is valid, leading to shipment preparation.
+- `F -- No --> C`: Address is invalid, leading to notification of out-of-stock items.
+- `G --> H`: Shipment is prepared, leading to item packaging.
+- `H --> I`: Item is packaged, leading to shipping label printing.
+- `I --> J`: Shipping label is printed, leading to shipment dispatch.
+- `J --> K`: Shipment is dispatched, leading to order status update.
+- `K --> L`: Order status is updated, leading to delivery receipt check.
+- `L -- Yes --> N`: Delivery is received, leading to order marked as delivered.
+- `L -- No --> M`: Delivery is not received, leading to investigation of delay.
+- `M --> J`: After investigating the delay, the process loops back to shipment dispatched.
+- `N --> O`: Order is marked as delivered, leading to order closure.
+- `Q --> P`: Refund is initiated, leading to payment reversal.
+- `P --> A`: Payment is reversed, looping back to user initiates order.
+- `C --> R`: User is notified of out-of-stock items, leading to notification of payment failure.
+- `R --> A`: User is notified of payment failure, looping back to user initiates order.
+
+## Repository Context & Terminology
+- **User Initiates Order**: In standard practice, this refers to the action of a customer placing an order through a system. In this diagram, it represents the starting point of the workflow.
+- **Check Inventory**: In standard practice, this refers to verifying the availability of items in stock. In this diagram, it's a decision point that determines whether the order can proceed.
+- **Process Payment**: In standard practice, this refers to the process of charging the customer for the order. In this diagram, it's a step that can either succeed or fail, leading to different paths.
+- **Address Valid?**: In standard practice, this refers to verifying the accuracy and deliverability of the shipping address. In this diagram, a 'No' result incorrectly leads to 'Notify User of Out of Stock'.
+- **Shipment Dispatched**: In standard practice, this refers to the action of sending the package for delivery. In this diagram, it's a step that is repeated after investigating a delay, creating an illogical loop.
+- **Order Delivered**: In standard practice, this refers to the confirmation that the customer has received the order. In this diagram, it incorrectly leads to 'Close Order'.
+- **Notify User of Out of Stock**: In standard practice, this refers to informing the customer that an item is unavailable. In this diagram, it incorrectly merges into 'Notify User of Payment Failure'.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with the "User Initiates Order," which proceeds to "Check Inventory." If the inventory check fails, the user is incorrectly notified of "Out of Stock" which then merges into "Notify User of Payment Failure," and the process loops back to the start. If the inventory check succeeds, the system attempts to "Process Payment." A successful payment leads to "Order Placed Confirmation" and then to "Address Valid?." If the address is valid, the process continues to "Prepare Shipment," "Package Item," "Shipping Label Printed," and then, incorrectly, "Update Order Status" *before* "Shipment Dispatched." If the address is invalid, the user is incorrectly notified of "Out of Stock." After shipment dispatch, the system checks if "Delivery Received?". If not, it goes to "Investigate Delay" and then loops back to "Shipment Dispatched," causing repeated dispatches. If delivery is received, the system marks "Order Delivered" and then incorrectly goes to "Close Order." A failed payment leads to "Refund Initiated," then "Payment Reversed," and the process loops back to "User Initiates Order." The final step, "Close Order," is reached after the order is marked as delivered, completing the flawed workflow.

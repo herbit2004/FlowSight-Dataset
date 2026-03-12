@@ -1,0 +1,109 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the archival and cleanup policy for a data lake. It outlines the steps involved in determining whether data needs to be archived, the process of archiving the data, and the actions taken based on the success or failure of the archival process. The diagram serves as a visual representation of the data lifecycle management within the data lake environment.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It is divided into several subgraphs representing different stages of the archival process. The start node is "Start: Policy Engine Triggered" and the end node is "End: Data Lake Inactive".
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Archival and Cleanup Policy - Data Lake**: The main subgraph encompassing the entire archival process.
+- **Data Lake**: Represents the different zones within the data lake (Raw, Curated, Reporting).
+- **Archive Storage**: Represents the different types of archive storage (Nearline, Cold).
+- **Incident Response**: Represents the actions taken in response to archival failures.
+- **Compliance & Security**: Represents the compliance and security measures applied during the archival process.
+- **Monitoring & Reporting**: Represents the monitoring and reporting aspects of the archival process.
+
+## Node-by-Node Description
+- **A / Start: Policy Engine Triggered**: The process begins when the policy engine is triggered.
+- **B / Data Lake Active?**: A decision point to determine if the data lake is active.
+- **C / Compliance Check Required?**: A decision point to determine if a compliance check is required.
+- **D / Initiate Compliance Scan**: Initiates a compliance scan.
+- **E / Direct Archival Process**: Starts the direct archival process.
+- **F / Sensitive Data Found?**: A decision point to determine if sensitive data is found.
+- **G / Data Masking Application**: Applies data masking to sensitive data.
+- **H / Metadata Enrichment**: Enriches the metadata.
+- **I / Archival Readiness Check**: Checks if the data is ready for archival.
+- **J / Pass Readiness Check?**: A decision point to determine if the readiness check passed.
+- **K / Incident Log with Error Details**: Logs an incident with error details.
+- **L / Alert Security Team**: Alerts the security team.
+- **M / Data Movement to Archive Storage**: Moves the data to archive storage.
+- **N / Archive Metadata Update**: Updates the archive metadata.
+- **O / Replication to DR Site Required?**: A decision point to determine if replication to a disaster recovery site is required.
+- **P / Replicate to Disaster Recovery Archive**: Replicates the data to a disaster recovery archive.
+- **Q / Verify Data Integrity in Archive**: Verifies the data integrity in the archive.
+- **R / Integrity Verification Success?**: A decision point to determine if the integrity verification was successful.
+- **S / Cleanup Staging Area**: Cleans up the staging area.
+- **T / Retry Data Archival**: Retries the data archival process.
+- **U / Index Archive Data**: Indexes the archive data.
+- **V / Update Data Retention Policy**: Updates the data retention policy.
+- **W / Generate Archival Report**: Generates an archival report.
+- **X / Purge Data from Data Lake based on Policy**: Purges data from the data lake based on the policy.
+- **Y / End: Archival Complete**: The archival process is complete.
+- **Z / End: Data Lake Inactive**: The process ends when the data lake is inactive.
+- **DL1 / Data Lake - Raw Zone**: Represents the raw zone of the data lake.
+- **DL2 / Data Lake - Curated Zone**: Represents the curated zone of the data lake.
+- **DL3 / Data Lake - Reporting Zone**: Represents the reporting zone of the data lake.
+- **AS1 / Nearline Archive**: Represents the nearline archive storage.
+- **AS2 / Cold Storage Archive**: Represents the cold storage archive.
+- **IR1 / Security Team Escalation**: Represents the security team escalation process. visible in diagram; no further repository context available.
+- **IR2 / Automated Remediation**: Represents the automated remediation process. visible in diagram; no further repository context available.
+- **CS1 / Compliance Rules Engine**: Represents the compliance rules engine.
+- **CS2 / Data Masking Module**: Represents the data masking module.
+- **CS3 / Data Encryption Service**: Represents the data encryption service.
+- **MR1 / Archival Status Dashboard**: Represents the archival status dashboard.
+- **MR2 / Data Retention Policy Monitor**: Represents the data retention policy monitor.
+
+## Edges, Branches & Convergence
+- `A --> B`: The policy engine trigger initiates the process.
+- `B -- Yes --> C`: If the data lake is active, a compliance check is required.
+- `B -- No --> Z`: If the data lake is not active, the process ends.
+- `C -- Yes --> D`: If a compliance check is required, initiate the compliance scan.
+- `C -- No --> E`: If a compliance check is not required, start the direct archival process.
+- `D --> F`: The compliance scan leads to a check for sensitive data.
+- `F -- Yes --> G`: If sensitive data is found, apply data masking.
+- `F -- No --> H`: If sensitive data is not found, enrich the metadata.
+- `G --> H`: Data masking is followed by metadata enrichment.
+- `H --> I`: Metadata enrichment leads to an archival readiness check.
+- `I --> J`: The archival readiness check leads to a decision point.
+- `J -- Yes --> E`: If the readiness check passes, start the direct archival process.
+- `J -- No --> K`: If the readiness check fails, log an incident with error details.
+- `K --> L`: Logging an incident leads to alerting the security team.
+- `L --> Z`: Alerting the security team leads to the end of the process.
+- `E --> M`: The direct archival process leads to data movement to archive storage.
+- `M --> N`: Data movement to archive storage is followed by archive metadata update.
+- `N --> O`: Archive metadata update leads to a check for replication to a DR site.
+- `O -- Yes --> P`: If replication to a DR site is required, replicate the data.
+- `O -- No --> Q`: If replication to a DR site is not required, verify data integrity in the archive.
+- `P --> Q`: Replication to a DR site is followed by verifying data integrity in the archive.
+- `Q --> R`: Verifying data integrity leads to a decision point.
+- `R -- Yes --> S`: If the integrity verification is successful, cleanup the staging area.
+- `R -- No --> T`: If the integrity verification fails, retry the data archival.
+- `T --> E`: Retrying the data archival leads back to the direct archival process.
+- `S --> U`: Cleaning up the staging area leads to indexing the archive data.
+- `U --> V`: Indexing the archive data leads to updating the data retention policy.
+- `V --> W`: Updating the data retention policy leads to generating an archival report.
+- `W --> X`: Generating an archival report leads to purging data from the data lake based on the policy.
+- `X --> Y`: Purging data from the data lake leads to the end of the archival process.
+- `Y --> Z`: The end of the archival process leads to the end of the overall process.
+- `D --> CS1`: Initiate Compliance Scan leads to Compliance Rules Engine.
+- `G --> CS2`: Data Masking Application leads to Data Masking Module.
+- `CS2 --> CS3`: Data Masking Module leads to Data Encryption Service.
+- `M --> AS1`: Data Movement to Archive Storage leads to Nearline Archive.
+- `P --> AS2`: Replicate to Disaster Recovery Archive leads to Cold Storage Archive.
+- `L --> IR1`: Alert Security Team leads to Security Team Escalation.
+- `V --> MR2`: Update Data Retention Policy leads to Data Retention Policy Monitor.
+- `W --> MR1`: Generate Archival Report leads to Archival Status Dashboard.
+
+## Repository Context & Terminology
+- **Data Lake**: A centralized repository that allows you to store all your structured and unstructured data at any scale.
+- **Policy Engine**: A system that evaluates and enforces policies.
+- **Compliance Scan**: A process to check if data and processes meet regulatory requirements.
+- **Data Masking**: A technique to hide sensitive data by replacing it with modified or substitute data.
+- **Metadata Enrichment**: The process of adding more information to existing metadata to improve its quality and usefulness.
+- **DR Site**: Disaster Recovery site, a location for an organization to recover and continue operating its technology infrastructure when its primary location becomes unavailable.
+- **Data Retention Policy**: A set of rules that define how long data should be kept and how it should be disposed of.
+- **Nearline Archive**: A storage tier that provides relatively fast access to archived data.
+- **Cold Storage Archive**: A storage tier for infrequently accessed data, typically with lower cost and slower access times.
+
+## High-Density QA Ground Truth Summary
+The archival and cleanup policy for a data lake begins with the 'Start: Policy Engine Triggered' node, which initiates the process. The first decision point is 'Data Lake Active?'. If the data lake is not active, the process ends at 'End: Data Lake Inactive'. If the data lake is active, the process moves to 'Compliance Check Required?'. If compliance check is required, 'Initiate Compliance Scan' is triggered, leading to the 'Compliance Rules Engine'. Otherwise, the process proceeds to 'Direct Archival Process'. A key branch occurs at 'Sensitive Data Found?'. If sensitive data is found, 'Data Masking Application' is applied, utilizing the 'Data Masking Module' and 'Data Encryption Service', before proceeding to 'Metadata Enrichment'. Otherwise, the process directly goes to 'Metadata Enrichment'. After metadata enrichment, an 'Archival Readiness Check' is performed. If the check fails, an incident is logged, and the security team is alerted, leading to 'Security Team Escalation' and the process ends. If the readiness check passes, 'Data Movement to Archive Storage' occurs, storing data in 'Nearline Archive' or 'Cold Storage Archive' depending on replication requirements. The process then verifies data integrity. If integrity verification fails, the archival is retried. If successful, the staging area is cleaned, archive data is indexed, and the data retention policy is updated, utilizing the 'Data Retention Policy Monitor'. Finally, an archival report is generated, and data is purged from the data lake based on the policy, leading to 'End: Archival Complete'. The data lake itself is structured into 'Raw Zone', 'Curated Zone', and 'Reporting Zone'.

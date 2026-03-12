@@ -1,0 +1,61 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a process flow, likely for an image generation or processing application. The diagram outlines the steps from initial user input to the final output of downloading or sharing an image. It serves as a visual representation of the application's workflow, guiding users and developers alike.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with a single entry point at the top and branches out into different paths based on user choices and processing outcomes, eventually converging towards a final stage. The start node is "访问驾驶舱" (Access Cockpit), and the end node is "下载/分享" (Download/Share).
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages:
+1. Initial Access & Input: "访问驾驶舱" (Access Cockpit) to "提交任务" (Submit Task).
+2. Generation Mode Selection: "生成模式选择" (Generation Mode Selection).
+3. Client-Side Processing: "客户端轮询 实时进度" (Client-Side Polling Real-Time Progress) to "轮询查询状态" (Polling Query Status).
+4. Server-Side Processing: "服务端轮询 自动等待" (Server-Side Polling Automatic Waiting).
+5. Output & Download: "返回最终图像" (Return Final Image), "展示图像" (Display Image), "显示错误" (Display Error) to "下载/分享" (Download/Share).
+
+## Node-by-Node Description
+- **A / 访问驾驶舱 (Access Cockpit)**: The starting point of the process, likely representing the user accessing the application. visible in diagram; no further repository context available.
+- **B / 输入提示词 (Enter Prompt)**: The user provides input or a prompt for the image generation. visible in diagram; no further repository context available.
+- **C / 选择操作模式 (Select Operation Mode)**: A decision point where the user chooses an operation mode. visible in diagram; no further repository context available.
+- **D / 快速生成 默认参数 (Quick Generation Default Parameters)**: One operation mode, using default parameters for quick image generation. visible in diagram; no further repository context available.
+- **E / 高级设置 自定义参数 (Advanced Settings Custom Parameters)**: Another operation mode, allowing the user to customize parameters. visible in diagram; no further repository context available.
+- **F / 提交任务 (Submit Task)**: The task is submitted for processing after selecting the operation mode and parameters. visible in diagram; no further repository context available.
+- **G / 生成模式选择 (Generation Mode Selection)**: A decision point for selecting the generation mode. visible in diagram; no further repository context available.
+- **H / 服务端轮询 自动等待 (Server-Side Polling Automatic Waiting)**: The server-side component polls and waits for the image generation to complete. visible in diagram; no further repository context available.
+- **I / 客户端轮询 实时进度 (Client-Side Polling Real-Time Progress)**: The client-side component polls for real-time progress updates. visible in diagram; no further repository context available.
+- **K / 显示进度条 (Show Progress Bar)**: A progress bar is displayed to the user, showing the generation progress. visible in diagram; no further repository context available.
+- **L / 轮询查询状态 (Polling Query Status)**: The system polls to check the status of the image generation. visible in diagram; no further repository context available.
+- **M / 生成状态 (Generation Status)**: A decision point based on the status of the image generation. visible in diagram; no further repository context available.
+- **J / 返回最终图像 (Return Final Image)**: The final image is returned after successful generation. visible in diagram; no further repository context available.
+- **N / 展示图像 (Display Image)**: The generated image is displayed to the user. visible in diagram; no further repository context available.
+- **O / 显示错误 (Display Error)**: An error message is displayed if the image generation fails. visible in diagram; no further repository context available.
+- **P / 下载/分享 (Download/Share)**: The final step, where the user can download or share the generated image. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Accessing the cockpit leads to entering a prompt.
+- `B --> C`: Entering a prompt leads to selecting an operation mode.
+- `C --> D`: Selecting "Quick Generation Default Parameters" leads to submitting the task.
+- `C --> E`: Selecting "Advanced Settings Custom Parameters" leads to submitting the task.
+- `D --> F`: Submitting the task.
+- `E --> F`: Submitting the task.
+- `F --> G`: Submitting the task leads to selecting the generation mode.
+- `G --> H`: Selecting server-side processing.
+- `G --> I`: Selecting client-side processing.
+- `I --> K`: Client-side polling leads to displaying a progress bar.
+- `K --> L`: Displaying the progress bar leads to polling the query status.
+- `M -- 完成 (Complete) --> N`: If the generation status is complete, display the image.
+- `M -- 失败 (Failure) --> O`: If the generation status is a failure, display an error.
+- `M -- 处理中 (Processing) --> L`: If the generation is still processing, continue polling the query status.
+- `H --> J`: Server-side processing leads to returning the final image.
+- `J --> P`: Returning the final image leads to downloading/sharing.
+- `N --> P`: Displaying the image leads to downloading/sharing.
+
+## Repository Context & Terminology
+- **访问驾驶舱 (Access Cockpit)**: The initial access point to the image generation application. This could be a web page, a command-line interface, or another entry point.
+- **输入提示词 (Enter Prompt)**: The user's textual input that guides the image generation process. This is a crucial element in text-to-image models.
+- **快速生成 (Quick Generation)**: A mode that uses default parameters for faster image generation, potentially sacrificing some customization or quality.
+- **高级设置 (Advanced Settings)**: A mode that allows users to fine-tune various parameters, offering more control over the image generation process.
+- **服务端轮询 (Server-Side Polling)**: A technique where the server periodically checks for updates or completion of the image generation task.
+- **客户端轮询 (Client-Side Polling)**: A technique where the client (e.g., a web browser) periodically sends requests to the server to check for updates or completion of the image generation task.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the user accessing the "访问驾驶舱" (Access Cockpit) and then entering a "输入提示词" (Enter Prompt). The user then selects an operation mode via "选择操作模式" (Select Operation Mode), choosing either "快速生成 默认参数" (Quick Generation Default Parameters) or "高级设置 自定义参数" (Advanced Settings Custom Parameters). Regardless of the mode selected, the task is then submitted via "提交任务" (Submit Task). Next, the "生成模式选择" (Generation Mode Selection) determines whether client-side or server-side processing is used. If client-side, the "客户端轮询 实时进度" (Client-Side Polling Real-Time Progress) node displays a "显示进度条" (Show Progress Bar) while polling the "轮询查询状态" (Polling Query Status). The "生成状态" (Generation Status) node then determines if the process is "完成" (Complete), "失败" (Failure), or still "处理中" (Processing). If complete, the "展示图像" (Display Image) node is reached; if failed, the "显示错误" (Display Error) node is reached; if still processing, the process loops back to "轮询查询状态" (Polling Query Status). If server-side processing is selected, the "服务端轮询 自动等待" (Server-Side Polling Automatic Waiting) node is reached, leading to "返回最终图像" (Return Final Image). Finally, both the "展示图像" (Display Image) and "返回最终图像" (Return Final Image) nodes converge to the "下载/分享" (Download/Share) node, allowing the user to obtain the generated image. The "输入提示词" (Enter Prompt) is a critical element, representing the user's textual input that guides the image generation process, a common feature in text-to-image models.

@@ -1,0 +1,57 @@
+graph TD
+    subgraph IoT Device
+        A[Telemetry Sensor] --> B(Data Formatting);
+        C(Cmd Receive);
+    end
+
+    subgraph Cloud Platform
+        D[API Gateway];
+        E(Authentication);
+        F(Traffic Shaping);
+        G(Message Queue);
+        H(Telemetry Ingestion);
+        I(Command Dispatch);
+        J(Data Store);
+        K(Alerting Engine);
+    end
+
+    B --> D;
+    C <-- I;
+
+    D --> E;
+    E -- Valid User --> F;
+    E -- Invalid User --> L(Reject Request);
+
+    F --> G;
+    G --> H;
+    H --> J;
+    H -- Threshold Exceeded --> K;
+
+    K --> M{Escalation Policy};
+    M -- Notify Ops --> N(PagerDuty);
+    M -- Log Only --> J;
+
+    I --> O{Command Type};
+    O -- Config Change --> P(Param Validation);
+    O -- Reboot --> Q(Reboot Command);
+    P -- Valid Param --> Q(Reboot Command);
+    P -- Invalid Param --> R(Reject w/ Error);
+
+    D --> I;
+
+    Q --> S(Cmd Queue);
+    S --> T(Cmd Router);
+
+    T --> U{Device Type};
+    U -- Sensor --> V(Device Specific Cmd);
+    U -- Actuator --> W(Device Specific Cmd);
+    V --> X(Msg Format);
+    W --> X;
+    X --> Y(Encrypt & Sign);
+    Y --> Z(Send to Device);
+    Z --> C;
+
+    classDef authFill fill:#f9f,stroke:#333,stroke-width:2px
+    classDef errorFill fill:#fbb,stroke:#333,stroke-width:2px
+    class L,R authFill
+    class N errorFill

@@ -1,0 +1,44 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture and data flow between an AI agent, a Python MCP server, a Cheat Engine (DBVM mode), and a target executable. The diagram illustrates how the AI agent interacts with the Cheat Engine to access and manipulate the memory of the target process. It provides a high-level overview of the communication and execution flow within the system.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It shows a hierarchical structure starting with the AI Agent, flowing through the MCP server and named pipe, then into the Cheat Engine with its internal threads, and finally reaching the target executable. The start node is the AI Agent, and the end node is the Target .exe.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **ce_mcp_bridge.lua**: This subgraph represents the Lua script within the Cheat Engine responsible for bridging the MCP communication with the engine's internal threads.
+The diagram is also logically divided into stages:
+1. AI Agent interaction
+2. MCP Server communication
+3. Named Pipe communication
+4. Cheat Engine execution
+5. Target process memory access
+
+## Node-by-Node Description
+- **AI Agent: Claude/Cursor/Copilot**: Represents the AI agent interacting with the system, potentially using tools like Claude, Cursor, or Copilot. visible in diagram; no further repository context available.
+- **mcp_cheatengine.py - Python MCP Server**: Represents the Python MCP server that handles communication with the AI agent. visible in diagram; no further repository context available.
+- **\\.\pipe\CE_MCP_Bridge_v99**: Represents the named pipe used for asynchronous communication between the Python MCP server and the Cheat Engine. visible in diagram; no further repository context available.
+- **Cheat Engine - DBVM**: Represents the Cheat Engine running in DBVM (Driver Based Virtual Machine) mode. visible in diagram; no further repository context available.
+- **ce_mcp_bridge.lua**: Represents the Lua script within the Cheat Engine that bridges the MCP communication with the engine's internal threads. visible in diagram; no further repository context available.
+- **Worker Thread - Blocking I/O**: Represents a worker thread within the Cheat Engine that handles blocking I/O operations. visible in diagram; no further repository context available.
+- **Main Thread - GUI + CE API**: Represents the main thread of the Cheat Engine, responsible for the GUI and providing the Cheat Engine API. visible in diagram; no further repository context available.
+- **Target .exe**: Represents the target executable whose memory is being accessed and manipulated. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `AI Agent --> MCP`: Represents the communication from the AI agent to the MCP server using the MCP protocol (JSON-RPC over stdio).
+- `MCP <--> PIPE`: Represents the asynchronous communication between the MCP server and the named pipe.
+- `PIPE <--> CE`: Represents the communication between the named pipe and the Cheat Engine.
+- `Worker Thread <--> Main Thread`: Represents the synchronization between the worker thread and the main thread within the Cheat Engine.
+- `Main Thread --> Target .exe`: Represents the memory access from the main thread to the target executable.
+
+## Repository Context & Terminology
+- **MCP (Machine Communication Protocol)**: A protocol used for communication between different components, likely using JSON-RPC over standard input/output (stdio).
+- **JSON-RPC**: A remote procedure call protocol encoded in JSON.
+- **stdio**: Standard input/output streams used for communication.
+- **Named Pipe**: A mechanism for inter-process communication (IPC).
+- **Async**: Asynchronous communication, allowing operations to be non-blocking.
+- **DBVM (Driver Based Virtual Machine)**: A mode of operation for Cheat Engine that uses a driver-based virtual machine for advanced memory access and manipulation.
+- **Lua**: A scripting language often embedded in applications like Cheat Engine for extending functionality.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a system where an AI Agent (Claude/Cursor/Copilot) interacts with a Target .exe through a series of components. The process begins with the AI Agent communicating with the `mcp_cheatengine.py` (Python MCP Server) via the MCP Protocol (JSON-RPC over stdio). This communication then transitions to a named pipe (`\\.\pipe\CE_MCP_Bridge_v99`) for asynchronous communication. The named pipe connects to the Cheat Engine (DBVM mode), specifically the `ce_mcp_bridge.lua` script. Within the Cheat Engine, a Worker Thread handles blocking I/O, synchronizing with the Main Thread, which manages the GUI and Cheat Engine API. Finally, the Main Thread accesses the memory of the Target .exe. The use of DBVM suggests advanced memory manipulation capabilities within the Cheat Engine. The MCP protocol likely defines a set of commands the AI Agent can use to interact with the Cheat Engine and ultimately modify the Target .exe's memory. The asynchronous named pipe communication allows the Python MCP server and Cheat Engine to operate independently, improving responsiveness.

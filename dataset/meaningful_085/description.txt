@@ -1,0 +1,54 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the process of handling customer compensation claims. It outlines the steps involved from the initial submission of a claim to its final resolution, including validation, calculation of compensation, manager approval (if necessary), offer generation, customer acceptance, and payment processing. The diagram serves as a visual representation of the claim handling workflow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "Customer Submits Compensation Claim" node at the top and flows downwards through various decision points and processes, ultimately leading to either "Process Payment and Close Claim" or "Initiate Negotiation Process" at the bottom.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Claim Submission & Validation, Initial Compensation Calculation, Manager Approval (Conditional), Offer Generation, and Claim Resolution.
+
+## Node-by-Node Description
+- **A / Customer Submits Compensation Claim**: Represents the initial step where a customer submits a claim for compensation. visible in diagram; no further repository context available.
+- **B / Validate Claim Data**: Represents the process of validating the data provided in the claim. visible in diagram; no further repository context available.
+- **C / Calculate Initial Compensation Amount**: Represents the calculation of the initial compensation amount based on the validated claim data. visible in diagram; no further repository context available.
+- **D / Reject Claim and Notify Customer**: Represents the rejection of the claim due to invalid data and notification of the customer. visible in diagram; no further repository context available.
+- **E / Is Compensation Above Manager Threshold?**: Represents a decision point to determine if the calculated compensation amount exceeds a predefined manager approval threshold. visible in diagram; no further repository context available.
+- **F / Escalate Claim to Manager Approval**: Represents the process of escalating the claim to a manager for approval when the compensation amount is above the threshold. visible in diagram; no further repository context available.
+- **H / Manager Approves Claim?**: Represents a decision point to determine if the manager approves the claim. visible in diagram; no further repository context available.
+- **I / Generate Final Compensation Offer**: Represents the generation of the final compensation offer after manager approval. visible in diagram; no further repository context available.
+- **G / Generate Automated Compensation Offer**: Represents the generation of an automated compensation offer when the compensation amount is below the manager threshold. visible in diagram; no further repository context available.
+- **J / Revise Compensation Amount and Re-evaluate**: Represents the process of revising the compensation amount and re-evaluating the claim. visible in diagram; no further repository context available.
+- **K / Send Offer to Customer**: Represents the process of sending the compensation offer to the customer. visible in diagram; no further repository context available.
+- **L / Customer Accepts Offer?**: Represents a decision point to determine if the customer accepts the compensation offer. visible in diagram; no further repository context available.
+- **M / Process Payment and Close Claim**: Represents the final step of processing the payment and closing the claim when the customer accepts the offer. visible in diagram; no further repository context available.
+- **N / Initiate Negotiation Process**: Represents the initiation of a negotiation process when the customer rejects the offer. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Customer submits a compensation claim, initiating the process.
+- `B -- Valid Data --> C`: If the claim data is valid, proceed to calculate the initial compensation amount.
+- `B -- Invalid Data --> D`: If the claim data is invalid, reject the claim and notify the customer.
+- `C --> E`: After calculating the initial compensation amount, determine if it exceeds the manager threshold.
+- `E -- Yes --> F`: If the compensation is above the threshold, escalate the claim to a manager for approval.
+- `E -- No --> G`: If the compensation is below the threshold, generate an automated compensation offer.
+- `F --> H`: After escalating the claim, determine if the manager approves it.
+- `H -- Yes --> I`: If the manager approves the claim, generate the final compensation offer.
+- `H -- No --> J`: If the manager does not approve the claim, revise the compensation amount and re-evaluate.
+- `J --> E`: After revising the compensation amount, re-evaluate if it exceeds the manager threshold.
+- `I --> K`: After generating the final compensation offer, send the offer to the customer.
+- `G --> K`: After generating the automated compensation offer, send the offer to the customer.
+- `K --> L`: After sending the offer, determine if the customer accepts it.
+- `L -- Yes --> M`: If the customer accepts the offer, process the payment and close the claim.
+- `L -- No --> N`: If the customer rejects the offer, initiate the negotiation process.
+- Paths converge at node K: both "Generate Final Compensation Offer" and "Generate Automated Compensation Offer" lead to "Send Offer to Customer".
+
+## Repository Context & Terminology
+- **Compensation Claim**: A formal request by a customer for reimbursement or payment due to a loss, damage, or injury.
+- **Claim Data Validation**: The process of verifying the accuracy and completeness of the information provided in a claim.
+- **Manager Threshold**: A predefined monetary limit above which a claim requires manager approval.
+- **Automated Compensation Offer**: A compensation offer generated automatically by a system based on predefined rules and algorithms.
+- **Negotiation Process**: A discussion between the customer and the company to reach a mutually acceptable settlement.
+- **Payment Processing**: The process of transferring funds to the customer as compensation for the claim.
+- **Claim Closure**: The final step in the claim handling process, indicating that the claim has been resolved and no further action is required.
+
+## High-Density QA Ground Truth Summary
+The compensation claim process begins when a customer submits a claim. The first step is to validate the claim data; if the data is invalid, the claim is rejected, and the customer is notified. If the data is valid, the initial compensation amount is calculated. A key decision point is whether the calculated compensation exceeds a manager approval threshold. If it does ("Yes" branch), the claim is escalated to a manager for approval. If the manager approves ("Yes" branch), a final compensation offer is generated; otherwise ("No" branch), the compensation amount is revised, and the process loops back to the threshold check. If the initial compensation is below the threshold ("No" branch), an automated compensation offer is generated. Both the final and automated offers are then sent to the customer. The customer's acceptance of the offer determines the final outcome. If the customer accepts ("Yes" branch), the payment is processed, and the claim is closed. If the customer rejects ("No" branch), a negotiation process is initiated. The "Manager Threshold" is a critical control point, determining whether human oversight is required for higher-value claims, reflecting a balance between automation and risk management. The process culminates in either a closed claim with payment or the start of negotiations.

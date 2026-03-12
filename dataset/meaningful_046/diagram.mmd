@@ -1,0 +1,14 @@
+graph TD;
+    A[User Request] --> B{Audit Enabled?};
+    B -- Yes --> C[Log Pre-Execution Data];
+    B -- No --> G[Execute Core Logic];
+    C --> D[Execute Core Logic];
+    D --> E{Successful Execution?};
+    E -- Yes --> F[Log Post-Execution Data + Success];
+    E -- No --> H[Log Failure Details];
+    F --> I[Return Result to User];
+    G --> E;
+    H --> I;
+    I --> J[Update Metrics Dashboard];
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J default

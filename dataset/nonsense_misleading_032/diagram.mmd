@@ -1,0 +1,20 @@
+graph TD
+    A[Order Received] --> B{Payment Successful?};
+    B -- No --> C[Cancel Order];
+    B -- Yes --> D[Inventory Check];
+    D --> E{Sufficient Inventory?};
+    E -- Yes --> F[Package Items];
+    E -- No --> G[Notify Customer of Delay];
+    G --> D;
+    F --> H[Generate Shipping Label];
+    H --> I{Label Printed?};
+    I -- Yes --> J[Ship Order];
+    I -- No --> F; 
+    J --> K[Update Inventory];
+    K --> L[Send Shipping Notification];
+    L --> M[Order Delivered];
+    M --> N{Customer Satisfied?};
+    N -- Yes --> O[Close Order];
+    N -- No --> P[Open Support Ticket];
+    P --> O;
+    C --> O;

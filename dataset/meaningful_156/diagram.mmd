@@ -1,0 +1,42 @@
+graph TD
+    subgraph Data Ingestion Pipeline
+        A[Data Source: Sensor Logs] --> B{Data Validation};
+        B -- Invalid Data --> H[Alerting System];
+        B -- Valid Data --> C[Timestamp Indexing];
+        C --> D[Data Transformation: Aggregate Stats];
+        D --> E[Hot Tier Storage: In-Memory Cache];
+    end
+
+    subgraph Cold Tier Archival
+        F[Data Aging Policy Checker];
+        E --> F;
+        F -- Data Exceeds Age Threshold --> G[Data Serialization: Parquet];
+        G --> I[Cold Tier Storage: Object Storage];
+    end
+
+    subgraph Query & Retrieval
+        J[User Query Request];
+        J --> K{Check Data Age};
+        K -- Data is Recent --> L[Query Hot Tier];
+        L --> E;
+        K -- Data is Old --> M[Query Cold Tier];
+        M --> N[Data Deserialization];
+        N --> I;
+        N --> O[Merge Results];
+        L --> O;
+        O --> P[Return Results to User];
+    end
+
+    I --> Q[Data Lifecycle Management];
+    Q --> R[Archive Infrequent Data];
+    R --> S[Glacier Storage];
+
+    classDef primary fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef secondary fill:#ccf,stroke:#333,stroke-width:2px;
+    classDef tertiary fill:#ffc,stroke:#333,stroke-width:2px;
+    classDef danger fill:#fcc,stroke:#333,stroke-width:2px;
+
+    class A,B,C,D,E primary;
+    class F,G,I secondary;
+    class J,K,L,M,N,O,P tertiary;
+    class H,Q,R,S danger;

@@ -1,0 +1,27 @@
+graph TD
+    subgraph External Secret Store
+        ES[(External Secret)]
+    end
+
+    subgraph Secret Rotation Service
+        A[Request Secret Rotation - API];
+        B[Authentication/Authorization];
+        C[Secret Metadata Retrieval];
+        D[Generate New Secret];
+        E[Update External Secret Store];
+        F[Shadow Read Verification];
+        G[Promote New Secret];
+        H[Cleanup Old Secret - Asynchronous];
+    end
+
+    A -- Valid API Key? --> B
+    B -- Yes --> C
+    B -- No --> Z[Reject Request];
+    C -- Get Rotation Policy --> D
+    D -- New Secret Generated --> E
+    E -- External Secret Updated --> F
+    F -- Verification Successful? --> G
+    F -- Verification Failed --> I[Rollback Secret Update];
+    G -- Promote Complete --> H
+    classDef success fill:#ccffcc,stroke:#333,stroke-width:2px;
+    G:::success

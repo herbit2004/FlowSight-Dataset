@@ -1,0 +1,36 @@
+graph TD
+    subgraph Mobile Device
+        A[Telemetry Module: Collect Data] --> B{GPS Valid?};
+        B -- Yes --> C[Package and Buffer];
+        B -- No --> D[Use Last Known, Mark Stale];
+        D --> C;
+    end
+
+    subgraph Edge Gateway
+        C --> E[Edge Agent: Receive Data];
+        E --> F{Validate Payload};
+        F -- Valid --> G[MQTT Publish to Broker];
+        F -- Invalid --> H[Log Error, Discard];
+    end
+
+    subgraph Cloud Infrastructure
+        G --> I[Message Broker];
+        I --> J{Command Request for Device X?};
+        J -- Yes --> K[Command Dispatcher];
+        K --> L[Send Command to Edge];
+        L --> M[Edge Agent: Forward to Device];
+        J -- No --> N[Time-Series Database];
+        I --> N;
+    end
+
+    subgraph Management Console
+      O[User Interface] --> P{Issue Command Request?};
+      P -- Yes --> Q[API Gateway];
+      Q --> K
+      P -- No --> R[Display Telemetry Data];
+      N --> R
+
+    end
+
+    classDef internal fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R internal

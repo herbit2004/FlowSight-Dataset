@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of an order processing system. It depicts the sequence of operations performed by different services, including order reception, inventory check, payment processing, and order fulfillment. The diagram highlights the decision points and the flow of control based on certain conditions, such as the presence of a trace ID and stock availability.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "Order Service: Receive Request" node at the top and flows downwards through various service interactions and decision points, ultimately converging at the "Complete Trace & Notify SRE" node at the bottom.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Reception, Trace Context Propagation, Inventory Check, Payment Processing/Out of Stock, and Order Fulfillment/SRE Notification.
+
+## Node-by-Node Description
+- **A / Order Service: Receive Request**: Represents the initial stage where the order service receives a new order request. visible in diagram; no further repository context available.
+- **B / Is Trace ID Present?**: A decision point to check if a trace ID is already present in the request. visible in diagram; no further repository context available.
+- **D / Generate New Trace ID**: If a trace ID is not present, this node represents the generation of a new trace ID. visible in diagram; no further repository context available.
+- **C / Propagate Trace Context**: Represents the propagation of the trace context to downstream services. visible in diagram; no further repository context available.
+- **E / Inventory Service: Check Stock - Record Span**: Represents the inventory service checking the stock availability and recording a span for tracing purposes. visible in diagram; no further repository context available.
+- **F / Stock Available?**: A decision point to check if the required stock is available. visible in diagram; no further repository context available.
+- **G / Payment Service: Process Payment - Record Span**: Represents the payment service processing the payment and recording a span. visible in diagram; no further repository context available.
+- **I / Order Fulfillment: Initiate Shipment - Record Span**: Represents the order fulfillment service initiating the shipment and recording a span. visible in diagram; no further repository context available.
+- **H / Return: Out of Stock**: Represents the scenario where the stock is not available, and the system returns an "Out of Stock" message. visible in diagram; no further repository context available.
+- **J / Complete Trace & Notify SRE**: Represents the completion of the trace and notification to the Site Reliability Engineering (SRE) team. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The order request is passed to check for a trace ID.
+- `B -- Yes --> C`: If a trace ID is present, the trace context is propagated.
+- `B -- No --> D`: If a trace ID is not present, a new trace ID is generated.
+- `D --> C`: After generating a new trace ID, the trace context is propagated.
+- `C --> E`: The trace context is passed to the inventory service to check stock.
+- `E --> F`: The result of the stock check is used to determine stock availability.
+- `F -- Yes --> G`: If stock is available, the payment service processes the payment.
+- `F -- No --> H`: If stock is not available, an "Out of Stock" message is returned.
+- `G --> I`: After successful payment, the order fulfillment service initiates shipment.
+- `H --> J`: If stock is unavailable, the trace is completed, and SRE is notified.
+- `I --> J`: After initiating shipment, the trace is completed, and SRE is notified.
+
+## Repository Context & Terminology
+- **Order Service**: A microservice responsible for receiving and processing order requests.
+- **Trace ID**: A unique identifier used to track a request across multiple services in a distributed system.
+- **Trace Context**: The information needed to correlate events and spans across different services, including the trace ID and span ID.
+- **Inventory Service**: A microservice responsible for managing inventory and checking stock availability.
+- **Span**: A unit of work within a trace, representing a specific operation or service call.
+- **Payment Service**: A microservice responsible for processing payments.
+- **Order Fulfillment**: A microservice responsible for initiating shipment and managing the delivery process.
+- **SRE (Site Reliability Engineering)**: A team responsible for ensuring the reliability and availability of the system.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the Order Service receiving a request. The system then checks for the presence of a Trace ID. If a Trace ID exists ("Yes" branch), the process proceeds to propagate the Trace Context. If not ("No" branch), a new Trace ID is generated before propagating the Trace Context. Next, the Inventory Service checks stock availability, recording a span for tracing. If stock is available ("Yes" branch), the Payment Service processes the payment, also recording a span. Subsequently, the Order Fulfillment service initiates shipment, recording another span. If stock is unavailable ("No" branch), the system returns an "Out of Stock" message. Both the successful order fulfillment path (after payment) and the "Out of Stock" path converge at the "Complete Trace & Notify SRE" node. The Trace ID is crucial for distributed tracing, allowing engineers to monitor the request's journey across microservices and identify performance bottlenecks. The SRE team is notified upon completion to ensure system health and reliability.

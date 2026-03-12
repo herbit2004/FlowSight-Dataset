@@ -1,0 +1,23 @@
+graph TD
+    A[User Places Order] --> B{Payment Successful?};
+    B -- No --> C[Order Cancelled];
+    B -- Yes --> F[Inventory Check];
+    F --> D{Inventory Available?};
+    D -- Yes --> E[Shipping Label Created];
+    E --> G[Order Marked as Shipped];
+    G --> H{Was Label Validated?};
+    H -- No --> A;
+    H -- Yes --> I[Package Delivered];
+    I --> K[Customer Receives Package];
+    K --> J{Customer Satisfied?};
+    J -- Yes --> L[Order Completion Email Sent];
+    J -- No --> M[Dispatch Support Agent];
+    M --> N[Investigate Issue];
+    N --> L;
+    D -- No --> O[Restock Inventory];
+    O --> E;
+    C --> P[Refund Initiated];
+    P --> L;
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+    style I fill:#f9f,stroke:#333,stroke-width:2px

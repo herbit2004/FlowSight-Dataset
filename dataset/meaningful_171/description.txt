@@ -1,0 +1,98 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the billing infrastructure process. It outlines the steps involved in generating a bill, from the initial request to delivering the bill to the customer. The diagram serves as a visual representation of the billing workflow, aiding in understanding and troubleshooting the system.
+
+## Overall Layout
+The diagram flows from left to right (LR). It consists of a single subgraph named "Billing Infrastructure" containing all the nodes and edges. The process starts with a "Bill Generation Request" and ends with "Bill Delivered to Customer," with error states as possible alternative end points.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Billing Infrastructure**: This subgraph encompasses the entire billing process, from request validation to bill delivery.
+
+## Node-by-Node Description
+- **A / Bill Generation Request**: Represents the initiation of the bill generation process.
+  visible in diagram; no further repository context available.
+- **B / Request Validation**: Represents the process of validating the incoming bill generation request.
+  visible in diagram; no further repository context available.
+- **C / Account Status Check**: Represents a check to determine if the account is active.
+  visible in diagram; no further repository context available.
+- **D / Usage Data Retrieval**: Represents the retrieval of usage data for the account.
+  visible in diagram; no further repository context available.
+- **E / Usage Data Available?**: Represents a decision point to determine if usage data is available.
+  visible in diagram; no further repository context available.
+- **F / Data Transformation & Aggregation**: Represents the transformation and aggregation of the usage data.
+  visible in diagram; no further repository context available.
+- **G / Rate Calculation**: Represents the calculation of rates based on the transformed data.
+  visible in diagram; no further repository context available.
+- **H / Discount Application**: Represents the application of discounts to the calculated rates.
+  visible in diagram; no further repository context available.
+- **I / Promotions Applicable?**: Represents a decision point to determine if promotions are applicable.
+  visible in diagram; no further repository context available.
+- **J / Apply Promotions**: Represents the application of promotions.
+  visible in diagram; no further repository context available.
+- **K / Proceed to Bill Generation**: Represents the step where the system proceeds to generate the bill.
+  visible in diagram; no further repository context available.
+- **L / Bill Formatting**: Represents the formatting of the bill.
+  visible in diagram; no further repository context available.
+- **M / Tax Calculation**: Represents the calculation of taxes for the bill.
+  visible in diagram; no further repository context available.
+- **N / Final Bill Generation**: Represents the final generation of the bill.
+  visible in diagram; no further repository context available.
+- **O / Bill Generation Successful?**: Represents a decision point to determine if the bill generation was successful.
+  visible in diagram; no further repository context available.
+- **P / Bill Storage**: Represents the storage of the generated bill.
+  visible in diagram; no further repository context available.
+- **Q / Notification Trigger**: Represents the triggering of a notification.
+  visible in diagram; no further repository context available.
+- **R / Payment Gateway Integration**: Represents the integration with a payment gateway.
+  visible in diagram; no further repository context available.
+- **S / Bill Delivered to Customer**: Represents the delivery of the bill to the customer.
+  visible in diagram; no further repository context available.
+- **Z / Error: Invalid Request**: Represents an error state for invalid requests.
+  visible in diagram; no further repository context available.
+- **Y / Error: Account Inactive**: Represents an error state for inactive accounts.
+  visible in diagram; no further repository context available.
+- **X / Error: No Usage Data**: Represents an error state when no usage data is available.
+  visible in diagram; no further repository context available.
+- **W / Error: Bill Generation Failed**: Represents an error state when bill generation fails.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Bill generation request is sent for validation.
+- `B -- Valid Request --> C`: If the request is valid, proceed to account status check.
+- `B -- Invalid Request --> Z`: If the request is invalid, an error is raised.
+- `C -- Account Active --> D`: If the account is active, retrieve usage data.
+- `C -- Account Inactive --> Y`: If the account is inactive, an error is raised.
+- `D --> E`: Usage data is sent to check for availability.
+- `E -- Yes --> F`: If usage data is available, proceed to data transformation and aggregation.
+- `E -- No --> X`: If usage data is not available, an error is raised.
+- `F --> G`: Transformed and aggregated data is used for rate calculation.
+- `G --> H`: Calculated rates are used for discount application.
+- `H --> I`: Discounts are sent to check for promotion applicability.
+- `I -- Yes --> J`: If promotions are applicable, apply them.
+- `I -- No --> K`: If promotions are not applicable, proceed to bill generation.
+- `J --> K`: After applying promotions, proceed to bill generation.
+- `K --> L`: Proceed to bill formatting.
+- `L --> M`: Formatted bill is used for tax calculation.
+- `M --> N`: Taxes are used for final bill generation.
+- `N --> O`: Final bill is sent to check for successful generation.
+- `O -- Yes --> P`: If bill generation is successful, store the bill.
+- `O -- No --> W`: If bill generation fails, an error is raised.
+- `P --> Q`: Stored bill triggers a notification.
+- `Q --> R`: Notification triggers payment gateway integration.
+- `R --> S`: Payment gateway integration leads to bill delivery to the customer.
+
+## Repository Context & Terminology
+- **Bill Generation Request**: An initial request to generate a bill for a customer, typically containing account information and billing period details.
+- **Request Validation**: The process of verifying that the bill generation request is well-formed, contains all necessary information, and adheres to predefined rules.
+- **Account Status Check**: Verifying that the customer's account is active and in good standing before proceeding with bill generation.
+- **Usage Data Retrieval**: Fetching the customer's usage data (e.g., electricity consumption, data usage) for the billing period from a data store.
+- **Data Transformation & Aggregation**: Transforming the raw usage data into a format suitable for billing calculations and aggregating it to represent total usage.
+- **Rate Calculation**: Applying predefined rates to the usage data to determine the initial charges.
+- **Discount Application**: Applying any applicable discounts based on customer loyalty, promotional offers, or other criteria.
+- **Promotions**: Special offers or incentives that can be applied to reduce the bill amount.
+- **Bill Formatting**: Arranging the bill information into a readable and presentable format for the customer.
+- **Tax Calculation**: Calculating applicable taxes based on the bill amount and relevant tax laws.
+- **Payment Gateway Integration**: Connecting the billing system to a payment gateway to facilitate online payments from customers.
+
+## High-Density QA Ground Truth Summary
+The billing infrastructure process begins with a "Bill Generation Request," which is then passed to "Request Validation." If the request is deemed "Invalid Request," the process terminates with an "Error: Invalid Request." If the request is "Valid Request," the process proceeds to "Account Status Check." If the account is "Inactive," the process terminates with an "Error: Account Inactive." If the account is "Active," the process moves to "Usage Data Retrieval" and then to the "Usage Data Available?" decision point. If usage data is "No" available, the process terminates with an "Error: No Usage Data." If usage data is "Yes" available, the process continues through "Data Transformation & Aggregation," "Rate Calculation," and "Discount Application." The process then branches at "Promotions Applicable?," applying promotions if "Yes" or proceeding directly to "Proceed to Bill Generation" if "No." The process continues with "Bill Formatting," "Tax Calculation," and "Final Bill Generation," culminating in the "Bill Generation Successful?" decision. If "No," the process terminates with "Error: Bill Generation Failed." If "Yes," the process concludes with "Bill Storage," "Notification Trigger," "Payment Gateway Integration," and finally "Bill Delivered to Customer." The "Payment Gateway Integration" step allows customers to pay their bills online, a common feature in modern billing systems.

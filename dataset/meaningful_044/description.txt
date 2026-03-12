@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a multi-tenant data access pattern. It depicts the flow of a user request through authorization, data access layers, a shared infrastructure, and ultimately to a response. The diagram highlights how data is filtered and accessed based on tenant ID in a multi-tenant environment.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TB). It is divided into two main sections representing Tenant A and Tenant B, with a shared infrastructure section in the middle. The start nodes are the user requests for each tenant, and the end nodes are the application responses for each tenant.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs: Tenant A and Tenant B, representing the request flow for each tenant. There is also a "Shared Infrastructure" subgraph, representing the common components used by both tenants.
+
+## Node-by-Node Description
+- **TA_Request / User: Tenant A Request**: Represents a request initiated by a user belonging to Tenant A. visible in diagram; no further repository context available.
+- **TA_AuthZ / Authorization Check**: Represents the authorization check performed for Tenant A's request. visible in diagram; no further repository context available.
+- **TA_DataAccess / Data Access Layer: Tenant A**: Represents the data access layer specific to Tenant A. visible in diagram; no further repository context available.
+- **TB_Request / User: Tenant B Request**: Represents a request initiated by a user belonging to Tenant B. visible in diagram; no further repository context available.
+- **TB_AuthZ / Authorization Check**: Represents the authorization check performed for Tenant B's request. visible in diagram; no further repository context available.
+- **TB_DataAccess / Data Access Layer: Tenant B**: Represents the data access layer specific to Tenant B. visible in diagram; no further repository context available.
+- **DataAccessRouter / Data Access Router**: Represents a component responsible for routing data access requests based on tenant ID. visible in diagram; no further repository context available.
+- **Database / Multi-Tenant Database**: Represents the shared database used by all tenants. visible in diagram; no further repository context available.
+- **FilterA / Filter Data by Tenant A**: Represents the process of filtering data based on Tenant A's ID. visible in diagram; no further repository context available.
+- **FilterB / Filter Data by Tenant B**: Represents the process of filtering data based on Tenant B's ID. visible in diagram; no further repository context available.
+- **ReturnA / Return Filtered Data: Tenant A**: Represents the filtered data returned to Tenant A. visible in diagram; no further repository context available.
+- **ReturnB / Return Filtered Data: Tenant B**: Represents the filtered data returned to Tenant B. visible in diagram; no further repository context available.
+- **TA_Response / Application: Tenant A Response**: Represents the application response for Tenant A. visible in diagram; no further repository context available.
+- **TB_Response / Application: Tenant B Response**: Represents the application response for Tenant B. visible in diagram; no further repository context available.
+- **TA_Error / Return Error: Unauthorized**: Represents an error response returned to Tenant A due to authorization failure. visible in diagram; no further repository context available.
+- **TB_Error / Return Error: Unauthorized**: Represents an error response returned to Tenant B due to authorization failure. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `TA_Request --> TA_AuthZ`: A user request from Tenant A triggers the authorization check.
+- `TA_AuthZ -- Allowed --> TA_DataAccess`: If the authorization check for Tenant A is successful, the request proceeds to the data access layer.
+- `TA_AuthZ -- Denied --> TA_Error`: If the authorization check for Tenant A fails, an unauthorized error is returned.
+- `TB_Request --> TB_AuthZ`: A user request from Tenant B triggers the authorization check.
+- `TB_AuthZ -- Allowed --> TB_DataAccess`: If the authorization check for Tenant B is successful, the request proceeds to the data access layer.
+- `TB_AuthZ -- Denied --> TB_Error`: If the authorization check for Tenant B fails, an unauthorized error is returned.
+- `TA_DataAccess --> DataAccessRouter`: Tenant A's data access layer sends the request to the data access router.
+- `TB_DataAccess --> DataAccessRouter`: Tenant B's data access layer sends the request to the data access router.
+- `DataAccessRouter -- Tenant A ID --> FilterA`: The data access router routes the request to the Tenant A data filter based on the tenant ID.
+- `DataAccessRouter -- Tenant B ID --> FilterB`: The data access router routes the request to the Tenant B data filter based on the tenant ID.
+- `FilterA --> Database`: The filtered data request from Tenant A is sent to the multi-tenant database.
+- `FilterB --> Database`: The filtered data request from Tenant B is sent to the multi-tenant database.
+- `Database -- Data: Tenant A Requested --> ReturnA`: The database returns filtered data for Tenant A.
+- `Database -- Data: Tenant B Requested --> ReturnB`: The database returns filtered data for Tenant B.
+- `ReturnA --> TA_Response`: The filtered data is returned as the application response for Tenant A.
+- `ReturnB --> TB_Response`: The filtered data is returned as the application response for Tenant B.
+- `TA_Error --> TA_Response`: The unauthorized error is returned as the application response for Tenant A.
+- `TB_Error --> TB_Response`: The unauthorized error is returned as the application response for Tenant B.
+
+## Repository Context & Terminology
+- **Multi-Tenancy**: A software architecture where a single instance of the software serves multiple customers (tenants).
+- **Data Access Layer**: An abstraction layer that provides simplified access to data stored in a database or other data storage system.
+- **Authorization**: The process of verifying that a user or application has the necessary permissions to access a resource.
+- **Data Filtering**: The process of selecting a subset of data based on specific criteria, such as tenant ID.
+- **Data Access Router**: A component that routes data access requests to the appropriate data source or service based on tenant ID or other criteria.
+- **Tenant ID**: A unique identifier for each tenant in a multi-tenant system.
+- **Shared Infrastructure**: The common hardware and software resources that are shared by all tenants in a multi-tenant system.
+
+## High-Density QA Ground Truth Summary
+The process begins with either a `User: Tenant A Request` or a `User: Tenant B Request`, which immediately triggers an `Authorization Check` specific to that tenant. If the authorization check passes (`Allowed`), the request proceeds to the tenant-specific `Data Access Layer`. If the authorization fails (`Denied`), a `Return Error: Unauthorized` is generated, which is then passed to the respective `Application: Tenant A/B Response`. When authorized, the `Data Access Layer` forwards the request to the `Data Access Router` within the `Shared Infrastructure`. The `Data Access Router` uses the `Tenant A/B ID` to route the request to the appropriate `Filter Data by Tenant A/B` component. The filtered request is then sent to the `Multi-Tenant Database`. The database returns the requested data, which is then passed to the `Return Filtered Data: Tenant A/B` component. Finally, the filtered data is returned as the `Application: Tenant A/B Response`. The `Multi-Tenant Database` is a key component, allowing multiple tenants to share the same database instance while maintaining data isolation through tenant-specific filtering. The `Data Access Router` ensures that requests are routed to the correct filter based on the tenant ID, maintaining data security and isolation.

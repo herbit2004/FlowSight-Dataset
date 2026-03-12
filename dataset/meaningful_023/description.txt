@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a canary deployment strategy. It depicts the flow of user requests through a traffic router, directing them to either a canary cluster or a production cluster based on a defined weight. The diagram outlines the process of verifying the canary service response, aggregating metrics, and making decisions to either rollback the canary, increase its weight, or route all traffic to the production environment.
+
+## Overall Layout
+The diagram flows from top to bottom. It starts with a "User Request" node and ends with a "Route All Traffic to Prod" node. The diagram includes decision diamonds for traffic routing and metrics aggregation, creating branching paths.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: User Request & Routing, Canary Deployment, Production Deployment, Metrics Aggregation, and Rollback/Promotion.
+
+## Node-by-Node Description
+- **User Request**: Represents an incoming request from a user. visible in diagram; no further repository context available.
+- **Traffic Router**: A component responsible for routing traffic based on a defined canary weight. visible in diagram; no further repository context available.
+- **Canary Cluster**: A cluster running the new version of the service for testing. visible in diagram; no further repository context available.
+- **Production Cluster**: A cluster running the stable, production-ready version of the service. visible in diagram; no further repository context available.
+- **Canary Service: Verify Response**: A step where the response from the canary service is verified. visible in diagram; no further repository context available.
+- **Production Service**: The service running in the production cluster. visible in diagram; no further repository context available.
+- **Metrics Aggregator**: A component that aggregates metrics from both the canary and production services. visible in diagram; no further repository context available.
+- **Rollback Canary**: A process to revert the canary deployment if metrics are unsatisfactory. visible in diagram; no further repository context available.
+- **Increase Canary Weight**: A process to increase the traffic routed to the canary cluster if metrics are satisfactory. visible in diagram; no further repository context available.
+- **Route All Traffic to Prod**: A final step to route all traffic to the production cluster after successful canary testing. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Request --> Traffic Router`: A user request is sent to the traffic router.
+- `Traffic Router -- Canary Weight < Threshold --> Production Cluster`: If the canary weight is below the threshold, traffic is routed to the production cluster.
+- `Traffic Router -- Canary Weight >= Threshold --> Canary Cluster`: If the canary weight is at or above the threshold, traffic is routed to the canary cluster.
+- `Canary Cluster --> Canary Service: Verify Response`: The canary cluster's response is verified.
+- `Canary Service: Verify Response -- Success --> Metrics Aggregator`: If the canary service response is successful, metrics are aggregated.
+- `Canary Service: Verify Response -- Failure --> Rollback Canary`: If the canary service response fails, the canary deployment is rolled back.
+- `Production Cluster --> Production Service`: The production cluster serves the production service.
+- `Production Service --> Metrics Aggregator`: Metrics from the production service are aggregated.
+- `Metrics Aggregator -- Metrics Threshold Met? --> Increase Canary Weight`: If the metrics threshold is met, the canary weight is increased.
+- `Metrics Aggregator -- Metrics Unsatisfactory? --> Rollback Canary`: If the metrics are unsatisfactory, the canary deployment is rolled back.
+- `Increase Canary Weight --> Traffic Router`: After increasing the canary weight, the process returns to the traffic router.
+- `Rollback Canary --> Route All Traffic to Prod`: After rolling back the canary, all traffic is routed to production.
+- `Route All Traffic to Prod --> Production Cluster`: After routing all traffic to prod, the process returns to the production cluster.
+
+## Repository Context & Terminology
+- **Canary Deployment**: A deployment strategy where a new version of an application is rolled out to a small subset of users before being rolled out to the entire infrastructure.
+- **Canary Weight**: The percentage of traffic routed to the canary cluster.
+- **Threshold**: A predefined value used to determine whether the canary weight should be increased or the canary deployment should be rolled back.
+- **Metrics Aggregator**: A component that collects and aggregates performance metrics from both the canary and production environments. These metrics are used to evaluate the stability and performance of the canary deployment.
+- **Rollback**: The process of reverting to the previous stable version of the application.
+- **Production Cluster**: The cluster running the current stable version of the application.
+- **Traffic Router**: A component that directs incoming traffic to either the canary or production cluster based on the configured canary weight.
+
+## High-Density QA Ground Truth Summary
+The canary deployment process begins with a "User Request" that is directed to the "Traffic Router." The "Traffic Router" then decides whether to route the request to the "Canary Cluster" or the "Production Cluster" based on whether the "Canary Weight" is greater than or equal to a defined "Threshold." If the weight is below the threshold, the request goes to the "Production Cluster," which serves the "Production Service," and its metrics are sent to the "Metrics Aggregator." If the weight is at or above the threshold, the request goes to the "Canary Cluster," and the "Canary Service" response is verified. A successful response leads to the "Metrics Aggregator"; a failure triggers a "Rollback Canary" operation, routing all traffic to the "Production Cluster." The "Metrics Aggregator" evaluates whether the metrics threshold is met. If the metrics are satisfactory, the "Canary Weight" is increased, and the process loops back to the "Traffic Router." If the metrics are unsatisfactory, the "Canary" deployment is rolled back, and all traffic is routed to the "Production Cluster." This iterative process allows for controlled testing and validation of new application versions before full deployment, mitigating potential risks. The "Traffic Router" is a key component in this strategy, enabling the controlled distribution of traffic between the stable and experimental versions.

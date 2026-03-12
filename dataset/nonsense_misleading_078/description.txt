@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow of a system. It depicts the sequence of steps from when a user places an order to when the order is completed and a confirmation is sent. The diagram serves as a visual representation of the order fulfillment process, highlighting key decision points and actions.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "User Places Order" node at the top and progresses downwards through various stages of order processing. The diagram has one start node and one end node, although there are loops back to earlier stages.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement & Payment, Order Processing, Inventory Check, Shipping & Delivery, Order Completion, and Confirmation.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action of a user submitting an order. visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision point to determine if the user's payment was successful. visible in diagram; no further repository context available.
+- **C / Send Order Confirmation**: Represents sending an order confirmation to the user. visible in diagram; no further repository context available.
+- **D / Order Processing Begins**: Indicates the start of the order processing phase. visible in diagram; no further repository context available.
+- **E / Inventory Check**: Represents the process of checking if the ordered items are in stock. visible in diagram; no further repository context available.
+- **F / Shipping Label Printed**: Represents the action of printing a shipping label for the order. visible in diagram; no further repository context available.
+- **G / Notify User of Delay**: Represents notifying the user about a delay in order processing due to unavailable inventory. visible in diagram; no further repository context available.
+- **H / Package Delivered**: Represents the event of the package being delivered to the user. visible in diagram; no further repository context available.
+- **I / User Received Package?**: A decision point to determine if the user has received the package. visible in diagram; no further repository context available.
+- **J / Order Completed**: Represents the final stage where the order is marked as completed. visible in diagram; no further repository context available.
+- **K / Update Inventory**: Represents updating the inventory records after the order is completed. visible in diagram; no further repository context available.
+- **L / Generate Invoice**: Represents generating an invoice for the order. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The user's order triggers the payment success check.
+- `B -- No --> C`: If payment is not successful, an order confirmation is sent.
+- `B -- Yes --> D`: If payment is successful, order processing begins.
+- `D --> E`: Order processing leads to an inventory check.
+- `E -- Available --> F`: If inventory is available, a shipping label is printed.
+- `E -- Unavailable --> G`: If inventory is unavailable, the user is notified of a delay.
+- `G --> A`: Notifying the user of a delay loops back to the beginning, where the user places the order again.
+- `F --> H`: Printing a shipping label leads to package delivery.
+- `H --> I`: Package delivery leads to a check if the user received the package.
+- `I -- No --> D`: If the user has not received the package, the process loops back to order processing.
+- `I -- Yes --> J`: If the user has received the package, the order is completed.
+- `J --> K`: Order completion leads to updating the inventory.
+- `K --> L`: Updating the inventory leads to generating an invoice.
+- `L --> C`: Generating an invoice leads to sending an order confirmation.
+
+## Repository Context & Terminology
+- **User Places Order**: Standard meaning is a customer initiating a purchase. In this diagram, it's the starting point of the workflow, and also a loop point if inventory is unavailable.
+- **Payment Successful?**: Standard meaning is verifying if the payment was processed correctly. In this diagram, a "No" outcome leads to sending an order confirmation *before* payment.
+- **Order Processing Begins**: Standard meaning is the start of fulfilling the order. In this diagram, it's a stage after successful payment and a loop point if the package is not received.
+- **Inventory Check**: Standard meaning is verifying the availability of items. In this diagram, unavailability leads back to the user placing the order again.
+- **Shipping Label Printed**: Standard meaning is creating a label for shipping the package. In this diagram, it's a step before the package is delivered.
+- **Package Delivered**: Standard meaning is the package reaching the customer. In this diagram, it's followed by a check to see if the user received it.
+- **Update Inventory**: Standard meaning is adjusting stock levels. In this diagram, it occurs *after* the order is completed and the package is delivered, which is an incorrect sequence.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "User Places Order" node, which then proceeds to the "Payment Successful?" decision point. If payment is unsuccessful, the diagram counterfactually branches to "Send Order Confirmation" *before* payment is actually made. If payment is successful, "Order Processing Begins," followed by an "Inventory Check." If inventory is "Unavailable," the user is notified of a delay, and the process loops back to the "User Places Order" node. If inventory is "Available," a "Shipping Label Printed," and then the "Package Delivered." Next, the diagram checks "User Received Package?". If "No," the process loops back to "Order Processing Begins," skipping any reshipping or support steps. If "Yes," the "Order Completed," followed by "Update Inventory" and "Generate Invoice." Finally, "Generate Invoice" merges back into "Send Order Confirmation," which has already occurred, potentially sending duplicate confirmations. The diagram incorrectly places "Update Inventory" *after* "Order Completed" and "Package Delivered," reversing the correct sequence. The end node is "Send Order Confirmation."

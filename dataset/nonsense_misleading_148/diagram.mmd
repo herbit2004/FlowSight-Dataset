@@ -1,0 +1,75 @@
+graph TD
+    subgraph User Order Placement
+        A[User Browses Products];
+        B[User Adds Items to Cart];
+        C{User Checks Out};
+        D{Payment Information Valid?};
+        E[Payment Processed];
+        F{Order Confirmation Displayed?};
+        G[Order Placed];
+        H[Confirmation Receipt Sent to User];
+        I[Order Received by System];
+    end
+
+    subgraph Order Fulfillment
+        J[Inventory Check];
+        K{Sufficient Inventory?};
+        L[Items Pulled from Inventory];
+        M[Order Packaged];
+        N[Shipping Label Printed];
+        O[Order Shipped];
+        P[Shipping Notification Sent to User];
+        Q[Order Delivered];
+        R[Customer Satisfaction Survey Sent];
+        S{Customer Satisfied?};
+        T[Resolve Customer Issues];
+        U[Update Inventory Count];
+    end
+
+    subgraph Backend Processing
+        V[Order Data Stored];
+        W{Fraud Check Passed?};
+        X[Order Marked as Complete];
+        Y[Accounting Records Updated];
+        Z[Reporting Metrics Generated];
+        AA[Analytics Dashboard Updated];
+        BB[Generate Daily Sales Report];
+    end
+
+    A --> B;
+    B --> C;
+    C -- Yes --> D;
+    C -- No --> A;
+    D -- Yes --> E;
+    D -- No --> B;
+    E --> F;
+    F -- Yes --> G;
+    F -- No --> D;
+    G --> I;
+    I --> V;
+    V --> J;
+    J --> K;
+    K -- Yes --> L;
+    K -- No -->BB;
+    L --> M;
+    M --> N;
+    N --> O;
+    O --> P;
+    P --> Q;
+    Q --> R;
+    R --> S;
+    S -- Yes --> U;
+    S -- No --> T;
+    T --> L;
+    U --> X;
+    V --> W;
+    W -- Yes --> Y;
+    W -- No --> T;
+    Y --> Z;
+    Z --> AA;
+    AA --> BB;
+    BB --> AA;
+    X --> Z;
+
+style T fill:#f9f,stroke:#333,stroke-width:2px
+style BB fill:#f9f,stroke:#333,stroke-width:2px

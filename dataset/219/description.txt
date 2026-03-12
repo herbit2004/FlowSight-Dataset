@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of a system that processes events from Git repositories (GitLab, GitHub, Gitea) and triggers actions based on the event type, such as merge requests or push events. The diagram outlines the decision-making process, code review mechanisms, and notification systems involved in the workflow. It serves as a visual representation of the system's logic and helps in understanding the flow of events and actions.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the initial event source (GitLab/GitHub/Gitea) and branches into different paths based on event types and conditions. The diagram concludes with sending IM messages or reports.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 3 stages: Platform and Event Identification, Merge Request/Push Processing, and Notification/Reporting.
+
+## Node-by-Node Description
+- **A / GitLab/GitHub/Gitea**: Represents the source of the event, which can be GitLab, GitHub, or Gitea. visible in diagram; no further repository context available.
+- **B / Webhook API Call**: Represents the Webhook API call triggered by an event in the Git repository. visible in diagram; no further repository context available.
+- **C / Platform = ?**: A decision node that identifies the platform from which the event originated. visible in diagram; no further repository context available.
+- **C1 / Event = ?**: A decision node that identifies the type of event. visible in diagram; no further repository context available.
+- **D / handle_merge_request**: Represents the process of handling a merge request event. visible in diagram; no further repository context available.
+- **E / action = open / update?**: A decision node that checks the action type of the merge request (open or update). visible in diagram; no further repository context available.
+- **F / obtain code changes**: Represents the process of obtaining code changes for review. visible in diagram; no further repository context available.
+- **G / LLM review**: Represents the Large Language Model (LLM) review process. visible in diagram; no further repository context available.
+- **H1 / Send CR IM message**: Represents sending a code review IM message. visible in diagram; no further repository context available.
+- **I / handle_push_request**: Represents the process of handling a push request event. visible in diagram; no further repository context available.
+- **J / log push**: Represents the process of logging the push event. visible in diagram; no further repository context available.
+- **K / push review enabled?**: A decision node that checks if push review is enabled. visible in diagram; no further repository context available.
+- **L / Send IM notice**: Represents sending an IM notification. visible in diagram; no further repository context available.
+- **M / LLM review**: Represents the Large Language Model (LLM) review process. visible in diagram; no further repository context available.
+- **H2 / Send CR IM message**: Represents sending a code review IM message. visible in diagram; no further repository context available.
+- **Z / Scheduled Timer**: Represents a scheduled timer that triggers a task. visible in diagram; no further repository context available.
+- **P / Read logs**: Represents the process of reading logs. visible in diagram; no further repository context available.
+- **Q / LLM summary**: Represents the Large Language Model (LLM) summary process. visible in diagram; no further repository context available.
+- **H3 / Send IM report**: Represents sending an IM report. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: A Webhook API call is triggered.
+- `B --> C`: Platform identification.
+- `C --> C1`: Event type identification.
+- `C -- merge request --> D`: A merge request event is detected.
+- `D --> E`: Checks the action type of the merge request.
+- `E -- 是 --> F`: The action is either open or update.
+- `F --> G`: Code changes are obtained for LLM review.
+- `G --> H1`: A code review IM message is sent.
+- `C -- push --> I`: A push event is detected.
+- `I --> J`: The push event is logged.
+- `J --> K`: Checks if push review is enabled.
+- `K -- 否 --> L`: Push review is not enabled, send an IM notice.
+- `K -- 是 --> M`: Push review is enabled, perform LLM review.
+- `M --> H2`: A code review IM message is sent.
+- `Z --> P`: A scheduled timer triggers reading logs.
+- `P --> Q`: Logs are summarized by LLM.
+- `Q --> H3`: An IM report is sent.
+- `J --> P`: Logs are read from the log push process.
+
+## Repository Context & Terminology
+- **GitLab/GitHub/Gitea**: These are popular web-based Git repository management and collaboration platforms.
+- **Webhook API Call**: A webhook is a mechanism for one application to notify another application when an event occurs. In this context, it's used to trigger the workflow when an event happens in the Git repository.
+- **Merge Request**: A request to merge code changes from one branch into another.
+- **Push Request**: An event that occurs when code changes are pushed to a Git repository.
+- **LLM Review**: Large Language Model review, which refers to using a large language model to automatically review code changes.
+- **IM Message/Report**: Instant Messaging message or report, which is used to send notifications or summaries to users.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with an event originating from a Git repository (GitLab/GitHub/Gitea), triggering a Webhook API call. The system first identifies the platform and then the event type. If the event is a merge request, the system proceeds to `handle_merge_request`, checking if the action is either `open` or `update`. If the action is `open` or `update`, the system obtains code changes and performs an LLM review before sending a code review IM message. If the event is a push, the system proceeds to `handle_push_request` and logs the push event. The system then checks if push review is enabled. If push review is not enabled, an IM notice is sent; otherwise, an LLM review is performed, and a code review IM message is sent. A scheduled timer triggers the reading of logs, which are then summarized by an LLM, and an IM report is sent. The `log push` process also feeds into the `Read logs` process, indicating that logs are read from the push events. The final actions involve sending IM messages or reports, providing feedback or summaries to users based on the processed events.

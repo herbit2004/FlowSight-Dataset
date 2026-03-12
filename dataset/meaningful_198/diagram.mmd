@@ -1,0 +1,9 @@
+graph TD
+    A[Client: Config Management Agent] --> B{Check Local Cache};
+    B -- Cache Valid? (TTL) --> C{Pull from Config Server};
+    B -- Cache Invalid --> D[Read from Local Cache];
+    C -- Success --> E[Update Local Cache & Notify];
+    C -- Failure --> F[Log Error & Use Existing Config];
+    E --> G[Apply Configuration];
+    F --> G;
+    G --> H[Monitor System Performance];

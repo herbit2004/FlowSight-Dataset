@@ -1,0 +1,73 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the request flow through an API Gateway, including token validation and authorization. It depicts the steps involved in processing a client request, validating the token, authorizing access, and routing the request to the appropriate upstream service. The diagram serves as a visual representation of the API Gateway's architecture and request processing logic.
+
+## Overall Layout
+The diagram has a top-to-bottom (TD) layout. It is divided into two subgraphs: "API Gateway" and "Token Validation Service". The flow starts with a "Client Request" and ends with a "Client Response", with error states returning 401 or 403 responses.
+
+## Subgraphs / Stages
+The diagram contains two subgraphs:
+- **API Gateway**: This subgraph represents the main API Gateway component, handling client requests, routing, authentication, authorization, and response transformation.
+- **Token Validation Service**: This subgraph details the token validation process, including parsing, JWT validation, key vault lookup, and signature verification.
+
+## Node-by-Node Description
+- **A / Client Request**: Represents the initial client request entering the API Gateway. visible in diagram; no further repository context available.
+- **B / Request Router**: Routes the request based on the path. visible in diagram; no further repository context available.
+- **C / Authentication Handler**: Handles authentication based on the presence of a token. visible in diagram; no further repository context available.
+- **D / Return 401 Unauthorized**: Returns a 401 Unauthorized error if no token is present or the token is invalid. visible in diagram; no further repository context available.
+- **E / Token Validation Service**: Validates the token using the Token Validation Service subgraph. visible in diagram; no further repository context available.
+- **F / Authorization Service**: Authorizes the request based on the validated token. visible in diagram; no further repository context available.
+- **G / Request Transformer**: Transforms the request before sending it to the upstream service. visible in diagram; no further repository context available.
+- **I / Upstream Service A**: Represents an upstream service A. visible in diagram; no further repository context available.
+- **J / Upstream Service B**: Represents an upstream service B. visible in diagram; no further repository context available.
+- **H / Return 403 Forbidden**: Returns a 403 Forbidden error if the request is unauthorized. visible in diagram; no further repository context available.
+- **K / Response Transformer A**: Transforms the response from Upstream Service A. visible in diagram; no further repository context available.
+- **L / Response Transformer B**: Transforms the response from Upstream Service B. visible in diagram; no further repository context available.
+- **Z / Client Response**: Represents the final client response. visible in diagram; no further repository context available.
+- **M / Token from Request**: Extracts the token from the request. visible in diagram; no further repository context available.
+- **N / Token Parser**: Parses the token. visible in diagram; no further repository context available.
+- **O / JWT Validator**: Validates the JWT (JSON Web Token). visible in diagram; no further repository context available.
+- **P / Key Vault Lookup**: Looks up the key in the key vault. visible in diagram; no further repository context available.
+- **R / Signature Verification**: Verifies the signature of the JWT. visible in diagram; no further repository context available.
+- **Q / Return Invalid**: Returns an invalid token response. visible in diagram; no further repository context available.
+- **S / Return Valid**: Returns a valid token response. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Client request is sent to the Request Router.
+- `B --> C`: Request is routed to the Authentication Handler based on the path.
+- `C -- No Token --> D`: If no token is present, return 401 Unauthorized.
+- `C -- Has Token --> E`: If a token is present, send the request to the Token Validation Service.
+- `E -- Valid Token --> F`: If the token is valid, send the request to the Authorization Service.
+- `E -- Invalid Token --> D`: If the token is invalid, return 401 Unauthorized.
+- `F -- Authorized --> G`: If the request is authorized, send it to the Request Transformer.
+- `F -- Unauthorized --> H`: If the request is unauthorized, return 403 Forbidden.
+- `G -- Route A --> I`: Route the request to Upstream Service A.
+- `G -- Route B --> J`: Route the request to Upstream Service B.
+- `I --> K`: Upstream Service A sends the response to Response Transformer A.
+- `J --> L`: Upstream Service B sends the response to Response Transformer B.
+- `K --> Z`: Response Transformer A sends the response to the Client Response.
+- `L --> Z`: Response Transformer B sends the response to the Client Response.
+- `D --> Z`: Return 401 Unauthorized sends the response to the Client Response.
+- `H --> Z`: Return 403 Forbidden sends the response to the Client Response.
+- `M --> N`: Token from Request is sent to the Token Parser.
+- `N --> O`: Token Parser sends the parsed token to the JWT Validator.
+- `O -- Valid JWT --> P`: If the JWT is valid, send it to the Key Vault Lookup.
+- `O -- Invalid JWT --> Q`: If the JWT is invalid, return an invalid token.
+- `P -- Key Found --> R`: If the key is found, send it to the Signature Verification.
+- `P -- Key Not Found --> Q`: If the key is not found, return an invalid token.
+- `R -- Signature Valid --> S`: If the signature is valid, return a valid token.
+- `R -- Signature Invalid --> Q`: If the signature is invalid, return an invalid token.
+- `Q --> E`: Return Invalid sends the response back to the Token Validation Service in the API Gateway.
+- `S --> E`: Return Valid sends the response back to the Token Validation Service in the API Gateway.
+
+## Repository Context & Terminology
+- **API Gateway**: A service that acts as a single entry point for client requests, routing them to the appropriate backend services.
+- **JWT (JSON Web Token)**: A standard for securely transmitting information between parties as a JSON object.
+- **Key Vault**: A secure storage for cryptographic keys, secrets, and certificates.
+- **Authentication**: The process of verifying the identity of a user or service.
+- **Authorization**: The process of determining whether a user or service has permission to access a resource.
+- **Upstream Service**: A backend service that the API Gateway routes requests to.
+- **Request Transformer**: A component that modifies the request before sending it to the upstream service.
+- **Response Transformer**: A component that modifies the response from the upstream service before sending it to the client.
+
+## High-Density QA Ground Truth Summary
+The API Gateway process begins with a "Client Request" (A), which is then routed by the "Request Router" (B) based on the request path. The "Authentication Handler" (C) checks for the presence of a token. If no token is found, a "Return 401 Unauthorized" (D) response is immediately sent back to the client. If a token exists, the request proceeds to the "Token Validation Service" (E). Within the Token Validation Service, the "Token from Request" (M) is parsed by the "Token Parser" (N), and then validated by the "JWT Validator" (O). If the JWT is invalid, "Return Invalid" (Q) sends an error back to the API Gateway. A valid JWT triggers a "Key Vault Lookup" (P); if the key is not found, "Return Invalid" (Q) is triggered. If the key is found, "Signature Verification" (R) occurs. A valid signature leads to "Return Valid" (S), while an invalid signature leads to "Return Invalid" (Q). Back in the API Gateway, a valid token leads to the "Authorization Service" (F). If authorized, the "Request Transformer" (G) modifies the request before routing to either "Upstream Service A" (I) or "Upstream Service B" (J), based on configured routes. The responses from these services are then transformed by "Response Transformer A" (K) or "Response Transformer B" (L), respectively, before being sent as a "Client Response" (Z). If the Authorization Service determines the request is unauthorized, a "Return 403 Forbidden" (H) response is sent to the client. The API Gateway thus handles request routing, authentication, authorization, and response transformation, ensuring secure and controlled access to backend services.

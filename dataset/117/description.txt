@@ -1,0 +1,67 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the operational flow of a trading bot or automated trading system. It depicts the sequence of steps involved in initializing the system, monitoring market data, identifying trading opportunities, executing trades, and managing positions. The diagram serves as a visual representation of the bot's decision-making process and execution logic.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It represents a sequential process with some parallel monitoring and decision branching. The start node is "Start," and the end node is "Jupiter sell path," with an alternative "Notify only" end node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Initialization, Monitoring, Analysis, Execution, and Post-Execution.
+
+## Node-by-Node Description
+- **A / Start**: The starting point of the trading bot's process. visible in diagram; no further repository context available.
+- **B / Load .env**: Loads environment variables, likely containing API keys, configuration settings, and other sensitive information. visible in diagram; no further repository context available.
+- **C / Init RPC, Yellowstone, ZeroSlot, Wallet**: Initializes the Remote Procedure Call (RPC) connection, Yellowstone client, ZeroSlot client, and the wallet. visible in diagram; no further repository context available.
+- **D / Start Blockhash Processor**: Starts the blockhash processor, which is likely responsible for fetching and processing blockhash data from the blockchain. visible in diagram; no further repository context available.
+- **E / Init Token Account Cache**: Initializes the token account cache, which stores information about token accounts to improve performance. visible in diagram; no further repository context available.
+- **F / Start Cache Maintenance**: Starts the cache maintenance process, which is responsible for keeping the token account cache up-to-date. visible in diagram; no further repository context available.
+- **G / Init Selling Engine**: Initializes the selling engine, which is responsible for executing sell orders. visible in diagram; no further repository context available.
+- **H / Run monitors in parallel**: Runs the target wallet monitoring and DEX monitoring processes in parallel. visible in diagram; no further repository context available.
+- **I / Target Wallet Monitoring**: Monitors specific target wallets for relevant transactions. visible in diagram; no further repository context available.
+- **J / DEX Monitoring**: Monitors decentralized exchanges (DEXs) for relevant market data and trading opportunities. visible in diagram; no further repository context available.
+- **K / Parse txs/logs**: Parses transactions and logs from the monitored wallets and DEXs. visible in diagram; no further repository context available.
+- **L / Protocol match**: Checks if the parsed transactions/logs match a predefined protocol. visible in diagram; no further repository context available.
+- **M / Execute swap**: Executes a swap on a DEX. visible in diagram; no further repository context available.
+- **N / Notify only**: Sends a notification without executing a trade. visible in diagram; no further repository context available.
+- **O / Update selling / copy-sell**: Updates selling parameters or initiates a copy-sell strategy. visible in diagram; no further repository context available.
+- **P / Dynamic trailing / TP / SL**: Implements dynamic trailing stop-loss (SL) and take-profit (TP) orders. visible in diagram; no further repository context available.
+- **Q / Jupiter sell path**: Executes a sell order using the Jupiter aggregator. visible in diagram; no further repository context available.
+- **R / Update 20-slot time series**: Updates a time series data structure with 20 slots, likely used for technical analysis. visible in diagram; no further repository context available.
+- **S / Bottom detected?**: Checks if a market bottom has been detected based on the time series data. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Starts the process and loads environment variables.
+- `B --> C`: Initializes RPC, Yellowstone, ZeroSlot, and Wallet.
+- `C --> D`: Starts the blockhash processor.
+- `D --> E`: Initializes the token account cache.
+- `E --> F`: Starts cache maintenance.
+- `F --> G`: Initializes the selling engine.
+- `G --> H`: Starts running monitors in parallel.
+- `H --> I`: Starts target wallet monitoring.
+- `H --> J`: Starts DEX monitoring.
+- `I --> K`: Parses transactions and logs from target wallets.
+- `J --> K`: Parses transactions and logs from DEXs.
+- `K --> L`: Checks for a protocol match.
+- `L -- PumpFun --> M`: Executes a swap if the protocol matches.
+- `L -- PumpSwap --> N`: Notifies only if the protocol does not match.
+- `M --> O`: Updates selling parameters or initiates a copy-sell strategy after a swap.
+- `O --> P`: Implements dynamic trailing stop-loss and take-profit orders.
+- `P --> Q`: Executes a sell order using the Jupiter aggregator.
+- `K --> R`: Updates the 20-slot time series data.
+- `R --> S`: Checks if a market bottom has been detected.
+- `S -- Yes --> M`: Executes a swap if a bottom is detected.
+- `S -- No --> H`: Continues running monitors if a bottom is not detected.
+- `N --> Q`: Executes a sell order using the Jupiter aggregator after notifying only.
+- Paths converge at node K, where the outputs of Target Wallet Monitoring (I) and DEX Monitoring (J) are combined for parsing.
+
+## Repository Context & Terminology
+- **RPC (Remote Procedure Call)**: A protocol that allows a program to request a service from a program located on another computer on a network.
+- **Yellowstone**: visible in diagram; no further repository context available.
+- **ZeroSlot**: visible in diagram; no further repository context available.
+- **Wallet**: A digital wallet used to store and manage cryptocurrency assets.
+- **Blockhash**: A unique identifier for a block in a blockchain.
+- **DEX (Decentralized Exchange)**: A cryptocurrency exchange that operates without a central authority.
+- **Jupiter**: A swap aggregator on Solana.
+- **TP/SL (Take Profit / Stop Loss)**: Order types used to automatically close a position when a certain profit level is reached (TP) or to limit potential losses (SL).
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "Start" node, immediately followed by "Load .env" to load environment variables, crucial for configuring the bot with necessary API keys and settings. Next, the system initializes essential components like the RPC connection, Yellowstone client, ZeroSlot client, and the wallet. The "Start Blockhash Processor" and "Init Token Account Cache" nodes prepare the system for efficient blockchain data handling. The "Run monitors in parallel" node initiates concurrent monitoring of target wallets and DEXs, feeding transaction data into the "Parse txs/logs" node. A key decision point is "Protocol match," which, if positive ("PumpFun"), leads to "Execute swap," followed by "Update selling / copy-sell" and "Dynamic trailing / TP / SL" for position management, ultimately reaching the "Jupiter sell path" end node. If "Protocol match" is negative ("PumpSwap"), the flow goes to "Notify only" and then to "Jupiter sell path". Another branch, "Bottom detected?", determines whether to execute a swap based on time series analysis; if a bottom is detected ("Yes"), a swap is executed; otherwise ("No"), the monitoring loop continues. The "Jupiter sell path" and "Notify only" nodes represent the possible end states of the process. The system uses RPC for blockchain interaction and manages risk with dynamic trailing stop-loss and take-profit orders.

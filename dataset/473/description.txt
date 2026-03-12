@@ -1,0 +1,45 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the flow of data and API calls within a web application. It depicts the interaction between the client-side browser, CDN, storage, API components, database, and AI service. The diagram serves as a high-level overview of the system's architecture, outlining the dependencies and communication pathways between different services.
+
+## Overall Layout
+The diagram flows from left to right. It is divided into several subgraphs representing different components of the system. The start nodes are the "Browser" and the end nodes are "MongoDB Atlas" and "OpenAI API".
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Client**: Represents the user's browser.
+- **CDN**: Represents the Content Delivery Network.
+- **Storage**: Represents the storage solution for static assets.
+- **API**: Represents the backend API.
+- **DB**: Represents the database.
+- **AI**: Represents the AI service.
+
+## Node-by-Node Description
+- **Browser / React + SWR**: Represents the client-side browser application built with React and using SWR for data fetching. visible in diagram; no further repository context available.
+- **CloudFront CDN**: Represents the CloudFront Content Delivery Network, used for caching and serving static assets. visible in diagram; no further repository context available.
+- **S3 Bucket / Static Export**: Represents the S3 bucket used for storing static assets, which are exported for serving via the CDN. visible in diagram; no further repository context available.
+- **API Gateway**: Represents the API Gateway, which acts as a single entry point for all API requests. visible in diagram; no further repository context available.
+- **Lambda - Express API**: Represents the backend API implemented using Lambda and Express.js. visible in diagram; no further repository context available.
+- **MongoDB Atlas**: Represents the MongoDB Atlas database used for storing application data. visible in diagram; no further repository context available.
+- **OpenAI API**: Represents the OpenAI API used for AI-related tasks. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Browser --> CloudFront CDN`: Represents the HTTPS request from the browser to the CDN for static assets.
+- `CloudFront CDN --> S3 Bucket`: Represents the CDN serving static assets from the S3 bucket.
+- `Browser --> API Gateway`: Represents the API calls from the browser to the API Gateway.
+- `API Gateway --> Lambda - Express API`: Represents the routing of API requests from the API Gateway to the Lambda function.
+- `Lambda - Express API --> MongoDB Atlas`: Represents the Lambda function interacting with the MongoDB Atlas database.
+- `Lambda - Express API --> OpenAI API`: Represents the Lambda function interacting with the OpenAI API.
+
+## Repository Context & Terminology
+- **React**: A JavaScript library for building user interfaces.
+- **SWR**: A React Hooks library for remote data fetching.
+- **CDN (Content Delivery Network)**: A geographically distributed network of servers that caches static content to reduce latency and improve performance.
+- **S3 Bucket**: Amazon Simple Storage Service (S3) is an object storage service.
+- **API Gateway**: A service that acts as a single entry point for all API requests, providing routing, authentication, and other functionalities.
+- **Lambda**: A serverless compute service that lets you run code without provisioning or managing servers.
+- **Express API**: A minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
+- **MongoDB Atlas**: A fully-managed cloud database service.
+- **OpenAI API**: Provides access to powerful AI models developed by OpenAI.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with the client's browser, built using React and SWR, which initiates two primary flows. First, it sends HTTPS requests to the CloudFront CDN to retrieve static assets, which are served from an S3 bucket configured for static export. Second, the browser makes API calls to the API Gateway. The API Gateway then routes these requests to a Lambda function running an Express API. This Lambda function serves as the core backend logic, interacting with both a MongoDB Atlas database for persistent data storage and the OpenAI API for AI-related functionalities. The Lambda function's interaction with MongoDB Atlas and OpenAI API represents the convergence of the API's data processing and external service integration. The use of React and SWR on the client side indicates a modern approach to UI development with efficient data fetching. The architecture leverages serverless technologies like Lambda and managed services like MongoDB Atlas to reduce operational overhead.

@@ -1,0 +1,60 @@
+graph TD
+    subgraph Inventory Deduction and Rollback System
+    A[Order Received] --> B{Inventory Available?};
+    B -- Yes --> C[Reserve Inventory];
+    C --> D{Payment Successful?};
+    D -- Yes --> E[Deduct Inventory];
+    E --> F[Create Shipment Record];
+    F --> G[Shipment Scheduled];
+    G --> H[Order Fulfilled]
+    D -- No --> I[Release Reserved Inventory];
+    I --> J[Notify Customer: Payment Failed];
+    B -- No --> K[Notify Customer: Out of Stock];
+    K --> L[Send Low Stock Alert];
+
+    subgraph Rollback Process
+    H -->|Event: Shipment Failure| M[Initiate Rollback];
+    M --> N{Payment Reversed?};
+    N -- Yes --> O[Increase Inventory];
+    O --> P[Update Inventory Records];
+    P --> Q[Mark Order as Failed];
+    Q --> R[Notify Customer: Order Cancelled];
+    N -- No --> S[Escalate Rollback Failure];
+    S --> T[Manual Intervention Required];
+    end
+
+    subgraph Inventory Service
+    O -->|To Inventory Service| U[Inventory Update API];
+    E -->|To Inventory Service| V[Inventory Update API];
+    I -->|To Inventory Service| W[Inventory Update API];
+    end
+
+    subgraph Notification Service
+    J -->|To Notification Service| X[Send Notification API];
+    K -->|To Notification Service| Y[Send Notification API];
+    R -->|To Notification Service| Z[Send Notification API];
+    L -->|To Notification Service| AA[Send Notification API];
+    end
+
+    subgraph Database
+    P -->|To Database| BB[Inventory Table];
+    F -->|To Database| CC[Shipment Table];
+    Q -->|To Database| DD[Order Table];
+    end
+
+    subgraph Payment Gateway
+    D -->|To Payment Gateway| EE[Authorize Payment API];
+    N -->|To Payment Gateway| FF[Reverse Payment API];
+    end
+
+    end
+
+    classDef success fill:#ccffcc,stroke:#333,stroke-width:2px;
+    classDef failure fill:#ffcccc,stroke:#333,stroke-width:2px;
+    classDef pending fill:#ffffcc,stroke:#333,stroke-width:2px;
+
+    class A,C,E,F,G,O,P success;
+    class H success;
+    class I,J,K,L,Q,R failure;
+    class S,T failure;
+    class B,D,N pending;

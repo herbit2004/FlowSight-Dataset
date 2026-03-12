@@ -1,0 +1,73 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the customer order flow and payment processing within an e-commerce system. It outlines the steps involved in creating an order, validating details, processing payment, and handling post-payment execution, including error scenarios. The diagram serves as a visual representation of the order processing logic.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TB), with three main subgraphs representing distinct stages of the order processing: Customer Order Flow, Payment Processing, and Post-Payment Execution. The process starts with "Customer Order Creation" and ends with "Order Completion" or "Display Error to Customer."
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Customer Order Flow**: Encompasses the initial steps of order creation, validation, inventory check, and order total calculation.
+- **Payment Processing**: Details the payment method selection, authorization request, and payment capture or decline.
+- **Post-Payment Execution**: Covers the steps taken after payment, including inventory updates, shipping notifications, and handling payment failures.
+
+## Node-by-Node Description
+- **A / Customer Order Creation**: The starting point of the order process, where the customer initiates an order. visible in diagram; no further repository context available.
+- **B / Validate Order Details**: Checks the validity of the order details provided by the customer. visible in diagram; no further repository context available.
+- **C / Inventory Check & Reservation**: Verifies if sufficient inventory is available and reserves the required items. visible in diagram; no further repository context available.
+- **D / Calculate Order Total**: Calculates the total amount for the order, including taxes and shipping costs. visible in diagram; no further repository context available.
+- **E / Generate Order ID**: Creates a unique identifier for the order. visible in diagram; no further repository context available.
+- **F / Present Payment Options**: Displays the available payment methods to the customer. visible in diagram; no further repository context available.
+- **G / Customer Selects Payment Method**: The customer chooses their preferred payment method. visible in diagram; no further repository context available.
+- **H / Card Payment Gateway**: Handles credit card payments through a secure gateway. visible in diagram; no further repository context available.
+- **I / PayPal API**: Processes payments through the PayPal API. visible in diagram; no further repository context available.
+- **J / Internal Credit System**: Manages payments using store credit. visible in diagram; no further repository context available.
+- **K / Authorization Request**: Sends a request to authorize the payment. visible in diagram; no further repository context available.
+- **L / Payment Capture**: Captures the authorized payment. visible in diagram; no further repository context available.
+- **M / Payment Declined Notification**: Notifies the customer if the payment is declined. visible in diagram; no further repository context available.
+- **N / Order Confirmation**: Confirms the order to the customer. visible in diagram; no further repository context available.
+- **O / Update Inventory Levels**: Updates the inventory levels after a successful order. visible in diagram; no further repository context available.
+- **P / Send Shipping Notification**: Sends a notification to the customer when the order is shipped. visible in diagram; no further repository context available.
+- **Q / Order Completion**: Marks the order as complete. visible in diagram; no further repository context available.
+- **R / Rollback Inventory Reservation**: Releases the reserved inventory if the payment fails. visible in diagram; no further repository context available.
+- **S / Notify Customer of Payment Failure**: Informs the customer about the payment failure. visible in diagram; no further repository context available.
+- **Z / Display Error to Customer**: Displays an error message to the customer. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Order creation initiates order detail validation.
+- `B -- Valid --> C`: Order details are valid, proceed to inventory check.
+- `B -- Invalid --> Z`: Order details are invalid, display error to customer.
+- `C -- Sufficient Inventory --> D`: Sufficient inventory is available, calculate order total.
+- `C -- Insufficient Inventory --> Z`: Insufficient inventory, display error to customer.
+- `D --> E`: Calculate order total, then generate order ID.
+- `E --> F`: Generate order ID, then present payment options.
+- `F --> G`: Present payment options, customer selects payment method.
+- `G -- Credit Card --> H`: Customer selects credit card payment.
+- `G -- PayPal --> I`: Customer selects PayPal payment.
+- `G -- Store Credit --> J`: Customer selects store credit payment.
+- `H --> K`: Card payment gateway sends authorization request.
+- `I --> K`: PayPal API sends authorization request.
+- `J --> K`: Internal credit system sends authorization request.
+- `K -- Approved --> L`: Authorization request approved, capture payment.
+- `K -- Declined --> M`: Authorization request declined, send payment declined notification.
+- `L --> N`: Payment capture successful, send order confirmation.
+- `N --> O`: Order confirmation, update inventory levels.
+- `O --> P`: Update inventory levels, send shipping notification.
+- `P --> Q`: Send shipping notification, order completion.
+- `M --> R`: Payment declined, rollback inventory reservation.
+- `R --> S`: Rollback inventory reservation, notify customer of payment failure.
+- `S --> Z`: Notify customer of payment failure, display error to customer.
+- `C -- Insufficient Inventory --> Z`: Insufficient inventory, display error to customer.
+- `B -- Invalid --> Z`: Invalid order details, display error to customer.
+
+## Repository Context & Terminology
+- **Customer Order Creation**: The initial step where a customer places an order, typically involving adding items to a cart and providing shipping information.
+- **Validate Order Details**: Verifying the accuracy and completeness of the order information, such as address, payment details, and item availability.
+- **Inventory Check & Reservation**: Checking if the requested items are in stock and reserving them to prevent overselling.
+- **Payment Gateway**: A service that processes credit card payments securely.
+- **PayPal API**: An interface for integrating PayPal payments into the system.
+- **Authorization Request**: A request to the payment provider to verify the customer's payment method and authorize the transaction.
+- **Payment Capture**: The process of collecting the authorized funds from the customer's account.
+- **Rollback Inventory Reservation**: Releasing the reserved inventory back into the available stock if the payment fails.
+
+## High-Density QA Ground Truth Summary
+The customer order flow begins with "Customer Order Creation," which leads to "Validate Order Details." If the order details are invalid, the process branches to "Display Error to Customer," terminating the flow. If the details are valid, the flow proceeds to "Inventory Check & Reservation." If there is insufficient inventory, the flow branches to "Display Error to Customer." With sufficient inventory, the system calculates the order total and generates an order ID before presenting payment options to the customer. The customer selects a payment method (Credit Card, PayPal, or Store Credit), triggering an "Authorization Request." If the authorization is approved, "Payment Capture" occurs, followed by "Order Confirmation." If declined, a "Payment Declined Notification" is sent. Post-payment, the system updates inventory levels and sends a shipping notification, culminating in "Order Completion." In case of payment failure, the system rolls back the inventory reservation and notifies the customer, ultimately displaying an error. The "Payment Gateway" and "PayPal API" are external services used for processing payments, ensuring secure transactions.

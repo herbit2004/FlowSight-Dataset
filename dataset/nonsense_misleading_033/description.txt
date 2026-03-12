@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the process flow of an order fulfillment system. It outlines the steps involved from receiving an order to its completion, including payment processing, inventory management, shipping, and customer interaction. This diagram serves as a visual representation of the order processing workflow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with a single "Start: Order Received" node and progresses through various stages until reaching the "Order Completed" node. The diagram contains decision diamonds that create branching paths based on certain conditions.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Initiation & Payment, Order Fulfillment, Delivery, Customer Interaction, Issue Resolution, and Completion.
+
+## Node-by-Node Description
+- **A / Start: Order Received**: Represents the beginning of the order processing workflow, when an order is initially received. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Send Payment Reminder**: A step to send a reminder to the customer if the payment has not been received. visible in diagram; no further repository context available.
+- **F / Order Shipped**: Indicates that the order has been shipped to the customer. visible in diagram; no further repository context available.
+- **I / Delivery Attempted?**: A decision point to check if a delivery attempt has been made. visible in diagram; no further repository context available.
+- **J / Notify Customer**: A step to notify the customer if the delivery attempt was unsuccessful. visible in diagram; no further repository context available.
+- **K / Customer Received?**: A decision point to check if the customer has received the order. visible in diagram; no further repository context available.
+- **M / Return to Sender**: Indicates that the order is being returned to the sender. visible in diagram; no further repository context available.
+- **D / Inventory Check**: A step to check the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **E / Order Packaging**: A step to package the order for shipping. visible in diagram; no further repository context available.
+- **G / Shipping Address Valid?**: A decision point to check if the shipping address is valid. visible in diagram; no further repository context available.
+- **H / Cancel Order**: Indicates that the order has been cancelled. visible in diagram; no further repository context available.
+- **L / Order Completed**: Represents the end of the order processing workflow, when the order is successfully completed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The order processing starts and proceeds to check if payment is received.
+- `B -- No --> C`: If payment is not received, a payment reminder is sent.
+- `C --> F`: After sending the payment reminder, the order is shipped. Note: This is a reversed sequence; payment should be received before shipping.
+- `B -- Yes --> D`: If payment is received, an inventory check is performed.
+- `D -- Available --> E`: If the inventory is available, the order is packaged.
+- `E --> G`: After packaging, the shipping address is validated.
+- `G -- No --> H`: If the shipping address is invalid, the order is cancelled. Note: This should lead to address correction, not cancellation.
+- `G -- Yes --> F`: If the shipping address is valid, the order is shipped.
+- `F --> I`: After shipping, a delivery attempt is made.
+- `I -- No --> J`: If the delivery attempt fails, the customer is notified.
+- `J --> I`: Notifying the customer loops back to Delivery Attempted. Note: This should trigger another delivery attempt, not loop back directly.
+- `I -- Yes --> K`: If the delivery attempt is successful, it is checked if the customer received the order.
+- `K -- Yes --> L`: If the customer received the order, the order is completed.
+- `K -- No --> M`: If the customer did not receive the order, it is returned to the sender.
+- `M --> D`: Returning to sender leads back to inventory check. Note: This should lead to customer service/investigation, not automatically restocking.
+- `H --> L`: Cancelling the order leads to order completed. Note: This is contradictory; a cancelled order should not be marked as completed.
+- `L --> A`: Order completed leads back to order received. Note: This creates an illogical loop; an order should not re-trigger the process.
+
+## Repository Context & Terminology
+- **Order Received**: The initial event that triggers the order processing workflow. In standard practice, this would involve capturing order details and initiating payment processing. In this diagram, it's simply the starting point.
+- **Payment Received?**: A check to determine if the payment for the order has been successfully processed. In standard practice, this would involve verifying payment details with a payment gateway. In this diagram, it's a simple boolean check.
+- **Send Payment Reminder**: An action to remind the customer to make the payment. In standard practice, this would involve sending an email or SMS notification. In this diagram, it's a simple task.
+- **Order Shipped**: An event indicating that the order has been dispatched for delivery. In standard practice, this would involve generating a shipping label and updating the order status. In this diagram, it occurs even before payment in one branch.
+- **Delivery Attempted?**: A check to determine if a delivery attempt has been made. In standard practice, this would involve tracking the delivery status with the shipping carrier. In this diagram, it's a simple boolean check.
+- **Customer Received?**: A check to determine if the customer has received the order. In standard practice, this would involve confirming delivery with the customer or tracking the delivery status. In this diagram, it's a simple boolean check.
+- **Shipping Address Valid?**: A check to determine if the shipping address is valid. In standard practice, this would involve verifying the address format and existence. In this diagram, an invalid address leads to order cancellation, which is incorrect.
+- **Order Completed**: The final state indicating that the order has been successfully fulfilled. In standard practice, this would involve updating the order status and sending a confirmation email. In this diagram, it's reached even after cancellation, which is contradictory.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Start: Order Received," immediately branching to "Payment Received?". If 'No', a "Send Payment Reminder" is triggered, followed by "Order Shipped" (an incorrect sequence). If 'Yes', an "Inventory Check" occurs. If inventory is "Available", "Order Packaging" proceeds, followed by a "Shipping Address Valid?" check. A 'Yes' outcome from address validation leads to "Order Shipped", while a 'No' outcome incorrectly cancels the order via "Cancel Order". Post "Order Shipped", "Delivery Attempted?" is evaluated. A 'No' outcome triggers "Notify Customer", looping back to "Delivery Attempted?" (an illogical loop). A 'Yes' outcome leads to "Customer Received?". If 'Yes', the process ends at "Order Completed". If 'No', the order is "Return to Sender", looping back to "Inventory Check" (incorrectly restocking). Critically, "Cancel Order" also leads to "Order Completed" (contradictory), and "Order Completed" loops back to "Start: Order Received" (illogical re-trigger). The diagram lacks a confirmation email step and contains reversed sequences, swapped branch outcomes, wrong causal directions, and contradictory edge labels, deviating significantly from standard order processing practices.

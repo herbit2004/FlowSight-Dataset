@@ -1,0 +1,46 @@
+graph TD
+    subgraph CDN Origin Fetch Scenario
+        A[Client Request] --> B{Cache Hit?};
+        B -- Yes --> C[Deliver Cached Content];
+        B -- No --> D[Origin Fetch Initiator];
+
+        D --> E{Request Routing Logic};
+        E --> F[Select Origin Server];
+        F --> G[Origin Server Health Check];
+
+        G -- Healthy --> H[Construct Origin Request];
+        G -- Unhealthy --> I[Failover to Secondary Origin];
+        I --> J[Secondary Origin Health Check];
+
+        H --> K[Send Request to Origin];
+        K --> L[Origin Response Received];
+        L --> M{Response Validation};
+
+        J -- Healthy --> H;
+	J -- Unhealthy --> N[Error: All Origins Down];
+	N --> O[Return 503 Error];
+
+        M -- Valid --> P[Cache Response];
+        M -- Invalid --> Q[Error: Invalid Response];
+	Q --> O;
+
+        P --> R[Store in Cache];
+        R --> S[Deliver Content to Client];
+	S --> T[Log Transaction];
+        L --> S;
+	C --> T;
+
+	subgraph Secondary Origin
+	X[Secondary Origin Server];
+	I -- Secondary Origin Selected --> X;
+	end
+
+	subgraph Origin System
+	W[Primary Origin Server];
+	end
+
+	F -- Select Origin --> W;
+    end
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class N,O,Q error

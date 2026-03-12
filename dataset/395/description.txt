@@ -1,0 +1,105 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the architecture and process flow of a route planning system. It depicts the various layers involved in processing a user query, incorporating real-time traffic data, and generating a final route. The diagram serves as a high-level overview of the system's components and their interactions.
+
+## Overall Layout
+The diagram is laid out from left to right, with the Preprocessing Layer on the right, followed by the Query Processing Layer, Fallback Layer, Real-time Layer, and Post-processing Layer. The flow starts with map data preprocessing and a user query, and ends with the generation of a final route.
+
+## Subgraphs / Stages
+The diagram is divided into five distinct layers:
+- **Preprocessing Layer**: Handles the initial processing of map data.
+- **Query Processing Layer**: Processes the user's route query.
+- **Real-time Layer**: Incorporates live traffic data into the route planning process.
+- **Fallback Layer**: Provides alternative routing strategies in case of timeouts or failures.
+- **Post-processing Layer**: Performs final adjustments and calculations to generate the final route.
+
+## Node-by-Node Description
+- **MAP_DATA / Map Data**: Represents the map data used for route planning, including OSM (OpenStreetMap) and proprietary data.
+  visible in diagram; no further repository context available.
+- **GRAPH_BUILD / Graph Construction**: Represents the construction of a graph from the map data, where nodes represent intersections and edges represent roads.
+  visible in diagram; no further repository context available.
+- **CH_PREP / Contraction Hierarchies Preprocessing**: Represents the preprocessing step for Contraction Hierarchies, an algorithm used for faster route planning.
+  visible in diagram; no further repository context available.
+- **ARCFLAGS / Arc Flags Computation**: Represents the computation of arc flags, a technique used to optimize route planning.
+  visible in diagram; no further repository context available.
+- **USER_QUERY / User Query**: Represents the initial user query, specifying the start (A) and end (B) points of the route.
+  visible in diagram; no further repository context available.
+- **REGION_CHECK / Same region?**: A decision point that checks if the start and end points are in the same region.
+  visible in diagram; no further repository context available.
+- **LOCAL_ALG / Local Dijkstra**: Represents the use of the Dijkstra algorithm for route planning in a small area.
+  visible in diagram; no further repository context available.
+- **CH_QUERY / CH Query**: Represents the use of a Contraction Hierarchies query for route planning.
+  visible in diagram; no further repository context available.
+- **CH_PATH / Path in CH Graph**: Represents the path found in the Contraction Hierarchies graph.
+  visible in diagram; no further repository context available.
+- **UNPACK / Unpack Shortcuts**: Represents the unpacking of shortcuts in the Contraction Hierarchies path.
+  visible in diagram; no further repository context available.
+- **TRAFFIC_DATA / Live Traffic**: Represents live traffic data from sensors and crowd-sourced information.
+  visible in diagram; no further repository context available.
+- **ML_MODEL / ML Traffic Prediction**: Represents the use of a machine learning model to predict traffic conditions.
+  visible in diagram; no further repository context available.
+- **WEIGHT_UPDATE / Edge Weight Updates**: Represents the updating of edge weights based on traffic conditions.
+  visible in diagram; no further repository context available.
+- **RECOMPUTE / Significant change?**: A decision point that checks if there is a significant change in traffic conditions.
+  visible in diagram; no further repository context available.
+- **REROUTE / SPFA Incremental Update**: Represents the use of the Shortest Path Faster Algorithm (SPFA) for incremental route updates.
+  visible in diagram; no further repository context available.
+- **KEEP / Keep Current Route**: Represents the decision to keep the current route if there is no significant change in traffic conditions.
+  visible in diagram; no further repository context available.
+- **TIMEOUT / Timeout?**: A decision point that checks if the route planning process has timed out.
+  visible in diagram; no further repository context available.
+- **GREEDY / Greedy Closest Next**: Represents a greedy algorithm for route planning, selecting the closest next node.
+  visible in diagram; no further repository context available.
+- **SUCCESS / Route Found**: Represents the successful finding of a route.
+  visible in diagram; no further repository context available.
+- **FAIL / Failed?**: A decision point that checks if the route planning process has failed.
+  visible in diagram; no further repository context available.
+- **STANDARD_DIJ / Standard Dijkstra**: Represents the use of the standard Dijkstra algorithm for route planning.
+  visible in diagram; no further repository context available.
+- **TURN_COST / Turn Restrictions**: Represents the adjustment of costs based on turn restrictions.
+  visible in diagram; no further repository context available.
+- **LANE_GUIDE / Lane Guidance**: Represents the generation of lane guidance information.
+  visible in diagram; no further repository context available.
+- **ETA / ETA Calculation**: Represents the calculation of the estimated time of arrival (ETA) using historical data.
+  visible in diagram; no further repository context available.
+- **FINAL / Final Route**: Represents the final route generated by the system.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `MAP_DATA --> GRAPH_BUILD`: Map data is used to construct the graph.
+- `GRAPH_BUILD --> CH_PREP`: The constructed graph is preprocessed using Contraction Hierarchies.
+- `GRAPH_BUILD --> ARCFLAGS`: Arc flags are computed based on the constructed graph.
+- `USER_QUERY --> REGION_CHECK`: A user query is submitted for route planning.
+- `REGION_CHECK -- Yes --> LOCAL_ALG`: If the start and end points are in the same region, the Local Dijkstra algorithm is used.
+- `REGION_CHECK -- No --> CH_QUERY`: If the start and end points are not in the same region, the CH Query algorithm is used.
+- `CH_QUERY --> CH_PATH`: A path is found in the Contraction Hierarchies graph.
+- `CH_PATH --> UNPACK`: Shortcuts in the path are unpacked.
+- `TRAFFIC_DATA --> ML_MODEL`: Live traffic data is fed into a machine learning model for traffic prediction.
+- `ML_MODEL --> WEIGHT_UPDATE`: Edge weights are updated based on traffic predictions.
+- `WEIGHT_UPDATE --> RECOMPUTE`: A check is performed to see if there is a significant change in traffic conditions.
+- `RECOMPUTE -- Yes --> REROUTE`: If there is a significant change, the route is recomputed using SPFA.
+- `RECOMPUTE -- No --> KEEP`: If there is no significant change, the current route is kept.
+- `LOCAL_ALG --> TIMEOUT`: The Local Dijkstra algorithm may time out.
+- `TIMEOUT -- Yes --> GREEDY`: If the Local Dijkstra algorithm times out, a greedy algorithm is used.
+- `TIMEOUT -- No --> SUCCESS`: If the Local Dijkstra algorithm finds a route, the route is considered successful.
+- `CH_QUERY --> FAIL`: The CH Query algorithm may fail.
+- `FAIL -- Yes --> STANDARD_DIJ`: If the CH Query algorithm fails, the standard Dijkstra algorithm is used.
+- `FAIL -- No --> CH_PATH`: If the CH Query algorithm succeeds, a path is found in the CH graph.
+- `UNPACK --> TURN_COST`: Unpacked shortcuts are used for turn restriction cost adjustment.
+- `TURN_COST --> LANE_GUIDE`: Turn restriction cost adjustments are used for lane guidance generation.
+- `LANE_GUIDE --> ETA`: Lane guidance is used for ETA calculation.
+- `ETA --> FINAL`: The ETA calculation leads to the final route.
+- `REROUTE --> FINAL`: The recomputed route becomes the final route.
+- `KEEP --> FINAL`: The kept current route becomes the final route.
+- `SUCCESS --> TURN_COST`: A successful route is used for turn restriction cost adjustment.
+- `GREEDY --> TURN_COST`: The greedy route is used for turn restriction cost adjustment.
+
+## Repository Context & Terminology
+- **OSM (OpenStreetMap)**: A collaborative project to create a free editable map of the world. It is often used as a source of map data for route planning applications.
+- **Contraction Hierarchies (CH)**: A speed-up technique for route planning algorithms. It preprocesses the road network to create a hierarchy of nodes, allowing for faster route calculations.
+- **Dijkstra's Algorithm**: A classic algorithm for finding the shortest path between two nodes in a graph.
+- **SPFA (Shortest Path Faster Algorithm)**: An improvement of the Bellman-Ford algorithm for computing single-source shortest paths in a directed graph. It is often used for incremental route updates.
+- **ETA (Estimated Time of Arrival)**: The predicted time at which a vehicle or person is expected to arrive at a particular destination.
+- **Arc Flags**: A technique used to precompute information about the reachability of nodes in a graph, which can then be used to speed up route planning queries.
+
+## High-Density QA Ground Truth Summary
+The route planning process begins with `USER_QUERY`, specifying start and end points. The system first checks `REGION_CHECK` whether these points are within the same region. If `Yes`, `LOCAL_ALG` (Dijkstra) is employed; if `No`, a `CH_QUERY` (Contraction Hierarchies) is initiated. The CH query can `FAIL`, triggering a fallback to `STANDARD_DIJ` (Dijkstra), or proceed to find a `CH_PATH`, which is then `UNPACK`ed. Simultaneously, `TRAFFIC_DATA` from sensors and crowdsourcing feeds into an `ML_MODEL` for traffic prediction, leading to `WEIGHT_UPDATE`s. A `RECOMPUTE` check determines if traffic changes are `Significant`. If `Yes`, `REROUTE` (SPFA) is performed; otherwise, the system `KEEP`s the current route. The `LOCAL_ALG` can `TIMEOUT`, defaulting to a `GREEDY` closest-next approach. All paths converge in the `Post-processing Layer`, starting with `TURN_COST` adjustments, followed by `LANE_GUIDE` generation, and `ETA` calculation using historical data. Finally, the `FINAL` route is generated. The use of Contraction Hierarchies (`CH_QUERY`) aims to accelerate route calculations compared to standard Dijkstra, especially for long-distance routes.

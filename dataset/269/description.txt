@@ -1,0 +1,106 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the dependencies between various Go packages and external libraries within the itch.io ecosystem. It illustrates how the `butler` command-line tool relies on other packages for tasks such as archive extraction, compression, and platform-specific operations. The diagram serves as a high-level overview of the architectural relationships between these components.
+
+## Overall Layout
+The diagram has a left-to-right orientation. The `butler` node acts as the central starting point, with arrows indicating dependencies on other packages. The diagram fans out from `butler` to various leaf nodes representing individual packages and external libraries.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into six stages:
+1. High-level packages: `hush`, `wharf`, `boar`, `go-itchio`.
+2. Mid-level packages: `savior`, `httpkit`.
+3. Leaf packages (direct deps): `headway`, `arkive`, `dash`, `elefant`, `hades`, `intact`, `lake`, `mitch`, `ox`, `pelican`, `screw`, `smaug`, `spellbook`, `wizardry`.
+4. Compression packages: `kompress`, `dskompress`, `go-brotli`, `lzma`, `randsource`.
+5. Archive extraction packages: `sevenzip-go`, `dmcunrar-go`.
+6. External native libraries: `libc7zip`.
+
+## Node-by-Node Description
+- **butler**: The itch.io command-line tool. In the repository this corresponds to the main entry point for the butler application.
+- **hush**: Installation receipts and manifests. In the repository this corresponds to the `itchio/hush` package, used for managing installation metadata.
+- **wharf**: Delta patching, binary diffing, pwr format. In the repository this corresponds to the `itchio/wharf` package, used for efficient updating of game files.
+- **boar**: Multi-format archive extraction (7z, RAR, ZIP). In the repository this corresponds to the `itchio/boar` package, used for extracting various archive formats.
+- **go-itchio**: itch.io API client library. In the repository this corresponds to the `itchio/go-itchio` package, used for interacting with the itch.io API.
+- **savior**: Archive extraction and seeking. In the repository this corresponds to the `itchio/savior` package, used for extracting data from archives.
+- **httpkit**: HTTP utilities and streaming. In the repository this corresponds to the `itchio/httpkit` package, used for handling HTTP requests and streaming data.
+- **headway**: Progress tracking and unit formatting. In the repository this corresponds to the `itchio/headway` package, used for displaying progress information.
+- **arkive**: ZIP/archive format support. In the repository this corresponds to the `itchio/arkive` package, used for working with ZIP and other archive formats.
+- **dash**: Game configuration and metadata. In the repository this corresponds to the `itchio/dash` package, used for managing game configuration files.
+- **elefant**: ELF binary parser (Linux). In the repository this corresponds to the `itchio/elefant` package, used for parsing ELF binaries on Linux.
+- **hades**: SQLite schema and queries. In the repository this corresponds to the `itchio/hades` package, used for managing SQLite databases.
+- **intact**: File integrity verification. In the repository this corresponds to the `itchio/intact` package, used for verifying file integrity.
+- **lake**: Binary storage pools, file structure tracking. In the repository this corresponds to the `itchio/lake` package, used for managing binary data.
+- **mitch**: Test fixtures (dev only). In the repository this corresponds to the `itchio/mitch` package, used for providing test data.
+- **ox**: OS abstractions (registry, system calls). In the repository this corresponds to the `itchio/ox` package, used for OS-specific operations.
+- **pelican**: PE binary parser (Windows). In the repository this corresponds to the `itchio/pelican` package, used for parsing PE binaries on Windows.
+- **screw**: Game manifest utilities. In the repository this corresponds to the `itchio/screw` package, used for working with game manifests.
+- **smaug**: Windows installer/runtime detection. In the repository this corresponds to the `itchio/smaug` package, used for detecting Windows installers and runtimes.
+- **spellbook**: File magic number detection. In the repository this corresponds to the `itchio/spellbook` package, used for identifying file types based on magic numbers.
+- **wizardry**: Binary file utilities. In the repository this corresponds to the `itchio/wizardry` package, used for various binary file operations.
+- **kompress**: Compression abstraction layer. In the repository this corresponds to the `itchio/kompress` package, used as an abstraction layer for compression algorithms.
+- **dskompress**: Decompression utilities. In the repository this corresponds to the `itchio/dskompress` package, used for decompression operations.
+- **go-brotli**: Brotli compression support. In the repository this corresponds to the `itchio/go-brotli` package, used for Brotli compression.
+- **lzma**: LZMA compression support. In the repository this corresponds to the `itchio/lzma` package, used for LZMA compression.
+- **randsource**: Random source utilities. In the repository this corresponds to the `itchio/randsource` package, used for generating random data.
+- **sevenzip-go**: 7-zip library bindings. In the repository this corresponds to the `itchio/sevenzip-go` package, used for interfacing with the 7-zip library.
+- **dmcunrar-go**: RAR decompression support. In the repository this corresponds to the `itchio/dmcunrar-go` package, used for RAR decompression.
+- **libc7zip**: C wrapper for 7-zip. In the repository this corresponds to the `itchio/libc7zip` package, a C wrapper for 7-zip.
+- **dynamic link**: visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `butler --> hush`: `butler` depends on `hush` for installation receipts and manifests.
+- `butler --> wharf`: `butler` depends on `wharf` for delta patching and binary diffing.
+- `butler --> boar`: `butler` depends on `boar` for multi-format archive extraction.
+- `butler --> go-itchio`: `butler` depends on `go-itchio` for interacting with the itch.io API.
+- `butler --> savior`: `butler` depends on `savior` for archive extraction and seeking.
+- `butler --> httpkit`: `butler` depends on `httpkit` for HTTP utilities and streaming.
+- `butler --> headway`: `butler` depends on `headway` for progress tracking.
+- `butler --> arkive`: `butler` depends on `arkive` for ZIP/archive format support.
+- `butler --> dash`: `butler` depends on `dash` for game configuration and metadata.
+- `butler --> elefant`: `butler` depends on `elefant` for ELF binary parsing.
+- `butler --> hades`: `butler` depends on `hades` for SQLite schema and queries.
+- `butler --> intact`: `butler` depends on `intact` for file integrity verification.
+- `butler --> lake`: `butler` depends on `lake` for binary storage pools.
+- `butler --> mitch`: `butler` depends on `mitch` for test fixtures.
+- `butler --> ox`: `butler` depends on `ox` for OS abstractions.
+- `butler --> pelican`: `butler` depends on `pelican` for PE binary parsing.
+- `butler --> screw`: `butler` depends on `screw` for game manifest utilities.
+- `butler --> smaug`: `butler` depends on `smaug` for Windows installer detection.
+- `butler --> spellbook`: `butler` depends on `spellbook` for file magic number detection.
+- `butler --> wizardry`: `butler` depends on `wizardry` for binary file utilities.
+- `butler --> kompress`: `butler` depends on `kompress` for compression abstraction.
+- `butler --> dskompress`: `butler` depends on `dskompress` for decompression utilities.
+- `butler --> go-brotli`: `butler` depends on `go-brotli` for Brotli compression.
+- `butler --> lzma`: `butler` depends on `lzma` for LZMA compression.
+- `butler --> randsource`: `butler` depends on `randsource` for random source utilities.
+- `butler --> sevenzip-go`: `butler` depends on `sevenzip-go` for 7-zip library bindings.
+- `butler --> dmcunrar-go`: `butler` depends on `dmcunrar-go` for RAR decompression.
+- `hush --> boar`: `hush` depends on `boar` for archive extraction.
+- `hush --> go-itchio`: `hush` depends on `go-itchio` for API interaction.
+- `hush --> savior`: `hush` depends on `savior` for archive extraction.
+- `hush --> intact`: `hush` depends on `intact` for file integrity verification.
+- `hush --> lake`: `hush` depends on `lake` for binary storage pools.
+- `hush --> screw`: `hush` depends on `screw` for game manifest utilities.
+- `wharf --> savior`: `wharf` depends on `savior` for archive extraction.
+- `wharf --> lake`: `wharf` depends on `lake` for binary storage pools.
+- `wharf --> screw`: `wharf` depends on `screw` for game manifest utilities.
+- `boar --> savior`: `boar` depends on `savior` for archive extraction.
+- `boar --> dash`: `boar` depends on `dash` for game configuration.
+- `boar --> arkive`: `boar` depends on `arkive` for archive format support.
+- `boar --> sevenzip-go`: `boar` depends on `sevenzip-go` for 7-zip extraction.
+- `boar --> dmcunrar-go`: `boar` depends on `dmcunrar-go` for RAR extraction.
+- `go-itchio --> httpkit`: `go-itchio` depends on `httpkit` for HTTP requests.
+- `savior --> arkive`: `savior` depends on `arkive` for archive format support.
+- `savior --> ox`: `savior` depends on `ox` for OS abstractions.
+- `savior --> kompress`: `savior` depends on `kompress` for compression.
+- `kompress --> dskompress`: `kompress` depends on `dskompress` for decompression.
+- `kompress --> go-brotli`: `kompress` depends on `go-brotli` for Brotli support.
+- `kompress --> lzma`: `kompress` depends on `lzma` for LZMA support.
+- `httpkit --> headway`: `httpkit` depends on `headway` for progress tracking.
+- `sevenzip-go -.-> libc7zip`: `sevenzip-go` dynamically links to `libc7zip`.
+
+## Repository Context & Terminology
+- **butler**: The itch.io command-line tool, used for installing, updating, and managing games and other content from itch.io.
+- **hush**: Used for managing installation receipts and manifests, allowing butler to track installed files and their origins.
+- **wharf**: Enables delta patching and binary diffing, reducing the size of updates by only transferring the changes between versions.
+- **boar**: Provides multi-format archive extraction capabilities, allowing butler to extract files from various archive types such as 7z, RAR, and ZIP.
+- **go-itchio**: The itch.io API client library, used for interacting with the itch.io API to retrieve information about games, downloads, and user accounts.
+- **kompress**: An abstraction layer for compression algorithms, allowing butler to support multiple compression formats through a unified interface.

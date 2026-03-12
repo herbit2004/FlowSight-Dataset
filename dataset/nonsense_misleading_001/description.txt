@@ -1,0 +1,69 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the steps in an order processing system. It depicts the flow of an order from submission to completion, including payment, inventory checks, shipping, and review requests. The diagram serves as a visual representation of the order processing workflow.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with "User Submits Order" at the top and ends with "Order Processing Complete" at the bottom. The diagram shows decision points and parallel paths in the order processing workflow.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Payment, Inventory Check, Order Fulfillment, Shipping, Review Request, and Completion.
+
+## Node-by-Node Description
+- **User Submits Order**: The initial step where a user places an order. visible in diagram; no further repository context available.
+- **Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **Order Placed**: Indicates that the order has been successfully placed after payment confirmation. visible in diagram; no further repository context available.
+- **Inventory Available?**: A decision point to check if the required inventory is available for the order. visible in diagram; no further repository context available.
+- **Notify User of Delay**: Informs the user about a delay in order processing due to unavailable inventory. visible in diagram; no further repository context available.
+- **Fulfill Backorder**: Process to fulfill the order when the inventory is currently unavailable. visible in diagram; no further repository context available.
+- **Shipping Label Created**: A shipping label is created for the order. visible in diagram; no further repository context available.
+- **Package Delivered?**: A decision point to check if the package has been delivered. visible in diagram; no further repository context available.
+- **Order Shipped**: Indicates that the order has been shipped. visible in diagram; no further repository context available.
+- **Mark Order as Complete**: Marks the order as complete. visible in diagram; no further repository context available.
+- **Review Requested?**: A decision point to check if a review has been requested for the order. visible in diagram; no further repository context available.
+- **Request Review**: Sends a request to the user to review the order. visible in diagram; no further repository context available.
+- **Send Shipping Confirmation**: Sends a shipping confirmation to the user. visible in diagram; no further repository context available.
+- **Send Payment Reminder**: Sends a reminder to the user to make the payment. visible in diagram; no further repository context available.
+- **Order Cancelled**: Indicates that the order has been cancelled. visible in diagram; no further repository context available.
+- **Order Processing Complete**: The final step indicating that the order processing is complete. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Submits Order --> Payment Received?`: The order submission triggers the payment check.
+- `Payment Received? -- No --> Send Payment Reminder`: If payment is not received, a payment reminder is sent.
+- `Send Payment Reminder --> Order Cancelled`: After sending a payment reminder, the order is cancelled.
+- `Payment Received? -- Yes --> Order Placed`: If payment is received, the order is placed.
+- `Order Placed --> Inventory Available?`: After placing the order, the inventory availability is checked.
+- `Inventory Available? -- No --> Notify User of Delay`: If inventory is not available, the user is notified of the delay.
+- `Notify User of Delay --> Fulfill Backorder`: After notifying the user, the backorder is fulfilled.
+- `Fulfill Backorder --> Shipping Label Created`: After fulfilling the backorder, a shipping label is created.
+- `Inventory Available? -- Yes --> Shipping Label Created`: If inventory is available, a shipping label is created.
+- `Shipping Label Created --> Package Delivered?`: After creating the shipping label, the package delivery status is checked.
+- `Package Delivered? -- No --> Mark Order as Complete`: If the package is not delivered, the order is marked as complete.
+- `Mark Order as Complete --> Send Shipping Confirmation`: After marking the order as complete, shipping confirmation is sent.
+- `Package Delivered? -- Yes --> Order Shipped`: If the package is delivered, the order is shipped.
+- `Order Shipped --> Review Requested?`: After shipping the order, a review is requested.
+- `Review Requested? -- Yes --> Request Review`: If a review is requested, a review request is sent to the user.
+- `Request Review --> Order Processing Complete`: After requesting a review, the order processing is complete.
+- `Review Requested? -- No --> Send Shipping Confirmation`: If a review is not requested, shipping confirmation is sent.
+- `Send Shipping Confirmation --> Order Processing Complete`: After sending shipping confirmation, the order processing is complete.
+- `Order Cancelled --> Order Processing Complete`: After the order is cancelled, the order processing is complete.
+- `Order Processing Complete --> User Submits Order`: The completion of order processing loops back to the initial step of user submitting an order.
+
+## Repository Context & Terminology
+- **User Submits Order**: Typically, this refers to the action of a user placing an order through a website or application. In this diagram, it's the starting point of the order processing flow, and also the end point due to the illogical loop.
+- **Payment Received?**: This checks whether the payment for the order has been successfully processed. In this diagram, it's a decision point that determines whether the order proceeds or a payment reminder is sent.
+- **Order Placed**: This indicates that the order has been successfully created in the system. In this diagram, it signifies that the payment has been received and the order is ready for further processing.
+- **Inventory Available?**: This checks whether the required items for the order are in stock. In this diagram, it's a decision point that determines whether the order can be fulfilled immediately or needs to be backordered.
+- **Notify User of Delay**: This involves informing the user about a delay in fulfilling their order. In this diagram, it's triggered when the inventory is not available.
+- **Fulfill Backorder**: This refers to the process of fulfilling an order when the items are not currently in stock. In this diagram, it's triggered when the inventory is not available.
+- **Shipping Label Created**: This involves generating a label for shipping the order. In this diagram, it's a step that occurs after inventory is confirmed or backordered.
+- **Package Delivered?**: This checks whether the package has been successfully delivered to the customer. In this diagram, it's a decision point that determines whether the order is marked as complete or shipped.
+- **Order Shipped**: This indicates that the order has been dispatched for delivery. In this diagram, it's triggered when the package is delivered.
+- **Mark Order as Complete**: This signifies that the order has been fully processed and delivered. In this diagram, it's triggered when the package is not delivered.
+- **Review Requested?**: This checks whether a review has been requested from the customer. In this diagram, it's a decision point that determines whether a review request is sent.
+- **Request Review**: This involves sending a request to the customer to review their order. In this diagram, it's triggered when a review is requested.
+- **Send Shipping Confirmation**: This involves sending a confirmation to the customer that their order has been shipped. In this diagram, it's triggered after marking the order as complete or when a review is not requested.
+- **Send Payment Reminder**: This involves sending a reminder to the customer to make the payment. In this diagram, it's triggered when the payment is not received.
+- **Order Cancelled**: This indicates that the order has been cancelled. In this diagram, it's triggered after sending a payment reminder.
+- **Order Processing Complete**: This signifies that the entire order processing workflow has been completed. In this diagram, it's the final step in the process, but it loops back to the beginning.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Submits Order," which leads to the "Payment Received?" decision. If payment is not received, a "Send Payment Reminder" is triggered, followed by "Order Cancelled," and then "Order Processing Complete." If payment is received, the flow proceeds to "Order Placed" and then "Inventory Available?". If inventory is unavailable, the user is notified ("Notify User of Delay"), and a "Fulfill Backorder" process is initiated, followed by "Shipping Label Created." If inventory is available, "Shipping Label Created" is triggered directly. After the shipping label is created, the diagram checks "Package Delivered?". If not delivered, the "Mark Order as Complete" step is triggered, followed by "Send Shipping Confirmation." If the package is delivered, the "Order Shipped" step is triggered, leading to "Review Requested?". If a review is requested, a "Request Review" action is initiated, followed by "Order Processing Complete." If no review is requested, "Send Shipping Confirmation" is triggered. The "Send Shipping Confirmation" step incorrectly merges into "Order Processing Complete." The "Order Processing Complete" step then loops back to "User Submits Order," creating an illogical cycle. The "Package Delivered?" decision has a reversed outcome; a 'No' leads to marking the order as complete and sending shipping confirmation, while a 'Yes' leads to order shipment.

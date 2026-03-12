@@ -1,0 +1,43 @@
+graph TD
+    subgraph Cluster Membership
+        A[Node A: Heartbeat Sender] -- Heartbeat A --> B(Node B: Heartbeat Receiver)
+        B -- Heartbeat B --> A
+        C[Node C: Heartbeat Sender] -- Heartbeat C --> A
+        A -- Heartbeat A --> C
+        B -- Heartbeat B --> C
+        C -- Heartbeat C --> B
+    end
+
+    D{Election Manager};
+    E[Active Node Selection];
+
+
+    A --> D;
+    B --> D;
+    C --> D;
+
+
+    D -- "Quorum Achieved?" --> F{Quorum Size Check};
+    F -- Yes --> G[Designate Primary Node];
+    F -- No --> H[Maintain Passive State];
+
+
+    subgraph Active/Passive Role Assignment
+        G --> E;
+        E -- Assign Active Role --> I[New Active Handles Requests];
+        E -- Assign Passive Role --> J[Standby for Failover];
+    end
+
+
+    I -- Request Processing --> K[Data Replication to Passives];
+
+    subgraph Failover Process
+        B -- "Heartbeat Loss from Active" --> L[Node B Proposes Failover];
+        L --> D;
+        C -- "Heartbeat Loss from Active" --> M[Node C Proposes Failover];
+        M --> D;
+    end
+
+    classDef passive fill:#f9f,stroke:#333,stroke-width:2px;
+    J:::passive;
+    H:::passive;

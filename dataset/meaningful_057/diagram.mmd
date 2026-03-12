@@ -1,0 +1,32 @@
+graph TD
+    subgraph Configuration Change and Rollback
+    A[User Initiates Config Change] --> B{Pre-Change Validation?};
+    B -- Yes --> C[Run Validation Scripts];
+    C -- Validation Passed --> D[Backup Current Config];
+    C -- Validation Failed --> E[Reject Change & Notify User];
+    B -- No --> D;
+    D --> F[Apply New Config];
+    F --> G{Config Application Successful?};
+    G -- Yes --> H[Post-Change Verification];
+    G -- No --> I[Initiate Rollback];
+    H --> J{Post-Change Verification Passed?};
+    J -- Yes --> K[Log Change Event];
+    J -- No --> I;
+    K --> L[Mark Change as Success];
+    I --> M[Restore Previous Config];
+    M --> N{Rollback Successful?};
+    N -- Yes --> O[Notify User of Rollback];
+    N -- No --> P[Escalate: Manual Intervention Required];
+    O --> Q[Mark Change as Failed];
+    L --> Z[End];
+    Q --> Z;
+    E --> Z;
+    P --> Z;
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style I fill:#f9f,stroke:#333,stroke-width:2px
+    style P fill:#f9f,stroke:#333,stroke-width:2px
+
+    classDef important fill:#f9f,stroke:#333,stroke-width:2px;
+    class A,I important;

@@ -1,0 +1,64 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the order processing workflow, from order submission to archiving, including payment verification, inventory check, shipping, customer satisfaction, and refund processing. The diagram serves as a visual representation of the steps involved in handling an order within the system.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User Submits Order" node at the top and flows downwards through a series of processes and decision points, ultimately leading to order completion or refund processing. There is a loop back from "Notify Customer: Out of Stock" to "Payment Received?" and from "Process Refund" to "User Submits Order".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Payment, Inventory Check, Shipping, Customer Satisfaction, Order Completion, and Refund.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **C / Order Cancelled Automatically**: Represents the automatic cancellation of the order if payment is not received.
+  visible in diagram; no further repository context available.
+- **D / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory.
+  visible in diagram; no further repository context available.
+- **E / Notify Customer: Out of Stock**: Represents notifying the customer that the ordered items are out of stock.
+  visible in diagram; no further repository context available.
+- **F / Shipping Label Created**: Represents the creation of a shipping label for the order.
+  visible in diagram; no further repository context available.
+- **G / Package Delivered**: Represents the delivery of the package to the customer.
+  visible in diagram; no further repository context available.
+- **H / Customer Satisfied?**: A decision point to determine if the customer is satisfied with the order.
+  visible in diagram; no further repository context available.
+- **I / Process Refund**: Represents the process of issuing a refund to the customer.
+  visible in diagram; no further repository context available.
+- **J / Order Completed**: Represents the successful completion of the order.
+  visible in diagram; no further repository context available.
+- **K / Update Inventory**: Represents the process of updating the inventory after the order is completed.
+  visible in diagram; no further repository context available.
+- **L / Generate Invoice**: Represents the process of generating an invoice for the order.
+  visible in diagram; no further repository context available.
+- **M / Archive Order**: Represents the process of archiving the order details.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, triggering the payment verification process.
+- `B -- No --> C`: If payment is not received, the order is automatically cancelled.
+- `B -- Yes --> D`: If payment is received, an inventory check is initiated.
+- `D -- In Stock --> F`: If the items are in stock, a shipping label is created.
+- `D -- Out of Stock --> E`: If the items are out of stock, the customer is notified.
+- `E --> B`: After notifying the customer about the out-of-stock situation, the system loops back to check payment again.
+- `F --> G`: After the shipping label is created, the package is delivered.
+- `G --> H`: After the package is delivered, customer satisfaction is checked.
+- `H -- Yes --> I`: If the customer is satisfied, a refund is processed.
+- `H -- No --> J`: If the customer is not satisfied, the order is marked as completed.
+- `I --> A`: After processing the refund, the system loops back to the user submitting an order.
+- `J --> K`: After the order is completed, the inventory is updated.
+- `K --> L`: After updating the inventory, an invoice is generated.
+- `L --> M`: After generating the invoice, the order is archived.
+
+## Repository Context & Terminology
+- **User Submits Order**: In standard practice, this refers to a customer placing an order through a website or application. In this diagram, it's the starting point of the workflow and also the endpoint of the refund process, creating an illogical loop.
+- **Payment Received?**: In standard practice, this refers to verifying if the payment has been successfully processed. In this diagram, it's a decision point that determines whether the order proceeds or is cancelled.
+- **Inventory Check**: In standard practice, this refers to checking the availability of items in stock. In this diagram, it determines whether a shipping label is created or the customer is notified about the out-of-stock situation.
+- **Shipping Label Created**: In standard practice, this refers to generating a label with the shipping address and other details. In this diagram, it's a step that follows the inventory check when items are in stock.
+- **Package Delivered**: In standard practice, this refers to the successful delivery of the package to the customer. In this diagram, it precedes the customer satisfaction check, which is a reversed sequence.
+- **Customer Satisfied?**: In standard practice, this refers to determining if the customer is happy with their purchase. In this diagram, a 'yes' leads to refund processing, which is a swapped branch outcome.
+- **Process Refund**: In standard practice, this refers to issuing a refund to the customer. In this diagram, it leads back to the "User Submits Order" node, creating an illogical loop.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with `A[User Submits Order]`, which leads to `B{Payment Received?}`. If payment is not received (`B -- No --> C`), the `C[Order Cancelled Automatically]`. If payment is received (`B -- Yes --> D`), an `D[Inventory Check]` is performed. If items are out of stock (`D -- Out of Stock --> E`), the `E[Notify Customer: Out of Stock]` and the process loops back to `B{Payment Received?}`. If items are in stock (`D -- In Stock --> F`), a `F[Shipping Label Created]`, then `G[Package Delivered]`. The diagram then checks `H{Customer Satisfied?}`. Illogically, if the customer *is* satisfied (`H -- Yes --> I`), a `I[Process Refund]` is initiated, which then loops back to `A[User Submits Order]`. If the customer is *not* satisfied (`H -- No --> J`), the `J[Order Completed]`, followed by `K[Update Inventory]`, `L[Generate Invoice]`, and finally `M[Archive Order]`. The standard real-world sequence of package delivery followed by customer satisfaction check is reversed in this diagram, and a satisfied customer triggers a refund and a new order submission, which is counterintuitive. Also, there is no step for packing the item between shipping label creation and package delivery.

@@ -1,0 +1,38 @@
+graph TD
+    subgraph Service Provider
+        A[Service Instance] --> B(Register with Service Discovery);
+        B --> C{Registration Successful?};
+        C -- Yes --> D(Start Health Check Endpoint);
+        C -- No --> E[Retry Registration];
+        E --> B;
+    end
+
+    subgraph Service Consumer
+        F[Consumer Application] --> G(Query Service Discovery for Service X);
+        G --> H{Service X Instances Found?};
+        H -- Yes --> I(Filter by Health Status);
+        I --> J{Healthy Instances Available?};
+        J -- Yes --> K(Load Balance Request to Instance);
+        K --> L[Service Instance];
+        J -- No --> M[Circuit Breaker Triggered];
+        M --> N(Fallback Mechanism);
+        H -- No --> O[Service Unavailable Error];
+    end
+
+    subgraph Service Discovery Server
+        P[Receive Registration Request] --> Q{Validate Request};
+        Q -- Valid --> R(Store Instance Metadata);
+        Q -- Invalid --> S[Return Error];
+        R --> T(Run Health Checks);
+        T --> U{Instance Healthy?};
+        U -- Yes --> V[Mark Instance as Healthy];
+        U -- No --> W[Mark Instance as Unhealthy];
+        P --> C;
+        G --> X[Return Instance List];
+        X --> H;
+    end
+
+    classDef healthy fill:#ccffcc,stroke:#333,stroke-width:2px;
+    classDef unhealthy fill:#ffcccc,stroke:#333,stroke-width:2px;
+    V:::healthy
+    W:::unhealthy

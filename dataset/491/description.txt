@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the architecture of a system that processes user questions using a supervisor agent and various sub-agents and tools. The diagram depicts the flow of information and control between different components, including email and calendar management, search functionality, and interaction with the Microsoft 365 API. It serves as a high-level overview of the system's architecture and how different components interact to answer user questions.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with a "User Question" node at the top and flows down through a "Supervisor Agent" to various sub-agents and tools. The flow converges at the "Microsoft 365 API" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: User Question, Supervisor Agent, Sub-Agents and Tools, Data Sources, and API Interaction.
+
+## Node-by-Node Description
+- **User Question**: Represents the initial user query or request. visible in diagram; no further repository context available.
+- **Supervisor Agent**: Acts as the central coordinator, routing the user question to appropriate sub-agents or tools. visible in diagram; no further repository context available.
+- **manage_email**: Represents the functionality to manage emails. visible in diagram; no further repository context available.
+- **schedule_event**: Represents the functionality to schedule events. visible in diagram; no further repository context available.
+- **search_email_history**: Represents the functionality to search through email history. visible in diagram; no further repository context available.
+- **Question Tool**: Represents a tool used to answer questions. visible in diagram; no further repository context available.
+- **Done Tool**: Represents a tool used to indicate the completion of a task. visible in diagram; no further repository context available.
+- **Email Sub-Agent**: A sub-agent responsible for handling email-related tasks. visible in diagram; no further repository context available.
+- **Calendar Sub-Agent**: A sub-agent responsible for handling calendar-related tasks. visible in diagram; no further repository context available.
+- **PostgreSQL + pgvector**: Represents a PostgreSQL database with the pgvector extension, used for storing and searching vector embeddings. visible in diagram; no further repository context available.
+- **MCP Email Tools**: Represents tools specific to managing email within the Microsoft Cloud Partner (MCP) ecosystem. visible in diagram; no further repository context available.
+- **MCP Calendar Tools**: Represents tools specific to managing calendars within the Microsoft Cloud Partner (MCP) ecosystem. visible in diagram; no further repository context available.
+- **Microsoft 365 API**: Represents the Microsoft 365 API, used for interacting with Microsoft 365 services. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Question --> Supervisor Agent`: The user question is passed to the supervisor agent for processing.
+- `Supervisor Agent --> manage_email`: The supervisor agent routes the task to the manage_email functionality.
+- `Supervisor Agent --> schedule_event`: The supervisor agent routes the task to the schedule_event functionality.
+- `Supervisor Agent --> search_email_history`: The supervisor agent routes the task to the search_email_history functionality.
+- `Supervisor Agent --> Question Tool`: The supervisor agent routes the task to the Question Tool.
+- `Supervisor Agent --> Done Tool`: The supervisor agent routes the task to the Done Tool.
+- `manage_email --> Email Sub-Agent`: The manage_email functionality utilizes the Email Sub-Agent.
+- `schedule_event --> Calendar Sub-Agent`: The schedule_event functionality utilizes the Calendar Sub-Agent.
+- `search_email_history --> PostgreSQL + pgvector`: The search_email_history functionality queries the PostgreSQL database with pgvector.
+- `Email Sub-Agent --> MCP Email Tools`: The Email Sub-Agent uses MCP Email Tools.
+- `Calendar Sub-Agent --> MCP Calendar Tools`: The Calendar Sub-Agent uses MCP Calendar Tools.
+- `MCP Email Tools --> Microsoft 365 API`: MCP Email Tools interact with the Microsoft 365 API.
+- `MCP Calendar Tools --> Microsoft 365 API`: MCP Calendar Tools interact with the Microsoft 365 API.
+
+## Repository Context & Terminology
+- **Supervisor Agent**: A central component responsible for routing user requests to appropriate sub-agents or tools based on the nature of the request.
+- **Email Sub-Agent**: A specialized agent designed to handle email-related tasks, such as managing emails, sending emails, or processing email content.
+- **Calendar Sub-Agent**: A specialized agent designed to handle calendar-related tasks, such as scheduling events, managing appointments, or retrieving calendar information.
+- **PostgreSQL + pgvector**: A PostgreSQL database enhanced with the pgvector extension, enabling efficient storage and retrieval of vector embeddings for semantic search and similarity analysis.
+- **MCP Email Tools**: Tools specifically designed for managing email within the Microsoft Cloud Partner (MCP) ecosystem, potentially offering features tailored to partner-specific requirements.
+- **MCP Calendar Tools**: Tools specifically designed for managing calendars within the Microsoft Cloud Partner (MCP) ecosystem, potentially offering features tailored to partner-specific requirements.
+- **Microsoft 365 API**: The application programming interface provided by Microsoft 365, allowing external applications and services to interact with Microsoft 365 services such as email, calendar, and contacts.
+
+## High-Density QA Ground Truth Summary
+The process begins with a "User Question" that is immediately passed to the "Supervisor Agent." The Supervisor Agent acts as a router, directing the question to one of several paths: "manage_email," "schedule_event," "search_email_history," "Question Tool," or "Done Tool." If the question involves email management ("manage_email"), it's routed to the "Email Sub-Agent," which then utilizes "MCP Email Tools" to interact with the "Microsoft 365 API." Similarly, for calendar-related questions ("schedule_event"), the "Calendar Sub-Agent" is invoked, using "MCP Calendar Tools" to interact with the same Microsoft 365 API. If the question requires searching email history ("search_email_history"), the system queries a "PostgreSQL + pgvector" database, likely containing vector embeddings of email content for semantic search. The "Question Tool" and "Done Tool" represent generic tools for question answering and task completion, respectively. All email and calendar interactions ultimately converge at the "Microsoft 365 API," highlighting its role as the central integration point for these functionalities. The use of "MCP Email Tools" and "MCP Calendar Tools" suggests a specific focus on Microsoft Cloud Partner (MCP) ecosystem, potentially offering tailored features for partner-specific requirements.

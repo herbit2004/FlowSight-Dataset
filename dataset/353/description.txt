@@ -1,0 +1,30 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the data flow and dependencies between different components in a glTF (GL Transmission Format) material processing pipeline. It illustrates how a procedural color is generated and used as the base color for a PBR (Physically Based Rendering) surface shader, ultimately resulting in a surface material. This diagram likely serves as a high-level overview of the material creation process within a 3D graphics or game engine.
+
+## Overall Layout
+The diagram is laid out in a top-to-bottom (TB) direction. It shows a hierarchical structure where a procedural color generation subgraph feeds into a surface shader node, which then produces a surface material. The start node is `constant:color3:1,1,1` and the end node is `surfacematerial:material`.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **gltf_procedural**: This subgraph encapsulates the procedural generation of a color, starting from a constant color value and outputting a color value.
+
+## Node-by-Node Description
+- **constant:color3:1,1,1**: This node represents a constant color value (white in this case, as RGB values are 1, 1, 1). visible in diagram; no further repository context available.
+- **output:color3**: This node represents the output of the `gltf_procedural` subgraph, providing a color value. visible in diagram; no further repository context available.
+- **gltf_pbr:surfaceshader**: This node represents a surface shader that uses PBR principles to calculate the final color of a surface. visible in diagram; no further repository context available.
+- **surfacematerial:material**: This node represents the final surface material, which can be applied to a 3D object. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `constant:color3:1,1,1 --> output:color3`: This edge represents the flow of the constant color value to the output of the `gltf_procedural` subgraph.
+- `output:color3 --"base_color"--> gltf_pbr:surfaceshader`: This edge represents the flow of the output color from the `gltf_procedural` subgraph as the base color input to the `gltf_pbr:surfaceshader` node.
+- `gltf_pbr:surfaceshader --"surfaceshader"--> surfacematerial:material`: This edge represents the output of the surface shader being used to define the surface material.
+
+## Repository Context & Terminology
+- **gltf**: GL Transmission Format, a standard file format for 3D scenes and models.
+- **PBR (Physically Based Rendering)**: A rendering technique that simulates the interaction of light with surfaces in a physically plausible way.
+- **Surface Shader**: A program that calculates the color of a surface based on its material properties, lighting conditions, and viewing angle.
+- **Material**: A set of properties that define how a surface reflects and interacts with light.
+- **Color3**: A data type representing a color with three components (red, green, blue).
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a glTF material creation pipeline, starting with a `constant:color3:1,1,1` node that defines a white color. This constant color flows to the `output:color3` node within the `gltf_procedural` subgraph, representing the procedural color generation stage. The output color, labeled as "base_color", is then fed into the `gltf_pbr:surfaceshader` node. This shader uses PBR principles to calculate the final color of the surface, taking the base color as input. The `gltf_pbr:surfaceshader` node outputs a "surfaceshader" which is then used to define the `surfacematerial:material`. The `surfacematerial:material` node represents the final material that can be applied to a 3D object in a glTF scene. The diagram highlights the dependency of the surface material on the procedural color generation and the PBR surface shader, showcasing a typical workflow in 3D graphics rendering. The use of glTF and PBR suggests a focus on standardized and physically accurate material representation.

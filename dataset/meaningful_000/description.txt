@@ -1,0 +1,78 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the user registration and login process for a typical web application. It outlines the steps a user takes when creating an account and logging in, including email verification and credential validation. The diagram serves as a visual representation of the authentication flow, aiding in understanding and documenting the system's security measures.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the user initiating registration and ends with either displaying an error message or redirecting the user to the welcome page after successful login. The flow progresses linearly with decision points that branch based on certain conditions.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into three stages: user registration, email verification, and user login.
+
+## Node-by-Node Description
+- **A / User initiates registration**: The process begins when a user starts the registration process.
+  visible in diagram; no further repository context available.
+- **B / Account exists?**: A decision point to check if an account with the provided credentials already exists.
+  visible in diagram; no further repository context available.
+- **C / Display 'Account Already Exists' error**: An error message displayed if the account already exists.
+  visible in diagram; no further repository context available.
+- **D / Validate email format**: The system validates the format of the email address provided by the user.
+  visible in diagram; no further repository context available.
+- **E / Display 'Invalid Email' error**: An error message displayed if the email format is invalid.
+  visible in diagram; no further repository context available.
+- **F / Send verification email to user**: The system sends a verification email to the user's provided email address.
+  visible in diagram; no further repository context available.
+- **G / User clicks verification link**: The user clicks on the verification link sent to their email.
+  visible in diagram; no further repository context available.
+- **H / Verification token valid?**: The system checks if the verification token in the link is valid.
+  visible in diagram; no further repository context available.
+- **I / Display 'Invalid Verification Link' error**: An error message displayed if the verification link is invalid.
+  visible in diagram; no further repository context available.
+- **J / Create user account in database**: The system creates a new user account in the database.
+  visible in diagram; no further repository context available.
+- **K / Generate access and refresh tokens**: The system generates access and refresh tokens for the user.
+  visible in diagram; no further repository context available.
+- **L / Store refresh token securely**: The refresh token is stored securely, typically in a database.
+  visible in diagram; no further repository context available.
+- **M / Set authentication cookies/headers**: The system sets authentication cookies or headers to maintain the user's session.
+  visible in diagram; no further repository context available.
+- **N / Redirect user to welcome page**: The user is redirected to the welcome page after successful registration.
+  visible in diagram; no further repository context available.
+- **O / User initiates login**: The user starts the login process.
+  visible in diagram; no further repository context available.
+- **P / Credentials valid?**: The system checks if the provided login credentials are valid.
+  visible in diagram; no further repository context available.
+- **Q / Display 'Invalid Credentials' error**: An error message displayed if the login credentials are invalid.
+  visible in diagram; no further repository context available.
+- **R / Generate new access token**: The system generates a new access token for the user.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User registration initiation leads to checking if the account exists.
+- `B -- Yes --> C`: If the account exists, display the "Account Already Exists" error.
+- `B -- No --> D`: If the account does not exist, validate the email format.
+- `D -- Invalid format --> E`: If the email format is invalid, display the "Invalid Email" error.
+- `D -- Valid format --> F`: If the email format is valid, send a verification email to the user.
+- `F --> G`: Sending the verification email leads to the user clicking the verification link.
+- `G --> H`: User clicking the verification link leads to checking if the verification token is valid.
+- `H -- No --> I`: If the verification token is invalid, display the "Invalid Verification Link" error.
+- `H -- Yes --> J`: If the verification token is valid, create a user account in the database.
+- `J --> K`: Creating a user account leads to generating access and refresh tokens.
+- `K --> L`: Generating tokens leads to storing the refresh token securely.
+- `L --> M`: Storing the refresh token leads to setting authentication cookies/headers.
+- `M --> N`: Setting authentication cookies/headers leads to redirecting the user to the welcome page.
+- `N --> O`: Redirecting to the welcome page can lead to the user initiating login.
+- `O --> P`: User login initiation leads to checking if the credentials are valid.
+- `P -- No --> Q`: If the credentials are invalid, display the "Invalid Credentials" error.
+- `P -- Yes --> R`: If the credentials are valid, generate a new access token.
+- `R --> M`: Generating a new access token leads back to setting authentication cookies/headers.
+
+## Repository Context & Terminology
+- **Access Token**: A credential that can be used to access protected resources. It has a limited lifespan.
+- **Refresh Token**: A credential used to obtain new access tokens without requiring the user to log in again. It has a longer lifespan than an access token and is stored securely.
+- **Authentication Cookies/Headers**: Mechanisms used to maintain a user's authenticated session. Cookies are small pieces of data stored in the user's browser, while headers are part of the HTTP request.
+- **Email Verification**: The process of confirming that the email address provided by a user is valid and belongs to them.
+- **Credentials**: Information used to verify a user's identity, typically a username and password.
+- **Database**: A structured set of data held in a computer, especially one that is accessible in various ways.
+- **User Account**: A record in a system that represents a user, containing information such as username, password, and email address.
+
+## High-Density QA Ground Truth Summary
+The user registration and login process begins with the user initiating registration (A). The system first checks if an account already exists (B). If it does (B -- Yes --> C), an "Account Already Exists" error is displayed. If not (B -- No --> D), the email format is validated. An invalid format (D -- Invalid format --> E) results in an "Invalid Email" error. A valid format (D -- Valid format --> F) triggers sending a verification email. The user clicks the link (G), and the system verifies the token (H). An invalid token (H -- No --> I) displays an "Invalid Verification Link" error. A valid token (H -- Yes --> J) leads to account creation, followed by generating access and refresh tokens (K). The refresh token is securely stored (L), and authentication cookies/headers are set (M). The user is then redirected to the welcome page (N). From there, the user can initiate login (O), where the system validates credentials (P). Invalid credentials (P -- No --> Q) result in an "Invalid Credentials" error. Valid credentials (P -- Yes --> R) generate a new access token, and the authentication cookies/headers are reset (M), completing the login flow. The use of access and refresh tokens is a standard security practice to minimize the risk of token compromise while maintaining user sessions.

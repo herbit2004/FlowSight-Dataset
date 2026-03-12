@@ -1,0 +1,100 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the Membership Tier and Benefits System. It depicts the workflow for a user selecting a membership tier, validating their eligibility, activating benefits, and synchronizing data across various systems. The diagram serves as a visual representation of the system's logic and data flow, aiding in understanding and troubleshooting the membership tier and benefits activation process.
+
+## Overall Layout
+The diagram flows from left to right. It starts with a user action and progresses through validation, activation, and synchronization stages, culminating in a confirmation to the user.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Membership Tier and Benefits System". Logically, the diagram is divided into four stages:
+1. Tier Selection
+2. Eligibility Validation
+3. Benefit Activation
+4. Data Synchronization
+
+## Node-by-Node Description
+- **A / User Action: Select Tier**: Represents the user initiating the process by selecting a membership tier.
+  visible in diagram; no further repository context available.
+- **B / Tier Selected?**: A decision point to determine if a tier has been selected.
+  visible in diagram; no further repository context available.
+- **C / Validate Selection**: Validates the user's tier selection.
+  visible in diagram; no further repository context available.
+- **D / Eligible for Tier?**: A decision point to determine if the user is eligible for the selected tier.
+  visible in diagram; no further repository context available.
+- **E / Update User Profile**: Updates the user's profile with the selected tier information.
+  visible in diagram; no further repository context available.
+- **G / Activate Tier Benefits**: Activates the benefits associated with the selected tier.
+  visible in diagram; no further repository context available.
+- **H / Log Tier Activation Event**: Logs the event of tier activation.
+  visible in diagram; no further repository context available.
+- **I / Send Welcome Email**: Sends a welcome email to the user.
+  visible in diagram; no further repository context available.
+- **J / Trigger Benefit Sync Process**: Triggers the process to synchronize benefits data across systems.
+  visible in diagram; no further repository context available.
+- **K / Sync: Access Control Lists**: Synchronizes access control lists.
+  visible in diagram; no further repository context available.
+- **L / Sync: Discount Coupons**: Synchronizes discount coupons.
+  visible in diagram; no further repository context available.
+- **M / Sync: Content Visibility**: Synchronizes content visibility settings.
+  visible in diagram; no further repository context available.
+- **N / ACL Sync Success?**: A decision point to determine if the ACL synchronization was successful.
+  visible in diagram; no further repository context available.
+- **O / Coupon Sync Success?**: A decision point to determine if the coupon synchronization was successful.
+  visible in diagram; no further repository context available.
+- **P / Content Sync Success?**: A decision point to determine if the content synchronization was successful.
+  visible in diagram; no further repository context available.
+- **Q / Update User Benefits Database**: Updates the user benefits database.
+  visible in diagram; no further repository context available.
+- **F / Display Eligibility Error**: Displays an error message if the user is not eligible for the selected tier.
+  visible in diagram; no further repository context available.
+- **R / Log ACL Sync Failure**: Logs the failure of ACL synchronization.
+  visible in diagram; no further repository context available.
+- **S / Log Coupon Sync Failure**: Logs the failure of coupon synchronization.
+  visible in diagram; no further repository context available.
+- **T / Log Content Sync Failure**: Logs the failure of content synchronization.
+  visible in diagram; no further repository context available.
+- **U / Display Confirmation to User**: Displays a confirmation message to the user.
+  visible in diagram; no further repository context available.
+- **V / End User Action**: Represents the end of the process, where the user has completed the tier selection and activation.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User selects a tier.
+- `B -- Yes --> C`: A tier has been selected, proceed to validation.
+- `B -- No --> A`: No tier has been selected, return to tier selection.
+- `C --> D`: Validate the selected tier.
+- `D -- Yes --> E`: User is eligible for the tier, proceed to update user profile.
+- `D -- No --> F`: User is not eligible for the tier, display eligibility error.
+- `E --> G`: Update user profile.
+- `G --> H`: Activate tier benefits.
+- `H --> I`: Log tier activation event.
+- `I --> J`: Send welcome email.
+- `J --> K`: Trigger benefit sync process to sync access control lists.
+- `J --> L`: Trigger benefit sync process to sync discount coupons.
+- `J --> M`: Trigger benefit sync process to sync content visibility.
+- `K --> N`: Synchronize access control lists.
+- `L --> O`: Synchronize discount coupons.
+- `M --> P`: Synchronize content visibility.
+- `N -- Yes --> Q`: ACL synchronization was successful, proceed to update user benefits database.
+- `N -- No --> R`: ACL synchronization failed, log ACL sync failure.
+- `O -- Yes --> Q`: Coupon synchronization was successful, proceed to update user benefits database.
+- `O -- No --> S`: Coupon synchronization failed, log coupon sync failure.
+- `P -- Yes --> Q`: Content synchronization was successful, proceed to update user benefits database.
+- `P -- No --> T`: Content synchronization failed, log content sync failure.
+- `F --> U`: Display eligibility error leads to displaying confirmation to the user.
+- `R --> U`: Log ACL sync failure leads to displaying confirmation to the user.
+- `S --> U`: Log coupon sync failure leads to displaying confirmation to the user.
+- `T --> U`: Log content sync failure leads to displaying confirmation to the user.
+- `Q --> U`: Update user benefits database leads to displaying confirmation to the user.
+- `U --> V`: Display confirmation to user leads to end user action.
+
+## Repository Context & Terminology
+- **Membership Tier**: A level of membership that provides specific benefits to the user.
+- **Benefits System**: A system that manages and provides benefits to members based on their tier.
+- **Access Control Lists (ACL)**: Lists that define permissions for accessing resources.
+- **Discount Coupons**: Coupons that provide discounts on products or services.
+- **Content Visibility**: Settings that control the visibility of content to users.
+- **User Profile**: A collection of data associated with a user account.
+- **User Benefits Database**: A database that stores information about user benefits.
+
+## High-Density QA Ground Truth Summary
+The process starts with the user selecting a membership tier via the "User Action: Select Tier" node. The system then checks "Tier Selected?". If 'No', the process loops back to the "User Action: Select Tier" node. If 'Yes', the system proceeds to "Validate Selection" and then checks "Eligible for Tier?". If the user is not eligible ('No'), the system displays an "Display Eligibility Error" and proceeds to display confirmation to the user. If the user is eligible ('Yes'), the system updates the "Update User Profile", "Activate Tier Benefits", "Log Tier Activation Event", and "Send Welcome Email". The system then triggers the "Trigger Benefit Sync Process", which initiates parallel synchronization tasks for "Sync: Access Control Lists", "Sync: Discount Coupons", and "Sync: Content Visibility". Each synchronization task has a corresponding success check ("ACL Sync Success?", "Coupon Sync Success?", "Content Sync Success?"). If any of these synchronizations fail, the system logs the failure ("Log ACL Sync Failure", "Log Coupon Sync Failure", "Log Content Sync Failure"). Regardless of the synchronization success or failure, the system updates the "Update User Benefits Database" and then "Display Confirmation to User", before ending with "End User Action". The synchronization tasks ensure that user benefits, such as access permissions and discount coupons, are consistently applied across different systems within the membership tier and benefits system.

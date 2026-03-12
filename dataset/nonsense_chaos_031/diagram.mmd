@@ -1,0 +1,41 @@
+graph TD
+    A[Start: ZenithGate Initiate] --> B{DeltaPhase Checkpoint};
+    B -- Delta Ok --> C[SpectraQueue Request];
+    B -- Retry Needed --> A;
+    C --> D{CoreSync Validation};
+    D -- Approved --> E[FluxBridge Router];
+    D -- Revoked --> F[VaultNode Handshake Retry];
+    F --> D;
+    E --> G[ArcLane Distributor Activation];
+    G --> H{ZenithGate Auth Layer Present?};
+    H -- Yes --> I[SpectraQueue Flush];
+    H -- No --> J[Bypass Protocol Override];
+    J --> I;
+    I --> K[TransientBuffer Commit];
+    K --> L{Commit Successful?};
+    L -- Yes --> M[DeltaPhase Completion Notify];
+    L -- No --> N[TransientBuffer Rollback];
+    N --> K;
+    M --> O[End: System Quiescence];
+    C --> P[VaultNode Handshake Begin];
+    P --> Q{VaultNode Established?};
+    Q -- Yes --> D;
+    Q -- No --> R[Emergency VaultNode Purge];
+    R --> O;
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style O fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style D fill:#ccf,stroke:#333,stroke-width:2px
+    style H fill:#ccf,stroke:#333,stroke-width:2px
+    style L fill:#ccf,stroke:#333,stroke-width:2px
+    linkStyle 2 stroke-width:2px,stroke:green;
+    linkStyle 3 stroke-width:2px,stroke:red;
+    linkStyle 5 stroke-width:2px,stroke:green;
+    linkStyle 6 stroke-width:2px,stroke:red;
+    linkStyle 9 stroke-width:2px,stroke:green;
+    linkStyle 10 stroke-width:2px,stroke:red;
+    linkStyle 13 stroke-width:2px,stroke:green;
+    linkStyle 14 stroke-width:2px,stroke:red;
+    linkStyle 20 stroke-width:2px,stroke:green;
+    linkStyle 21 stroke-width:2px,stroke:red;

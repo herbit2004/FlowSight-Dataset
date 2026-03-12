@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a data processing pipeline. It depicts the flow of data from ingestion through transformation, enrichment, and finally loading and archival. The diagram serves as a high-level overview of the data processing steps within the system.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is organized into three subgraphs representing stages of the data pipeline. The start node is "S3 Data Arrival Event" and the end nodes are "Load to Snowflake" and "Archive to Cold Storage".
+
+## Subgraphs / Stages
+The diagram contains three subgraphs:
+- **Data Ingestion**: Handles the initial intake and validation of data.
+- **Transformation & Enrichment**: Transforms and enriches the data to prepare it for analysis.
+- **Load & Archival**: Loads the processed data into a data warehouse and archives it for long-term storage.
+
+## Node-by-Node Description
+- **S3 Data Arrival Event**: Represents the event triggered when data arrives in an Amazon S3 bucket. visible in diagram; no further repository context available.
+- **Metadata Extraction**: Extracts metadata from the incoming data. visible in diagram; no further repository context available.
+- **Data Validation**: Validates the data against predefined rules or schemas. visible in diagram; no further repository context available.
+- **Data Staging**: Stages the validated data for further processing. visible in diagram; no further repository context available.
+- **Quarantine & Alert**: Quarantines invalid data and triggers an alert. visible in diagram; no further repository context available.
+- **Customer ID Mapping**: Maps customer IDs to a standardized format. visible in diagram; no further repository context available.
+- **Product Feature Engineering**: Creates new features from the data for use in machine learning models or other analytical processes. visible in diagram; no further repository context available.
+- **Completeness Check**: Checks the data for completeness, ensuring that all required fields are present. visible in diagram; no further repository context available.
+- **Geographic Enrichment**: Enriches the data with geographic information. visible in diagram; no further repository context available.
+- **Retry Feature Engineering**: Retries the feature engineering process if data is missing. visible in diagram; no further repository context available.
+- **Data Aggregation**: Aggregates the data into a summarized format. visible in diagram; no further repository context available.
+- **Load to Snowflake**: Loads the processed data into a Snowflake data warehouse. visible in diagram; no further repository context available.
+- **Archive to Cold Storage**: Archives the data to a cold storage solution for long-term retention. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `S3 Data Arrival Event --> Metadata Extraction`: Data flows from S3 to metadata extraction.
+- `Metadata Extraction --> Data Validation`: Metadata is passed for validation.
+- `Data Validation -- Valid --> Data Staging`: Valid data is staged.
+- `Data Validation -- Invalid --> Quarantine & Alert`: Invalid data is quarantined and an alert is triggered.
+- `Data Staging --> Customer ID Mapping`: Staged data is passed for customer ID mapping.
+- `Customer ID Mapping --> Product Feature Engineering`: Customer IDs are mapped before feature engineering.
+- `Product Feature Engineering --> Completeness Check`: Feature engineered data is checked for completeness.
+- `Completeness Check -- Complete --> Geographic Enrichment`: Complete data is enriched with geographic information.
+- `Completeness Check -- Missing Data --> Retry Feature Engineering`: Data with missing fields is sent back for feature engineering retry.
+- `Retry Feature Engineering --> Product Feature Engineering`: Retried data goes back to feature engineering.
+- `Geographic Enrichment --> Data Aggregation`: Enriched data is aggregated.
+- `Data Aggregation --> Load to Snowflake`: Aggregated data is loaded into Snowflake.
+- `Load to Snowflake --> Archive to Cold Storage`: Data loaded into Snowflake is archived to cold storage.
+
+## Repository Context & Terminology
+- **S3 Data Arrival Event**: An event triggered when a new object is created in an Amazon S3 bucket.
+- **Metadata Extraction**: The process of extracting relevant information about the data, such as its schema, data types, and source.
+- **Data Validation**: The process of ensuring that the data conforms to predefined rules and constraints.
+- **Data Staging**: A temporary storage area where data is prepared for further processing.
+- **Quarantine**: A secure location where invalid or corrupted data is isolated.
+- **Customer ID Mapping**: The process of associating customer identifiers from different systems or sources.
+- **Product Feature Engineering**: The process of creating new features from existing data to improve the performance of machine learning models.
+- **Completeness Check**: A verification step to ensure that all required data fields are present and populated.
+- **Geographic Enrichment**: The process of adding geographic information to data, such as latitude, longitude, or postal codes.
+- **Data Aggregation**: The process of summarizing data into a more concise format.
+- **Snowflake**: A cloud-based data warehouse platform.
+- **Cold Storage**: A low-cost storage solution for infrequently accessed data.
+
+## High-Density QA Ground Truth Summary
+The data pipeline begins with an `S3 Data Arrival Event`, which triggers the `Metadata Extraction` process. The extracted metadata is then passed to `Data Validation`. If the data is `Valid`, it proceeds to `Data Staging`; otherwise, it is sent to `Quarantine & Alert`. Valid data moves from `Data Staging` to `Customer ID Mapping`, followed by `Product Feature Engineering`. The engineered features are then subjected to a `Completeness Check`. If the data is `Complete`, it undergoes `Geographic Enrichment` and then `Data Aggregation`. If data is `Missing Data` during the `Completeness Check`, it is sent to `Retry Feature Engineering`, and then back to `Product Feature Engineering`. Finally, the aggregated data is loaded into `Load to Snowflake` and then `Archive to Cold Storage`. The S3 Data Arrival Event leverages Amazon's Simple Storage Service, a common entry point for data pipelines, while Snowflake serves as the data warehouse for analytical workloads. The pipeline ensures data quality through validation and completeness checks, and enriches the data with geographic information for enhanced analysis.

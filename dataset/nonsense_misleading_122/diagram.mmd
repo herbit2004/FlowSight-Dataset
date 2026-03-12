@@ -1,0 +1,13 @@
+graph TD
+    A[User Places Order] --> B{Payment Received?};
+    B -- Yes --> C[Prepare Shipment];
+    B -- No --> E[Order Cancelled];
+    C --> D{Inventory Available?};
+    D -- Yes --> F[Ship Order];
+    D -- No --> I[Backorder Item];
+    F --> G[Order Delivered];
+    G --> A;
+    I --> H[Notify User of Delay];
+    H --> C;
+    E --> J[Refund Payment];
+    J --> G;

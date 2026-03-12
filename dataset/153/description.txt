@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts a decision-making process for determining the appropriate node type in a system. The diagram serves as a guide for developers or content creators to select the correct node type based on a series of questions about the node's purpose and content.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It starts with a single "I need a new node type" node and branches out based on a series of questions, ultimately leading to different node type classifications. There is one start node and four potential end nodes representing different node types.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages:
+1. Initial need for a new node type.
+2. Inline formatting check.
+3. Top-level routable entry point check.
+4. Node's entire purpose check.
+5. Annotated text property check.
+6. Splitting into two nodes check.
+
+## Node-by-Node Description
+- **Start / I need a new node type**: Represents the initial decision point where a new node type is required. visible in diagram; no further repository context available.
+- **Q1 / Is it inline formatting applied within text?**: A decision node asking whether the node involves inline formatting within text. visible in diagram; no further repository context available.
+- **Q2 / Is it a top-level routable entry point?**: A decision node asking whether the node is a top-level routable entry point. visible in diagram; no further repository context available.
+- **Q3 / Is text the node's entire purpose?**: A decision node asking whether the node's entire purpose is text. visible in diagram; no further repository context available.
+- **Q4 / Does it have exactly one annotated_text property?**: A decision node asking whether the node has exactly one annotated text property. visible in diagram; no further repository context available.
+- **Q5 / Does pressing Enter to split into two nodes make sense?**: A decision node asking whether splitting the node into two nodes by pressing Enter makes sense. visible in diagram; no further repository context available.
+- **KindAnnotation / kind: annotation e.g. bold, italic, link**: Represents a node type classified as an annotation, such as bold, italic, or link. visible in diagram; no further repository context available.
+- **KindDocument / kind: document e.g. page, article, event**: Represents a node type classified as a document, such as a page, article, or event. visible in diagram; no further repository context available.
+- **KindBlock / kind: block e.g. image+caption, quote+author, list, nav, embed**: Represents a node type classified as a block, such as an image with a caption, a quote with an author, a list, a navigation element, or an embedded element. visible in diagram; no further repository context available.
+- **KindText / kind: text e.g. paragraph, heading, list_item**: Represents a node type classified as text, such as a paragraph, heading, or list item. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Start --> Q1`: Represents the start of the decision process.
+- `Q1 -- Yes --> KindAnnotation`: If inline formatting is applied within the text, the node type is classified as an annotation.
+- `Q1 -- No --> Q2`: If inline formatting is not applied, proceed to the next question.
+- `Q2 -- Yes --> KindDocument`: If the node is a top-level routable entry point, the node type is classified as a document.
+- `Q2 -- No --> Q3`: If the node is not a top-level routable entry point, proceed to the next question.
+- `Q3 -- "No — it has non-text properties or children" --> KindBlock`: If the node has non-text properties or children, the node type is classified as a block.
+- `Q3 -- Yes --> Q4`: If the node's entire purpose is text, proceed to the next question.
+- `Q4 -- "No — multiple text properties" --> KindBlock`: If the node has multiple text properties, the node type is classified as a block.
+- `Q4 -- Yes --> Q5`: If the node has exactly one annotated text property, proceed to the next question.
+- `Q5 -- "No — splitting doesn't make sense" --> KindBlock`: If splitting the node into two nodes by pressing Enter doesn't make sense, the node type is classified as a block.
+- `Q5 -- Yes --> KindText`: If splitting the node into two nodes by pressing Enter makes sense, the node type is classified as text.
+
+## Repository Context & Terminology
+- **Node Type**: A classification of content elements within the system, determining their structure and behavior.
+- **Inline Formatting**: Text formatting applied within a line of text, such as bold, italic, or links.
+- **Top-Level Routable Entry Point**: A node that serves as a primary entry point for navigation within the system.
+- **Annotated Text Property**: A text property that includes additional metadata or formatting information.
+- **Block**: A content element that can contain other elements, such as images, text, or other blocks.
+- **Text**: A content element consisting primarily of textual information.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the need to define a new node type, initiating a series of questions. The first decision point asks whether inline formatting is applied within the text. If yes, the node is classified as an annotation (e.g., bold, italic, link), and the process ends. If not, the flow proceeds to the next question: is it a top-level routable entry point? A positive answer leads to classification as a document (e.g., page, article, event). A negative answer leads to the question: is text the node's entire purpose? If the answer is no, indicating non-text properties or children, the node is classified as a block (e.g., image+caption, quote+author, list, nav, embed). If the node's entire purpose is text, the flow asks: does it have exactly one annotated_text property? If no, indicating multiple text properties, the node is classified as a block. If yes, the flow asks: does pressing Enter to split into two nodes make sense? If no, the node is classified as a block. If yes, the node is classified as text (e.g., paragraph, heading, list_item). The final node type classifications represent different content structures within the system, guiding how content is organized and displayed.

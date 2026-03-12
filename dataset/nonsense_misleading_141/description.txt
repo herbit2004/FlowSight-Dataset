@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the process of handling a new order. It outlines the steps involved from receiving an order to its completion, including inventory checks, payment processing, packaging, inspection, and shipping. The diagram serves as a visual representation of the order fulfillment workflow.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with a single "Start" node at the top and ends with a single "End" node at the bottom. The flow branches at decision points and converges at the end.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Order Reception & Inventory Check, Payment Processing, Order Preparation, Inspection, Shipping, Notification & Archival, and Order Completion.
+
+## Node-by-Node Description
+- **A / Start: New Order Received**: Represents the beginning of the order processing workflow when a new order is received. visible in diagram; no further repository context available.
+- **B / Inventory Available?**: A decision point to check if the ordered item is in stock. visible in diagram; no further repository context available.
+- **C / Notify Customer: Out of Stock**: Represents notifying the customer that the item is out of stock. visible in diagram; no further repository context available.
+- **D / Process Payment**: Represents the payment processing step. visible in diagram; no further repository context available.
+- **E / Shipping Label Created**: Represents the creation of a shipping label after successful payment. visible in diagram; no further repository context available.
+- **G / Package Order**: Represents the packaging of the order. visible in diagram; no further repository context available.
+- **H / Inspection Passed?**: A decision point to check if the packaged order passes inspection. visible in diagram; no further repository context available.
+- **I / Send to Shipping**: Represents sending the order to shipping after a failed inspection. visible in diagram; no further repository context available.
+- **J / Return Item to Inventory**: Represents returning the item to inventory after a successful inspection. visible in diagram; no further repository context available.
+- **K / Order Shipped**: Represents the order being shipped. visible in diagram; no further repository context available.
+- **L / Send Shipping Notification**: Represents sending a shipping notification to the customer. visible in diagram; no further repository context available.
+- **M / Archive Order**: Represents archiving the order after shipping. visible in diagram; no further repository context available.
+- **F / Cancel Order**: Represents canceling the order after a failed payment. visible in diagram; no further repository context available.
+- **N / End: Order Completed**: Represents the end of the order processing workflow. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `A --> B`: Indicates the start of the order processing, leading to the inventory check.
+  `B -- No --> C`: If the inventory is not available, notify the customer.
+  `C --> A`: After notifying the customer, the process returns to the start.
+  `B -- Yes --> D`: If the inventory is available, proceed to payment processing.
+  `D -- Success --> E`: If the payment is successful, create a shipping label.
+  `D -- Failure --> F`: If the payment fails, cancel the order.
+  `E --> G`: After creating the shipping label, package the order.
+  `G --> H`: After packaging the order, perform an inspection.
+  `H -- No --> I`: If the inspection fails, send the order to shipping.
+  `H -- Yes --> J`: If the inspection passes, return the item to inventory.
+  `J --> B`: After returning the item to inventory, the process returns to the inventory check.
+  `I --> K`: After a failed inspection, the order is sent to shipping.
+  `K --> L`: After sending to shipping, the order is marked as shipped.
+  `L --> M`: After the order is shipped, send a shipping notification.
+  `M --> N`: After sending the shipping notification, archive the order.
+  `F --> N`: If the order is cancelled, the process ends.
+  Paths `M` and `F` converge at node `N`.
+
+## Repository Context & Terminology
+- **Order**: In standard practice, an order represents a customer's request to purchase goods or services. In this diagram, an order triggers the entire workflow.
+- **Inventory**: In standard practice, inventory refers to the stock of goods available. In this diagram, the availability of inventory determines the path the order takes.
+- **Payment Processing**: In standard practice, payment processing involves securely collecting and verifying customer payment information. In this diagram, successful payment leads to order fulfillment, while failure leads to cancellation.
+- **Shipping Label**: In standard practice, a shipping label contains information needed to deliver a package. In this diagram, it is created after successful payment.
+- **Packaging**: In standard practice, packaging involves preparing the order for shipment. In this diagram, it occurs after the shipping label is created.
+- **Inspection**: In standard practice, inspection involves checking the packaged order for quality and accuracy. In this diagram, a failed inspection leads to shipping, while a passed inspection returns the item to inventory.
+- **Shipping Notification**: In standard practice, a shipping notification informs the customer that their order has been shipped. In this diagram, it is sent after the order is marked as shipped.
+
+## High-Density QA Ground Truth Summary
+The process begins with "Start: New Order Received" (A), immediately followed by a check for "Inventory Available?" (B). If inventory is not available ("No" branch), the customer is notified ("Notify Customer: Out of Stock" C), and the process counterfactually loops back to the start (A). If inventory is available ("Yes" branch), the system proceeds to "Process Payment" (D). A failed payment ("Failure" branch) leads to "Cancel Order" (F) and then "End: Order Completed" (N). A successful payment ("Success" branch) results in "Shipping Label Created" (E), followed by "Package Order" (G). The diagram then shows "Inspection Passed?" (H). Here, the "Yes" branch counterfactually leads to "Return Item to Inventory" (J), which then loops back to the "Inventory Available?" check (B). The "No" branch from inspection leads to "Send to Shipping" (I), then "Order Shipped" (K), "Send Shipping Notification" (L), and "Archive Order" (M), before finally reaching "End: Order Completed" (N). The diagram contains several errors, including an illogical loop from notifying the customer of out-of-stock items back to the start, a reversed sequence of inspection before packaging, and a swapped branch outcome where passing inspection leads to returning the item to inventory.

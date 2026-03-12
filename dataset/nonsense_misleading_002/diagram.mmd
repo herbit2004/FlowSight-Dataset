@@ -1,0 +1,22 @@
+graph TD
+    A[User Places Order] --> B{Payment Received?};
+    B -- No --> C[Cancel Order];
+    B -- Yes --> D[Inventory Check];
+    D -- Available --> E[Fulfillment Initiated];
+    D -- Unavailable --> F[Order Backordered];
+    F --> B;  
+    E --> H{Shipping Address Valid?};
+    H -- No --> G[Contact User For Address];
+    G --> E;
+    H -- Yes --> I[Package Items];
+    I --> J[Shipping Confirmation Sent];
+    J --> K[Package Shipped];
+    K --> L{Delivery Successful?};
+    L -- No --> M[Investigate Delivery Failure];
+    M --> K; 
+    L -- Yes --> N[Order Marked Complete];
+    N --> A;
+    C --> N;
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style N fill:#f9f,stroke:#333,stroke-width:2px

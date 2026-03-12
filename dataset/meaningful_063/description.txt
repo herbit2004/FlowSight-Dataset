@@ -1,0 +1,108 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the Archival & Cleanup Job Scheduler process. It outlines the steps involved in checking the job schedule, initiating daily, weekly, and monthly scans, and performing actions based on data age and user activity. The diagram serves as a visual representation of the automated data management and user account maintenance procedures.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "Start: Archival & Cleanup Job Scheduler" node at the top and flows downwards through decision points and actions, ultimately converging at the "End: Report Sent" node. The diagram branches into daily, weekly, and monthly processes, each with its own set of checks and actions.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into four stages:
+1. **Scheduling**: Initial check of the job schedule.
+2. **Scanning**: Daily, weekly, and monthly scans for file system, audit logs, and inactive user accounts.
+3. **Data Management**: Actions based on data age, including archiving, purging, and retention.
+4. **User Account Management**: Actions based on user activity, including disabling and deleting accounts.
+
+## Node-by-Node Description
+- **A / Start: Archival & Cleanup Job Scheduler**: The starting point of the archival and cleanup process.
+  visible in diagram; no further repository context available.
+- **B / Check Job Schedule**: Checks the schedule for daily, weekly, and monthly jobs.
+  visible in diagram; no further repository context available.
+- **C / Initiate Daily Scan: File System & Database**: Initiates a daily scan of the file system and database.
+  visible in diagram; no further repository context available.
+- **D / Initiate Weekly Scan: Audit Logs & Permissions**: Initiates a weekly scan of audit logs and permissions.
+  visible in diagram; no further repository context available.
+- **E / Initiate Monthly Scan: Inactive User Accounts**: Initiates a monthly scan for inactive user accounts.
+  visible in diagram; no further repository context available.
+- **F / File Age > Retention Period?**: Checks if the file age is greater than the retention period.
+  visible in diagram; no further repository context available.
+- **G / Move File to Archive: Cold Storage**: Moves the file to cold storage for archiving.
+  visible in diagram; no further repository context available.
+- **H / Log: File within Retention**: Logs that the file is within the retention period.
+  visible in diagram; no further repository context available.
+- **I / Log Data Age > 90 Days?**: Checks if the log data age is greater than 90 days.
+  visible in diagram; no further repository context available.
+- **J / Purge Log Data**: Purges the log data.
+  visible in diagram; no further repository context available.
+- **K / Maintain Log Data**: Maintains the log data.
+  visible in diagram; no further repository context available.
+- **L / User Last Logged-in > 1 Year?**: Checks if the user last logged in more than 1 year ago.
+  visible in diagram; no further repository context available.
+- **M / Disable User Account**: Disables the user account.
+  visible in diagram; no further repository context available.
+- **N / Account Disabled > 6 Months?**: Checks if the account has been disabled for more than 6 months.
+  visible in diagram; no further repository context available.
+- **O / Delete User Account**: Deletes the user account.
+  visible in diagram; no further repository context available.
+- **P / Maintain Disabled Account + Alert**: Maintains the disabled account and sends an alert.
+  visible in diagram; no further repository context available.
+- **Q / Log: User Actively Using Account**: Logs that the user is actively using the account.
+  visible in diagram; no further repository context available.
+- **R / Update File Metadata: Archived Timestamp**: Updates the file metadata with the archived timestamp.
+  visible in diagram; no further repository context available.
+- **S / Generate Archival Report**: Generates an archival report.
+  visible in diagram; no further repository context available.
+- **T / Generate Audit Log Purge Report**: Generates an audit log purge report.
+  visible in diagram; no further repository context available.
+- **U / Generate User Deletion Report**: Generates a user deletion report.
+  visible in diagram; no further repository context available.
+- **V / Email Archival Report**: Emails the archival report.
+  visible in diagram; no further repository context available.
+- **W / Email Audit Log Report**: Emails the audit log report.
+  visible in diagram; no further repository context available.
+- **X / Email User Account Report**: Emails the user account report.
+  visible in diagram; no further repository context available.
+- **Y / End: Report Sent**: The end point of the process, indicating that the report has been sent.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Start the archival and cleanup job scheduler.
+- `B -- Daily? --> C`: If the job is scheduled daily, initiate the daily scan.
+- `B -- Weekly? --> D`: If the job is scheduled weekly, initiate the weekly scan.
+- `B -- Monthly? --> E`: If the job is scheduled monthly, initiate the monthly scan.
+- `C --> F`: After the daily scan, check if the file age is greater than the retention period.
+- `F -- Yes --> G`: If the file age is greater than the retention period, move the file to archive.
+- `F -- No --> H`: If the file age is not greater than the retention period, log that the file is within retention.
+- `D --> I`: After the weekly scan, check if the log data age is greater than 90 days.
+- `I -- Yes --> J`: If the log data age is greater than 90 days, purge the log data.
+- `I -- No --> K`: If the log data age is not greater than 90 days, maintain the log data.
+- `E --> L`: After the monthly scan, check if the user last logged in more than 1 year ago.
+- `L -- Yes --> M`: If the user last logged in more than 1 year ago, disable the user account.
+- `L -- No --> Q`: If the user last logged in less than 1 year ago, log that the user is actively using the account.
+- `M --> N`: After disabling the user account, check if the account has been disabled for more than 6 months.
+- `N -- Yes --> O`: If the account has been disabled for more than 6 months, delete the user account.
+- `N -- No --> P`: If the account has not been disabled for more than 6 months, maintain the disabled account and send an alert.
+- `G --> R`: After moving the file to archive, update the file metadata with the archived timestamp.
+- `R --> S`: After updating the file metadata, generate an archival report.
+- `H --> S`: After logging that the file is within retention, generate an archival report.
+- `J --> T`: After purging the log data, generate an audit log purge report.
+- `K --> T`: After maintaining the log data, generate an audit log purge report.
+- `O --> U`: After deleting the user account, generate a user deletion report.
+- `P --> U`: After maintaining the disabled account, generate a user deletion report.
+- `S --> V`: After generating the archival report, email the archival report.
+- `T --> W`: After generating the audit log purge report, email the audit log report.
+- `U --> X`: After generating the user deletion report, email the user account report.
+- `V --> Y`: After emailing the archival report, end the process.
+- `W --> Y`: After emailing the audit log report, end the process.
+- `X --> Y`: After emailing the user account report, end the process.
+Paths converge at nodes S, T, U, and Y.
+
+## Repository Context & Terminology
+- **Archival**: The process of moving data to long-term storage for preservation.
+- **Cleanup**: The process of removing or purging old or unnecessary data.
+- **Retention Period**: The duration for which data must be kept before it can be archived or deleted.
+- **Cold Storage**: A storage solution for infrequently accessed data, typically with lower cost and slower access times.
+- **Audit Logs**: Records of system events and user activities, used for security and compliance purposes.
+- **Inactive User Account**: A user account that has not been used for a specified period of time.
+- **Metadata**: Data about data, providing information about the characteristics and context of the data.
+
+## High-Density QA Ground Truth Summary
+The Archival & Cleanup Job Scheduler starts by checking the job schedule to determine whether to initiate daily, weekly, or monthly scans. The daily scan focuses on the file system and database, branching based on whether the file age exceeds the retention period. If it does, the file is moved to cold storage, its metadata is updated with an archived timestamp, and an archival report is generated. Otherwise, it's logged that the file is within retention, and an archival report is generated. The weekly scan examines audit logs and permissions, branching based on whether the log data age exceeds 90 days. If so, the log data is purged, and an audit log purge report is generated. Otherwise, the log data is maintained, and an audit log purge report is generated. The monthly scan focuses on inactive user accounts, branching based on whether the user last logged in more than a year ago. If so, the user account is disabled, and a further check determines if the account has been disabled for more than 6 months. If yes, the account is deleted; otherwise, the disabled account is maintained, and an alert is sent. If the user logged in within the last year, it's logged that the user is actively using the account. After generating the archival, audit log purge, or user deletion reports, they are emailed, and the process ends with the "End: Report Sent" node. The retention period is a key domain concept determining data lifecycle management.

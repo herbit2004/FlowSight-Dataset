@@ -1,0 +1,73 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the architecture of a scheduled job dispatch system. It outlines the flow of a job from initial request through scheduling, execution, and monitoring, including error handling and notification. The diagram serves as a visual representation of the system's components and their interactions.
+
+## Overall Layout
+The diagram flows from left to right. It starts with a user request and ends with monitoring and alerting. The diagram includes decision points and subgraphs to represent different execution paths and system stages.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Monitoring & Alerting**: This subgraph handles logging, dashboard monitoring, and alerting based on defined thresholds.
+
+## Node-by-Node Description
+- **A / User Request Job**: Represents the initial submission of a job by a user. visible in diagram; no further repository context available.
+- **B / Job Scheduler**: Responsible for scheduling jobs based on defined criteria. visible in diagram; no further repository context available.
+- **C / Job Queue Selector**: Selects the appropriate job queue (Priority, Short, or Long) based on job characteristics. visible in diagram; no further repository context available.
+- **D / Priority Job Queue**: A queue for high-priority jobs. visible in diagram; no further repository context available.
+- **E / Short Job Queue**: A queue for short-running jobs. visible in diagram; no further repository context available.
+- **F / Long Job Queue**: A queue for long-running jobs. visible in diagram; no further repository context available.
+- **H / Resource Manager**: Manages available resources and determines if resources are available for job execution. visible in diagram; no further repository context available.
+- **I / Job Dispatcher**: Dispatches jobs to available executors. visible in diagram; no further repository context available.
+- **J / Pending Job Queue**: A queue for jobs waiting for available resources. visible in diagram; no further repository context available.
+- **K / Job Executor Pool**: A pool of executors responsible for executing jobs. visible in diagram; no further repository context available.
+- **L / Executor Thread**: A thread responsible for executing a job. visible in diagram; no further repository context available.
+- **M / Execute Job Logic**: The actual execution of the job's logic. visible in diagram; no further repository context available.
+- **N / Job Completion Handler**: Handles the completion of a job, updating its status. visible in diagram; no further repository context available.
+- **O / Failure Handler**: Handles job failures and determines if a retry is allowed. visible in diagram; no further repository context available.
+- **P / Update Job Status to Success**: Updates the job status to "Success" upon successful completion. visible in diagram; no further repository context available.
+- **Q / Retry Policy**: Determines if a failed job should be retried. visible in diagram; no further repository context available.
+- **R / Retry Job**: Retries a failed job. visible in diagram; no further repository context available.
+- **S / Update Job Status to Failed**: Updates the job status to "Failed" if the retry policy does not allow retries or if retries fail. visible in diagram; no further repository context available.
+- **T / Notification Service**: Sends notifications about job status changes. visible in diagram; no further repository context available.
+- **U / User/System Logs**: Logs job status and system events. visible in diagram; no further repository context available.
+- **V / Monitoring Dashboard**: Displays monitoring information about the system. visible in diagram; no further repository context available.
+- **W / Alerting System**: Generates alerts based on defined thresholds. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: A user requests a job, which is then sent to the Job Scheduler.
+- `B -- Check Job Queues --> C`: The Job Scheduler checks the job queues and passes the job to the Job Queue Selector.
+- `C -- Priority Queue --> D`: The Job Queue Selector routes the job to the Priority Job Queue.
+- `C -- Short Queue --> E`: The Job Queue Selector routes the job to the Short Job Queue.
+- `C -- Long Queue --> F`: The Job Queue Selector routes the job to the Long Job Queue.
+- `D --> H`: Jobs from the Priority Job Queue are sent to the Resource Manager.
+- `E --> H`: Jobs from the Short Job Queue are sent to the Resource Manager.
+- `F --> H`: Jobs from the Long Job Queue are sent to the Resource Manager.
+- `H -- Available Resources? (Yes) --> I`: If resources are available, the Resource Manager sends the job to the Job Dispatcher.
+- `H -- Available Resources? (No) --> J`: If resources are not available, the Resource Manager sends the job to the Pending Job Queue.
+- `J -- Periodically Check --> H`: The Pending Job Queue periodically checks with the Resource Manager for available resources.
+- `I --> K`: The Job Dispatcher sends the job to the Job Executor Pool.
+- `K -- Select Available Executor Thread --> L`: The Job Executor Pool selects an available executor thread.
+- `L --> M`: The executor thread executes the job logic.
+- `M -- Job Success --> N`: If the job executes successfully, it is sent to the Job Completion Handler.
+- `M -- Job Failure --> O`: If the job fails, it is sent to the Failure Handler.
+- `N --> P`: The Job Completion Handler updates the job status to "Success".
+- `O --> Q`: The Failure Handler sends the job to the Retry Policy.
+- `Q -- Retry Allowed --> R`: If the retry policy allows retries, the job is sent to the Retry Job.
+- `Q -- Retry Not Allowed --> S`: If the retry policy does not allow retries, the job status is updated to "Failed".
+- `R --> J`: The Retry Job sends the job back to the Pending Job Queue.
+- `P --> T`: The job status is sent to the Notification Service.
+- `S --> T`: The job status is sent to the Notification Service.
+- `T -- Send Job Status Notification --> U`: The Notification Service sends a notification about the job status.
+- `U --> V`: Job status and system events are sent to the Monitoring Dashboard.
+- `V -- Threshold Breached --> W`: If a threshold is breached, the Monitoring Dashboard sends an alert to the Alerting System.
+
+## Repository Context & Terminology
+- **Job Scheduler**: A system component responsible for scheduling jobs for execution, often based on priority, resource availability, or time constraints.
+- **Job Queue**: A data structure that holds jobs waiting to be executed, typically managed based on priority or other scheduling policies.
+- **Resource Manager**: A system component that manages and allocates resources (e.g., CPU, memory) to jobs.
+- **Job Dispatcher**: A component that assigns jobs to available executors for processing.
+- **Job Executor Pool**: A collection of worker processes or threads that execute jobs.
+- **Retry Policy**: A set of rules that determine whether a failed job should be retried, and if so, how many times and under what conditions.
+- **Monitoring Dashboard**: A visual interface that displays real-time information about the system's performance and status.
+
+## High-Density QA Ground Truth Summary
+The scheduled job dispatch system begins with a User Request Job, which is then passed to the Job Scheduler. The Job Scheduler checks the job queues before handing off to the Job Queue Selector, which routes the job to either the Priority, Short, or Long Job Queue based on job characteristics. These queues all converge at the Resource Manager. The Resource Manager checks for available resources; if resources are available (Yes), the job is sent to the Job Dispatcher. If not (No), the job is placed in the Pending Job Queue and periodically re-evaluated. The Job Dispatcher sends the job to the Job Executor Pool, where an Executor Thread is selected to execute the Job Logic. Upon successful execution, the Job Completion Handler updates the job status to "Success". If the job fails, the Failure Handler consults the Retry Policy. If retries are allowed, the job returns to the Pending Job Queue; otherwise, the job status is updated to "Failed". Both success and failure statuses are sent to the Notification Service, which then sends a notification. Finally, job status and system events are logged to User/System Logs, feeding into the Monitoring & Alerting subgraph. Within the subgraph, the Monitoring Dashboard displays system information, and if a Threshold is Breached, the Alerting System is triggered. The system leverages job queues to manage workload and a resource manager to efficiently allocate resources, ensuring jobs are processed according to their priority and available system capacity.

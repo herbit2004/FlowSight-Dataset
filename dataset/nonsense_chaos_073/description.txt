@@ -1,0 +1,83 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the intake process of LuminaGenesis. It outlines the steps and decision points involved in processing data, including validation, routing, injection, and finalization. The diagram serves as a visual representation of the data flow and control logic within the LuminaGenesis system.
+
+## Overall Layout
+The diagram flows from top to bottom (TB). It starts with the "Start: LuminaGenesis Intake" node and ends with the "End: LuminaGenesis Eject" node. The diagram includes decision diamonds that create branching paths based on certain conditions.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Intake, CoreSync Validation, ZenithGate Authentication, Temporal Buffering, CoreSync Postload, VaultNode Handshake, and Termination.
+
+## Node-by-Node Description
+- **A / Start: LuminaGenesis Intake**: Represents the beginning of the LuminaGenesis intake process.
+  visible in diagram; no further repository context available.
+- **B / CoreSync Validation: Enabled?**: A decision point to check if CoreSync validation is enabled.
+  visible in diagram; no further repository context available.
+- **C / SpectraQueue Flush: PreLoad**: Represents the pre-loading of the SpectraQueue flush.
+  visible in diagram; no further repository context available.
+- **D / VaultNode Handshake: Initial**: Represents the initial handshake with the VaultNode.
+  visible in diagram; no further repository context available.
+- **E / ArcLane Distributor: Alloc Init**: Represents the allocation and initialization of the ArcLane Distributor.
+  visible in diagram; no further repository context available.
+- **F / ZenithGate Auth Layer: Active?**: A decision point to check if the ZenithGate authentication layer is active.
+  visible in diagram; no further repository context available.
+- **G / FluxBridge Router: ProtoEstablish**: Represents the proto-establishment of the FluxBridge Router.
+  visible in diagram; no further repository context available.
+- **H / FluxBridge Router: Bypass**: Represents the bypassing of the FluxBridge Router.
+  visible in diagram; no further repository context available.
+- **I / Temporal Buffer: Full?**: A decision point to check if the temporal buffer is full.
+  visible in diagram; no further repository context available.
+- **J / DataShunt Inject: Main**: Represents the injection of data via the main DataShunt.
+  visible in diagram; no further repository context available.
+- **K / DataShunt Inject: Overflow**: Represents the injection of data via the overflow DataShunt.
+  visible in diagram; no further repository context available.
+- **L / CoreSync Validation: PostLoad**: Represents the post-load validation of CoreSync.
+  visible in diagram; no further repository context available.
+- **M / ArcLane Distributor: Alloc Dealloc**: Represents the allocation and deallocation of the ArcLane Distributor.
+  visible in diagram; no further repository context available.
+- **N / SpectraQueue Flush: PostLoad**: Represents the post-load flushing of the SpectraQueue.
+  visible in diagram; no further repository context available.
+- **O / VaultNode Handshake: Confirm**: Represents the confirmation handshake with the VaultNode.
+  visible in diagram; no further repository context available.
+- **P / Termination Signal: Send**: Represents sending the termination signal.
+  visible in diagram; no further repository context available.
+- **Q / Alert: SysFailure**: Represents alerting a system failure.
+  visible in diagram; no further repository context available.
+- **R / End: LuminaGenesis Eject**: Represents the end of the LuminaGenesis eject process.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Start the LuminaGenesis intake process.
+- `B -- Yes --> C`: If CoreSync validation is enabled, proceed to SpectraQueue PreLoad.
+- `B -- No --> D`: If CoreSync validation is not enabled, proceed to VaultNode Initial Handshake.
+- `C --> E`: After SpectraQueue PreLoad, proceed to ArcLane Distributor initialization.
+- `D --> E`: After VaultNode Initial Handshake, proceed to ArcLane Distributor initialization.
+- `E --> F`: After ArcLane Distributor initialization, proceed to ZenithGate Auth Layer check.
+- `F -- Yes --> G`: If ZenithGate Auth Layer is active, proceed to FluxBridge Router ProtoEstablish.
+- `F -- No --> H`: If ZenithGate Auth Layer is not active, proceed to FluxBridge Router Bypass.
+- `G --> I`: After FluxBridge Router ProtoEstablish, proceed to Temporal Buffer check.
+- `H --> I`: After FluxBridge Router Bypass, proceed to Temporal Buffer check.
+- `I -- No --> J`: If Temporal Buffer is not full, proceed to DataShunt Inject Main.
+- `I -- Yes --> K`: If Temporal Buffer is full, proceed to DataShunt Inject Overflow.
+- `J --> L`: After DataShunt Inject Main, proceed to CoreSync PostLoad validation.
+- `K --> L`: After DataShunt Inject Overflow, proceed to CoreSync PostLoad validation.
+- `L --> M`: After CoreSync PostLoad validation, proceed to ArcLane Distributor deallocation.
+- `M --> N`: After ArcLane Distributor deallocation, proceed to SpectraQueue PostLoad flush.
+- `N --> O`: After SpectraQueue PostLoad flush, proceed to VaultNode Handshake confirmation.
+- `O -- Success --> P`: If VaultNode Handshake is successful, proceed to Termination Signal Send.
+- `O -- Failure --> Q`: If VaultNode Handshake fails, proceed to Alert SysFailure.
+- `P --> R`: After Termination Signal Send, proceed to LuminaGenesis Eject.
+- `Q --> R`: After Alert SysFailure, proceed to LuminaGenesis Eject.
+
+## Repository Context & Terminology
+- **LuminaGenesis**: The overall system or process being described by the flowchart.
+- **CoreSync Validation**: A validation process, possibly related to data synchronization. It has an enabled/disabled state.
+- **SpectraQueue Flush**: A queue flushing mechanism, with pre-load and post-load stages.
+- **VaultNode Handshake**: A handshake process with a VaultNode, involving initial and confirmation stages.
+- **ArcLane Distributor**: A component responsible for distributing data, involving allocation and deallocation.
+- **ZenithGate Auth Layer**: An authentication layer with an active/inactive state.
+- **FluxBridge Router**: A router component, with proto-establishment and bypass modes.
+- **Temporal Buffer**: A buffer that stores data temporarily, with a full/not full state.
+- **DataShunt Inject**: A data injection mechanism, with main and overflow injection paths.
+
+## High-Density QA Ground Truth Summary
+The LuminaGenesis intake process begins with a check to see if CoreSync Validation is enabled. If enabled, the process proceeds to SpectraQueue Flush (PreLoad); otherwise, it initiates a VaultNode Handshake (Initial). Both paths converge at the ArcLane Distributor (Alloc Init), which then leads to a check for ZenithGate Auth Layer activity. If active, the FluxBridge Router is ProtoEstablished; otherwise, it's bypassed. Both of these paths converge at the Temporal Buffer, where a check is performed to see if it's full. If full, DataShunt Inject (Overflow) is triggered; otherwise, DataShunt Inject (Main) is used. Both injection paths converge at CoreSync Validation (PostLoad), followed by ArcLane Distributor (Alloc Dealloc) and SpectraQueue Flush (PostLoad). The process then attempts a VaultNode Handshake (Confirm). A successful handshake leads to Termination Signal (Send), while a failure triggers Alert (SysFailure). Both the termination signal and the system failure alert lead to the final step: LuminaGenesis Eject. The CoreSync Validation, ZenithGate Auth Layer, and Temporal Buffer checks are key decision points that determine the path of data flow within the LuminaGenesis system.

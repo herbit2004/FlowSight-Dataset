@@ -1,0 +1,27 @@
+graph TD
+    A[Bill Request Received] --> B{Validate Request};
+    B -- Valid --> C[Retrieve Customer Account];
+    B -- Invalid --> Z[Reject Request + Log Error];
+    C --> D{Determine Billing Cycle};
+    D -- Monthly --> E[Calculate Monthly Usage];
+    D -- Quarterly --> F[Calculate Quarterly Usage];
+    E --> G[Apply Discounts and Taxes];
+    F --> G;
+    G --> H{Check for Outstanding Balance};
+    H -- Yes --> I[Add Remaining Balance];
+    H -- No --> J[Continue];
+    I --> J[Continue];
+    J --> K[Generate Bill Summary];
+    K --> L[Create PDF Bill];
+    L --> M[Store Bill in Repository];
+    M --> N{Delivery Method?};
+    N -- Email --> O[Send Email Notification];
+    N -- Postal --> P[Print and Mail Bill];
+    N -- Online Portal --> Q[Update Online Portal];
+    O --> R[Update Billing System];
+    P --> R;
+    Q --> R;
+    R --> S[Mark Bill as Generated];
+    S --> T[Billing Process Complete];
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px
+    style B,H fill:#ccf,stroke:#333,stroke-width:2px

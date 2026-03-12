@@ -1,0 +1,40 @@
+graph TD
+    subgraph Data Ingestion
+        A[Metrics Source: Application A] --> B(Metrics Router);
+        C[Metrics Source: Application B] --> B;
+        D[Metrics Source: Infrastructure] --> B;
+    end
+
+    B --> E{Pre-Processing};
+    E -- "Handle high cardinality" --> F[Aggregation Service];
+    E -- "Filter irrelevant metrics" --> G[Dropping Service];
+
+    F --> H{Storage Options};
+    G --> H;
+
+    subgraph Data Storage
+        H -- "Time-series data" --> I[TSDB: MetricsDB];
+        H -- "Alert configurations" --> J[Configuration Store: AlertingConfigDB];
+    end
+
+    I --> K(Query Engine);
+    J --> L(Alerting Engine);
+
+    K --> M{Threshold Check};
+    L --> M
+
+    M -- "Threshold breached" --> N[Alert Generation];
+    M -- "Threshold OK" --> O[No Action];
+
+    N --> P{Notification Routing};
+    P -- "Email" --> Q[Email Service];
+    P -- "Pager" --> R[Pager Service];
+    P -- "Webhook" --> S[Incident Management System];
+
+    subgraph Reporting & Visualization
+      K --> T[Dashboard Service];
+      T --> U[User Interface];
+    end
+
+    classDef alert fill:#f9f,stroke:#333,stroke-width:2px;
+    class N,P alert;

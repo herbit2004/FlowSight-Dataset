@@ -1,0 +1,68 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow and control flow within a distributed cache system. It depicts the interaction between an application service, a distributed cache layer, an invalidation service, and a remote database. The diagram serves as a visual representation of the system's architecture and the steps involved in handling read and write requests, as well as cache invalidation.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically organized into subgraphs representing different services and components. The start node is the "Application Logic" within the "Application Service" subgraph, and the primary end node is "Cache Data" within the "Distributed Cache Layer" subgraph, although error reporting also represents a possible end state.
+
+## Subgraphs / Stages
+The diagram contains the following explicit subgraphs:
+- **Application Service**: Represents the application logic that initiates read and write requests.
+- **Distributed Cache Layer**: Manages the cache, including reading, writing, and validating data.
+- **Invalidation Service**: Handles cache invalidation events and updates the cache accordingly.
+- **Remote Database**: Represents the persistent data store.
+
+## Node-by-Node Description
+- **AS / Application Logic**: Represents the application logic within the Application Service that initiates read and write requests. visible in diagram; no further repository context available.
+- **CCW / Cache Controller - Write**: Handles write requests to the cache within the Distributed Cache Layer. visible in diagram; no further repository context available.
+- **WU / Write Unit Ready?**: A decision point that checks if the write unit is ready for processing. visible in diagram; no further repository context available.
+- **WV / Write Validator**: Validates the write request before it is written to the cache. visible in diagram; no further repository context available.
+- **CW / Cache Writer**: Writes the validated data to the cache. visible in diagram; no further repository context available.
+- **ER / Error Reporting**: Handles errors that occur during the write validation process. visible in diagram; no further repository context available.
+- **CC / Cache Controller**: Handles read requests to the cache within the Distributed Cache Layer. visible in diagram; no further repository context available.
+- **CM / Cache Miss?**: A decision point that checks if the requested data is present in the cache. visible in diagram; no further repository context available.
+- **RT / Remote Tier**: Retrieves data from the remote database when a cache miss occurs. visible in diagram; no further repository context available.
+- **CD / Cache Data**: Represents the cached data. visible in diagram; no further repository context available.
+- **EV / Event Listener**: Listens for cache invalidation events within the Invalidation Service. visible in diagram; no further repository context available.
+- **IF / Invalidate Event?**: A decision point that checks if an invalidation event has occurred. visible in diagram; no further repository context available.
+- **IK / Invalidation Key Extractor**: Extracts the key to be invalidated from the invalidation event. visible in diagram; no further repository context available.
+- **IQ / Invalidation Queue**: Queues the invalidation keys to be processed. visible in diagram; no further repository context available.
+- **IV / Cache Invalidator**: Invalidates the corresponding data in the cache. visible in diagram; no further repository context available.
+- **DB / Data Store**: Represents the remote database where data is stored. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `AS --> CCW`: A write request is sent from the Application Logic to the Cache Controller - Write.
+- `CCW --> WU`: The Cache Controller - Write checks if the write unit is ready.
+- `WU -- Yes --> WV`: If the write unit is ready, the write request is sent to the Write Validator.
+- `WU -- No --> (loops back to CCW)`: If the write unit is not ready, the process loops back to the Cache Controller - Write. visible in diagram; no further repository context available.
+- `WV --> CW`: If the write request is valid, it is sent to the Cache Writer.
+- `WV --> ER`: If the write request is invalid, an error is reported.
+- `CW --> CD`: The Cache Writer writes the data to the Cache Data.
+- `CW --> EV`: The Cache Writer sends a value to the Event Listener.
+- `CC --> CM`: A read request is sent from the Cache Controller to the Cache Miss? decision point.
+- `CM -- Yes --> RT`: If there is a cache miss, the request is sent to the Remote Tier.
+- `CM -- No --> CD`: If there is a cache hit, the data is retrieved from the Cache Data.
+- `RT --> DB`: The Remote Tier retrieves data from the Data Store.
+- `DB --> RT`: The Data Store returns the requested data to the Remote Tier.
+- `RT --> CC`: The Remote Tier returns the data to the Cache Controller.
+- `CD --> AS`: The Cache Data returns the value to the Application Logic.
+- `EV --> IF`: The Event Listener checks if an invalidation event has occurred.
+- `IF -- Yes --> IK`: If an invalidation event has occurred, the Invalidation Key Extractor extracts the key.
+- `IF -- No --> EV`: If no invalidation event has occurred, the Event Listener continues to listen for events.
+- `IK --> IQ`: The Invalidation Key Extractor sends the key to the Invalidation Queue.
+- `IQ --> IV`: The Invalidation Queue sends the key to the Cache Invalidator.
+- `IV --> CD`: The Cache Invalidator invalidates the corresponding data in the Cache Data.
+- `ER --> CC`: The Error Reporting sends an error to the Cache Controller.
+- `EV --> CC`: The Event Listener sends a value to the Cache Controller.
+
+## Repository Context & Terminology
+- **Application Service**: A software component that provides specific functionality to end-users or other applications.
+- **Distributed Cache**: A caching system that spans multiple nodes or servers, providing scalability and high availability.
+- **Cache Controller**: A component responsible for managing the cache, including reading, writing, and invalidating data.
+- **Cache Miss**: An event that occurs when requested data is not found in the cache.
+- **Remote Tier**: A component that interacts with a remote data source, such as a database.
+- **Invalidation Service**: A service that handles cache invalidation events, ensuring data consistency.
+- **Event Listener**: A component that listens for specific events and triggers corresponding actions.
+- **Cache Invalidator**: A component that invalidates data in the cache based on invalidation events.
+
+## High-Density QA Ground Truth Summary
+The process begins with the Application Logic sending a Write Request to the Cache Controller - Write. The Cache Controller then checks if the Write Unit is ready. If ready, the Write Validator validates the request; otherwise, it loops back. A valid write proceeds to the Cache Writer, which writes the data to the Cache Data and sends a value to the Event Listener. An invalid write triggers Error Reporting, which then sends an error to the Cache Controller. For read requests, the Cache Controller checks for a Cache Miss. If a miss occurs, the Remote Tier retrieves data from the Data Store, returning it to the Cache Controller. If there's a cache hit, data is retrieved directly from Cache Data. The Cache Data then returns the value to the Application Logic. The Event Listener continuously monitors for Invalidate Events. Upon detection, the Invalidation Key Extractor extracts the key, which is then queued in the Invalidation Queue and processed by the Cache Invalidator, ultimately invalidating the corresponding data in the Cache Data. The Distributed Cache Layer, a core component, ensures data consistency and availability across multiple nodes, a common requirement in modern application architectures.

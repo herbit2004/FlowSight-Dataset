@@ -1,0 +1,95 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of requests and data transformations within a chat service. It illustrates how incoming requests are routed, processed, and transformed into different output formats, such as Server-Sent Events (SSE) and JSON. The diagram provides a high-level overview of the system's components and their interactions.
+
+## Overall Layout
+The diagram's primary direction is left to right (LR). It is hierarchically divided into four subgraphs: "配置系统 (Configuration System)", "请求处理层 (Request Processing Layer)", "聊天服务核心 (Chat Service Core)", and "转换引擎 (Transformation Engine)". The start node is "入口路由器 (Entry Router)" and the end nodes are "🌊 SSE 流输出 (SSE Stream Output)" and "📄 JSON 输出 (JSON Output)".
+
+## Subgraphs / Stages
+- **配置系统 (Configuration System)**: Responsible for managing environment variables and configuration objects.
+- **请求处理层 (Request Processing Layer)**: Handles incoming requests and routes them based on the URL path.
+- **聊天服务核心 (Chat Service Core)**: Processes chat-related requests, including authentication, request transformation, and upstream calls.
+- **转换引擎 (Transformation Engine)**: Transforms data into different formats, such as SSE and JSON.
+
+## Node-by-Node Description
+- **入口路由器 (Entry Router)**: The entry point for incoming requests.
+  visible in diagram; no further repository context available.
+- **路径判断 (Path Judgement)**: Determines the appropriate service based on the request path.
+  visible in diagram; no further repository context available.
+- **模型列表服务 (Model List Service)**: Handles requests for listing models (e.g., `/v1/models`).
+  visible in diagram; no further repository context available.
+- **聊天服务 (Chat Service)**: Handles chat-related requests (e.g., `/v1/chat/completions`).
+  visible in diagram; no further repository context available.
+- **开发者驾驶舱 (Developer Cockpit)**: Likely a UI or tool for developers.
+  visible in diagram; no further repository context available.
+- **404 处理 (404 Handling)**: Handles requests that do not match any defined routes.
+  visible in diagram; no further repository context available.
+- **认证验证 (Authentication Verification)**: Authenticates and authorizes incoming requests.
+  visible in diagram; no further repository context available.
+- **请求转换器 (Request Transformer)**: Transforms the request into a format suitable for the upstream service.
+  visible in diagram; no further repository context available.
+- **上游调用 (Upstream Call)**: Invokes the upstream service.
+  visible in diagram; no further repository context available.
+- **响应类型判断 (Response Type Judgement)**: Determines the type of response (streaming or non-streaming).
+  visible in diagram; no further repository context available.
+- **TransformStream 转换器 (TransformStream Converter)**: Converts streaming responses into SSE format.
+  visible in diagram; no further repository context available.
+- **批量转换器 (Batch Converter)**: Converts non-streaming responses into JSON format.
+  visible in diagram; no further repository context available.
+- **SSE 流输出 (SSE Stream Output)**: Outputs the data in SSE format.
+  visible in diagram; no further repository context available.
+- **JSON 输出 (JSON Output)**: Outputs the data in JSON format.
+  visible in diagram; no further repository context available.
+- **数据解码 (Data Decoding)**: Decodes the incoming data.
+  visible in diagram; no further repository context available.
+- **行分割处理 (Line Segmentation Processing)**: Splits the data into lines.
+  visible in diagram; no further repository context available.
+- **JSON 解析 (JSON Parsing)**: Parses the JSON data.
+  visible in diagram; no further repository context available.
+- **格式映射 (Format Mapping)**: Maps the data to the desired format.
+  visible in diagram; no further repository context available.
+- **重新编码 (Re-encoding)**: Re-encodes the data.
+  visible in diagram; no further repository context available.
+- **SSE 封装 (SSE Encapsulation)**: Encapsulates the data into SSE format.
+  visible in diagram; no further repository context available.
+- **环境变量 (Environment Variables)**: Configuration parameters set in the environment.
+  visible in diagram; no further repository context available.
+- **CONFIG 对象 (CONFIG Object)**: A configuration object that stores the system's configuration.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `入口路由器 (Entry Router) --> 路径判断 (Path Judgement)`: Incoming requests are routed to the path judgement node.
+- `路径判断 (Path Judgement) --> 模型列表服务 (Model List Service)`: If the path is `/v1/models`, the request is routed to the model list service.
+- `路径判断 (Path Judgement) --> 聊天服务 (Chat Service)`: If the path is `/v1/chat/completions`, the request is routed to the chat service.
+- `路径判断 (Path Judgement) --> 开发者驾驶舱 (Developer Cockpit)`: If the path is `/`, the request is routed to the developer cockpit.
+- `路径判断 (Path Judgement) --> 404 处理 (404 Handling)`: If the path does not match any defined routes, the request is routed to the 404 handling.
+- `聊天服务 (Chat Service) --> 认证验证 (Authentication Verification)`: Chat service requests are authenticated.
+- `认证验证 (Authentication Verification) --> 请求转换器 (Request Transformer)`: Authenticated requests are transformed.
+- `请求转换器 (Request Transformer) --> 上游调用 (Upstream Call)`: Transformed requests are sent to the upstream service.
+- `上游调用 (Upstream Call) --> 响应类型判断 (Response Type Judgement)`: The response type is determined.
+- `响应类型判断 (Response Type Judgement) -- 流式响应 (Streaming Response) --> TransformStream 转换器 (TransformStream Converter)`: Streaming responses are converted to SSE format.
+- `响应类型判断 (Response Type Judgement) -- 非流式响应 (Non-Streaming Response) --> 批量转换器 (Batch Converter)`: Non-streaming responses are converted to JSON format.
+- `TransformStream 转换器 (TransformStream Converter) --> SSE 流输出 (SSE Stream Output)`: The SSE stream is output.
+- `批量转换器 (Batch Converter) --> JSON 输出 (JSON Output)`: The JSON output is generated.
+- `TransformStream 转换器 (TransformStream Converter) --> 1. 数据解码 (1. Data Decoding)`: Streaming responses are further processed by the transformation engine.
+- `1. 数据解码 (1. Data Decoding) --> 2. 行分割处理 (2. Line Segmentation Processing)`: Decoded data is split into lines.
+- `2. 行分割处理 (2. Line Segmentation Processing) --> 3. JSON 解析 (3. JSON Parsing)`: Lines are parsed as JSON.
+- `3. JSON 解析 (3. JSON Parsing) --> 4. 格式映射 (4. Format Mapping)`: JSON data is mapped to a specific format.
+- `4. 格式映射 (4. Format Mapping) --> 5. 重新编码 (5. Re-encoding)`: Data is re-encoded.
+- `5. 重新编码 (5. Re-encoding) --> 6. SSE 封装 (6. SSE Encapsulation)`: Data is encapsulated into SSE format.
+- `配置系统 (Configuration System): 环境变量 (Environment Variables) --> CONFIG 对象 (CONFIG Object)`: Environment variables are used to create a configuration object.
+- `CONFIG 对象 (CONFIG Object) --> 模型列表服务 (Model List Service)`: The configuration object is used by the model list service.
+- `CONFIG 对象 (CONFIG Object) --> 聊天服务 (Chat Service)`: The configuration object is used by the chat service.
+- `CONFIG 对象 (CONFIG Object) --> 开发者驾驶舱 (Developer Cockpit)`: The configuration object is used by the developer cockpit.
+
+## Repository Context & Terminology
+- **入口路由器 (Entry Router)**: The initial point of contact for all incoming requests, responsible for directing traffic to the appropriate handler based on the request's URL.
+- **路径判断 (Path Judgement)**: The process of analyzing the URL path of an incoming request to determine the correct service or component to handle it.
+- **/v1/models**: An API endpoint that provides a list of available models.
+- **/v1/chat/completions**: An API endpoint for generating chat completions.
+- **SSE (Server-Sent Events)**: A server push technology enabling real-time data streaming from the server to the client.
+- **JSON (JavaScript Object Notation)**: A lightweight data-interchange format.
+- **TransformStream**: A WHATWG Streams API that allows transforming data as it flows through a pipeline.
+- **CONFIG 对象 (CONFIG Object)**: A centralized repository for configuration settings, potentially loaded from environment variables or configuration files.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the architecture of a chat service, starting with the `入口路由器 (Entry Router)` which receives incoming requests. The router then uses `路径判断 (Path Judgement)` to determine the appropriate service based on the request path. If the path is `/v1/models`, the request is routed to the `模型列表服务 (Model List Service)`. If the path is `/v1/chat/completions`, the request is routed to the `聊天服务 (Chat Service)`. Other paths lead to the `开发者驾驶舱 (Developer Cockpit)` or `404 处理 (404 Handling)`. The `聊天服务 (Chat Service)` then proceeds with `认证验证 (Authentication Verification)` before using a `请求转换器 (Request Transformer)` and making an `上游调用 (Upstream Call)`. The `响应类型判断 (Response Type Judgement)` then branches the flow based on whether the response is streaming or not. Streaming responses are processed by the `TransformStream 转换器 (TransformStream Converter)` and output as `SSE 流输出 (SSE Stream Output)`. Non-streaming responses are processed by the `批量转换器 (Batch Converter)` and output as `JSON 输出 (JSON Output)`. The `TransformStream` utilizes a `转换引擎 (Transformation Engine)` consisting of `数据解码 (Data Decoding)`, `行分割处理 (Line Segmentation Processing)`, `JSON 解析 (JSON Parsing)`, `格式映射 (Format Mapping)`, `重新编码 (Re-encoding)`, and `SSE 封装 (SSE Encapsulation)` to convert the data into SSE format. The `配置系统 (Configuration System)` provides configuration to the `模型列表服务 (Model List Service)`, `聊天服务 (Chat Service)`, and `开发者驾驶舱 (Developer Cockpit)` via `环境变量 (Environment Variables)` and a `CONFIG 对象 (CONFIG Object)`.

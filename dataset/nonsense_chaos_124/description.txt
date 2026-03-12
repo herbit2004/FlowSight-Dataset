@@ -1,0 +1,94 @@
+## Diagram Type & Purpose
+This is a flowchart diagram outlining the CoreSync protocol. It details the steps involved in initiating, authenticating, transmitting data, synchronizing peripheral data, and ensuring data integrity within the CoreSync system. The diagram serves as a visual representation of the protocol's workflow, aiding in understanding and troubleshooting the data synchronization process.
+
+## Overall Layout
+The diagram flows from top to bottom (TB). It starts with the initiation of the CoreSync protocol and progresses through various stages of authentication, data transmission, and integrity checks, eventually leading to either a successful completion or a failure state.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Handshake & Authentication, OmniLink Connection, Data Transmission, Peripheral Data Sync, Integrity Check, and Termination.
+
+## Node-by-Node Description
+- **A / Start: Initiating CoreSync Protocol**: The starting point of the CoreSync protocol. visible in diagram; no further repository context available.
+- **B / Verify VaultNode Handshake**: Verifies the handshake with the VaultNode. visible in diagram; no further repository context available.
+- **D / SpectraQueue Flush**: Flushes the SpectraQueue. visible in diagram; no further repository context available.
+- **E / Initiate ZenithGate Auth Layer**: Initiates the ZenithGate authentication layer. visible in diagram; no further repository context available.
+- **F / ZenithGate Authentication Passed?**: Checks if ZenithGate authentication was successful. visible in diagram; no further repository context available.
+- **C / Activate FluxBridge Router**: Activates the FluxBridge router. visible in diagram; no further repository context available.
+- **J / Establish OmniLink Connection**: Establishes an OmniLink connection. visible in diagram; no further repository context available.
+- **K / OmniLink Stable?**: Checks if the OmniLink connection is stable. visible in diagram; no further repository context available.
+- **L / Begin Data Transmission via ArcLane Distributor**: Begins data transmission using the ArcLane distributor. visible in diagram; no further repository context available.
+- **N / Perform Delta Compression using XenCodec Engine**: Performs delta compression using the XenCodec engine. visible in diagram; no further repository context available.
+- **O / Send Compressed Data to Target VaultNode**: Sends the compressed data to the target VaultNode. visible in diagram; no further repository context available.
+- **P / Data Transmission Successful?**: Checks if the data transmission was successful. visible in diagram; no further repository context available.
+- **Q / Acknowledge Transmission Receipt**: Acknowledges the receipt of the transmission. visible in diagram; no further repository context available.
+- **R / Initiate Peripheral Data Sync**: Initiates the synchronization of peripheral data. visible in diagram; no further repository context available.
+- **T / Peripheral Data Sync Complete?**: Checks if the peripheral data synchronization is complete. visible in diagram; no further repository context available.
+- **U / Consolidate Synced Data in CoreSync Repository**: Consolidates the synchronized data into the CoreSync repository. visible in diagram; no further repository context available.
+- **W / Perform Integrity Check using DataShield Algorithm**: Performs an integrity check using the DataShield algorithm. visible in diagram; no further repository context available.
+- **X / Integrity Check Passed?**: Checks if the integrity check passed. visible in diagram; no further repository context available.
+- **Y / Update CoreSync Metadata Manifest**: Updates the CoreSync metadata manifest. visible in diagram; no further repository context available.
+- **BB / Deactivate FluxBridge Router**: Deactivates the FluxBridge router. visible in diagram; no further repository context available.
+- **CC / Release OmniLink Connection**: Releases the OmniLink connection. visible in diagram; no further repository context available.
+- **DD / End: CoreSync Protocol Completed Successfully**: The successful completion point of the CoreSync protocol. visible in diagram; no further repository context available.
+- **M / Retry OmniLink Connection Establishment**: Retries establishing the OmniLink connection. visible in diagram; no further repository context available.
+- **S / Re-transmit Data via ArcLane Distributor**: Re-transmits data using the ArcLane distributor. visible in diagram; no further repository context available.
+- **V / Retry Peripheral Data Sync**: Retries the peripheral data synchronization. visible in diagram; no further repository context available.
+- **Z / Trigger Rollback to Previous CoreSync State**: Triggers a rollback to the previous CoreSync state. visible in diagram; no further repository context available.
+- **AA / Log DataShield Algorithm Failure**: Logs a failure of the DataShield algorithm. visible in diagram; no further repository context available.
+- **G / Log ArcLane Distributor Failure**: Logs a failure of the ArcLane distributor. visible in diagram; no further repository context available.
+- **H / Send Signal to CoreSync Validation Monitor**: Sends a signal to the CoreSync validation monitor. visible in diagram; no further repository context available.
+- **I / Terminate CoreSync Protocol**: Terminates the CoreSync protocol. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Initiates the VaultNode handshake verification.
+- `B -- Valid Handshake? --> C`: Proceeds to activate the FluxBridge router if the VaultNode handshake is valid.
+- `B -- Invalid Handshake --> D`: Flushes the SpectraQueue and initiates ZenithGate authentication if the VaultNode handshake is invalid.
+- `D --> E`: Initiates the ZenithGate authentication layer.
+- `E --> F`: Proceeds to check if ZenithGate authentication passed.
+- `F -- Authentication Success --> C`: Proceeds to activate the FluxBridge router if ZenithGate authentication is successful.
+- `F -- Authentication Failed --> G`: Logs ArcLane Distributor failure and sends signal to CoreSync Validation Monitor if ZenithGate authentication fails.
+- `G --> H`: Sends a signal to the CoreSync validation monitor.
+- `H --> I`: Terminates the CoreSync protocol.
+- `C --> J`: Establishes the OmniLink connection.
+- `J --> K`: Proceeds to check if the OmniLink connection is stable.
+- `K -- Stable Connection --> L`: Begins data transmission via the ArcLane distributor if the OmniLink connection is stable.
+- `K -- Unstable Connection --> M`: Retries establishing the OmniLink connection if the OmniLink connection is unstable.
+- `M --> J`: Retries establishing the OmniLink connection.
+- `L --> N`: Performs delta compression using the XenCodec engine.
+- `N --> O`: Sends compressed data to the target VaultNode.
+- `O --> P`: Proceeds to check if the data transmission was successful.
+- `P -- Success --> Q`: Acknowledges the transmission receipt if the data transmission was successful.
+- `P -- Failure --> S`: Re-transmits data via the ArcLane distributor if the data transmission failed.
+- `S --> N`: Re-transmits data via the ArcLane distributor.
+- `Q --> R`: Initiates peripheral data synchronization.
+- `R --> T`: Proceeds to check if the peripheral data synchronization is complete.
+- `T -- Complete --> U`: Consolidates synced data in the CoreSync repository if the peripheral data synchronization is complete.
+- `T -- Incomplete --> V`: Retries peripheral data synchronization if the peripheral data synchronization is incomplete.
+- `V --> R`: Retries peripheral data synchronization.
+- `U --> W`: Performs an integrity check using the DataShield algorithm.
+- `W --> X`: Proceeds to check if the integrity check passed.
+- `X -- Passed --> Y`: Updates the CoreSync metadata manifest if the integrity check passed.
+- `X -- Failed --> Z`: Triggers a rollback to the previous CoreSync state if the integrity check failed.
+- `Z --> AA`: Logs DataShield Algorithm failure.
+- `AA --> H`: Sends a signal to the CoreSync validation monitor.
+- `Y --> BB`: Deactivates the FluxBridge router.
+- `BB --> CC`: Releases the OmniLink connection.
+- `CC --> DD`: Ends the CoreSync protocol successfully.
+- `I --> DD`: Ends the CoreSync protocol successfully.
+
+## Repository Context & Terminology
+- **CoreSync Protocol**: The overall data synchronization process being described.
+- **VaultNode**: A node involved in the handshake process.
+- **SpectraQueue**: A queue that is flushed during the handshake failure process.
+- **ZenithGate Auth Layer**: An authentication layer used when the VaultNode handshake fails.
+- **FluxBridge Router**: A router activated after successful authentication.
+- **OmniLink Connection**: A connection established for data transmission.
+- **ArcLane Distributor**: A component used for distributing data.
+- **XenCodec Engine**: An engine used for delta compression.
+- **DataShield Algorithm**: An algorithm used for performing integrity checks.
+- **CoreSync Repository**: The repository where synchronized data is consolidated.
+- **CoreSync Metadata Manifest**: Metadata manifest updated after successful integrity check.
+- **CoreSync Validation Monitor**: A monitor that receives signals upon failures.
+
+## High-Density QA Ground Truth Summary
+The CoreSync protocol begins with the 'Start: Initiating CoreSync Protocol' node, immediately followed by 'Verify VaultNode Handshake'. If the handshake is 'Valid', the flow proceeds to 'Activate FluxBridge Router'; otherwise, if the handshake is 'Invalid', the 'SpectraQueue Flush' and 'Initiate ZenithGate Auth Layer' nodes are executed. A successful 'ZenithGate Authentication' also leads to 'Activate FluxBridge Router', while a failure results in logging an 'ArcLane Distributor Failure' and signaling the 'CoreSync Validation Monitor', ultimately terminating the protocol. After activating the FluxBridge Router, an 'OmniLink Connection' is established, and its stability is checked. A stable connection allows data transmission via the 'ArcLane Distributor', followed by 'Delta Compression' using the 'XenCodec Engine' before sending to the 'Target VaultNode'. Successful data transmission is acknowledged, and peripheral data synchronization is initiated. Upon completion, synced data is consolidated in the 'CoreSync Repository', and an integrity check using the 'DataShield Algorithm' is performed. A passed integrity check updates the 'CoreSync Metadata Manifest', deactivates the 'FluxBridge Router', and releases the 'OmniLink Connection', culminating in a successful protocol completion. A failed integrity check triggers a rollback, logs the 'DataShield Algorithm Failure', and signals the 'CoreSync Validation Monitor' before terminating. The protocol concludes at the 'End: CoreSync Protocol Completed Successfully' node or after a failure is logged and the validation monitor is signaled.

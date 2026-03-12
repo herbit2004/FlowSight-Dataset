@@ -1,0 +1,39 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the network configuration of multiple hosts, including their operating systems and GPU/VRAM specifications. The diagram illustrates the communication between an Apple macOS host and several other hosts running Ubuntu and Windows 11, highlighting the available VRAM on each machine. It serves to visualize the hardware and software resources available across the network.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The Apple macOS host (host3) is at the top, acting as the central node. The Ubuntu (host1) and Windows 11 (host2, host4) hosts are positioned below, forming the lower level of the hierarchy.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs, each representing a different host machine:
+- **host4**: Windows 11 (host4)
+- **host3**: Apple macOS (host3)
+- **host2**: Windows 11 (host2)
+- **host1**: Ubuntu (host1)
+
+## Node-by-Node Description
+- **host3 / Apple macOS (host3)**: Represents an Apple macOS host machine.
+- **gpu10 / Apple M1 Max (6GiB VRAM remaining)**: Represents the Apple M1 Max GPU within the macOS host, with 6GiB of VRAM remaining.
+- **host1 / Ubuntu (host1)**: Represents an Ubuntu host machine.
+- **gpu30 / NVIDIA 4080 0 (8GiB VRAM remaining)**: Represents an NVIDIA 4080 0 GPU within the Ubuntu host, with 8GiB of VRAM remaining.
+- **gpu31 / NVIDIA 4080 1 (10GiB VRAM remaining)**: Represents an NVIDIA 4080 1 GPU within the Ubuntu host, with 10GiB of VRAM remaining.
+- **host2 / Windows 11 (host2)**: Represents a Windows 11 host machine.
+- **gpu20 / NVIDIA 4090 (12GiB VRAM remaining)**: Represents an NVIDIA 4090 GPU within the Windows 11 host, with 12GiB of VRAM remaining.
+- **host4 / Windows 11 (host4)**: Represents a Windows 11 host machine.
+- **ram40 / 11GiB RAM remaining**: Represents the available RAM on the Windows 11 host, with 11GiB remaining.
+
+## Edges, Branches & Convergence
+- `host3 --> ram40`: TCP connection from the Apple macOS host to the Windows 11 (host4) host.
+- `host3 --> gpu20`: TCP connection from the Apple macOS host to the Windows 11 (host2) host.
+- `host3 --> gpu30`: TCP connection from the Apple macOS host to the Ubuntu (host1) host.
+- `host3 --> gpu31`: TCP connection from the Apple macOS host to the Ubuntu (host1) host.
+
+## Repository Context & Terminology
+- **TCP**: Transmission Control Protocol, a standard protocol for data communication over networks.
+- **VRAM**: Video Random Access Memory, a type of RAM specifically used to store image data for a computer display.
+- **GPU**: Graphics Processing Unit, a specialized electronic circuit designed to rapidly manipulate and alter memory to accelerate the creation of images in a frame buffer intended for output to a display device.
+- **Apple M1 Max**: A system on a chip (SoC) designed by Apple Inc.
+- **NVIDIA 4080, 4090**: High-performance graphics cards manufactured by NVIDIA.
+
+## High-Density QA Ground Truth Summary
+The diagram starts with the Apple macOS host (host3), equipped with an Apple M1 Max GPU and 6GiB of VRAM remaining. This host establishes TCP connections to three other hosts. One connection goes to a Windows 11 host (host4) with 11GiB of RAM remaining. Another TCP connection links to a Windows 11 host (host2) that has an NVIDIA 4090 GPU with 12GiB of VRAM remaining. The final two TCP connections go to an Ubuntu host (host1), which contains two NVIDIA GPUs: an NVIDIA 4080 0 with 8GiB of VRAM remaining and an NVIDIA 4080 1 with 10GiB of VRAM remaining. The diagram highlights the network architecture and resource distribution, specifically VRAM and RAM availability, across these different operating systems and hardware configurations. The use of TCP indicates a reliable, connection-oriented communication method between the macOS host and the other machines, likely for distributed computing or resource sharing tasks.

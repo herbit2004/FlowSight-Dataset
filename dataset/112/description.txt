@@ -1,0 +1,117 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It illustrates the decision-making process and flow of control within a question-answering system, potentially leveraging a large language model (LLM) like Gemini. The diagram outlines how the system processes questions, generates responses, and refines its knowledge through search and reflection.
+
+## Overall Layout
+The diagram flows from top to bottom. It starts with initialization and a token budget check, then proceeds through question processing, action selection, and iterative refinement. The process ends at the 'End' node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Initialization & Budget Check, Question Processing & Response Generation, Action Selection (Answer/Reflect/Search/Visit), Knowledge Refinement, and Final Answer Generation.
+
+## Node-by-Node Description
+- **Start**: The beginning of the process.
+  visible in diagram; no further repository context available.
+- **Init / Initialize context & variables**: Initializes the context and variables required for the question-answering process.
+  visible in diagram; no further repository context available.
+- **CheckBudget / Token budget exceeded?**: A decision point to check if the token budget has been exceeded.
+  visible in diagram; no further repository context available.
+- **GetQuestion / Get current question from gaps**: Retrieves the current question, potentially filling in gaps from previous iterations.
+  visible in diagram; no further repository context available.
+- **GenPrompt / Generate prompt**: Generates a prompt for the language model.
+  visible in diagram; no further repository context available.
+- **ModelGen / Generate response using Gemini**: Generates a response using the Gemini language model.
+  visible in diagram; no further repository context available.
+- **ActionCheck / Check action type**: Checks the type of action to be performed (answer, reflect, search, visit).
+  visible in diagram; no further repository context available.
+- **AnswerCheck / Is original question?**: Checks if the current question is the original question.
+  visible in diagram; no further repository context available.
+- **EvalAnswer / Evaluate answer**: Evaluates the generated answer.
+  visible in diagram; no further repository context available.
+- **IsGoodAnswer / Is answer definitive?**: Checks if the answer is definitive.
+  visible in diagram; no further repository context available.
+- **HasRefs / Has references?**: Checks if the answer has references.
+  visible in diagram; no further repository context available.
+- **StoreBad / Store bad attempt Reset context**: Stores the bad attempt and resets the context.
+  visible in diagram; no further repository context available.
+- **StoreKnowledge / Store as intermediate knowledge**: Stores the information as intermediate knowledge.
+  visible in diagram; no further repository context available.
+- **ProcessQuestions / Process new sub-questions**: Processes new sub-questions.
+  visible in diagram; no further repository context available.
+- **DedupQuestions / New unique questions?**: Checks if there are new unique questions.
+  visible in diagram; no further repository context available.
+- **AddGaps / Add to gaps queue**: Adds the new questions to the gaps queue.
+  visible in diagram; no further repository context available.
+- **DisableReflect / Disable reflect for next step**: Disables reflection for the next step.
+  visible in diagram; no further repository context available.
+- **SearchQuery / Execute search**: Executes a search query.
+  visible in diagram; no further repository context available.
+- **NewURLs / New URLs found?**: Checks if new URLs were found.
+  visible in diagram; no further repository context available.
+- **StoreURLs / Store URLs for future visits**: Stores the URLs for future visits.
+  visible in diagram; no further repository context available.
+- **DisableSearch / Disable search for next step**: Disables search for the next step.
+  visible in diagram; no further repository context available.
+- **VisitURLs / Visit URLs**: Visits the URLs.
+  visible in diagram; no further repository context available.
+- **NewContent / New content found?**: Checks if new content was found.
+  visible in diagram; no further repository context available.
+- **StoreContent / Store content as knowledge**: Stores the content as knowledge.
+  visible in diagram; no further repository context available.
+- **DisableVisit / Disable visit for next step**: Disables visiting for the next step.
+  visible in diagram; no further repository context available.
+- **BeastMode / Enter Beast Mode**: Enters a special mode (likely for handling difficult questions).
+  visible in diagram; no further repository context available.
+- **FinalAnswer / Generate final answer**: Generates the final answer.
+  visible in diagram; no further repository context available.
+- **End**: The end of the process.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Start --> Init`: Starts the process and initializes context.
+- `Init --> CheckBudget`: Checks if the token budget has been exceeded.
+- `CheckBudget -- Yes --> BeastMode`: If the token budget is exceeded, enter Beast Mode.
+- `CheckBudget -- No --> GetQuestion`: If the token budget is not exceeded, get the current question.
+- `GetQuestion --> GenPrompt`: Generates a prompt.
+- `GenPrompt --> ModelGen`: Generates a response using Gemini.
+- `ModelGen --> ActionCheck`: Checks the action type.
+- `ActionCheck -- answer --> AnswerCheck`: If the action type is 'answer', check if it's the original question.
+- `ActionCheck -- reflect --> ProcessQuestions`: If the action type is 'reflect', process new sub-questions.
+- `ActionCheck -- search --> SearchQuery`: If the action type is 'search', execute a search query.
+- `ActionCheck -- visit --> VisitURLs`: If the action type is 'visit', visit URLs.
+- `AnswerCheck -- Yes --> EvalAnswer`: If it's the original question, evaluate the answer.
+- `AnswerCheck -- No --> StoreKnowledge`: If it's not the original question, store as intermediate knowledge.
+- `EvalAnswer --> IsGoodAnswer`: Checks if the answer is definitive.
+- `IsGoodAnswer -- Yes --> HasRefs`: If the answer is definitive, check for references.
+- `IsGoodAnswer -- No --> StoreBad`: If the answer is not definitive, store the bad attempt and reset context.
+- `HasRefs -- Yes --> End`: If there are references, the process ends.
+- `HasRefs -- No --> GetQuestion`: If there are no references, get the current question.
+- `ProcessQuestions --> DedupQuestions`: Processes new sub-questions and checks for unique questions.
+- `DedupQuestions -- Yes --> AddGaps`: If there are new unique questions, add them to the gaps queue.
+- `DedupQuestions -- No --> DisableReflect`: If there are no new unique questions, disable reflection for the next step.
+- `SearchQuery --> NewURLs`: Executes a search query and checks if new URLs were found.
+- `NewURLs -- Yes --> StoreURLs`: If new URLs were found, store them for future visits.
+- `NewURLs -- No --> DisableSearch`: If no new URLs were found, disable search for the next step.
+- `VisitURLs --> NewContent`: Visits URLs and checks if new content was found.
+- `NewContent -- Yes --> StoreContent`: If new content was found, store it as knowledge.
+- `NewContent -- No --> DisableVisit`: If no new content was found, disable visiting for the next step.
+- `StoreBad --> GetQuestion`: After storing a bad attempt, get the current question.
+- `StoreKnowledge --> GetQuestion`: After storing intermediate knowledge, get the current question.
+- `AddGaps --> GetQuestion`: After adding to the gaps queue, get the current question.
+- `DisableReflect --> GetQuestion`: After disabling reflection, get the current question.
+- `StoreURLs --> GetQuestion`: After storing URLs, get the current question.
+- `DisableSearch --> GetQuestion`: After disabling search, get the current question.
+- `StoreContent --> GetQuestion`: After storing content, get the current question.
+- `DisableVisit --> GetQuestion`: After disabling visiting, get the current question.
+- `BeastMode --> FinalAnswer`: Enters Beast Mode and generates the final answer.
+- `FinalAnswer --> End`: Generates the final answer and ends the process.
+
+## Repository Context & Terminology
+- **Gemini**: A large language model (LLM) used for generating responses.
+- **Token Budget**: A limit on the number of tokens (words or sub-words) that can be used in the process, likely to manage costs or resource usage.
+- **Gaps Queue**: A queue of questions or information gaps that need to be addressed.
+- **Beast Mode**: A special mode, likely for handling difficult or complex questions, potentially involving more aggressive search or reasoning strategies.
+- **Reflection**: The process of generating new sub-questions to refine the answer.
+- **Intermediate Knowledge**: Knowledge gained during the process that is stored for future use.
+- **Action Type**: The type of action to be performed (answer, reflect, search, visit).
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with 'Start', initializing context and variables before checking if the 'Token budget' has been 'exceeded?'. If the budget is exceeded, the process enters 'Beast Mode' to 'Generate final answer' and then 'End'. Otherwise, the system proceeds to 'Get current question from gaps', then 'Generate prompt' and 'Generate response using Gemini'. The 'Check action type' node branches based on the action: 'answer', 'reflect', 'search', or 'visit'. If 'answer', the system checks 'Is original question?'. If yes, it 'Evaluate answer' and checks 'Is answer definitive?'. A definitive answer leads to checking 'Has references?' before 'End'ing; otherwise, a 'bad attempt' is stored, context is reset, and the process loops back to 'Get current question from gaps'. If the question is not original, the knowledge is stored as 'intermediate knowledge' before looping back. The 'reflect' action processes 'new sub-questions', adding 'unique questions' to a 'gaps queue' or disabling reflection for the next step. The 'search' action executes a 'search query', storing 'new URLs' or disabling search. The 'visit' action visits URLs, storing 'new content' or disabling visiting. The iterative process of question processing, action selection, and knowledge refinement continues until a definitive answer with references is found or the token budget is exhausted, leveraging Gemini's capabilities to generate responses and refine its understanding.

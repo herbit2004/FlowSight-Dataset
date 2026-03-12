@@ -1,0 +1,16 @@
+graph TD
+    A[User Places Order] --> B{Inventory Available?};
+    B -- No --> C[Cancel Order];
+    B -- Yes --> D[Payment Processing];
+    D --> E{Payment Successful?};
+    E -- Yes --> F[Shipping Preparation];
+    E -- No --> G[Update Inventory];
+    G --> A;
+    F --> H{Shipping Address Valid?};
+    H -- No --> I[Cancel Order];
+    H -- Yes --> J[Package Shipped];
+    J --> K[Order Delivered];
+    K --> L[Send Confirmation Email];
+    L --> M[Archive Order];
+    I --> M;
+    C --> M;

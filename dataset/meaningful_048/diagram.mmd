@@ -1,0 +1,50 @@
+graph TD
+    subgraph "External Traffic"
+        A[User Request] --> B(Load Balancer);
+    end
+
+    subgraph "Orchestration Layer"
+        B --> C{Ingress Controller};
+        C -- "HTTP Request" --> D[Routing Service];
+        D --> E{Service Discovery};
+        E -- "Service Found" --> F[Target Application Instance];
+    end
+
+    subgraph "Application Layer"
+        F --> G{Request Handler};
+        G --> H[Business Logic];
+        H --> I[Database Query];
+        I -- "Data Retrieved" --> H;
+        H --> J[Response Builder];
+        J --> K[Response Cache];
+        K -- "Cache Hit?" --> L[Response to Client];
+        K -- "Cache Miss" --> M[Response to Client];
+        J --> M;
+        M --> F;
+    end
+
+    subgraph "Monitoring & Scaling"
+        N[Metrics Collection] --> O{Horizontal Pod Autoscaler};
+        O -- "High CPU?" --> P[Scale Out];
+        O -- "Low CPU?" --> Q[Scale In];
+        O -- "Within Threshold" --> R[No Action];
+
+        P --> S[New Instance Provisioning];
+        S --> E;
+        Q --> T[Instance Decommissioning];
+        T --> E;
+        F --> N;
+
+        classDef highlight fill:#f9f,stroke:#333,stroke-width:2px;
+        class D,F,G,H,I,J highlight;
+
+    end
+
+    subgraph "Data Storage"
+        I --> U[Database Cluster];
+        U --> I;
+    end
+
+    L --> B;
+    B --> A;
+    R --> N;

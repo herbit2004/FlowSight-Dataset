@@ -1,0 +1,90 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the components and data flow within a multi-agent system. It depicts the interaction between different layers, including the client layer, multi-agent system, decision and optimization layer, LLM integration layer, MCP server layer, and data and storage layer. The diagram serves as a high-level overview of the system's architecture and the relationships between its various components.
+
+## Overall Layout
+The diagram is laid out from left to right, with the client layer on the left and the data & storage layer on the right. The diagram is hierarchically structured, with the multi-agent system at the core, supported by various components and layers. The client layer serves as the entry point, and the data & storage layer represents the final destination for data persistence.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing different layers of the system:
+- **Client Layer**: Contains the CLI Interface and API Server.
+- **Multi-Agent System**: Contains the core agents responsible for task execution and coordination.
+- **Decision & Optimization Layer**: Contains components for decision-making and optimization.
+- **LLM Integration Layer**: Contains components for integrating with Large Language Models.
+- **MCP Server Layer**: Contains components for managing and executing tools.
+- **Data & Storage Layer**: Contains components for data persistence and storage.
+- **Supporting Components**: Contains components that support the multi-agent system.
+
+## Node-by-Node Description
+- **CLI Interface / packages/agent-client/src/cli.js**: Command-line interface for the agent system. In the repository this corresponds to `packages/agent-client/src/cli.js`.
+- **API Server / packages/api-server**: API server for the agent system. In the repository this corresponds to `packages/api-server`.
+- **MultiAgentDecisionExecutor**: Coordinates agents, loads schemas, and manages context.
+- **FastDecisionOptimizer**: Performs single-step optimization, handles simple queries, and includes a circuit breaker.
+- **CoordinatorAgent**: Orchestrates workflow, manages agent transitions, and controls parallel execution.
+- **PlannerAgent**: Performs intent analysis, plan generation, and task breakdown.
+- **ExecutorAgent**: Executes tasks, orchestrates tools, and generates goal-aware tasks.
+- **AnalyzerAgent**: Synthesizes results, formats responses, and ensures quality assurance.
+- **LLMFactory**: Selects providers and configures models for LLM integration.
+- **ClaudeLLM**: Integrates with Anthropic API, provides intelligent analytics, and supports subagent orchestration.
+- **OpenAILLM**: Integrates with GPT models and supports function calling.
+- **GeminiLLM**: Integrates with Google AI, offers tiered models, and optimizes cost.
+- **GroqLLM**: Provides fast inference and supports open models.
+- **MCP Server / packages/mcp-server/src/index.js**: Manages tool execution and formatting. In the repository this corresponds to `packages/mcp-server/src/index.js`.
+- **Tool Manager**: Registers tools, executes them, and formats results.
+- **TaskPlanner**: Manages task lifecycle, dependencies, and status tracking.
+- **SequentialThinker**: Performs 5-phase analysis and structured thinking.
+- **LoopDetector**: Detects patterns and prevents infinite loops.
+- **GoalAwareTaskGenerator**: Performs gap analysis, strategic planning, and verification tasks.
+- **AgentContext**: Manages sessions, tracks files, and provides team context.
+- **PerformanceLogger**: Tracks latency, pipeline stages, and optimization metrics.
+- **ConversationLogger**: Records sessions, tracks tool calls, and provides debug logging.
+- **DecisionContext**: Manages schema context, RAG context, and session state.
+- **Neo4j Knowledge Graph**: Stores team-scoped memory, knowledge relationships, and schema integration.
+- **MongoDB**: Provides session persistence, conversation history, and performance logs.
+- **DuckDB**: Performs local analytics, supports CSV/Parquet, and executes SQL queries.
+- **File Providers**: Provides access to local files, HTTP downloads, and Aden platform files.
+
+## Edges, Branches & Convergence
+- `CLI --> MultiAgentDecisionExecutor`: CLI triggers agent coordination and decision execution.
+- `API --> MultiAgentDecisionExecutor`: API triggers agent coordination and decision execution.
+- `MultiAgentDecisionExecutor --> CoordinatorAgent`: Decision executor passes control to the coordinator agent.
+- `MultiAgentDecisionExecutor --> FastDecisionOptimizer`: Decision executor uses the fast decision optimizer.
+- `CoordinatorAgent --> PlannerAgent`: Coordinator delegates planning to the planner agent.
+- `CoordinatorAgent --> ExecutorAgent`: Coordinator delegates execution to the executor agent.
+- `CoordinatorAgent --> AnalyzerAgent`: Coordinator delegates analysis to the analyzer agent.
+- `PlannerAgent --> AgentContext`: Planner agent uses the agent context.
+- `ExecutorAgent --> AgentContext`: Executor agent uses the agent context.
+- `ExecutorAgent --> GoalAwareTaskGenerator`: Executor agent uses the goal-aware task generator.
+- `AnalyzerAgent --> AgentContext`: Analyzer agent uses the agent context.
+- `MultiAgentDecisionExecutor --> DecisionContext`: Decision executor provides the decision context.
+- `DecisionContext --> Neo4j Knowledge Graph`: Decision context is stored in the Neo4j knowledge graph.
+- `DecisionContext --> MongoDB`: Decision context is stored in MongoDB.
+- `AgentContext --> MCP Server`: Agent context is passed to the MCP server.
+- `MCP Server --> Tool Manager`: MCP server uses the tool manager.
+- `Tool Manager --> TaskPlanner`: Tool manager uses the task planner.
+- `Tool Manager --> SequentialThinker`: Tool manager uses the sequential thinker.
+- `Tool Manager --> LoopDetector`: Tool manager uses the loop detector.
+- `PlannerAgent --> LLMFactory`: Planner agent uses the LLM factory.
+- `ExecutorAgent --> LLMFactory`: Executor agent uses the LLM factory.
+- `AnalyzerAgent --> LLMFactory`: Analyzer agent uses the LLM factory.
+- `LLMFactory --> ClaudeLLM`: LLM factory creates a ClaudeLLM instance.
+- `LLMFactory --> OpenAILLM`: LLM factory creates an OpenAILLM instance.
+- `LLMFactory --> GeminiLLM`: LLM factory creates a GeminiLLM instance.
+- `LLMFactory --> GroqLLM`: LLM factory creates a GroqLLM instance.
+- `Tool Manager --> DuckDB`: Tool manager uses DuckDB for local analytics.
+- `Tool Manager --> File Providers`: Tool manager uses file providers for accessing files.
+- `Tool Manager --> Neo4j Knowledge Graph`: Tool manager interacts with the Neo4j Knowledge Graph.
+- `MultiAgentDecisionExecutor --> PerformanceLogger`: Decision executor uses the performance logger.
+- `CoordinatorAgent --> PerformanceLogger`: Coordinator agent uses the performance logger.
+- `AgentContext --> ConversationLogger`: Agent context uses the conversation logger.
+
+## Repository Context & Terminology
+- **packages/agent-client/src/cli.js**: This file likely contains the implementation of the command-line interface for the agent system, allowing users to interact with the system through commands.
+- **packages/api-server**: This directory likely contains the code for the API server, which provides a programmatic interface to the agent system.
+- **packages/mcp-server/src/index.js**: This file likely serves as the entry point for the MCP (Management and Control Plane) server, responsible for managing and executing tools.
+- **LLMFactory**: This component is responsible for creating and configuring instances of different LLM providers (Claude, OpenAI, Gemini, Groq).
+- **RAG context**: Retrieval-Augmented Generation context, which refers to the information retrieved from external sources to augment the generation process of the LLMs.
+- **MCP Server Layer**: This layer is responsible for managing and executing tools, providing a centralized point for tool registration, execution, and result formatting.
+- **Decision & Optimization Layer**: This layer is responsible for making decisions and optimizing the performance of the multi-agent system.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with the Client Layer, where either the CLI Interface (`packages/agent-client/src/cli.js`) or the API Server (`packages/api-server`) initiates a request to the MultiAgentDecisionExecutor in the Decision & Optimization Layer. The MultiAgentDecisionExecutor then coordinates agents and loads necessary schemas and context. It passes control to the CoordinatorAgent within the Multi-Agent System, which orchestrates the workflow by delegating tasks to PlannerAgent, ExecutorAgent, and AnalyzerAgent. The PlannerAgent handles intent analysis and plan generation, while the ExecutorAgent executes tasks using tools managed by the MCP Server. The AnalyzerAgent synthesizes results and ensures quality. Both PlannerAgent, ExecutorAgent, and AnalyzerAgent use the LLMFactory to create instances of different LLMs (ClaudeLLM, OpenAILLM, GeminiLLM, GroqLLM) for various tasks. The Tool Manager, part of the MCP Server Layer, interacts with TaskPlanner, SequentialThinker, and LoopDetector to manage tool execution. The Tool Manager also interacts with DuckDB for local analytics, File Providers for accessing files, and Neo4j Knowledge Graph for knowledge management. The MultiAgentDecisionExecutor also provides the DecisionContext, which is stored in both Neo4j Knowledge Graph and MongoDB for persistence. The system concludes with data persistence in the Data & Storage Layer, utilizing Neo4j Knowledge Graph, MongoDB, DuckDB, and File Providers. The AgentContext, a Supporting Component, provides session management and file tracking, while the PerformanceLogger tracks latency and pipeline stages.

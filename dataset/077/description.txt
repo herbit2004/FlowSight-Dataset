@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the process of scanning for 5G New Radio (NR) signals. The flowchart outlines the steps involved in selecting a 5G NR band, calculating the Global Synchronization Channel Number (GSCN) range, tuning a Universal Software Radio Peripheral (USRP) to a specific frequency, detecting Synchronization Signal Block (SSB) signals, saving detection results, updating a web user interface (UI), and determining if more frequencies need to be scanned.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It follows a sequential flow with a loop for frequency iteration. The start node is "Start Scanning" and the end node is "Scan Complete".
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Frequency Iteration". This subgraph encapsulates the steps involved in scanning a range of frequencies.
+
+## Node-by-Node Description
+- **Start / Start Scanning**: Represents the beginning of the scanning process.
+  visible in diagram; no further repository context available.
+- **SelectBand / Select 5G NR Band n1, n3, n77, n78, n79**: Represents the selection of a specific 5G NR band (n1, n3, n77, n78, n79).
+  visible in diagram; no further repository context available.
+- **CalcGSCN / Calculate GSCN Range Based on 3GPP TS 38.104**: Represents the calculation of the GSCN range based on the 3GPP Technical Specification (TS) 38.104.
+  visible in diagram; no further repository context available.
+- **GetFreq / Get Next GSCN Frequency**: Represents the retrieval of the next GSCN frequency to be scanned within the "Frequency Iteration" subgraph.
+  visible in diagram; no further repository context available.
+- **TuneUSRP / Tune USRP to Frequency**: Represents the tuning of the USRP to the current frequency within the "Frequency Iteration" subgraph.
+  visible in diagram; no further repository context available.
+- **Detect / SSB Signal Detected?**: Represents a decision point where the system checks if an SSB signal is detected at the current frequency within the "Frequency Iteration" subgraph.
+  visible in diagram; no further repository context available.
+- **SaveResult / Save Detection Result**: Represents the saving of the detection result if an SSB signal is detected within the "Frequency Iteration" subgraph.
+  visible in diagram; no further repository context available.
+- **UpdateUI / Update Web UI Progress**: Represents the updating of the web UI to reflect the progress of the scanning process within the "Frequency Iteration" subgraph.
+  visible in diagram; no further repository context available.
+- **MoreFreq / More Frequencies?**: Represents a decision point where the system checks if there are more frequencies to be scanned.
+  visible in diagram; no further repository context available.
+- **Complete / Scan Complete**: Represents the end of the scanning process.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Start --> SelectBand`: Initiates the selection of a 5G NR band.
+- `SelectBand --> CalcGSCN`: Triggers the calculation of the GSCN range.
+- `CalcGSCN --> GetFreq`: Starts the frequency iteration loop by getting the next GSCN frequency.
+- `GetFreq --> TuneUSRP`: Tunes the USRP to the retrieved frequency.
+- `TuneUSRP --> Detect`: Checks for SSB signal detection.
+- `Detect -- Yes --> SaveResult`: If an SSB signal is detected, the detection result is saved.
+- `Detect -- No --> UpdateUI`: If no SSB signal is detected, the web UI progress is updated.
+- `SaveResult --> UpdateUI`: After saving the detection result, the web UI progress is updated.
+- `UpdateUI --> MoreFreq`: Checks if there are more frequencies to scan.
+- `MoreFreq -- Yes --> GetFreq`: If there are more frequencies, the process loops back to get the next frequency.
+- `MoreFreq -- No --> Complete`: If there are no more frequencies, the scanning process is complete.
+- `GetFreq --> TuneUSRP`: The "Frequency Iteration" subgraph loops back to "Get Next GSCN Frequency" to continue scanning frequencies.
+
+## Repository Context & Terminology
+- **5G NR**: 5G New Radio, the global standard for the fifth generation of wireless communications.
+- **GSCN**: Global Synchronization Channel Number, a number that represents the frequency of the synchronization signal block (SSB) in 5G NR.
+- **3GPP TS 38.104**: A technical specification from the 3rd Generation Partnership Project (3GPP) that defines the technical requirements for 5G NR base stations.
+- **USRP**: Universal Software Radio Peripheral, a software-defined radio platform used for transmitting and receiving radio signals.
+- **SSB**: Synchronization Signal Block, a set of signals used for initial cell search and synchronization in 5G NR.
+- **Web UI**: Web User Interface, a graphical interface accessible through a web browser, used to monitor and control the scanning process.
+
+## High-Density QA Ground Truth Summary
+The scanning process begins at the "Start Scanning" node, immediately followed by "Select 5G NR Band" where a specific 5G NR band (n1, n3, n77, n78, n79) is chosen. Next, the "Calculate GSCN Range Based on 3GPP TS 38.104" node determines the range of GSCN frequencies to be scanned, referencing the 3GPP TS 38.104 specification. The process then enters the "Frequency Iteration" subgraph, starting with "Get Next GSCN Frequency". The "Tune USRP to Frequency" node configures the USRP to the current frequency. A key decision point is "SSB Signal Detected?". If "Yes", the "Save Detection Result" node stores the findings; otherwise, the process proceeds directly to "Update Web UI Progress". After saving the result, the UI is updated. The "Update Web UI Progress" node updates the web UI, providing feedback on the scanning progress. The process then reaches the "More Frequencies?" decision node. If "Yes", the process loops back to "Get Next GSCN Frequency" to continue scanning. If "No", the process terminates at the "Scan Complete" node. The USRP, a software-defined radio, is a central component used to tune to specific frequencies and detect SSB signals, which are essential for initial cell search in 5G NR.

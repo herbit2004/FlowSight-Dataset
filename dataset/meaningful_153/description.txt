@@ -1,0 +1,76 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting two distinct processes: a backup process and a restore process. It illustrates the sequence of steps involved in backing up data to a repository and restoring data from the repository. The diagram serves as a visual representation of the data backup and recovery strategy.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into two main subgraphs representing the backup and restore processes, respectively. The start nodes are "Backup Initiated" and "Restore Initiated," and the end nodes are "Backup Complete" and "Restore Complete," which then converge to "Trigger Catalog Update" and "Success Notification".
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Backup Process**: This subgraph outlines the steps involved in backing up data, including checking the backup schedule, creating and mounting snapshots, copying data to the backup repository, and updating metadata.
+- **Restore Process**: This subgraph outlines the steps involved in restoring data, including validating the restore point, mounting the backup volume, copying data from the backup repository, and updating application configuration.
+
+## Node-by-Node Description
+- **A / Backup Initiated**: The starting point of the backup process. visible in diagram; no further repository context available.
+- **B / Check Backup Schedule**: A decision point to determine if the current time is within the scheduled backup window. visible in diagram; no further repository context available.
+- **C / Snapshot Volume Group**: Creates a snapshot of the volume group to be backed up. visible in diagram; no further repository context available.
+- **D / Skip Backup Cycle**: Skips the backup process if the current time is outside the scheduled backup window. visible in diagram; no further repository context available.
+- **E / Mount Snapshot Volume**: Mounts the snapshot volume to allow access to the data for backup. visible in diagram; no further repository context available.
+- **F / Run Pre-Backup Scripts**: Executes scripts before the backup process to prepare the data or environment. visible in diagram; no further repository context available.
+- **G / Copy Data to Backup Repository**: Copies the data from the mounted snapshot volume to the backup repository. visible in diagram; no further repository context available.
+- **H / Run Post-Backup Scripts**: Executes scripts after the backup process, such as cleanup or verification tasks. visible in diagram; no further repository context available.
+- **I / Unmount Snapshot Volume**: Unmounts the snapshot volume after the backup is complete. visible in diagram; no further repository context available.
+- **J / Delete Snapshot Volume**: Deletes the snapshot volume to free up storage space. visible in diagram; no further repository context available.
+- **K / Update Backup Metadata**: Updates the backup metadata with information about the backup, such as timestamps and checksums. visible in diagram; no further repository context available.
+- **L / Backup Complete**: The end point of the backup process. visible in diagram; no further repository context available.
+- **M / Restore Initiated**: The starting point of the restore process. visible in diagram; no further repository context available.
+- **N / Validate Restore Point**: A decision point to determine if the selected restore point is valid. visible in diagram; no further repository context available.
+- **O / Mount Backup Volume**: Mounts the backup volume to allow access to the data for restoration. visible in diagram; no further repository context available.
+- **P / Log Error and Abort**: Logs an error and aborts the restore process if the restore point is invalid. visible in diagram; no further repository context available.
+- **Q / Run Pre-Restore Scripts**: Executes scripts before the restore process to prepare the environment. visible in diagram; no further repository context available.
+- **R / Copy Data from Backup Repository**: Copies the data from the backup repository to the target location. visible in diagram; no further repository context available.
+- **S / Run Post-Restore Scripts**: Executes scripts after the restore process, such as configuration updates or verification tasks. visible in diagram; no further repository context available.
+- **T / Unmount Backup Volume**: Unmounts the backup volume after the restore is complete. visible in diagram; no further repository context available.
+- **U / Update Application Configuration**: Updates the application configuration with the restored data. visible in diagram; no further repository context available.
+- **V / Restore Complete**: The end point of the restore process. visible in diagram; no further repository context available.
+- **W / Trigger Catalog Update**: Triggers an update to the catalog to reflect the changes made by the backup or restore process. visible in diagram; no further repository context available.
+- **X / Success Notification**: Sends a notification indicating that the backup or restore process was successful. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Backup process starts and proceeds to check the backup schedule.
+- `B -- Yes, within window --> C`: If the current time is within the backup window, proceed to snapshot the volume group.
+- `B -- No, outside window --> D`: If the current time is outside the backup window, skip the backup cycle.
+- `C --> E`: After snapshotting the volume group, mount the snapshot volume.
+- `E --> F`: After mounting the snapshot volume, run pre-backup scripts.
+- `F --> G`: After running pre-backup scripts, copy data to the backup repository.
+- `G --> H`: After copying data to the backup repository, run post-backup scripts.
+- `H --> I`: After running post-backup scripts, unmount the snapshot volume.
+- `I --> J`: After unmounting the snapshot volume, delete the snapshot volume.
+- `J --> K`: After deleting the snapshot volume, update backup metadata.
+- `K --> L`: After updating backup metadata, the backup process is complete.
+- `D --> L`: If the backup cycle is skipped, the process proceeds directly to the backup complete state.
+- `M --> N`: Restore process starts and proceeds to validate the restore point.
+- `N -- Valid restore point --> O`: If the restore point is valid, proceed to mount the backup volume.
+- `N -- Invalid restore point --> P`: If the restore point is invalid, log an error and abort the restore process.
+- `O --> Q`: After mounting the backup volume, run pre-restore scripts.
+- `Q --> R`: After running pre-restore scripts, copy data from the backup repository.
+- `R --> S`: After copying data from the backup repository, run post-restore scripts.
+- `S --> T`: After running post-restore scripts, unmount the backup volume.
+- `T --> U`: After unmounting the backup volume, update application configuration.
+- `U --> V`: After updating application configuration, the restore process is complete.
+- `P --> V`: If the restore process is aborted, the process proceeds directly to the restore complete state.
+- `L --> W`: After the backup process is complete, trigger a catalog update.
+- `V --> W`: After the restore process is complete, trigger a catalog update.
+- `W --> X`: After triggering a catalog update, send a success notification.
+
+## Repository Context & Terminology
+- **Snapshot Volume Group**: A point-in-time copy of a volume group, used for backup and recovery purposes.
+- **Backup Repository**: A storage location where backup data is stored.
+- **Pre-Backup Scripts**: Scripts executed before the backup process to prepare the data or environment.
+- **Post-Backup Scripts**: Scripts executed after the backup process, such as cleanup or verification tasks.
+- **Restore Point**: A specific point in time to which data can be restored.
+- **Pre-Restore Scripts**: Scripts executed before the restore process to prepare the environment.
+- **Post-Restore Scripts**: Scripts executed after the restore process, such as configuration updates or verification tasks.
+- **Catalog Update**: Updating the catalog with information about the backup or restore process.
+
+## High-Density QA Ground Truth Summary
+The backup process begins with "Backup Initiated," immediately followed by "Check Backup Schedule." If the process is within the scheduled backup window, indicated by a "Yes" branch, it proceeds to "Snapshot Volume Group," creating a point-in-time copy. Otherwise, a "No" branch leads to "Skip Backup Cycle." The snapshot is then mounted ("Mount Snapshot Volume"), and pre-backup scripts are executed ("Run Pre-Backup Scripts") to prepare the data. Data is copied to the "Backup Repository," followed by post-backup scripts ("Run Post-Backup Scripts"). The snapshot volume is then unmounted and deleted ("Unmount Snapshot Volume," "Delete Snapshot Volume"), and backup metadata is updated ("Update Backup Metadata"). Both the successful backup and the skipped cycle converge at "Backup Complete." The restore process starts with "Restore Initiated" and "Validate Restore Point." A valid restore point leads to mounting the backup volume ("Mount Backup Volume"), running pre-restore scripts, copying data from the backup repository, and running post-restore scripts. An invalid restore point triggers "Log Error and Abort." The backup and restore processes both conclude by triggering a catalog update ("Trigger Catalog Update") and sending a success notification ("Success Notification"). The "Backup Repository" is a central component, storing the data copied during the backup process and serving as the source during restoration.

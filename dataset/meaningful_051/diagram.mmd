@@ -1,0 +1,15 @@
+graph TD
+    A[Order Service: Receive Request] --> B{Is Trace ID Present?};
+    B -- Yes --> C[Propagate Trace Context];
+    B -- No --> D[Generate New Trace ID];
+    D --> C;
+    C --> E[Inventory Service: Check Stock - Record Span];
+    E --> F{Stock Available?};
+    F -- Yes --> G[Payment Service: Process Payment - Record Span];
+    F -- No --> H[Return: Out of Stock];
+    G --> I[Order Fulfillment: Initiate Shipment - Record Span];
+    H --> J[Complete Trace & Notify SRE];
+    I --> J;
+
+    classDef trace fill:#f9f,stroke:#333,stroke-width:2px;
+    class A,B,C,D,E,F,G,H,I,J trace

@@ -1,0 +1,78 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the high-level components and data flow within the GoClaw system. It illustrates the interaction between various clients, the core processing pipeline, and storage solutions. The diagram serves as a visual representation of the system's architecture, aiding in understanding the relationships between different modules and their roles.
+
+## Overall Layout
+The diagram has a top-to-bottom (TB) orientation. It is hierarchically structured, with clients at the top, followed by the GoClaw Gateway, processing stages, and storage at the bottom. The start nodes are the various client types, and the end nodes are the storage solutions.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Clients**: Represents the various client applications that interact with the system.
+- **GoClaw Gateway**: Encompasses the core processing components responsible for message handling, scheduling, and routing.
+- **Storage**: Represents the data storage solutions used by the system.
+
+## Node-by-Node Description
+- **Web Dashboard (React SPA)**: A web-based user interface built with React.
+  visible in diagram; no further repository context available.
+- **HTTP API**: An HTTP-based API endpoint for external communication.
+  visible in diagram; no further repository context available.
+- **Telegram**: A Telegram client integration.
+  visible in diagram; no further repository context available.
+- **Discord**: A Discord client integration.
+  visible in diagram; no further repository context available.
+- **Feishu/Lark**: A Feishu/Lark client integration.
+  visible in diagram; no further repository context available.
+- **Zalo OA**: A Zalo Official Account client integration.
+  visible in diagram; no further repository context available.
+- **Zalo Personal**: A Zalo Personal client integration.
+  visible in diagram; no further repository context available.
+- **WebSocket RPC**: A WebSocket-based Remote Procedure Call component.
+  visible in diagram; no further repository context available.
+- **HTTP Server**: An HTTP server component.
+  visible in diagram; no further repository context available.
+- **Channel Manager**: Manages communication channels with different clients.
+  visible in diagram; no further repository context available.
+- **Message Bus**: A message bus for inter-component communication.
+  visible in diagram; no further repository context available.
+- **Lane-based Scheduler**: A scheduler that organizes tasks into lanes for processing, with main, subagent, delegate, and cron functionalities.
+  visible in diagram; no further repository context available.
+- **Agent Router**: Routes tasks to appropriate agents.
+  visible in diagram; no further repository context available.
+- **Agent Loop**: A loop that implements the think-act-observe cycle for agents.
+  visible in diagram; no further repository context available.
+- **Tool Registry**: A registry of tools used by the system, supporting file system, execution, web, memory, delegate, team, MCP, and custom tools.
+  visible in diagram; no further repository context available.
+- **LLM Providers**: Integrates with Large Language Model providers, including Anthropic (with native and prompt caching) and OpenAI-compat (12+).
+  visible in diagram; no further repository context available.
+- **File-based (standalone)**: A file-based storage solution.
+  visible in diagram; no further repository context available.
+- **PostgreSQL 18 + pgvector (managed · multi-tenant)**: A PostgreSQL 18 database with pgvector extension, managed and multi-tenant.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Web Dashboard (React SPA) --> WebSocket RPC`: The web dashboard communicates with the WebSocket RPC component.
+- `HTTP API --> HTTP Server`: The HTTP API communicates with the HTTP Server component.
+- `Telegram --> Channel Manager`: The Telegram client communicates with the Channel Manager.
+- `Discord --> Channel Manager`: The Discord client communicates with the Channel Manager.
+- `Feishu/Lark --> Channel Manager`: The Feishu/Lark client communicates with the Channel Manager.
+- `Zalo OA --> Channel Manager`: The Zalo OA client communicates with the Channel Manager.
+- `Zalo Personal --> Channel Manager`: The Zalo Personal client communicates with the Channel Manager.
+- `WebSocket RPC & HTTP Server & Channel Manager --> Message Bus`: The WebSocket RPC, HTTP Server, and Channel Manager components all send messages to the Message Bus.
+- `Message Bus --> Lane-based Scheduler`: The Message Bus sends messages to the Lane-based Scheduler.
+- `Lane-based Scheduler --> Agent Router`: The Lane-based Scheduler sends tasks to the Agent Router.
+- `Agent Router --> Agent Loop`: The Agent Router routes tasks to the Agent Loop.
+- `Agent Loop --> Tool Registry`: The Agent Loop utilizes the Tool Registry.
+- `Agent Loop --> LLM Providers`: The Agent Loop utilizes LLM Providers.
+- `Agent Loop --> File-based (standalone)`: The Agent Loop stores data in the file-based storage.
+- `Agent Loop --> PostgreSQL 18 + pgvector (managed · multi-tenant)`: The Agent Loop stores data in the PostgreSQL database.
+
+## Repository Context & Terminology
+- **React SPA**: Single Page Application built using React framework.
+- **HTTP API**: An interface that allows different systems to communicate over the internet using HTTP protocol.
+- **WebSocket RPC**: A communication protocol that provides full-duplex communication channels over a single TCP connection.
+- **Message Bus**: A software architecture pattern used for inter-application communication.
+- **Lane-based Scheduler**: A scheduler that organizes tasks into lanes for processing, potentially allowing for parallel or prioritized execution.
+- **Agent Loop (think → act → observe)**: A control loop where an agent thinks, acts based on its thinking, and observes the result of its actions.
+- **pgvector**: A PostgreSQL extension for vector similarity search.
+
+## High-Density QA Ground Truth Summary
+The system begins with various clients: Web Dashboard (React SPA), HTTP API, Telegram, Discord, Feishu/Lark, Zalo OA, and Zalo Personal. The Web Dashboard communicates via WebSocket RPC, while the HTTP API uses an HTTP Server. The other clients (Telegram, Discord, Feishu/Lark, Zalo OA, Zalo Personal) all connect to the Channel Manager. The WebSocket RPC, HTTP Server, and Channel Manager converge by sending messages to the Message Bus. The Message Bus then feeds into the Lane-based Scheduler, which organizes tasks, potentially using cron-based scheduling. The Agent Router receives scheduled tasks and routes them to the Agent Loop. The Agent Loop operates on a "think -> act -> observe" cycle, utilizing the Tool Registry for various tools (fs, exec, web, memory, delegate, team, mcp, custom) and LLM Providers such as Anthropic (with native and prompt caching) and OpenAI-compat (12+). Finally, the Agent Loop persists data to both a File-based (standalone) storage solution and a PostgreSQL 18 + pgvector (managed · multi-tenant) database, leveraging the pgvector extension for vector similarity searches.

@@ -1,0 +1,15 @@
+graph TD
+    A[Payment Gateway Callback] --> B{Validate Signature & Timestamp};
+    B -- Valid --> C[Deserialize Callback Data];
+    B -- Invalid --> E[Log Security Alert];
+    C --> D{Payment Status: Success?};
+    D -- Yes --> F[Update Payment Record: 'Settled'];
+    D -- No --> G{Payment Status: Pending?};
+    G -- Yes --> H[Update Payment Record: 'Pending'];
+    G -- No --> I[Update Payment Record: 'Failed'];
+    F --> J[Trigger Reconciliation Job];
+    I --> J;
+    H --> J;
+
+    classDef alert fill:#f9f,stroke:#333,stroke-width:2px
+    class E alert

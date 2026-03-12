@@ -1,0 +1,71 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow in an e-commerce system. It depicts the flow of an order from customer entry to order history, including validation, warehouse management, shipping, and event publishing via Kafka topics. The diagram serves as a high-level architectural overview of the order processing pipeline.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It is hierarchically organized into subgraphs representing different stages of the order processing pipeline. The start node is "Customer Web App," and the end node is "Order History DB."
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Customer Interface**: Handles customer order entry and validation.
+- **Order Processing**: Processes validated orders, publishing accepted or rejected events.
+- **Warehouse Management**: Checks inventory and manages order fulfillment or backorders.
+- **Shipping**: Packages and ships orders, publishing shipping events.
+- **Order History Service**: Consumes order events and updates the order history database.
+
+## Node-by-Node Description
+- **A / Customer Web App**: Represents the customer-facing web application where orders are placed. visible in diagram; no further repository context available.
+- **B / Order Entry API**: Represents the API endpoint that receives order requests from the customer web app. visible in diagram; no further repository context available.
+- **C / Validate Order**: Represents the order validation process. visible in diagram; no further repository context available.
+- **D / Order Accepted Event Producer**: Produces an event indicating that the order has been accepted. visible in diagram; no further repository context available.
+- **E / Order Rejection Event Producer**: Produces an event indicating that the order has been rejected. visible in diagram; no further repository context available.
+- **F / Kafka Topic: order.accepted**: Represents the Kafka topic where accepted order events are published. visible in diagram; no further repository context available.
+- **G / Kafka Topic: order.rejected**: Represents the Kafka topic where rejected order events are published. visible in diagram; no further repository context available.
+- **H / Inventory Check**: Represents the inventory check process in the warehouse. visible in diagram; no further repository context available.
+- **I / Warehouse Order Event Producer**: Produces an event indicating that the order is being processed by the warehouse. visible in diagram; no further repository context available.
+- **J / Backorder Event Producer**: Produces an event indicating that the order has been backordered. visible in diagram; no further repository context available.
+- **K / Kafka Topic: warehouse.order**: Represents the Kafka topic where warehouse order events are published. visible in diagram; no further repository context available.
+- **L / Kafka Topic: backorder.created**: Represents the Kafka topic where backorder events are published. visible in diagram; no further repository context available.
+- **M / Package Order**: Represents the order packaging process. visible in diagram; no further repository context available.
+- **N / Ship Order Event Producer**: Produces an event indicating that the order has been shipped. visible in diagram; no further repository context available.
+- **O / Kafka Topic: order.shipped**: Represents the Kafka topic where shipped order events are published. visible in diagram; no further repository context available.
+- **P / Order Accepted Event Consumer**: Consumes accepted order events from the Kafka topic. visible in diagram; no further repository context available.
+- **Q / Order Rejected Event Consumer**: Consumes rejected order events from the Kafka topic. visible in diagram; no further repository context available.
+- **R / Order Shipped Event Consumer**: Consumes shipped order events from the Kafka topic. visible in diagram; no further repository context available.
+- **S / Backorder Event Consumer**: Consumes backorder events from the Kafka topic. visible in diagram; no further repository context available.
+- **T / Order History DB**: Represents the database where order history is stored. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Customer places an order via the web app, sending a request to the Order Entry API.
+- `B --> C`: The Order Entry API sends the order to be validated.
+- `C -- Valid --> D`: If the order is valid, an "Order Accepted Event" is produced.
+- `C -- Invalid --> E`: If the order is invalid, an "Order Rejection Event" is produced.
+- `D --> F`: The "Order Accepted Event Producer" publishes the event to the "order.accepted" Kafka topic.
+- `E --> G`: The "Order Rejection Event Producer" publishes the event to the "order.rejected" Kafka topic.
+- `F --> H`: Accepted orders trigger an inventory check in the warehouse.
+- `H -- Sufficient Inventory --> I`: If there is sufficient inventory, a "Warehouse Order Event" is produced.
+- `H -- Insufficient Inventory --> J`: If there is insufficient inventory, a "Backorder Event" is produced.
+- `I --> K`: The "Warehouse Order Event Producer" publishes the event to the "warehouse.order" Kafka topic.
+- `J --> L`: The "Backorder Event Producer" publishes the event to the "backorder.created" Kafka topic.
+- `K --> M`: Warehouse order events trigger the packaging of the order.
+- `M --> N`: The packaged order triggers the "Ship Order Event Producer".
+- `N --> O`: The "Ship Order Event Producer" publishes the event to the "order.shipped" Kafka topic.
+- `F --> P`: Accepted order events are consumed by the "Order Accepted Event Consumer".
+- `G --> Q`: Rejected order events are consumed by the "Order Rejected Event Consumer".
+- `O --> R`: Shipped order events are consumed by the "Order Shipped Event Consumer".
+- `L --> S`: Backorder events are consumed by the "Backorder Event Consumer".
+- `P --> T`: The "Order Accepted Event Consumer" updates the "Order History DB".
+- `Q --> T`: The "Order Rejected Event Consumer" updates the "Order History DB".
+- `R --> T`: The "Order Shipped Event Consumer" updates the "Order History DB".
+- `S --> T`: The "Backorder Event Consumer" updates the "Order History DB".
+
+## Repository Context & Terminology
+- **Kafka Topic**: A category or feed name to which records are published.
+- **Event Producer**: A component that publishes events to a Kafka topic.
+- **Event Consumer**: A component that subscribes to a Kafka topic and processes events.
+- **Order Entry API**: An API endpoint that receives order requests.
+- **Inventory Check**: A process to verify the availability of items in the warehouse.
+- **Backorder**: An order that cannot be fulfilled immediately due to insufficient inventory.
+- **Order History DB**: A database that stores the history of orders.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with a customer placing an order via the Customer Web App, which sends a request to the Order Entry API. The API then triggers order validation. If the order is valid, the flow proceeds to the Order Accepted Event Producer, which publishes an event to the order.accepted Kafka topic; otherwise, the Order Rejection Event Producer publishes to the order.rejected topic. Accepted orders trigger an Inventory Check. If sufficient inventory exists, a Warehouse Order Event is produced and published to the warehouse.order Kafka topic; if not, a Backorder Event is produced and published to the backorder.created topic. Warehouse orders then proceed to Package Order and the Ship Order Event Producer, which publishes to the order.shipped Kafka topic. Each Kafka topic has a corresponding consumer (Order Accepted, Rejected, Shipped, and Backorder Event Consumers) that updates the Order History DB. The Order History DB serves as the final destination, storing the complete lifecycle of each order. The use of Kafka topics enables asynchronous communication and decoupling between different services in the order processing pipeline.

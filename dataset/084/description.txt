@@ -1,0 +1,54 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the deployment process of an application to AWS infrastructure. It outlines the steps from building Docker images to provisioning resources and deploying containers using Terraform. The diagram serves as a high-level overview of the deployment pipeline.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It shows a linear sequence of steps initially, followed by a subgraph representing Terraform deployment, which branches out to multiple AWS resource configurations. The start node is "GitHub Actions," and the end node is "AWS Infrastructure."
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Terraform Deployment**: This subgraph encapsulates the steps performed by Terraform to provision and configure AWS resources. It includes provisioning an ECS cluster, deploying containers to ECS, configuring CloudWatch logs, and creating VPC and network resources.
+
+## Node-by-Node Description
+- **A / GitHub Actions**: Represents the trigger for the deployment pipeline, typically a code commit or scheduled event.
+  visible in diagram; no further repository context available.
+- **B / Build Docker Images**: Represents the step where Docker images for the application are built.
+  visible in diagram; no further repository context available.
+- **C / Push to Amazon ECR**: Represents the step where the built Docker images are pushed to Amazon Elastic Container Registry (ECR).
+  visible in diagram; no further repository context available.
+- **D / Terraform Deployment**: Represents the stage where Terraform is used to provision and configure AWS resources.
+  visible in diagram; no further repository context available.
+- **E / Provision ECS Cluster**: Represents the step where an Amazon Elastic Container Service (ECS) cluster is provisioned.
+  visible in diagram; no further repository context available.
+- **F / Deploy Containers to ECS**: Represents the step where the application's containers are deployed to the ECS cluster.
+  visible in diagram; no further repository context available.
+- **G / Configure CloudWatch Logs**: Represents the step where CloudWatch logs are configured for the application and infrastructure.
+  visible in diagram; no further repository context available.
+- **H / Create VPC and Network Resources**: Represents the step where the Virtual Private Cloud (VPC) and other network resources are created.
+  visible in diagram; no further repository context available.
+- **I / AWS Infrastructure**: Represents the final AWS infrastructure where the application is deployed.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: GitHub Actions triggers the building of Docker images.
+- `B --> C`: After building, Docker images are pushed to Amazon ECR.
+- `C --> D`: Docker images in ECR trigger the Terraform deployment.
+- `D --> E`: Terraform deployment initiates the provisioning of an ECS cluster.
+- `D --> F`: Terraform deployment initiates the deployment of containers to ECS.
+- `D --> G`: Terraform deployment initiates the configuration of CloudWatch logs.
+- `D --> H`: Terraform deployment initiates the creation of VPC and network resources.
+- `I --> E`: The AWS Infrastructure is the target for the ECS Cluster provisioning.
+- `I --> F`: The AWS Infrastructure is the target for the ECS Container deployment.
+- `I --> G`: The AWS Infrastructure is the target for the CloudWatch Logs configuration.
+- `I --> H`: The AWS Infrastructure is the target for the VPC and Network Resources creation.
+
+## Repository Context & Terminology
+- **GitHub Actions**: A CI/CD platform that allows you to automate your build, test, and deployment pipeline.
+- **Docker Images**: A lightweight, standalone, executable package that includes everything needed to run a piece of software, including the code, runtime, system tools, system libraries, and settings.
+- **Amazon ECR (Elastic Container Registry)**: A fully managed container registry that makes it easy to store, manage, share, and deploy your container images.
+- **Terraform**: An infrastructure-as-code (IaC) tool that enables you to define and provision infrastructure using a declarative configuration language.
+- **ECS (Elastic Container Service)**: A fully managed container orchestration service that makes it easy to run, stop, and manage Docker containers on a cluster.
+- **CloudWatch Logs**: A monitoring and logging service that collects and monitors log data from your applications and infrastructure.
+- **VPC (Virtual Private Cloud)**: A logically isolated section of the AWS Cloud where you can launch AWS resources in a virtual network that you define.
+
+## High-Density QA Ground Truth Summary
+The deployment process starts with GitHub Actions, which triggers the building of Docker images. These images are then pushed to Amazon ECR for storage and versioning. The presence of images in ECR initiates the Terraform deployment stage. Within the Terraform deployment, several parallel actions occur: an ECS cluster is provisioned, containers are deployed to the ECS cluster, CloudWatch logs are configured for monitoring, and VPC and network resources are created to provide the necessary network infrastructure. All these Terraform-managed resources ultimately contribute to the final AWS Infrastructure. Terraform, as an infrastructure-as-code tool, ensures that the AWS resources are provisioned and configured in a consistent and repeatable manner. The end result is a fully deployed application running on AWS, with monitoring and logging enabled via CloudWatch. The AWS Infrastructure is the final destination for all the resources created and configured during the Terraform deployment.

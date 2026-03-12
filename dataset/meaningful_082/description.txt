@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the processes of inbound receiving and outbound shipping in a warehouse or supply chain management system. It depicts the flow of goods and information from when an Advanced Shipping Notice (ASN) is received to when a shipment is confirmed. The diagram serves as a visual representation of the key steps and decision points in these processes.
+
+## Overall Layout
+The diagram is laid out from top to bottom, with two main sections: Inbound Receiving and Outbound Shipping. The Inbound Receiving process starts at the top right, and the Outbound Shipping process starts at the bottom left. The diagram shows the flow of goods and information from receiving to shipping.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Inbound Receiving**: This subgraph covers the process of receiving goods into the warehouse, starting with the ASN and ending with putaway task creation.
+- **Outbound Shipping**: This subgraph covers the process of shipping goods out of the warehouse, starting with an order and ending with shipment confirmation.
+
+## Node-by-Node Description
+- **A / ASN Received**: Represents the receipt of an Advanced Shipping Notice (ASN). visible in diagram; no further repository context available.
+- **B / Validate ASN Details**: Represents the validation of the ASN details. visible in diagram; no further repository context available.
+- **C / Create Receiving Task**: Represents the creation of a task for receiving the goods. In the repository this corresponds to a function that generates a receiving task based on the ASN details.
+- **D / Expected Goods Received**: Represents the point where the expected goods are received. visible in diagram; no further repository context available.
+- **F / Goods Match ASN?**: Represents a decision point where the received goods are compared to the ASN. visible in diagram; no further repository context available.
+- **G / Update Inventory**: Represents the updating of the inventory system with the received goods. visible in diagram; no further repository context available.
+- **H / Investigate Discrepancy**: Represents the investigation of any discrepancies between the received goods and the ASN. visible in diagram; no further repository context available.
+- **E / Alert: ASN Exception**: Represents the generation of an alert for an ASN exception. visible in diagram; no further repository context available.
+- **I / Putaway Task Creation**: Represents the creation of a task for putting away the received goods. In the repository this corresponds to a function that generates a putaway task based on the received goods.
+- **J / Order Received**: Represents the receipt of an order. visible in diagram; no further repository context available.
+- **K / Inventory Available?**: Represents a decision point where the availability of inventory is checked. visible in diagram; no further repository context available.
+- **L / Create Picking Task**: Represents the creation of a task for picking the goods. In the repository this corresponds to a function that generates a picking task based on the order details.
+- **M / Backorder Management**: Represents the management of backorders. visible in diagram; no further repository context available.
+- **N / Goods Picked & Staged**: Represents the point where the goods are picked and staged. visible in diagram; no further repository context available.
+- **O / Packing & Labeling**: Represents the packing and labeling of the goods. visible in diagram; no further repository context available.
+- **P / Shipment Confirmation**: Represents the confirmation of the shipment. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: ASN is sent for validation.
+- `B -- Valid ASN --> C`: ASN details are valid, create a receiving task.
+- `B -- Invalid ASN --> E`: ASN details are invalid, alert an exception.
+- `C --> D`: Receiving task is completed, expected goods are received.
+- `D --> F`: Received goods are checked against the ASN.
+- `F -- Yes --> G`: Goods match the ASN, update inventory.
+- `F -- No --> H`: Goods do not match the ASN, investigate the discrepancy.
+- `H --> E`: After investigation, alert an ASN exception.
+- `G --> I`: Inventory updated, create a putaway task.
+- `I --> K`: Putaway task is completed, check inventory availability for outbound shipping.
+- `J --> K`: Order is received, check inventory availability.
+- `K -- Yes --> L`: Inventory is available, create a picking task.
+- `K -- No --> M`: Inventory is not available, manage backorder.
+- `L --> N`: Picking task is completed, goods are picked and staged.
+- `N --> O`: Goods are packed and labeled.
+- `O --> P`: Goods are packed and labeled, shipment confirmation.
+
+## Repository Context & Terminology
+- **ASN (Advanced Shipping Notice)**: An electronic document that provides detailed information about an incoming shipment, including the contents, expected arrival date, and other relevant details.
+- **Receiving Task**: A task created to manage the process of receiving goods into the warehouse.
+- **Putaway Task**: A task created to manage the process of storing received goods in the warehouse.
+- **Inventory**: The stock of goods held in the warehouse.
+- **Picking Task**: A task created to manage the process of picking goods from the warehouse to fulfill an order.
+- **Backorder**: An order that cannot be fulfilled immediately due to insufficient inventory.
+- **WMS (Warehouse Management System)**: A software system used to manage and control warehouse operations.
+
+## High-Density QA Ground Truth Summary
+The Inbound Receiving process begins with the receipt of an ASN. The ASN details are then validated. If the ASN is valid, a receiving task is created; otherwise, an ASN exception alert is triggered. After the expected goods are received, they are checked against the ASN. If the goods match the ASN, the inventory is updated, and a putaway task is created. If the goods do not match, a discrepancy is investigated, and an ASN exception alert is triggered. The Outbound Shipping process starts with an order being received. The system checks if the inventory is available. If inventory is available, a picking task is created, and the goods are picked and staged. If inventory is not available, backorder management is initiated. After the goods are picked and staged, they are packed and labeled, and finally, shipment confirmation is sent. The creation of receiving, picking, and putaway tasks are key operations managed by a WMS, ensuring efficient warehouse operations. The process converges at the inventory availability check (K), where the output of the putaway task creation (I) in the Inbound Receiving subgraph feeds into the inventory check for Outbound Shipping. The end nodes are Shipment Confirmation (P) and Alert: ASN Exception (E).

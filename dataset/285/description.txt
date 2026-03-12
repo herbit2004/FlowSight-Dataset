@@ -1,0 +1,32 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the interaction between View, ViewModel, and Model components in a Model-View-ViewModel (MVVM) architecture. It depicts how the View observes properties in the ViewModel, how the ViewModel interacts with the Model, and how changes are propagated back to the View. The diagram serves as a high-level overview of the data flow and dependencies within the MVVM pattern.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It shows a linear flow of data and control between the View, ViewModel, and Model components. There is no explicit start or end node, but the View can be considered the entry point, and the Model the final data source.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into three stages: View, ViewModel, and Model.
+
+## Node-by-Node Description
+- **View / (Widgets)**: Represents the user interface layer, responsible for displaying data and handling user interactions.
+  visible in diagram; no further repository context available.
+- **ViewModel / (ChangeNotifier)**: Acts as an intermediary between the View and the Model, exposing data and commands that the View can bind to. It also implements the ChangeNotifier pattern to notify the View of changes.
+  visible in diagram; no further repository context available.
+- **(Domain) Model / (Service)**: Represents the data and business logic of the application. It provides data to the ViewModel and handles data persistence.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `View --> ViewModel`: The View watches properties in the ViewModel using the `watchProperty` mechanism.
+- `ViewModel --> Model`: The ViewModel listens to and gets properties from the Model using the `listen/get properties` mechanism.
+- `Model --> ViewModel`: The Model notifies the ViewModel of changes by adding `true` to `changedProperties`.
+- `ViewModel --> View`: The ViewModel notifies the View of changes using the `notify` mechanism.
+
+## Repository Context & Terminology
+- **MVVM (Model-View-ViewModel)**: A software architectural pattern that facilitates a separation of concerns between the UI (View), the data (Model), and the UI logic (ViewModel).
+- **View**: The user interface, responsible for displaying data and handling user interactions.
+- **ViewModel**: An abstraction of the View, exposing data and commands that the View can bind to.
+- **Model**: Represents the data and business logic of the application.
+- **ChangeNotifier**: A class that provides change notifications to its listeners.
+
+## High-Density QA Ground Truth Summary
+The diagram begins with the View (Widgets), which initiates the process by watching properties in the ViewModel (ChangeNotifier) via the `watchProperty` mechanism. The ViewModel then interacts with the (Domain) Model (Service) by listening for and retrieving properties using `listen/get properties`. Changes in the Model trigger a notification back to the ViewModel through `changedProperties.add(true)`. Finally, the ViewModel notifies the View of these changes using the `notify` mechanism, completing the cycle. This pattern ensures that the View remains decoupled from the Model, with the ViewModel acting as an intermediary. The ViewModel utilizes the ChangeNotifier pattern, indicating that it is responsible for managing state and notifying the View of any updates. The Model represents the data layer, providing data to the ViewModel and handling data persistence. The overall architecture follows the MVVM pattern, promoting separation of concerns and testability.

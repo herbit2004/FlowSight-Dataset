@@ -1,0 +1,66 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a simplified order processing workflow. It illustrates the sequence of steps involved from when a user submits an order to when they are notified of its status, including payment processing, inventory checks, and feedback requests. The diagram serves as a visual representation of the order fulfillment process, but contains logical errors.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It starts with the "User Submits Order" node at the top and branches out based on decision points. The diagram includes loops and merges, and ends with "Notify Customer" and "Notify Out of Stock".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission, Payment Processing, Order Fulfillment, Feedback, Restock/Confirmation, and Out of Stock Notification.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **C / Shipping Label Printed**: Represents the action of printing the shipping label for the order.
+  visible in diagram; no further repository context available.
+- **D / Package Delivered**: Represents the action of the package being delivered.
+  visible in diagram; no further repository context available.
+- **E / Feedback Requested**: A decision point to determine if feedback should be requested from the user.
+  visible in diagram; no further repository context available.
+- **F / Order Cancelled**: Represents the action of cancelling the order.
+  visible in diagram; no further repository context available.
+- **G / Offer Discount Code**: Represents the action of offering a discount code to the user.
+  visible in diagram; no further repository context available.
+- **H / Refund Processed**: Represents the action of processing a refund for the order.
+  visible in diagram; no further repository context available.
+- **I / Notify Customer**: Represents the action of notifying the customer.
+  visible in diagram; no further repository context available.
+- **K / Restock Inventory**: Represents the action of restocking the inventory.
+  visible in diagram; no further repository context available.
+- **L / Send Order Confirmation**: Represents the action of sending an order confirmation to the user.
+  visible in diagram; no further repository context available.
+- **M / Items in Stock?**: A decision point to check if the items are in stock.
+  visible in diagram; no further repository context available.
+- **N / Notify Out of Stock**: Represents the action of notifying the user that the items are out of stock.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the payment check.
+- `B -- Yes --> C`: If payment is received, proceed to print the shipping label.
+- `B -- No --> F`: If payment is not received, the order is cancelled.
+- `C --> D`: After printing the shipping label, the package is delivered.
+- `D --> E`: After the package is delivered, feedback is requested.
+- `E -- Positive --> G`: If feedback is positive, offer a discount code.
+- `E -- Negative --> H`: If feedback is negative, process a refund.
+- `G --> A`: Offering a discount code loops back to the user submitting another order.
+- `H --> I`: After processing a refund, notify the customer.
+- `F --> K`: After cancelling the order, restock the inventory.
+- `K --> L`: After restocking the inventory, send an order confirmation.
+- `L --> M`: After sending order confirmation, check if items are in stock.
+- `M -- Yes --> A`: If items are in stock, loop back to the user submitting another order.
+- `M -- No --> N`: If items are not in stock, notify the user.
+- `N --> B`: Notifying the user that items are out of stock loops back to the payment check.
+
+## Repository Context & Terminology
+- **User Submits Order**: In standard e-commerce, this refers to the action of a customer placing an order on a website or application. In this diagram, it represents the starting point of the order processing workflow.
+- **Payment Received?**: In standard e-commerce, this refers to the verification of payment for the order. In this diagram, it is a decision point that determines whether the order proceeds to fulfillment or is cancelled.
+- **Shipping Label Printed**: In standard e-commerce, this refers to the creation and printing of a label containing the necessary information for shipping the package. In this diagram, it is a step in the order fulfillment process.
+- **Package Delivered**: In standard e-commerce, this refers to the successful delivery of the package to the customer. In this diagram, it is a step in the order fulfillment process that leads to a feedback request.
+- **Feedback Requested**: In standard e-commerce, this refers to the process of soliciting feedback from the customer regarding their experience. In this diagram, it is a decision point that leads to either offering a discount code or processing a refund.
+- **Order Cancelled**: In standard e-commerce, this refers to the cancellation of an order, typically due to non-payment or customer request. In this diagram, it is a result of non-payment and leads to restocking the inventory.
+- **Restock Inventory**: In standard inventory management, this refers to replenishing the stock of items. In this diagram, it occurs *after* order cancellation and *before* sending order confirmation, which is illogical.
+- **Send Order Confirmation**: In standard e-commerce, this refers to sending a confirmation message to the customer after they place an order. In this diagram, it happens *after* restocking inventory, which is a reversed sequence.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Submits Order," which leads to the "Payment Received?" decision. If payment is received ("Yes" branch), a "Shipping Label Printed" and then "Package Delivered." If payment is not received ("No" branch), the "Order Cancelled" and "Restock Inventory." After package delivery, "Feedback Requested" branches to "Offer Discount Code" if positive, looping back to "User Submits Order," or "Refund Processed" if negative, leading to "Notify Customer." The "Restock Inventory" step is followed by "Send Order Confirmation," which then checks "Items in Stock?". A "Yes" branch loops back to "User Submits Order," while a "No" branch leads to "Notify Out of Stock," which then loops back to "Payment Received?". The diagram contains several logical errors, including restocking inventory *before* order confirmation, sending order confirmation *after* cancellation, and looping back to payment check after notifying the user of out-of-stock items. The "Offer Discount Code" path also creates an illogical loop back to "User Submits Order" before the original order is fulfilled.

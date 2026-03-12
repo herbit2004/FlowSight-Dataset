@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the steps in an order processing system. It depicts the sequence of actions taken from when an order is received to when it is either shipped or cancelled. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram's layout is top-down (TD). The flow starts with "Order Received" at the top and progresses downwards through various stages of order processing. The diagram has multiple end nodes: "Generate Invoice" and "Notify Customer".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Intake, Inventory Check, Payment Processing, Order Fulfillment/Cancellation, and Notification/Invoice.
+
+## Node-by-Node Description
+- **A / Order Received**: Represents the initial state where a new order is received.
+  visible in diagram; no further repository context available.
+- **B / Check Inventory**: Represents the process of verifying if the ordered items are in stock.
+  visible in diagram; no further repository context available.
+- **C / Process Payment**: Represents the step where the customer's payment is processed.
+  visible in diagram; no further repository context available.
+- **E / Ship Order**: Represents the action of shipping the order to the customer.
+  visible in diagram; no further repository context available.
+- **F / Cancel Order**: Represents the action of cancelling the order, typically due to payment failure or insufficient stock.
+  visible in diagram; no further repository context available.
+- **G / Generate Invoice**: Represents the process of creating an invoice for the order.
+  visible in diagram; no further repository context available.
+- **D / Notify Customer**: Represents the action of informing the customer about the status of their order (either shipment or cancellation).
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: An order received triggers the inventory check process.
+- `B -- In Stock --> C`: If the inventory check confirms that the items are in stock, the payment processing step is initiated.
+- `B -- Out of Stock --> D`: If the inventory check reveals that the items are out of stock, the customer is notified.
+- `C -- Success --> E`: If the payment processing is successful, the order is shipped.
+- `C -- Failure --> F`: If the payment processing fails, the order is cancelled.
+- `E --> G`: After the order is shipped, an invoice is generated.
+- `F --> D`: After the order is cancelled, the customer is notified.
+- `G --> A`: After generating the invoice, the process loops back to "Order Received".
+
+## Repository Context & Terminology
+- **Order Received**: In standard e-commerce, this refers to the point when a customer submits an order. In this diagram, it's the starting point, but also the destination of a loop from invoice generation, which is unusual.
+- **Check Inventory**: This is the process of verifying if the ordered items are available in the warehouse. Here, it determines whether to proceed with payment or notify the customer of unavailability.
+- **Process Payment**: This involves charging the customer for the order. In this diagram, success leads to shipping, while failure leads to cancellation.
+- **Ship Order**: This is the action of sending the order to the customer. Here, it precedes invoice generation.
+- **Cancel Order**: This is the action of terminating the order, usually due to payment failure or lack of stock. Here, it leads to customer notification.
+- **Generate Invoice**: This is the process of creating a bill for the order. In this diagram, it strangely loops back to "Order Received".
+- **Notify Customer**: This is the process of informing the customer about the order status. In this diagram, it's reached after out-of-stock or cancellation, but *not* after successful shipment.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Order Received," which triggers a "Check Inventory" process. If the items are "In Stock," the flow proceeds to "Process Payment." A successful payment leads to "Ship Order," followed by "Generate Invoice," which counterfactually loops back to "Order Received." A failed payment results in "Cancel Order," which then leads to "Notify Customer." If the inventory check determines the items are "Out of Stock," the flow directly goes to "Notify Customer." The "Notify Customer" node is reached after an out-of-stock situation or after an order cancellation due to payment failure. The diagram contains an illogical loop from "Generate Invoice" back to "Order Received," and a reversed sequence where the invoice is generated before the customer is notified of cancellation. The "Notify Customer" step only occurs after cancellation or out-of-stock, not after successful shipment.

@@ -1,0 +1,44 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the process of synthesizing and validating Cilium network policies from Hubble flows. It illustrates the steps involved in converting Hubble flow data into Cilium network policies, validating their structure, and generating reports. The diagram serves as a visual representation of the policy generation and validation pipeline.
+
+## Overall Layout
+The diagram has a left-to-right (LR) layout. It starts with Hubble Flows JSON data and ends with a Policy Ready for Deployment or an HTML Report. The flow progresses linearly with a validation check that determines the final output.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Hubble Flow Input, Policy Synthesis, Policy Validation, Reporting, and Deployment Readiness.
+
+## Node-by-Node Description
+- **A / Hubble Flows JSON**: Represents the input data in JSON format, containing Hubble flow information. visible in diagram; no further repository context available.
+- **B / Parse & Validate internal/hubble**: Represents the parsing and validation of the Hubble flow data. In the repository this corresponds to the `internal/hubble` package.
+- **C / Parsed Flows Metadata Extracted**: Represents the extracted metadata from the parsed Hubble flows. visible in diagram; no further repository context available.
+- **D / Synthesize Policies internal/synth**: Represents the synthesis of network policies based on the extracted metadata. In the repository this corresponds to the `internal/synth` package.
+- **E / CiliumNetworkPolicy YAML**: Represents the Cilium network policy in YAML format. visible in diagram; no further repository context available.
+- **F / Validate Structure internal/verify**: Represents the validation of the Cilium network policy structure. In the repository this corresponds to the `internal/verify` package.
+- **G / Valid?**: Represents a decision point where the validity of the policy is checked. visible in diagram; no further repository context available.
+- **H / Policy Ready for Deployment**: Represents the final state where the policy is ready for deployment. visible in diagram; no further repository context available.
+- **I / Generate Report internal/explain**: Represents the generation of a report explaining the policy. In the repository this corresponds to the `internal/explain` package.
+- **J / HTML Report + Network Graph**: Represents the generated HTML report along with a network graph. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Hubble Flows JSON data is learned and passed to the parsing and validation stage.
+- `B --> C`: Parsed and validated flows are passed to metadata extraction.
+- `C --> D`: Extracted metadata is proposed to the policy synthesis stage.
+- `D --> E`: Synthesized policies are passed as CiliumNetworkPolicy YAML.
+- `E --> F`: CiliumNetworkPolicy YAML is verified for structure.
+- `F --> G`: The structure validation result is passed to the validation decision point.
+- `G -- Yes --> H`: If the policy is valid, it is marked as ready for deployment.
+- `C --> I`: Extracted metadata is used to explain and generate a report.
+- `E --> I`: CiliumNetworkPolicy YAML is used to explain and generate a report.
+- `I --> J`: The generated report is output as an HTML Report + Network Graph.
+
+## Repository Context & Terminology
+- **Hubble Flows**: Network flow data collected by Hubble, a network observability tool for Kubernetes.
+- **CiliumNetworkPolicy**: A Kubernetes custom resource definition (CRD) used by Cilium to define network policies.
+- **YAML**: A human-readable data serialization format commonly used for configuration files.
+- **internal/hubble**: Package responsible for parsing and validating Hubble flow data.
+- **internal/synth**: Package responsible for synthesizing Cilium network policies.
+- **internal/verify**: Package responsible for validating the structure of Cilium network policies.
+- **internal/explain**: Package responsible for generating reports explaining the policy.
+
+## High-Density QA Ground Truth Summary
+The process begins with `Hubble Flows JSON` data, which is then parsed and validated by the `internal/hubble` package. The `Parsed Flows Metadata Extracted` node represents the result of this parsing and validation, with extracted metadata then proposed to the `Synthesize Policies internal/synth` stage. This stage generates `CiliumNetworkPolicy YAML`. The YAML policy is then passed to `Validate Structure internal/verify` to ensure its structural integrity. A key decision point, `Valid?`, determines the subsequent path. If the policy is deemed valid, indicated by a "Yes" branch, the process concludes with the `Policy Ready for Deployment` node. Regardless of the validation outcome, the `Parsed Flows Metadata Extracted` and `CiliumNetworkPolicy YAML` are used by the `Generate Report internal/explain` stage to create an `HTML Report + Network Graph`, providing insights into the generated policy and network topology. The `internal/synth` package plays a crucial role in converting the extracted metadata into a deployable Cilium network policy, while the `internal/verify` package ensures that the generated policy adheres to the required structure.

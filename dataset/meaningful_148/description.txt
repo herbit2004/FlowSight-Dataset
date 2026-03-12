@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the lifecycle of a ticket in a support or issue tracking system. It illustrates the flow of a ticket from creation to closure, including SLA (Service Level Agreement) checks, escalations, and resolution attempts. The diagram serves as a visual representation of the ticket handling process, aiding in understanding and optimizing the workflow.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It consists of a main process flow within a "Ticket_Lifecycle" subgraph. The start node is "Ticket Creation: User Report," and the end node is "Ticket Closure."
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Ticket_Lifecycle," which encapsulates the entire ticket processing workflow.
+
+## Node-by-Node Description
+- **A / Ticket Creation: User Report**: Represents the initial creation of a ticket, typically by a user reporting an issue. visible in diagram; no further repository context available.
+- **B / SLA Clock Start**: Indicates the start of the SLA clock, which tracks the time taken to resolve the ticket. visible in diagram; no further repository context available.
+- **C / SLA Breach Check: Initial**: Represents the initial check to determine if the SLA has been breached. visible in diagram; no further repository context available.
+- **D / Assign to Support Group**: Represents the assignment of the ticket to a specific support group for resolution. visible in diagram; no further repository context available.
+- **E / Ticket Resolution: Attempt**: Represents an attempt to resolve the ticket by the assigned support group. visible in diagram; no further repository context available.
+- **F / SLA Breach Check: Ongoing**: Represents an ongoing check to determine if the SLA has been breached during the resolution attempt. visible in diagram; no further repository context available.
+- **G / Resolve Ticket**: Represents the successful resolution of the ticket. visible in diagram; no further repository context available.
+- **H / Ticket Closure**: Represents the final closure of the ticket after resolution. visible in diagram; no further repository context available.
+- **I / Escalate: Priority 1**: Represents the escalation of the ticket to a higher priority level. visible in diagram; no further repository context available.
+- **J / Escalate: Tier 2**: Represents the escalation of the ticket to a higher support tier. visible in diagram; no further repository context available.
+- **K / Notify On-Call Engineer**: Represents the notification of an on-call engineer for immediate attention. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The creation of a ticket triggers the start of the SLA clock.
+- `B --> C`: The SLA clock start leads to an initial SLA breach check.
+- `C -- SLA Met --> D`: If the SLA is met during the initial check, the ticket is assigned to a support group.
+- `C -- SLA Breached --> I`: If the SLA is breached during the initial check, the ticket is escalated to Priority 1.
+- `D --> E`: Assignment to a support group leads to an attempt to resolve the ticket.
+- `E --> F`: After a resolution attempt, an ongoing SLA breach check is performed.
+- `F -- SLA Met --> G`: If the SLA is met during the ongoing check, the ticket is resolved.
+- `F -- SLA Breached --> J`: If the SLA is breached during the ongoing check, the ticket is escalated to Tier 2.
+- `G --> H`: Resolving the ticket leads to ticket closure.
+- `I --> D`: Escalation to Priority 1 leads to assignment to a support group.
+- `J --> K`: Escalation to Tier 2 leads to notification of the on-call engineer.
+- `K --> D`: Notification of the on-call engineer leads to assignment to a support group.
+
+## Repository Context & Terminology
+- **Ticket**: A record of an issue or request that needs to be addressed.
+- **SLA (Service Level Agreement)**: A contract defining the level of service expected from a service provider.
+- **SLA Clock**: A timer that tracks the time taken to resolve a ticket, used to measure compliance with the SLA.
+- **Escalation**: The process of raising a ticket to a higher priority level or support tier.
+- **Support Group**: A team or department responsible for resolving tickets.
+- **On-Call Engineer**: An engineer available to respond to urgent issues outside of normal working hours.
+- **Ticket Resolution**: The process of addressing and resolving the issue reported in the ticket.
+- **Ticket Closure**: The final step in the ticket lifecycle, indicating that the issue has been resolved and the ticket is no longer active.
+
+## High-Density QA Ground Truth Summary
+The ticket lifecycle begins with "Ticket Creation: User Report," which immediately triggers the "SLA Clock Start." An "SLA Breach Check: Initial" then determines if the service level agreement has been breached. If "SLA Met," the ticket is "Assign to Support Group"; otherwise, if "SLA Breached," the ticket is escalated to "Escalate: Priority 1" and then assigned to a support group. The assigned support group attempts "Ticket Resolution: Attempt," followed by an "SLA Breach Check: Ongoing." If "SLA Met," the ticket is "Resolve Ticket" and then "Ticket Closure." If "SLA Breached" during the ongoing check, the ticket is escalated to "Escalate: Tier 2," which triggers "Notify On-Call Engineer," before being assigned to a support group. The SLA is a critical component, defining the expected resolution time; breaches trigger escalations to ensure timely issue resolution. The cycle continues with assignment to a support group after each escalation, ensuring continuous attempts at resolution until the ticket reaches "Ticket Closure."

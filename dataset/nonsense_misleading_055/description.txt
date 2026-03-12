@@ -1,0 +1,74 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the "Order Processing" workflow. It depicts the sequence of steps involved in processing an order, from initiation to completion, including inventory checks, payment processing, shipping, and handling of delivery failures. The diagram serves as a visual representation of the order processing logic.
+
+## Overall Layout
+The diagram flows from left to right. It starts with a "Start Order" node on the left and ends with an "Order Completed" node on the right. The diagram contains decision diamonds that create branching paths based on conditions.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Order Processing".
+
+## Node-by-Node Description
+- **A / Start Order**: Represents the initiation of the order processing workflow.
+  visible in diagram; no further repository context available.
+- **B / Item in Stock?**: A decision point to check if the ordered item is available in stock.
+  visible in diagram; no further repository context available.
+- **C / Notify Customer: Out of Stock**: Informs the customer if the item is not in stock.
+  visible in diagram; no further repository context available.
+- **D / Calculate Total**: Calculates the total amount for the order.
+  visible in diagram; no further repository context available.
+- **E / Payment Received?**: A decision point to check if the payment has been received.
+  visible in diagram; no further repository context available.
+- **G / Package Items**: Packages the items for shipment.
+  visible in diagram; no further repository context available.
+- **H / Print Shipping Label**: Prints the shipping label for the package.
+  visible in diagram; no further repository context available.
+- **I / Ship Order**: Ships the order to the customer.
+  visible in diagram; no further repository context available.
+- **J / Delivery Confirmed?**: A decision point to check if the delivery has been confirmed.
+  visible in diagram; no further repository context available.
+- **K / Investigate Delivery Failure**: Investigates the reason for delivery failure.
+  visible in diagram; no further repository context available.
+- **L / Update Inventory**: Updates the inventory after delivery.
+  visible in diagram; no further repository context available.
+- **M / Send Confirmation Email**: Sends a confirmation email to the customer.
+  visible in diagram; no further repository context available.
+- **F / Cancel Order**: Cancels the order.
+  visible in diagram; no further repository context available.
+- **N / Order Completed**: Indicates that the order processing is complete.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Starts the order processing workflow.
+- `B -- No --> C`: If the item is not in stock, notify the customer.
+- `B -- Yes --> D`: If the item is in stock, calculate the total.
+- `C --> F`: After notifying the customer about out-of-stock item, cancel the order.
+- `D --> E`: Proceeds to check if payment has been received.
+- `E -- Yes --> G`: If payment is received, package the items.
+- `E -- No --> L`: If payment is not received, update the inventory.
+- `G --> H`: Proceeds to print the shipping label.
+- `H --> I`: Proceeds to ship the order.
+- `I --> J`: Proceeds to check if delivery has been confirmed.
+- `J -- No --> K`: If delivery is not confirmed, investigate the delivery failure.
+- `J -- Yes --> L`: If delivery is confirmed, update the inventory.
+- `K --> H`: After investigating delivery failure, print shipping label again.
+- `L --> M`: After updating inventory, send confirmation email.
+- `M --> F`: After sending confirmation email, cancel the order.
+- `F --> N`: Indicates the order is completed after cancellation.
+
+## Repository Context & Terminology
+- **Start Order**: In standard practice, this would involve a customer placing an order with specific items. In this diagram, it's simply the initiation of the process, skipping the actual order placement.
+- **Item in Stock?**: Standard inventory check. In this diagram, a "No" result leads directly to order cancellation *without* attempting to backorder or find alternatives.
+- **Calculate Total**: Standard calculation of order cost. In this diagram, the calculation itself isn't detailed.
+- **Payment Received?**: Standard check for successful payment. In this diagram, a "No" result *illogically* leads to updating inventory, instead of prompting for payment or cancelling the order.
+- **Package Items**: Standard packaging process. In this diagram, it's a simple step with no details.
+- **Print Shipping Label**: Standard label printing. In this diagram, it's a simple step with no details.
+- **Ship Order**: Standard shipping process. In this diagram, it's a simple step with no details.
+- **Delivery Confirmed?**: Standard check for successful delivery. In this diagram, a "Yes" result *illogically* leads to updating inventory, which should happen *before* shipping.
+- **Investigate Delivery Failure**: Standard investigation process. In this diagram, it loops back to printing the shipping label, which is illogical.
+- **Update Inventory**: Standard inventory update. In this diagram, it's triggered by both failed payment and confirmed delivery, which is illogical.
+- **Send Confirmation Email**: Standard confirmation email. In this diagram, it happens *before* order completion, which is out of order.
+- **Cancel Order**: Standard order cancellation. In this diagram, it's triggered by out-of-stock items, confirmation email, and after delivery failure investigation.
+- **Order Completed**: Standard order completion. In this diagram, it's the final step after cancellation.
+
+## High-Density QA Ground Truth Summary
+The order processing flowchart begins with "Start Order," immediately followed by a check: "Item in Stock?". If the item is not in stock ("No" branch), the customer is notified ("Notify Customer: Out of Stock"), and the order is then cancelled. If the item *is* in stock ("Yes" branch), the total is calculated ("Calculate Total"), and the system checks if payment has been received ("Payment Received?"). If payment *has* been received ("Yes" branch), the items are packaged ("Package Items"), a shipping label is printed ("Print Shipping Label"), and the order is shipped ("Ship Order"). If payment has *not* been received ("No" branch), the inventory is updated, skipping logical steps. After shipping, the system checks if delivery is confirmed ("Delivery Confirmed?"). If delivery is *not* confirmed ("No" branch), the delivery failure is investigated ("Investigate Delivery Failure"), and the process loops back to printing the shipping label. If delivery *is* confirmed ("Yes" branch), the inventory is updated. After updating the inventory, a confirmation email is sent ("Send Confirmation Email"), and the order is then cancelled. Finally, the "Cancel Order" node leads to "Order Completed". The "Delivery Confirmed?" node's "Yes" branch incorrectly triggers "Update Inventory" *after* shipping, contradicting standard inventory management practices where inventory is updated *before* fulfilling the order.

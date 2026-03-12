@@ -1,0 +1,70 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow of an e-commerce system. It illustrates the sequence of steps from when a user places an order to when the order is completed and the inventory is updated. The diagram serves as a visual representation of the order fulfillment process, but contains deliberate errors and contradictions.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The flow starts with the "User Places Order" node at the top and progresses downwards through a series of decision points and actions, eventually leading to the "Update Inventory" node at the bottom. There is one start node and one end node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement & Payment, Shipment Initiation, Inventory Check, Order Fulfillment, Delivery & Completion, and Inventory Update.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial step where a user submits their order.
+  visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision point to determine if the payment for the order was successful.
+  visible in diagram; no further repository context available.
+- **C / Show Error Message**: Indicates that an error message is displayed to the user if the payment fails.
+  visible in diagram; no further repository context available.
+- **D / Initiate Shipment**: Represents the action of starting the shipment process after successful payment.
+  visible in diagram; no further repository context available.
+- **E / Inventory Available?**: A decision point to check if the required inventory is available to fulfill the order.
+  visible in diagram; no further repository context available.
+- **F / Order Fulfilled and Shipped**: Represents the action of fulfilling the order and shipping it to the customer, despite inventory potentially being unavailable.
+  visible in diagram; no further repository context available.
+- **G / Notify Customer of Backorder**: Represents the action of informing the customer that their order is on backorder due to unavailable inventory.
+  visible in diagram; no further repository context available.
+- **H / Handle Customer Cancellation**: Represents the process of managing the customer's cancellation request.
+  visible in diagram; no further repository context available.
+- **I / Deliver Order**: Represents the action of delivering the order to the customer.
+  visible in diagram; no further repository context available.
+- **J / Order Received?**: A decision point to determine if the customer has received the order.
+  visible in diagram; no further repository context available.
+- **K / Investigate Lost Package**: Represents the action of investigating a lost package if the customer has not received the order.
+  visible in diagram; no further repository context available.
+- **L / Complete Order**: Represents the final step of completing the order after it has been received by the customer.
+  visible in diagram; no further repository context available.
+- **M / Update Inventory**: Represents the action of updating the inventory levels after the order is completed.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `A --> B`: The user's order triggers the payment verification process.
+  `B -- No --> C`: If the payment is not successful, an error message is shown.
+  `C --> A`: After showing the error message, the flow returns to the "User Places Order" node, implying the user retries the order with corrected payment details.
+  `B -- Yes --> D`: If the payment is successful, the shipment process is initiated.
+  `D --> E`: Initiating shipment leads to checking inventory availability.
+  `E -- No --> F`: If inventory is *not* available, the order is fulfilled and shipped anyway.
+  `E -- Yes --> G`: If inventory is available, the customer is notified of a backorder.
+  `G --> H`: Notifying the customer of a backorder leads to handling customer cancellation.
+  `H --> A`: Handling customer cancellation returns the flow to the "User Places Order" node.
+  `F --> I`: The fulfilled and shipped order is delivered.
+  `I --> J`: Delivery leads to checking if the order was received.
+  `J -- No --> K`: If the order was not received, the lost package is investigated.
+  `K --> I`: Investigating the lost package leads back to delivering the order (presumably the same delivery attempt).
+  `J -- Yes --> L`: If the order was received, the order is completed.
+  `L --> M`: Completing the order triggers inventory update.
+  `M --> D`: Updating inventory initiates shipment.
+
+## Repository Context & Terminology
+- **User Places Order**: In standard e-commerce, this refers to the action of a customer submitting an order through a website or application. In this diagram, it's the starting point of the workflow, and also a point of return after payment failures or customer cancellations.
+- **Payment Successful?**: This refers to the verification of the payment information provided by the user. In this diagram, it's a decision point that determines whether the order processing continues or an error message is displayed.
+- **Initiate Shipment**: This refers to the process of preparing and sending the order to the customer. In this diagram, it's triggered after successful payment, but illogically triggered again after inventory update.
+- **Inventory Available?**: This refers to checking if there is enough stock to fulfill the order. In this diagram, the "No" branch leads to fulfilling and shipping the order anyway, which is contradictory.
+- **Order Fulfilled and Shipped**: This refers to the process of packing and sending the order to the customer. In this diagram, it happens even if inventory is unavailable, which is an error.
+- **Notify Customer of Backorder**: This refers to informing the customer that their order will be delayed due to unavailable inventory. In this diagram, this happens when inventory *is* available, which is contradictory.
+- **Deliver Order**: This refers to the process of transporting the order to the customer's address. In this diagram, it's preceded by fulfilling and shipping even when inventory is unavailable.
+- **Order Received?**: This refers to confirming that the customer has received the order. In this diagram, it's a decision point that determines whether the order is completed or a lost package investigation is initiated.
+- **Investigate Lost Package**: This refers to the process of finding a package that has not been delivered to the customer. In this diagram, it loops back to "Deliver Order", implying the same delivery attempt is made again.
+- **Complete Order**: This refers to the final step of marking the order as fulfilled. In this diagram, it triggers inventory update.
+- **Update Inventory**: This refers to adjusting the stock levels to reflect the fulfilled order. In this diagram, it illogically triggers shipment initiation.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "User Places Order" node, which then leads to the "Payment Successful?" decision point. If payment fails ("No" branch), an error message is shown, and the flow returns to the "User Places Order" node. If payment is successful ("Yes" branch), the "Initiate Shipment" process begins, followed by a check for "Inventory Available?". Here, a critical error occurs: if inventory is *not* available ("No" branch), the system proceeds to "Order Fulfilled and Shipped", which is illogical. If inventory *is* available ("Yes" branch), the customer is notified of a backorder, and then the system handles customer cancellation, returning to the "User Places Order" node. The "Order Fulfilled and Shipped" node leads to "Deliver Order", followed by a check: "Order Received?". If not ("No" branch), the system "Investigate Lost Package", which then loops back to "Deliver Order" (same delivery attempt). If the order *is* received ("Yes" branch), the "Complete Order" node is reached, which then triggers "Update Inventory". Finally, "Update Inventory" illogically leads back to "Initiate Shipment", creating a circular flow. The process terminates at "Update Inventory". The "Handle Customer Cancellation" node returns to the start, suggesting a new order attempt.

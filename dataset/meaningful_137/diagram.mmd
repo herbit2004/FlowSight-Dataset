@@ -1,0 +1,56 @@
+graph TD
+    subgraph User Interaction
+        A[User Search Input] --> B(Query Parser);
+    end
+
+    subgraph Search Backend
+        B --> C{Boolean Query Conversion?};
+        C -- Yes --> D[Boolean Query Evaluator];
+        C -- No --> E[Semantic Enrichment];
+        E --> F[Expand Query with Synonyms];
+        F --> D;
+        D --> G{Index Available?};
+        G -- Yes --> H[Index Search Engine];
+        G -- No --> I[Brute Force Search];
+        H --> J(Rank & Score Results);
+        I --> J;
+    end
+
+    subgraph Highlighting and Presentation
+        J --> K{Apply Relevance Threshold?};
+        K -- Yes --> L[Filter Top Results];
+        K -- No --> L;
+        L --> M[Highlight Search Terms];
+        M --> N[Snippet Generator];
+        N --> O(Response Formatter);
+    end
+
+    subgraph Cache and Persistence
+        O --> P{Cache Hit?};
+        P -- Yes --> Q(Return Cached Result);
+        P -- No --> R[Store Result in Cache];
+        R --> Q;
+        J --> S[Log Query & Results];
+        S --> T[(Analytics Database)];
+    end
+
+    subgraph Document Indexing
+        U[Document Ingestion] --> V[Text Extraction];
+        V --> W[Tokenization & Normalization];
+        W --> X[Inverted Index Builder];
+        X --> Y[(Index Storage)];
+        Y --> H;
+
+    end
+
+
+    Q --> Z[User Interface];
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px
+    classDef data fill:#eee,stroke:#333,stroke-width:2px
+
+    class B,D,F,H,I,J,L,M,N,O,R,U,V,W,X process
+    class C,G,K,P decision
+    class T,Y data
+    class A,Z data

@@ -1,0 +1,23 @@
+graph TD
+    subgraph Data Synchronization & ETL Pipeline
+        A[Source System: Order Management] --> B(Order Data Extractor);
+        B --> C{Data Validation};
+        C -- Invalid Data --> D[Exception Handling & Logging];
+        C -- Valid Data --> E(Data Transformation);
+        E --> F(Customer ID Lookup);
+        F --> G{Customer ID Found?};
+        G -- Yes --> H(Enrich Order Data);
+        G -- No --> I[Create New Customer Record];
+        I --> H;
+        H --> J(Data Aggregation);
+        J --> K(Load to Data Warehouse);
+        K --> L[Data Quality Checks];
+        L --> M{Data Quality Passed?};
+        M -- Yes --> N[Data Warehouse: Star Schema];
+        M -- No --> O[Quarantine Area for Correction];
+    end
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px
+    class A,B,E,F,H,J,K,I,O process;
+    class C,G,M decision;

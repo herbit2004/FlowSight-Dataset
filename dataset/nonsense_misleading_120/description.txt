@@ -1,0 +1,56 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow of an e-commerce system. It outlines the steps involved from when a user places an order to when the order is closed or cancelled, including inventory checks, payment processing, and shipment. The diagram serves as a visual representation of the order fulfillment process, but contains intentional logical errors.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "User Places Order" node at the top and flows downwards through a series of process and decision nodes, ultimately leading to either "Close Order" or "Order Cancelled". There is one start node and two end nodes.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement & Inventory Check, Payment Processing, Order Preparation, Shipment, Delivery, and Order Completion/Cancellation.
+
+## Node-by-Node Description
+- **A / User Places Order**: The initial step where a user submits their order. visible in diagram; no further repository context available.
+- **B / Inventory Available?**: A decision point to check if the ordered items are in stock. visible in diagram; no further repository context available.
+- **C / Process Payment**: The step to charge the user for the order. visible in diagram; no further repository context available.
+- **D / Payment Successful?**: A decision point to verify if the payment was processed successfully. visible in diagram; no further repository context available.
+- **E / Send Refund Request**: The step to initiate a refund if the payment fails. visible in diagram; no further repository context available.
+- **F / Prepare Order for Shipment**: The step to package and prepare the order for delivery. visible in diagram; no further repository context available.
+- **G / Item Packed Correctly?**: A decision point to ensure the order is packed correctly. visible in diagram; no further repository context available.
+- **I / Notify Customer of Shipment**: The step to inform the customer that their order has been shipped. visible in diagram; no further repository context available.
+- **J / Ship Order**: The step to dispatch the order for delivery. visible in diagram; no further repository context available.
+- **K / Delivery Attempted**: The step indicating that a delivery attempt has been made. visible in diagram; no further repository context available.
+- **L / Delivery Successful?**: A decision point to check if the delivery was successful. visible in diagram; no further repository context available.
+- **M / Close Order**: The step to finalize the order after successful delivery. visible in diagram; no further repository context available.
+- **N / Update Inventory**: The step to adjust the inventory levels after the order is processed. visible in diagram; no further repository context available.
+- **H / Order Cancelled**: The final step indicating that the order has been cancelled. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User order triggers inventory check.
+- `B -- Yes --> C`: If inventory is available, proceed to payment processing.
+- `B -- No --> H`: If inventory is not available, the order is cancelled. (ERROR: Swapped branch outcomes)
+- `C --> D`: Payment processing leads to payment success check.
+- `D -- No --> E`: If payment is not successful, send a refund request.
+- `D -- Yes --> F`: If payment is successful, prepare the order for shipment.
+- `E --> C`: Refund request loops back to payment processing. (ERROR: Wrong causal direction)
+- `F --> G`: Order preparation leads to item packing check.
+- `G -- No --> F`: If the item is not packed correctly, loop back to prepare the order for shipment again. (ERROR: Illogical Loop)
+- `G -- Yes --> I`: If the item is packed correctly, notify the customer of shipment.
+- `I --> J`: Notification leads to shipping the order.
+- `J --> K`: Shipping the order leads to a delivery attempt.
+- `K --> L`: Delivery attempt leads to delivery success check.
+- `L -- Yes --> M`: If delivery is successful, close the order.
+- `L -- No --> G`: If delivery is not successful, loop back to item packing check. (ERROR: Illogical Loop)
+- `M --> N`: Closing the order leads to updating the inventory.
+- `N --> H`: Inventory update leads to order cancellation. (ERROR: Reversed Sequence)
+
+## Repository Context & Terminology
+- **User Places Order**: The initial action by a customer to request a product or service. In this diagram, it starts the entire order processing workflow.
+- **Inventory Available?**: A check to determine if the requested items are in stock. In this diagram, if inventory is *available*, the order is cancelled. (ERROR: Swapped branch outcomes)
+- **Process Payment**: The step of charging the customer's account. In this diagram, if payment fails, a refund request loops back to payment processing. (ERROR: Wrong causal direction)
+- **Payment Successful?**: A verification of whether the payment was successfully processed. In this diagram, a failed payment triggers a refund request.
+- **Prepare Order for Shipment**: The process of packaging and preparing the order for delivery. In this diagram, packing failure loops back to packing again. (ERROR: Illogical Loop)
+- **Item Packed Correctly?**: A check to ensure the order is packed correctly before shipping. In this diagram, delivery failure leads back to this check. (ERROR: Illogical Loop)
+- **Delivery Successful?**: A verification of whether the delivery was successful. In this diagram, delivery failure leads back to item packing. (ERROR: Illogical Loop)
+- **Update Inventory**: The process of adjusting inventory levels after an order is processed. In this diagram, this step leads to order cancellation. (ERROR: Reversed Sequence)
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Places Order," which triggers an "Inventory Available?" check. If inventory is available, the process proceeds to "Process Payment"; if not, the order is cancelled. (ERROR: Swapped branch outcomes). After payment processing, a "Payment Successful?" check determines the next step. If payment fails, a "Send Refund Request" is initiated, which then loops back to "Process Payment" (ERROR: Wrong causal direction). If payment is successful, the system moves to "Prepare Order for Shipment," followed by an "Item Packed Correctly?" check. If packing is incorrect, the process loops back to "Prepare Order for Shipment" (ERROR: Illogical Loop). If packing is correct, the customer is notified of shipment, and the order is shipped, leading to a "Delivery Attempted." A "Delivery Successful?" check follows. If delivery fails, the process loops back to "Item Packed Correctly?" (ERROR: Illogical Loop). If delivery is successful, the "Close Order" step is executed, followed by "Update Inventory," which then leads to "Order Cancelled" (ERROR: Reversed Sequence). The process concludes with either "Close Order" or "Order Cancelled," but the "Order Cancelled" path merges with the "Update Inventory" path, creating a contradictory flow where inventory updates lead to cancellation, even after successful delivery. The diagram contains multiple logical errors, including illogical loops and reversed sequences.

@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the process of handling a customer order. It outlines the steps involved from receiving the order to its completion, including inventory checks, payment processing, shipping, and post-delivery actions. The diagram serves as a visual representation of the order fulfillment workflow.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The process starts with "Receive Customer Order" at the top and progresses downwards towards "Complete Order" at the bottom. The diagram includes decision points that create branching paths.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Reception, Pre-processing (Inventory & Payment), Cancellation, Warehouse Processing, Delivery, and Completion.
+
+## Node-by-Node Description
+- **A / Receive Customer Order**: The initial step where a customer's order is received. visible in diagram; no further repository context available.
+- **B / Inventory Check**: A decision point to determine if the ordered items are in stock. visible in diagram; no further repository context available.
+- **C / Payment Processing**: The step where the customer's payment is processed. visible in diagram; no further repository context available.
+- **D / Payment Successful?**: A decision point to determine if the payment was successful. visible in diagram; no further repository context available.
+- **E / Shipping Notification**: A notification sent to the customer confirming that their order has been shipped. visible in diagram; no further repository context available.
+- **F / Cancel Order**: The step where the order is cancelled due to inventory issues or payment failure. visible in diagram; no further repository context available.
+- **G / Notify Customer of Cancellation**: The step where the customer is notified about the order cancellation. visible in diagram; no further repository context available.
+- **H / Log Cancellation Reason**: The step where the reason for the order cancellation is logged. visible in diagram; no further repository context available.
+- **I / Update Inventory**: The step where the inventory is updated after an order cancellation. visible in diagram; no further repository context available.
+- **J / Send Order to Warehouse**: The step where the order is sent to the warehouse for fulfillment. visible in diagram; no further repository context available.
+- **K / Pack Order**: The step where the order is packed at the warehouse. visible in diagram; no further repository context available.
+- **L / Ship Order**: The step where the order is shipped to the customer. visible in diagram; no further repository context available.
+- **M / Order Delivered**: The step where the order is delivered to the customer. visible in diagram; no further repository context available.
+- **N / Send Post-Delivery Survey**: The step where a post-delivery survey is sent to the customer. visible in diagram; no further repository context available.
+- **O / Complete Order**: The final step where the order is marked as complete. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: An order is sent for inventory check.
+- `B -- Yes --> C`: If the inventory check is successful (items are in stock), proceed to payment processing.
+- `B -- No --> F`: If the inventory check fails (items are out of stock), cancel the order.
+- `C --> D`: Payment is sent for success check.
+- `D -- No --> C`: If the payment is unsuccessful, loop back to payment processing.
+- `D -- Yes --> E`: If the payment is successful, send a shipping notification.
+- `E --> A`: Shipping Notification incorrectly loops back to Receive Customer Order.
+- `F --> G`: If the order is cancelled, notify the customer.
+- `G --> H`: After notifying the customer, log the cancellation reason.
+- `H --> I`: After logging the cancellation reason, update the inventory.
+- `I --> J`: After updating the inventory, send the order to the warehouse.
+- `J --> K`: The order is sent to be packed.
+- `K --> L`: The packed order is shipped.
+- `L --> M`: The order is delivered.
+- `M --> N`: After delivery, send a post-delivery survey.
+- `N --> O`: After sending the survey, complete the order.
+
+## Repository Context & Terminology
+- **Receive Customer Order**: The initial action of receiving an order from a customer. In this diagram, it's the starting point of the entire process.
+- **Inventory Check**: Verifying the availability of items in stock. In this diagram, it's a decision point that determines whether the order can proceed or needs to be cancelled.
+- **Payment Processing**: The process of charging the customer for the order. In this diagram, it's a step that follows a successful inventory check.
+- **Shipping Notification**: A notification sent to the customer confirming that their order has been shipped. In this diagram, it's triggered after successful payment, but incorrectly loops back to the start.
+- **Cancel Order**: The action of cancelling an order. In this diagram, it occurs when the inventory check fails.
+- **Update Inventory**: Adjusting the stock levels after an order is cancelled. In this diagram, this happens *before* the order is sent to the warehouse, which is incorrect.
+- **Send Order to Warehouse**: Transmitting the order details to the warehouse for fulfillment. In this diagram, this happens after inventory is updated (following a cancellation).
+- **Pack Order**: Preparing the order for shipment at the warehouse. In this diagram, it follows sending the order to the warehouse.
+- **Ship Order**: Sending the order to the customer. In this diagram, it follows packing the order.
+- **Order Delivered**: Confirmation that the order has been delivered to the customer. In this diagram, it follows shipping the order.
+- **Send Post-Delivery Survey**: Sending a survey to the customer after the order has been delivered. In this diagram, this happens *before* the order is completed.
+- **Complete Order**: The final step in the order fulfillment process. In this diagram, it follows sending the post-delivery survey.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Receive Customer Order," which leads to an "Inventory Check." If the inventory check is successful ("Yes" branch), the process proceeds to "Payment Processing." If the inventory check fails ("No" branch), the order is "Cancel Order," and the customer is notified, the cancellation reason is logged, and then the inventory is updated. After "Payment Processing," the diagram checks "Payment Successful?". If payment fails ("No"), the process loops back to "Payment Processing." If payment is successful ("Yes"), a "Shipping Notification" is sent, which incorrectly loops back to "Receive Customer Order." If the order is cancelled, the process continues with "Notify Customer of Cancellation," followed by "Log Cancellation Reason," and then "Update Inventory." After updating inventory, the process proceeds to "Send Order to Warehouse," then "Pack Order," "Ship Order," and "Order Delivered." Following delivery, a "Send Post-Delivery Survey" is sent, and then the process ends with "Complete Order." The "Update Inventory" step is misplaced, occurring after cancellation but before sending the order to the warehouse. The shipping notification incorrectly loops back to the start. The post-delivery survey happens before the order is completed.

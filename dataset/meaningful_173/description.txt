@@ -1,0 +1,71 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the ticket creation and routing process within a technical support system. It outlines the steps involved in classifying, triaging, and assigning support tickets based on their type, impact, and other relevant factors. The diagram serves as a visual guide for support staff and helps standardize the ticket handling procedure.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with a "Start" node at the top and flows downwards through a series of decision points and actions, eventually converging to an "End" node at the bottom. The diagram has a hierarchical structure, with branching paths based on ticket characteristics.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Ticket Classification, Hardware/Software Differentiation, Impact Assessment, Resolution/Routing, and Assignment.
+
+## Node-by-Node Description
+- **A / Start: Ticket Creation**: Represents the beginning of the ticket creation process. visible in diagram; no further repository context available.
+- **B / Ticket Type?**: A decision node that determines the type of ticket being created (e.g., general inquiry, technical issue). visible in diagram; no further repository context available.
+- **C / Route to Helpdesk Queue**: Represents routing the ticket to the helpdesk queue. visible in diagram; no further repository context available.
+- **D / Hardware or Software?**: A decision node that determines whether the ticket is related to hardware or software. visible in diagram; no further repository context available.
+- **E / Asset Tag Present?**: A decision node that checks if an asset tag is present for the hardware issue. visible in diagram; no further repository context available.
+- **F / Lookup Asset Owner & Support Team**: Represents looking up the owner and support team associated with the asset. visible in diagram; no further repository context available.
+- **G / Route to Hardware Support Queue**: Represents routing the ticket to the hardware support queue. visible in diagram; no further repository context available.
+- **H / Service Impacting?**: A decision node that determines if the software issue is impacting a service. visible in diagram; no further repository context available.
+- **I / Severity Escalation Check**: Represents checking the severity of the service impact. visible in diagram; no further repository context available.
+- **J / High Impact Threshold?**: A decision node that determines if the severity exceeds a high impact threshold. visible in diagram; no further repository context available.
+- **K / Notify Incident Management**: Represents notifying incident management about the high impact issue. visible in diagram; no further repository context available.
+- **L / Analyze Error Code & Logs**: Represents analyzing error codes and logs to diagnose the issue. visible in diagram; no further repository context available.
+- **M / Known Error?**: A decision node that determines if the error is a known error. visible in diagram; no further repository context available.
+- **N / Apply Known Solution & Auto-Resolve**: Represents applying a known solution and automatically resolving the ticket. visible in diagram; no further repository context available.
+- **O / Route to Software Support Queue**: Represents routing the ticket to the software support queue. visible in diagram; no further repository context available.
+- **P / Predict Skillset Need**: Represents predicting the skillset needed to resolve the ticket. visible in diagram; no further repository context available.
+- **Q / Find Available Agent with Matching Skills**: Represents finding an available agent with the matching skills. visible in diagram; no further repository context available.
+- **R / Auto-Assign Ticket to Agent**: Represents automatically assigning the ticket to the agent. visible in diagram; no further repository context available.
+- **S / Notify Agent via Slack and Email**: Represents notifying the agent about the assigned ticket via Slack and email. visible in diagram; no further repository context available.
+- **T / End: Ticket Assigned**: Represents the end of the ticket assignment process. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Start the ticket creation process.
+- `B -- General Inquiry --> C`: If the ticket type is a general inquiry, route to the helpdesk queue.
+- `B -- Technical Issue --> D`: If the ticket type is a technical issue, proceed to determine if it's hardware or software related.
+- `D -- Hardware --> E`: If the issue is hardware-related, check for an asset tag.
+- `D -- Software --> H`: If the issue is software-related, check if it's service impacting.
+- `E -- Yes --> F`: If an asset tag is present, lookup the asset owner and support team.
+- `E -- No --> G`: If an asset tag is not present, route to the hardware support queue.
+- `H -- Yes --> I`: If the software issue is service impacting, perform a severity escalation check.
+- `H -- No --> L`: If the software issue is not service impacting, analyze error codes and logs.
+- `I --> J`: Proceed to determine if the severity exceeds a high impact threshold.
+- `J -- Yes --> K`: If the severity exceeds the threshold, notify incident management.
+- `J -- No --> L`: If the severity does not exceed the threshold, analyze error codes and logs.
+- `L --> M`: Analyze error code and logs to determine if it is a known error.
+- `M -- Yes --> N`: If the error is a known error, apply the known solution and auto-resolve.
+- `M -- No --> O`: If the error is not a known error, route to the software support queue.
+- `F --> P`: Predict the skillset needed to resolve the ticket.
+- `C --> T`: Route to Helpdesk Queue converges to End: Ticket Assigned.
+- `G --> Q`: Route to Hardware Support Queue converges to Find Available Agent with Matching Skills.
+- `O --> Q`: Route to Software Support Queue converges to Find Available Agent with Matching Skills.
+- `K --> Q`: Notify Incident Management converges to Find Available Agent with Matching Skills.
+- `P --> Q`: Predict Skillset Need converges to Find Available Agent with Matching Skills.
+- `N --> T`: Apply Known Solution & Auto-Resolve converges to End: Ticket Assigned.
+- `Q --> R`: Find Available Agent with Matching Skills leads to Auto-Assign Ticket to Agent.
+- `R --> S`: Auto-Assign Ticket to Agent leads to Notify Agent via Slack and Email.
+- `S --> T`: Notify Agent via Slack and Email leads to End: Ticket Assigned.
+
+## Repository Context & Terminology
+- **Ticket**: A record of a support request or incident.
+- **Helpdesk Queue**: A queue where general inquiries are routed for initial assessment.
+- **Hardware Support Queue**: A queue specifically for hardware-related issues.
+- **Software Support Queue**: A queue specifically for software-related issues.
+- **Asset Tag**: A unique identifier associated with a hardware asset.
+- **Incident Management**: A process for managing and resolving major service disruptions.
+- **Severity Escalation**: A process for escalating high-impact issues to the appropriate teams.
+- **Auto-Resolve**: Automatically resolving a ticket based on a known solution.
+- **Slack**: A messaging and collaboration platform.
+
+## High-Density QA Ground Truth Summary
+The ticket creation process begins with the "Start: Ticket Creation" node, immediately branching to the "Ticket Type?" decision node. If the ticket is a "General Inquiry," it's routed to the "Route to Helpdesk Queue" and ends at "End: Ticket Assigned." For "Technical Issue" tickets, the process branches to "Hardware or Software?". Hardware issues proceed to "Asset Tag Present?". If yes, "Lookup Asset Owner & Support Team" then "Predict Skillset Need"; if no, "Route to Hardware Support Queue." Software issues branch to "Service Impacting?". If yes, "Severity Escalation Check" then "High Impact Threshold?". If the threshold is met, "Notify Incident Management"; otherwise, "Analyze Error Code & Logs." If "Service Impacting?" is no, the process also goes to "Analyze Error Code & Logs," which then branches to "Known Error?". If yes, "Apply Known Solution & Auto-Resolve" and ends; if no, "Route to Software Support Queue." The "Predict Skillset Need," "Route to Hardware Support Queue," "Notify Incident Management," and "Route to Software Support Queue" paths all converge at "Find Available Agent with Matching Skills," followed by "Auto-Assign Ticket to Agent," "Notify Agent via Slack and Email," and finally "End: Ticket Assigned." The routing to specific support queues (hardware/software) ensures specialized handling based on the nature of the technical issue.

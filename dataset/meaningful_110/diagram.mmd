@@ -1,0 +1,39 @@
+graph TD
+    subgraph User Interaction
+        A[User opens application] --> B{Session exists?};
+        B -- Yes --> C[Fetch session data];
+        B -- No --> D[Redirect to SSO Provider];
+    end
+
+    subgraph SSO Authentication
+        D --> E[Display SSO login page];
+        E --> F{User authenticates?};
+        F -- Yes --> G[SSO Provider generates token];
+        F -- No --> H[Display error, retry];
+        H --> E;
+        G --> I[SSO Provider redirects back to application with token];
+    end
+
+    subgraph Application Session Handling
+        I --> J[Application server validates token];
+        J -- Valid --> K[Create application session];
+        J -- Invalid --> L[Display SSO error];
+        K --> M[Store session data in Redis];
+        M --> N[Set session cookie];
+    end
+
+    subgraph Request Processing
+        C --> O[Retrieve session data from Redis];
+        O --> P{Session data valid?};
+        P -- Yes --> Q[Authorize request];
+        P -- No --> L;
+        Q --> R[Process request];
+        R --> S[Return response to user];
+        N --> S;
+        L --> S;
+    end
+
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    classDef error fill:#fbb,stroke:#f00,stroke-width:2px
+    class L,H error

@@ -1,0 +1,65 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of configuration and secret management in a Kubernetes environment. It depicts how various sources of secrets and configurations are consolidated, watched for changes, and used to trigger rollouts of different Kubernetes resources. The diagram provides a high-level overview of the reloader mechanism and its dependencies.
+
+## Overall Layout
+The diagram has a left-to-right (LR) layout. It starts with nodes representing sources of secrets and configurations on the left, flows through intermediate nodes for consolidation and watching, and ends with Kubernetes resources that are triggered for rollout on the right.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 3 stages: Configuration Sources (ExternalSecret, SealedSecret, Certificate, ConfigMap), Consolidation & Watching (Secret, ConfigMap, Reloader), and Rollout Targets (Deployment, DeploymentConfig, Daemonset, Statefulset, ArgoRollout, CronJob, Slack, Teams, Webhook).
+
+## Node-by-Node Description
+- **ExternalSecret**: Represents an external secret source.
+  visible in diagram; no further repository context available.
+- **SealedSecret**: Represents a sealed secret source.
+  visible in diagram; no further repository context available.
+- **Certificate**: Represents a certificate source.
+  visible in diagram; no further repository context available.
+- **Secret**: Represents a Kubernetes Secret object.
+  visible in diagram; no further repository context available.
+- **ConfigMap**: Represents a Kubernetes ConfigMap object.
+  visible in diagram; no further repository context available.
+- **Reloader**: Represents a component that watches for changes in Secrets and ConfigMaps and triggers rollouts.
+  visible in diagram; no further repository context available.
+- **Deployment**: Represents a Kubernetes Deployment resource.
+  visible in diagram; no further repository context available.
+- **DeploymentConfig**: Represents a Kubernetes DeploymentConfig resource (likely from OpenShift).
+  visible in diagram; no further repository context available.
+- **Daemonset**: Represents a Kubernetes DaemonSet resource.
+  visible in diagram; no further repository context available.
+- **Statefulset**: Represents a Kubernetes StatefulSet resource.
+  visible in diagram; no further repository context available.
+- **ArgoRollout**: Represents an Argo Rollout resource.
+  visible in diagram; no further repository context available.
+- **CronJob**: Represents a Kubernetes CronJob resource.
+  visible in diagram; no further repository context available.
+- **Slack, Teams, Webhook**: Represents notification channels.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `ExternalSecret --> Secret`: An ExternalSecret creates a Secret.
+  `SealedSecret --> Secret`: A SealedSecret creates a Secret.
+  `Certificate --> ConfigMap`: A Certificate creates a ConfigMap.
+  `Secret --> Reloader`: The Reloader watches the Secret.
+  `ConfigMap --> Reloader`: The Reloader watches the ConfigMap.
+  `Reloader --> Deployment`: The Reloader triggers a rollout of the Deployment.
+  `Reloader --> DeploymentConfig`: The Reloader triggers a rollout of the DeploymentConfig.
+  `Reloader --> Daemonset`: The Reloader triggers a rollout of the Daemonset.
+  `Reloader --> Statefulset`: The Reloader triggers a rollout of the Statefulset.
+  `Reloader --> ArgoRollout`: The Reloader triggers a rollout of the ArgoRollout.
+  `Reloader --> CronJob`: The Reloader triggers a job of the CronJob.
+  `Reloader --> Slack, Teams, Webhook`: The Reloader sends a notification to Slack, Teams, and Webhook.
+
+## Repository Context & Terminology
+- **ExternalSecret**: A Kubernetes Custom Resource Definition (CRD) that allows referencing secrets stored in external secret management systems like AWS Secrets Manager or HashiCorp Vault.
+- **SealedSecret**: A Kubernetes controller and CRD that allows encrypting secrets so they can be safely stored in public repositories.
+- **ConfigMap**: A Kubernetes API object used to store non-confidential configuration data in key-value pairs. Pods can consume ConfigMaps as environment variables, command-line arguments, or as configuration files in a volume.
+- **Secret**: A Kubernetes API object used to store sensitive information, such as passwords, OAuth tokens, and SSH keys. Secrets are stored encrypted in the Kubernetes API server.
+- **Deployment**: A Kubernetes API object that manages a replicated application. Deployments declare a desired state and the Deployment controller gradually updates the actual state to match the desired state.
+- **DeploymentConfig**: An OpenShift resource similar to a Kubernetes Deployment, but with additional features like triggers for image changes and configuration updates.
+- **DaemonSet**: A Kubernetes API object that ensures that all (or some) nodes run a copy of a pod. As nodes are added to the cluster, pods are added to them. As nodes are removed from the cluster, those pods are garbage collected. Deleting a DaemonSet will clean up the pods it created.
+- **StatefulSet**: A Kubernetes API object used to manage the deployment and scaling of stateful applications. Unlike Deployments, StatefulSets maintain a sticky identity for each of their Pods. These pods are created from the same spec, but are not interchangeable: each has a persistent identifier that it maintains across any rescheduling.
+- **Argo Rollout**: A Kubernetes controller that provides advanced deployment strategies such as canary and blue/green deployments.
+- **CronJob**: A Kubernetes API object that creates Jobs on a schedule.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a configuration and secret management workflow in Kubernetes. It begins with various sources like `ExternalSecret`, `SealedSecret`, and `Certificate`, which create Kubernetes `Secret` and `ConfigMap` resources. The `Reloader` component watches these `Secret` and `ConfigMap` resources for changes. Upon detecting a change, the `Reloader` triggers rollouts of various Kubernetes resources, including `Deployment`, `DeploymentConfig`, `Daemonset`, `Statefulset`, and `ArgoRollout`. It can also trigger a `CronJob` or send notifications to `Slack`, `Teams`, or a generic `Webhook`. The use of `ExternalSecret` and `SealedSecret` indicates a concern for secure secret management, where secrets might originate from external sources or be encrypted for safe storage in repositories. The `Reloader` acts as a central component, automating the rollout process based on configuration changes, ensuring that applications are updated when their configuration or secrets are modified. The diagram highlights the automated propagation of configuration changes to different types of Kubernetes workloads.

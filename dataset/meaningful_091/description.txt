@@ -1,0 +1,66 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the process of source code analysis and license validation. It outlines the steps involved in identifying dependencies, determining their licenses, and generating a report. The diagram serves as a visual representation of the workflow for automated software composition analysis.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It is hierarchically structured into two main subgraphs: "Source Code Analysis" and "License Validation". The process starts with "Git Repository Checkout" and ends with "Generate Report".
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Source Code Analysis**: This stage focuses on checking out the source code from a Git repository, detecting the programming language, and extracting dependencies.
+- **License Validation**: This stage involves fingerprinting dependencies, looking up licenses in a database or performing heuristic analysis, and determining if the licenses are acceptable.
+
+## Node-by-Node Description
+- **A / Git Repository Checkout**: Checks out the source code from a Git repository. visible in diagram; no further repository context available.
+- **B / Language Detection**: Detects the programming language used in the source code. visible in diagram; no further repository context available.
+- **C / Poetry Project?**: Determines if the project is a Python Poetry project. visible in diagram; no further repository context available.
+- **D / Maven Project?**: Determines if the project is a Java Maven project. visible in diagram; no further repository context available.
+- **E / Poetry Lockfile Parsing**: Parses the `poetry.lock` file to extract dependencies. visible in diagram; no further repository context available.
+- **F / Scan requirements.txt**: Scans the `requirements.txt` file to extract dependencies. visible in diagram; no further repository context available.
+- **G / Maven POM Parsing**: Parses the Maven `pom.xml` file to extract dependencies. visible in diagram; no further repository context available.
+- **H / Fallback: Naive JAR Scan**: Performs a naive scan of JAR files to extract dependencies. visible in diagram; no further repository context available.
+- **I / Dependency Extraction**: Extracts dependencies from the identified source. visible in diagram; no further repository context available.
+- **J / Dependency Fingerprinting**: Creates fingerprints of the extracted dependencies. visible in diagram; no further repository context available.
+- **K / Known Package Database?**: Checks if the dependency is present in a known package database. visible in diagram; no further repository context available.
+- **L / License Lookup**: Looks up the license of the dependency in the database. visible in diagram; no further repository context available.
+- **M / Heuristic Analysis of JAR/Package**: Performs heuristic analysis to determine the license of the JAR file or package. visible in diagram; no further repository context available.
+- **N / License Acceptable?**: Determines if the license of the dependency is acceptable. visible in diagram; no further repository context available.
+- **O / Add to Allowed Dependencies**: Adds the dependency to the list of allowed dependencies. visible in diagram; no further repository context available.
+- **P / Raise Security Alert**: Raises a security alert if the license is not acceptable. visible in diagram; no further repository context available.
+- **Q / Generate Report**: Generates a report summarizing the analysis results. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Proceeds to language detection after checking out the repository.
+- `B -- Python --> C`: If the language is Python, checks if it's a Poetry project.
+- `B -- Java --> D`: If the language is Java, checks if it's a Maven project.
+- `C -- Yes --> E`: If it's a Poetry project, parse the lockfile.
+- `C -- No --> F`: If it's not a Poetry project, scan the `requirements.txt` file.
+- `D -- Yes --> G`: If it's a Maven project, parse the POM file.
+- `D -- No --> H`: If it's not a Maven project, perform a naive JAR scan.
+- `E --> I`: Proceeds to dependency extraction after parsing the Poetry lockfile.
+- `F --> I`: Proceeds to dependency extraction after scanning the `requirements.txt` file.
+- `G --> I`: Proceeds to dependency extraction after parsing the Maven POM file.
+- `H --> I`: Proceeds to dependency extraction after performing a naive JAR scan.
+- `I --> J`: Proceeds to dependency fingerprinting after dependency extraction.
+- `J --> K`: Checks if the dependency is in a known package database.
+- `K -- Yes --> L`: If the dependency is in the database, perform a license lookup.
+- `K -- No --> M`: If the dependency is not in the database, perform heuristic analysis.
+- `L --> N`: Determines if the license is acceptable after the lookup.
+- `M --> N`: Determines if the license is acceptable after heuristic analysis.
+- `N -- Yes --> O`: If the license is acceptable, add to allowed dependencies.
+- `N -- No --> P`: If the license is not acceptable, raise a security alert.
+- `O --> Q`: Generates a report after adding to allowed dependencies.
+- `P --> Q`: Generates a report after raising a security alert.
+Paths `E`, `F`, `G`, and `H` converge at node `I`. Paths `L` and `M` converge at node `N`. Paths `O` and `P` converge at node `Q`.
+
+## Repository Context & Terminology
+- **Git Repository Checkout**: The process of retrieving the source code from a Git repository.
+- **Language Detection**: Identifying the programming language used in the source code.
+- **Poetry**: A Python dependency management and packaging tool.
+- **Maven**: A build automation tool primarily used for Java projects.
+- **Poetry Lockfile**: A file (`poetry.lock`) that specifies the exact versions of dependencies used in a Poetry project.
+- **Maven POM**: The Project Object Model (`pom.xml`) file in Maven projects, containing project metadata and dependencies.
+- **Dependency Extraction**: The process of identifying and listing the dependencies of a software project.
+- **License Validation**: The process of verifying that the licenses of the dependencies are acceptable according to organizational policies.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Git Repository Checkout," followed by "Language Detection" to determine whether the project uses Python or Java. For Python projects, the process branches based on whether it's a "Poetry Project?". If yes, "Poetry Lockfile Parsing" extracts dependencies; otherwise, "Scan requirements.txt" is used. For Java projects, the process branches based on whether it's a "Maven Project?". If yes, "Maven POM Parsing" extracts dependencies; otherwise, a "Fallback: Naive JAR Scan" is performed. All dependency extraction paths converge at "Dependency Extraction," which leads to "Dependency Fingerprinting." Next, the flowchart checks "Known Package Database?". If the dependency is known, "License Lookup" is performed; otherwise, "Heuristic Analysis of JAR/Package" is conducted. These paths converge at "License Acceptable?". If the license is acceptable, the dependency is "Add to Allowed Dependencies"; otherwise, "Raise Security Alert." Both outcomes lead to the final step, "Generate Report." The "Poetry Lockfile Parsing" node leverages the `poetry.lock` file, a standard artifact in Python projects managed with the Poetry dependency management tool, to ensure reproducible builds.

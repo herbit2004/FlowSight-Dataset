@@ -1,0 +1,97 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of points redemption within a rewards system. It outlines the steps involved from user initiation to fulfillment and notification, including authentication, validation, inventory checks, and error handling. The diagram serves as a visual representation of the redemption workflow, aiding in understanding the system's logic and identifying potential areas for optimization.
+
+## Overall Layout
+The diagram flows from top to bottom (TB). It is divided into several subgraphs representing different stages of the redemption process. The start node is "User initiates points redemption," and the end nodes are "Frontend: Display success message" and "Frontend: Display error message."
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **User Interaction**: Represents the initial steps taken by the user to initiate the redemption process.
+- **Backend Services**: Encompasses the core logic and validation steps performed by the backend services.
+- **Fulfillment Processing**: Details the steps involved in fulfilling the redemption request.
+- **Notification**: Describes the process of sending a confirmation to the user.
+
+## Node-by-Node Description
+- **A / User initiates points redemption**: The user starts the process of redeeming points. visible in diagram; no further repository context available.
+- **B / Redemption channel?**: A decision point to determine the redemption channel (Web UI or Mobile App). visible in diagram; no further repository context available.
+- **C / Web UI: Display available rewards**: The web user interface displays the available rewards. visible in diagram; no further repository context available.
+- **D / Mobile App: Display available rewards**: The mobile application displays the available rewards. visible in diagram; no further repository context available.
+- **E / User selects reward**: The user selects a reward from the available options. visible in diagram; no further repository context available.
+- **F / Frontend: Submit redemption request**: The frontend submits the redemption request to the backend. visible in diagram; no further repository context available.
+- **G / API Gateway: Receive request**: The API Gateway receives the redemption request. visible in diagram; no further repository context available.
+- **H / Redemption Service: Authenticate user**: The Redemption Service authenticates the user. visible in diagram; no further repository context available.
+- **I / User authenticated?**: A decision point to determine if the user is authenticated. visible in diagram; no further repository context available.
+- **J / Redemption Service: Validate request**: The Redemption Service validates the redemption request. visible in diagram; no further repository context available.
+- **L / Sufficient points?**: A decision point to determine if the user has sufficient points. visible in diagram; no further repository context available.
+- **M / Points Ledger: Debit points**: The Points Ledger debits the points from the user's account. visible in diagram; no further repository context available.
+- **O / Reward Inventory Service: Check availability**: The Reward Inventory Service checks the availability of the selected reward. visible in diagram; no further repository context available.
+- **P / Reward available?**: A decision point to determine if the reward is available. visible in diagram; no further repository context available.
+- **Q / Reward Inventory Service: Reserve reward**: The Reward Inventory Service reserves the reward. visible in diagram; no further repository context available.
+- **S / Orchestration Service: Initiate fulfillment**: The Orchestration Service initiates the fulfillment process. visible in diagram; no further repository context available.
+- **T / Fulfillment Queue: Enqueue message**: The Fulfillment Queue enqueues a message for fulfillment. visible in diagram; no further repository context available.
+- **U / Fulfillment Processor: Consume message**: The Fulfillment Processor consumes the message from the queue. visible in diagram; no further repository context available.
+- **V / Partner API: Submit fulfillment request**: The Partner API submits the fulfillment request. visible in diagram; no further repository context available.
+- **W / Partner response: Success?**: A decision point to determine if the partner response was successful. visible in diagram; no further repository context available.
+- **X / Reward Inventory Service: Mark reward as fulfilled**: The Reward Inventory Service marks the reward as fulfilled. visible in diagram; no further repository context available.
+- **Z / Points Ledger: Record redemption event**: The Points Ledger records the redemption event. visible in diagram; no further repository context available.
+- **AA / Notification Service: Send user confirmation**: The Notification Service sends a user confirmation. visible in diagram; no further repository context available.
+- **K / Return error: Authentication failed**: Returns an error indicating authentication failure. visible in diagram; no further repository context available.
+- **N / Return error: Insufficient points**: Returns an error indicating insufficient points. visible in diagram; no further repository context available.
+- **R / Return error: Reward unavailable**: Returns an error indicating the reward is unavailable. visible in diagram; no further repository context available.
+- **Y / Retry Fulfillment Queue: Enqueue message for retry**: Enqueues a message for retry in the Fulfillment Queue. visible in diagram; no further repository context available.
+- **AE / Fulfillment Completed**: Indicates that the fulfillment process is completed. visible in diagram; no further repository context available.
+- **AG / API Gateway: Return response**: The API Gateway returns the response to the frontend. visible in diagram; no further repository context available.
+- **AC / Frontend: Display error message**: The frontend displays an error message. visible in diagram; no further repository context available.
+- **AF / Frontend: Display success message**: The frontend displays a success message. visible in diagram; no further repository context available.
+- **AB / Return error to Frontend**: Returns an error to the frontend. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User initiates points redemption, leading to the redemption channel decision.
+- `B -- Web UI --> C`: If the redemption channel is Web UI, display available rewards on the web.
+- `B -- Mobile App --> D`: If the redemption channel is Mobile App, display available rewards on the mobile app.
+- `C --> E`: User selects a reward after viewing available options on the web UI.
+- `D --> E`: User selects a reward after viewing available options on the mobile app.
+- `E --> F`: The frontend submits the redemption request.
+- `F --> G`: The API Gateway receives the redemption request.
+- `G --> H`: The Redemption Service authenticates the user.
+- `H --> I`: User authentication check.
+- `I -- Yes --> J`: If the user is authenticated, validate the request.
+- `I -- No --> K`: If the user is not authenticated, return an authentication failed error.
+- `J --> L`: Points sufficiency check.
+- `L -- Yes --> M`: If sufficient points are available, debit the points.
+- `L -- No --> N`: If insufficient points are available, return an insufficient points error.
+- `M --> O`: Check reward availability.
+- `O --> P`: Reward availability check.
+- `P -- Yes --> Q`: If the reward is available, reserve the reward.
+- `P -- No --> R`: If the reward is unavailable, return a reward unavailable error.
+- `Q --> S`: Initiate fulfillment.
+- `S --> T`: Enqueue fulfillment message.
+- `T --> U`: Fulfillment processor consumes the message.
+- `U --> V`: Submit fulfillment request to partner API.
+- `V --> W`: Partner response check.
+- `W -- Yes --> X`: If the partner response is successful, mark the reward as fulfilled.
+- `W -- No --> Y`: If the partner response is unsuccessful, enqueue the message for retry.
+- `X --> Z`: Record the redemption event in the Points Ledger.
+- `Z --> AA`: Send user confirmation.
+- `K --> AB`: Return authentication failed error to the frontend.
+- `N --> AB`: Return insufficient points error to the frontend.
+- `R --> AB`: Return reward unavailable error to the frontend.
+- `Y --> AE`: Fulfillment completed.
+- `X --> AE`: Fulfillment completed.
+- `AE --> AG`: API Gateway returns response.
+- `AB --> AG`: API Gateway returns response.
+- `AG --> AC`: Display error message on the frontend.
+- `AG --> AF`: Display success message on the frontend.
+
+## Repository Context & Terminology
+- **API Gateway**: A service that acts as a single entry point for all client requests, routing them to the appropriate backend services.
+- **Redemption Service**: A service responsible for handling the redemption of points, including authentication and validation.
+- **Points Ledger**: A system for tracking user points balances and transactions.
+- **Reward Inventory Service**: A service that manages the inventory of available rewards.
+- **Orchestration Service**: A service that coordinates the fulfillment process across multiple services.
+- **Fulfillment Queue**: A message queue used to asynchronously process fulfillment requests.
+- **Fulfillment Processor**: A service that consumes messages from the fulfillment queue and executes the fulfillment process.
+- **Partner API**: An API provided by a third-party partner to fulfill the redemption request.
+
+## High-Density QA Ground Truth Summary
+The points redemption process begins with the user initiating a redemption request, which is then routed based on the channel (Web UI or Mobile App) to display available rewards. After the user selects a reward, the frontend submits a redemption request to the backend, which is received by the API Gateway. The Redemption Service then authenticates the user. If authentication fails, an error is returned to the frontend. If authentication succeeds, the Redemption Service validates the request and checks if the user has sufficient points. If not, an insufficient points error is returned. If sufficient points are available, the Points Ledger debits the points, and the Reward Inventory Service checks reward availability. If the reward is unavailable, an error is returned. If available, the reward is reserved, and the Orchestration Service initiates fulfillment by enqueuing a message in the Fulfillment Queue. The Fulfillment Processor consumes this message and submits a fulfillment request to a Partner API. If the partner response is successful, the Reward Inventory Service marks the reward as fulfilled, and the Points Ledger records the redemption event. A confirmation is then sent to the user. If the partner response is unsuccessful, the message is enqueued for retry. Finally, the API Gateway returns a response to the frontend, displaying either a success or error message based on the outcome of the process. The API Gateway acts as a central point for routing requests and returning responses, ensuring a consistent interface for the frontend.

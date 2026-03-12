@@ -1,0 +1,42 @@
+graph TD
+    subgraph Form Flow
+    A[User Enters Details on Step 1: Personal Information] --> B{Validate Step 1};
+    B -- Success --> C[User Proceeds to Step 2: Address Verification];
+    B -- Errors --> A;
+    C --> D{Validate Step 2 - Address Format Only};
+    D -- Success --> E[Address Autocomplete API Call];
+    D -- Errors --> C;
+    E --> F{Address Autocomplete Found?};
+    F -- Yes --> G[Display Autocomplete Suggestions];
+    F -- No --> H[Allow Manual Address Entry];
+    G --> I[User Selects Autocomplete Suggestion];
+    H --> I[User Manually Enters Address];
+    I --> J{Validate Step 2 - Full Address};
+    J -- Success --> K[User Proceeds to Step 3: Payment Information];
+    J -- Errors --> C;
+    K --> L{Validate Step 3};
+    L -- Success --> M[Credit Card CVV Auth API];
+    L -- Errors --> K;
+    M --> N{CVV Auth Success?};
+    N -- Yes --> O[Display Confirmation Page];
+    N -- No --> P[Display CVV Error Message];
+    P --> K;
+
+    subgraph Background Tasks
+    O --> Q[Queue Submission Job];
+    Q --> R[Submission Job Processor];
+    R --> S{Fraud Check Passed?};
+    S -- Yes --> T[Record Submission in Database];
+    S -- No --> U[Flag Submission for Manual Review];
+    T --> V[Send Confirmation Email to User];
+    U --> V;
+    end
+
+    end
+
+    classDef valid fill:#afa,stroke:#333,stroke-width:2px;
+    classDef invalid fill:#f55,stroke:#333,stroke-width:2px;
+    style B,D,J,L fill:#ccf,stroke:#333,stroke-width:2px
+    style N,S fill:#dda,stroke:#333,stroke-width:2px
+    class B,D,J,L valid;
+    class N,S valid;

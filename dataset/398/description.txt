@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the data flow and component interaction within a system for converting and uploading Markdown content to a Feishu (Lark) Wiki. It illustrates the different layers involved in processing Markdown files, folders, and Wiki spaces, transforming them into formats suitable for the Feishu platform, and finally outputting various document types. The diagram serves as a high-level overview of the system's architecture and data pipeline.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TB), representing a layered architecture. It starts with the input layer at the top and ends with the output layer at the bottom. The diagram shows the flow of data through transformation and API layers.
+
+## Subgraphs / Stages
+The diagram is divided into four explicit subgraphs, representing distinct stages:
+- **输入层 (Input Layer)**: Handles the initial input sources.
+- **转换层 (Transformation Layer)**: Converts the input data into an intermediate format.
+- **API 层 (API Layer)**: Interacts with the Feishu Open API.
+- **输出层 (Output Layer)**: Represents the final output formats.
+
+## Node-by-Node Description
+- **A / Markdown 文件 (Markdown File)**: Represents a Markdown file as an input source. visible in diagram; no further repository context available.
+- **B / 文件夹 (Folder)**: Represents a folder containing Markdown files as an input source. visible in diagram; no further repository context available.
+- **C / Wiki 空间 (Wiki Space)**: Represents a Wiki space as an input source. visible in diagram; no further repository context available.
+- **D / md_to_feishu.py, Markdown → Blocks**: Python script responsible for converting Markdown content into Feishu Blocks format. visible in diagram; no further repository context available.
+- **E / feishu_md_uploader.py, JSON 转换器 (JSON Converter)**: Python script responsible for converting the data into JSON format for uploading. visible in diagram; no further repository context available.
+- **F / feishu_api_client.py, 飞书 Open API (Feishu Open API)**: Python script acting as a client for the Feishu Open API, facilitating communication with the Feishu platform. visible in diagram; no further repository context available.
+- **G / wiki_operations.py, Wiki 操作库 (Wiki Operations Library)**: Python script providing a library of operations for interacting with the Wiki. visible in diagram; no further repository context available.
+- **H / 飞云文档 (Feiyun Document)**: Represents Feiyun documents as an output format. visible in diagram; no further repository context available.
+- **I / Wiki 知识库 (Wiki Knowledge Base)**: Represents a Wiki knowledge base as an output format. visible in diagram; no further repository context available.
+- **J / 多维表格 (Multi-dimensional Table)**: Represents multi-dimensional tables as an output format. visible in diagram; no further repository context available.
+- **K / Markdown 文件 (Markdown File)**: Represents Markdown files as an output format. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> D`: Markdown file is passed to `md_to_feishu.py` for conversion.
+- `B --> D`: Folder is passed to `md_to_feishu.py` for conversion.
+- `C --> G`: Wiki space is passed to `wiki_operations.py` for operations.
+- `D --> E`: Converted Markdown (Blocks format) is passed to `feishu_md_uploader.py` for JSON conversion.
+- `E --> F`: JSON data is passed to `feishu_api_client.py` for uploading via the Feishu Open API.
+- `G --> F`: Wiki operations are passed to `feishu_api_client.py` for execution via the Feishu Open API.
+- `F --> H`: Feishu Open API client outputs Feiyun documents.
+- `F --> I`: Feishu Open API client outputs Wiki knowledge base.
+- `F --> J`: Feishu Open API client outputs multi-dimensional tables.
+- `F --> K`: Feishu Open API client outputs Markdown files.
+
+## Repository Context & Terminology
+- **Feishu (飞书) / Lark**: A collaboration and communication platform developed by ByteDance.
+- **Markdown**: A lightweight markup language with plain text formatting syntax.
+- **JSON**: A lightweight data-interchange format.
+- **API**: Application Programming Interface, a set of rules and specifications that software programs can follow to communicate with each other.
+- **Blocks**: A specific data structure used within Feishu for representing document content.
+- **Open API**: A publicly available API that allows developers to access and integrate with a platform's services.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a system for processing Markdown content and integrating it with Feishu (Lark). The process begins with input from three sources: Markdown files, folders containing Markdown files, and Wiki spaces. Markdown files and folders are fed into `md_to_feishu.py`, which converts the Markdown content into Feishu Blocks format. This intermediate format is then passed to `feishu_md_uploader.py`, which converts the Blocks into JSON. Simultaneously, Wiki spaces are processed by `wiki_operations.py`, which provides a library for interacting with the Wiki. Both the JSON data from the Markdown conversion and the Wiki operations are then passed to `feishu_api_client.py`. This script acts as a client for the Feishu Open API, handling the communication with the Feishu platform. Finally, the `feishu_api_client.py` outputs various document types to the output layer, including Feiyun documents, Wiki knowledge bases, multi-dimensional tables, and Markdown files. The core of the system lies in the transformation of Markdown into Feishu-compatible formats and the utilization of the Feishu Open API for seamless integration.

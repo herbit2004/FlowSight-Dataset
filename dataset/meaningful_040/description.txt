@@ -1,0 +1,69 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the end-to-end machine learning model training and deployment pipeline. It illustrates the flow of data and processes from raw data ingestion to live model serving, including training, evaluation, and deployment stages. The diagram serves as a high-level overview of the model lifecycle.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured into three main subgraphs: Training Pipeline, Model Registry, and Deployment Pipeline. The start node is "Data Ingestion: Raw Logs," and the end node is "Live Model Serving."
+
+## Subgraphs / Stages
+- **Training Pipeline**: This subgraph encompasses the initial steps of data ingestion, cleaning, feature engineering, and model training.
+- **Model Registry**: This subgraph focuses on model versioning, metadata management, and model evaluation.
+- **Deployment Pipeline**: This subgraph covers the steps involved in deploying the model, including staging, pre-deployment checks, shadow deployment, real-time traffic mirroring, and performance monitoring.
+
+## Node-by-Node Description
+- **A / Data Ingestion: Raw Logs**: Represents the initial step of ingesting raw log data into the training pipeline. visible in diagram; no further repository context available.
+- **B / Data Validation & Cleaning**: Represents the process of validating and cleaning the ingested data. visible in diagram; no further repository context available.
+- **C / Feature Engineering**: Represents the process of creating new features or using existing features for model training. visible in diagram; no further repository context available.
+- **D / Feature Store: Online/Offline**: Represents a centralized repository for storing and serving features, both online and offline. visible in diagram; no further repository context available.
+- **E / Model Training**: Represents the process of training the machine learning model using the prepared features. visible in diagram; no further repository context available.
+- **F / Model Versioning & Metadata**: Represents the process of storing and managing different versions of the model along with their metadata. visible in diagram; no further repository context available.
+- **G / Model Evaluation**: Represents the process of evaluating the trained model's performance. visible in diagram; no further repository context available.
+- **H / Model Registry: Staging Area**: Represents a staging area within the model registry where models are prepared for deployment. visible in diagram; no further repository context available.
+- **K / Pre-Deployment Checks**: Represents a series of checks performed before deploying the model. visible in diagram; no further repository context available.
+- **L / Shadow Deployment**: Represents a deployment strategy where the new model is deployed alongside the existing model, without serving live traffic. visible in diagram; no further repository context available.
+- **M / Real-time Traffic Mirroring**: Represents the process of mirroring real-time traffic to the shadow deployment for performance evaluation. visible in diagram; no further repository context available.
+- **N / Model Performance Monitoring**: Represents the process of monitoring the model's performance in real-time. visible in diagram; no further repository context available.
+- **O / Promote to Production**: Represents the action of promoting the model to production if its performance is stable. visible in diagram; no further repository context available.
+- **P / Rollback to Previous Version**: Represents the action of rolling back to the previous model version if the current model's performance degrades. visible in diagram; no further repository context available.
+- **Q / Live Model Serving**: Represents the final stage where the model is serving live traffic. visible in diagram; no further repository context available.
+- **I / Alerting System**: Represents a system that triggers alerts when pre-deployment checks fail or model performance degrades. visible in diagram; no further repository context available.
+- **J / Engineering Review**: Represents a manual review process triggered by the alerting system. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Data flows from data ingestion to data validation and cleaning.
+- `B --> C`: Cleaned data flows to feature engineering.
+- `C -- New Features --> D`: New features are sent to the feature store.
+- `C -- Existing Features --> D`: Existing features are sent to the feature store.
+- `D --> E`: Features are used for model training.
+- `E --> F`: Trained model is sent to model versioning and metadata management.
+- `F --> G`: Model is sent for evaluation.
+- `G -- Passes Thresholds --> H`: If the model passes evaluation thresholds, it is moved to the staging area.
+- `G -- Fails Thresholds --> I`: If the model fails evaluation thresholds, an alert is triggered.
+- `H --> K`: Model in staging area undergoes pre-deployment checks.
+- `K -- All Checks Pass --> L`: If all pre-deployment checks pass, the model is deployed in shadow mode.
+- `K -- Checks Fail --> I`: If pre-deployment checks fail, an alert is triggered.
+- `L --> M`: Real-time traffic is mirrored to the shadow deployment.
+- `M --> N`: Model performance is monitored in real-time.
+- `N -- Performance Stable --> O`: If performance is stable, the model is promoted to production.
+- `N -- Performance Degrades --> P`: If performance degrades, the model is rolled back to the previous version.
+- `O --> Q`: Promoted model serves live traffic.
+- `P --> Q`: Rolled back model serves live traffic.
+- `I --> J`: Alert triggers engineering review.
+- `J --> E`: Engineering review can trigger retraining of the model.
+- Paths `O` and `P` converge at `Q`.
+
+## Repository Context & Terminology
+- **Data Ingestion**: The process of acquiring and importing data from various sources into a data processing system.
+- **Data Validation & Cleaning**: The process of ensuring data quality by identifying and correcting errors, inconsistencies, and inaccuracies.
+- **Feature Engineering**: The process of selecting, transforming, and creating features from raw data to improve the performance of machine learning models.
+- **Feature Store**: A centralized repository for storing and managing features, making them accessible for training and serving machine learning models.
+- **Model Training**: The process of using algorithms to learn patterns from data and create a predictive model.
+- **Model Registry**: A centralized repository for storing and managing machine learning models, including versioning and metadata.
+- **Model Evaluation**: The process of assessing the performance of a trained model using various metrics.
+- **Staging Area**: An environment where models are prepared and tested before being deployed to production.
+- **Shadow Deployment**: A deployment strategy where a new model is deployed alongside an existing model, without serving live traffic, to evaluate its performance.
+- **Real-time Traffic Mirroring**: The process of duplicating real-time traffic and sending it to a shadow deployment for performance evaluation.
+- **Model Performance Monitoring**: The process of continuously tracking the performance of a deployed model using various metrics.
+- **Rollback**: The process of reverting to a previous version of a model or system.
+
+## High-Density QA Ground Truth Summary
+The machine learning model pipeline begins with "Data Ingestion: Raw Logs," followed by "Data Validation & Cleaning" to ensure data quality. The cleaned data then undergoes "Feature Engineering," where new or existing features are selected and prepared for model training. These features are stored in a "Feature Store: Online/Offline" for accessibility. The "Model Training" stage produces a trained model, which is then versioned and its metadata managed in the "Model Registry." The model is evaluated; if it "Passes Thresholds," it proceeds to the "Model Registry: Staging Area" within the "Deployment Pipeline." If it "Fails Thresholds," an "Alerting System" triggers an "Engineering Review," potentially leading back to "Model Training" for adjustments. In the "Deployment Pipeline," "Pre-Deployment Checks" are performed. If "All Checks Pass," a "Shadow Deployment" is initiated, mirroring real-time traffic. If "Checks Fail," the "Alerting System" is triggered. "Real-time Traffic Mirroring" feeds data to "Model Performance Monitoring." Based on performance, the model is either "Promote to Production" if "Performance Stable" or "Rollback to Previous Version" if "Performance Degrades." Both paths converge at "Live Model Serving," where the model serves real-world requests. The feature store is a key component, providing a central repository for features used in both training and serving, ensuring consistency across the model lifecycle.

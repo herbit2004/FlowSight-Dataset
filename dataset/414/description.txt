@@ -1,0 +1,107 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting a three-layer quantum computing system. It illustrates the flow from high-level problem builders to quantum solvers and finally to quantum backends. The diagram serves as a high-level overview of the system's architecture, showing the relationships between different components.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner, with three distinct layers arranged vertically. The flow starts at the top layer with high-level builders and progresses downwards through quantum solvers to quantum backends. There are multiple start nodes in the top layer and multiple end nodes in the bottom layer.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs, representing the three layers of the quantum computing system:
+- **Layer 1: High-Level Builders**: Contains components responsible for creating problem instances.
+- **Layer 2: Quantum Solvers**: Contains quantum algorithms (QAOA) to solve the problems.
+- **Layer 3: Quantum Backends**: Contains different quantum computing hardware platforms.
+
+## Node-by-Node Description
+- **GC / GraphColoring Builder**: Represents a builder for graph coloring problems.
+  In the repository this corresponds to graphColoring { }.
+- **MC / MaxCut Builder**: Represents a builder for MaxCut problems.
+  In the repository this corresponds to MaxCut.createProblem.
+- **KS / Knapsack Builder**: Represents a builder for Knapsack problems.
+  In the repository this corresponds to Knapsack.createProblem.
+- **TS / TSP Builder**: Represents a builder for Traveling Salesperson Problems (TSP).
+  In the repository this corresponds to TSP.createProblem.
+- **PO / Portfolio Builder**: Represents a builder for portfolio optimization problems.
+  In the repository this corresponds to Portfolio.createProblem.
+- **NF / NetworkFlow Builder**: Represents a builder for network flow problems.
+  In the repository this corresponds to NetworkFlow module.
+- **SCHED / TaskScheduling Builder**: Represents a builder for task scheduling problems.
+  In the repository this corresponds to scheduledTask { }.
+- **QGC / QuantumGraphColoringSolver**: Represents a quantum solver for graph coloring problems using QAOA.
+  In the repository this corresponds to (QAOA).
+- **QMC / QuantumMaxCutSolver**: Represents a quantum solver for MaxCut problems using QAOA.
+  In the repository this corresponds to (QAOA).
+- **QKS / QuantumKnapsackSolver**: Represents a quantum solver for Knapsack problems using QAOA.
+  In the repository this corresponds to (QAOA).
+- **QTS / QuantumTspSolver**: Represents a quantum solver for TSP problems using QAOA.
+  In the repository this corresponds to (QAOA).
+- **QPO / QuantumPortfolioSolver**: Represents a quantum solver for portfolio optimization problems using QAOA.
+  In the repository this corresponds to (QAOA).
+- **QNF / QuantumNetworkFlowSolver**: Represents a quantum solver for network flow problems using QAOA.
+  In the repository this corresponds to (QAOA).
+- **QSCHED / QuantumSchedulingSolver**: Represents a quantum solver for task scheduling problems using QAOA.
+  In the repository this corresponds to (QAOA).
+- **LOCAL / LocalBackend**: Represents a local quantum computing backend with ≤20 qubits.
+  In the repository this corresponds to (≤20 qubits).
+- **IONQ / IonQBackend**: Represents the IonQ quantum computing backend available through Azure Quantum.
+  In the repository this corresponds to (Azure Quantum).
+- **RIGETTI / RigettiBackend**: Represents the Rigetti quantum computing backend available through Azure Quantum.
+  In the repository this corresponds to (Azure Quantum).
+- **ATOM / AtomComputingBackend**: Represents the Atom Computing quantum computing backend available through Azure Quantum with 100+ qubits.
+  In the repository this corresponds to (Azure Quantum, 100+ qubits).
+- **QUANTINUUM / QuantinuumBackend**: Represents the Quantinuum quantum computing backend available through Azure Quantum with 99.9%+ fidelity.
+  In the repository this corresponds to (Azure Quantum, 99.9%+ fidelity).
+
+## Edges, Branches & Convergence
+- `GC --> QGC`: The GraphColoring Builder passes the problem instance to the QuantumGraphColoringSolver.
+- `MC --> QMC`: The MaxCut Builder passes the problem instance to the QuantumMaxCutSolver.
+- `KS --> QKS`: The Knapsack Builder passes the problem instance to the QuantumKnapsackSolver.
+- `TS --> QTS`: The TSP Builder passes the problem instance to the QuantumTspSolver.
+- `PO --> QPO`: The Portfolio Builder passes the problem instance to the QuantumPortfolioSolver.
+- `NF --> QNF`: The NetworkFlow Builder passes the problem instance to the QuantumNetworkFlowSolver.
+- `SCHED --> QSCHED`: The TaskScheduling Builder passes the problem instance to the QuantumSchedulingSolver.
+- `QGC --> LOCAL`: The QuantumGraphColoringSolver sends the problem to the LocalBackend.
+- `QMC --> LOCAL`: The QuantumMaxCutSolver sends the problem to the LocalBackend.
+- `QKS --> LOCAL`: The QuantumKnapsackSolver sends the problem to the LocalBackend.
+- `QTS --> LOCAL`: The QuantumTspSolver sends the problem to the LocalBackend.
+- `QPO --> LOCAL`: The QuantumPortfolioSolver sends the problem to the LocalBackend.
+- `QNF --> LOCAL`: The QuantumNetworkFlowSolver sends the problem to the LocalBackend.
+- `QSCHED --> LOCAL`: The QuantumSchedulingSolver sends the problem to the LocalBackend.
+- `QGC -.-> IONQ`: The QuantumGraphColoringSolver sends the problem to the IonQBackend.
+- `QMC -.-> IONQ`: The QuantumMaxCutSolver sends the problem to the IonQBackend.
+- `QKS -.-> IONQ`: The QuantumKnapsackSolver sends the problem to the IonQBackend.
+- `QTS -.-> IONQ`: The QuantumTspSolver sends the problem to the IonQBackend.
+- `QPO -.-> IONQ`: The QuantumPortfolioSolver sends the problem to the IonQBackend.
+- `QNF -.-> IONQ`: The QuantumNetworkFlowSolver sends the problem to the IonQBackend.
+- `QSCHED -.-> IONQ`: The QuantumSchedulingSolver sends the problem to the IonQBackend.
+- `QGC -.-> RIGETTI`: The QuantumGraphColoringSolver sends the problem to the RigettiBackend.
+- `QMC -.-> RIGETTI`: The QuantumMaxCutSolver sends the problem to the RigettiBackend.
+- `QKS -.-> RIGETTI`: The QuantumKnapsackSolver sends the problem to the RigettiBackend.
+- `QTS -.-> RIGETTI`: The QuantumTspSolver sends the problem to the RigettiBackend.
+- `QPO -.-> RIGETTI`: The QuantumPortfolioSolver sends the problem to the RigettiBackend.
+- `QNF -.-> RIGETTI`: The QuantumNetworkFlowSolver sends the problem to the RigettiBackend.
+- `QSCHED -.-> RIGETTI`: The QuantumSchedulingSolver sends the problem to the RigettiBackend.
+- `QGC -.-> ATOM`: The QuantumGraphColoringSolver sends the problem to the AtomComputingBackend.
+- `QMC -.-> ATOM`: The QuantumMaxCutSolver sends the problem to the AtomComputingBackend.
+- `QKS -.-> ATOM`: The QuantumKnapsackSolver sends the problem to the AtomComputingBackend.
+- `QTS -.-> ATOM`: The QuantumTspSolver sends the problem to the AtomComputingBackend.
+- `QPO -.-> ATOM`: The QuantumPortfolioSolver sends the problem to the AtomComputingBackend.
+- `QNF -.-> ATOM`: The QuantumNetworkFlowSolver sends the problem to the AtomComputingBackend.
+- `QSCHED -.-> ATOM`: The QuantumSchedulingSolver sends the problem to the AtomComputingBackend.
+- `QGC -.-> QUANTINUUM`: The QuantumGraphColoringSolver sends the problem to the QuantinuumBackend.
+- `QMC -.-> QUANTINUUM`: The QuantumMaxCutSolver sends the problem to the QuantinuumBackend.
+- `QKS -.-> QUANTINUUM`: The QuantumKnapsackSolver sends the problem to the QuantinuumBackend.
+- `QTS -.-> QUANTINUUM`: The QuantumTspSolver sends the problem to the QuantinuumBackend.
+- `QPO -.-> QUANTINUUM`: The QuantumPortfolioSolver sends the problem to the QuantinuumBackend.
+- `QNF -.-> QUANTINUUM`: The QuantumNetworkFlowSolver sends the problem to the QuantinuumBackend.
+- `QSCHED -.-> QUANTINUUM`: The QuantumSchedulingSolver sends the problem to the QuantinuumBackend.
+
+## Repository Context & Terminology
+- **QAOA**: Quantum Approximate Optimization Algorithm, a quantum algorithm used for solving combinatorial optimization problems.
+- **Azure Quantum**: Microsoft's quantum computing service, providing access to various quantum hardware backends.
+- **GraphColoring Builder**: A module responsible for constructing graph coloring problem instances.
+- **MaxCut Builder**: A module responsible for constructing MaxCut problem instances.
+- **Knapsack Builder**: A module responsible for constructing Knapsack problem instances.
+- **TSP Builder**: A module responsible for constructing Traveling Salesperson Problem instances.
+- **Portfolio Builder**: A module responsible for constructing portfolio optimization problem instances.
+
+## High-Density QA Ground Truth Summary
+The architecture diagram illustrates a quantum computing workflow, starting with high-level problem builders such as GraphColoring Builder, MaxCut Builder, Knapsack Builder, TSP Builder, Portfolio Builder, NetworkFlow Builder, and TaskScheduling Builder. Each builder creates a problem instance, which is then passed to a corresponding quantum solver in the second layer. These solvers, including QuantumGraphColoringSolver, QuantumMaxCutSolver, QuantumKnapsackSolver, QuantumTspSolver, QuantumPortfolioSolver, QuantumNetworkFlowSolver, and QuantumSchedulingSolver, utilize the Quantum Approximate Optimization Algorithm (QAOA). The solvers then send the problem to various quantum backends in the third layer for execution. These backends include LocalBackend (≤20 qubits), IonQBackend (Azure Quantum), RigettiBackend (Azure Quantum), AtomComputingBackend (Azure Quantum, 100+ qubits), and QuantinuumBackend (Azure Quantum, 99.9%+ fidelity). The diagram highlights the modularity of the system, allowing different problem builders to utilize various quantum solvers and backends. The Azure Quantum service provides access to the IonQ, Rigetti, AtomComputing, and Quantinuum backends, enabling users to leverage different quantum hardware platforms.

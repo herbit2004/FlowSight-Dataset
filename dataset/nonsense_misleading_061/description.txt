@@ -1,0 +1,61 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating an order processing workflow. It depicts the sequence of steps involved from when a user submits an order to when the order status is updated to complete. The diagram serves as a visual representation of the order fulfillment process, including payment verification, inventory checks, packing, shipping, and delivery confirmation.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User Submits Order" node at the top and flows downwards through a series of processes and decision points, eventually leading to the "Update Order Status: Complete" node at the bottom. The diagram contains loops and branches, indicating conditional execution paths.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Submission & Payment, Inventory Check, Order Fulfillment, Delivery, and Completion & Re-initiation.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order. visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision node that checks if the payment for the order was successful. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **D / Sufficient Stock?**: A decision node that determines if there is sufficient stock to fulfill the order. visible in diagram; no further repository context available.
+- **E / Notify User of Delay**: Represents the action of informing the user about a delay in order fulfillment due to insufficient stock. visible in diagram; no further repository context available.
+- **F / Request Stock Replenishment**: Represents the process of requesting a stock replenishment to fulfill the order. visible in diagram; no further repository context available.
+- **G / Wait for Stock**: Represents the waiting period for the stock to be replenished. visible in diagram; no further repository context available.
+- **K / Pack Order**: Represents the process of packing the order for shipment. visible in diagram; no further repository context available.
+- **L / Generate Shipping Label**: Represents the process of generating a shipping label for the order. visible in diagram; no further repository context available.
+- **M / Dispatch Order**: Represents the action of dispatching the order for delivery. visible in diagram; no further repository context available.
+- **N / Delivery Successful?**: A decision node that checks if the order delivery was successful. visible in diagram; no further repository context available.
+- **O / Investigate Delivery Failure**: Represents the process of investigating a delivery failure. visible in diagram; no further repository context available.
+- **H / Send Order Confirmation**: Represents the action of sending an order confirmation to the user. visible in diagram; no further repository context available.
+- **P / Update Order Status: Complete**: Represents the action of updating the order status to complete. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the payment verification process.
+- `B -- Yes --> C`: If payment is successful, proceed to inventory check.
+- `B -- No --> H`: If payment fails, send order confirmation (incorrect sequence).
+- `C --> D`: Inventory check leads to a decision on stock sufficiency.
+- `D -- Yes --> K`: If sufficient stock is available, pack the order.
+- `D -- No --> E`: If insufficient stock, notify the user of a delay (incorrect branch).
+- `E --> F`: Notify user of delay triggers a request for stock replenishment.
+- `F --> G`: Request stock replenishment leads to waiting for stock.
+- `G --> D`: Waiting for stock loops back to the sufficient stock check.
+- `K --> L`: Packing the order leads to generating a shipping label.
+- `L --> M`: Generating a shipping label leads to dispatching the order.
+- `M --> N`: Dispatching the order leads to a delivery success check.
+- `N -- Yes --> H`: If delivery is successful, send order confirmation.
+- `N -- No --> O`: If delivery fails, investigate the delivery failure.
+- `O --> M`: Investigating delivery failure loops back to dispatching the order (incorrect causal direction).
+- `H --> P`: Sending order confirmation leads to updating the order status to complete.
+- `P --> A`: Updating order status to complete loops back to user submitting order (illogical loop).
+
+## Repository Context & Terminology
+- **User Submits Order**: Standard meaning is a customer placing an order. In this diagram, it's the starting point and also incorrectly re-triggered after order completion.
+- **Payment Successful?**: Standard meaning is verifying payment authorization. In this diagram, a failed payment incorrectly leads to sending an order confirmation.
+- **Inventory Check**: Standard meaning is verifying product availability. In this diagram, it occurs after payment, which is standard, but the subsequent flow for insufficient stock is reversed.
+- **Sufficient Stock?**: Standard meaning is checking if enough items are in stock. In this diagram, insufficient stock incorrectly triggers a notification of delay instead of a cancellation or backorder process.
+- **Notify User of Delay**: Standard meaning is informing the customer about a delay. In this diagram, it's triggered by insufficient stock (incorrectly) and leads to stock replenishment.
+- **Request Stock Replenishment**: Standard meaning is ordering more stock. In this diagram, it's triggered by a delay notification (incorrectly).
+- **Pack Order**: Standard meaning is preparing the order for shipment. In this diagram, it follows a successful stock check.
+- **Generate Shipping Label**: Standard meaning is creating a label for shipping. In this diagram, it follows packing the order.
+- **Dispatch Order**: Standard meaning is sending the order for delivery. In this diagram, it follows generating a shipping label.
+- **Delivery Successful?**: Standard meaning is verifying successful delivery. In this diagram, a failed delivery incorrectly loops back to dispatching the order.
+- **Investigate Delivery Failure**: Standard meaning is looking into why delivery failed. In this diagram, it's triggered by a failed delivery and incorrectly loops back to dispatching the order.
+- **Send Order Confirmation**: Standard meaning is confirming the order with the customer. In this diagram, it's incorrectly triggered by payment failure and delivery success, and it precedes the inventory check in one branch.
+- **Update Order Status: Complete**: Standard meaning is marking the order as fulfilled. In this diagram, it's the final step, but it incorrectly loops back to the "User Submits Order" node.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Submits Order," which then proceeds to a "Payment Successful?" check. If payment fails, the diagram incorrectly flows to "Send Order Confirmation." If payment succeeds, an "Inventory Check" is performed, leading to a "Sufficient Stock?" decision. If stock is insufficient, the diagram incorrectly branches to "Notify User of Delay," followed by "Request Stock Replenishment" and "Wait for Stock," looping back to the stock check. If stock is sufficient, the process moves to "Pack Order," "Generate Shipping Label," and "Dispatch Order." A "Delivery Successful?" check follows. If delivery fails, the diagram incorrectly loops back to "Dispatch Order" after "Investigate Delivery Failure." If delivery succeeds, "Send Order Confirmation" is triggered. Finally, "Update Order Status: Complete" is reached, which then erroneously loops back to "User Submits Order," restarting the process. The standard flow of order processing is disrupted by reversed sequences (confirmation before inventory), swapped branch outcomes (insufficient stock leading to notification instead of cancellation), wrong causal directions (delivery failure looping back to dispatch), and illogical loops (completion triggering new order submission).

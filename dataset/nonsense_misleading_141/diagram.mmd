@@ -1,0 +1,17 @@
+graph TD
+  A[Start: New Order Received] --> B{Inventory Available?};
+  B -- No --> C[Notify Customer: Out of Stock];
+  C --> A;
+  B -- Yes --> D[Process Payment];
+  D -- Success --> E[Shipping Label Created];
+  D -- Failure --> F[Cancel Order];
+  E --> G[Package Order];
+  G --> H{Inspection Passed?};
+  H -- No --> I[Send to Shipping];
+  H -- Yes --> J[Return Item to Inventory];
+  J --> B;
+  I --> K[Order Shipped];
+  K --> L[Send Shipping Notification];
+  L --> M[Archive Order];
+  M --> N[End: Order Completed];
+  F --> N;

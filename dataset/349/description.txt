@@ -1,0 +1,65 @@
+## Diagram Type & Purpose
+This is a flowchart illustrating the architecture and data flow of a reinforcement learning (RL) system, specifically for training a four-legged robot. The diagram outlines the process from input data through neural network processing, RL core operations, environment interaction, training loop, and finally, the output of a trained model and training plots. It serves as a high-level overview of the RL training pipeline.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom. It is hierarchically structured, starting with input data, progressing through neural networks and RL core components, interacting with the environment, and culminating in a training loop that refines the model. The start nodes are "Observations" and "Previous Actions," and the end nodes are "Trained Model .zip file" and "Training Plots Rewards, Episodes."
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs:
+- **Input Data**: Represents the input to the system, including observations and previous actions.
+- **Neural Networks**: Contains the policy and value networks used for decision-making and value estimation.
+- **RL Core**: Encompasses the core RL algorithms, including rollout collection, advantage calculation, and PPO clipping.
+- **Environment**: Simulates the environment in which the robot interacts, including physics and reward functions.
+- **Training Loop**: Iteratively updates the neural network weights based on the collected data and computed losses.
+- **Output**: The final trained model and training plots.
+
+## Node-by-Node Description
+- **Observations (75 values)**: Represents the input observations from the environment, with 75 values. visible in diagram; no further repository context available.
+- **Previous Actions (8 values)**: Represents the previous actions taken by the agent, with 8 values. visible in diagram; no further repository context available.
+- **Policy Network (2x64 hidden)**: A neural network that maps observations to actions, with two hidden layers of 64 units each. visible in diagram; no further repository context available.
+- **Value Network (2x64 hidden)**: A neural network that estimates the value of a given state, with two hidden layers of 64 units each. visible in diagram; no further repository context available.
+- **Rollout Collection (2048 steps)**: Collects experiences (state, action, reward, next state) from the environment over 2048 steps. visible in diagram; no further repository context available.
+- **Advantage Calculation (GAE Lambda=0.95)**: Calculates the advantage function using Generalized Advantage Estimation (GAE) with lambda=0.95. visible in diagram; no further repository context available.
+- **PPO Clipping (Epsilon=0.2)**: Applies Proximal Policy Optimization (PPO) clipping with epsilon=0.2 to constrain policy updates. visible in diagram; no further repository context available.
+- **4-Legged Robot (8 Joints (2 per leg))**: Represents the simulated four-legged robot with 8 joints (2 per leg). visible in diagram; no further repository context available.
+- **PyBullet Physics (9.81 m/s² gravity)**: Simulates the physics of the environment using PyBullet, with a gravity of 9.81 m/s². visible in diagram; no further repository context available.
+- **Reward Function (Multi-objective)**: Defines the reward function used to train the agent, which is multi-objective. visible in diagram; no further repository context available.
+- **Compute Loss Policy + Value**: Computes the loss function based on the policy and value networks. visible in diagram; no further repository context available.
+- **Optimizer Step Adam LR=3e-4**: Updates the network parameters using the Adam optimizer with a learning rate of 3e-4. visible in diagram; no further repository context available.
+- **Update Network Weights**: Updates the weights of the policy and value networks. visible in diagram; no further repository context available.
+- **Trained Model .zip file**: The trained model saved as a .zip file. visible in diagram; no further repository context available.
+- **Training Plots Rewards, Episodes**: Plots of the rewards and episodes during training. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Observations --> Policy Network`: The observations are fed into the policy network.
+- `Previous Actions --> Policy Network`: The previous actions are fed into the policy network.
+- `Observations --> Value Network`: The observations are fed into the value network.
+- `Policy Network --> Rollout Collection`: The policy network's actions are used to collect rollouts.
+- `Value Network --> Rollout Collection`: The value network's value estimates are used to collect rollouts.
+- `Rollout Collection --> Advantage Calculation`: Rollout data is used to calculate advantages.
+- `Advantage Calculation --> PPO Clipping`: Calculated advantages are used in PPO clipping.
+- `PPO Clipping --> Compute Loss`: Clipped advantages are used to compute the loss.
+- `Reward Function --> Compute Loss`: Rewards from the environment are used to compute the loss.
+- `Compute Loss --> Optimizer Step`: The computed loss is used to take an optimizer step.
+- `Optimizer Step --> Update Network Weights`: The optimizer step updates the network weights.
+- `Update Network Weights --> Policy Network`: Updated weights are fed back into the policy network.
+- `Update Network Weights --> Value Network`: Updated weights are fed back into the value network.
+- `Policy Network --> 4-Legged Robot`: The policy network controls the robot's actions.
+- `4-Legged Robot --> Environment`: The robot interacts with the environment.
+- `4-Legged Robot --> Reward Function`: The robot's actions influence the reward function.
+- `PyBullet Physics --> 4-Legged Robot`: PyBullet physics simulates the robot's movement.
+- `Update Network Weights --> Trained Model .zip file`: The updated network weights are saved as a trained model.
+- `Compute Loss --> Training Plots`: The computed loss is used to generate training plots.
+
+## Repository Context & Terminology
+- **Policy Network**: A neural network that outputs a probability distribution over possible actions given an observation.
+- **Value Network**: A neural network that estimates the expected cumulative reward (value) of being in a particular state.
+- **Rollout Collection**: The process of gathering experiences (state, action, reward, next state) by running the policy in the environment.
+- **Advantage Calculation**: Estimating how much better an action is compared to the average action in a given state, often using Generalized Advantage Estimation (GAE).
+- **PPO Clipping**: A technique used in Proximal Policy Optimization (PPO) to constrain policy updates, preventing large changes that could destabilize training.
+- **PyBullet**: A physics engine used for simulating the robot's environment.
+- **Adam Optimizer**: An adaptive learning rate optimization algorithm used to update the neural network weights.
+- **Multi-objective Reward Function**: A reward function that considers multiple objectives or criteria when evaluating the agent's performance.
+
+## High-Density QA Ground Truth Summary
+The RL training process begins with "Observations" (75 values) and "Previous Actions" (8 values) as input data. These inputs are fed into the "Policy Network" and "Value Network," both with a 2x64 hidden layer architecture. The "Policy Network" outputs actions that guide the "Rollout Collection" process (2048 steps), while the "Value Network" provides value estimates. The collected rollouts are then used for "Advantage Calculation" using GAE with Lambda=0.95, followed by "PPO Clipping" with Epsilon=0.2 to stabilize policy updates. The clipped advantages, along with rewards from the "Reward Function" (multi-objective), are used to "Compute Loss" for both policy and value networks. This loss is minimized using the "Optimizer Step" with the Adam optimizer and a learning rate of 3e-4. The "Update Network Weights" step refines the "Policy Network" and "Value Network," creating a feedback loop. The "Policy Network" controls the "4-Legged Robot" within the "PyBullet Physics" environment (9.81 m/s² gravity). Finally, the "Trained Model .zip file" and "Training Plots Rewards, Episodes" are generated as output, representing the culmination of the training process. The PPO Clipping step, with its epsilon parameter, is crucial for ensuring stable policy updates during training.

@@ -1,0 +1,44 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the high-level architecture and data flow within an operating system. It illustrates how a user program interacts with various system components through system calls, including the Virtual File System (VFS), memory management, and hardware drivers. The diagram serves as a simplified model for understanding the interaction between user-level applications and the kernel.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The hierarchy starts with the "User program" node at the top and flows down through the "Syscall dispatcher" to various modules and eventually to "Hardware" at the bottom. The diagram illustrates the flow of control and data from the user program down to the hardware level.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: User Program, System Call Handling, Module Interaction, and Hardware Interaction.
+
+## Node-by-Node Description
+- **User program**: Represents a user-level application running on the system. visible in diagram; no further repository context available.
+- **Syscall dispatcher**: This node represents the system call dispatcher, which handles system calls made by user programs. visible in diagram; no further repository context available.
+- **Time & Date module**: Represents a module responsible for providing time and date information. visible in diagram; no further repository context available.
+- **Virtual File System**: Represents the Virtual File System, which provides a unified interface to different file systems. visible in diagram; no further repository context available.
+- **Memory module**: Represents the memory management module. visible in diagram; no further repository context available.
+- **Loader module**: Represents the module responsible for loading and executing programs. visible in diagram; no further repository context available.
+- **Disk module**: Represents a module for interacting with disk storage. visible in diagram; no further repository context available.
+- **File System**: Represents a specific file system implementation. visible in diagram; no further repository context available.
+- **Driver implementation: video, keyboard, serial, etc...**: Represents the device driver layer, which provides an interface to hardware devices. visible in diagram; no further repository context available.
+- **Hardware**: Represents the physical hardware components of the system. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User program -- syscall/rst 8 --> Syscall dispatcher`: A user program makes a system call, which is handled by the system call dispatcher.
+- `Syscall dispatcher -- getdate/time --> Time & Date module`: The system call dispatcher calls the Time & Date module to retrieve time and date information.
+- `Syscall dispatcher -- mount --> Disk module`: The system call dispatcher calls the Disk module to mount a file system.
+- `Syscall dispatcher --> Virtual File System`: The system call dispatcher interacts with the Virtual File System for file system operations.
+- `Syscall dispatcher -- map --> Memory module`: The system call dispatcher calls the Memory module for memory management operations.
+- `Syscall dispatcher -- exec/exit --> Loader module`: The system call dispatcher calls the Loader module to execute or exit programs.
+- `Virtual File System --> Disk module`: The Virtual File System interacts with the Disk module for disk-related operations.
+- `Virtual File System --> Driver implementation: video, keyboard, serial, etc...`: The Virtual File System interacts with the device driver layer for hardware access.
+- `Disk module <--> File System`: The Disk module interacts with a specific File System implementation.
+- `File System --> Driver implementation: video, keyboard, serial, etc...`: The File System interacts with the device driver layer for hardware access.
+- `Driver implementation: video, keyboard, serial, etc... --> Hardware`: The device driver layer interacts directly with the hardware.
+
+## Repository Context & Terminology
+- **Syscall**: A system call is a request made by a user-level program to the operating system kernel.
+- **Virtual File System (VFS)**: An abstraction layer that allows applications to access different file systems in a uniform way.
+- **Driver**: A software component that enables the operating system to interact with hardware devices.
+- **mount**: The process of making a file system accessible to the operating system.
+- **map**: In the context of memory management, mapping refers to associating a virtual address space with physical memory.
+- **exec/exit**: System calls related to program execution (exec) and termination (exit).
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the flow of control starting from a "User program" initiating a system call via `syscall/rst 8` to the "Syscall dispatcher". The dispatcher then branches based on the specific system call. For example, a `getdate/time` call goes to the "Time & Date module", a `mount` call goes to the "Disk module", a `map` call goes to the "Memory module", and an `exec/exit` call goes to the "Loader module". File system operations involve the "Virtual File System" which interacts with the "Disk module" and "Driver implementation". The "Disk module" and "File System" interact bidirectionally. The "File System" also interacts with the "Driver implementation". The "Driver implementation" (handling video, keyboard, serial, etc.) ultimately interfaces with the "Hardware". The diagram highlights the layered architecture of an operating system, where user programs interact with the kernel through system calls, and the kernel manages resources and interacts with hardware through device drivers. The VFS provides a unified interface for accessing different file systems, abstracting away the underlying implementation details.

@@ -1,0 +1,75 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow in an e-commerce system. It depicts the sequence of operations from receiving an order request to either fulfilling the order or rejecting it, including inventory checks, payment processing, and backorder handling. The diagram serves as a visual representation of the system's logic and data flow.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It is hierarchically organized into three subgraphs representing different services: CustomerOrderService, PaymentService, and FulfillmentService. The start node is "Order Request Received," and the end nodes are "Customer Notification," "Cancel Order Process," and "Await Inventory Restock."
+
+## Subgraphs / Stages
+- **CustomerOrderService**: This subgraph handles the initial order validation and inventory check.
+- **PaymentService**: This subgraph manages payment authorization and handles payment success or failure scenarios.
+- **FulfillmentService**: This subgraph deals with inventory allocation, shipping label generation, and order shipment.
+
+## Node-by-Node Description
+- **A / Order Request Received**: Represents the initial receipt of a customer's order. visible in diagram; no further repository context available.
+- **B / Validate Order**: Represents the process of validating the order details. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of checking the availability of the requested items in the inventory. visible in diagram; no further repository context available.
+- **D / Create Order Record**: Represents the creation of a record for the order in the system. visible in diagram; no further repository context available.
+- **E / Order ID Generated**: Represents the generation of a unique identifier for the order. visible in diagram; no further repository context available.
+- **F / Payment Required?**: Represents a decision point to determine if payment is required for the order. visible in diagram; no further repository context available.
+- **G / Authorize Payment**: Represents the process of authorizing the payment for the order. visible in diagram; no further repository context available.
+- **H / Acknowledge Order**: Represents the process of acknowledging the order to the customer. visible in diagram; no further repository context available.
+- **I / Payment Successful?**: Represents a decision point to determine if the payment was successful. visible in diagram; no further repository context available.
+- **J / Payment Failure Handling**: Represents the process of handling payment failures. visible in diagram; no further repository context available.
+- **K / Update Order Status: Awaiting Fulfillment**: Represents updating the order status to indicate that it is awaiting fulfillment. visible in diagram; no further repository context available.
+- **L / Fulfillment Request Sent**: Represents sending a request to the fulfillment service to process the order. visible in diagram; no further repository context available.
+- **M / Allocate Inventory**: Represents the process of allocating inventory for the order. visible in diagram; no further repository context available.
+- **N / Inventory Allocation Success?**: Represents a decision point to determine if inventory allocation was successful. visible in diagram; no further repository context available.
+- **O / Generate Shipping Label**: Represents the process of generating a shipping label for the order. visible in diagram; no further repository context available.
+- **P / Ship Order**: Represents the process of shipping the order to the customer. visible in diagram; no further repository context available.
+- **Q / Update Order Status: Shipped**: Represents updating the order status to indicate that it has been shipped. visible in diagram; no further repository context available.
+- **R / Customer Notification**: Represents notifying the customer about the order shipment. visible in diagram; no further repository context available.
+- **Y / Backorder Flow**: Represents the process of handling backorders when inventory is insufficient. visible in diagram; no further repository context available.
+- **S / Create Backorder Request**: Represents the creation of a backorder request. visible in diagram; no further repository context available.
+- **T / Await Inventory Restock**: Represents waiting for inventory to be restocked. visible in diagram; no further repository context available.
+- **Z / Reject Order**: Represents the process of rejecting an order due to payment failure or other issues. visible in diagram; no further repository context available.
+- **U / Cancel Order Process**: Represents the process of canceling an order. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Order request is passed for validation.
+- `B -- Valid --> C`: Order is valid, proceed to inventory check.
+- `B -- Invalid --> Z`: Order is invalid, reject the order.
+- `C -- Sufficient Inventory --> D`: Sufficient inventory is available, create order record.
+- `C -- Insufficient Inventory --> Y`: Insufficient inventory, initiate backorder flow.
+- `D --> E`: Order record is created, generate order ID.
+- `E --> F`: Order ID is generated, check if payment is required.
+- `F -- Yes --> G`: Payment is required, authorize payment.
+- `F -- No --> H`: Payment is not required, acknowledge order.
+- `G --> I`: Payment is authorized, check if payment was successful.
+- `I -- Yes --> H`: Payment was successful, acknowledge order.
+- `I -- No --> J`: Payment failed, handle payment failure.
+- `J --> Z`: Payment failure handling leads to order rejection.
+- `H --> K`: Order is acknowledged, update order status to awaiting fulfillment.
+- `K --> L`: Order status is updated, send fulfillment request.
+- `L --> M`: Fulfillment request is sent, allocate inventory.
+- `M --> N`: Inventory is allocated, check if allocation was successful.
+- `N -- Yes --> O`: Inventory allocation was successful, generate shipping label.
+- `N -- No --> Y`: Inventory allocation failed, initiate backorder flow.
+- `O --> P`: Shipping label is generated, ship order.
+- `P --> Q`: Order is shipped, update order status to shipped.
+- `Q --> R`: Order status is updated, notify customer.
+- `Y --> S`: Backorder flow is initiated, create backorder request.
+- `S --> T`: Backorder request is created, await inventory restock.
+- `T --> C`: After inventory restock, return to inventory check.
+- `Z --> U`: Order is rejected, cancel order process.
+
+## Repository Context & Terminology
+- **Order Request**: A formal request from a customer to purchase goods or services.
+- **Inventory Check**: The process of verifying the availability of items in stock.
+- **Payment Authorization**: The process of obtaining approval from a financial institution to charge a customer's account.
+- **Fulfillment**: The process of preparing and shipping an order to a customer.
+- **Backorder**: An order that cannot be fulfilled immediately due to insufficient inventory.
+- **Shipping Label**: A document containing information required for shipping a package.
+- **Order Status**: The current state of an order in the processing pipeline (e.g., "Awaiting Fulfillment," "Shipped").
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with the "Order Request Received" node, which initiates the CustomerOrderService subgraph. The first step is to "Validate Order"; if the order is invalid, the process immediately branches to "Reject Order" and then "Cancel Order Process." If the order is valid, the workflow proceeds to "Inventory Check." If sufficient inventory is available, a new "Order Record" is created, and an "Order ID" is generated. The process then transitions to the PaymentService subgraph, where it's determined if "Payment Required?". If payment is required, the system attempts to "Authorize Payment," and the workflow branches based on "Payment Successful?". A failed payment leads to "Payment Failure Handling," ultimately resulting in order rejection. Successful payments, or orders not requiring payment, lead to "Acknowledge Order" and updating the "Order Status: Awaiting Fulfillment." The FulfillmentService subgraph is then initiated, sending a "Fulfillment Request." Inventory is "Allocated," and the workflow branches based on "Inventory Allocation Success?". If allocation fails, a "Backorder Flow" is initiated. Successful allocation leads to "Generate Shipping Label," "Ship Order," "Update Order Status: Shipped," and finally, "Customer Notification." The "Backorder Flow" creates a "Backorder Request" and then "Awaits Inventory Restock," looping back to the "Inventory Check" node in the CustomerOrderService. The end nodes are "Customer Notification," "Cancel Order Process," and "Await Inventory Restock," representing successful order fulfillment, order cancellation, and backorder processing, respectively.

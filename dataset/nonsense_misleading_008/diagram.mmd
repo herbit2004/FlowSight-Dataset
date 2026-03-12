@@ -1,0 +1,38 @@
+graph TD
+    subgraph Customer_Order
+        A[Customer Places Order] --> B{Inventory Check};
+        B -- Yes --> C[Create Shipping Label];
+        B -- No --> I[Send Out-of-Stock Notification];
+        C --> D[Request Payment];
+        D -- Approved --> E[Package Items];
+        D -- Declined --> A;
+        E --> F[Submit Order to Warehouse];
+        F --> G[Forward to Shipping Carrier];
+        G --> H[Order Delivered];
+        I --> H;
+    end
+
+    subgraph System_Integration
+        H --> J{Feedback Received?};
+        J -- No --> K[Close Order Cycle];
+        J -- Yes --> L[Record Customer Feedback];
+        L --> M{Feedback Positive?};
+        M -- Yes --> N[Release Payment to Supplier];
+        M -- No --> O[Contact Customer Service];
+        O --> N;
+        N --> K;
+    end
+
+    subgraph Monitoring_and_Alerting
+      K --> P{System Health Below Alert Threshold?};
+      P -- Yes --> Q[Send System Health Report];
+      P -- No --> S[Archive Order Data];
+      S --> R[Evaluate Customer Satisfaction];
+      R --> Q;
+      Q --> T[End Process];
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style H fill:#f9f,stroke:#333,stroke-width:2px
+    style K fill:#f9f,stroke:#333,stroke-width:2px
+    style T fill:#f9f,stroke:#333,stroke-width:2px

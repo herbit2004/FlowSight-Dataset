@@ -1,0 +1,77 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a bug investigation and resolution process. It outlines the steps taken from when an issue is reported to when a fix is submitted as a pull request. The diagram serves as a visual guide for developers to follow when addressing reported issues.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It starts with an "Issue Reported" node and progresses through a series of decision points and actions, ultimately leading to a "Submit PR" node. The diagram has a hierarchical structure, with branching paths based on decision outcomes.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Issue Reporting & Reproduction, Debugging & Analysis, Testing, Component Fixing, and Submission.
+
+## Node-by-Node Description
+- **Start / Issue Reported**: Represents the initial state where a bug or issue is reported.
+  visible in diagram; no further repository context available.
+- **Reproduce / Can Reproduce?**: A decision point to determine if the reported issue can be reproduced.
+  visible in diagram; no further repository context available.
+- **More / Request More Info**: Indicates a request for additional information if the issue cannot be reproduced initially.
+  visible in diagram; no further repository context available.
+- **Logs / Check Logs**: Represents the action of checking logs to understand the issue.
+  visible in diagram; no further repository context available.
+- **Level / Debug Level**: A decision point based on the debug level.
+  visible in diagram; no further repository context available.
+- **Increase / Set DEBUG_LEVEL=3**: Represents setting the debug level to 3.
+  visible in diagram; no further repository context available.
+- **Analyze / Analyze Logs**: Represents the action of analyzing the logs.
+  visible in diagram; no further repository context available.
+- **Component / Component Issue?**: A decision point to determine if the issue is related to a specific component.
+  visible in diagram; no further repository context available.
+- **Unit / Run Unit Tests**: Represents running unit tests.
+  visible in diagram; no further repository context available.
+- **Integration / Run Integration Tests**: Represents running integration tests.
+  visible in diagram; no further repository context available.
+- **System / Check System State**: Represents checking the system state.
+  visible in diagram; no further repository context available.
+- **Config / Check Configuration**: Represents checking the configuration.
+  visible in diagram; no further repository context available.
+- **Fix / Fix Component**: Represents fixing the component.
+  visible in diagram; no further repository context available.
+- **Test / Test Fix**: Represents testing the fix.
+  visible in diagram; no further repository context available.
+- **PR / Submit PR**: Represents submitting a pull request with the fix.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Start --> Reproduce`: An issue is reported and needs to be reproduced.
+- `Reproduce -- Yes --> Logs`: If the issue can be reproduced, check the logs.
+- `Reproduce -- No --> More`: If the issue cannot be reproduced, request more information.
+- `Logs --> Level`: After checking logs, determine the debug level.
+- `Level -- Low --> Increase`: If the debug level is low, set DEBUG_LEVEL=3.
+- `Level -- High --> Analyze`: If the debug level is high, analyze the logs.
+- `Increase --> Reproduce`: After setting the debug level, try to reproduce the issue again.
+- `Analyze --> Component`: After analyzing logs, determine if it's a component issue.
+- `Component -- Yes --> Unit`: If it's a component issue, run unit tests.
+- `Component -- No --> Integration`: If it's not a component issue, run integration tests.
+- `Integration --> System`: After running integration tests, check the system state.
+- `System --> Config`: After checking the system state, check the configuration.
+- `Unit --> Fix`: After running unit tests, fix the component.
+- `Config --> Fix`: After checking the configuration, fix the component.
+- `Fix --> Test`: After fixing the component, test the fix.
+- `Test --> PR`: After testing the fix, submit a pull request.
+- `More --> Start`: After requesting more information, the process returns to the start.
+
+## Repository Context & Terminology
+- **Issue Reported**: A bug or problem identified in the system.
+- **Reproduce**: The ability to recreate the reported issue.
+- **Logs**: System-generated records of events and errors.
+- **Debug Level**: The level of detail in the logs.
+- **DEBUG_LEVEL=3**: A specific debug level setting.
+- **Component Issue**: An issue related to a specific module or part of the system.
+- **Unit Tests**: Tests that verify the functionality of individual components.
+- **Integration Tests**: Tests that verify the interaction between different components.
+- **System State**: The current condition of the system.
+- **Configuration**: The settings and parameters of the system.
+- **Fix Component**: Correcting the code or configuration to resolve the issue.
+- **Test Fix**: Verifying that the fix resolves the issue without introducing new problems.
+- **Submit PR**: Creating a pull request to merge the fix into the main codebase.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with an "Issue Reported," immediately branching to "Can Reproduce?". If the issue is reproducible ("Yes" branch), the process proceeds to "Check Logs"; otherwise ("No" branch), it goes to "Request More Info" and loops back to the start. After checking logs, the flow moves to "Debug Level," branching based on the level. A "Low" debug level leads to "Set DEBUG_LEVEL=3" and a loop back to "Can Reproduce?". A "High" debug level leads to "Analyze Logs," followed by "Component Issue?". If it's a component issue ("Yes"), "Run Unit Tests" is executed; otherwise ("No"), "Run Integration Tests" is performed, followed by "Check System State" and "Check Configuration." Both "Run Unit Tests" and "Check Configuration" converge at "Fix Component," which represents the code correction phase. After fixing the component, the flow proceeds to "Test Fix" and finally concludes with "Submit PR," indicating the submission of the corrected code as a pull request. The "DEBUG_LEVEL" setting suggests a configuration parameter that controls the verbosity of logging, which is a common practice in software development for debugging purposes.

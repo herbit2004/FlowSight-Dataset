@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the structure of a NestJS monorepo template. It depicts the relationships between different applications and shared libraries within the monorepo. The diagram serves as a high-level overview of the project's architecture, showing dependencies and responsibilities of each component.
+
+## Overall Layout
+The diagram is laid out in a top-down (TB) manner. It has a hierarchical structure, with the root node representing the monorepo, followed by subgraphs for applications and shared libraries. There is no explicit start or end node, but the diagram implies a flow of dependencies from applications to shared libraries.
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Root**: Represents the root directory of the NestJS monorepo template.
+- **Apps**: Contains independent services or applications within the monorepo.
+- **Libs**: Contains shared, reusable code libraries.
+
+## Node-by-Node Description
+- **Root / nestjs-monorepo-template/**: Represents the root directory of the NestJS monorepo template.
+- **Apps / apps/ (Independent Services)**: Represents the directory containing independent services or applications.
+- **API / api-server**: Represents the API server application, running on port 3001, providing REST API endpoints, validation, and health checks.
+- **Worker / worker**: Represents a background service application for scheduled tasks, without HTTP endpoints.
+- **WS / websocket-service**: Represents a websocket service application, running on port 3002, providing real-time communication using Socket.IO.
+- **Admin / admin**: Represents the admin panel application, running on port 3003, providing management functionalities.
+- **Libs / libs/ (Shared Reusable Code)**: Represents the directory containing shared, reusable code libraries.
+- **DB / db/**: Represents a database abstraction library, supporting MongoDB, PostgreSQL, and MySQL.
+- **Config / configuration/**: Represents a configuration library, providing environment configuration, type safety, and validation.
+- **Common / common/**: Represents a common utilities library, providing logging, error handling, and filters.
+- **RootFiles / Root Files**: Represents the root files of the project, including `package.json`, `tsconfig.json`, `nest-cli.json`, and `.env`.
+
+## Edges, Branches & Convergence
+- `API --> DB`: The API server imports the database abstraction library.
+- `API --> Config`: The API server imports the configuration library.
+- `API --> Common`: The API server imports the common utilities library.
+- `Worker --> DB`: The worker imports the database abstraction library.
+- `Worker --> Config`: The worker imports the configuration library.
+- `Worker --> Common`: The worker imports the common utilities library.
+- `WS --> DB`: The websocket service imports the database abstraction library.
+- `WS --> Config`: The websocket service imports the configuration library.
+- `WS --> Common`: The websocket service imports the common utilities library.
+- `Admin --> DB`: The admin application imports the database abstraction library.
+- `Admin --> Config`: The admin application imports the configuration library.
+- `Admin --> Common`: The admin application imports the common utilities library.
+
+## Repository Context & Terminology
+- **NestJS**: A progressive Node.js framework for building efficient, reliable and scalable server-side applications.
+- **Monorepo**: A software development strategy where code for many projects is stored in the same repository.
+- **package.json**: A file in the root directory of a Node.js project that contains metadata about the project, such as its name, version, and dependencies.
+- **tsconfig.json**: A file that specifies the root files and the compiler options required to compile the project.
+- **nest-cli.json**: A configuration file for the NestJS CLI, used for generating and managing NestJS projects.
+- **.env**: A file that stores environment-specific variables for the application.
+- **Socket.IO**: A library that enables real-time, bidirectional and event-based communication between web clients and servers.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a NestJS monorepo architecture. The root of the monorepo contains configuration files like `package.json`, `tsconfig.json`, `nest-cli.json`, and `.env`. Within the `apps` directory, there are four independent services: `api-server` (port 3001, REST API), `worker` (background tasks), `websocket-service` (port 3002, Socket.IO), and `admin` (port 3003, admin panel). Each of these applications imports shared libraries located in the `libs` directory. These shared libraries include `db` (database abstraction for MongoDB, PostgreSQL, and MySQL), `configuration` (environment configuration and validation), and `common` (utilities for logging, errors, and filters). All four applications import all three shared libraries, indicating a high degree of code reuse and dependency on common functionalities. The `api-server` provides REST API endpoints with validation and health checks. The `worker` handles scheduled background tasks without exposing HTTP endpoints. The `websocket-service` facilitates real-time communication using Socket.IO. The `admin` application provides a management interface. The diagram effectively communicates the modular structure and dependencies within the NestJS monorepo template.

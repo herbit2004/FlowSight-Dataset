@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the incident resolution process. It depicts the steps involved from when a user submits an incident report to when the incident is closed. The diagram outlines the flow of information and actions taken by engineers and users during the incident resolution lifecycle.
+
+## Overall Layout
+The diagram's layout is top-down (TD). The flow starts with the "User Submits Incident Report" node at the top and progresses downwards through various decision points and actions. The diagram contains an illogical loop, as the "Close Incident" node leads back to the "User Submits Incident Report" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Incident Submission, Severity Assessment, Engineer Assignment, Investigation, Reproducibility Check, Fix Implementation, and Resolution.
+
+## Node-by-Node Description
+- **A / User Submits Incident Report**: Represents the initial stage where a user reports an incident. visible in diagram; no further repository context available.
+- **B / Severity Assessed?**: A decision point to determine if the severity of the incident has been assessed. visible in diagram; no further repository context available.
+- **C / Assign to Engineer**: Represents the action of assigning the incident to an engineer. visible in diagram; no further repository context available.
+- **D / Engineer Investigates**: Represents the stage where the assigned engineer investigates the incident. visible in diagram; no further repository context available.
+- **E / Reproducible?**: A decision point to determine if the incident is reproducible. visible in diagram; no further repository context available.
+- **F / Incident Resolved?**: A decision point to determine if the incident has been resolved. visible in diagram; no further repository context available.
+- **G / Fix Implemented**: Represents the action of implementing a fix for the incident. visible in diagram; no further repository context available.
+- **H / Request More Information From User**: Represents the action of requesting more information from the user. visible in diagram; no further repository context available.
+- **I / Mark as Resolved**: Represents the action of marking the incident as resolved. visible in diagram; no further repository context available.
+- **J / Close Incident**: Represents the final stage of closing the incident. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an incident report, leading to severity assessment.
+- `B -- Yes --> C`: If the severity is assessed, the incident is assigned to an engineer.
+- `B -- No --> F`: If the severity is not assessed, the flow goes to 'Incident Resolved?'.
+- `C --> D`: The assigned engineer investigates the incident.
+- `D --> E`: The engineer's investigation leads to checking if the incident is reproducible.
+- `E -- No --> H`: If the incident is not reproducible, more information is requested from the user.
+- `E -- Yes --> G`: If the incident is reproducible, a fix is implemented.
+- `G --> F`: After a fix is implemented, the flow goes to 'Incident Resolved?'.
+- `H --> A`: Requesting more information from the user leads back to the incident submission.
+- `F -- Yes --> C`: If the incident is resolved, the flow loops back to 'Assign to Engineer'.
+- `F -- No --> I`: If the incident is not resolved, it is marked as resolved.
+- `I --> J`: Marking the incident as resolved leads to closing the incident.
+- `J --> A`: Closing the incident leads back to the incident submission.
+
+## Repository Context & Terminology
+- **Incident Report**: A formal document or record detailing a problem or issue encountered by a user. In this diagram, it's the starting point of the process.
+- **Severity Assessment**: The process of determining the impact and urgency of an incident. In this diagram, it's a decision point that influences the subsequent steps.
+- **Engineer**: A technical professional responsible for investigating and resolving incidents. In this diagram, the engineer plays a key role in diagnosing and fixing the reported issue.
+- **Reproducible**: The ability to recreate the incident consistently. In this diagram, reproducibility is a key factor in determining the next steps for resolving the incident.
+- **Fix**: A solution or workaround implemented to resolve the incident. In this diagram, implementing a fix is a crucial step towards resolving the incident.
+- **Resolved**: The state where the incident is considered to be fixed and no longer causing issues. In this diagram, the 'Incident Resolved?' decision point determines the subsequent flow.
+- **Close Incident**: The final stage where the incident is officially closed and no further action is required. In this diagram, closing the incident incorrectly loops back to the beginning.
+
+## High-Density QA Ground Truth Summary
+The incident resolution process begins when a user submits an incident report (A). The first decision point is whether the severity has been assessed (B). If yes, the incident is assigned to an engineer (C); if no, the flow incorrectly jumps to 'Incident Resolved?' (F). The engineer investigates (D) and determines if the incident is reproducible (E). If not reproducible, more information is requested from the user (H), which then restarts the entire incident submission process (A). If reproducible, a fix is implemented (G), and the flow goes to 'Incident Resolved?' (F). If the incident is resolved (F -- Yes --> C), the flow incorrectly loops back to assigning the incident to an engineer (C). If the incident is not resolved (F -- No --> I), it is marked as resolved (I), and then the incident is closed (J). The 'Close Incident' step (J) incorrectly loops back to the 'User Submits Incident Report' node (A), restarting the entire process. The diagram's flow contains several logical errors, including resolving the incident before assessing severity and looping back to the start after closing the incident.

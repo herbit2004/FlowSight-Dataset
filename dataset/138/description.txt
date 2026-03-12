@@ -1,0 +1,79 @@
+## Diagram Type & Purpose
+This is a dependency graph, specifically showing the relationships between Go packages and modules. It visualizes the import dependencies between various components, primarily within the `golang.org/x/tools` repository, and external dependencies like `github.com/kisielk/errcheck`. The diagram helps understand the architecture and dependencies of the `errcheck` tool and its reliance on the Go tooling ecosystem.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the `github.com/kisielk/errcheck` module and its sub-package `github.com/kisielk/errcheck/errcheck` at the top. The graph then expands downwards to show the dependencies on various `golang.org/x/tools` packages. There isn't a single defined "end" node, but the nodes at the bottom of the diagram represent packages with fewer outgoing dependencies within the scope of this graph.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into four stages:
+1. Entry point: `github.com/kisielk/errcheck` and `github.com/kisielk/errcheck/errcheck`.
+2. Core tooling: `golang.org/x/tools/go/analysis` and `golang.org/x/tools/go/packages`.
+3. Internal packages: `golang.org/x/tools/internal/*`.
+4. Low-level utilities: `golang.org/x/tools/go/types/*` and `golang.org/x/mod/semver`.
+
+## Node-by-Node Description
+- **github.com/kisielk/errcheck**: The root module for the errcheck tool.
+- **github.com/kisielk/errcheck/errcheck**: The main package within the errcheck module.
+- **golang.org/x/tools/go/analysis**: Package for static analysis of Go code.
+- **golang.org/x/tools/go/packages**: Package for loading and querying Go packages.
+- **golang.org/x/mod/semver**: Package for semantic versioning.
+- **golang.org/x/sync/errgroup**: Package for synchronizing goroutines.
+- **golang.org/x/tools/go/gcexportdata**: Package for reading and writing gcexport data.
+- **golang.org/x/tools/internal/gcimporter**: Internal package for importing Go packages.
+- **golang.org/x/tools/internal/gocommand**: Internal package for executing Go commands.
+- **golang.org/x/tools/internal/packagesinternal**: Internal package related to package loading.
+- **golang.org/x/tools/internal/pkgbits**: Internal package for handling package bits.
+- **golang.org/x/tools/internal/event**: Internal package for event handling.
+- **golang.org/x/tools/internal/event/core**: Internal package for core event functionality.
+- **golang.org/x/tools/internal/event/keys**: Internal package for event keys.
+- **golang.org/x/tools/internal/event/label**: Internal package for event labels.
+- **golang.org/x/tools/go/types/objectpath**: Package for creating object paths in Go types.
+- **golang.org/x/tools/go/types/typeutil**: Package for utility functions related to Go types.
+- **golang.org/x/tools/internal/typeparams**: Internal package for type parameters.
+- **golang.org/x/tools/internal/aliases**: Internal package for handling aliases.
+- **golang.org/x/tools/internal/typesinternal**: Internal package related to Go types.
+- **golang.org/x/tools/internal/stdlib**: Internal package for standard library.
+- **golang.org/x/tools/internal/versions**: Internal package for versioning.
+
+## Edges, Branches & Convergence
+- `github.com/kisielk/errcheck --> github.com/kisielk/errcheck/errcheck`: Indicates the errcheck module contains the errcheck package.
+- `github.com/kisielk/errcheck --> golang.org/x/tools/go/packages`: Indicates the errcheck module depends on the go/packages package.
+- `github.com/kisielk/errcheck/errcheck --> golang.org/x/tools/go/analysis`: Indicates the errcheck package depends on the go/analysis package.
+- `github.com/kisielk/errcheck/errcheck --> golang.org/x/tools/go/packages`: Indicates the errcheck package depends on the go/packages package.
+- `golang.org/x/tools/go/packages --> golang.org/x/sync/errgroup`: Indicates the go/packages package depends on the sync/errgroup package.
+- `golang.org/x/tools/go/packages --> golang.org/x/tools/go/gcexportdata`: Indicates the go/packages package depends on the go/gcexportdata package.
+- `golang.org/x/tools/go/packages --> golang.org/x/tools/internal/gocommand`: Indicates the go/packages package depends on the internal/gocommand package.
+- `golang.org/x/tools/go/packages --> golang.org/x/tools/internal/packagesinternal`: Indicates the go/packages package depends on the internal/packagesinternal package.
+- `golang.org/x/tools/go/gcexportdata --> golang.org/x/tools/internal/gcimporter`: Indicates the go/gcexportdata package depends on the internal/gcimporter package.
+- `golang.org/x/tools/internal/gcimporter --> golang.org/x/tools/go/types/objectpath`: Indicates the internal/gcimporter package depends on the go/types/objectpath package.
+- `golang.org/x/tools/internal/gcimporter --> golang.org/x/tools/internal/pkgbits`: Indicates the internal/gcimporter package depends on the internal/pkgbits package.
+- `golang.org/x/tools/internal/gcimporter --> golang.org/x/tools/internal/typesinternal`: Indicates the internal/gcimporter package depends on the internal/typesinternal package.
+- `golang.org/x/tools/internal/gocommand --> golang.org/x/mod/semver`: Indicates the internal/gocommand package depends on the mod/semver package.
+- `golang.org/x/tools/internal/gocommand --> golang.org/x/tools/internal/event`: Indicates the internal/gocommand package depends on the internal/event package.
+- `golang.org/x/tools/internal/event --> golang.org/x/tools/internal/event/core`: Indicates the internal/event package depends on the internal/event/core package.
+- `golang.org/x/tools/internal/event/core --> golang.org/x/tools/internal/event/keys`: Indicates the internal/event/core package depends on the internal/event/keys package.
+- `golang.org/x/tools/internal/event/core --> golang.org/x/tools/internal/event/label`: Indicates the internal/event/core package depends on the internal/event/label package.
+- `golang.org/x/tools/go/types/objectpath --> golang.org/x/tools/internal/aliases`: Indicates the go/types/objectpath package depends on the internal/aliases package.
+- `golang.org/x/tools/go/types/objectpath --> golang.org/x/tools/internal/typesinternal`: Indicates the go/types/objectpath package depends on the internal/typesinternal package.
+- `golang.org/x/tools/go/types/typeutil --> golang.org/x/tools/internal/typeparams`: Indicates the go/types/typeutil package depends on the internal/typeparams package.
+- `golang.org/x/tools/internal/typeparams --> golang.org/x/tools/internal/aliases`: Indicates the internal/typeparams package depends on the internal/aliases package.
+- `golang.org/x/tools/internal/typesinternal --> golang.org/x/tools/go/types/typeutil`: Indicates the internal/typesinternal package depends on the go/types/typeutil package.
+- `golang.org/x/tools/internal/typesinternal --> golang.org/x/tools/internal/aliases`: Indicates the internal/typesinternal package depends on the internal/aliases package.
+- `golang.org/x/tools/internal/typesinternal --> golang.org/x/tools/internal/stdlib`: Indicates the internal/typesinternal package depends on the internal/stdlib package.
+- `golang.org/x/tools/internal/typesinternal --> golang.org/x/tools/internal/versions`: Indicates the internal/typesinternal package depends on the internal/versions package.
+- `golang.org/x/tools/internal/event --> golang.org/x/tools/internal/event/keys`: Indicates the internal/event package depends on the internal/event/keys package.
+- `golang.org/x/tools/internal/event --> golang.org/x/tools/internal/event/label`: Indicates the internal/event package depends on the internal/event/label package.
+- `golang.org/x/tools/internal/event/keys --> golang.org/x/tools/internal/event/label`: Indicates the internal/event/keys package depends on the internal/event/label package.
+
+## Repository Context & Terminology
+- **errcheck**: A tool for statically checking for unchecked errors in Go programs.
+- **go/analysis**: The `go/analysis` package provides a framework for building static analysis tools for Go code.
+- **go/packages**: The `go/packages` package provides functionality for loading and querying Go packages, used by many Go tools.
+- **gcexportdata**: Refers to the data format used by the Go compiler to export information about packages.
+- **gcimporter**: The `gcimporter` is responsible for importing packages from gcexportdata.
+- **internal packages**: Packages under the `internal` directory are not part of the public API and can change without notice.
+- **typesinternal**: Internal package for handling Go types.
+- **event**: Internal package for event handling.
+
+## High-Density QA Ground Truth Summary
+The dependency graph starts with `github.com/kisielk/errcheck`, the root module for the errcheck tool, which depends on its sub-package `github.com/kisielk/errcheck/errcheck` and `golang.org/x/tools/go/packages`. The `errcheck/errcheck` package then depends on `golang.org/x/tools/go/analysis` and `golang.org/x/tools/go/packages`. `golang.org/x/tools/go/packages` is a central package for loading and querying Go packages, and it depends on several internal packages such as `golang.org/x/tools/internal/gocommand` and `golang.org/x/tools/internal/packagesinternal`, as well as `golang.org/x/sync/errgroup` and `golang.org/x/tools/go/gcexportdata`. The `gcexportdata` package relies on `golang.org/x/tools/internal/gcimporter` for importing package data. The `gcimporter` then depends on `golang.org/x/tools/go/types/objectpath`, `golang.org/x/tools/internal/pkgbits`, and `golang.org/x/tools/internal/typesinternal`. `golang.org/x/tools/internal/gocommand` depends on `golang.org/x/mod/semver` and `golang.org/x/tools/internal/event`. The `event` package further depends on `event/core`, `event/keys`, and `event/label`. `golang.org/x/tools/internal/typesinternal` depends on `golang.org/x/tools/go/types/typeutil`, `golang.org/x/tools/internal/aliases`, `golang.org/x/tools/internal/stdlib`, and `golang.org/x/tools/internal/versions`. The graph illustrates how `errcheck`, a static analysis tool, relies heavily on the `golang.org/x/tools

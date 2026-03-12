@@ -1,0 +1,66 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the infrastructure and data flow of a cloud-based application. It depicts the components involved in handling requests, processing jobs, managing repositories, and authenticating users. The diagram provides a high-level overview of the system's architecture and how different services interact with each other.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) fashion. It shows a hierarchical structure, starting with the CloudFront CDN and branching out to various AWS services. The start nodes are CloudFront CDN, and the end nodes are DynamoDB, S3 (Artifacts), and Secrets Manager.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **CloudFront CDN**: Represents the content delivery network.
+
+Logically divided into 4 stages:
+1. Entry point: CloudFront CDN
+2. Routing and Authentication: S3 (Frontend), API Gateway, Lambda: Authorizer
+3. Job and Repository Handling: Lambda: Jobs Handler, Lambda: Repos Handler, Step Functions
+4. Processing and Storage: ECS Fargate (Processor), DynamoDB, S3 (Artifacts), Secrets Manager
+
+## Node-by-Node Description
+- **CloudFront CDN**: Content Delivery Network, serving static assets and routing API requests.
+  - In the repository this corresponds to the entry point for all requests, caching content and forwarding requests to the appropriate backend services.
+- **openrepowiki.xyz, api.***: Represents the domain and API endpoints served by the CloudFront CDN.
+  - visible in diagram; no further repository context available.
+- **S3 (Frontend)**: Amazon S3 bucket storing the frontend application.
+  - In the repository this corresponds to the static website hosted on S3.
+- **API Gateway**: AWS API Gateway, routing API requests to backend Lambda functions.
+  - In the repository this corresponds to the API endpoint that handles requests for data.
+- **Lambda: Jobs Handler**: AWS Lambda function handling job-related requests.
+  - In the repository this corresponds to the function that processes and manages jobs.
+- **Lambda: Repos Handler**: AWS Lambda function handling repository-related requests.
+  - In the repository this corresponds to the function that retrieves and manages repository data.
+- **Lambda: Authorizer**: AWS Lambda function handling authentication and authorization.
+  - In the repository this corresponds to the function that verifies user credentials and permissions.
+- **Step Functions**: AWS Step Functions, orchestrating complex workflows.
+  - In the repository this corresponds to the state machine that manages the execution of tasks.
+- **ECS Fargate (Processor)**: AWS ECS Fargate cluster, running the processing tasks.
+  - In the repository this corresponds to the containerized application that performs the core processing logic.
+- **DynamoDB**: Amazon DynamoDB database, storing data.
+  - In the repository this corresponds to the database that stores structured data.
+- **S3 (Artifacts)**: Amazon S3 bucket storing artifacts.
+  - In the repository this corresponds to the storage location for generated artifacts.
+- **Secrets Manager**: AWS Secrets Manager, storing secrets.
+  - In the repository this corresponds to the service that securely stores sensitive information.
+
+## Edges, Branches & Convergence
+- `CloudFront CDN --> S3 (Frontend)`: Requests for static assets are routed to the S3 bucket.
+- `CloudFront CDN --> API Gateway`: API requests are routed to the API Gateway.
+- `API Gateway --> Lambda: Jobs Handler`: API Gateway routes job-related requests to the Jobs Handler Lambda function.
+- `API Gateway --> Lambda: Repos Handler`: API Gateway routes repository-related requests to the Repos Handler Lambda function.
+- `API Gateway --> Lambda: Authorizer`: API Gateway routes authentication requests to the Authorizer Lambda function.
+- `Lambda: Jobs Handler --> Step Functions`: The Jobs Handler Lambda function triggers the Step Functions workflow.
+- `Step Functions --> ECS Fargate (Processor)`: The Step Functions workflow triggers the ECS Fargate cluster to process the job.
+- `ECS Fargate (Processor) --> DynamoDB`: The ECS Fargate cluster stores data in DynamoDB.
+- `ECS Fargate (Processor) --> S3 (Artifacts)`: The ECS Fargate cluster stores artifacts in the S3 bucket.
+- `ECS Fargate (Processor) --> Secrets Manager`: The ECS Fargate cluster retrieves secrets from Secrets Manager.
+
+## Repository Context & Terminology
+- **CloudFront CDN**: A content delivery network (CDN) service provided by AWS. It caches content at edge locations to reduce latency and improve performance.
+- **S3 (Frontend)**: An Amazon S3 bucket used to host the static frontend application files (HTML, CSS, JavaScript).
+- **API Gateway**: A fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale.
+- **Lambda**: A serverless compute service that lets you run code without provisioning or managing servers.
+- **Step Functions**: A serverless orchestration service that lets you coordinate multiple AWS services into serverless workflows.
+- **ECS Fargate**: A serverless compute engine for containers that works with Amazon Elastic Container Service (ECS).
+- **DynamoDB**: A fully managed NoSQL database service that provides fast and predictable performance with seamless scalability.
+- **Secrets Manager**: A service that helps you protect secrets needed to access your applications, services, and IT resources.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with the CloudFront CDN, which serves as the entry point for all requests, handling both static assets and API calls. Static content requests are routed directly to S3 (Frontend), while API requests are forwarded to the API Gateway. The API Gateway then dispatches requests to different Lambda functions based on the endpoint: Lambda: Jobs Handler for job-related tasks, Lambda: Repos Handler for repository management, and Lambda: Authorizer for authentication. The Lambda: Jobs Handler triggers a Step Functions workflow to orchestrate complex job processing. This workflow then invokes an ECS Fargate cluster (Processor) to execute the core processing logic. The ECS Fargate cluster interacts with several backend services: it stores processed data in DynamoDB, saves generated artifacts in S3 (Artifacts), and retrieves sensitive information from Secrets Manager. The Lambda: Authorizer validates user credentials, ensuring secure access to the system. The system leverages serverless technologies like Lambda and Fargate to minimize operational overhead and scale efficiently. The use of CloudFront CDN ensures low latency and high availability for users accessing the application.

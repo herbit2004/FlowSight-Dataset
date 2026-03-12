@@ -1,0 +1,31 @@
+flowchart TD
+    A[User Starts Subscription];
+    B{Payment Successful?};
+    C[Account Created];
+    D[Welcome Email Sent];
+    E[Profile Setup];
+    F{Profile Complete?};
+    G[Subscription Active];
+    H[Billing Cycle Starts];
+    I[Access Granted];
+    J[Subscription Expires];
+    K[Account Disabled];
+    L[Upsell Offer Sent];
+    M[Upsell Accepted?];
+
+    A -- Pays --> B
+    B -- No --> K
+    B -- Yes --> D
+    C --> E
+    D -- After Account Creation --> C
+    E -- Completes Profile --> F
+    F -- No --> L
+    F -- Yes --> G
+    G --> H
+    H -- Cycle Start --> I
+    I --> J
+    J -- Expires --> M
+    M -- Yes --> G
+    M -- No --> K
+    L -- No --> E
+    L -- Yes --> K

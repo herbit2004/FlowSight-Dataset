@@ -1,0 +1,71 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the architecture of a metrics ingestion, storage, alerting, and visualization pipeline. It depicts the flow of metrics data from various sources through processing, storage, and ultimately to visualization and alerting mechanisms. The diagram serves as a high-level overview of the system's architecture and data flow.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It is hierarchically organized into stages, starting with data ingestion and ending with notification routing. The start nodes are the metrics sources, and the end nodes are the notification services and the user interface.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing stages in the metrics pipeline:
+- **Data Ingestion**: Handles the collection of metrics from various sources.
+- **Data Storage**: Manages the storage of metrics data and alert configurations.
+- **Reporting & Visualization**: Provides tools for querying, visualizing, and interacting with the stored metrics.
+
+## Node-by-Node Description
+- **Metrics Source: Application A**: Represents a source of metrics data from application A. visible in diagram; no further repository context available.
+- **Metrics Source: Application B**: Represents a source of metrics data from application B. visible in diagram; no further repository context available.
+- **Metrics Source: Infrastructure**: Represents a source of metrics data from the infrastructure. visible in diagram; no further repository context available.
+- **Metrics Router**: Routes the incoming metrics data to the appropriate processing steps. visible in diagram; no further repository context available.
+- **Pre-Processing**: Performs initial processing of the metrics data. visible in diagram; no further repository context available.
+- **Aggregation Service**: Handles high cardinality metrics by aggregating them. visible in diagram; no further repository context available.
+- **Dropping Service**: Filters out irrelevant metrics. visible in diagram; no further repository context available.
+- **Storage Options**: Represents the different storage options available for metrics data and alert configurations. visible in diagram; no further repository context available.
+- **TSDB: MetricsDB**: A time-series database used for storing metrics data. In the repository this corresponds to a database optimized for time-series data, such as Prometheus or InfluxDB.
+- **Configuration Store: AlertingConfigDB**: A database or configuration file used for storing alert configurations. visible in diagram; no further repository context available.
+- **Query Engine**: Provides a mechanism for querying the stored metrics data. visible in diagram; no further repository context available.
+- **Alerting Engine**: Evaluates metrics data against configured thresholds to trigger alerts. visible in diagram; no further repository context available.
+- **Dashboard Service**: Provides a service for creating and displaying dashboards. visible in diagram; no further repository context available.
+- **Threshold Check**: Checks if the metrics data exceeds a predefined threshold. visible in diagram; no further repository context available.
+- **Alert Generation**: Generates alerts when thresholds are breached. visible in diagram; no further repository context available.
+- **No Action**: Indicates that no action is taken when thresholds are not breached. visible in diagram; no further repository context available.
+- **Notification Routing**: Routes alerts to the appropriate notification channels. visible in diagram; no further repository context available.
+- **Email Service**: Sends alerts via email. visible in diagram; no further repository context available.
+- **Pager Service**: Sends alerts via a pager system. visible in diagram; no further repository context available.
+- **Incident Management System**: Creates incidents in an incident management system. visible in diagram; no further repository context available.
+- **Dashboard Service**: Provides a service for creating and displaying dashboards. visible in diagram; no further repository context available.
+- **User Interface**: The user interface for interacting with the dashboards and metrics data. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Metrics Source: Application A --> Metrics Router`: Metrics data from application A is sent to the metrics router.
+- `Metrics Source: Application B --> Metrics Router`: Metrics data from application B is sent to the metrics router.
+- `Metrics Source: Infrastructure --> Metrics Router`: Metrics data from the infrastructure is sent to the metrics router.
+- `Metrics Router --> Pre-Processing`: The metrics router sends the data to the pre-processing stage.
+- `Pre-Processing -- Handle high cardinality --> Aggregation Service`: High cardinality metrics are sent to the aggregation service.
+- `Pre-Processing -- Filter irrelevant metrics --> Dropping Service`: Irrelevant metrics are sent to the dropping service.
+- `Aggregation Service --> Storage Options`: Aggregated metrics are sent to storage options.
+- `Dropping Service --> Storage Options`: Filtered metrics are sent to storage options.
+- `Storage Options -- Time-series data --> TSDB: MetricsDB`: Time-series data is stored in the TSDB.
+- `Storage Options -- Alert configurations --> Configuration Store: AlertingConfigDB`: Alert configurations are stored in the configuration store.
+- `TSDB: MetricsDB --> Query Engine`: Metrics data is sent to the query engine.
+- `Configuration Store: AlertingConfigDB --> Alerting Engine`: Alert configurations are sent to the alerting engine.
+- `Query Engine --> Threshold Check`: Query results are sent to the threshold check.
+- `Alerting Engine --> Threshold Check`: Alerting engine results are sent to the threshold check.
+- `Threshold Check -- Threshold breached --> Alert Generation`: If the threshold is breached, an alert is generated.
+- `Threshold Check -- Threshold OK --> No Action`: If the threshold is not breached, no action is taken.
+- `Alert Generation --> Notification Routing`: Generated alerts are sent to the notification routing stage.
+- `Notification Routing -- Email --> Email Service`: Alerts are sent via email.
+- `Notification Routing -- Pager --> Pager Service`: Alerts are sent via a pager system.
+- `Notification Routing -- Webhook --> Incident Management System`: Alerts are sent to an incident management system.
+- `Query Engine --> Dashboard Service`: Query results are sent to the dashboard service.
+- `Dashboard Service --> User Interface`: The dashboard service displays the data in the user interface.
+
+## Repository Context & Terminology
+- **Metrics**: Numerical data points that represent the performance or state of a system or application over time.
+- **Time-Series Database (TSDB)**: A database optimized for storing and querying time-series data, which is data indexed by time.
+- **Alerting**: The process of monitoring metrics and triggering notifications when predefined thresholds are breached.
+- **High Cardinality**: A term used to describe data with a large number of unique values, which can pose challenges for storage and processing.
+- **Aggregation**: The process of combining multiple data points into a single value, often used to reduce the cardinality of metrics.
+- **Threshold**: A predefined value that, when exceeded by a metric, triggers an alert.
+- **Incident Management System**: A system used to track and resolve incidents, which are unplanned interruptions to IT services.
+
+## High-Density QA Ground Truth Summary
+The metrics pipeline begins with data ingestion from three sources: Application A, Application B, and Infrastructure. These sources feed into a Metrics Router, which directs the data to the Pre-Processing stage. Here, a decision is made: high cardinality metrics are routed to the Aggregation Service, while irrelevant metrics are sent to the Dropping Service. Both services then converge at the Storage Options stage. A further branching occurs based on data type: time-series data is stored in the TSDB (MetricsDB), a specialized database like Prometheus or InfluxDB, while alert configurations are stored in the AlertingConfigDB. The MetricsDB feeds into a Query Engine, and the AlertingConfigDB feeds into an Alerting Engine. Both the Query Engine and Alerting Engine results converge at the Threshold Check. If a threshold is breached, an Alert Generation process is triggered; otherwise, no action is taken. Generated alerts are then routed via Notification Routing to Email Service, Pager Service, or an Incident Management System. Finally, the Query Engine also sends data to the Dashboard Service, which presents the data to the User Interface. The TSDB is a key component, providing efficient storage and retrieval of time-series data for both visualization and alerting purposes.

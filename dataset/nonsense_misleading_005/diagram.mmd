@@ -1,0 +1,16 @@
+graph TD
+    A[Order Received] --> B{Credit Card Valid?};
+    B -- Yes --> C[Inventory Check];
+    B -- No --> I[Notify Customer of Payment Failure];
+    C --> D{Inventory Available?};
+    D -- No --> E[Backorder Item];
+    D -- Yes --> F[Pack Order];
+    F --> G[Ship Order];
+    G --> H[Update Inventory]
+    H --> E;
+    G --> J{Delivery Confirmed?};
+    J -- No --> K[Send Shipment Notification];
+    J -- Yes --> L[Close Order];
+    I --> A;
+    E --> K;
+    K --> L;

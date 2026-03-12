@@ -1,0 +1,75 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a CI (Continuous Integration) pipeline. It outlines the steps involved in triggering a CI pipeline, performing dependency resolution, license compliance checks, vulnerability scanning, and ultimately publishing SBOM (Software Bill of Materials) and artifacts. The diagram serves as a visual representation of the automated process for building, testing, and deploying software.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with a "Start" node at the top and progresses through a series of decision diamonds and process rectangles, ending with an "End" node at the bottom. The diagram represents a linear flow with branching based on decision outcomes.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Trigger, Dependency Resolution, License Compliance, Vulnerability Scan, Reporting, and Completion.
+
+## Node-by-Node Description
+- **A / Start: CI Pipeline Trigger**: Represents the beginning of the CI pipeline process.
+  visible in diagram; no further repository context available.
+- **B / Is this a Pull Request?**: A decision point to determine if the pipeline was triggered by a pull request.
+  visible in diagram; no further repository context available.
+- **C / Fetch Changed Module List**: Retrieves the list of modules that have been modified in the pull request.
+  visible in diagram; no further repository context available.
+- **D / Fetch All Module List**: Retrieves the complete list of modules in the project. This is used for nightly builds or when not triggered by a pull request.
+  visible in diagram; no further repository context available.
+- **E / Dependency Graph Builder**: Constructs a dependency graph based on the fetched module list.
+  visible in diagram; no further repository context available.
+- **F / Dependency Resolution: Success?**: A decision point to determine if the dependency resolution was successful.
+  visible in diagram; no further repository context available.
+- **G / License Scanner**: Scans the dependencies for license compliance.
+  visible in diagram; no further repository context available.
+- **H / Fail Build: Dependency Resolution Error**: Indicates that the build failed due to a dependency resolution error.
+  visible in diagram; no further repository context available.
+- **I / License Compliance Checks: Pass?**: A decision point to determine if the license compliance checks passed.
+  visible in diagram; no further repository context available.
+- **J / SBOM Generation**: Generates a Software Bill of Materials (SBOM).
+  visible in diagram; no further repository context available.
+- **K / Fail Build: License Violation**: Indicates that the build failed due to a license violation.
+  visible in diagram; no further repository context available.
+- **L / Vulnerability Scan of Dependencies**: Scans the dependencies for known vulnerabilities.
+  visible in diagram; no further repository context available.
+- **M / Vulnerability Scan: Clean?**: A decision point to determine if the vulnerability scan was clean.
+  visible in diagram; no further repository context available.
+- **O / Report Vulnerabilities & Consider Risk Assessment**: Reports any identified vulnerabilities and assesses the associated risks.
+  visible in diagram; no further repository context available.
+- **N / Publish SBOM & Artifacts**: Publishes the generated SBOM and other build artifacts.
+  visible in diagram; no further repository context available.
+- **P / End: CI Pipeline Complete**: Represents the end of the CI pipeline process.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Start the CI pipeline.
+- `B -- Yes --> C`: If the trigger is a pull request, fetch the changed module list.
+- `B -- No (e.g., nightly build) --> D`: If the trigger is not a pull request (e.g., nightly build), fetch all module list.
+- `C --> E`: Build the dependency graph from the changed module list.
+- `D --> E`: Build the dependency graph from the complete module list.
+- `E --> F`: Attempt to resolve dependencies.
+- `F -- Yes --> G`: If dependency resolution is successful, proceed to license scanning.
+- `F -- No --> H`: If dependency resolution fails, fail the build with a dependency resolution error.
+- `G --> I`: Perform license compliance checks.
+- `I -- Yes --> J`: If license compliance checks pass, generate the SBOM.
+- `I -- No --> K`: If license compliance checks fail, fail the build with a license violation.
+- `J --> L`: Perform vulnerability scan of dependencies.
+- `L --> M`: Check if the vulnerability scan is clean.
+- `M -- Yes --> N`: If the vulnerability scan is clean, publish the SBOM and artifacts.
+- `M -- No --> O`: If vulnerabilities are found, report them and consider risk assessment.
+- `O --> N`: After reporting vulnerabilities, publish the SBOM and artifacts.
+- `N --> P`: End the CI pipeline.
+
+## Repository Context & Terminology
+- **CI Pipeline**: An automated process for building, testing, and deploying software.
+- **Pull Request**: A request to merge code changes from one branch into another.
+- **Module**: A self-contained unit of code within a larger project.
+- **Dependency Graph**: A representation of the dependencies between modules in a project.
+- **Dependency Resolution**: The process of identifying and resolving dependencies between software components.
+- **License Scanner**: A tool that scans software dependencies to identify their licenses.
+- **SBOM (Software Bill of Materials)**: A comprehensive list of all components used in a software product.
+- **Vulnerability Scan**: A process of identifying security vulnerabilities in software.
+- **Artifacts**: The output of a build process, such as executable files, libraries, and documentation.
+
+## High-Density QA Ground Truth Summary
+The CI pipeline starts with a trigger, initiating the automated build, test, and deployment process. The first decision point checks if the trigger is a pull request. If yes, the pipeline fetches only the changed modules; otherwise, it fetches all modules, typically for nightly builds. A dependency graph is then built, representing the relationships between modules. If dependency resolution fails, the build immediately fails, preventing further steps. Upon successful dependency resolution, a license scanner checks for compliance. Failure here also halts the build. If licenses are compliant, an SBOM is generated, followed by a vulnerability scan. Any identified vulnerabilities are reported, and a risk assessment is considered. Finally, the SBOM and other build artifacts are published, marking the completion of the CI pipeline. The SBOM generation step is crucial for maintaining software supply chain security, providing a detailed inventory of all components used in the build. The pipeline ensures that only compliant and secure software is deployed.

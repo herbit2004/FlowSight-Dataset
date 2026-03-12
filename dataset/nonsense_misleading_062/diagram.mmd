@@ -1,0 +1,16 @@
+graph TD
+    A[User Places Order] --> B{Payment Received?};
+    B -- No --> C[Order Cancelled];
+    B -- Yes --> D[Fulfillment Begins];
+    D --> E{Inventory Available?};
+    E -- No --> F[Backorder Placed];
+    F --> D;
+    E -- Yes --> G[Order Packed];
+    G --> H[Shipping Label Created];
+    H --> I[Package Shipped];
+    I --> J{Delivery Successful?};
+    J -- No --> K[Refund Processed];
+    K --> L[Order Completed];
+    J -- Yes --> M[Customer Notified];
+    M --> C;
+    C --> L;

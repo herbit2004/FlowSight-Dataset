@@ -1,0 +1,141 @@
+graph TD
+    subgraph Data Sources
+        A[Structured Data - CRM] --> B(Data Transformation Pipeline)
+        C[Unstructured Data - Documents] --> D(Document Parsing Service)
+        E[Semi-Structured Data - Logs] --> F(Log Analysis Module)
+    end
+
+    subgraph Data Processing
+        B --> G(Data Cleaning & Deduplication)
+        D --> H(Named Entity Recognition - NER)
+        F --> I(Relationship Extraction)
+        G --> J(Schema Mapping)
+        H --> K(Entity Linking)
+        I --> L(Relationship Inference)
+    end
+
+    subgraph Knowledge Graph Construction
+        J --> M(Graph Data Store - Triplestore)
+        K --> M
+        L --> M
+
+        M -->|SPARQL Query| N(Knowledge Graph API)
+        N --> O{Validation Rules}
+        O -- Yes --> P(Policy Enforcement Engine)
+        O -- No --> N
+
+        P --> Q(Audit Logging)
+        Q --> R[Compliance Reporting]
+    end
+
+    subgraph External Services
+        S[External Knowledge Base - Wikidata] --> K
+        T[User Interaction - UI] --> N
+        N --> T
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#f9f,stroke:#333,stroke-width:2px
+    style R fill:#ccf,stroke:#333,stroke-width:2px
+
+    classDef dataFill fill:#e2e2ff,stroke:#333,stroke-width:1px
+    classDef processFill fill:#ccffcc,stroke:#333,stroke-width:1px
+    classDef graphFill fill:#ffffcc,stroke:#333,stroke-width:1px
+    classDef externalFill fill:#cceeff,stroke:#333,stroke-width:1px
+
+    class A,C,E dataFill
+    class B,D,F,G,H,I,J,K,L processFill
+    class M graphFill
+    class N,O,P externalFill
+    class Q,R externalFill
+    class S,T externalFill
+
+    subgraph Metadata Management
+        U[Data Catalog] --> B
+        U --> D
+        U --> F
+        V[Ontology Repository] --> J
+        W[Vocabulary Service] --> K
+        X[Provenance Tracking] --> Q
+    end
+
+    style U fill:#ffcc99,stroke:#333,stroke-width:1px
+    style V fill:#ffcc99,stroke:#333,stroke-width:1px
+    style W fill:#ffcc99,stroke:#333,stroke-width:1px
+    style X fill:#ffcc99,stroke:#333,stroke-width:1px
+
+    subgraph System Monitoring
+        Y[Performance Monitoring] --> Z(Alerting System )
+        Y --> AA(Dashboard)
+        M---|Metrics| Y
+        N---|Usage Metrics| Y
+    end
+
+    class Y,Z,AA externalFill
+
+    subgraph Security & Access Control
+        BB(Authentication Service) --> N
+        CC(Authorization Service) --> N
+    end
+
+    class BB,CC externalFill
+
+    AA --> BB
+    Z --> T
+
+    subgraph Data Quality Assessment
+     DD[Data profiling rules] --> G
+     EE[Quality Checks] --> F
+     FF[Data Quality Reporting] --> AA
+     G --> FF
+     F --> FF
+    end
+
+    class DD,EE,FF externalFill
+
+    subgraph Version Control
+     GG[Configuration Management] --> B
+     GG --> D
+     GG --> F
+     GG --> U
+     GG --> V
+    end
+    class GG externalFill
+
+    subgraph Data Lake Integration
+        HH[Data Lake Storage] --> A
+        HH --> C
+        HH --> E
+    end
+
+    class HH externalFill
+
+    subgraph Graph Enrichment
+        II[Graph Embedding Service] --> M
+    end
+
+    class II externalFill
+
+    subgraph Model Training
+      JJ[Machine Learning Models] --> II
+      KK[Training data from Data Lake] --> JJ
+      HH --> KK
+    end
+
+    class JJ,KK externalFill
+
+    subgraph Schema Evolution Management
+      LL[Schema registry] --> J
+    end
+
+    class LL externalFill
+
+    subgraph Continuous integration
+     MM[CI/CD pipeline] --> B
+     MM --> D
+     MM --> F
+     MM --> JJ
+
+    end
+    class MM externalFill

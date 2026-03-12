@@ -1,0 +1,31 @@
+graph TD
+    subgraph Data Pipeline
+        A[Metric Ingestion API] --> B(Kafka Topic: raw_metrics);
+        B --> C{Metric Parser\n& Validator};
+        C -- Invalid Metrics --> D[Dead Letter Queue];
+        C -- Valid Metrics --> E(Kafka Topic: validated_metrics);
+        E --> F[Aggregation Engine];
+        F --> G(Time-series Database);
+    end
+
+    subgraph Alerting System
+        G --> H{Query API};
+        H --> I[Alerting Rules Engine];
+        I -- Rule Triggered --> J{Threshold Check};
+        J -- Threshold Exceeded --> K[Alert Generation];
+        J -- Threshold Not Exceeded --> L[No Action];
+        K --> M(Notification Service);
+    end
+
+    subgraph Notification Channels
+        M --> N[Email Service];
+        M --> O[Slack Integration];
+        M --> P[PagerDuty Escalation];
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style G fill:#ccf,stroke:#333,stroke-width:2px
+    style M fill:#efe,stroke:#333,stroke-width:2px
+
+    classDef kafka fill:#fff,stroke:#333,stroke-width:1px;
+    class B,E kafka;

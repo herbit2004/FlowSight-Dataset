@@ -1,0 +1,77 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the operation of a distributed cache system. It depicts the flow of a client request, the cache lookup process, interaction with the origin server, cache updates, and invalidation mechanisms. The diagram serves as a visual representation of the system's architecture and logic, aiding in understanding the data flow and component interactions.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It illustrates a hierarchical flow, starting with a client request and ending with the client receiving a value or an invalidation confirmation being sent to the origin server. The start node is "Client Request" and the end node is "Client Application".
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs:
+- **Origin Server**: Represents the origin server processing logic, including data change detection and invalidation event publishing.
+- **Invalidation Service**: Represents the service responsible for receiving invalidation events and updating the cache.
+- **Cache Node**: Represents the cache node's operations, including updating the cache, handling cache size limits, and updating access timestamps.
+
+## Node-by-Node Description
+- **Client Request**: Represents the initial request from a client application. visible in diagram; no further repository context available.
+- **Cache Hit?**: A decision point to determine if the requested data is present in the cache. visible in diagram; no further repository context available.
+- **Request Origin Server**: Represents the action of requesting data from the origin server when a cache miss occurs. visible in diagram; no further repository context available.
+- **Origin Server Processing**: Represents the processing of the request by the origin server. visible in diagram; no further repository context available.
+- **Data Changed?**: A decision point to determine if the data has changed on the origin server. visible in diagram; no further repository context available.
+- **Return Value Directly**: Represents the action of returning the data directly from the origin server when no changes have occurred. visible in diagram; no further repository context available.
+- **Publish Invalidation Event**: Represents the action of publishing an invalidation event when data changes on the origin server. visible in diagram; no further repository context available.
+- **Return Value to Cache & Client**: Represents the action of returning the data to both the cache and the client. visible in diagram; no further repository context available.
+- **Receive Invalidation Event**: Represents the action of receiving an invalidation event by the invalidation service. visible in diagram; no further repository context available.
+- **Local Cache Entry Exists?**: A decision point to determine if a local cache entry exists for the invalidated data. visible in diagram; no further repository context available.
+- **No Action**: Represents the action of taking no action when a local cache entry does not exist. visible in diagram; no further repository context available.
+- **Invalidate Local Cache Entry**: Represents the action of invalidating the local cache entry. visible in diagram; no further repository context available.
+- **Update Last Invalidation Timestamp**: Represents the action of updating the last invalidation timestamp. visible in diagram; no further repository context available.
+- **Acknowledge Invalidation Event**: Represents the action of acknowledging the invalidation event. visible in diagram; no further repository context available.
+- **Update Cache**: Represents the action of updating the cache with the new data. visible in diagram; no further repository context available.
+- **Cache Size Limit Reached?**: A decision point to determine if the cache size limit has been reached. visible in diagram; no further repository context available.
+- **Evict Least Recently Used Entry**: Represents the action of evicting the least recently used entry from the cache. visible in diagram; no further repository context available.
+- **Store Value in Cache**: Represents the action of storing the new value in the cache. visible in diagram; no further repository context available.
+- **Update Last Access Timestamp**: Represents the action of updating the last access timestamp for the cache entry. visible in diagram; no further repository context available.
+- **Return Value to Client**: Represents the action of returning the value to the client. visible in diagram; no further repository context available.
+- **Return Cached Value**: Represents the action of returning the cached value to the client. visible in diagram; no further repository context available.
+- **Client Receives Value**: Represents the client receiving the value. visible in diagram; no further repository context available.
+- **Invalidation Confirmation to Origin Server**: Represents the invalidation confirmation sent to the origin server. visible in diagram; no further repository context available.
+- **Client Application**: Represents the client application. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Client Request --> Cache Hit?`: Represents the initiation of a client request and the subsequent cache lookup.
+- `Cache Hit? -- Yes --> Return Cached Value`: Represents the scenario where the requested data is found in the cache.
+- `Cache Hit? -- No --> Request Origin Server`: Represents the scenario where the requested data is not found in the cache.
+- `Request Origin Server --> Origin Server Processing`: Represents the request being sent to the origin server for processing.
+- `Origin Server Processing --> Data Changed?`: Represents the origin server processing the request and determining if the data has changed.
+- `Data Changed? -- Yes --> Publish Invalidation Event`: Represents the scenario where the data has changed on the origin server, triggering an invalidation event.
+- `Data Changed? -- No --> Return Value Directly`: Represents the scenario where the data has not changed on the origin server.
+- `Publish Invalidation Event --> Receive Invalidation Event`: Represents the invalidation event being sent to the invalidation service.
+- `Return Value Directly --> Return Value to Cache & Client`: Represents the data being returned to the cache and the client.
+- `Return Value to Cache & Client --> Update Cache`: Represents the data being used to update the cache.
+- `Receive Invalidation Event --> Local Cache Entry Exists?`: Represents the invalidation service checking if a local cache entry exists.
+- `Local Cache Entry Exists? -- Yes --> Invalidate Local Cache Entry`: Represents the scenario where a local cache entry exists and is invalidated.
+- `Local Cache Entry Exists? -- No --> No Action`: Represents the scenario where a local cache entry does not exist.
+- `Invalidate Local Cache Entry --> Update Last Invalidation Timestamp`: Represents updating the last invalidation timestamp after invalidating the cache entry.
+- `Update Last Invalidation Timestamp --> Acknowledge Invalidation Event`: Represents acknowledging the invalidation event after updating the timestamp.
+- `No Action --> Acknowledge Invalidation Event`: Represents acknowledging the invalidation event when no action is taken.
+- `Update Cache --> Cache Size Limit Reached?`: Represents checking if the cache size limit has been reached after updating the cache.
+- `Cache Size Limit Reached? -- Yes --> Evict Least Recently Used Entry`: Represents the scenario where the cache size limit has been reached, triggering the eviction of the least recently used entry.
+- `Cache Size Limit Reached? -- No --> Store Value in Cache`: Represents the scenario where the cache size limit has not been reached.
+- `Evict Least Recently Used Entry --> Store Value in Cache`: Represents storing the new value in the cache after evicting an entry.
+- `Store Value in Cache --> Update Last Access Timestamp`: Represents updating the last access timestamp after storing the value in the cache.
+- `Update Last Access Timestamp`: No outgoing edge.
+- `Return Value to Client --> Client Receives Value`: Represents the data being returned to the client.
+- `Return Cached Value --> Client Receives Value`: Represents the cached data being returned to the client.
+- `Acknowledge Invalidation Event --> Invalidation Confirmation to Origin Server`: Represents the invalidation confirmation being sent to the origin server.
+- `Client Receives Value --> Client Application`: Represents the client application receiving the value.
+
+## Repository Context & Terminology
+- **Distributed Cache**: A system that stores copies of data at various network locations to improve access times and reduce the load on origin servers.
+- **Cache Hit**: When the requested data is found in the cache.
+- **Cache Miss**: When the requested data is not found in the cache.
+- **Origin Server**: The primary source of data.
+- **Invalidation Event**: A notification that data in the cache is no longer valid and needs to be updated.
+- **Least Recently Used (LRU)**: A cache eviction policy that removes the least recently accessed items to make space for new data.
+- **Timestamp**: A record of when an event occurred, used for tracking invalidation and access times.
+
+## High-Density QA Ground Truth Summary
+The distributed cache system begins with a "Client Request," which immediately leads to a "Cache Hit?" decision. If the data is present (Cache Hit? -- Yes), the system "Return Cached Value" directly to the "Client Receives Value," ultimately reaching the "Client Application." If the data is not in the cache (Cache Hit? -- No), the system "Request Origin Server." The "Origin Server Processing" then determines if "Data Changed?" If yes, a "Publish Invalidation Event" is triggered, sending a signal to the "Invalidation Service" to "Receive Invalidation Event." The invalidation service checks "Local Cache Entry Exists?" and either invalidates the entry and updates the timestamp, or takes no action if the entry doesn't exist, before sending an "Acknowledge Invalidation Event" back to the "Origin Server" as "Invalidation Confirmation to Origin Server." If the origin server determines that the data has not changed, it will "Return Value Directly" to the "Return Value to Cache & Client" node. The "Return Value to Cache & Client" node updates the cache, checking if the "Cache Size Limit Reached?" If so, the system "Evict Least Recently Used Entry" before storing the new value. Finally, the system "Return Value to Client" and the "Client Receives Value" before reaching the "Client Application." The cache invalidation mechanism ensures data consistency across the distributed cache nodes.

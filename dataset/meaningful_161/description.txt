@@ -1,0 +1,82 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting an order processing workflow. It illustrates the sequence of steps involved in processing an order, from the initial receipt of the order to its completion or cancellation. The diagram serves as a visual representation of the order processing logic, aiding in understanding and optimizing the process.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It consists of two subgraphs: "Order Processing Workflow" and "Reporting & Alerts". The start node is "Order Received", and the end nodes are "Order Completion", "Generate Shipment Report", "Generate Cancellation Report", and "Trigger Low Stock Alert".
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Order Processing Workflow**: This subgraph encompasses the core steps of processing an order, including inventory checks, payment processing, shipment initiation, and order fulfillment.
+- **Reporting & Alerts**: This subgraph focuses on generating reports and alerts related to order processing, such as shipment reports, cancellation reports, and low stock alerts.
+
+## Node-by-Node Description
+- **A / Order Received**: Represents the initial state where an order is received.
+  visible in diagram; no further repository context available.
+- **B / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory.
+  visible in diagram; no further repository context available.
+- **C / Allocate Inventory**: Represents the process of reserving the required quantity of items from the inventory for the order.
+  visible in diagram; no further repository context available.
+- **D / Await Payment**: Represents the state where the system waits for the customer's payment to be received.
+  visible in diagram; no further repository context available.
+- **E / Backorder Item**: Represents the process of placing an item on backorder when it is unavailable in the inventory.
+  visible in diagram; no further repository context available.
+- **F / Await Restock**: Represents the state where the system waits for the restock of the backordered item.
+  visible in diagram; no further repository context available.
+- **G / Initiate Shipment**: Represents the process of starting the shipment process after payment is received.
+  visible in diagram; no further repository context available.
+- **H / Order Cancellation**: Represents the process of canceling an order due to payment failure or other reasons.
+  visible in diagram; no further repository context available.
+- **I / Generate Shipping Label**: Represents the process of creating a shipping label for the order.
+  visible in diagram; no further repository context available.
+- **J / Package Order**: Represents the process of packing the ordered items into a package.
+  visible in diagram; no further repository context available.
+- **K / Hand Off to Courier**: Represents the process of handing over the packaged order to a courier for delivery.
+  visible in diagram; no further repository context available.
+- **L / Update Order Status: Shipped**: Represents the process of updating the order status to "Shipped" after the order has been handed off to the courier.
+  visible in diagram; no further repository context available.
+- **M / Order Completion**: Represents the final state where the order is successfully completed and delivered.
+  visible in diagram; no further repository context available.
+- **N / Release Inventory**: Represents the process of releasing the allocated inventory back into the system when an order is cancelled.
+  visible in diagram; no further repository context available.
+- **O / Update Order Status: Cancelled**: Represents the process of updating the order status to "Cancelled" after the order has been cancelled.
+  visible in diagram; no further repository context available.
+- **P / Generate Shipment Report**: Represents the process of generating a report on the shipment details.
+  visible in diagram; no further repository context available.
+- **Q / Generate Cancellation Report**: Represents the process of generating a report on the cancelled orders.
+  visible in diagram; no further repository context available.
+- **R / Trigger Low Stock Alert**: Represents the process of triggering an alert when the stock level of an item falls below a certain threshold.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Order is received, initiating the inventory check.
+- `B -- Available --> C`: Inventory is available, allocate inventory.
+- `B -- Unavailable --> E`: Inventory is unavailable, backorder item.
+- `E --> F`: Await restock of the backordered item.
+- `F --> C`: After restock, allocate inventory.
+- `C --> D`: Inventory is allocated, await payment.
+- `D -- Payment Received --> G`: Payment is received, initiate shipment.
+- `D -- Payment Failed --> H`: Payment failed, order cancellation.
+- `G --> I`: Initiate shipment leads to generating a shipping label.
+- `I --> J`: Generate shipping label leads to package order.
+- `J --> K`: Package order leads to hand off to courier.
+- `K --> L`: Hand off to courier leads to updating order status to shipped.
+- `H --> N`: Order cancellation leads to releasing inventory.
+- `L --> M`: Order status shipped leads to order completion.
+- `N --> O`: Release inventory leads to updating order status to cancelled.
+- `O --> M`: Order status cancelled leads to order completion.
+- `L --> P`: Update order status: Shipped triggers generating a shipment report.
+- `H --> Q`: Order cancellation triggers generating a cancellation report.
+- `B -- Low Stock --> R`: Inventory check reveals low stock, triggering a low stock alert.
+- Paths `L` and `O` converge at `M`.
+
+## Repository Context & Terminology
+- **Order Processing Workflow**: The sequence of steps involved in fulfilling a customer's order, from placement to delivery.
+- **Inventory Check**: Verifying the availability of products in the warehouse or stock system.
+- **Allocate Inventory**: Reserving specific units of a product for a pending order.
+- **Backorder**: An order for a product that is temporarily out of stock.
+- **Restock**: Replenishing the inventory with new units of a product.
+- **Payment Gateway**: A service that processes online payments for e-commerce transactions.
+- **Shipping Label**: A document containing information for shipping a package, including addresses and tracking numbers.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with "Order Received," which triggers an "Inventory Check." If the item is "Available," the workflow proceeds to "Allocate Inventory," then "Await Payment." If the item is "Unavailable," it goes to "Backorder Item" and "Await Restock" before returning to "Allocate Inventory." Upon "Payment Received," the workflow proceeds to "Initiate Shipment," "Generate Shipping Label," "Package Order," and "Hand Off to Courier," culminating in "Update Order Status: Shipped." A failed payment leads to "Order Cancellation" and "Release Inventory," followed by "Update Order Status: Cancelled." Both "Update Order Status: Shipped" and "Update Order Status: Cancelled" lead to "Order Completion." The "Inventory Check" step can also trigger a "Low Stock" alert. "Update Order Status: Shipped" triggers "Generate Shipment Report," while "Order Cancellation" triggers "Generate Cancellation Report." These reports, along with the "Trigger Low Stock Alert," fall under the "Reporting & Alerts" subgraph. The "Inventory Check" step is crucial for determining whether an order can be fulfilled immediately or requires a backorder, directly impacting customer satisfaction and order fulfillment time.

@@ -1,0 +1,76 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the operational flow of a Tor relay setup within a Docker container. It illustrates the initialization process, relay mode selection, operational tools, and graceful shutdown procedures. The diagram serves as a visual guide to understanding the Tor relay's lifecycle and configuration options.
+
+## Overall Layout
+The diagram flows primarily from top to bottom. It is hierarchically structured, with distinct stages represented as subgraphs. The process starts with a "docker run" command and ends with either a "Container Exits" or "Clean Stop".
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **INITIALIZATION**: Handles the initial configuration and validation of the Tor relay.
+- **RELAY MODE SELECTION**: Allows the user to choose the type of Tor relay (Bridge, Exit, or Guard/Middle).
+- **OPERATIONS**: Provides access to diagnostic tools for monitoring and managing the Tor relay.
+- **GRACEFUL SHUTDOWN**: Describes the process of shutting down the Tor relay cleanly.
+
+## Node-by-Node Description
+- **🐳 docker run**: Represents the start of the process, initiating the Docker container. visible in diagram; no further repository context available.
+- **⚙️ INITIALIZATION**: The subgraph responsible for configuring and validating the Tor relay.
+- **📄 Config File at /etc/tor/torrc?**: Checks for the existence of a Tor configuration file at the specified location. visible in diagram; no further repository context available.
+- **📁 Use Mounted Config Full Tor Control**: Indicates that a mounted configuration file is being used, giving the user full control over the Tor relay's configuration. visible in diagram; no further repository context available.
+- **🌐 ENV Variables? NICKNAME + CONTACT_INFO**: Checks for the presence of environment variables such as NICKNAME and CONTACT_INFO. visible in diagram; no further repository context available.
+- **⚙️ Auto-Generate torrc from ENV Variables**: Automatically generates a Tor configuration file based on the provided environment variables. visible in diagram; no further repository context available.
+- **🧪 Validate Config tor --verify-config**: Validates the Tor configuration file using the `tor --verify-config` command. visible in diagram; no further repository context available.
+- **❌ ERROR No Configuration Found**: Indicates that no valid configuration was found, leading to the termination of the container. visible in diagram; no further repository context available.
+- **🎯 RELAY MODE SELECTION**: The subgraph where the user selects the type of Tor relay.
+- **TOR_RELAY_MODE**: The decision node where the relay mode is chosen. visible in diagram; no further repository context available.
+- **🛡️ GUARD/MIDDLE**: Represents a Guard or Middle relay configuration. visible in diagram; no further repository context available.
+- **🚪 EXIT RELAY**: Represents an Exit relay configuration. visible in diagram; no further repository context available.
+- **🌉 BRIDGE + obfs4**: Represents a Bridge relay configuration using obfs4. visible in diagram; no further repository context available.
+- **🟢 TOR RELAY RUNNING**: Indicates that the Tor relay is running. visible in diagram; no further repository context available.
+- **🛠️ OPERATIONS**: The subgraph providing access to diagnostic tools.
+- **🔧 Diagnostic Tools via docker exec**: Provides access to diagnostic tools via the `docker exec` command. visible in diagram; no further repository context available.
+- **📊 status**: Displays the status of the Tor relay, including full health report, bootstrap progress, and reachability status. visible in diagram; no further repository context available.
+- **💚 health**: Provides a JSON health API for monitoring systems. visible in diagram; no further repository context available.
+- **🆔 fingerprint**: Shows the relay identity and Tor metrics URL. visible in diagram; no further repository context available.
+- **🌉 bridge-line**: Gets the obfs4 bridge line and allows sharing with users. visible in diagram; no further repository context available.
+- **🔑 gen-auth**: Generates control port authentication data. visible in diagram; no further repository context available.
+- **👨‍👩‍👧 gen-family**: Generates and imports happy family keys. visible in diagram; no further repository context available.
+- **🧹 GRACEFUL SHUTDOWN**: The subgraph responsible for shutting down the Tor relay cleanly.
+- **Close Circuits Cleanly Notify Directory Authorities Save State to Disk Exit Gracefully**: Describes the steps taken during a graceful shutdown. visible in diagram; no further repository context available.
+- **⛔ Container Exits**: Indicates that the container has exited due to an error. visible in diagram; no further repository context available.
+- **✅ Clean Stop**: Indicates that the Tor relay has been shut down gracefully. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Start --> Init`: The Docker container starts and proceeds to the initialization stage.
+- `Check -- Yes --> Mount`: If a configuration file exists at `/etc/tor/torrc`, the mounted configuration is used.
+- `Check -- No --> Env`: If no configuration file is found, the process checks for environment variables.
+- `Env -- Yes --> Generate`: If environment variables are set, a Tor configuration file is automatically generated.
+- `Env -- No --> Error`: If environment variables are missing, an error occurs, and the container exits.
+- `Mount --> Validate`: After using the mounted config, the configuration is validated.
+- `Generate --> Validate`: After auto-generating the config, the configuration is validated.
+- `Validate -- Yes --> ModeSelect`: If the configuration is valid, the process proceeds to relay mode selection.
+- `Validate -- No --> Error`: If the configuration is invalid, an error occurs, and the container exits.
+- `ModeSelect --> Guard`: If the Guard/Middle relay mode is selected, the process configures a Guard/Middle relay.
+- `ModeSelect --> Exit`: If the Exit relay mode is selected, the process configures an Exit relay.
+- `ModeSelect --> Bridge`: If the Bridge relay mode is selected, the process configures a Bridge relay.
+- `Guard --> Running`: After configuring the Guard/Middle relay, the Tor relay starts running.
+- `Exit --> Running`: After configuring the Exit relay, the Tor relay starts running.
+- `Bridge --> Running`: After configuring the Bridge relay, the Tor relay starts running.
+- `Running --> Ops`: Once the Tor relay is running, diagnostic operations are available.
+- `Running --> Shutdown`: When the `docker stop SIGTERM` command is issued, the Tor relay initiates a graceful shutdown.
+- `Shutdown --> End2`: After a graceful shutdown, the container stops cleanly.
+- `Error --> End`: If an error occurs, the container exits.
+
+## Repository Context & Terminology
+- **/etc/tor/torrc**: The default location for the Tor configuration file.
+- **NICKNAME**: An environment variable used to set the nickname of the Tor relay.
+- **CONTACT_INFO**: An environment variable used to set the contact information for the Tor relay.
+- **tor --verify-config**: A Tor command used to validate the configuration file.
+- **obfs4**: A pluggable transport used to obfuscate Tor traffic, making it more resistant to censorship.
+- **BridgeRelay**: A type of Tor relay that helps users bypass censorship.
+- **ExitRelay**: A type of Tor relay that allows users to exit the Tor network and access the internet.
+- **Guard/Middle Relay**: Tor relays that serve as entry points (Guards) or intermediate nodes (Middles) in the Tor network.
+- **docker exec**: A Docker command used to run commands inside a running container.
+- **SIGTERM**: A signal sent to a process to request its termination.
+
+## High-Density QA Ground Truth Summary
+The Tor relay Docker container starts with the `docker run` command, initiating the INITIALIZATION phase. The process first checks for a configuration file at `/etc/tor/torrc`. If found, the mounted configuration is used, providing full Tor control; otherwise, the process checks for environment variables like NICKNAME and CONTACT_INFO. If these are set, a `torrc` file is auto-generated; if not, the container exits with an error. After either using a mounted config or auto-generating one, the configuration is validated using `tor --verify-config`. An invalid configuration also leads to container exit. A valid configuration proceeds to RELAY MODE SELECTION, where the user chooses between Guard/Middle, Exit, or Bridge relay modes. Depending on the selection, the corresponding relay configuration is applied, and the Tor relay starts running. Diagnostic OPERATIONS are then available via `docker exec`. Finally, upon receiving a `docker stop SIGTERM` signal, the relay initiates a GRACEFUL SHUTDOWN, closing circuits, notifying directory authorities, and saving state before exiting cleanly. The `tor --verify-config` command ensures the Tor configuration is valid before the relay starts running, preventing errors and ensuring proper functionality.

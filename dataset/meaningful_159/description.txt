@@ -1,0 +1,82 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the process of a device firmware update. It illustrates the interaction between a device and a server to check for, download, and apply firmware updates. The diagram serves as a visual representation of the update process, aiding in understanding the steps involved and potential error scenarios.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TB). It is divided into two main sections: "Device" and "Server". The process starts with the "Device Firmware" node and ends with "Normal Operation" or one of the error states.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs: "Device" and "Server", representing the two main actors in the firmware update process. The "Device" subgraph contains a nested subgraph called "Update Process". The "Server" subgraph contains a nested subgraph called "Artifact Storage".
+
+## Node-by-Node Description
+- **Device Firmware**: Represents the initial state of the device's firmware. visible in diagram; no further repository context available.
+- **Update Check?**: A decision point where the device checks for available firmware updates. visible in diagram; no further repository context available.
+- **Request Update Info**: The device requests update information from the server. visible in diagram; no further repository context available.
+- **Receive Update Manifest**: The device receives the update manifest from the server. visible in diagram; no further repository context available.
+- **Manifest Valid?**: A decision point where the device validates the received update manifest. visible in diagram; no further repository context available.
+- **Download Update Image**: The device downloads the update image from the server. visible in diagram; no further repository context available.
+- **Image Downloaded OK?**: A decision point where the device checks if the image was downloaded successfully. visible in diagram; no further repository context available.
+- **Verify Image Signature**: The device verifies the signature of the downloaded image. visible in diagram; no further repository context available.
+- **Signature Valid?**: A decision point where the device checks if the image signature is valid. visible in diagram; no further repository context available.
+- **Prepare Update Area**: The device prepares the update area for the new firmware. visible in diagram; no further repository context available.
+- **Apply Update**: The device applies the new firmware update. visible in diagram; no further repository context available.
+- **Reboot Device**: The device reboots after applying the update. visible in diagram; no further repository context available.
+- **Verify New Firmware**: The device verifies the new firmware after rebooting. visible in diagram; no further repository context available.
+- **Update Complete**: The update process is completed successfully. visible in diagram; no further repository context available.
+- **Error: Update Failed, Rollback**: An error state indicating that the update failed and a rollback is initiated. visible in diagram; no further repository context available.
+- **Normal Operation**: The device returns to normal operation. visible in diagram; no further repository context available.
+- **Device Database**: A database on the server that stores device information. visible in diagram; no further repository context available.
+- **Update Server API**: The server API used for handling update requests. visible in diagram; no further repository context available.
+- **Device Registered?**: A decision point where the server checks if the device is registered. visible in diagram; no further repository context available.
+- **Generate Update Manifest**: The server generates the update manifest. visible in diagram; no further repository context available.
+- **Error: Device Not Registered**: An error state indicating that the device is not registered on the server. visible in diagram; no further repository context available.
+- **Serve Update Manifest**: The server serves the update manifest to the device. visible in diagram; no further repository context available.
+- **Signature Storage**: Storage on the server for image signatures. visible in diagram; no further repository context available.
+- **Update Image Storage**: Storage on the server for update images. visible in diagram; no further repository context available.
+- **Image Signature**: The signature of the firmware image. visible in diagram; no further repository context available.
+- **Latest Firmware Image**: The latest firmware image available for update. visible in diagram; no further repository context available.
+- **Error: Invalid Manifest**: An error state indicating that the manifest is invalid. visible in diagram; no further repository context available.
+- **Error: Download Failed**: An error state indicating that the download failed. visible in diagram; no further repository context available.
+- **Error: Invalid Signature**: An error state indicating that the signature is invalid. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Device Firmware --> Update Check?`: The device initiates an update check.
+- `Update Check? -- Yes --> Request Update Info`: If an update check is positive, the device requests update information.
+- `Update Check? -- No --> Normal Operation`: If no update is needed, the device goes to normal operation.
+- `Request Update Info --> Receive Update Manifest`: The device receives the update manifest from the server.
+- `Receive Update Manifest --> Manifest Valid?`: The device validates the received update manifest.
+- `Manifest Valid? -- Yes --> Download Update Image`: If the manifest is valid, the device downloads the update image.
+- `Manifest Valid? -- No --> Error: Invalid Manifest`: If the manifest is invalid, an error occurs.
+- `Download Update Image --> Image Downloaded OK?`: The device checks if the image was downloaded successfully.
+- `Image Downloaded OK? -- Yes --> Verify Image Signature`: If the image is downloaded successfully, the device verifies the image signature.
+- `Image Downloaded OK? -- No --> Error: Download Failed`: If the image download fails, an error occurs.
+- `Verify Image Signature --> Signature Valid?`: The device checks if the image signature is valid.
+- `Signature Valid? -- Yes --> Prepare Update Area`: If the signature is valid, the device prepares the update area.
+- `Signature Valid? -- No --> Error: Invalid Signature`: If the signature is invalid, an error occurs.
+- `Prepare Update Area --> Apply Update`: The device applies the update.
+- `Apply Update --> Reboot Device`: The device reboots after applying the update.
+- `Reboot Device --> Verify New Firmware`: The device verifies the new firmware after rebooting.
+- `Verify New Firmware -- Success --> Update Complete`: If the new firmware is verified successfully, the update is complete.
+- `Verify New Firmware -- Fail --> Error: Update Failed, Rollback`: If the new firmware verification fails, an error occurs and a rollback is initiated.
+- `Update Complete --> Normal Operation`: After a successful update, the device returns to normal operation.
+- `Error: Update Failed, Rollback --> Normal Operation`: After a failed update and rollback, the device returns to normal operation.
+- `Device Database --> Update Server API`: The server uses the device database to handle update requests.
+- `Update Server API --> Device Registered?`: The server checks if the device is registered.
+- `Device Registered? -- Yes --> Generate Update Manifest`: If the device is registered, the server generates the update manifest.
+- `Device Registered? -- No --> Error: Device Not Registered`: If the device is not registered, an error occurs.
+- `Generate Update Manifest --> Serve Update Manifest`: The server serves the update manifest to the device.
+- `Serve Update Manifest --> Receive Update Manifest`: The server sends the update manifest to the device.
+- `Update Image Storage --> Serve Update Manifest`: The server provides the latest firmware image to the device.
+- `Signature Storage --> Serve Update Manifest`: The server provides the image signature to the device.
+- `Request Update Info --> Update Server API`: The device requests update information from the server.
+
+## Repository Context & Terminology
+- **Firmware**: Software embedded in hardware devices that provides low-level control and operation.
+- **Update Manifest**: A file containing metadata about the firmware update, including version, size, and checksums.
+- **Image Signature**: A cryptographic signature used to verify the integrity and authenticity of the firmware image.
+- **Rollback**: The process of reverting to a previous firmware version in case an update fails.
+- **API (Application Programming Interface)**: A set of defined rules that enable different applications to communicate with each other.
+- **Device Registration**: The process of registering a device with a server to enable firmware updates and other services.
+- **Checksum**: A value computed from a block of data used to detect errors during transmission or storage.
+
+## High-Density QA Ground Truth Summary
+The firmware update process begins with the "Device Firmware" initiating an "Update Check?". If an update is available ("Update Check? -- Yes --> Request Update Info"), the device requests update information from the server via the "Update Server API", which consults the "Device Database" to verify if the device is registered ("Device Registered?"). If registered, the server generates an "Update Manifest" containing metadata about the new firmware. The device receives this manifest ("Receive Update Manifest") and validates it ("Manifest Valid?"). An invalid manifest leads to "Error: Invalid Manifest" and a return to "Normal Operation". If the manifest is valid, the device downloads the "Update Image" from the "Update Image Storage". A failed download results in "Error: Download Failed" and a return to "Normal Operation". A successful download is followed by "Verify Image Signature" using the "Image Signature" from "Signature Storage". An invalid signature leads to "Error: Invalid Signature" and a return to "Normal Operation". If the signature is valid, the device prepares for the update ("Prepare Update Area"), applies the update ("Apply Update"), and reboots ("Reboot Device"). After reboot, the device verifies the new firmware ("Verify New Firmware"). A successful verification leads to "Update Complete" and then "Normal Operation". A failed verification triggers "Error: Update Failed, Rollback", reverting to the previous firmware and then "Normal Operation". The "Update Manifest" ensures the device downloads the correct firmware version and verifies its integrity before installation.

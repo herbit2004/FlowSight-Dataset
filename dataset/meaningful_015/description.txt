@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a user authentication and authorization process. It outlines the steps involved in verifying a user's identity, validating their roles, checking permissions, and granting access to a resource. The diagram serves as a visual representation of the authentication and authorization logic within a system.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It is hierarchically structured into two subgraphs: "User Authentication" and "Resource Server." The process starts with "User Login" and can end with either "Display Authentication Error," "Display Unauthorized Role Error," "Display Access Denied Error," or "Serve Resource."
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **User Authentication**: This subgraph encompasses the initial steps of user login, authentication, and role retrieval.
+- **Resource Server**: This subgraph represents the final stage where access is granted and the resource is served.
+
+## Node-by-Node Description
+- **A / User Login**: Represents the initial step where the user provides their credentials. visible in diagram; no further repository context available.
+- **B / Authentication Successful?**: A decision point to determine if the user's credentials are valid. visible in diagram; no further repository context available.
+- **C / Retrieve User Roles**: Retrieves the roles associated with the authenticated user. visible in diagram; no further repository context available.
+- **X / Display Authentication Error**: Displays an error message if authentication fails. visible in diagram; no further repository context available.
+- **D / User Role Lookup**: Performs a lookup to find the user's roles. visible in diagram; no further repository context available.
+- **E / Role Validation Service**: Validates the user's roles against the requested resource. visible in diagram; no further repository context available.
+- **F / Role Valid Against Request?**: A decision point to determine if the user's role is valid for the requested resource. visible in diagram; no further repository context available.
+- **G / Permission Validation Service**: Validates the user's permissions based on their role and the requested resource. visible in diagram; no further repository context available.
+- **Z / Display Unauthorized Role Error**: Displays an error message if the user's role is not authorized for the requested resource. visible in diagram; no further repository context available.
+- **H / Permission Check**: Checks if the user has the necessary permissions to access the resource. visible in diagram; no further repository context available.
+- **I / Permission Allowed?**: A decision point to determine if the user has the required permissions. visible in diagram; no further repository context available.
+- **J / Record Audit Log**: Records an audit log entry indicating that the user was granted access. visible in diagram; no further repository context available.
+- **AA / Display Access Denied Error**: Displays an error message if the user does not have the required permissions. visible in diagram; no further repository context available.
+- **K / Grant Access**: Grants the user access to the requested resource. visible in diagram; no further repository context available.
+- **L / Serve Resource**: Serves the requested resource to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User login attempt triggers authentication.
+- `B -- Yes --> C`: If authentication is successful, retrieve user roles.
+- `B -- No --> X`: If authentication fails, display an authentication error.
+- `C --> D`: After retrieving user roles, perform a user role lookup.
+- `D --> E`: The user role lookup triggers the role validation service.
+- `E --> F`: The role validation service leads to a check of role validity against the request.
+- `F -- Yes --> G`: If the role is valid, proceed to permission validation.
+- `F -- No --> Z`: If the role is not valid, display an unauthorized role error.
+- `G --> H`: Permission validation service triggers a permission check.
+- `H --> I`: The permission check leads to a decision on whether permission is allowed.
+- `I -- Yes --> J`: If permission is allowed, record an audit log.
+- `I -- No --> AA`: If permission is not allowed, display an access denied error.
+- `J --> K`: Recording the audit log leads to granting access.
+- `K --> L`: Granting access leads to serving the resource.
+
+## Repository Context & Terminology
+- **User Authentication**: The process of verifying a user's identity.
+- **User Role Lookup**: The process of retrieving the roles associated with a user.
+- **Role Validation Service**: A service that validates whether a user's role is authorized to access a specific resource.
+- **Permission Validation Service**: A service that validates whether a user has the necessary permissions to perform a specific action on a resource.
+- **Audit Log**: A record of events that occur within a system, used for security and compliance purposes.
+- **Grant Access**: The process of allowing a user to access a resource.
+- **Serve Resource**: The process of providing a resource to a user.
+
+## High-Density QA Ground Truth Summary
+The authentication and authorization process begins with the "User Login" node, where the user submits their credentials. The system then evaluates "Authentication Successful?". If authentication fails (No branch), the process terminates by "Display Authentication Error." If authentication succeeds (Yes branch), the system proceeds to "Retrieve User Roles" and performs a "User Role Lookup," followed by the "Role Validation Service." The system then checks "Role Valid Against Request?". If the role is invalid (No branch), the system terminates by "Display Unauthorized Role Error." If the role is valid (Yes branch), the system proceeds to "Permission Validation Service" and performs a "Permission Check," followed by the decision "Permission Allowed?". If permission is denied (No branch), the system terminates by "Display Access Denied Error." If permission is granted (Yes branch), the system "Record Audit Log" and "Grant Access" within the "Resource Server" subgraph, ultimately "Serve Resource." The "Role Validation Service" and "Permission Validation Service" are crucial components, ensuring that only authorized users with the correct permissions can access protected resources, maintaining system security and data integrity.

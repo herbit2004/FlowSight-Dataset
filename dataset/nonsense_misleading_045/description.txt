@@ -1,0 +1,54 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the process of order fulfillment, from the initial submission of an order by a user to its completion or termination. The diagram outlines the steps involved in checking inventory, processing payment, shipping the order, confirming delivery, and handling order completion.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "User Submits Order" node at the top and flows downwards through a series of processes and decision points, eventually leading to the "End" node. There is no explicit hierarchy, but the flow progresses linearly with branching based on decision outcomes.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: order submission, inventory check, payment processing, shipping, delivery confirmation, order confirmation, and completion/termination.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order. visible in diagram; no further repository context available.
+- **B / Inventory Available?**: A decision point to check if the ordered items are in stock. visible in diagram; no further repository context available.
+- **C / Notify User: Out of Stock**: Represents notifying the user that the order cannot be fulfilled due to insufficient inventory. visible in diagram; no further repository context available.
+- **D / Process Payment**: Represents the action of processing the user's payment for the order. visible in diagram; no further repository context available.
+- **E / Payment Successful?**: A decision point to determine if the payment was successfully processed. visible in diagram; no further repository context available.
+- **G / Acknowledge Order**: Represents acknowledging the order. visible in diagram; no further repository context available.
+- **H / Ship Order**: Represents the action of shipping the order to the user. visible in diagram; no further repository context available.
+- **I / Delivery Confirmed?**: A decision point to check if the delivery of the order has been confirmed. visible in diagram; no further repository context available.
+- **J / Investigate Delivery**: Represents investigating the delivery if it has not been confirmed. visible in diagram; no further repository context available.
+- **K / Send Order Confirmation**: Represents sending a confirmation message to the user after successful delivery. visible in diagram; no further repository context available.
+- **L / Order Completed?**: A decision point to determine if the order process is complete. visible in diagram; no further repository context available.
+- **M / Release Hold on Funds**: Represents releasing the hold on funds after the order is supposedly completed. visible in diagram; no further repository context available.
+- **F / End**: Represents the end of the order fulfillment process. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the process.
+- `B -- No --> C`: If inventory is not available, notify the user.
+- `B -- Yes --> D`: If inventory is available, process the payment.
+- `D --> E`: Payment is processed.
+- `E -- No --> G`: If payment is not successful, acknowledge the order.
+- `E -- Yes --> H`: If payment is successful, ship the order.
+- `H --> I`: Order is shipped.
+- `I -- No --> J`: If delivery is not confirmed, investigate the delivery.
+- `J --> H`: After investigating delivery, re-ship the order.
+- `I -- Yes --> K`: If delivery is confirmed, send order confirmation.
+- `K --> L`: Order confirmation is sent.
+- `L -- Yes --> M`: If the order is completed, release hold on funds.
+- `L -- No --> D`: If the order is not completed, re-process payment.
+- `C --> F`: Notifying user of out-of-stock leads to the end.
+- `G --> F`: Acknowledging the order leads to the end.
+- `M --> F`: Releasing hold on funds leads to the end.
+
+## Repository Context & Terminology
+- **User Submits Order**: Standard meaning is a customer placing an order for goods or services. In this diagram, it's the starting point of the order fulfillment process.
+- **Inventory Available?**: Standard meaning is checking if the required quantity of items is in stock. In this diagram, it's a decision point that determines whether to proceed with the order or notify the user of unavailability.
+- **Process Payment**: Standard meaning is executing the payment transaction. In this diagram, it's a step that follows inventory check and precedes shipping.
+- **Payment Successful?**: Standard meaning is verifying if the payment was successfully processed. In this diagram, it's a decision point that determines whether to ship the order or acknowledge it.
+- **Ship Order**: Standard meaning is dispatching the order for delivery. In this diagram, it's a step that follows successful payment.
+- **Delivery Confirmed?**: Standard meaning is verifying if the order has been delivered to the customer. In this diagram, it's a decision point that determines whether to send order confirmation or investigate delivery.
+- **Order Completed?**: Standard meaning is determining if all steps of the order process are finished. In this diagram, it's a decision point that determines whether to release hold on funds or re-process payment.
+- **Release Hold on Funds**: Standard meaning is releasing the funds held for the order. In this diagram, it's the final step before the end.
+
+## High-Density QA Ground Truth Summary
+The process begins when the "User Submits Order," which leads to checking "Inventory Available?". If the inventory check fails (No), the "User" is "Notify User: Out of Stock," and the process "End"s. If inventory is available (Yes), the system proceeds to "Process Payment." The "Payment Successful?" decision node then determines the next step. If payment fails (No), the system "Acknowledge Order" and "End"s, which is an error in the diagram. If payment is successful (Yes), the system proceeds to "Ship Order." After shipping, the system checks "Delivery Confirmed?". If delivery is not confirmed (No), the system "Investigate Delivery" and then re-ships the order, looping back to "Ship Order." If delivery is confirmed (Yes), the system "Send Order Confirmation," and then checks "Order Completed?". If the order is not completed (No), the system loops back to "Process Payment," which is an error in the diagram. If the order is completed (Yes), the system "Release Hold on Funds" and then "End"s. The "Process Payment" node is reached after inventory check and also incorrectly after the "Order Completed?" check fails. The process terminates at the "End" node, reached after notifying the user of out-of-stock, acknowledging the order, or releasing hold on funds.

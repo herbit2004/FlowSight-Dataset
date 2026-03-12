@@ -1,0 +1,43 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the authentication flow for a client application. It illustrates the interaction between different services and databases involved in user authentication, including JWT token generation and OAuth integration with Google and GitHub. The diagram serves as a high-level overview of the authentication process.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It shows a hierarchical flow starting from the Client App, proceeding through authentication services, and ending with data stores and OAuth providers. The start node is the Client App, and the end nodes are User Database, Redis Cache, Google OAuth, and GitHub OAuth.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: Client Request, Authentication Processing, Token Management, and OAuth Integration.
+
+## Node-by-Node Description
+- **Client App**: Represents the client application initiating the authentication request. visible in diagram; no further repository context available.
+- **Auth API**: Represents the authentication API endpoint that receives the login request from the client application. visible in diagram; no further repository context available.
+- **Auth Service**: Represents the core authentication service responsible for verifying user credentials and managing authentication processes. visible in diagram; no further repository context available.
+- **User Database**: Represents the database storing user credentials and related information. visible in diagram; no further repository context available.
+- **JWT Token Service**: Represents the service responsible for generating and managing JWT (JSON Web Token) tokens. visible in diagram; no further repository context available.
+- **Redis Cache**: Represents the Redis cache used for storing and retrieving JWT tokens. visible in diagram; no further repository context available.
+- **OAuth Service**: Represents the service responsible for handling OAuth authentication flows. visible in diagram; no further repository context available.
+- **Google OAuth**: Represents the Google OAuth provider for user authentication. visible in diagram; no further repository context available.
+- **GitHub OAuth**: Represents the GitHub OAuth provider for user authentication. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Client App --> Auth API`: The client application sends a POST request to the `/auth/login` endpoint of the Auth API.
+- `Auth API --> Auth Service`: The Auth API forwards the authentication request to the Auth Service.
+- `Auth Service --> User Database`: The Auth Service interacts with the User Database to verify user credentials.
+- `Auth Service --> JWT Token Service`: The Auth Service requests the JWT Token Service to generate a JWT token upon successful authentication.
+- `Auth Service --> OAuth Service`: The Auth Service delegates authentication to the OAuth Service for OAuth-based logins.
+- `JWT Token Service --> Redis Cache`: The JWT Token Service stores the generated JWT token in the Redis Cache.
+- `OAuth Service --> Google OAuth`: The OAuth Service initiates the OAuth flow with Google.
+- `OAuth Service --> GitHub OAuth`: The OAuth Service initiates the OAuth flow with GitHub.
+
+## Repository Context & Terminology
+- **Client App**: The application that initiates the authentication process.
+- **Auth API**: The API endpoint responsible for handling authentication requests.
+- **Auth Service**: The core service responsible for authenticating users.
+- **User Database**: A database containing user credentials.
+- **JWT Token Service**: A service for generating and managing JWT tokens. JWT (JSON Web Token) is an open standard (RFC 7519) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object.
+- **Redis Cache**: An in-memory data store used for caching JWT tokens.
+- **OAuth Service**: A service for handling OAuth authentication flows. OAuth (Open Authorization) is an open standard for access delegation, commonly used as a way for Internet users to grant websites or applications access to their information on other websites but without giving them the passwords.
+- **Google OAuth**: Google's implementation of the OAuth protocol.
+- **GitHub OAuth**: GitHub's implementation of the OAuth protocol.
+
+## High-Density QA Ground Truth Summary
+The authentication process begins with the Client App sending a POST request to the `/auth/login` endpoint of the Auth API. The Auth API then forwards this request to the Auth Service. The Auth Service has two primary paths: either authenticating against the User Database directly, or delegating to the OAuth Service. If authenticating directly, the Auth Service verifies the user's credentials against the User Database. Upon successful verification, the Auth Service requests a JWT Token Service to generate a JWT token. The JWT Token Service then stores this token in the Redis Cache for later retrieval. Alternatively, if the user chooses to authenticate via OAuth, the Auth Service delegates the authentication process to the OAuth Service. The OAuth Service then initiates an OAuth flow with either Google OAuth or GitHub OAuth, depending on the user's choice. Both Google OAuth and GitHub OAuth represent external identity providers. The end nodes are the User Database (for direct authentication), Redis Cache (for JWT token storage), Google OAuth, and GitHub OAuth (for delegated authentication). The JWT Token Service utilizes the open standard RFC 7519 to securely transmit user information.

@@ -1,0 +1,42 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow and processing pipeline for a radio frequency (RF) signal processing system. It depicts the capture, processing, and visualization of RF data, likely for real-time analysis or monitoring. The diagram serves as a high-level overview of the system architecture and data transformation steps.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It consists of a "Capture" subgraph on the left, followed by a linear sequence of processing nodes leading to a visualization node on the right. The diagram starts with three data capture sources and ends with an Open3D live viewer.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Capture**: This subgraph encapsulates the initial data acquisition stage, including ESP32 UDP JSON data, Nexmon + tcpdump data, and Monitor Radiotap data.
+
+## Node-by-Node Description
+- **ESP32 UDP JSON**: Represents data received from an ESP32 device in UDP JSON format. visible in diagram; no further repository context available.
+- **Nexmon + tcpdump**: Represents data captured using Nexmon and tcpdump, likely for packet capture and analysis. visible in diagram; no further repository context available.
+- **Monitor Radiotap**: Represents data captured using Radiotap monitoring, likely for wireless network analysis. visible in diagram; no further repository context available.
+- **esp32_udp.py**: A Python script that processes ESP32 UDP data. visible in diagram; no further repository context available.
+- **nexmon_pcap.py**: A Python script that processes Nexmon pcap data. visible in diagram; no further repository context available.
+- **monitor_radiotap.py**: A Python script that processes Radiotap data. visible in diagram; no further repository context available.
+- **realtime_detector.py**: A Python script that performs real-time detection or analysis on the processed data. visible in diagram; no further repository context available.
+- **fusion rf/rssi**: Represents the fusion of RF and RSSI (Received Signal Strength Indicator) data. visible in diagram; no further repository context available.
+- **Open3D live viewer**: Represents a live visualization of the processed data using Open3D. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `ESP32 UDP JSON --> esp32_udp.py`: Data flow of csi_batch from ESP32 UDP JSON to the esp32_udp.py script.
+- `Nexmon + tcpdump --> nexmon_pcap.py`: Data flow of pcap data from Nexmon + tcpdump to the nexmon_pcap.py script.
+- `Monitor Radiotap --> monitor_radiotap.py`: Data flow of RSSI stream data from Monitor Radiotap to the monitor_radiotap.py script.
+- `esp32_udp.py & nexmon_pcap.py & monitor_radiotap.py --> realtime_detector.py`: Convergence of data from the three processing scripts into the realtime_detector.py script.
+- `realtime_detector.py --> fusion rf/rssi`: Data flow from the real-time detector to the RF/RSSI fusion module.
+- `fusion rf/rssi --> Open3D live viewer`: Data flow from the RF/RSSI fusion module to the Open3D live viewer.
+
+## Repository Context & Terminology
+- **ESP32**: A low-cost, low-power system on a chip (SoC) series with Wi-Fi and Bluetooth capabilities.
+- **UDP**: User Datagram Protocol, a connectionless protocol used for transmitting data over IP networks.
+- **JSON**: JavaScript Object Notation, a lightweight data-interchange format.
+- **Nexmon**: A framework for reverse-engineering and modifying Broadcom Wi-Fi chips.
+- **tcpdump**: A command-line packet analyzer.
+- **pcap**: Packet capture file format.
+- **Radiotap**: A header format for 802.11 frame injection and monitoring.
+- **RSSI**: Received Signal Strength Indicator, a measure of the power of a received radio signal.
+- **Open3D**: An open-source library for 3D data processing.
+
+## High-Density QA Ground Truth Summary
+The system begins with three distinct data capture methods: ESP32 UDP JSON, Nexmon + tcpdump, and Monitor Radiotap. The ESP32 UDP JSON data, carrying csi_batch information, is processed by the `esp32_udp.py` script. Simultaneously, Nexmon + tcpdump captures pcap data, which is then processed by the `nexmon_pcap.py` script. The Monitor Radiotap captures RSSI stream data, processed by `monitor_radiotap.py`. These three processed data streams converge at the `realtime_detector.py` script, which performs real-time analysis. The output of the real-time detector is then fed into a "fusion rf/rssi" module, which combines RF and RSSI data. Finally, the fused data is visualized using an "Open3D live viewer," providing a real-time 3D representation of the processed RF signals. The use of ESP32 devices for data capture suggests a focus on low-cost, embedded sensing applications, while the use of Nexmon and Radiotap indicates capabilities for wireless network monitoring and analysis.

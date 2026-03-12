@@ -1,0 +1,37 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the interaction between a user and an agent team consisting of several specialized bots. The diagram illustrates the flow of a user request, how it is processed by different bots within the agent team, and how the final answer is delivered back to the user. This diagram serves as a high-level architecture overview of a system that leverages multiple AI models to fulfill user requests.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The "User" node is at the top, initiating the flow. The "Agent Team" is represented as a subgraph in the middle, containing the different bots. The "User" node also serves as the end node, receiving the final answer.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Agent Team**: This subgraph encapsulates the different bots that work together to process the user's request. It includes the Support Bot, Research Bot, Content Writer, and Billing Bot.
+
+## Node-by-Node Description
+- **User**: Represents the user initiating the request and receiving the final answer. visible in diagram; no further repository context available.
+- **Support Bot (Claude Haiku)**: The central bot within the agent team, responsible for coordinating the other bots and providing the final answer to the user. visible in diagram; no further repository context available.
+- **Research Bot (GPT-4)**: A specialized bot responsible for researching competitor pricing. visible in diagram; no further repository context available.
+- **Content Writer (Claude Sonnet)**: A specialized bot responsible for writing content. visible in diagram; no further repository context available.
+- **Billing Bot (Gemini)**: A specialized bot responsible for billing. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User --> Support Bot`: The user initiates the process by sending a request to research competitor pricing to the Support Bot.
+- `Support Bot --> Research Bot`: The Support Bot synchronously requests the Research Bot to perform research, waiting for an answer.
+- `Research Bot --> Support Bot`: The Research Bot returns the result of its research to the Support Bot.
+- `Support Bot --> Content Writer`: The Support Bot asynchronously requests the Content Writer to write content, without waiting for a response.
+- `Content Writer -.-> Support Bot`: The Content Writer announces when it is done to the Support Bot.
+- `Support Bot -.-x Billing Bot`: There is no link between the Support Bot and the Billing Bot.
+- `Support Bot --> User`: The Support Bot provides the final answer to the user.
+
+## Repository Context & Terminology
+- **Agent Team**: A group of specialized bots working together to fulfill user requests.
+- **Support Bot**: The main bot responsible for coordinating the other bots.
+- **Research Bot**: A bot specialized in research tasks, using the GPT-4 model.
+- **Content Writer**: A bot specialized in content creation, using the Claude Sonnet model.
+- **Billing Bot**: A bot specialized in billing tasks, using the Gemini model.
+- **sync: wait for answer**: Indicates a synchronous call where the Support Bot waits for the Research Bot to complete its task.
+- **async: don't wait**: Indicates an asynchronous call where the Support Bot does not wait for the Content Writer to complete its task.
+
+## High-Density QA Ground Truth Summary
+The process starts with the User sending a "Research competitor pricing" request to the Support Bot (Claude Haiku). The Support Bot then synchronously calls the Research Bot (GPT-4) with a "sync: wait for answer" request, indicating that it will wait for the result. The Research Bot performs the research and returns the "result" to the Support Bot. Simultaneously, the Support Bot asynchronously calls the Content Writer (Claude Sonnet) with an "async: don't wait" request, meaning it doesn't wait for a response. The Content Writer, upon completion, sends an "announce when done" signal back to the Support Bot. There is "no link" between the Support Bot and the Billing Bot (Gemini). Finally, the Support Bot compiles the "final answer" and sends it back to the User. The Agent Team subgraph encapsulates the interactions between these specialized bots, showcasing a coordinated effort to fulfill the initial user request. The synchronous call to the Research Bot ensures that the Support Bot has the necessary research data before proceeding, while the asynchronous call to the Content Writer allows for parallel processing and potentially faster response times. The use of specific models like GPT-4, Claude Sonnet, and Gemini suggests a modular architecture where each bot leverages the strengths of a particular AI model.

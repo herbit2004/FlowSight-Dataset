@@ -1,0 +1,20 @@
+graph TD
+    A[User Submits Support Ticket] --> B{Ticket Created?};
+    B -- No --> A;
+    B -- Yes --> C[Assign Ticket to Agent];
+    C --> D{Agent Available?};
+    D -- No --> E[Escalate to Manager];
+    E --> F[Manager Reviews Ticket];
+    F --> C;
+    D -- Yes --> G[Agent Reviews Ticket];
+    G --> H{Can Resolve Issue?};
+    H -- No --> I[Request More Information From User];
+    I --> G;
+    H -- Yes --> J[Notify User of Resolution];
+    J --> K{User Confirms Resolution?};
+    K -- No --> I;
+    K -- Yes --> L[Close Ticket];
+    L --> M[Generate Report];
+    M --> B;
+    I --> N[Update Ticket Status];
+    N --> H;

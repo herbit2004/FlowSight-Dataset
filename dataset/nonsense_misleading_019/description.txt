@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow for an e-commerce system. It depicts the sequence of steps involved from when a user initiates an order to when the order is either fulfilled or cancelled. The diagram serves as a visual representation of the order management process.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The flow starts with "User Initiates Order" at the top and progresses through various stages to either order fulfillment or cancellation at the bottom. There is a loop back to the beginning from the "Customer Complaint?" node and from the "Attempt Another Payment" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages:
+1. Order Initiation and Payment: User initiates order, payment processing.
+2. Shipment: Order is dispatched.
+3. Delivery: Delivery status check.
+4. Post-Delivery: Order confirmation and archiving, or refund and inventory update.
+5. Customer Feedback: Handling customer complaints.
+6. Cancellation and Retry: Order cancellation and payment retry.
+
+## Node-by-Node Description
+- **A / User Initiates Order**: Represents the start of the order process when a user places an order. visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision node that checks if the payment for the order was successful. visible in diagram; no further repository context available.
+- **C / Shipment Dispatched**: Represents the action of dispatching the shipment after successful payment. visible in diagram; no further repository context available.
+- **D / Delivery Successful?**: A decision node that checks if the delivery of the shipment was successful. visible in diagram; no further repository context available.
+- **E / Send Order Confirmation**: Represents the action of sending an order confirmation to the user after successful delivery. visible in diagram; no further repository context available.
+- **F / Order Archived**: Represents the action of archiving the order details after confirmation. visible in diagram; no further repository context available.
+- **G / Customer Complaint?**: A decision node that checks if there is a customer complaint after the order is archived. visible in diagram; no further repository context available.
+- **H / Order Cancelled**: Represents the state where the order is cancelled due to payment failure or other issues. visible in diagram; no further repository context available.
+- **I / Issue Refund**: Represents the action of issuing a refund to the user after unsuccessful delivery. visible in diagram; no further repository context available.
+- **J / Update Inventory**: Represents the action of updating the inventory after a refund is issued. visible in diagram; no further repository context available.
+- **K / Notify User of Cancellation**: Represents the action of notifying the user about the order cancellation. visible in diagram; no further repository context available.
+- **L / Attempt Another Payment**: Represents the action of attempting another payment after a cancellation notification. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User initiates an order, triggering payment processing.
+- `B -- Yes --> C`: If payment is successful, the shipment is dispatched.
+- `B -- No --> H`: If payment is not successful, the order is cancelled.
+- `C --> D`: Shipment is dispatched, leading to a delivery status check.
+- `D -- Yes --> E`: If delivery is successful, send order confirmation.
+- `D -- No --> I`: If delivery is not successful, issue a refund.
+- `E --> F`: After sending order confirmation, the order is archived.
+- `F --> G`: After archiving the order, check for customer complaints.
+- `G -- Yes --> C`: If there is a customer complaint, re-dispatch the shipment.
+- `G -- No --> A`: If there is no customer complaint, the process loops back to the start (User Initiates Order).
+- `I --> J`: After issuing a refund, update the inventory.
+- `J --> H`: After updating inventory, the order is cancelled.
+- `H --> K`: After the order is cancelled, notify the user of cancellation.
+- `K --> L`: After notifying the user, attempt another payment.
+- `L --> B`: After attempting another payment, the process loops back to payment processing.
+
+## Repository Context & Terminology
+- **User Initiates Order**: Standard meaning is a customer placing an order. In this diagram, it's the starting point of the workflow.
+- **Payment Successful?**: Standard meaning is checking if the payment went through. In this diagram, it's a decision point determining whether to dispatch the shipment or cancel the order.
+- **Shipment Dispatched**: Standard meaning is sending out the order for delivery. In this diagram, it happens *before* order confirmation, which is an error.
+- **Delivery Successful?**: Standard meaning is checking if the order was delivered. In this diagram, it determines whether to send an order confirmation or issue a refund.
+- **Send Order Confirmation**: Standard meaning is notifying the customer that the order was delivered. In this diagram, it happens *after* successful delivery.
+- **Order Archived**: Standard meaning is storing the order details for future reference. In this diagram, it precedes the customer complaint check, implying archiving *causes* complaints.
+- **Customer Complaint?**: Standard meaning is checking if the customer has any complaints. In this diagram, a "Yes" leads back to shipment dispatch, which is illogical.
+- **Order Cancelled**: Standard meaning is terminating the order process. In this diagram, it's triggered by payment failure or after inventory update following a refund.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with the "User Initiates Order," which leads to the "Payment Successful?" decision node. If payment fails ("No" branch), the "Order Cancelled" node is reached, the user is notified of the cancellation, and another payment is attempted, looping back to the payment check. If payment is successful ("Yes" branch), the "Shipment Dispatched" node is activated. The next decision point is "Delivery Successful?". If delivery fails ("No" branch), a refund is issued, inventory is updated, and the order is cancelled. If delivery is successful ("Yes" branch), an order confirmation is sent, and the order is archived. After archiving, the system checks for "Customer Complaint?". A "Yes" response illogically restarts the shipment process. A "No" response loops back to the "User Initiates Order" node. The "Update Inventory" node is reached after a refund is issued, which is followed by order cancellation. The final nodes are "Notify User of Cancellation" and "Attempt Another Payment," which loops back to the payment check. The diagram contains several errors, including dispatching the shipment before order confirmation, triggering shipment again on customer complaint, and updating inventory after a refund.

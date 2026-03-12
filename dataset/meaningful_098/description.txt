@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow in a system. It depicts the flow of an order from its creation through validation, routing, processing, fulfillment, and finally, the updating of the order status in a database. The diagram serves as a high-level overview of the order processing architecture.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into two main subgraphs: "Producer" and "Consumer Group: Order". The flow starts with the "Order Service: POST /orders" node and ends with the "Database: order_status" node.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Producer**: This subgraph represents the initial stage of order processing, including order creation, validation, and routing to a Kafka topic.
+- **Consumer Group: Order**: This subgraph represents the subsequent stages of order processing, including order routing, priority/standard processing, fulfillment, and database update.
+
+## Node-by-Node Description
+- **A / Order Service: POST /orders**: Represents the entry point for creating a new order via a POST request to the `/orders` endpoint. visible in diagram; no further repository context available.
+- **B / Order Validation**: Represents the process of validating the order data. visible in diagram; no further repository context available.
+- **C / Kafka Topic: new-orders**: Represents a Kafka topic named "new-orders" where valid orders are published. visible in diagram; no further repository context available.
+- **D / Error Handling: Dead Letter Queue**: Represents a dead letter queue for handling invalid orders. visible in diagram; no further repository context available.
+- **E / Order Router**: Represents the component responsible for routing orders based on their type (Premium or Standard). visible in diagram; no further repository context available.
+- **F / Priority Processor**: Represents the processor for handling premium orders. visible in diagram; no further repository context available.
+- **G / Standard Processor**: Represents the processor for handling standard orders. visible in diagram; no further repository context available.
+- **H / Order Fulfillment**: Represents the process of fulfilling the order. visible in diagram; no further repository context available.
+- **I / Database: order_status**: Represents the database where the order status is updated. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Represents the flow of an order from the Order Service to the Order Validation component.
+- `B -- Valid Order --> C`: Represents the flow of a valid order to the "new-orders" Kafka topic.
+- `B -- Invalid Order --> D`: Represents the flow of an invalid order to the Dead Letter Queue.
+- `C --> E`: Represents the flow of orders from the Kafka topic to the Order Router.
+- `E -- Premium Order --> F`: Represents the routing of premium orders to the Priority Processor.
+- `E -- Standard Order --> G`: Represents the routing of standard orders to the Standard Processor.
+- `F --> H`: Represents the flow of premium orders from the Priority Processor to the Order Fulfillment component.
+- `G --> H`: Represents the flow of standard orders from the Standard Processor to the Order Fulfillment component.
+- `F` and `G` converge at `H`.
+- `H --> I`: Represents the flow of fulfilled orders to the database for updating the order status.
+
+## Repository Context & Terminology
+- **Order Service**: A service responsible for handling order-related operations, such as creating, updating, and retrieving orders.
+- **POST /orders**: An HTTP POST request to the `/orders` endpoint, typically used for creating a new order.
+- **Order Validation**: The process of verifying that the order data is correct and complete.
+- **Kafka Topic**: A category or feed name to which records are published in Kafka.
+- **Dead Letter Queue**: A queue used for storing messages that could not be processed.
+- **Consumer Group**: A group of consumers that collectively consume messages from one or more Kafka topics.
+- **Order Router**: A component that routes orders to different processors based on their type or priority.
+- **Order Fulfillment**: The process of completing an order, including picking, packing, and shipping the items.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with an "Order Service" receiving a POST request to the `/orders` endpoint, initiating the creation of a new order. The order then proceeds to "Order Validation," where its data is checked for correctness and completeness. If the order is deemed "Valid Order," it is published to the "Kafka Topic: new-orders." Conversely, if the order is "Invalid Order," it is sent to the "Error Handling: Dead Letter Queue" for further investigation and potential reprocessing. From the Kafka topic, orders are consumed by a "Consumer Group: Order" and routed by the "Order Router" based on their type, either "Premium Order" or "Standard Order." Premium orders are directed to the "Priority Processor," while standard orders are sent to the "Standard Processor." Both processors then feed into the "Order Fulfillment" stage, where the actual processing and shipping of the order occur. Finally, the "Order Fulfillment" process updates the "Database: order_status" to reflect the completed order. The use of a Kafka topic enables asynchronous processing and decoupling of the order service from downstream components.

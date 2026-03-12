@@ -1,0 +1,20 @@
+graph TD
+    subgraph Invoice Request and Issuance
+    A[Incoming Invoice Request] --> B{Validate Request};
+    B -- Valid --> C[Create Draft Invoice];
+    B -- Invalid --> I[Reject Request];
+    C --> D{Approval Required?};
+    D -- Yes --> E[Initiate Approval Workflow];
+    D -- No --> H[Finalize Invoice];
+    E --> F[Approval Task Assigned];
+    F --> G{Approved?};
+    G -- Yes --> H;
+    G -- No --> I;
+    H --> J[Generate Invoice Document];
+    J --> K[Send Invoice to Customer];
+    K --> L[Invoice Delivered];
+    I --> M[Notify Requestor: Request Rejected];
+    end
+
+    classDef rejected fill:#f9f,stroke:#333,stroke-width:2px
+    class I,M rejected

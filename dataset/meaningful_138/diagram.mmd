@@ -1,0 +1,13 @@
+graph TD
+    subgraph TenantA
+        A[Request from TenantA] --> B{Tenant Isolation Check};
+        B -- Valid Tenant ID? --> C[Route to TenantA's Data Plane];
+        C --> D(TenantA's Database);
+    end
+    subgraph TenantB
+        E[Request from TenantB] --> F{Tenant Isolation Check};
+        F -- Valid Tenant ID? --> G[Route to TenantB's Data Plane];
+        G --> H(TenantB's Database);
+    end
+    B -- Invalid Tenant ID --> I[Reject Request];
+    F -- Invalid Tenant ID --> I;

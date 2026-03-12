@@ -1,0 +1,44 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a multi-tenant data isolation architecture. It depicts the flow of requests from different tenants (TenantA and TenantB) and the process of tenant isolation checks to ensure data security and prevent unauthorized access. The diagram highlights how requests are routed to the appropriate data plane and database based on tenant identification.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TD). It consists of two parallel subgraphs, one for each tenant (TenantA and TenantB), and a central "Reject Request" node where invalid requests converge. The start nodes are "Request from TenantA" and "Request from TenantB," and the end nodes are "TenantA's Database," "TenantB's Database," and "Reject Request."
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **TenantA**: Represents the request flow and data access for TenantA.
+- **TenantB**: Represents the request flow and data access for TenantB.
+
+## Node-by-Node Description
+- **A / Request from TenantA**: Represents an incoming request originating from TenantA. visible in diagram; no further repository context available.
+- **B / Tenant Isolation Check**: Represents the process of verifying the tenant's identity and ensuring proper isolation. visible in diagram; no further repository context available.
+- **C / Route to TenantA's Data Plane**: Represents the routing of the request to TenantA's dedicated data plane. visible in diagram; no further repository context available.
+- **D / TenantA's Database**: Represents the database associated with TenantA. visible in diagram; no further repository context available.
+- **E / Request from TenantB**: Represents an incoming request originating from TenantB. visible in diagram; no further repository context available.
+- **F / Tenant Isolation Check**: Represents the process of verifying the tenant's identity and ensuring proper isolation. visible in diagram; no further repository context available.
+- **G / Route to TenantB's Data Plane**: Represents the routing of the request to TenantB's dedicated data plane. visible in diagram; no further repository context available.
+- **H / TenantB's Database**: Represents the database associated with TenantB. visible in diagram; no further repository context available.
+- **I / Reject Request**: Represents the rejection of a request due to an invalid tenant ID. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: A request from TenantA is sent for tenant isolation check.
+- `B -- Valid Tenant ID? --> C`: If the tenant ID is valid, the request is routed to TenantA's data plane.
+- `B -- Invalid Tenant ID --> I`: If the tenant ID is invalid, the request is rejected.
+- `C --> D`: The request is processed by TenantA's data plane and accesses TenantA's database.
+- `E --> F`: A request from TenantB is sent for tenant isolation check.
+- `F -- Valid Tenant ID? --> G`: If the tenant ID is valid, the request is routed to TenantB's data plane.
+- `F -- Invalid Tenant ID --> I`: If the tenant ID is invalid, the request is rejected.
+- `G --> H`: The request is processed by TenantB's data plane and accesses TenantB's database.
+- `B -- Invalid Tenant ID --> I`: Requests with invalid Tenant ID from TenantA are rejected.
+- `F -- Invalid Tenant ID --> I`: Requests with invalid Tenant ID from TenantB are rejected.
+
+## Repository Context & Terminology
+- **Tenant**: A customer or group of users sharing the same application instance but with isolated data.
+- **Tenant Isolation**: The practice of separating data and resources belonging to different tenants to prevent unauthorized access and ensure data security.
+- **Data Plane**: The set of components responsible for processing and routing data requests.
+- **Database**: A structured collection of data organized for efficient storage and retrieval.
+- **Request**: A communication from a client to a server to access resources or perform actions.
+- **Tenant ID**: A unique identifier associated with each tenant, used to distinguish their data and resources.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with requests originating from TenantA and TenantB. Each request undergoes a "Tenant Isolation Check" to validate the tenant ID. If the tenant ID is valid, the request is routed to the corresponding data plane, either "Route to TenantA's Data Plane" or "Route to TenantB's Data Plane," and subsequently accesses the respective database ("TenantA's Database" or "TenantB's Database"). However, if the "Tenant Isolation Check" determines that the tenant ID is invalid, the request is directed to the "Reject Request" node, effectively denying access. This tenant isolation mechanism is crucial in multi-tenant architectures to ensure that each tenant's data remains separate and secure, preventing unauthorized access or data leakage. The "Tenant ID" acts as the primary key for enforcing this isolation, and the "Data Plane" represents the infrastructure responsible for processing requests within the context of a specific tenant. The diagram highlights the parallel processing of requests from different tenants while maintaining strict isolation boundaries.

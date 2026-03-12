@@ -1,0 +1,43 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of an e-commerce purchase initiation and processing system. It depicts the sequence of operations performed by different services, including user profile, inventory, payment, order, delivery, and compensation, to complete a purchase. The diagram serves as a visual representation of the system's logic and helps in understanding the interactions between various components.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the `UserProfileService` initiating the purchase and flows through various service interactions, ending with either order confirmation or compensation flow initiation.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Purchase Initiation, Stock Verification, Payment Authorization, Order Creation, Delivery Scheduling, and Completion/Compensation.
+
+## Node-by-Node Description
+- **A / UserProfileService: Initiate Purchase**: Represents the start of the purchase process, triggered by the user profile service. visible in diagram; no further repository context available.
+- **B / InventoryService: Verify Stock**: Represents the inventory service checking the availability of the requested stock. visible in diagram; no further repository context available.
+- **C / UserMessageService: Notify User**: Represents the user message service notifying the user about insufficient stock. visible in diagram; no further repository context available.
+- **D / PaymentService: Authorize Payment**: Represents the payment service attempting to authorize the payment. visible in diagram; no further repository context available.
+- **E / InventoryService: Reserve Stock**: Represents the inventory service reserving the stock after successful payment authorization. visible in diagram; no further repository context available.
+- **F / UserMessageService: Notify User**: Represents the user message service notifying the user about payment decline. visible in diagram; no further repository context available.
+- **G / OrderService: Create Pending Order**: Represents the order service creating a pending order after stock reservation. visible in diagram; no further repository context available.
+- **H / DeliveryService: Schedule Delivery**: Represents the delivery service scheduling the delivery of the order. visible in diagram; no further repository context available.
+- **I / OrderService: Confirm Order**: Represents the order service confirming the order after successful delivery scheduling. visible in diagram; no further repository context available.
+- **J / CompensationService: Begin Compensation Flow**: Represents the compensation service initiating the compensation flow if delivery scheduling fails. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The `UserProfileService` initiates the purchase, triggering the `InventoryService` to verify stock.
+- `B -- Insufficient Stock --> C`: If the `InventoryService` finds insufficient stock, the `UserMessageService` is notified to inform the user.
+- `B -- Sufficient Stock --> D`: If the `InventoryService` finds sufficient stock, the `PaymentService` is invoked to authorize payment.
+- `D -- Payment Authorized --> E`: If the payment is authorized, the `InventoryService` reserves the stock.
+- `D -- Payment Declined --> F`: If the payment is declined, the `UserMessageService` is notified to inform the user.
+- `E --> G`: After stock reservation, the `OrderService` creates a pending order.
+- `G --> H`: The `OrderService` triggers the `DeliveryService` to schedule delivery.
+- `H -- Delivery Scheduled --> I`: If the delivery is successfully scheduled, the `OrderService` confirms the order.
+- `H -- Delivery Failed --> J`: If the delivery scheduling fails, the `CompensationService` begins the compensation flow.
+
+## Repository Context & Terminology
+- **UserProfileService**: A service responsible for managing user profiles and initiating the purchase process.
+- **InventoryService**: A service responsible for managing inventory and verifying stock availability.
+- **PaymentService**: A service responsible for processing payments and authorizing transactions.
+- **OrderService**: A service responsible for creating and managing orders.
+- **DeliveryService**: A service responsible for scheduling and managing deliveries.
+- **CompensationService**: A service responsible for handling compensation in case of failures.
+- **Compensation Flow**: A process initiated when a transaction fails, involving refunds, credits, or other forms of compensation to the user.
+
+## High-Density QA Ground Truth Summary
+The purchase process begins with the `UserProfileService` initiating a purchase, which immediately triggers the `InventoryService` to verify stock levels. A key decision point arises here: if there is insufficient stock, the flow branches to the `UserMessageService` to notify the user, effectively ending the purchase attempt. Conversely, if sufficient stock is available, the `PaymentService` is invoked to authorize the payment. Another branch occurs based on payment authorization: a declined payment results in the `UserMessageService` notifying the user, while an authorized payment leads to the `InventoryService` reserving the stock. Following successful stock reservation, the `OrderService` creates a pending order, which then prompts the `DeliveryService` to schedule the delivery. The final decision point is whether the delivery is successfully scheduled. If so, the `OrderService` confirms the order, completing the purchase flow. However, if delivery scheduling fails, the `CompensationService` initiates a compensation flow, potentially involving refunds or other remedies. This compensation flow is crucial for maintaining customer satisfaction in the event of logistical failures within the e-commerce system.

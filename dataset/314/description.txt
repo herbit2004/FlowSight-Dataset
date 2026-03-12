@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow within a ROS (Robot Operating System) node related to urban road filtering. It depicts the input and output topics of the `urban_road_filt` node, showing how point cloud data is processed and distributed to various downstream components for tasks like curb detection, road segmentation, and region of interest (ROI) extraction. The diagram serves as a visual representation of the node's functionality and its interaction with other ROS nodes.
+
+## Overall Layout
+The diagram has a left-to-right (LR) layout. It starts with the `points` node on the left, representing the input data, and flows through the `urban_road_filt` node, which then branches out to multiple output nodes on the right. There is no explicit hierarchy, but the flow is sequential from input to processing to multiple outputs.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into three stages: input, processing, and output.
+- Input: `points`
+- Processing: `urban_road_filt node`
+- Output: `curb`, `road`, `road_probably`, `roi`, `road_marker`
+
+## Node-by-Node Description
+- **points**: Represents the input point cloud data.
+  visible in diagram; no further repository context available.
+- **urban_road_filt node**: Represents the core processing node responsible for filtering and segmenting the road and related features from the input point cloud.
+  visible in diagram; no further repository context available.
+- **curb**: Represents the output containing detected curb points.
+  visible in diagram; no further repository context available.
+- **road**: Represents the output containing segmented road points.
+  visible in diagram; no further repository context available.
+- **road_probably**: Represents the output containing points that are likely to be part of the road.
+  visible in diagram; no further repository context available.
+- **roi**: Represents the output defining the region of interest.
+  visible in diagram; no further repository context available.
+- **road_marker**: Represents the output used for visualizing the detected road.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `points --> urban_road_filt node`: Represents the flow of `sensor_msgs/PointCloud2` data from the input `points` to the `urban_road_filt node`.
+- `urban_road_filt node --> curb`: Represents the flow of `sensor_msgs/PointCloud2` data from the `urban_road_filt node` to the `curb` output.
+- `urban_road_filt node --> road`: Represents the flow of `sensor_msgs/PointCloud2` data from the `urban_road_filt node` to the `road` output.
+- `urban_road_filt node --> road_probably`: Represents the flow of `sensor_msgs/PointCloud2` data from the `urban_road_filt node` to the `road_probably` output.
+- `urban_road_filt node --> roi`: Represents the flow of `sensor_msgs/PointCloud2` data from the `urban_road_filt node` to the `roi` output.
+- `urban_road_filt node --> road_marker`: Represents the flow of `visualization_msgs/MarkerArray` data from the `urban_road_filt node` to the `road_marker` output.
+
+## Repository Context & Terminology
+- **ROS (Robot Operating System)**: A flexible framework for writing robot software. It is a collection of tools, libraries, and conventions that aim to simplify the task of creating complex and robust robot behavior across a wide variety of robotic platforms.
+- **Node**: In ROS, a node is an executable that performs a specific task. Nodes communicate with each other via topics, services, and actions.
+- **Topic**: A named bus over which nodes exchange messages. Topics have anonymous publish/subscribe semantics, which decouples the production of information from its consumption.
+- **sensor_msgs/PointCloud2**: A standard ROS message type for representing point cloud data. It includes information such as the 3D coordinates of points, color, and intensity.
+- **visualization_msgs/MarkerArray**: A standard ROS message type for sending multiple visualization markers at once. It is often used to display shapes, text, and other visual elements in a 3D environment.
+- **urban_road_filt**: The name of the ROS node responsible for filtering and segmenting road-related features from point cloud data in an urban environment.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the data flow of the `urban_road_filt` ROS node, starting with the `points` node that provides input `sensor_msgs/PointCloud2` data. This data is then processed by the `urban_road_filt node`, which performs filtering and segmentation to identify road and curb features. The `urban_road_filt node` then branches out to multiple output topics. The `curb`, `road`, and `road_probably` nodes receive `sensor_msgs/PointCloud2` data representing detected curb points, segmented road points, and points likely to be part of the road, respectively. The `roi` node also receives `sensor_msgs/PointCloud2` data defining the region of interest. Finally, the `road_marker` node receives `visualization_msgs/MarkerArray` data, which is used for visualizing the detected road in a 3D environment. The `sensor_msgs/PointCloud2` message type is crucial for representing point cloud data, enabling the node to process and distribute spatial information about the urban environment. The `urban_road_filt` node acts as a central hub, transforming raw point cloud data into actionable information for downstream tasks such as autonomous navigation and mapping.

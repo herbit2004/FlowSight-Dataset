@@ -1,0 +1,63 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the flow of a user request and the background processes involved in managing quotas and rate limits. It illustrates how user requests are processed, checked against rate limits and quotas, and how background services update these limits and quotas. The diagram also shows the monitoring and alerting mechanisms in place.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TD). It is divided into three subgraphs: "User Request Flow," "Background Processes," and "Monitoring and Alerts." The "User Request Flow" subgraph starts with "User Application" and ends with "User Application" (looping back). The "Background Processes" subgraph starts with "Request Ingestion" and feeds into "Monitoring and Alerts."
+
+## Subgraphs / Stages
+- **User Request Flow**: This subgraph describes the path of a user request, including rate limit and quota checks, request processing, and response.
+- **Background Processes**: This subgraph details the processes responsible for updating quotas and rate limits, including data storage and scheduled tasks.
+- **Monitoring and Alerts**: This subgraph shows how the system is monitored for critical quota thresholds and high volume errors, triggering alerts as needed.
+
+## Node-by-Node Description
+- **User Application**: Represents the user application initiating the request. visible in diagram; no further repository context available.
+- **Rate Limit Check**: A decision point to determine if the request exceeds the global rate limit. visible in diagram; no further repository context available.
+- **Reject Request**: Represents the rejection of a request due to exceeding the global rate limit or user quota. visible in diagram; no further repository context available.
+- **Quota Check**: A decision point to determine if the request exceeds the user's quota. visible in diagram; no further repository context available.
+- **Process Request**: Represents the processing of the request by the backend service. visible in diagram; no further repository context available.
+- **Backend Service**: The service responsible for handling the request. visible in diagram; no further repository context available.
+- **Return Response**: Represents the response returned to the user application. visible in diagram; no further repository context available.
+- **Request Ingestion**: Represents the initial ingestion of requests. visible in diagram; no further repository context available.
+- **Kafka Queue**: A message queue used to buffer requests. visible in diagram; no further repository context available.
+- **Quota Update Service**: A service responsible for updating user quotas. visible in diagram; no further repository context available.
+- **Rate Limit Update Service**: A service responsible for updating rate limits. visible in diagram; no further repository context available.
+- **Scheduled Task: Daily Quota Reset**: A scheduled task that resets quotas daily. visible in diagram; no further repository context available.
+- **Quota Database**: A database storing user quota information. visible in diagram; no further repository context available.
+- **Redis Cache**: A cache storing rate limit information. visible in diagram; no further repository context available.
+- **Prometheus**: A monitoring system used to collect metrics. visible in diagram; no further repository context available.
+- **Critical Quota Threshold Reached**: An alert indicating that a critical quota threshold has been reached. visible in diagram; no further repository context available.
+- **High Volume Errors**: An alert indicating a high volume of errors. visible in diagram; no further repository context available.
+- **PagerDuty Alert**: An alert sent via PagerDuty. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Application --> Rate Limit Check`: A user application initiates a request, which is then sent for rate limit checking.
+- `Rate Limit Check -- Exceeds Global Rate Limit? --> Reject Request`: If the request exceeds the global rate limit, it is rejected.
+- `Rate Limit Check -- Passes Global Rate Limit --> Quota Check`: If the request passes the global rate limit check, it proceeds to quota checking.
+- `Quota Check -- Exceeds User Quota? --> Reject Request`: If the request exceeds the user quota, it is rejected.
+- `Quota Check -- Passes User Quota --> Process Request`: If the request passes the user quota check, it is processed.
+- `Process Request --> Backend Service`: The request is sent to the backend service for processing.
+- `Backend Service --> Return Response`: The backend service returns a response.
+- `Return Response --> User Application`: The response is returned to the user application.
+- `Reject Request --> User Application`: The rejected request is returned to the user application.
+- `Request Ingestion --> Kafka Queue`: Requests are ingested and placed into a Kafka queue.
+- `Kafka Queue --> Quota Update Service`: The Kafka queue triggers the quota update service.
+- `Kafka Queue --> Rate Limit Update Service`: The Kafka queue triggers the rate limit update service.
+- `Quota Update Service --> Quota Database`: The quota update service updates the quota database.
+- `Scheduled Task: Daily Quota Reset --> Quota Database`: The scheduled task resets quotas in the quota database.
+- `Rate Limit Update Service --> Redis Cache`: The rate limit update service updates the Redis cache.
+- `Quota Database --> Prometheus`: The quota database is monitored by Prometheus.
+- `Redis Cache --> Prometheus`: The Redis cache is monitored by Prometheus.
+- `Prometheus -- Critical Quota Threshold Reached --> PagerDuty Alert`: If a critical quota threshold is reached, a PagerDuty alert is triggered.
+- `Prometheus -- High Volume Errors --> PagerDuty Alert`: If there are high volume errors, a PagerDuty alert is triggered.
+
+## Repository Context & Terminology
+- **Rate Limit**: A limit on the number of requests a user can make within a certain time period.
+- **Quota**: A limit on the amount of resources a user can consume.
+- **Kafka Queue**: A distributed message queue used for asynchronous communication.
+- **Redis Cache**: An in-memory data store used for caching frequently accessed data.
+- **Prometheus**: An open-source monitoring and alerting system.
+- **PagerDuty**: An incident management platform.
+- **Backend Service**: The service responsible for processing user requests and performing business logic.
+
+## High-Density QA Ground Truth Summary
+The user request flow begins with a "User Application" sending a request, which is immediately subjected to a "Rate Limit Check." If the request "Exceeds Global Rate Limit?", it is "Reject Request" and returned to the "User Application." Otherwise, if it "Passes Global Rate Limit," the request proceeds to a "Quota Check." Similarly, if the request "Exceeds User Quota?", it is "Reject Request" and returned to the "User Application." If the request "Passes User Quota," it is sent to "Process Request" and then to the "Backend Service." The "Backend Service" processes the request and sends a "Return Response" back to the "User Application," completing the cycle. In parallel, "Background Processes" handle quota and rate limit updates. "Request Ingestion" feeds into a "Kafka Queue," which triggers both "Quota Update Service" and "Rate Limit Update Service." The former updates the "Quota Database," while the latter updates the "Redis Cache." A "Scheduled Task: Daily Quota Reset" also updates the "Quota Database." Both "Quota Database" and "Redis Cache" are monitored by "Prometheus." If "Critical Quota Threshold Reached" or "High Volume Errors" are detected, "PagerDuty Alert" are triggered. The "Kafka Queue" is a standard component in distributed systems, enabling asynchronous processing of requests.

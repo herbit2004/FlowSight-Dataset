@@ -1,0 +1,24 @@
+graph TD
+    A[User Accesses Application] --> B{Session Cookie Present?};
+    B -- Yes --> C[Validate Session ID with Session Store];
+    C -- Valid --> D[Retrieve User Context];
+    D --> E[Application Logic];
+    E --> F[Return Page];
+    B -- No --> G[Redirect to SSO Provider];
+    G --> H[User Authenticates at SSO Provider];
+    H --> I{Authentication Successful?};
+    I -- No --> J[Display Authentication Failure];
+    I -- Yes --> K[Generate SAML Assertion];
+    K --> L[Post SAML Assertion to Application];
+    L --> M[Validate SAML Assertion];
+    M --> N{Assertion Valid?};
+    N -- No --> O[Error: Invalid Assertion];
+    N -- Yes --> P[Create New Session in Session Store];
+    P --> Q[Generate Session Cookie];
+    Q --> R[Set Session Cookie in Browser];
+    R --> D;
+    J --> Z[User Retry Authentication];
+    Z --> H;
+    O --> Z;
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class J,O error

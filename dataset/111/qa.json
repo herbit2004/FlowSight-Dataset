@@ -1,0 +1,74 @@
+[
+  {
+    "question": "What is the first step in the process?",
+    "options": [
+      "A. Open the developer UI(5), apply config.patch, then rebuild(2). Does the website still flag(3)?",
+      "B. Start",
+      "C. Run make ff-dbg(1) and build(2) a clean distribution of Firefox. Does the website flag in Firefox headless mode(4)?",
+      "D. Does website flag in the official Firefox?"
+    ],
+    "correct_index": 1,
+    "type": "factual",
+    "difficulty": "easy"
+  },
+  {
+    "question": "If the website does not flag in the official Firefox, what is the next step?",
+    "options": [
+      "A. Enable privacy.resistFingerprinting in the config(6). Does the website still flag(3)?",
+      "B. Open the developer UI(5), apply config.patch, then rebuild(2). Does the website still flag(3)?",
+      "C. Run make ff-dbg(1) and build(2) a clean distribution of Firefox. Does the website flag in Firefox headless mode(4)?",
+      "D. Likely bad IP/rate-limiting. If the website fails on both headless and headful mode on the official Firefox distribution, the issue is not with the browser."
+    ],
+    "correct_index": 2,
+    "type": "factual",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Starting from 'Start', if the website flags in the official Firefox, what is the final node reached?",
+    "options": [
+      "A. Likely bad IP/rate-limiting. If the website fails on both headless and headful mode on the official Firefox distribution, the issue is not with the browser.",
+      "B. If you get to this point, you may need to deobfuscate the Javascript behind the website to identify what it's testing.",
+      "C. Juggler needs to be debugged to locate the leak.",
+      "D. The issue has nothing to do with Playwright. Apply the rest of the Camoufox patches one by one until the one causing the leak is found."
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Starting from 'Start', if the website does NOT flag in the official Firefox, DOES flag in Firefox headless mode, and does NOT flag in both headful and headless modes, what is the next step?",
+    "options": [
+      "A. Enable privacy.resistFingerprinting in the config(6). Does the website still flag(3)?",
+      "B. Likely bad IP/rate-limiting. If the website fails on both headless and headful mode on the official Firefox distribution, the issue is not with the browser.",
+      "C. Open the developer UI(5), apply config.patch, then rebuild(2). Does the website still flag(3)?",
+      "D. In the config(6), enable FPP and start omitting overrides until you find the one that fixed the leak."
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Starting from 'Start', which of the following is a possible sequence of nodes?",
+    "options": [
+      "A. Start -> Does website flag in the official Firefox? -> Run make ff-dbg(1) and build(2) a clean distribution of Firefox. Does the website flag in Firefox headless mode(4)? -> Does the website flag in headful mode(3) AND headless mode(4)? -> Likely bad IP/rate-limiting. If the website fails on both headless and headful mode on the official Firefox distribution, the issue is not with the browser.",
+      "B. Start -> Does website flag in the official Firefox? -> Run make ff-dbg(1) and build(2) a clean distribution of Firefox. Does the website flag in Firefox headless mode(4)? -> Does the website flag in headful mode(3) AND headless mode(4)? -> Enable privacy.resistFingerprinting in the config(6). Does the website still flag(3)? -> If you get to this point, you may need to deobfuscate the Javascript behind the website to identify what it's testing.",
+      "C. Start -> Does website flag in the official Firefox? -> Run make ff-dbg(1) and build(2) a clean distribution of Firefox. Does the website flag in Firefox headless mode(4)? -> Does the website flag in headful mode(3) AND headless mode(4)? -> Enable privacy.resistFingerprinting in the config(6). Does the website still flag(3)? -> In the config(6), enable FPP and start omitting overrides until you find the one that fixed the leak.",
+      "D. Start -> Does website flag in the official Firefox? -> Run make ff-dbg(1) and build(2) a clean distribution of Firefox. Does the website flag in Firefox headless mode(4)? -> Does the website flag in headful mode(3) AND headless mode(4)? -> Open the developer UI(5), apply config.patch, then rebuild(2). Does the website still flag(3)?"
+    ],
+    "correct_index": 2,
+    "type": "reasoning",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which of the following nodes does NOT have a direct connection to the node labeled 'If you get to this point, you may need to deobfuscate the Javascript behind the website to identify what it's testing.'?",
+    "options": [
+      "A. In the config(6), enable FPP and start omitting overrides until you find the one that fixed the leak.",
+      "B. The issue has nothing to do with Playwright. Apply the rest of the Camoufox patches one by one until the one causing the leak is found.",
+      "C. Omit options from camoufox.cfg(6) and rerun(3) until you find the one causing the leak.",
+      "D. Enable privacy.resistFingerprinting in the config(6). Does the website still flag(3)?"
+    ],
+    "correct_index": 3,
+    "type": "negation",
+    "difficulty": "hard"
+  }
+]

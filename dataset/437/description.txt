@@ -1,0 +1,62 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the execution flow of the "vibe" command. It outlines the different execution paths based on whether it's the first run, the selected mode (interactive, message, or none), and the chosen transport protocol (stdio or sse). The diagram serves as a high-level overview of the command's logic and decision-making process.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "vibe command" node at the top and flows downwards through a series of decision points and processing steps, eventually converging at the "Tool Execution" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Initial Setup (First Run?, Setup Wizard, Save Configuration), Argument Parsing (Parse Arguments, Mode?), Mode Selection (Interactive REPL, CLI Execution, MCP Server), Transport Selection (Transport?), and Execution (Tool Execution, Stdio Server, SSE Server).
+
+## Node-by-Node Description
+- **Start / vibe command**: Represents the initial invocation of the "vibe" command. visible in diagram; no further repository context available.
+- **Detect / First Run?**: A decision point to determine if this is the first time the command is being run. visible in diagram; no further repository context available.
+- **Setup / Setup Wizard**: A setup wizard that guides the user through the initial configuration. visible in diagram; no further repository context available.
+- **Config / Save Configuration**: Saves the configuration settings after the setup wizard is complete. visible in diagram; no further repository context available.
+- **Parse / Parse Arguments**: Parses the command-line arguments provided by the user. visible in diagram; no further repository context available.
+- **Mode / Mode?**: A decision point to determine the execution mode. visible in diagram; no further repository context available.
+- **REPL / Interactive REPL**: Represents the interactive mode of the command, providing a read-eval-print loop. visible in diagram; no further repository context available.
+- **CLI / CLI Execution**: Represents the command-line execution mode. visible in diagram; no further repository context available.
+- **MCP / MCP Server**: Represents the mode where the command acts as an MCP (Minecraft Protocol) server. visible in diagram; no further repository context available.
+- **Session / Session Management**: Manages user sessions in interactive mode. visible in diagram; no further repository context available.
+- **Chat / Chat Interface**: Provides a chat interface for interacting with the system. visible in diagram; no further repository context available.
+- **Router / Hybrid Router**: Routes commands in the CLI execution mode. visible in diagram; no further repository context available.
+- **Transport / Transport?**: A decision point to determine the transport protocol for the MCP server. visible in diagram; no further repository context available.
+- **Stdio / Stdio Server**: Uses standard input/output for communication. visible in diagram; no further repository context available.
+- **SSE / SSE Server**: Uses Server-Sent Events for communication. visible in diagram; no further repository context available.
+- **Tools / Tool Execution**: Represents the execution of the core tool functionality. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Start --> Detect`: The initial execution flow from the "vibe command" to the "First Run?" decision.
+- `Detect -- Yes --> Setup`: If it's the first run, the flow goes to the "Setup Wizard."
+- `Detect -- No --> Parse`: If it's not the first run, the flow goes to "Parse Arguments."
+- `Setup --> Config`: After the setup wizard, the configuration is saved.
+- `Config --> Parse`: After saving the configuration, the flow goes to "Parse Arguments."
+- `Parse --> Mode`: After parsing arguments, the flow goes to the "Mode?" decision.
+- `Mode -- --interactive --> REPL`: If the interactive mode is selected, the flow goes to "Interactive REPL."
+- `Mode -- message --> CLI`: If the message mode is selected, the flow goes to "CLI Execution."
+- `Mode -- none --> MCP`: If no mode is selected, the flow goes to "MCP Server."
+- `Mode --> Setup`: If the `--setup` argument is passed, the flow returns to "Setup Wizard."
+- `REPL --> Session`: The "Interactive REPL" leads to "Session Management."
+- `Session --> Chat`: "Session Management" leads to "Chat Interface."
+- `Chat --> Tools`: The "Chat Interface" leads to "Tool Execution."
+- `CLI --> Router`: "CLI Execution" leads to "Hybrid Router."
+- `Router --> Tools`: The "Hybrid Router" leads to "Tool Execution."
+- `MCP --> Transport`: The "MCP Server" leads to the "Transport?" decision.
+- `Transport -- stdio --> Stdio`: If the transport is "stdio," the flow goes to "Stdio Server."
+- `Transport -- sse --> SSE`: If the transport is "sse," the flow goes to "SSE Server."
+- `Stdio --> Tools`: The "Stdio Server" leads to "Tool Execution."
+- `SSE --> Tools`: The "SSE Server" leads to "Tool Execution."
+- Convergence: The "Chat Interface", "Hybrid Router", "Stdio Server", and "SSE Server" all converge at the "Tool Execution" node.
+
+## Repository Context & Terminology
+- **vibe command**: The main command-line interface for the application.
+- **Setup Wizard**: A guided process for configuring the application for the first time.
+- **Interactive REPL**: A read-eval-print loop that allows users to interact with the application in real-time.
+- **CLI Execution**: Execution of commands directly from the command line.
+- **MCP Server**: A server that implements the Minecraft Protocol, allowing the application to interact with Minecraft clients.
+- **Stdio Server**: A server that uses standard input/output for communication.
+- **SSE Server**: A server that uses Server-Sent Events for communication.
+- **Tool Execution**: The core functionality of the application, which is executed after the initial setup and mode selection.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "vibe command" which immediately proceeds to a "First Run?" check. If it's the first run ("Yes" branch), the "Setup Wizard" is initiated, followed by "Save Configuration," and then parsing arguments. If it's not the first run ("No" branch), the flow skips the setup and directly parses arguments. After parsing, the "Mode?" decision node determines the execution path based on the selected mode. The `--interactive` flag leads to "Interactive REPL," then "Session Management," and finally "Chat Interface," before converging at "Tool Execution." The `message` mode triggers "CLI Execution" and "Hybrid Router," also leading to "Tool Execution." If no mode is specified (`none`), the "MCP Server" is activated, which then branches based on the "Transport?" decision. The `stdio` transport results in "Stdio Server," while `sse` leads to "SSE Server," both ultimately converging at "Tool Execution." The `--setup` argument at the "Mode?" decision allows re-running the "Setup Wizard." The "Tool Execution" node represents the final stage where the core application logic is executed, regardless of the initial setup or selected mode. The "vibe command" thus provides multiple execution pathways, from interactive sessions to command-line execution and even acting as an MCP server, all culminating in the execution of the core tool.

@@ -1,0 +1,68 @@
+graph TD
+    subgraph Data Source
+        A[Source System: Legacy CRM] --> B(Data Extraction: CRM Connector);
+        style A fill:#f9f,stroke:#333,stroke-width:2px
+    end
+
+    B --> C{Data Validation and Cleansing};
+    C -- Invalid Data --> D[Error Queue: Dead Letter Topic];
+    style D fill:#faa,stroke:#333,stroke-width:2px
+    C -- Valid Data --> E[Data Transformation: Mapping Engine];
+
+    subgraph Transformation and Enrichment
+        E --> F{Data Enrichment: Third-Party API};
+        F -- API Success --> G[Data Augmentation];
+        F -- API Failure --> H[Fallback Enrichment: Local Cache];
+        H --> G;
+        G --> I[Data Standardization];
+        style G fill:#ccf,stroke:#333,stroke-width:2px
+        I --> J(Schema Transformation);
+    end
+
+    J --> K{Data Quality Checks};
+    K -- Quality Met --> L[Data Routing];
+    K -- Quality Failed --> M[Data Remediation Queue];
+    style M fill:#faa,stroke:#333,stroke-width:2px
+
+    subgraph Destination Systems
+        L --> N[Destination System 1: Data Warehouse];
+        L --> O[Destination System 2: Reporting Database];
+        L --> P[Destination System 3: Operational Data Store];
+        style N fill:#9f9,stroke:#333,stroke-width:2px
+        style O fill:#9f9,stroke:#333,stroke-width:2px
+        style P fill:#9f9,stroke:#333,stroke-width:2px
+    end
+
+    subgraph Monitoring and Alerting
+        D --> Q[Alerting System: PagerDuty];
+        M --> Q;
+        B -- Extract Failed --> Q;
+        F -- API Timeout --> Q;
+        Q --> R[Ops Team Notification];
+        style R fill:#ffc,stroke:#333,stroke-width:2px
+
+        S[ETL Job Scheduler] --> B;
+        S --> F;
+
+        T[Metrics Collector] --> U[Grafana Dashboard];
+        B --> T;
+        C --> T;
+        E --> T;
+        F --> T;
+        G --> T;
+        J --> T;
+        K --> T;
+        L --> T;
+        N --> T;
+        O --> T;
+        P --> T;
+        D --> T;
+        M --> T;
+    end
+
+    classDef error fill:#fbb,stroke:#333,stroke-width:2px;
+    classDef success fill:#afa,stroke:#333,stroke-width:2px;
+    classDef warning fill:#fea,stroke:#333,stroke-width:2px;
+    class D,M error
+    class N,O,P success
+    class R warning

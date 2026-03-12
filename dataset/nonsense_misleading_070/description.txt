@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow of an e-commerce system. It outlines the steps involved from when a user places an order to when the order is delivered. The diagram serves as a visual representation of the order fulfillment process, but contains intentional errors.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with "User Places Order" at the top and ends with "Order Delivered" at the bottom. The diagram shows a single primary flow with decision points that create branches and loops.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages:
+1. Order Placement and Payment: User Places Order, Payment Successful?
+2. Inventory Check: Inventory Check, Notify Customer of Delay.
+3. Order Confirmation and Packaging: Send Order Confirmation Email, Package Order.
+4. Shipping Address Validation: Shipping Address Valid?
+5. Order Handling: Generate Shipping Label, Cancel Order, Order Shipped.
+6. Inventory Update and Notification: Update Inventory, Send Shipping Notification.
+7. Order Delivery: Order Delivered.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial step where a user submits an order through the system. visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision point to check if the payment for the order was successful. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **D / Package Order**: Represents the step of preparing the order for shipment. visible in diagram; no further repository context available.
+- **E / Notify Customer of Delay**: Represents notifying the customer about a delay in order processing, presumably due to items being out of stock. visible in diagram; no further repository context available.
+- **F / Send Order Confirmation Email**: Represents sending an email to the user confirming their order. visible in diagram; no further repository context available.
+- **G / Shipping Address Valid?**: A decision point to check if the shipping address provided by the user is valid. visible in diagram; no further repository context available.
+- **H / Cancel Order**: Represents the action of cancelling the order, presumably due to an invalid shipping address. visible in diagram; no further repository context available.
+- **I / Generate Shipping Label**: Represents the process of creating a shipping label for the order. visible in diagram; no further repository context available.
+- **J / Order Shipped**: Represents the point when the order is marked as shipped. visible in diagram; no further repository context available.
+- **K / Update Inventory**: Represents the process of updating the inventory to reflect the items shipped. visible in diagram; no further repository context available.
+- **L / Send Shipping Notification**: Represents sending a notification to the user that their order has been shipped. visible in diagram; no further repository context available.
+- **M / Order Delivered**: Represents the final step where the order is delivered to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, initiating the payment check.
+- `B -- Yes --> C`: If payment is successful, proceed to inventory check.
+- `B -- No --> F`: If payment fails, send order confirmation email (incorrect sequence).
+- `C -- In Stock --> D`: If items are in stock, proceed to package the order.
+- `C -- Out of Stock --> E`: If items are out of stock, notify the customer of the delay.
+- `E --> F`: After notifying the customer of the delay, send the order confirmation email.
+- `F --> D`: After sending the order confirmation email, package the order.
+- `D --> G`: After packaging the order, check if the shipping address is valid.
+- `G -- Yes --> I`: If the shipping address is valid, generate a shipping label.
+- `G -- No --> H`: If the shipping address is invalid, cancel the order.
+- `I --> J`: After generating the shipping label, the order is shipped.
+- `H --> J`: After cancelling the order, the order is shipped (incorrect sequence).
+- `J --> K`: After the order is shipped, update the inventory (incorrect causal direction).
+- `K --> L`: After updating the inventory, send a shipping notification.
+- `L --> M`: After sending the shipping notification, the order is delivered.
+- `M --> A`: After the order is delivered, the process loops back to the beginning (incorrect loop).
+
+## Repository Context & Terminology
+- **User Places Order**: In standard e-commerce, this refers to a customer submitting their order details. In this diagram, it's the starting point of the process.
+- **Payment Successful?**: In standard e-commerce, this checks if the payment was authorized. In this diagram, a failed payment leads to sending an order confirmation email *before* packaging.
+- **Inventory Check**: In standard e-commerce, this verifies if the ordered items are available. In this diagram, being out of stock leads to customer notification, then sending the order confirmation email.
+- **Send Order Confirmation Email**: In standard e-commerce, this confirms the order details to the customer. In this diagram, it happens *before* payment success in one branch, and after notifying the customer of a delay.
+- **Package Order**: In standard e-commerce, this prepares the order for shipping. In this diagram, it happens after sending the order confirmation email, regardless of payment status.
+- **Shipping Address Valid?**: In standard e-commerce, this verifies the delivery address. In this diagram, an invalid address leads to order cancellation, but the cancelled order is still shipped.
+- **Update Inventory**: In standard e-commerce, this adjusts stock levels after a sale. In this diagram, it happens *after* the order is shipped.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a user placing an order (A), which immediately proceeds to a payment success check (B). If payment is successful (B -- Yes --> C), an inventory check is performed. If the items are in stock (C -- In Stock --> D), the order is packaged. If the items are out of stock (C -- Out of Stock --> E), the customer is notified of the delay, and then an order confirmation email is sent (E --> F). If payment is not successful (B -- No --> F), an order confirmation email is also sent, skipping the inventory check. After sending the order confirmation email (F), the order is packaged (D). The packaged order then undergoes a shipping address validation (G). If the address is valid (G -- Yes --> I), a shipping label is generated. If the address is invalid (G -- No --> H), the order is cancelled. However, regardless of address validity, the order is then marked as shipped (I --> J, H --> J). After shipping, the inventory is updated (J --> K), and a shipping notification is sent (K --> L). Finally, the order is delivered (L --> M), and the process loops back to the beginning, with the user placing another order (M --> A). The intentional errors in this diagram include sending the order confirmation email before successful payment in one branch, shipping cancelled orders, and updating inventory after shipping.

@@ -1,0 +1,42 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting a content delivery network (CDN) for streaming media. It illustrates the flow of video content from the ingest point, through transcoding and manifest generation, to origin storage, then to the CDN edge for caching, and finally to the end user's web or mobile player. The diagram highlights the different components involved in the streaming process and their interactions.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TB). It shows a hierarchical flow starting with the Edge Ingress, proceeding to the CDN Origin, then to the CDN Edge, and finally to the Viewer. The start node is the Ingest Server, and the end node is the Web/Mobile Player.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing different stages in the content delivery process: Edge Ingress, CDN Origin, CDN Edge, and Viewer.
+
+## Node-by-Node Description
+- **A / Ingest Server: RTMP**: Represents the server that receives the incoming video stream using the Real-Time Messaging Protocol (RTMP). visible in diagram; no further repository context available.
+- **B / Transcoder: x264/AAC**: Represents the transcoder that converts the incoming video stream into x264 video codec and AAC audio codec. visible in diagram; no further repository context available.
+- **C / Manifest Generator: HLS/DASH**: Represents the component that generates the HLS (HTTP Live Streaming) and DASH (Dynamic Adaptive Streaming over HTTP) manifests. visible in diagram; no further repository context available.
+- **D / Origin Storage: S3 Bucket**: Represents the origin storage using Amazon S3 (Simple Storage Service) to store the HLS segments. visible in diagram; no further repository context available.
+- **E / Origin Storage: Azure Blob**: Represents the origin storage using Azure Blob Storage to store the DASH segments. visible in diagram; no further repository context available.
+- **F / Edge Cache: Akamai/Cloudflare**: Represents the CDN edge cache provided by Akamai or Cloudflare. visible in diagram; no further repository context available.
+- **G / Web/Mobile Player**: Represents the web or mobile player used by the viewer to watch the video stream. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The incoming video stream is sent from the Ingest Server to the Transcoder.
+- `B --> C`: The transcoded video stream is sent from the Transcoder to the Manifest Generator.
+- `C -- HLS --> D`: The HLS manifest and segments are sent from the Manifest Generator to the S3 Bucket.
+- `C -- DASH --> E`: The DASH manifest and segments are sent from the Manifest Generator to the Azure Blob.
+- `D -- HLS Request --> F`: An HLS request is sent from the CDN Edge to the S3 Bucket.
+- `E -- DASH Request --> F`: A DASH request is sent from the CDN Edge to the Azure Blob.
+- `F -- Cache Hit --> G`: The video stream is sent from the CDN Edge to the Web/Mobile Player if the content is found in the cache.
+- `F -- Cache Miss --> D`: If the HLS content is not found in the CDN Edge cache, a cache miss occurs, and the request is forwarded to the S3 Bucket.
+- `F -- Cache Miss --> E`: If the DASH content is not found in the CDN Edge cache, a cache miss occurs, and the request is forwarded to the Azure Blob.
+
+## Repository Context & Terminology
+- **RTMP (Real-Time Messaging Protocol)**: A protocol used for streaming audio, video, and data over the Internet, commonly used for live streaming.
+- **x264**: A free software library and application for encoding video streams into the H.264/MPEG-4 AVC format.
+- **AAC (Advanced Audio Coding)**: An audio coding standard for lossy digital audio compression.
+- **HLS (HTTP Live Streaming)**: An adaptive bitrate streaming protocol developed by Apple, used for delivering video and audio content over HTTP.
+- **DASH (Dynamic Adaptive Streaming over HTTP)**: An adaptive bitrate streaming protocol, also known as MPEG-DASH, used for delivering video and audio content over HTTP.
+- **S3 Bucket (Amazon S3)**: Object storage service offered by Amazon Web Services (AWS).
+- **Azure Blob Storage**: Microsoft Azure's object storage solution for storing unstructured data in the cloud.
+- **CDN (Content Delivery Network)**: A geographically distributed network of servers that caches content to deliver it to users with high availability and performance.
+- **Akamai/Cloudflare**: Popular CDN providers.
+
+## High-Density QA Ground Truth Summary
+The streaming process begins with the Ingest Server receiving an incoming video stream via RTMP. This stream is then passed to the Transcoder, which encodes it into x264 video and AAC audio. The transcoded stream is then sent to the Manifest Generator, which creates HLS and DASH manifests. The HLS content is stored in an S3 Bucket, while the DASH content is stored in Azure Blob Storage. When a user requests the video via a Web/Mobile Player, the CDN Edge (Akamai/Cloudflare) checks its cache. If the content is available (Cache Hit), it's delivered directly to the player. If not (Cache Miss), the CDN Edge requests the content from either the S3 Bucket (for HLS) or Azure Blob Storage (for DASH). The adaptive bitrate streaming protocols, HLS and DASH, allow the player to dynamically adjust the video quality based on the user's network conditions. The CDN architecture ensures efficient delivery of streaming content by caching it closer to the end-users, reducing latency and improving the viewing experience.

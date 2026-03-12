@@ -1,0 +1,57 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the components and data flow within an AWS Cloud environment for processing orders. It depicts the interaction between a client, API Gateway, Lambda functions, and various AWS services like WAF, AppConfig, and DynamoDB. The diagram serves as a high-level overview of the system's architecture, focusing on the order processing pipeline.
+
+## Overall Layout
+The diagram flows from left to right. It shows a progression from the client request through security, API gateway, compute resources, configuration, and finally to data storage. The start node is the "Client," and the end nodes are the "DynamoDB Orders Table" and "DynamoDB Idempotency Table."
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs:
+- **AWS Cloud**: Encompasses the entire architecture within the AWS environment.
+- **Security (Production)**: Represents the security layer, including WAF and AWS Managed Rules.
+- **API Gateway**: Represents the API Gateway service, handling REST API requests.
+- **Compute**: Represents the compute resources, including Lambda functions and Lambda Layers.
+- **Configuration**: Represents the configuration management, including AppConfig and Feature Flags.
+- **Storage**: Represents the data storage layer, including DynamoDB tables.
+
+## Node-by-Node Description
+- **Client**: Represents the user or application initiating the order request.
+  visible in diagram; no further repository context available.
+- **WAF WebACL / AWS Managed Rules**: Represents the Web Application Firewall (WAF) configured with AWS Managed Rules for security.
+  visible in diagram; no further repository context available.
+- **REST API / POST /api/orders**: Represents the REST API endpoint exposed by the API Gateway for receiving order requests.
+  visible in diagram; no further repository context available.
+- **Lambda Function / Python 3.14**: Represents the Lambda function responsible for processing the order request, implemented in Python 3.14.
+  visible in diagram; no further repository context available.
+- **Lambda Layer / Common Dependencies**: Represents a Lambda Layer containing common dependencies used by the Lambda function.
+  visible in diagram; no further repository context available.
+- **AppConfig / Feature Flags**: Represents the AppConfig service used for managing feature flags.
+  visible in diagram; no further repository context available.
+- **DynamoDB Orders Table**: Represents the DynamoDB table used for storing order data.
+  visible in diagram; no further repository context available.
+- **DynamoDB Idempotency Table**: Represents the DynamoDB table used for ensuring idempotency of order processing.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Client --> WAF WebACL / AWS Managed Rules`: The client's request is routed through the WAF for security inspection.
+- `WAF WebACL / AWS Managed Rules --> REST API / POST /api/orders`: The request, after passing through the WAF, is routed to the API Gateway's `/api/orders` endpoint.
+- `REST API / POST /api/orders --> Lambda Function / Python 3.14`: The API Gateway triggers the Lambda function to process the order request.
+- `Lambda Function / Python 3.14 --> Lambda Layer / Common Dependencies`: The Lambda function utilizes the common dependencies provided by the Lambda Layer.
+- `Lambda Function / Python 3.14 --> AppConfig / Feature Flags`: The Lambda function retrieves feature flag configurations from AppConfig.
+- `Lambda Function / Python 3.14 --> DynamoDB Orders Table`: The Lambda function stores the processed order data in the DynamoDB Orders Table.
+- `Lambda Function / Python 3.14 --> DynamoDB Idempotency Table`: The Lambda function interacts with the DynamoDB Idempotency Table to ensure idempotent processing.
+
+## Repository Context & Terminology
+- **AWS Cloud**: Amazon Web Services cloud computing platform.
+- **WAF (Web Application Firewall)**: A security service that protects web applications from common web exploits and bots.
+- **AWS Managed Rules**: Pre-configured rulesets provided by AWS for WAF to protect against common threats.
+- **API Gateway**: A fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale.
+- **REST API**: An architectural style for building web services using HTTP requests.
+- **Lambda Function**: A serverless compute service that lets you run code without provisioning or managing servers.
+- **Lambda Layer**: A ZIP archive that contains libraries, a custom runtime, or other dependencies that you can use with your Lambda functions.
+- **AppConfig**: A service that allows you to quickly and safely deploy application configurations.
+- **Feature Flags**: A software development technique that allows you to turn certain features on or off without deploying new code.
+- **DynamoDB**: A fully managed NoSQL database service that provides fast and predictable performance with seamless scalability.
+- **Idempotency**: The property of certain operations in that they can be applied multiple times without changing the result beyond the initial application.
+
+## High-Density QA Ground Truth Summary
+The process begins with a `Client` sending a request, which is immediately inspected by the `WAF WebACL` using `AWS Managed Rules` for security. After passing the security check, the request is routed to the `REST API` endpoint `/api/orders` managed by the `API Gateway`. The API Gateway then triggers a `Lambda Function` written in `Python 3.14` to process the order. This Lambda function leverages a `Lambda Layer` containing `Common Dependencies` to streamline its execution. The Lambda function also retrieves feature flag configurations from `AppConfig` to dynamically adjust its behavior. To ensure data persistence and integrity, the Lambda function interacts with two `DynamoDB` tables: the `DynamoDB Orders Table`, where the processed order data is stored, and the `DynamoDB Idempotency Table`, which guarantees that the order processing is idempotent, preventing duplicate operations. The use of `AppConfig` allows for dynamic control over features, enabling A/B testing or phased rollouts without requiring code deployments. The process concludes with the data stored in the DynamoDB tables.

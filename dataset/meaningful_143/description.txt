@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the health check and service registry update process within an agent cluster, along with how external clients interact with services through a service registry and circuit breaker. The diagram depicts the flow of requests, health checks, and service status updates, providing a visual representation of the system's health management and routing mechanisms. It serves as documentation for understanding the system's architecture and operational behavior.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It is divided into two main sections: the Agent Cluster health check process on the left, and the service registry and client interaction on the right. The start nodes are "Service Agent: Port 9000, Service A" and "External Client". The end nodes are "Route Traffic to A" and "Return Error to Caller".
+
+## Subgraphs / Stages
+The diagram contains an explicit subgraph:
+- **Agent Cluster**: This subgraph encapsulates the health check process for a service agent.
+
+## Node-by-Node Description
+- **A / Service Agent: Port 9000, Service A**: Represents a service agent running on port 9000, identified as Service A. visible in diagram; no further repository context available.
+- **B / Health Check: /health Endpoint**: Represents the health check endpoint for Service A. visible in diagram; no further repository context available.
+- **C / HTTP Response**: Represents the HTTP response received from the health check endpoint. visible in diagram; no further repository context available.
+- **D / Update Service Registry**: Represents the action of updating the service registry with the service's healthy status. visible in diagram; no further repository context available.
+- **E / Mark Service as Unhealthy**: Represents the action of marking the service as unhealthy in the service registry. visible in diagram; no further repository context available.
+- **F / Service Registry: Redis Cluster**: Represents the service registry implemented using a Redis cluster. visible in diagram; no further repository context available.
+- **G / Read Entry: Service A**: Represents the action of reading the service entry for Service A from the service registry. visible in diagram; no further repository context available.
+- **H / Load Balancer**: Represents the load balancer responsible for routing traffic to healthy service instances. visible in diagram; no further repository context available.
+- **I / Circuit Breaker Enabled**: Represents the circuit breaker that prevents requests from being sent to unhealthy service instances. visible in diagram; no further repository context available.
+- **J / Route Traffic to A**: Represents the action of routing traffic to Service A. visible in diagram; no further repository context available.
+- **K / Return Error to Caller**: Represents the action of returning an error to the caller when the service is unhealthy. visible in diagram; no further repository context available.
+- **L / External Client**: Represents an external client making requests to Service A. visible in diagram; no further repository context available.
+- **M / Request: Service A**: Represents the request made by the external client to Service A. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The service agent sends a request to the health check endpoint.
+- `B -- "Request Sent" --> C`: A request is sent to the HTTP endpoint.
+- `C -- "Status: 200 OK" --> D`: If the HTTP response status is 200 OK, the service registry is updated.
+- `C -- "Status: NOT 200" --> E`: If the HTTP response status is not 200 OK, the service is marked as unhealthy.
+- `F --> G`: The service registry is queried to read the entry for Service A.
+- `G -- "Healthy" --> H`: If the service is healthy, the request is routed to the load balancer.
+- `G -- "Unhealthy" --> I`: If the service is unhealthy, the circuit breaker is enabled.
+- `H --> J`: The load balancer routes traffic to Service A.
+- `I --> K`: The circuit breaker returns an error to the caller.
+- `L --> M`: The external client sends a request to Service A.
+- `M --> H`: The request is routed to the load balancer if the service is healthy.
+- `M --> I`: The request is handled by the circuit breaker if the service is unhealthy.
+
+## Repository Context & Terminology
+- **Service Agent**: A software component that provides a specific service, often running on a specific port.
+- **Health Check Endpoint**: An HTTP endpoint used to determine the health status of a service.
+- **HTTP Response**: The response received from an HTTP request, including a status code.
+- **Service Registry**: A database or system that stores information about available services, including their location and status.
+- **Redis Cluster**: A distributed implementation of the Redis in-memory data structure store, used for high availability and scalability.
+- **Load Balancer**: A component that distributes network traffic across multiple servers to ensure no single server is overwhelmed.
+- **Circuit Breaker**: A design pattern used to prevent cascading failures by stopping requests to a failing service.
+
+## High-Density QA Ground Truth Summary
+The process begins with a "Service Agent" running on port 9000, which initiates a health check by sending a request to its "/health" endpoint. The "HTTP Response" determines the subsequent action: a "Status: 200 OK" triggers an update to the "Service Registry", while a "Status: NOT 200" results in the service being marked as unhealthy. Concurrently, an "External Client" attempts to access "Service A". The "Service Registry", implemented as a "Redis Cluster", is queried to "Read Entry: Service A". This read operation branches based on the service's health status. If "Healthy", the request proceeds to a "Load Balancer" which then "Route Traffic to A". Conversely, if "Unhealthy", a "Circuit Breaker Enabled" prevents requests and "Return Error to Caller". The circuit breaker pattern is crucial for preventing cascading failures by stopping requests to unhealthy services, ensuring system stability. The service registry acts as a central source of truth for service availability, enabling informed routing decisions.

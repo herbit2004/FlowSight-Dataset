@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of an order processing system. It depicts the sequence of steps involved from when a user places an order to when feedback is processed, including inventory management, payment processing, and potential delays. The diagram serves as a visual representation of the order fulfillment process, but contains deliberate errors and illogical flows.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User Places Order" node at the top and flows downwards through various processes and decision points. The end nodes are "After Sales Survey" and "Update Inventory" (after "Process Feedback").
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Order Placement & Payment, Confirmation & Refund, Inventory Check, Order Fulfillment, Delivery, Feedback Collection, and Feedback Processing.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action of a user submitting an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Send Order Confirmation**: Sends a confirmation message to the user regarding their order. visible in diagram; no further repository context available.
+- **H / Update Inventory**: Updates the inventory levels based on the order. visible in diagram; no further repository context available.
+- **D / Sufficient Stock?**: A decision point to check if there is sufficient stock available to fulfill the order. visible in diagram; no further repository context available.
+- **E / Notify User of Delay**: Notifies the user about a delay in fulfilling their order. visible in diagram; no further repository context available.
+- **F / Package Order**: Packages the order for shipment. visible in diagram; no further repository context available.
+- **G / Shipping Label Printed**: Prints the shipping label for the packaged order. visible in diagram; no further repository context available.
+- **I / Order Delivered**: Indicates that the order has been delivered to the user. visible in diagram; no further repository context available.
+- **J / Feedback Received?**: A decision point to check if feedback has been received from the user. visible in diagram; no further repository context available.
+- **K / After Sales Survey**: Sends an after-sales survey to the user. visible in diagram; no further repository context available.
+- **L / Process Feedback**: Processes the feedback received from the user. visible in diagram; no further repository context available.
+- **M / Update Inventory**: Updates the inventory based on the processed feedback. visible in diagram; no further repository context available.
+- **N / Issue Refund**: Issues a refund to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, initiating the payment check.
+- `B -- No --> C`: If payment is not received, send an order confirmation (incorrect flow).
+- `B -- Yes --> H`: If payment is received, update the inventory.
+- `H --> D`: After updating inventory, check if there is sufficient stock.
+- `D -- No --> E`: If there is insufficient stock, notify the user of a delay.
+- `D -- Yes --> F`: If there is sufficient stock, package the order.
+- `F --> G`: After packaging the order, print the shipping label.
+- `G --> I`: After printing the shipping label, the order is delivered.
+- `I --> J`: After the order is delivered, check if feedback has been received.
+- `J -- No --> K`: If no feedback is received, send an after-sales survey.
+- `J -- Yes --> L`: If feedback is received, process the feedback.
+- `L --> M`: After processing feedback, update the inventory.
+- `E --> N`: After notifying the user of a delay, issue a refund.
+- `N --> H`: After issuing a refund, update the inventory.
+- `K --> A`: After sending the after-sales survey, the process loops back to the "User Places Order" node.
+- `C --> N`: After sending order confirmation, issue a refund.
+
+## Repository Context & Terminology
+- **User Places Order**: The initial action where a customer submits their order. In this diagram, it's the starting point and also the endpoint of an illogical loop.
+- **Payment Received?**: A check to verify if the payment was successful. In this diagram, a failed payment leads to sending an order confirmation, which is incorrect.
+- **Send Order Confirmation**: A message sent to the user confirming their order. In this diagram, it's sent after a failed payment, which is incorrect.
+- **Update Inventory**: Adjusting the stock levels based on orders or feedback. In this diagram, it's triggered at multiple illogical points, such as after a refund or after processing feedback.
+- **Sufficient Stock?**: A check to see if there is enough stock to fulfill the order. In this diagram, insufficient stock leads to notifying the user of a delay, which is incorrect.
+- **Notify User of Delay**: Informing the user about a delay in their order. In this diagram, it's triggered by insufficient stock, which should lead to cancellation or backorder.
+- **Package Order**: Preparing the order for shipment. visible in diagram; no further repository context available.
+- **Shipping Label Printed**: Printing the shipping label for the package. visible in diagram; no further repository context available.
+- **Order Delivered**: Indicates the order has been successfully delivered. visible in diagram; no further repository context available.
+- **Feedback Received?**: A check to see if the user has provided feedback. visible in diagram; no further repository context available.
+- **After Sales Survey**: A survey sent to the user after the sale. In this diagram, it loops back to "User Places Order", which is illogical.
+- **Process Feedback**: Analyzing the feedback received from the user. In this diagram, it leads to updating inventory, which is incorrect.
+- **Issue Refund**: Returning the payment to the user. In this diagram, it's triggered after sending an order confirmation (after failed payment) and leads to updating inventory, both of which are incorrect.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Places Order", which then leads to a "Payment Received?" decision. If payment fails ("No" branch), an "Order Confirmation" is sent (incorrect flow), followed by issuing a "Refund". If payment succeeds ("Yes" branch), the "Inventory" is updated. After updating inventory, a "Sufficient Stock?" check is performed. If stock is insufficient ("No" branch), the user is notified of a "Delay", and a "Refund" is issued. If stock is sufficient ("Yes" branch), the "Order" is "Packaged", a "Shipping Label Printed", and the "Order Delivered". Post-delivery, a "Feedback Received?" check determines whether to send an "After Sales Survey" or "Process Feedback". The "After Sales Survey" then loops back to "User Places Order" (illogical loop). "Process Feedback" leads to "Update Inventory" (incorrect causal direction). The "Issue Refund" step incorrectly leads to "Update Inventory". The "Order Confirmation" (after failed payment) incorrectly leads to "Issue Refund". The end nodes are "After Sales Survey" and "Update Inventory" (after feedback processing). The diagram contains several errors, including sending order confirmations after failed payments, triggering refunds after order confirmations, updating inventory after refunds, and looping back to order placement after the after-sales survey.

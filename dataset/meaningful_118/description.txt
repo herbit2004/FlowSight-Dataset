@@ -1,0 +1,97 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating a database read/write splitting and replication strategy. It shows the flow of requests from a client application through a load balancer, router services, and selection logic to primary and replica databases. The diagram aims to depict how read and write operations are handled differently to optimize performance and ensure data consistency through asynchronous replication.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It exhibits a hierarchical structure, starting with the client application and branching into read and write paths, eventually converging at the replica database nodes. The start node is the Client Application, and the end nodes are the Replica DB Nodes (1, 2, and 3).
+
+## Subgraphs / Stages
+The diagram contains the following explicit subgraphs:
+- **Client Application**: Represents the application initiating database requests.
+- **Load Balancer**: Distributes incoming requests.
+- **Read Router**: Handles read requests.
+- **Write Router**: Handles write requests.
+- **Read Replica Selection**: Implements logic to select a healthy replica for read operations.
+- **Primary DB Selection**: Implements logic to select the primary database for write operations.
+- **Replica DB**: Represents the replica database endpoint.
+- **Primary DB**: Represents the primary database endpoint.
+- **Primary Database Cluster**: Contains the primary database nodes.
+- **Replica Database Cluster**: Contains the replica database nodes.
+- **Async Replication Queue**: Asynchronously queues replication tasks.
+- **Replication Service**: Handles the replication of data from the primary to replica databases.
+
+## Node-by-Node Description
+- **Client Application**: Represents the application making requests to the database.
+  visible in diagram; no further repository context available.
+- **Load Balancer**: Distributes incoming requests to appropriate router services.
+  visible in diagram; no further repository context available.
+- **Read Router Service**: Handles read requests, routing them to replica databases.
+  visible in diagram; no further repository context available.
+- **Write Router Service**: Handles write requests, routing them to the primary database.
+  visible in diagram; no further repository context available.
+- **Replica Router Component**: Component responsible for routing read requests to a replica database.
+  visible in diagram; no further repository context available.
+- **Primary Router Component**: Component responsible for routing write requests to the primary database.
+  visible in diagram; no further repository context available.
+- **Replica Selection Logic**: Implements the logic to select a healthy replica for read operations.
+  visible in diagram; no further repository context available.
+- **Primary DB Selection Logic**: Implements the logic to select the primary database for write operations.
+  visible in diagram; no further repository context available.
+- **Replica DB Endpoint**: Represents the endpoint for accessing replica databases.
+  visible in diagram; no further repository context available.
+- **Primary DB Endpoint**: Represents the endpoint for accessing the primary database.
+  visible in diagram; no further repository context available.
+- **Primary DB Node 1**: A node in the primary database cluster.
+  visible in diagram; no further repository context available.
+- **Primary DB Node 2**: A node in the primary database cluster.
+  visible in diagram; no further repository context available.
+- **Primary DB Node 3**: A node in the primary database cluster.
+  visible in diagram; no further repository context available.
+- **Replica DB Node 1**: A node in the replica database cluster.
+  visible in diagram; no further repository context available.
+- **Replica DB Node 2**: A node in the replica database cluster.
+  visible in diagram; no further repository context available.
+- **Replica DB Node 3**: A node in the replica database cluster.
+  visible in diagram; no further repository context available.
+- **Async Replication Queue**: A queue for asynchronous replication tasks.
+  visible in diagram; no further repository context available.
+- **Replication Service**: Service responsible for replicating data from the primary to replica databases.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Client Application --> Load Balancer`: Client application sends requests to the load balancer.
+- `Load Balancer -- Read Request --> Read Router`: Load balancer forwards read requests to the read router service.
+- `Load Balancer -- Write Request --> Write Router`: Load balancer forwards write requests to the write router service.
+- `Read Router --> Replica Router Component`: Read router forwards the request to the replica router component.
+- `Write Router --> Primary Router Component`: Write router forwards the request to the primary router component.
+- `Replica Router Component --> Read Replica Selection`: Replica router component forwards the request to the replica selection logic.
+- `Primary Router Component --> Primary DB Selection`: Primary router component forwards the request to the primary DB selection logic.
+- `Read Replica Selection -- Healthy Replica Found --> Replica DB`: If a healthy replica is found, the request is routed to the replica database endpoint.
+- `Read Replica Selection -- No Healthy Replica --> Primary DB`: If no healthy replica is found, the request is routed to the primary database endpoint.
+- `Primary DB Selection --> Primary DB`: Primary DB selection logic routes the request to the primary database endpoint.
+- `Primary DB --> Primary DB Node 1`: Primary DB endpoint forwards the request to Primary DB Node 1.
+- `Primary DB --> Primary DB Node 2`: Primary DB endpoint forwards the request to Primary DB Node 2.
+- `Primary DB --> Primary DB Node 3`: Primary DB endpoint forwards the request to Primary DB Node 3.
+- `Replica DB --> Replica DB Node 1`: Replica DB endpoint forwards the request to Replica DB Node 1.
+- `Replica DB --> Replica DB Node 2`: Replica DB endpoint forwards the request to Replica DB Node 2.
+- `Replica DB --> Replica DB Node 3`: Replica DB endpoint forwards the request to Replica DB Node 3.
+- `Primary DB Node 1 -- Replication --> Replica DB Node 1`: Primary DB Node 1 replicates data to Replica DB Node 1.
+- `Primary DB Node 2 -- Replication --> Replica DB Node 2`: Primary DB Node 2 replicates data to Replica DB Node 2.
+- `Primary DB Node 3 -- Replication --> Replica DB Node 3`: Primary DB Node 3 replicates data to Replica DB Node 3.
+- `Primary DB --> Async Replication Queue`: Primary DB sends data to the Async Replication Queue for replication.
+- `Async Replication Queue --> Replication Service`: Async Replication Queue sends data to the Replication Service.
+- `Replication Service --> Replica DB`: Replication Service sends data to the Replica DB.
+
+## Repository Context & Terminology
+- **Client Application**: The application that initiates database requests (read or write).
+- **Load Balancer**: A network component that distributes incoming traffic across multiple servers or services to ensure no single server is overwhelmed.
+- **Read Router**: A service that directs read requests to appropriate database replicas.
+- **Write Router**: A service that directs write requests to the primary database.
+- **Primary Database**: The main database that handles write operations and serves as the source of truth.
+- **Replica Database**: A copy of the primary database used for read operations to reduce the load on the primary database and improve read performance.
+- **Replication**: The process of copying data from the primary database to replica databases to ensure data consistency.
+- **Async Replication Queue**: A queue that stores replication tasks to be processed asynchronously, ensuring that write operations are not blocked by replication.
+- **Replication Service**: A service that processes replication tasks from the queue and updates the replica databases.
+- **Endpoint**: A URL or network address that allows access to a service or database.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with the Client Application sending requests to the Load Balancer. The Load Balancer then routes requests based on their type: Read Requests are sent to the Read Router Service, while Write Requests are directed to the Write Router Service. The Read Router Service forwards requests to the Replica Router Component, which then uses Replica Selection Logic to find a healthy replica. If a healthy replica is found, the request is routed to the Replica DB Endpoint; otherwise, it's routed to the Primary DB Endpoint. The Write Router Service forwards requests to the Primary Router Component, which uses Primary DB Selection Logic to select a primary database. The selected Primary DB Endpoint then processes the write request. Data from the Primary DB Endpoint is asynchronously replicated to the Replica DB Endpoint via the Async Replication Queue and Replication Service. The Primary DB Nodes replicate data to the Replica DB Nodes to maintain data consistency. This read/write splitting strategy, combined with asynchronous replication, aims to optimize performance by directing read operations to replicas and ensuring data consistency through replication from the primary database. The architecture terminates with the Replica DB Nodes, which serve read requests.

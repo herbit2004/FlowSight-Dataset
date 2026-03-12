@@ -1,0 +1,15 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- No --> C[Order Cancelled];
+    B -- Yes --> D[Shipping Label Created];
+    D --> E{Inventory Sufficient?};
+    E -- Yes --> F[Item Pulled From Shelf];
+    F --> G[Package Delivered];
+    G --> H{Customer Satisfied?};
+    H -- No --> I[Issue Refund];
+    I --> A;
+    H -- Yes --> J[Order Completed];
+    E -- No --> K[Order Cancelled];
+    K --> D;
+    C --> L[Notify Customer Cancellation];
+    L --> J;

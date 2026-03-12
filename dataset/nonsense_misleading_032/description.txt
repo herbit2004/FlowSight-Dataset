@@ -1,0 +1,65 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the order processing workflow for a system, from order receipt to closure. The diagram outlines the steps involved in fulfilling an order, including payment verification, inventory management, shipping, and customer satisfaction.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with "Order Received" at the top and flows downwards through a series of processes and decision points, ultimately converging on "Close Order" at the bottom.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Initiation, Inventory & Packaging, Shipping, Delivery, Customer Feedback, and Order Closure.
+
+## Node-by-Node Description
+- **A / Order Received**: The initial step in the order processing workflow, indicating that an order has been placed. visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision point to verify if the payment for the order was successful. visible in diagram; no further repository context available.
+- **C / Cancel Order**: The process of canceling the order if the payment was not successful. visible in diagram; no further repository context available.
+- **D / Inventory Check**: A process to check the availability of the items in the order. visible in diagram; no further repository context available.
+- **E / Sufficient Inventory?**: A decision point to determine if there is sufficient inventory to fulfill the order. visible in diagram; no further repository context available.
+- **F / Package Items**: The process of packaging the items in the order. visible in diagram; no further repository context available.
+- **G / Notify Customer of Delay**: The process of notifying the customer if there is a delay in fulfilling the order due to insufficient inventory. visible in diagram; no further repository context available.
+- **H / Generate Shipping Label**: The process of generating a shipping label for the package. visible in diagram; no further repository context available.
+- **I / Label Printed?**: A decision point to determine if the shipping label was printed successfully. visible in diagram; no further repository context available.
+- **J / Ship Order**: The process of shipping the order to the customer. visible in diagram; no further repository context available.
+- **K / Update Inventory**: The process of updating the inventory after the order has been shipped. visible in diagram; no further repository context available.
+- **L / Send Shipping Notification**: The process of sending a shipping notification to the customer. visible in diagram; no further repository context available.
+- **M / Order Delivered**: Indicates that the order has been delivered to the customer. visible in diagram; no further repository context available.
+- **N / Customer Satisfied?**: A decision point to determine if the customer is satisfied with the order. visible in diagram; no further repository context available.
+- **O / Close Order**: The final step in the order processing workflow, indicating that the order has been closed. visible in diagram; no further repository context available.
+- **P / Open Support Ticket**: The process of opening a support ticket if the customer is not satisfied with the order. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Order received triggers payment verification.
+- `B -- Yes --> D`: Successful payment triggers inventory check.
+- `B -- No --> C`: Unsuccessful payment leads to order cancellation.
+- `D --> E`: Inventory check leads to a decision on inventory sufficiency.
+- `E -- Yes --> F`: Sufficient inventory leads to packaging items.
+- `E -- No --> G`: Insufficient inventory leads to notifying the customer of a delay.
+- `G --> D`: Customer notification of delay loops back to inventory check.
+- `F --> H`: Packaging items leads to generating a shipping label.
+- `H --> I`: Generating a shipping label leads to a decision on label printing.
+- `I -- Yes --> J`: Successful label printing leads to shipping the order.
+- `I -- No --> F`: Unsuccessful label printing loops back to packaging items.
+- `J --> K`: Shipping the order leads to updating inventory.
+- `K --> L`: Updating inventory leads to sending a shipping notification.
+- `L --> M`: Sending a shipping notification leads to order delivery.
+- `M --> N`: Order delivery leads to a decision on customer satisfaction.
+- `N -- Yes --> O`: Customer satisfaction leads to closing the order.
+- `N -- No --> P`: Customer dissatisfaction leads to opening a support ticket.
+- `P --> O`: Opening a support ticket leads to closing the order.
+- `C --> O`: Canceling the order leads to closing the order.
+
+## Repository Context & Terminology
+- **Order Received**: Typically refers to the initial stage when a customer places an order. In this diagram, it's the starting point of the workflow.
+- **Payment Successful?**: A standard check to ensure payment has been processed. Here, a failed payment leads to immediate order cancellation.
+- **Inventory Check**: A common process to verify product availability. In this diagram, if inventory is insufficient, the customer is notified, but the system loops back to the same inventory check without any intervention to correct the shortage.
+- **Sufficient Inventory?**: A decision point based on the inventory check. The diagram's logic dictates subsequent steps based on inventory levels.
+- **Package Items**: The process of preparing the order for shipment. In this diagram, it's illogically re-triggered if the shipping label fails to print.
+- **Generate Shipping Label**: Creating a label with the necessary shipping information.
+- **Ship Order**: The process of sending the order to the customer.
+- **Update Inventory**: Adjusting the inventory count after shipping. Critically, in this diagram, this happens *after* shipping, which is counterfactual.
+- **Send Shipping Notification**: Informing the customer that their order has been shipped.
+- **Order Delivered**: Indicates the order has reached the customer.
+- **Customer Satisfied?**: Gauging customer satisfaction post-delivery.
+- **Open Support Ticket**: Creating a ticket for customer service if the customer is not satisfied.
+- **Close Order**: The final stage, regardless of customer satisfaction or order cancellation.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Order Received" (A), immediately followed by a "Payment Successful?" check (B). If payment fails (B -- No --> C), the order is canceled and then closed (C --> O). If payment is successful (B -- Yes --> D), an "Inventory Check" (D) is performed, leading to the "Sufficient Inventory?" decision (E). If inventory is insufficient (E -- No --> G), the customer is notified of a delay (G), and the process loops back to the "Inventory Check" (D) without any corrective action. If inventory is sufficient (E -- Yes --> F), the items are packaged (F), and a shipping label is generated (H). A "Label Printed?" check (I) follows; if the label fails to print (I -- No --> F), the system illogically re-packages the items. If the label prints successfully (I -- Yes --> J), the order is shipped (J), and then the inventory is updated (K) *after* shipping, which is counterfactual. A shipping notification is sent (L), and the order is marked as delivered (M), leading to the "Customer Satisfied?" check (N). Regardless of customer satisfaction (N -- Yes --> O or N -- No --> P --> O), the order is closed (O). If the customer is dissatisfied (N -- No --> P), a support ticket is opened (P) before the order is closed (O). The "Inventory Check" (D) and "Update Inventory" (K) steps are key to inventory management within the order processing workflow, but their placement in the diagram introduces errors.

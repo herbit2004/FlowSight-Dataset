@@ -1,0 +1,49 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the user authentication flow in a system. It outlines the steps involved in verifying a user's credentials, checking their account status, and granting access to the dashboard. The diagram serves as a visual representation of the authentication process, aiding in understanding and troubleshooting the system's security mechanisms.
+
+## Overall Layout
+The diagram flows from left to right (LR). It starts with the user inputting their email and password and ends with either redirecting the user to the dashboard or displaying an error message. The diagram includes decision points represented by diamond shapes to handle different scenarios such as invalid input, locked accounts, or failed authentication.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "User Authentication Flow".
+
+## Node-by-Node Description
+- **A / User Input: Email & Password**: Represents the initial step where the user provides their email address and password. visible in diagram; no further repository context available.
+- **B / Validate Input**: Represents the process of validating the user's input (email and password). visible in diagram; no further repository context available.
+- **C / Check Active User Session**: Represents the process of checking if there is an active session for the user. visible in diagram; no further repository context available.
+- **D / Redirect to Dashboard**: Represents the final step where the user is redirected to the dashboard after successful authentication. visible in diagram; no further repository context available.
+- **E / Check User Account Status**: Represents the process of checking the user's account status (e.g., active, locked, pending verification). visible in diagram; no further repository context available.
+- **F / Display Locked Account Message**: Represents the display of a message indicating that the user's account is locked. visible in diagram; no further repository context available.
+- **G / Authenticate User**: Represents the process of authenticating the user's credentials against the system. visible in diagram; no further repository context available.
+- **H / Display Verification Required Message**: Represents the display of a message indicating that the user needs to verify their account. visible in diagram; no further repository context available.
+- **I / Create User Session**: Represents the creation of a new user session upon successful authentication. visible in diagram; no further repository context available.
+- **J / Display Login Error Message**: Represents the display of an error message when authentication fails. visible in diagram; no further repository context available.
+- **K / Generate JWT Token**: Represents the generation of a JSON Web Token (JWT) for the user session. visible in diagram; no further repository context available.
+- **L / Set JWT Cookie**: Represents the setting of the JWT as a cookie in the user's browser. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User input is passed for validation.
+- `B -- Invalid Input --> A`: If the input is invalid, the user is prompted to re-enter their credentials.
+- `B -- Valid Input --> C`: If the input is valid, the system checks for an active user session.
+- `C -- Session Found --> D`: If an active session is found, the user is redirected to the dashboard.
+- `C -- No Session Found --> E`: If no active session is found, the system checks the user's account status.
+- `E -- Account Locked --> F`: If the account is locked, a locked account message is displayed.
+- `E -- Account Active --> G`: If the account is active, the user is authenticated.
+- `E -- Account Pending Verification --> H`: If the account is pending verification, a verification required message is displayed.
+- `G -- Authentication Successful --> I`: If authentication is successful, a user session is created.
+- `G -- Authentication Failed --> J`: If authentication fails, a login error message is displayed.
+- `I --> K`: A JWT token is generated for the user session.
+- `K --> L`: The JWT token is set as a cookie in the user's browser.
+- `L --> D`: The user is redirected to the dashboard.
+
+## Repository Context & Terminology
+- **User Authentication**: The process of verifying the identity of a user attempting to access a system or application.
+- **Email & Password**: Common credentials used for user authentication.
+- **Session**: A period of interaction between a user and a system, typically tracked using cookies or tokens.
+- **JWT (JSON Web Token)**: A standard for securely transmitting information as a JSON object. It is commonly used for authentication and authorization.
+- **Cookie**: A small piece of data stored on the user's computer by a web browser while browsing a website. Cookies are used for various purposes, including session management and tracking.
+- **Dashboard**: A user interface that provides a summary of information and access to various features of a system or application.
+- **Account Status**: The state of a user's account, which can be active, locked, pending verification, or other custom states.
+
+## High-Density QA Ground Truth Summary
+The user authentication flow begins with the user providing their email and password (Node A). The input is then validated (Node B). If the input is invalid, the flow loops back to Node A, prompting the user to re-enter their credentials. If the input is valid, the system checks for an active user session (Node C). If a session is found, the user is immediately redirected to the dashboard (Node D). If no session is found, the system proceeds to check the user's account status (Node E). Based on the account status, different branches are taken: if the account is locked, a locked account message is displayed (Node F); if the account is pending verification, a verification required message is displayed (Node H); and if the account is active, the user is authenticated (Node G). If authentication is successful, a user session is created (Node I), a JWT token is generated (Node K), and the JWT is set as a cookie (Node L) before redirecting the user to the dashboard (Node D). If authentication fails, a login error message is displayed (Node J). The use of JWT tokens is a standard practice for secure authentication, allowing the system to verify the user's identity without repeatedly accessing the database. The flow culminates in either redirection to the dashboard (Node D) or the display of an error message (Nodes F, H, or J).

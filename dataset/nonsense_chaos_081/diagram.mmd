@@ -1,0 +1,19 @@
+graph TD
+    A[AxiomStart Init] --> B{CoreSync Validation}
+    B -- Validation OK --> C[FluxBridge Router]
+    B -- Validation Failed --> L[SpectraQueue Flush]
+    C --> D{VaultNode Handshake}
+    D -- Handshake Success --> E[ArcLane Distributor]
+    D -- Handshake Failure --> L
+    E --> F[ZenithGate Auth Layer]
+    F -- Auth Pass --> G[TerraformBuffer Commit]
+    F -- Auth Fail --> L
+    G --> H{Metadata Aggregation}
+    H -- Aggregation Complete --> I[AstroCache Invalidation]
+    H -- Aggregation Error --> L
+    I --> J[NebulaDrain Cascade]
+    J --> K[AxiomEnd Signal]
+    L --> K
+    style B fill:#f9f,stroke:#333,stroke-width:2px
+    style D fill:#f9f,stroke:#333,stroke-width:2px
+    style H fill:#f9f,stroke:#333,stroke-width:2px

@@ -1,0 +1,67 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the order processing workflow, from order receipt to order closure. The diagram outlines the steps involved in validating the credit card, checking inventory, packing and shipping the order, and handling backorders.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "Order Received" node at the top and flows downwards through a series of processes and decision points, eventually converging to the "Close Order" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Reception & Validation, Inventory Check, Order Fulfillment, Inventory Update, Delivery Confirmation, and Order Closure.
+
+## Node-by-Node Description
+- **Order Received**: Represents the initial state where an order is received.
+  visible in diagram; no further repository context available.
+- **Credit Card Valid?**: A decision node that checks the validity of the customer's credit card.
+  visible in diagram; no further repository context available.
+- **Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory.
+  visible in diagram; no further repository context available.
+- **Inventory Available?**: A decision node that checks if the required inventory is available.
+  visible in diagram; no further repository context available.
+- **Pack Order**: Represents the process of packing the order for shipment.
+  visible in diagram; no further repository context available.
+- **Ship Order**: Represents the process of shipping the packed order to the customer.
+  visible in diagram; no further repository context available.
+- **Update Inventory**: Represents the process of updating the inventory after the order has been shipped.
+  visible in diagram; no further repository context available.
+- **Backorder Item**: Represents the process of backordering an item if it is not available in the inventory.
+  visible in diagram; no further repository context available.
+- **Delivery Confirmed?**: A decision node that checks if the delivery has been confirmed by the customer.
+  visible in diagram; no further repository context available.
+- **Send Shipment Notification**: Represents the process of sending a shipment notification to the customer.
+  visible in diagram; no further repository context available.
+- **Close Order**: Represents the final state where the order is closed.
+  visible in diagram; no further repository context available.
+- **Notify Customer of Payment Failure**: Represents the process of notifying the customer about the payment failure.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Order Received --> Credit Card Valid?`: Indicates the flow from receiving an order to validating the credit card.
+- `Credit Card Valid? -- Yes --> Inventory Check`: If the credit card is valid, the process proceeds to check the inventory.
+- `Credit Card Valid? -- No --> Notify Customer of Payment Failure`: If the credit card is not valid, the customer is notified of the payment failure.
+- `Inventory Check --> Inventory Available?`: Indicates the flow from checking the inventory to determining its availability.
+- `Inventory Available? -- Yes --> Pack Order`: If the inventory is available, the process proceeds to pack the order.
+- `Inventory Available? -- No --> Backorder Item`: If the inventory is not available, the item is backordered.
+- `Pack Order --> Ship Order`: Indicates the flow from packing the order to shipping it.
+- `Ship Order --> Update Inventory`: Indicates the flow from shipping the order to updating the inventory.
+- `Update Inventory --> Backorder Item`: Indicates the flow from updating the inventory to backordering the item.
+- `Ship Order --> Delivery Confirmed?`: Indicates the flow from shipping the order to confirming delivery.
+- `Delivery Confirmed? -- No --> Send Shipment Notification`: If the delivery is not confirmed, a shipment notification is sent.
+- `Delivery Confirmed? -- Yes --> Close Order`: If the delivery is confirmed, the order is closed.
+- `Notify Customer of Payment Failure --> Order Received`: After notifying the customer of payment failure, the process loops back to the "Order Received" state.
+- `Backorder Item --> Send Shipment Notification`: Indicates the flow from backordering an item to sending a shipment notification.
+- `Send Shipment Notification --> Close Order`: Indicates the flow from sending a shipment notification to closing the order.
+
+## Repository Context & Terminology
+- **Order Received**: In standard practice, this refers to the initial event of a customer placing an order. In this diagram, it represents the starting point of the workflow and also a loop-back point after payment failure.
+- **Credit Card Valid?**: In standard practice, this refers to the process of verifying the customer's credit card details with a payment gateway. In this diagram, it is a decision point that determines whether the order processing continues or the customer is notified of payment failure.
+- **Inventory Check**: In standard practice, this refers to the process of querying the inventory database to check the availability of the ordered items. In this diagram, it is a process step that leads to the "Inventory Available?" decision.
+- **Inventory Available?**: In standard practice, this refers to the decision point based on the result of the inventory check. In this diagram, it determines whether the order can be fulfilled immediately or needs to be backordered.
+- **Pack Order**: In standard practice, this refers to the process of physically packing the items for shipment. In this diagram, it is a process step that follows the inventory check and precedes shipping.
+- **Ship Order**: In standard practice, this refers to the process of handing over the packed order to a shipping carrier. In this diagram, it is a process step that follows packing and precedes delivery confirmation.
+- **Update Inventory**: In standard practice, this refers to the process of updating the inventory database to reflect the items that have been shipped. In this diagram, it is placed after shipping, but illogically *before* backordering, and feeds into the backorder process.
+- **Backorder Item**: In standard practice, this refers to the process of placing an item on backorder if it is not currently available in the inventory. In this diagram, it is triggered by inventory unavailability, but receives input from the "Update Inventory" step, creating an illogical loop.
+- **Delivery Confirmed?**: In standard practice, this refers to the process of verifying that the customer has received the order. In this diagram, the "No" branch leads to sending a shipment notification, which is counterintuitive.
+- **Send Shipment Notification**: In standard practice, this refers to the process of sending an email or SMS to the customer to notify them that their order has been shipped. In this diagram, it is triggered by a failed delivery confirmation and leads to closing the order.
+- **Close Order**: In standard practice, this refers to the final step of marking the order as completed in the system. In this diagram, it is reached after delivery confirmation or after sending a shipment notification.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Order Received," which flows into the "Credit Card Valid?" decision. If the credit card is valid ("Yes" branch), the process moves to "Inventory Check"; otherwise ("No" branch), the customer is notified of payment failure, and the process loops back to "Order Received." After the inventory check, the "Inventory Available?" decision determines whether to "Pack Order" ("Yes" branch) or "Backorder Item" ("No" branch). The "Pack Order" step leads to "Ship Order," which then updates the inventory *before* the backorder process. The "Update Inventory" step feeds back into "Backorder Item," creating an illogical loop. "Ship Order" also leads to the "Delivery Confirmed?" decision. If delivery is *not* confirmed ("No" branch), a "Send Shipment Notification" is triggered, which then leads to "Close Order." If delivery *is* confirmed ("Yes" branch), the process goes directly to "Close Order," skipping the shipment notification. The "Backorder Item" process also triggers "Send Shipment Notification," which then leads to "Close Order." The final node is "Close Order," marking the completion of the workflow. The diagram contains several errors, including updating inventory before backordering, an illogical loop between "Update Inventory" and "Backorder Item," and a counterintuitive flow where a failed delivery confirmation triggers a shipment notification.

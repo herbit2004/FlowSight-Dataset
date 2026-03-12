@@ -1,0 +1,45 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the monitoring and notification flow for an application. It shows how monitored resources trigger CloudWatch alarms, which are then visualized in dashboards and used to send notifications via an SNS topic. The diagram provides a high-level overview of the monitoring infrastructure.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It has a hierarchical structure, starting with monitored resources at the top, flowing through CloudWatch monitoring in the middle, and ending with dashboards and notifications at the bottom.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Monitored Resources**: Represents the AWS resources being monitored.
+- **CloudWatch Monitoring**: Encompasses CloudWatch alarms and dashboards.
+- **Notification**: Represents the notification mechanism using an SNS topic.
+
+## Node-by-Node Description
+- **API Gateway**: Represents the API Gateway resource. visible in diagram; no further repository context available.
+- **Lambda Function**: Represents the Lambda Function resource. visible in diagram; no further repository context available.
+- **DynamoDB Tables**: Represents the DynamoDB Tables resource. visible in diagram; no further repository context available.
+- **API Gateway Alarms**: Represents CloudWatch alarms for the API Gateway, specifically monitoring 5XX errors and latency. visible in diagram; no further repository context available.
+- **Lambda Alarms**: Represents CloudWatch alarms for the Lambda Function, specifically monitoring errors and P90 latency. visible in diagram; no further repository context available.
+- **DynamoDB Alarms**: Represents CloudWatch alarms for DynamoDB Tables, specifically monitoring throttles and errors. visible in diagram; no further repository context available.
+- **High-Level Dashboard**: Represents a dashboard displaying API Gateway metrics and business KPIs. visible in diagram; no further repository context available.
+- **Low-Level Dashboard**: Represents a dashboard displaying Lambda and DynamoDB metrics. visible in diagram; no further repository context available.
+- **SNS Topic**: Represents an SNS topic that is KMS encrypted, used for sending notifications. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `API Gateway --> API Gateway Alarms`: API Gateway metrics trigger API Gateway Alarms.
+- `Lambda Function --> Lambda Alarms`: Lambda Function metrics trigger Lambda Alarms.
+- `DynamoDB Tables --> DynamoDB Alarms`: DynamoDB Tables metrics trigger DynamoDB Alarms.
+- `API Gateway Alarms --> SNS Topic`: API Gateway Alarms trigger a notification to the SNS Topic.
+- `Lambda Alarms --> SNS Topic`: Lambda Alarms trigger a notification to the SNS Topic.
+- `DynamoDB Alarms --> SNS Topic`: DynamoDB Alarms trigger a notification to the SNS Topic.
+- `API Gateway Alarms --> High-Level Dashboard`: API Gateway Alarms are displayed on the High-Level Dashboard.
+- `Lambda Alarms --> Low-Level Dashboard`: Lambda Alarms are displayed on the Low-Level Dashboard.
+- `DynamoDB Alarms --> Low-Level Dashboard`: DynamoDB Alarms are displayed on the Low-Level Dashboard.
+
+## Repository Context & Terminology
+- **API Gateway**: A fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale.
+- **Lambda Function**: A serverless compute service that lets you run code without provisioning or managing servers.
+- **DynamoDB Tables**: A fully managed NoSQL database service that provides fast and predictable performance with seamless scalability.
+- **CloudWatch Alarms**: A service that allows you to monitor your AWS resources and applications in real-time.
+- **SNS Topic**: A managed service that provides message delivery from publishers to subscribers (also known as producers and consumers).
+- **KMS Encryption**: A managed service that makes it easy for you to create and manage cryptographic keys and control their use across a wide range of AWS services and in your applications.
+- **P90 Latency**: The 90th percentile latency, a measure of the time it takes for 90% of requests to be processed.
+
+## High-Density QA Ground Truth Summary
+The diagram begins with three monitored resources: API Gateway, Lambda Function, and DynamoDB Tables. Each of these resources triggers corresponding CloudWatch Alarms based on specific metrics. API Gateway Alarms are triggered by 5XX errors and latency, Lambda Alarms by errors and P90 latency, and DynamoDB Alarms by throttles and errors. These alarms then feed into two main destinations: a High-Level Dashboard displaying API Gateway metrics and business KPIs, and a Low-Level Dashboard displaying Lambda and DynamoDB metrics. Crucially, all three types of CloudWatch Alarms also trigger notifications sent to an SNS Topic, which is KMS encrypted for security. The SNS Topic serves as the end node for the notification flow. The CloudWatch Alarms provide real-time monitoring of the AWS resources, allowing for proactive identification and resolution of issues. The dashboards provide visualizations of the metrics, enabling users to gain insights into the performance of the application. The SNS Topic ensures that notifications are sent to the appropriate stakeholders when alarms are triggered.

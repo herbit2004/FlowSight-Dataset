@@ -1,0 +1,83 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow of an e-commerce system. It illustrates the sequence of steps from when a user places an order to when the order is closed. The diagram serves as a visual representation of the order fulfillment process, but contains intentional errors and deviations from standard practice.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "User Places Order" node at the top and flows downwards towards the "Close Order" node at the bottom. There is a main linear flow with several branches and loops.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Order Placement, Payment Processing, Order Acknowledgement, Inventory Check, Shipment Preparation, Delivery, and Order Closure.
+
+## Node-by-Node Description
+- **User Places Order**: Represents the initial action of a user submitting an order.
+  visible in diagram; no further repository context available.
+- **Payment Received?**: A decision point to check if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **Acknowledge Order**: Represents the action of acknowledging the order after payment is received.
+  visible in diagram; no further repository context available.
+- **Shipping Label Printed**: Represents the printing of the shipping label for the order.
+  visible in diagram; no further repository context available.
+- **Inventory Available?**: A decision point to check if the required inventory is available.
+  visible in diagram; no further repository context available.
+- **Prepare Shipment**: Represents the preparation of the shipment for the order.
+  visible in diagram; no further repository context available.
+- **Notify Customer of Delay**: Represents notifying the customer about a delay in the order.
+  visible in diagram; no further repository context available.
+- **Packed & Ready**: Represents the state where the order is packed and ready for shipment.
+  visible in diagram; no further repository context available.
+- **Box Size Suitable?**: A decision point to check if the box size is suitable for the order.
+  visible in diagram; no further repository context available.
+- **Generate Invoice**: Represents the generation of the invoice for the order.
+  visible in diagram; no further repository context available.
+- **Contact Customer Service**: Represents contacting customer service.
+  visible in diagram; no further repository context available.
+- **Delivery Confirmation**: Represents the confirmation of delivery.
+  visible in diagram; no further repository context available.
+- **Order Delivered**: Represents the state where the order has been delivered.
+  visible in diagram; no further repository context available.
+- **Order Cancelled**: Represents the state where the order has been cancelled.
+  visible in diagram; no further repository context available.
+- **Order Shipped**: Represents the state where the order has been shipped.
+  visible in diagram; no further repository context available.
+- **Close Order**: Represents the final step of closing the order.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Places Order --> Payment Received?`: The user placing an order triggers the payment check.
+- `Payment Received? -- No --> Order Cancelled`: If payment is not received, the order is cancelled.
+- `Payment Received? -- Yes --> Acknowledge Order`: If payment is received, the order is acknowledged.
+- `Acknowledge Order --> Shipping Label Printed`: After acknowledgement, a shipping label is printed.
+- `Shipping Label Printed --> Inventory Available?`: After printing the shipping label, the inventory availability is checked.
+- `Inventory Available? -- No --> Order Shipped`: If inventory is not available, the order is shipped.
+- `Inventory Available? -- Yes --> Prepare Shipment`: If inventory is available, the shipment is prepared.
+- `Prepare Shipment --> Notify Customer of Delay`: After preparing the shipment, the customer is notified of a delay.
+- `Notify Customer of Delay --> Packed & Ready`: After notifying the customer, the order is packed and ready.
+- `Packed & Ready --> Box Size Suitable?`: After packing, the box size suitability is checked.
+- `Box Size Suitable? -- Yes --> Generate Invoice`: If the box size is suitable, an invoice is generated.
+- `Generate Invoice --> Shipping Label Printed`: Invoice generation loops back to printing the shipping label.
+- `Box Size Suitable? -- No --> Contact Customer Service`: If the box size is not suitable, customer service is contacted.
+- `Contact Customer Service --> Delivery Confirmation`: Contacting customer service leads to delivery confirmation.
+- `User Places Order --> Delivery Confirmation`: User order comes after delivery confirmation.
+- `Delivery Confirmation --> Order Delivered`: Delivery confirmation leads to the order being delivered.
+- `Order Delivered --> Close Order`: After delivery, the order is closed.
+- `Order Shipped --> Close Order`: After shipping, the order is closed.
+- `Order Cancelled --> Close Order`: After cancellation, the order is closed.
+
+## Repository Context & Terminology
+- **User Places Order**: Standard meaning is the initial step where a customer submits their order. In this diagram, it illogically occurs *after* delivery confirmation.
+- **Payment Received?**: Standard meaning is a check to ensure payment has been processed. In this diagram, a "No" results in order cancellation, as expected.
+- **Acknowledge Order**: Standard meaning is to confirm receipt of the order. In this diagram, it is followed by printing a shipping label *before* checking inventory.
+- **Shipping Label Printed**: Standard meaning is the creation of a label for shipping. In this diagram, it is part of a loop with invoice generation.
+- **Inventory Available?**: Standard meaning is a check to see if the items are in stock. In this diagram, a "No" results in the order being shipped directly, skipping delay notification.
+- **Prepare Shipment**: Standard meaning is the process of packing and preparing the order for shipping. In this diagram, it occurs *before* notifying the customer of a delay.
+- **Notify Customer of Delay**: Standard meaning is informing the customer of a delay. In this diagram, it occurs *after* shipment preparation.
+- **Box Size Suitable?**: Standard meaning is a check to ensure the box is the right size. In this diagram, a "No" leads to customer service and then delivery confirmation.
+- **Generate Invoice**: Standard meaning is creating a bill for the order. In this diagram, it loops back to printing the shipping label.
+- **Contact Customer Service**: Standard meaning is reaching out to customer support. In this diagram, it leads to delivery confirmation.
+- **Delivery Confirmation**: Standard meaning is confirming that the order has been delivered. In this diagram, it precedes the user placing the order.
+- **Order Delivered**: Standard meaning is the order reaching the customer. In this diagram, it leads to closing the order.
+- **Order Cancelled**: Standard meaning is the order being cancelled. In this diagram, it leads to closing the order.
+- **Order Shipped**: Standard meaning is the order being sent out for delivery. In this diagram, it occurs when inventory is unavailable.
+- **Close Order**: Standard meaning is the final step in the order process. In this diagram, it is the end point for all paths.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Places Order," which, counterfactually, is connected to "Delivery Confirmation" and occurs after delivery. The next step is "Payment Received?," branching to "Order Cancelled" if payment fails, or "Acknowledge Order" if successful. After acknowledgement, the process prints a "Shipping Label Printed" and then checks "Inventory Available?". If inventory is unavailable, the order is immediately "Order Shipped," bypassing delay notifications. If available, the system proceeds to "Prepare Shipment" and then "Notify Customer of Delay," reversing the expected sequence. The order is then "Packed & Ready," followed by a "Box Size Suitable?" check. A suitable box triggers "Generate Invoice," which then loops back to "Shipping Label Printed," creating an infinite loop. An unsuitable box leads to "Contact Customer Service," which then directly feeds into "Delivery Confirmation," skipping any resolution of the box size issue. Finally, "Order Delivered," "Order Shipped," and "Order Cancelled" all converge to "Close Order," the terminal node. The "Inventory Available?" check's failure path directly ships the order, a significant deviation from standard order processing where a backorder or delay notification would be expected.

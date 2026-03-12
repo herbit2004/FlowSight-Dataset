@@ -1,0 +1,42 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the components and interactions within a meme search application. It illustrates the flow of data and control between the user, the Rails application, the image-to-text generator, the PostgreSQL database, and shared meme files. The diagram serves as a high-level overview of the system's architecture and dependencies.
+
+## Overall Layout
+The diagram uses a top-down (TD) layout. The diagram shows the user interacting with the Rails application, which orchestrates the other components. The "Shared Meme Files" are at the bottom, representing persistent storage.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Shared Meme Files". This subgraph contains the "Public Memes" and "Meme Directory" nodes, representing the storage locations for meme files.
+
+## Node-by-Node Description
+- **User**: Represents the end-user interacting with the application. visible in diagram; no further repository context available.
+- **Docker & Compose Orchestration**: Represents the Docker Compose setup used to orchestrate the different services. In the repository this corresponds to the `docker-compose.yml` file.
+- **Rails Meme Search Application**: Represents the Rails application responsible for handling user requests, searching for memes, and interacting with other services. In the repository this corresponds to the `meme_search/meme_search_app` directory.
+- **Image-to-Text Generator (Python)**: Represents the Python service responsible for extracting text from images. In the repository this corresponds to the `meme_search/image_to_text_generator` directory.
+- **PostgreSQL Database (with pgvector)**: Represents the PostgreSQL database used to store meme data and pgvector for vector embeddings. In the repository this corresponds to the `meme_search/meme_search_app/config/database.yml` file.
+- **Public Memes**: Represents the directory containing publicly available memes. In the repository this corresponds to the `meme_search/meme_search_app/public/memes` directory.
+- **Meme Directory**: Represents the directory containing all memes. In the repository this corresponds to the `meme_search/memes` directory.
+
+## Edges, Branches & Convergence
+- `User --> Rails Meme Search Application`: Represents the user interacting with the Rails application.
+- `Rails Meme Search Application --> PostgreSQL Database (with pgvector)`: Represents the Rails application querying or updating the database.
+- `Rails Meme Search Application --> Image-to-Text Generator (Python)`: Represents the Rails application sending an API request to the image-to-text generator.
+- `Image-to-Text Generator (Python) --> Rails Meme Search Application`: Represents the image-to-text generator sending an API response back to the Rails application.
+- `Rails Meme Search Application --- Public Memes`: Represents the Rails application accessing the public memes directory via volume mount.
+- `Image-to-Text Generator (Python) --- Meme Directory`: Represents the image-to-text generator accessing the meme directory via volume mount.
+- `Docker & Compose Orchestration --- Rails Meme Search Application`: Represents Docker Compose orchestrating the Rails application.
+- `Docker & Compose Orchestration --- Image-to-Text Generator (Python)`: Represents Docker Compose orchestrating the image-to-text generator.
+- `Docker & Compose Orchestration --- PostgreSQL Database (with pgvector)`: Represents Docker Compose orchestrating the PostgreSQL database.
+
+## Repository Context & Terminology
+- **Docker Compose**: A tool for defining and running multi-container Docker applications. The `docker-compose.yml` file defines the services, networks, and volumes used in the application.
+- **Rails Meme Search Application**: The core application built with the Ruby on Rails framework. It handles user requests, searches for memes, and interacts with the database and image-to-text generator.
+- **Image-to-Text Generator**: A Python service that uses OCR (Optical Character Recognition) to extract text from images.
+- **PostgreSQL Database**: A relational database used to store meme metadata, including text extracted from images. The `pgvector` extension is used for storing and querying vector embeddings of meme text.
+- **Volume Mount**: A mechanism for sharing files between the host machine and Docker containers. In this case, volume mounts are used to share meme files between the Rails application, the image-to-text generator, and the host machine.
+- **`docker-compose.yml`**: This file defines the services, networks, and volumes used in the application. It specifies how the Rails application, image-to-text generator, and PostgreSQL database are configured and connected.
+- **`meme_search/meme_search_app/config/database.yml`**: This file contains the database configuration for the Rails application, including the connection details for the PostgreSQL database.
+- **`meme_search/meme_search_app/public/memes`**: This directory contains publicly available meme images served by the Rails application.
+- **`meme_search/memes`**: This directory contains the raw meme images used by the image-to-text generator.
+
+## High-Density QA Ground Truth Summary
+The diagram begins with the User interacting with the Rails Meme Search Application. The Rails application then orchestrates two primary actions: querying/updating the PostgreSQL Database (DBQueryUpdate) and sending an API request to the Image-to-Text Generator (APIRequest). The Image-to-Text Generator, after processing, sends an APIResponse back to the Rails application. Docker & Compose Orchestration manages the Rails application, the Image-to-Text Generator, and the PostgreSQL Database. The Rails application and Image-to-Text Generator both have VolumeMountAccess to the Shared Meme Files, specifically the Public Memes directory for the Rails app and the Meme Directory for the Image-to-Text Generator. The `docker-compose.yml` file defines how these services are orchestrated, including network configurations and volume mounts. The `database.yml` file configures the Rails application's connection to the PostgreSQL database, which stores meme metadata and uses the `pgvector` extension for efficient similarity searches. The end points are the Public Memes and Meme Directory, representing the persistent storage of meme files.

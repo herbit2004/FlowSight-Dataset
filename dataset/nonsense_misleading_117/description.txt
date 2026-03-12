@@ -1,0 +1,57 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow for a system. It outlines the steps involved from order initiation to completion or cancellation, including inventory checks, payment processing, order fulfillment, and delivery. The diagram serves as a visual representation of the order lifecycle.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with a single "User initiates order" node and progresses through various stages of order processing, ultimately leading to an "End" node. The diagram contains decision diamonds that create branching paths based on conditions like inventory availability and payment success.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Order Initiation, Inventory Check, Order Creation & Payment, Order Fulfillment, Delivery, Cancellation, and Completion.
+
+## Node-by-Node Description
+- **A / User initiates order**: Represents the starting point of the order process, triggered by a user action. visible in diagram; no further repository context available.
+- **B / Check Inventory**: A decision point where the system verifies if the required items are in stock. visible in diagram; no further repository context available.
+- **C / Create Order Record**: Represents the creation of a new order record in the system. visible in diagram; no further repository context available.
+- **D / Payment Successful?**: A decision point where the system verifies if the payment was successful. visible in diagram; no further repository context available.
+- **E / Cancel Order**: Represents the cancellation of the order due to payment failure. visible in diagram; no further repository context available.
+- **F / Refund Payment**: Represents the refunding of the payment after order cancellation. visible in diagram; no further repository context available.
+- **G / Notify Customer of Cancellation**: Represents notifying the customer about the order cancellation. visible in diagram; no further repository context available.
+- **H / Send Backorder Request**: Represents sending a request to restock items that are out of stock. visible in diagram; no further repository context available.
+- **I / Receive Stock**: Represents the process of receiving new stock into the inventory. visible in diagram; no further repository context available.
+- **K / Pack Order**: Represents the process of packing the order for shipment. visible in diagram; no further repository context available.
+- **L / Ship Order**: Represents the process of shipping the order to the customer. visible in diagram; no further repository context available.
+- **M / Delivery Successful?**: A decision point where the system verifies if the delivery was successful. visible in diagram; no further repository context available.
+- **N / Mark As Lost**: Represents marking the order as lost if delivery fails. visible in diagram; no further repository context available.
+- **O / Update Inventory**: Represents updating the inventory after successful delivery or marking the order as lost. visible in diagram; no further repository context available.
+- **J / End**: Represents the end of the order processing workflow. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User initiation triggers inventory check.
+- `B -- Yes --> C`: If inventory is available, create an order record.
+- `B -- No --> H`: If inventory is unavailable, send a backorder request.
+- `C --> D`: Order record creation triggers payment verification.
+- `D -- Yes --> C`: If payment is successful, loop back to create order record again.
+- `D -- No --> E`: If payment fails, cancel the order.
+- `E --> F`: Order cancellation triggers payment refund.
+- `F --> G`: Payment refund triggers notification to the customer.
+- `H --> I`: Backorder request triggers stock receiving.
+- `I --> B`: Receiving stock triggers another inventory check.
+- `G --> J`: Customer notification leads to the end of the process.
+- `C --> K`: Order record creation triggers order packing.
+- `K --> L`: Order packing triggers order shipment.
+- `L --> M`: Order shipment triggers delivery verification.
+- `M -- Yes --> O`: If delivery is successful, update inventory.
+- `M -- No --> N`: If delivery fails, mark the order as lost.
+- `N --> O`: Marking as lost triggers inventory update.
+- `O --> J`: Inventory update leads to the end of the process.
+
+## Repository Context & Terminology
+- **Order**: A request from a customer to purchase goods or services. In this diagram, it represents the entire process from initiation to completion or cancellation.
+- **Inventory**: The stock of goods available for sale. In this diagram, it is a critical factor in determining whether an order can be fulfilled immediately.
+- **Backorder**: An order for a product that is currently out of stock. In this diagram, it triggers a restocking process.
+- **Payment**: The transfer of funds from the customer to the seller. In this diagram, payment success is a critical decision point.
+- **Delivery**: The process of transporting goods from the seller to the customer. In this diagram, delivery success determines whether the order is considered complete.
+- **Refund**: The return of funds to the customer. In this diagram, it occurs after order cancellation due to payment failure.
+- **Cancellation**: The termination of an order before it is fulfilled. In this diagram, it occurs due to payment failure.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with the 'User initiates order', which immediately triggers a 'Check Inventory' step. If the inventory check returns 'Yes', the system proceeds to 'Create Order Record'; if 'No', a 'Send Backorder Request' is initiated, which then leads to 'Receive Stock' and loops back to 'Check Inventory'. After creating the order record, the system checks if 'Payment Successful?'. If 'Yes', the process illogically loops back to 'Create Order Record' again, creating an infinite loop. If 'No', the order is 'Cancel Order', followed by 'Refund Payment', and then the 'Notify Customer of Cancellation' before reaching the 'End' node. Parallel to the payment check, after creating the order record, the order is 'Pack Order' and then 'Ship Order', leading to a 'Delivery Successful?' check. A 'Yes' outcome updates the 'Update Inventory' before reaching the 'End' node. A 'No' outcome on delivery leads to 'Mark As Lost', then 'Update Inventory', and finally the 'End' node. The diagram's inventory check and backorder process are standard, but the payment success looping back to order creation is an error. Also, the refund happening before notification is another deviation from standard practice.

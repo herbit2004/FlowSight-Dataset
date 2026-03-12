@@ -1,0 +1,77 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the structure and data flow within the IsoBridge system. It depicts the various components, their relationships, and the flow of data between them, from the UI layer down to external upstream hosts. The diagram serves as a high-level overview of the system's architecture, aiding in understanding the system's design and functionality.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner, with the UI layer at the top and external upstream hosts at the bottom. It is hierarchically structured, with subgraphs representing different modules or layers of the system. The start nodes are the UI components (Admin Audit UI, Swagger UI, ISO Preview UI), and the end nodes are the external upstream hosts (REST Payment Host, SOAP Switch Host).
+
+## Subgraphs / Stages
+The diagram contains the following explicit subgraphs:
+- **UI Layer**: Represents the user interface components.
+- **IsoBridge.Web (ASP.NET Core)**: Represents the web application layer.
+- **IsoBridge.Core**: Represents the core business logic components.
+- **IsoBridge.ISO8583**: Represents the ISO8583 parsing and processing components.
+- **IsoBridge.Infrastructure (Audit)**: Represents the infrastructure components related to auditing.
+- **IsoBridge.Adapters**: Represents the adapters for forwarding requests to external systems.
+- **External Upstream Hosts**: Represents the external systems that the IsoBridge system interacts with.
+
+## Node-by-Node Description
+- **Admin Audit UI**: User interface for administrative audit functions. visible in diagram; no further repository context available.
+- **Swagger UI**: User interface for interacting with the API using Swagger. visible in diagram; no further repository context available.
+- **ISO Preview UI**: User interface for previewing ISO messages. visible in diagram; no further repository context available.
+- **AdminAuditController (View • Verify • Export)**: Controller in the IsoBridge.Web layer responsible for handling admin audit requests, including viewing, verifying, and exporting audit data.
+- **IsoController (Parse • Build • Forward)**: Controller in the IsoBridge.Web layer responsible for parsing, building, and forwarding ISO messages.
+- **Service Registration & Routing**: Component in the IsoBridge.Web layer responsible for registering and routing services. visible in diagram; no further repository context available.
+- **ForwardingService**: Service in the IsoBridge.Adapters layer responsible for forwarding requests.
+- **AuditRepository**: Repository in the IsoBridge.Infrastructure layer responsible for accessing and managing audit data.
+- **SHA256 Hasher**: Component in the IsoBridge.Infrastructure layer responsible for hashing data using the SHA256 algorithm.
+- **IForwarder**: Interface in the IsoBridge.Adapters layer defining the contract for forwarding requests.
+- **audit.db • SQLite**: SQLite database in the IsoBridge.Infrastructure layer used for storing audit data.
+- **REST**: Indicates the REST protocol used by RestForwarder.
+- **SOAP**: Indicates the SOAP protocol used by SoapForwarder.
+- **RestForwarder**: Component in the IsoBridge.Adapters layer responsible for forwarding requests using the REST protocol.
+- **SoapForwarder**: Component in the IsoBridge.Adapters layer responsible for forwarding requests using the SOAP protocol.
+- **REST Payment Host**: External system that receives REST requests for payment processing.
+- **SOAP Switch Host**: External system that receives SOAP requests for switch operations.
+- **AuditLoggingService**: Service in the IsoBridge.Core layer responsible for logging audit events.
+- **IIsoParser**: Interface in the IsoBridge.Core layer defining the contract for parsing ISO messages.
+- **IsoMessage • ParseResult**: Represents an ISO message and the result of parsing it.
+- **Audit Interfaces IAuditStore • IAuditHasher**: Interfaces in the IsoBridge.Core layer defining the contracts for audit storage and hashing.
+- **DefaultIsoParser**: Implementation of the IIsoParser interface in the IsoBridge.ISO8583 layer.
+- **TemplateLoader**: Component in the IsoBridge.ISO8583 layer responsible for loading ISO message templates.
+- **Field Codec**: Component in the IsoBridge.ISO8583 layer responsible for encoding and decoding ISO message fields.
+- **Bitmap Utils**: Component in the IsoBridge.ISO8583 layer providing utility functions for working with bitmaps.
+- **iso8583-templates.json**: JSON file containing ISO message templates.
+
+## Edges, Branches & Convergence
+- `Admin Audit UI --> AdminAuditController`: User interaction in the Admin Audit UI triggers a request to the AdminAuditController.
+- `Swagger UI --> IsoController`: User interaction in the Swagger UI triggers a request to the IsoController.
+- `ISO Preview UI --> IsoController`: User interaction in the ISO Preview UI triggers a request to the IsoController.
+- `AdminAuditController --> AuditRepository`: The AdminAuditController interacts with the AuditRepository to access and manage audit data.
+- `IsoController --> ForwardingService`: The IsoController forwards requests to the ForwardingService.
+- `IsoController --> IIsoParser`: The IsoController uses the IIsoParser to parse ISO messages.
+- `IsoController --> AuditLoggingService`: The IsoController uses the AuditLoggingService to log audit events.
+- `ForwardingService --> IForwarder`: The ForwardingService uses the IForwarder interface to forward requests.
+- `IForwarder -- REST --> RestForwarder`: The IForwarder interface uses the RestForwarder to forward requests using the REST protocol.
+- `IForwarder -- SOAP --> SoapForwarder`: The IForwarder interface uses the SoapForwarder to forward requests using the SOAP protocol.
+- `RestForwarder --> REST Payment Host`: The RestForwarder forwards requests to the REST Payment Host.
+- `SoapForwarder --> SOAP Switch Host`: The SoapForwarder forwards requests to the SOAP Switch Host.
+- `AuditRepository --> audit.db`: The AuditRepository interacts with the audit.db SQLite database to store and retrieve audit data.
+- `SHA256 Hasher --> Audit Interfaces`: The SHA256 Hasher implements the IAuditHasher interface.
+- `AuditLoggingService --> Audit Interfaces`: The AuditLoggingService uses the Audit Interfaces (IAuditStore, IAuditHasher) for audit storage and hashing.
+- `IIsoParser -.implements.-> DefaultIsoParser`: The DefaultIsoParser implements the IIsoParser interface.
+- `DefaultIsoParser --> TemplateLoader`: The DefaultIsoParser uses the TemplateLoader to load ISO message templates.
+- `TemplateLoader --> iso8583-templates.json`: The TemplateLoader loads ISO message templates from the iso8583-templates.json file.
+- `DefaultIsoParser --> Field Codec`: The DefaultIsoParser uses the Field Codec to encode and decode ISO message fields.
+- `DefaultIsoParser --> Bitmap Utils`: The DefaultIsoParser uses the Bitmap Utils for bitmap-related operations.
+
+## Repository Context & Terminology
+- **IsoBridge.Web**: This refers to the ASP.NET Core web application project that handles user requests and interacts with the core logic.
+- **IsoController**: A controller within the IsoBridge.Web project responsible for handling ISO message-related requests. It parses, builds, and forwards ISO messages.
+- **IIsoParser**: An interface defining the contract for parsing ISO messages. Implementations of this interface are responsible for converting raw ISO message data into a structured format.
+- **DefaultIsoParser**: A concrete implementation of the IIsoParser interface, specifically designed for parsing ISO8583 messages.
+- **iso8583-templates.json**: A JSON file containing templates for ISO8583 messages. These templates define the structure and format of the messages, aiding in parsing and building them.
+- **AuditRepository**: A component responsible for managing audit data, including storing and retrieving audit logs.
+- **SHA256 Hasher**: A component that implements a hashing algorithm (SHA256) for security purposes, likely used for data integrity or authentication.
+
+## High-Density QA Ground Truth Summary
+The IsoBridge system's architecture begins with the UI layer, comprising the Admin Audit UI, Swagger UI, and ISO Preview UI. User interactions with these UIs trigger requests to the IsoBridge.Web layer, specifically the AdminAuditController and IsoController. The AdminAuditController handles requests related to admin audit functions, interacting with the AuditRepository to manage audit data stored in the audit.db SQLite database. The IsoController, responsible for parsing, building, and forwarding ISO messages, utilizes the IIsoParser interface, implemented by DefaultIsoParser in the IsoBridge.ISO8583 module. DefaultIsoParser relies on TemplateLoader to load message templates from iso8583-templates.json, and also uses Field Codec and Bitmap Utils for message encoding/decoding. The IsoController also interacts with the AuditLoggingService to log audit events, which in turn uses Audit Interfaces (IAuditStore, IAuditHasher). The IsoController forwards requests to the ForwardingService, which uses the IForwarder interface to delegate to either RestForwarder or SoapForwarder based on the protocol (REST or SOAP). Finally, RestForwarder and SoapForwarder forward requests to the external REST Payment Host and SOAP Switch Host, respectively. The SHA256 Hasher is used for data integrity, implementing the IAuditHasher interface.

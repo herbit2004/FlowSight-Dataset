@@ -1,0 +1,12 @@
+graph TD
+    A[UserProfileService: Initiate Purchase] --> B{InventoryService: Verify Stock};
+    B -- Insufficient Stock --> C[UserMessageService: Notify User];
+    B -- Sufficient Stock --> D[PaymentService: Authorize Payment];
+    D -- Payment Authorized --> E[InventoryService: Reserve Stock];
+    D -- Payment Declined --> F[UserMessageService: Notify User];
+    E --> G[OrderService: Create Pending Order];
+    G --> H{DeliveryService: Schedule Delivery};
+    H -- Delivery Scheduled --> I[OrderService: Confirm Order];
+    H -- Delivery Failed --> J[CompensationService: Begin Compensation Flow];
+    classDef failure fill:#f9d2d0,stroke:#333,stroke-width:2px;
+    class C,F,J failure;

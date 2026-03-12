@@ -1,0 +1,64 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of trade data and settlement instructions through a trade capture system, payment system, and reconciliation engine. The diagram depicts the steps involved in processing trades, validating settlement details, and reconciling trade data with settlement data. It serves as a visual representation of the end-to-end process, highlighting key decision points and potential error handling paths.
+
+## Overall Layout
+The diagram is laid out from top to bottom, with three main subgraphs arranged horizontally. The process starts with the "Trade Capture System" and "Payment System" subgraphs, which feed into the "Reconciliation Engine" subgraph. The end nodes include "Update Trade Status in Trade Repository", "Escalate to Operations Team", and "Log Payment Failure".
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Trade Capture System**: Focuses on receiving, validating, enriching, and storing trade data.
+- **Payment System**: Deals with receiving settlement instructions, validating settlement details, and executing or rejecting payments.
+- **Reconciliation Engine**: Responsible for fetching trade and settlement data, performing reconciliation logic, and generating reports or escalating discrepancies.
+
+## Node-by-Node Description
+- **A / Receive Trade Data**: The Trade Capture System receives trade data. visible in diagram; no further repository context available.
+- **B / Trade Validation**: The Trade Capture System validates the received trade data. visible in diagram; no further repository context available.
+- **C / Enrich Trade**: The Trade Capture System enriches the validated trade data. visible in diagram; no further repository context available.
+- **D / Store in Trade Repository**: The Trade Capture System stores the enriched trade data in a trade repository. visible in diagram; no further repository context available.
+- **E / Fetch Trade Data from Trade Repository**: The Reconciliation Engine fetches trade data from the trade repository. visible in diagram; no further repository context available.
+- **F / Fetch Settlement Data from Payment System**: The Reconciliation Engine fetches settlement data from the payment system. visible in diagram; no further repository context available.
+- **G / Reconciliation Logic**: The Reconciliation Engine performs reconciliation logic to match trade data with settlement data. visible in diagram; no further repository context available.
+- **H / Generate Reconciliation Report**: The Reconciliation Engine generates a reconciliation report when a match is found. visible in diagram; no further repository context available.
+- **I / Investigate Discrepancies**: The Reconciliation Engine initiates an investigation into discrepancies when no match is found. visible in diagram; no further repository context available.
+- **J / Receive Settlement Instructions**: The Payment System receives settlement instructions. visible in diagram; no further repository context available.
+- **K / Validate Settlement Details**: The Payment System validates the settlement details. visible in diagram; no further repository context available.
+- **L / Execute Payment**: The Payment System executes the payment when the settlement details are valid. visible in diagram; no further repository context available.
+- **M / Reject Payment**: The Payment System rejects the payment when the settlement details are invalid. visible in diagram; no further repository context available.
+- **N / Log Payment Failure**: The Payment System logs the payment failure. visible in diagram; no further repository context available.
+- **P / Update Trade Status in Trade Repository**: The Trade Repository updates the trade status. visible in diagram; no further repository context available.
+- **Q / Escalate to Operations Team**: The Reconciliation Engine escalates the issue to the operations team. visible in diagram; no further repository context available.
+- **Z / Reject Trade**: The Trade Capture System rejects the trade. visible in diagram; no further repository context available.
+- **R / Manual Investigation**: Manual investigation is performed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Trade data is sent for validation.
+- `B -- Valid Trade --> C`: Trade data is considered valid and sent for enrichment.
+- `B -- Invalid Trade --> Z`: Trade data is considered invalid and rejected.
+- `C --> D`: Enriched trade data is stored in the trade repository.
+- `D --> E`: Trade data is fetched from the trade repository for reconciliation.
+- `J --> K`: Settlement instructions are sent for validation.
+- `K -- Valid Details --> L`: Settlement details are considered valid and payment is executed.
+- `K -- Invalid Details --> M`: Settlement details are considered invalid and payment is rejected.
+- `L --> F`: Settlement data is sent to the Reconciliation Engine.
+- `M --> N`: Payment failure is logged.
+- `E --> F`: Trade data and settlement data are sent for reconciliation.
+- `F --> G`: Trade data and settlement data are sent for reconciliation logic.
+- `G -- Match Found --> H`: A match is found during reconciliation and a report is generated.
+- `G -- No Match --> I`: No match is found during reconciliation and discrepancies are investigated.
+- `H --> P`: Trade status is updated in the trade repository.
+- `I --> Q`: The issue is escalated to the operations team.
+- `Q --> R`: Manual investigation is performed.
+- `R --> G`: The results of the manual investigation are fed back into the reconciliation logic.
+
+## Repository Context & Terminology
+- **Trade Capture System**: A system responsible for capturing, validating, and storing trade data.
+- **Payment System**: A system responsible for processing payments and handling settlement instructions.
+- **Reconciliation Engine**: A system responsible for matching trade data with settlement data to ensure accuracy and completeness.
+- **Trade Repository**: A database or storage system that stores trade data.
+- **Settlement Instructions**: Instructions that specify how a payment should be made.
+- **Reconciliation Logic**: The set of rules and algorithms used to match trade data with settlement data.
+- **Operations Team**: A team responsible for handling exceptions and resolving issues.
+- **Manual Investigation**: A process of manually reviewing data and processes to identify and resolve discrepancies.
+
+## High-Density QA Ground Truth Summary
+The process begins with the Trade Capture System receiving trade data, which then undergoes validation. If the trade is valid, it's enriched before being stored in the Trade Repository; otherwise, it's rejected. Simultaneously, the Payment System receives settlement instructions and validates the details. Valid settlement details lead to payment execution, sending settlement data to the Reconciliation Engine, while invalid details result in payment rejection and logging of the failure. The Reconciliation Engine fetches trade data from the Trade Repository and settlement data from the Payment System, then applies reconciliation logic. If a match is found, a reconciliation report is generated, and the trade status is updated in the Trade Repository, completing the automated process. If no match is found, discrepancies are investigated, and the issue is escalated to the Operations Team for manual investigation. The results of the manual investigation are fed back into the reconciliation logic. The Trade Repository serves as a central data store, enabling the Reconciliation Engine to compare trade details against settlement information, a critical step in financial transaction processing. The end states are updating the trade status, escalating to operations, or logging a payment failure.

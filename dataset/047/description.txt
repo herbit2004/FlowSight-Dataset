@@ -1,0 +1,38 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture of a tool registry and its associated tools. It illustrates the relationship between the central tool registry and various categories of tools, such as file tools, search tools, execution tools, web tools, memory tools, meta tools, and MCP tools. The diagram serves as a high-level overview of the system's structure and the types of tools managed by the registry.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) fashion. The "Tool Registry" node is at the top, serving as the root. The various tool categories are arranged below the registry, connected by edges indicating their relationship.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 2 stages: Tool Registry and Tool Categories.
+
+## Node-by-Node Description
+- **Registry / Tool Registry**: Represents the central tool registry component. It is described as `Arc<RwLock<HashMap<String, Arc<dyn Tool>>>>`, indicating it's an atomically reference-counted, read-write lock protected hash map that stores tools, where the keys are strings and the values are atomically reference-counted dynamic tool trait objects.
+- **FileTools / File Tools**: Represents a category of file-related tools, including read, write, edit, multiedit, and patch functionalities.
+- **SearchTools / Search & Nav**: Represents a category of search and navigation tools, including glob, grep, ls, and codesearch functionalities.
+- **ExecTools / Execution**: Represents a category of execution tools, including bash, task, batch, and bg functionalities.
+- **WebTools / Web**: Represents a category of web-related tools, including webfetch and websearch functionalities.
+- **MemTools / Memory & RAG**: Represents a category of memory and retrieval-augmented generation (RAG) tools, including remember, session_search, and conversation_search functionalities.
+- **MetaTools / Meta & Control**: Represents a category of meta and control tools, including todo, skill, communicate, mcp, and selfdev functionalities.
+- **MCPTools / MCP Tools**: Represents a category of MCP (Meta-Control Protocol) tools that are dynamically registered from external servers.
+
+## Edges, Branches & Convergence
+- `Registry --> FileTools`: Indicates that the File Tools are managed or accessed through the Tool Registry.
+- `Registry --> SearchTools`: Indicates that the Search & Nav tools are managed or accessed through the Tool Registry.
+- `Registry --> ExecTools`: Indicates that the Execution tools are managed or accessed through the Tool Registry.
+- `Registry --> WebTools`: Indicates that the Web tools are managed or accessed through the Tool Registry.
+- `Registry --> MemTools`: Indicates that the Memory & RAG tools are managed or accessed through the Tool Registry.
+- `Registry --> MetaTools`: Indicates that the Meta & Control tools are managed or accessed through the Tool Registry.
+- `Registry --> MCPTools`: Indicates that the MCP Tools are managed or accessed through the Tool Registry.
+
+## Repository Context & Terminology
+- **Arc**: Stands for "Atomically Reference Counted". It's a type in Rust that provides shared ownership of a value. Multiple `Arc` instances can point to the same data, and the data is deallocated when the last `Arc` pointing to it is dropped.
+- **RwLock**: Stands for "Read-Write Lock". It's a synchronization primitive that allows multiple readers or a single writer to access a shared resource concurrently.
+- **HashMap**: A data structure that stores key-value pairs, allowing for efficient retrieval of values based on their keys.
+- **dyn Tool**: Represents a dynamic trait object for the `Tool` trait. This allows the registry to hold different types of tools that implement the `Tool` trait.
+- **MCP (Meta-Control Protocol)**: visible in diagram; no further repository context available.
+- **RAG (Retrieval-Augmented Generation)**: visible in diagram; no further repository context available.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a tool registry architecture. The process starts at the "Tool Registry" node, which is implemented as an atomically reference-counted, read-write lock protected hash map (`Arc<RwLock<HashMap<String, Arc<dyn Tool>>>>`). This registry manages various categories of tools. From the "Tool Registry", the diagram branches out to different tool categories: "File Tools" (read, write, edit, multiedit, patch), "Search & Nav" (glob, grep, ls, codesearch), "Execution" (bash, task, batch, bg), "Web" (webfetch, websearch), "Memory & RAG" (remember, session_search, conversation_search), "Meta & Control" (todo, skill, communicate, mcp, selfdev), and "MCP Tools". The "MCP Tools" are dynamically registered from external servers. The `Arc` and `RwLock` types suggest a concurrent and safe access pattern to the tool registry, allowing multiple threads to read the tool list while ensuring exclusive access for modifications. The use of `dyn Tool` indicates that the registry can hold different types of tools that implement a common `Tool` trait, enabling polymorphism and extensibility. The diagram provides a high-level overview of the system's architecture and the types of tools managed by the registry.

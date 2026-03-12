@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the relationships between different services and data stores within a safety-related system. It illustrates the flow of data and dependencies between the user interface, API services, independent services (BERT, FastText, Keywords, Knowledge), and databases (MySQL/Redis, Vearch). The diagram serves as a high-level overview of the system's architecture and data flow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The hierarchy starts with the user interface at the top, followed by the API service, then the independent services, and finally the databases at the bottom. The start node is the "用户/业务系统" (User/Business System), and the end nodes are the "MySQL/Redis" and "Vearch 向量库" (Vearch Vector Database).
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages:
+1. User Interaction: "用户/业务系统" (User/Business System).
+2. API Layer: "safety-api API服务".
+3. Independent Services: "safety-basic Java lib", "safety-bert 独立服务", "safety-fasttext 独立服务", "safety-keywords 独立服务", "safety-knowledge 独立服务".
+4. Data Storage: "MySQL/Redis", "Vearch 向量库" (Vearch Vector Database).
+
+## Node-by-Node Description
+- **用户/业务系统**: Represents the user interface or business system that interacts with the safety API. visible in diagram; no further repository context available.
+- **safety-api API服务**: The main API service that handles requests from the user interface and distributes them to the appropriate independent services. visible in diagram; no further repository context available.
+- **safety-basic Java lib**: A Java library providing basic safety functionalities. visible in diagram; no further repository context available.
+- **safety-bert 独立服务**: An independent service utilizing BERT (Bidirectional Encoder Representations from Transformers) for safety-related tasks. visible in diagram; no further repository context available.
+- **safety-fasttext 独立服务**: An independent service utilizing FastText for safety-related tasks. visible in diagram; no further repository context available.
+- **safety-keywords 独立服务**: An independent service that handles keyword-based safety checks. visible in diagram; no further repository context available.
+- **safety-knowledge 独立服务**: An independent service that leverages knowledge-based approaches for safety analysis. visible in diagram; no further repository context available.
+- **MySQL/Redis**: A database used for storing various data, including model data, sensitive word data, and knowledge configurations. visible in diagram; no further repository context available.
+- **Vearch 向量库**: A vector database used for storing and retrieving vector embeddings, likely for semantic search or similarity analysis. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User --> API`: The user interface interacts with the safety API via HTTP/SDK.
+- `API --> Core`: The API service depends on the "safety-basic" Java library.
+- `API --> DB`: The API service reads strategies/configurations from the MySQL/Redis database.
+- `API --> Bert`: The API service communicates with the "safety-bert" service via HTTP/RESTful.
+- `API --> FastText`: The API service communicates with the "safety-fasttext" service via HTTP/RESTful.
+- `API --> Keywords`: The API service communicates with the "safety-keywords" service via HTTP/RESTful.
+- `API --> Knowledge`: The API service communicates with the "safety-knowledge" service via HTTP/RESTful.
+- `Bert --> DB`: The "safety-bert" service stores model data in the MySQL/Redis database.
+- `FastText --> DB`: The "safety-fasttext" service stores model data in the MySQL/Redis database.
+- `Keywords --> DB`: The "safety-keywords" service stores sensitive word data and knowledge configurations in the MySQL/Redis database.
+- `Knowledge --> DB`: The "safety-knowledge" service stores knowledge configurations in the MySQL/Redis database.
+- `Knowledge --> Vearch`: The "safety-knowledge" service performs vector search on the Vearch vector database.
+
+## Repository Context & Terminology
+- **BERT**: Bidirectional Encoder Representations from Transformers, a transformer-based machine learning technique for natural language processing.
+- **FastText**: A library for efficient learning of word representations and sentence classification.
+- **HTTP/SDK**: Indicates that the communication between the user interface and the API service is done via HTTP using a Software Development Kit (SDK).
+- **HTTP/RESTful**: Indicates that the communication between the API service and the independent services is done via HTTP using RESTful APIs.
+- **Vector Database**: A database that stores data as high-dimensional vectors, enabling efficient similarity searches.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with the "用户/业务系统" (User/Business System), which interacts with the "safety-api API服务" via HTTP/SDK. The API service then distributes requests to various independent services. The API service has a dependency on the "safety-basic Java lib" and reads strategies/configurations from the "MySQL/Redis" database. The API communicates with "safety-bert", "safety-fasttext", "safety-keywords", and "safety-knowledge" services using HTTP/RESTful APIs. The "safety-bert" and "safety-fasttext" services store model data in the "MySQL/Redis" database. The "safety-keywords" service stores sensitive word data and knowledge configurations in the "MySQL/Redis" database. The "safety-knowledge" service stores knowledge configurations in the "MySQL/Redis" database and performs vector search on the "Vearch 向量库". The "Vearch 向量库" likely stores vector embeddings for semantic search, while "safety-bert" and "safety-fasttext" leverage NLP models for safety analysis. The end nodes are the "MySQL/Redis" and "Vearch 向量库", representing the data storage components of the system.

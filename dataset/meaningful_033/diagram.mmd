@@ -1,0 +1,42 @@
+graph TD
+    subgraph Campaign Rule Engine
+        A[Request Received] --> B{Rule Evaluation Context};
+        B --> C{Segment Check};
+        C -- Segment Match --> D[Personalized Content Selection];
+        C -- No Segment Match --> E[Default Content Selection];
+        D --> F[Content Merge];
+        E --> F;
+        F --> G{A/B Test Check};
+        G -- A/B Test Required --> H[Variant Assignment];
+        G -- No A/B Test --> I[Final Payload Assembly];
+        H --> J[Fetch Variant Content];
+        J --> I;
+        I --> K[Payload Ready];
+        K --> L(Return Response);
+    end
+
+    subgraph Segmentation Service
+        A --> S1[User Profile Lookup];
+        S1 --> S2{Profile Found?};
+        S2 -- Yes --> S3[Build Segment Array];
+        S2 -- No --> S4[Apply Default Segments];
+        S3 --> B;
+        S4 --> B;
+    end
+
+    subgraph Content Repository
+        D --> CR1[Retrieve Content Block IDs];
+        E --> CR1;
+        CR1 --> CR2[Fetch Content Snippets];
+        CR2 --> F;
+        J --> CR3[Fetch Variant Snippets];
+        CR3 --> I;
+    end
+
+    subgraph Experimentation Service
+        G --> ES1[Determine Variant Group];
+        ES1 --> H;
+    end
+
+    classDef internal fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,K,L,S1,S2,S3,S4,CR1,CR2,CR3,ES1 internal

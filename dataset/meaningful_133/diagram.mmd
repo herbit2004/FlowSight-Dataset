@@ -1,0 +1,35 @@
+graph TD
+    subgraph Raw Data
+        A[Clickstream Logs] --> B(Session Aggregation);
+        C[Product Catalog] --> D(Price Lookup);
+    end
+
+    subgraph Feature Engineering
+        B --> E{Sufficient Session Length?};
+        D --> F(Enrich with Price Tier);
+
+        E -- Yes --> G(Time-Based Features);
+        E -- No --> H(Discard Session);
+
+        G --> I(Geographic Features);
+        F --> I;
+
+        I --> J(Interaction Features);
+
+        J --> K{Fraud Suspect?};
+
+        K -- Yes --> L(Behavioral Anomaly Detection);
+        K -- No --> M(Feature Vector Store);
+
+        L --> N(Generate Alert);
+        L --> M;
+    end
+
+    subgraph Endpoints
+        M --> O(Model Training);
+        M --> P(Real-time Inference);
+        N --> Q[Security Team Review];
+    end
+
+    classDef dark fill:#f9f,stroke:#333,stroke-width:2px;
+    class N,Q dark;

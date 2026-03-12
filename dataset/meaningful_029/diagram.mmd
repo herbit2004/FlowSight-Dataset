@@ -1,0 +1,30 @@
+graph TD
+    A[User Event Stream] --> B{Event Router};
+    B -- Route Key: UserID --> C[User Session Aggregator];
+    B -- Route Key: AdID --> D[Campaign Budget Monitor];
+
+    C --> E{Session Window};
+    E -- Window Closed --> F[Anomaly Detector];
+    F -- Anomaly Detected --> G[Alert Service];
+    F -- No Anomaly --> H(Session Store);
+
+    D --> I{Aggregated Spend};
+    I --> J{Budget Window};
+
+    J -- Window Closed --> K{Budget Comparator};
+    K -- Budget Exceeded --> L[Campaign Pauser];
+    K -- Budget OK --> M(Budget Metrics);
+
+    L --> N[Pause Notification];
+    N --> AlertService;
+    G --> P[Dashboard Updates];
+    N --> P;
+
+    H --> Q(Session Metrics);
+    M --> R(Budget Performance);
+
+    R --> P;
+    Q --> P;
+
+    classDef alertStyle fill:#f9f,stroke:#333,stroke-width:2px
+    class G,N alertStyle

@@ -1,0 +1,18 @@
+graph TD
+    subgraph Producer
+        A[Order Service: POST /orders] --> B(Order Validation)
+        B -- Valid Order --> C{Kafka Topic: new-orders}
+        B -- Invalid Order --> D[Error Handling: Dead Letter Queue]
+    end
+
+    subgraph Consumer Group: Order Processing
+        C --> E(Order Router)
+        E -- Premium Order --> F[Priority Processor]
+        E -- Standard Order --> G[Standard Processor]
+        F --> H(Order Fulfillment)
+        G --> H
+        H --> I{Database: order_status}
+    end
+
+    classDef kafka fill:#f9f,stroke:#333,stroke-width:2px
+    class C kafka

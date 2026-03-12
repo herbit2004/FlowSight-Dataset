@@ -1,0 +1,42 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating an order processing workflow. It depicts the sequence of steps involved in receiving an order, processing payment, shipping, delivery, customer satisfaction, refunds, and inventory updates, culminating in potential order cancellation. The diagram serves as a visual representation of the order lifecycle within a system.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with "Order Received" at the top and progresses downwards through decision points and actions, ultimately leading to "Cancel Order". There is a loop from "Customer Satisfied?" back to "Order Received", and "Update Inventory" also leads to "Cancel Order".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Reception & Payment, Order Fulfillment, Delivery & Satisfaction, Refund Processing, Inventory Update, and Order Cancellation.
+
+## Node-by-Node Description
+- **A / Order Received**: Represents the initial state where an order is received by the system. visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision point to determine if the payment for the order was successful. visible in diagram; no further repository context available.
+- **C / Cancel Order**: Represents the final state where the order is cancelled. visible in diagram; no further repository context available.
+- **D / Ship Order**: Represents the action of shipping the order to the customer. visible in diagram; no further repository context available.
+- **E / Order Delivered**: Represents the state where the order has been delivered to the customer. visible in diagram; no further repository context available.
+- **F / Customer Satisfied?**: A decision point to determine if the customer is satisfied with the order. visible in diagram; no further repository context available.
+- **G / Process Refund**: Represents the action of processing a refund for the order. visible in diagram; no further repository context available.
+- **H / Update Inventory**: Represents the action of updating the inventory after a refund. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: An order received triggers a payment success check.
+- `B -- No --> C`: If payment is not successful, the order is cancelled.
+- `B -- Yes --> D`: If payment is successful, the order is shipped.
+- `D --> E`: Shipping the order leads to order delivery.
+- `E --> F`: Order delivery leads to a customer satisfaction check.
+- `F -- No --> G`: If the customer is not satisfied, a refund is processed.
+- `G --> H`: Processing a refund leads to updating the inventory.
+- `F -- Yes --> A`: If the customer is satisfied, the process loops back to "Order Received", restarting the entire order process.
+- `H --> C`: Updating inventory leads to order cancellation.
+
+## Repository Context & Terminology
+- **Order Received**: Typically, this means the system has registered a new order. In this diagram, it's the start of the process and also the point where satisfied customers restart the entire order flow.
+- **Payment Successful?**: A check to verify if the payment was processed correctly. In this diagram, a failed payment leads to order cancellation.
+- **Ship Order**: The process of preparing and sending the order to the customer. In this diagram, this step follows successful payment.
+- **Order Delivered**: The state where the customer has received the order. In this diagram, this leads to a customer satisfaction check.
+- **Customer Satisfied?**: A check to see if the customer is happy with their order. In this diagram, a satisfied customer restarts the entire order process from the beginning.
+- **Process Refund**: The action of issuing a refund to the customer. In this diagram, this occurs if the customer is not satisfied.
+- **Update Inventory**: The process of adjusting the stock levels after a refund. In this diagram, this leads to order cancellation.
+- **Cancel Order**: The action of cancelling the order. In this diagram, this occurs after a failed payment or after inventory update.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Order Received," which immediately proceeds to the "Payment Successful?" decision. If payment fails ("No" branch), the order is immediately "Cancel Order". If payment is successful ("Yes" branch), the order is "Ship Order," followed by "Order Delivered." Post-delivery, "Customer Satisfied?" determines the next step. A "No" response triggers "Process Refund" and subsequently "Update Inventory," which counter-intuitively leads to "Cancel Order." A "Yes" response from "Customer Satisfied?" creates an illogical loop back to "Order Received," restarting the entire process. This means a satisfied customer re-triggers the entire order process. The diagram's end state is "Cancel Order," reachable via failed payment or after updating inventory following a refund. The standard sequence of refund processing *before* inventory update is reversed. The diagram also skips order fulfillment and preparation steps.

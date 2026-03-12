@@ -1,0 +1,62 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the Risk-Control Rule Engine. It illustrates the flow of a transaction through various stages of validation, risk assessment, and processing, ultimately leading to either committing, rolling back, or rejecting the transaction. The diagram serves as a visual representation of the decision-making process within the risk control system.
+
+## Overall Layout
+The diagram's primary direction is left to right (LR). It has a single subgraph named "Risk-Control Rule Engine". The start node is "Incoming Transaction", and the end nodes are "Log Transaction", "Reject Transaction - Pre-Validation", and "Rollback Transaction - Post Processing".
+
+## Subgraphs / Stages
+The diagram contains one subgraph:
+- **Risk-Control Rule Engine**: This subgraph encapsulates the entire workflow of the risk control process, from initial transaction receipt to final logging.
+
+## Node-by-Node Description
+- **A / Incoming Transaction**: Represents the initial receipt of a transaction. visible in diagram; no further repository context available.
+- **B / Pre-Validation Rules?**: A decision point to determine if pre-validation rules should be applied. visible in diagram; no further repository context available.
+- **C / Execute Pre-Validation Rules**: Executes the pre-validation rules. visible in diagram; no further repository context available.
+- **D / Pass/Fail?**: A decision point to determine if the transaction passed or failed pre-validation. visible in diagram; no further repository context available.
+- **E / Enrichment Service**: Enriches the transaction data with additional information. visible in diagram; no further repository context available.
+- **F / Risk Assessment Rules**: Applies risk assessment rules to the enriched transaction data. visible in diagram; no further repository context available.
+- **G / Risk Score Threshold?**: A decision point to determine if the risk score exceeds a predefined threshold. visible in diagram; no further repository context available.
+- **H / Escalate to Analyst Queue**: Escalates the transaction to an analyst queue for manual review. visible in diagram; no further repository context available.
+- **J / Execute Post-Processing Rules**: Executes post-processing rules on the transaction. visible in diagram; no further repository context available.
+- **K / Post-Processing Success?**: A decision point to determine if post-processing was successful. visible in diagram; no further repository context available.
+- **L / Commit Transaction**: Commits the transaction to the system. visible in diagram; no further repository context available.
+- **M / Rollback Transaction - Post Processing**: Rolls back the transaction after post-processing. visible in diagram; no further repository context available.
+- **N / Analyst Review & Override**: Allows an analyst to review and override the risk assessment. visible in diagram; no further repository context available.
+- **O / Approve?**: A decision point to determine if the analyst approves the transaction. visible in diagram; no further repository context available.
+- **I / Reject Transaction - Pre-Validation**: Rejects the transaction during pre-validation. visible in diagram; no further repository context available.
+- **Log / Log Transaction**: Logs the transaction details. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Incoming transaction proceeds to pre-validation rules check.
+- `B -- Yes --> C`: If pre-validation rules are to be applied, execute them.
+- `B -- No --> D`: If pre-validation rules are not to be applied, proceed to the pass/fail check.
+- `C --> D`: After executing pre-validation rules, proceed to the pass/fail check.
+- `D -- Pass --> E`: If the transaction passes pre-validation, proceed to the enrichment service.
+- `D -- Fail --> I`: If the transaction fails pre-validation, reject the transaction.
+- `E --> F`: After enrichment, apply risk assessment rules.
+- `F --> G`: After risk assessment, check if the risk score exceeds the threshold.
+- `G -- Over Threshold --> H`: If the risk score is over the threshold, escalate to the analyst queue.
+- `G -- Below Threshold --> J`: If the risk score is below the threshold, execute post-processing rules.
+- `J --> K`: After executing post-processing rules, check if post-processing was successful.
+- `K -- Yes --> L`: If post-processing was successful, commit the transaction.
+- `K -- No --> M`: If post-processing was not successful, rollback the transaction.
+- `H --> N`: After escalation, the analyst reviews and overrides the risk assessment.
+- `N --> O`: After analyst review, check if the transaction is approved.
+- `O -- Yes --> L`: If the transaction is approved, commit the transaction.
+- `O -- No --> M`: If the transaction is not approved, rollback the transaction.
+- `I --> Log`: Rejected transactions are logged.
+- `M --> Log`: Rolled back transactions are logged.
+- `L --> Log`: Committed transactions are logged.
+- `D --> Log`: Transactions that bypass pre-validation and pass are logged.
+
+## Repository Context & Terminology
+- **Transaction**: A unit of work or data exchange within the system, such as a financial transaction or a data update.
+- **Pre-Validation Rules**: Rules applied to an incoming transaction to ensure it meets basic requirements before further processing.
+- **Enrichment Service**: A service that adds additional data or context to a transaction, often from external sources.
+- **Risk Assessment Rules**: Rules used to evaluate the risk associated with a transaction, often based on various factors and data points.
+- **Risk Score Threshold**: A predefined value used to determine whether a transaction's risk score is considered high enough to warrant further investigation.
+- **Post-Processing Rules**: Rules applied to a transaction after initial validation and risk assessment, often for compliance or auditing purposes.
+- **Analyst Queue**: A queue or list of transactions that require manual review by a human analyst.
+
+## High-Density QA Ground Truth Summary
+The Risk-Control Rule Engine flowchart begins with an "Incoming Transaction" which is then evaluated against "Pre-Validation Rules?". If pre-validation is required ("Yes" branch), "Execute Pre-Validation Rules" is performed before proceeding to the "Pass/Fail?" decision. A "Fail" outcome leads to "Reject Transaction - Pre-Validation" and subsequent logging. A "Pass" outcome from pre-validation, or bypassing pre-validation entirely ("No" branch from "Pre-Validation Rules?"), directs the transaction to the "Enrichment Service". The enriched transaction undergoes "Risk Assessment Rules", and the resulting risk score is compared against a "Risk Score Threshold?". If the score exceeds the threshold ("Over Threshold"), the transaction is escalated to an "Analyst Review & Override" queue. Otherwise ("Below Threshold"), "Execute Post-Processing Rules" is initiated. The success of post-processing determines whether to "Commit Transaction" or "Rollback Transaction - Post Processing". Analyst approval after review also leads to transaction commitment, while disapproval results in rollback. All committed, rolled back, and rejected transactions are ultimately directed to "Log Transaction". The "Risk Assessment Rules" are crucial for determining the level of scrutiny a transaction receives, influencing whether it proceeds automatically or requires manual analyst intervention.

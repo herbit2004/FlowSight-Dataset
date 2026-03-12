@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is a layered architecture diagram illustrating the flow of requests and data through a multi-tier application. It depicts the components involved in handling user requests, processing them, and storing/retrieving data. The diagram serves as a high-level overview of the system's architecture, aiding in understanding the interactions between different services and data stores.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner, representing a tiered architecture. The flow starts at the edge (Tier 0) and progresses through ingress (Tier 1), compute (Tier 2), and finally data (Tier 3). There is a single start node (CloudFront CDN) and multiple end nodes (ElastiCache Redis, RDS PostgreSQL, SQS Event Queue).
+
+## Subgraphs / Stages
+The diagram contains four explicit subgraphs, representing different tiers in the application architecture:
+- **Tier 0 - Edge**: Represents the edge layer, responsible for content delivery and caching.
+- **Tier 1 - Ingress**: Represents the ingress layer, responsible for routing incoming requests to the appropriate services.
+- **Tier 2 - Compute**: Represents the compute layer, responsible for processing requests and interacting with data stores.
+- **Tier 3 - Data**: Represents the data layer, responsible for storing and retrieving data.
+
+## Node-by-Node Description
+- **CloudFront CDN**: Represents the CloudFront Content Delivery Network, responsible for caching and delivering content to users. visible in diagram; no further repository context available.
+- **Application Load Balancer**: Represents the Application Load Balancer, responsible for routing incoming requests to the appropriate services based on the URL path. visible in diagram; no further repository context available.
+- **API Service**: Represents the API Service, responsible for handling requests to the `/api/*` endpoint. visible in diagram; no further repository context available.
+- **User Service**: Represents the User Service, responsible for handling requests to the `/users/*` endpoint. visible in diagram; no further repository context available.
+- **Order Service**: Represents the Order Service, responsible for handling requests to the `/orders/*` endpoint. visible in diagram; no further repository context available.
+- **ElastiCache Redis**: Represents the ElastiCache Redis instance, used for caching data. visible in diagram; no further repository context available.
+- **RDS PostgreSQL**: Represents the RDS PostgreSQL database, used for storing persistent data. visible in diagram; no further repository context available.
+- **SQS Event Queue**: Represents the SQS Event Queue, used for asynchronous communication between services. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `CloudFront CDN --> Application Load Balancer`: HTTPS requests are routed from CloudFront CDN to the Application Load Balancer.
+- `Application Load Balancer --> API Service`: Requests with the `/api/*` path are routed to the API Service.
+- `Application Load Balancer --> User Service`: Requests with the `/users/*` path are routed to the User Service.
+- `Application Load Balancer --> Order Service`: Requests with the `/orders/*` path are routed to the Order Service.
+- `API Service --> RDS PostgreSQL`: The API Service interacts with the RDS PostgreSQL database.
+- `User Service --> RDS PostgreSQL`: The User Service interacts with the RDS PostgreSQL database.
+- `Order Service --> RDS PostgreSQL`: The Order Service interacts with the RDS PostgreSQL database.
+- `API Service --> ElastiCache Redis`: The API Service interacts with the ElastiCache Redis instance.
+- `Order Service --> SQS Event Queue`: The Order Service publishes events to the SQS Event Queue.
+- `API Service --> SQS Event Queue`: The API Service consumes events from the SQS Event Queue.
+
+## Repository Context & Terminology
+- **CloudFront CDN**: A content delivery network (CDN) service from AWS that caches content at edge locations to reduce latency for users.
+- **Application Load Balancer (ALB)**: An AWS load balancer that distributes incoming application traffic across multiple targets, such as EC2 instances, in multiple Availability Zones. It operates at the application layer (Layer 7).
+- **API Service, User Service, Order Service**: These represent microservices within the application, each responsible for a specific domain.
+- **ElastiCache Redis**: A fully managed, in-memory data store service from AWS, used for caching frequently accessed data to improve application performance.
+- **RDS PostgreSQL**: A fully managed relational database service from AWS, using the PostgreSQL database engine.
+- **SQS Event Queue**: A fully managed message queuing service from AWS, used for decoupling services and enabling asynchronous communication.
+- **/api/*, /users/*, /orders/***: These URL paths are used by the Application Load Balancer to route requests to the appropriate service.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a tiered application architecture, starting with the CloudFront CDN (Tier 0) which delivers content and routes HTTPS requests to the Application Load Balancer (ALB) in Tier 1. The ALB then routes requests based on their URL path: `/api/*` to the API Service, `/users/*` to the User Service, and `/orders/*` to the Order Service, all within Tier 2. The API Service interacts with both the RDS PostgreSQL database and the ElastiCache Redis instance in Tier 3. The User and Order Services also interact with the RDS PostgreSQL database. The Order Service publishes events to the SQS Event Queue, while the API Service consumes events from it. The RDS PostgreSQL database and ElastiCache Redis instance serve as the data storage and caching layers, respectively. The SQS Event Queue facilitates asynchronous communication between the API and Order services, enabling event-driven architecture. The ALB's path-based routing is a key element, directing traffic to the appropriate microservice based on the request's URL.

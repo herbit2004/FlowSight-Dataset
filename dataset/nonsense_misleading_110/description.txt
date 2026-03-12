@@ -1,0 +1,75 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow of an e-commerce system. It illustrates the sequence of steps involved from when a user submits an order to when the order is completed or a refund is issued. The diagram serves as a visual representation of the business logic and processes governing order fulfillment and customer service.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts at the top with "User Submits Order" and progresses downwards through a series of decision points and actions, eventually leading to the "End" node at the bottom. There is a feedback loop from late payment reminders back to the start.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Payment, Inventory & Shipping, Feedback Collection, Order Closure, Refund Processing, and Order Completion.
+
+## Node-by-Node Description
+- **A / User Submits Order**: The initial step where a user places an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **Z / Send Late Payment Reminder**: A step to send a reminder to the user if the payment has not been received. visible in diagram; no further repository context available.
+- **C / Inventory Check**: A step to check the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **D / Inventory Available?**: A decision point to determine if the inventory is available. visible in diagram; no further repository context available.
+- **F / Notify User of Delay**: A step to notify the user of a delay. visible in diagram; no further repository context available.
+- **E / Generate Shipping Label**: A step to generate the shipping label for the order. visible in diagram; no further repository context available.
+- **G / Package Order**: A step to package the order for shipping. visible in diagram; no further repository context available.
+- **H / Ship Order**: A step to ship the order to the user. visible in diagram; no further repository context available.
+- **I / Update Inventory**: A step to update the inventory after the order has been shipped. visible in diagram; no further repository context available.
+- **J / Shipping Confirmation Sent?**: A decision point to check if the shipping confirmation has been sent. visible in diagram; no further repository context available.
+- **K / Log Shipping Error**: A step to log a shipping error if the shipping confirmation has not been sent. visible in diagram; no further repository context available.
+- **L / Forward Feedback Request**: A step to forward a feedback request to the user. visible in diagram; no further repository context available.
+- **M / Feedback Received?**: A decision point to check if feedback has been received from the user. visible in diagram; no further repository context available.
+- **O / Process Feedback**: A step to process the feedback received from the user. visible in diagram; no further repository context available.
+- **N / Close Order**: A step to close the order. visible in diagram; no further repository context available.
+- **P / Archive Order Data**: A step to archive the order data. visible in diagram; no further repository context available.
+- **Q / Refund Requested?**: A decision point to check if a refund has been requested. visible in diagram; no further repository context available.
+- **S / Process Refund Request**: A step to process the refund request. visible in diagram; no further repository context available.
+- **T / Refund Approved?**: A decision point to check if the refund has been approved. visible in diagram; no further repository context available.
+- **U / Issue Refund**: A step to issue the refund. visible in diagram; no further repository context available.
+- **R / Review Order History**: A step to review the order history. visible in diagram; no further repository context available.
+- **V / End**: The final step, indicating the end of the order processing workflow. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the order processing workflow.
+- `B -- Yes --> C`: Payment received, proceed to inventory check.
+- `B -- No --> Z`: Payment not received, send a late payment reminder.
+- `Z --> A`: After sending the late payment reminder, the flow loops back to the beginning, "User Submits Order".
+- `C --> D`: Inventory check is performed.
+- `D -- Yes --> E`: Inventory is available, generate shipping label.
+- `D -- No --> F`: Inventory is not available, notify user of delay.
+- `F --> A`: After notifying the user of delay, the flow loops back to the beginning, "User Submits Order".
+- `E --> G`: Shipping label generated, package the order.
+- `G --> H`: Order packaged, ship the order.
+- `H --> I`: Order shipped, update inventory.
+- `I --> J`: Inventory updated, check if shipping confirmation sent.
+- `J -- No --> K`: Shipping confirmation not sent, log shipping error.
+- `K --> H`: After logging the shipping error, the flow loops back to "Ship Order".
+- `J -- Yes --> L`: Shipping confirmation sent, forward feedback request.
+- `L --> M`: Feedback request forwarded, check if feedback received.
+- `M -- No --> N`: Feedback not received, close order.
+- `M -- Yes --> O`: Feedback received, process feedback.
+- `O --> N`: After processing feedback, close order.
+- `N --> P`: Order closed, archive order data.
+- `P --> Q`: Order data archived, check if refund requested.
+- `Q -- No --> R`: Refund not requested, review order history.
+- `Q -- Yes --> S`: Refund requested, process refund request.
+- `S --> T`: Refund request processed, check if refund approved.
+- `T -- Yes --> U`: Refund approved, issue refund.
+- `T -- No --> F`: Refund not approved, notify user of delay.
+- `U --> R`: Refund issued, review order history.
+- `R --> V`: Order history reviewed, end.
+
+## Repository Context & Terminology
+- **User Submits Order**: Standard meaning is a customer placing an order. In this diagram, it's the starting point and also the point where the process loops back to after a late payment reminder or a delay notification, implying the user needs to resubmit the order.
+- **Payment Received?**: Standard meaning is checking if payment has been successfully processed. In this diagram, if payment is not received, the process loops back to the beginning, suggesting a resubmission of the order is required.
+- **Inventory Check**: Standard meaning is verifying if items are in stock. In this diagram, if inventory is unavailable, the user is notified of a delay, and the process loops back to the beginning.
+- **Shipping Confirmation Sent?**: Standard meaning is confirming that the order has been shipped. In this diagram, if the confirmation is not sent, a shipping error is logged, and the process loops back to "Ship Order", which is illogical.
+- **Feedback Request**: Standard meaning is soliciting feedback from the customer. In this diagram, feedback is requested after shipping confirmation.
+- **Refund Requested?**: Standard meaning is checking if the customer has requested a refund. In this diagram, this check occurs after archiving the order data, which is an unusual sequence.
+- **Refund Approved?**: Standard meaning is determining if the refund request is valid. In this diagram, if the refund is not approved, the user is notified of a delay, which is incorrect; it should be a refund denial.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins when the "User Submits Order," which then proceeds to check if "Payment Received?". If payment is not received, a "Send Late Payment Reminder" is triggered, looping back to the "User Submits Order." If payment is received, an "Inventory Check" is performed. If "Inventory Available?", the process moves to "Generate Shipping Label"; otherwise, the "Notify User of Delay" step is activated, also looping back to the "User Submits Order." After generating the shipping label, the order is "Package Order", then "Ship Order", and "Update Inventory". Next, it checks "Shipping Confirmation Sent?". If not, a "Log Shipping Error" is recorded, looping back to "Ship Order". If shipping confirmation is sent, a "Forward Feedback Request" is sent, and the system checks "Feedback Received?". If not, the "Close Order" step is executed; otherwise, "Process Feedback" is performed before closing the order. The "Archive Order Data" step follows, and then the system checks "Refund Requested?". If not, the "Review Order History" step is performed, leading to the "End" node. If a refund is requested, the "Process Refund Request" step is initiated, followed by "Refund Approved?". If approved, "Issue Refund" is executed, then "Review Order History" and "End". If the refund is not approved, the "Notify User of Delay" step is triggered, which is an error, as it should be a refund denial. The diagram contains several illogical loops and reversed sequences, such as updating inventory before shipping confirmation and looping back to ship order after logging a shipping error.

@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a log processing pipeline. It illustrates the flow of log data from an application server through various stages of processing, enrichment, indexing, and alerting. The diagram serves as a high-level architecture overview of a log management system.
+
+## Overall Layout
+The diagram has a top-to-bottom (TD) layout. It starts with the application server and flows through a series of processing steps, decision points, and components, ultimately leading to either an idle state or an incident management system.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Log Generation & Forwarding, Sampling, Aggregation, Enrichment & Normalization, Indexing & Storage, and Alerting & Monitoring.
+
+## Node-by-Node Description
+- **A / Application Server: MyApp**: Represents the application server that generates log data. visible in diagram; no further repository context available.
+- **B / Log Forwarder: Fluentd**: Represents the log forwarder component, specifically Fluentd, responsible for collecting and forwarding logs. In the repository this corresponds to a Fluentd configuration.
+- **C / Resource Monitor**: Represents a component that monitors system resources, specifically CPU usage. visible in diagram; no further repository context available.
+- **D / Dynamic Sampling: Reduce Verbosity**: Represents a sampling strategy that reduces log verbosity when high CPU usage is detected. visible in diagram; no further repository context available.
+- **E / Default Sampling**: Represents the default log sampling strategy. visible in diagram; no further repository context available.
+- **F / Kafka Topic: app-logs**: Represents a Kafka topic named "app-logs" where logs are stored. In the repository this corresponds to a Kafka topic configuration.
+- **G / Log Aggregator: Apache Flume**: Represents the log aggregator component, specifically Apache Flume, responsible for collecting and aggregating logs from Kafka. In the repository this corresponds to a Flume agent configuration.
+- **H / Data Enrichment?**: Represents a decision point to determine if data enrichment is needed. visible in diagram; no further repository context available.
+- **I / GeoIP Lookup Service**: Represents a service used to enrich log data with GeoIP information. visible in diagram; no further repository context available.
+- **J / Parse & Normalize Logs**: Represents the process of parsing and normalizing log data. visible in diagram; no further repository context available.
+- **K / Elasticsearch Indexer**: Represents the component responsible for indexing the parsed and normalized log data in Elasticsearch. visible in diagram; no further repository context available.
+- **L / Elasticsearch Cluster**: Represents the Elasticsearch cluster where the indexed log data is stored. In the repository this corresponds to an Elasticsearch cluster configuration.
+- **M / Alerting Rules?**: Represents a decision point to determine if alerting rules are met. visible in diagram; no further repository context available.
+- **N / PagerDuty Alert**: Represents an alert sent to PagerDuty when a threshold is breached. In the repository this corresponds to a PagerDuty integration configuration.
+- **O / Idle**: Represents an idle state when no alerting rules are met. visible in diagram; no further repository context available.
+- **P / Incident Management System**: Represents the incident management system that is triggered when a PagerDuty alert is sent. visible in diagram; no further repository context available.
+- **Q / Kibana Dashboard**: Represents a Kibana dashboard used to visualize the log data. In the repository this corresponds to a Kibana dashboard configuration.
+
+## Edges, Branches & Convergence
+- `A --> B`: Log data flows from the application server to the log forwarder.
+- `B --> C`: Log forwarder sends data to the resource monitor.
+- `C -- Yes --> D`: If CPU usage is high, logs are dynamically sampled to reduce verbosity.
+- `C -- No --> E`: If CPU usage is not high, default sampling is used.
+- `D --> F`: Dynamically sampled logs are sent to the Kafka topic.
+- `E --> F`: Default sampled logs are sent to the Kafka topic.
+- `F --> G`: Logs are aggregated from Kafka by Apache Flume.
+- `G --> H`: Aggregated logs are evaluated for data enrichment.
+- `H -- Needs GeoIP? --> I`: If GeoIP enrichment is needed, logs are sent to the GeoIP Lookup Service.
+- `H -- No --> J`: If GeoIP enrichment is not needed, logs are sent to the parsing and normalization stage.
+- `I --> J`: GeoIP enriched logs are sent to the parsing and normalization stage.
+- `J --> K`: Parsed and normalized logs are sent to the Elasticsearch indexer.
+- `K --> L`: Indexed logs are stored in the Elasticsearch cluster.
+- `L --> M`: Logs in Elasticsearch are evaluated against alerting rules.
+- `L --> Q`: Logs in Elasticsearch are sent to the Kibana Dashboard.
+- `M -- Threshold Breached --> N`: If alerting rules are met (threshold breached), a PagerDuty alert is triggered.
+- `M -- OK --> O`: If alerting rules are not met (OK), the system remains idle.
+- `N --> P`: A PagerDuty alert triggers the incident management system.
+
+## Repository Context & Terminology
+- **Application Server**: A server that hosts and runs applications.
+- **Fluentd**: An open-source data collector for unified logging layer.
+- **Kafka**: A distributed streaming platform used for building real-time data pipelines and streaming applications.
+- **Apache Flume**: A distributed, reliable, and available service for efficiently collecting, aggregating, and moving large amounts of log data.
+- **GeoIP Lookup**: The process of determining the geographic location of an IP address.
+- **Elasticsearch**: A distributed, RESTful search and analytics engine capable of solving a growing number of use cases.
+- **Kibana**: A data visualization dashboard for Elasticsearch.
+- **PagerDuty**: An incident management platform that provides alerting and on-call scheduling.
+
+## High-Density QA Ground Truth Summary
+The log processing pipeline begins with the Application Server (MyApp) generating logs, which are then forwarded by Fluentd. A Resource Monitor checks for high CPU usage. If CPU usage is high (`Yes` branch), Dynamic Sampling reduces log verbosity; otherwise (`No` branch), Default Sampling is applied. Both sampling paths converge at the Kafka Topic (app-logs), where logs are stored. Apache Flume aggregates logs from Kafka. A Data Enrichment decision point determines if GeoIP enrichment is needed. If so (`Needs GeoIP?` branch), the GeoIP Lookup Service enriches the logs; otherwise (`No` branch), logs proceed directly to parsing and normalization. Enriched or non-enriched logs are then parsed and normalized before being indexed by the Elasticsearch Indexer and stored in the Elasticsearch Cluster. The Elasticsearch Cluster data is visualized via a Kibana Dashboard. Alerting Rules are then evaluated. If a threshold is breached, a PagerDuty Alert is triggered, activating the Incident Management System. Otherwise, the system remains Idle. Fluentd acts as the initial log forwarder, collecting and routing logs based on configured rules, which may include dynamic sampling to manage verbosity under high CPU load.

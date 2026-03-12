@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the flow of data and interactions within a system that leverages Google Cloud Platform (GCP) services, including Vertex AI Search, Google ADK Agent Engine, and BigQuery. The diagram outlines the integration of on-premises data with cloud-based AI and data warehousing capabilities, emphasizing security and multi-agent orchestration. It serves as a high-level overview of the system's architecture and data flow.
+
+## Overall Layout
+The diagram is laid out in a left-to-right direction. It is divided into three main subgraphs: "Client Environment (On-Prem)", "GCP Landing Zone", and "Security Layer". The flow starts with "Legacy SQL" and "User", and ends with "BigQuery".
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Client Environment (On-Prem)**: Represents the on-premises environment where the legacy SQL database and cloud storage reside.
+- **GCP Landing Zone**: Encompasses the GCP environment, including Vertex AI Search, the Multi-Agent Swarm, and BigQuery.
+- **Security Layer**: Includes components responsible for security, such as VPC Service Controls and Identity-Aware Proxy.
+
+## Node-by-Node Description
+- **Legacy SQL**: Represents the on-premises legacy SQL database. visible in diagram; no further repository context available.
+- **Cloud Storage / GCS**: Represents the cloud storage service, likely Google Cloud Storage. visible in diagram; no further repository context available.
+- **Vertex AI Search**: Represents the Vertex AI Search service used for indexing and searching data. visible in diagram; no further repository context available.
+- **Google ADK Agent Engine**: Represents the Google ADK Agent Engine, which orchestrates the multi-agent swarm. visible in diagram; no further repository context available.
+- **Planner Agent**: Represents an agent within the multi-agent swarm responsible for planning. visible in diagram; no further repository context available.
+- **SQL Coder Agent**: Represents an agent within the multi-agent swarm responsible for generating SQL queries. visible in diagram; no further repository context available.
+- **Reviewer Agent**: Represents an agent within the multi-agent swarm responsible for reviewing the generated SQL queries. visible in diagram; no further repository context available.
+- **BigQuery**: Represents the BigQuery data warehouse. visible in diagram; no further repository context available.
+- **VPC Service Controls**: Represents VPC Service Controls, a security measure for GCP resources. visible in diagram; no further repository context available.
+- **Identity-Aware Proxy**: Represents Identity-Aware Proxy, a service that controls access to cloud applications. visible in diagram; no further repository context available.
+- **User**: Represents the end-user interacting with the system. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Legacy SQL -- Cloud Interconnect --> Cloud Storage / GCS`: Data flows from the on-premises Legacy SQL database to Cloud Storage via a Cloud Interconnect.
+- `Cloud Storage / GCS --> Vertex AI Search`: Data from Cloud Storage is indexed and made searchable by Vertex AI Search.
+- `Vertex AI Search --> Google ADK Agent Engine`: Search results from Vertex AI Search are fed into the Google ADK Agent Engine.
+- `Google ADK Agent Engine --> Planner Agent`: The Google ADK Agent Engine sends tasks to the Planner Agent.
+- `Google ADK Agent Engine --> SQL Coder Agent`: The Google ADK Agent Engine sends tasks to the SQL Coder Agent.
+- `Google ADK Agent Engine --> Reviewer Agent`: The Google ADK Agent Engine sends tasks to the Reviewer Agent.
+- `SQL Coder Agent -- Query --> BigQuery`: The SQL Coder Agent generates a query that is executed against BigQuery.
+- `Planner Agent -- Grounding --> Vertex AI Search`: The Planner Agent uses Vertex AI Search for grounding.
+- `User --> Identity-Aware Proxy`: The user's request is routed through the Identity-Aware Proxy for authentication and authorization.
+- `Identity-Aware Proxy --> Google ADK Agent Engine`: Authenticated requests are forwarded to the Google ADK Agent Engine.
+
+## Repository Context & Terminology
+- **Cloud Interconnect**: A Google Cloud service that provides a direct, private connection between your on-premises network and Google's network.
+- **GCS (Google Cloud Storage)**: A scalable, fully managed object storage service.
+- **Vertex AI Search**: A Google Cloud service that allows you to build search and discovery experiences powered by AI.
+- **Google ADK Agent Engine**: An engine that orchestrates multiple agents to perform complex tasks.
+- **BigQuery**: A fully managed, serverless data warehouse that enables scalable analysis over petabytes of data.
+- **VPC Service Controls**: A Google Cloud service that allows you to define a security perimeter around your sensitive data.
+- **Identity-Aware Proxy (IAP)**: A Google Cloud service that verifies user identity and context before allowing access to applications.
+
+## High-Density QA Ground Truth Summary
+The process begins with a User accessing the system, which is immediately routed through the Security Layer's Identity-Aware Proxy for authentication and authorization. The authenticated request then reaches the Google ADK Agent Engine within the GCP Landing Zone. Data from the on-premises Legacy SQL database is transferred to Cloud Storage/GCS via Cloud Interconnect. This data is then indexed and made searchable by Vertex AI Search. The Vertex AI Search results are fed into the Google ADK Agent Engine, which orchestrates a Multi-Agent Swarm consisting of the Planner Agent, SQL Coder Agent, and Reviewer Agent. The Planner Agent uses Vertex AI Search for grounding, while the SQL Coder Agent generates SQL queries that are executed against BigQuery. The SQL Coder Agent's generated query is sent to BigQuery. The Reviewer Agent reviews the generated SQL queries. The system leverages Google Cloud services like Cloud Interconnect for hybrid connectivity and Identity-Aware Proxy for secure access control. The final destination of the generated query is BigQuery.

@@ -1,0 +1,12 @@
+graph TD
+    A[Start: Initial Zylatron Boot] --> B{CoreSync Validation};
+    B -- Validation OK --> C[FluxBridge Router Initialization];
+    B -- Validation Failed --> D[VaultNode Handshake Attempt];
+    D -- Handshake Success --> C;
+    D -- Handshake Failed --> E[SpectraQueue Flush Sequence];
+    E --> F{ArcLane Distributor Status};
+    F -- Distributor Ready --> C;
+    F -- Distributor Error --> G[ZenithGate Auth Layer Reset];
+    G --> E;
+    C --> H[Process Core Data Stream];
+    H --> I[End: Zylatron Operational];

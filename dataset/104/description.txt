@@ -1,0 +1,65 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the interactions between different components of the MCP (Meta-Control Plane) system. It illustrates the data flow and dependencies between the MCP server, CLI commands, project repositories, and a registry. The diagram serves as a high-level overview of the system's architecture and how its components interact.
+
+## Overall Layout
+The diagram uses a top-down (TD) layout. It is divided into subgraphs representing different parts of the system. The MCP Server subgraph is at the top, followed by the Project Repos and CLI Commands subgraphs at the bottom.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **MCP Server**: Represents the backend server components.
+- **Project Repos**: Represents the project repositories where `.gitnexus` directories are located.
+- **CLI Commands**: Represents the command-line interface commands.
+
+## Node-by-Node Description
+- **server.ts**: Represents the main server file of the MCP server.
+  visible in diagram; no further repository context available.
+- **LocalBackend**: Represents the local backend component of the MCP server.
+  visible in diagram; no further repository context available.
+- **Connection Pool**: Represents a connection pool used by the backend.
+  visible in diagram; no further repository context available.
+- **KuzuDB conn A**: Represents a KuzuDB connection.
+  visible in diagram; no further repository context available.
+- **KuzuDB conn B**: Represents another KuzuDB connection.
+  visible in diagram; no further repository context available.
+- **.gitnexus/ in repo A**: Represents the `.gitnexus` directory within a project repository A.
+  visible in diagram; no further repository context available.
+- **.gitnexus/ in repo B**: Represents the `.gitnexus` directory within a project repository B.
+  visible in diagram; no further repository context available.
+- **gitnexus setup**: Represents the `gitnexus setup` CLI command.
+  visible in diagram; no further repository context available.
+- **~/.cursor/mcp.json**: Represents the global MCP configuration file.
+  visible in diagram; no further repository context available.
+- **gitnexus analyze**: Represents the `gitnexus analyze` CLI command.
+  visible in diagram; no further repository context available.
+- **registry.json**: Represents the registry file storing information about registered repositories.
+  visible in diagram; no further repository context available.
+- **gitnexus clean**: Represents the `gitnexus clean` CLI command.
+  visible in diagram; no further repository context available.
+- **gitnexus list**: Represents the `gitnexus list` CLI command.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Setup --> CursorConfig`: The `gitnexus setup` command writes the global MCP configuration to `~/.cursor/mcp.json`.
+- `Analyze --> RegFile`: The `gitnexus analyze` command registers a repository in the `registry.json` file.
+- `Analyze --> RepoA`: The `gitnexus analyze` command stores index data in the `.gitnexus` directory of repo A.
+- `Clean --> RegFile`: The `gitnexus clean` command unregisters a repository from the `registry.json` file.
+- `List --> RegFile`: The `gitnexus list` command reads from the `registry.json` file.
+- `Server --> RegFile`: The `server.ts` file reads the `registry.json` file.
+- `Server --> LocalBackend`: The `server.ts` uses the `LocalBackend`.
+- `LocalBackend --> Connection Pool`: The `LocalBackend` uses a `Connection Pool`.
+- `Connection Pool --> KuzuDB conn A`: The `Connection Pool` lazily opens a connection to KuzuDB A.
+- `Connection Pool --> KuzuDB conn B`: The `Connection Pool` lazily opens a connection to KuzuDB B.
+- `KuzuDB conn A --> RepoA`: KuzuDB connection A queries the `.gitnexus` directory in repo A.
+- `KuzuDB conn B --> RepoB`: KuzuDB connection B queries the `.gitnexus` directory in repo B.
+
+## Repository Context & Terminology
+- **MCP (Meta-Control Plane)**: The overall system being described, responsible for managing and analyzing code repositories.
+- **server.ts**: The main entry point for the MCP server, likely written in TypeScript.
+- **LocalBackend**: A component within the MCP server responsible for handling local repository analysis.
+- **Connection Pool**: A mechanism for managing database connections, likely to KuzuDB.
+- **KuzuDB**: A graph database used for storing and querying repository metadata.
+- **.gitnexus/**: A directory within each project repository used by GitNexus to store analysis results and metadata.
+- **registry.json**: A file that stores a registry of repositories managed by GitNexus, including their metadata and analysis status.
+
+## High-Density QA Ground Truth Summary
+The diagram begins with the `server.ts` component of the MCP Server, which initiates the process by reading the `registry.json` file. The server then utilizes the `LocalBackend`, which in turn employs a `Connection Pool` to manage connections to KuzuDB instances. The `Connection Pool` lazily opens connections to `KuzuDB conn A` and `KuzuDB conn B`. These KuzuDB connections then query the `.gitnexus` directories within `repo A` and `repo B` respectively. Separately, the CLI commands interact with the system. The `gitnexus setup` command writes the global MCP configuration to the `~/.cursor/mcp.json` file. The `gitnexus analyze` command registers repositories in the `registry.json` and stores index data in the `.gitnexus` directory of a repository. The `gitnexus clean` command unregisters repositories from the `registry.json`. Finally, the `gitnexus list` command reads the `registry.json` file to list registered repositories. The `registry.json` file acts as a central registry, read by the server and CLI commands, and modified by the `analyze` and `clean` commands. The end nodes are the `.gitnexus` directories in the project repos and the `registry.json` file, representing the persistent storage of analysis results and repository metadata.

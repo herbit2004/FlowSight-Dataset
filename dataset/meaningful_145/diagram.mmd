@@ -1,0 +1,39 @@
+graph TD
+    subgraph Client Application
+        A[Initiate Request] --> B(Trace Context Propagation)
+        B --> C{HTTP Request}
+    end
+
+    subgraph Backend Service A
+        C --> D[Receive HTTP Request]
+        D --> E(Extract Trace Context)
+        E --> F{Perform Business Logic}
+        F --> G[Emit Span: Business Logic]
+        G --> H{Outgoing Request to Service B}
+    end
+
+    subgraph Backend Service B
+        H --> I[Receive HTTP Request]
+        I --> J(Extract Trace Context)
+        J --> K{Database Query}
+        K --> L[Emit Span: Database Query]
+        L --> M{Return Result}
+    end
+
+    subgraph Trace Collector
+        N[Span Events] --> O(Agent Buffering)
+        O --> P{Batch Processing}
+        P --> Q[Data Validation & Enrichment]
+        Q --> R[Ingest into Backend Storage]
+    end
+
+    H --> N
+    G --> N
+    L --> N
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style R fill:#ccf,stroke:#333,stroke-width:2px
+
+    classDef important fill:#f9f,stroke:#333,stroke-width:2px
+
+    class A,R important

@@ -1,0 +1,65 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of user activity events through a real-time processing pipeline, batch processing, and push notification systems. It illustrates how user interactions like comments and likes are captured, processed, analyzed, and used to update user feeds and generate analytics. The diagram serves as a high-level overview of the system's architecture and data flow.
+
+## Overall Layout
+The diagram flows from top to bottom. It is hierarchically structured, starting with user interaction and event publishing, then branching into real-time processing and batch processing/storage. The end nodes include user devices, a comment search index, and a popularity dashboard.
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **User Interaction**: Captures user actions and publishes them as events.
+- **Kafka Topics**: Represents the Kafka topic where user activity events are stored.
+- **Real-time Processing**: Processes user activity events in real-time to update user feeds.
+- **Batch Processing & Storage**: Processes user activity events in batches for analytics and reporting.
+- **Reporting & Analytics**: Generates reports and analytics based on the processed data.
+- **Push Notifications**: Sends push notifications to users based on real-time activity.
+
+## Node-by-Node Description
+- **User Action: Comment/Like**: Represents user actions such as commenting or liking content. visible in diagram; no further repository context available.
+- **Event Publisher: UserActivityPub**: Publishes user activity events to a Kafka topic. visible in diagram; no further repository context available.
+- **Kafka Topic: user_activity_events**: Represents the Kafka topic where user activity events are stored. visible in diagram; no further repository context available.
+- **Stream Processor: ActivityStreamProcessor**: Processes user activity events in real-time. visible in diagram; no further repository context available.
+- **Activity Enricher: UserProfileLookup**: Enriches user activity events with user profile information. visible in diagram; no further repository context available.
+- **Dead Letter Queue: InvalidActivityDLQ**: Stores invalid user activity events. visible in diagram; no further repository context available.
+- **Feed Aggregator: TimelineAggregator**: Aggregates user activity events to generate user timelines. visible in diagram; no further repository context available.
+- **Redis Cache: AggregatedFeeds**: Caches aggregated user feeds. visible in diagram; no further repository context available.
+- **Data Lake Ingestion: ActivityLogIngestor**: Ingests user activity logs into a data lake. visible in diagram; no further repository context available.
+- **Data Lake: ActivityDataLake**: Stores user activity data in a data lake. visible in diagram; no further repository context available.
+- **Spark Job: PopularityCalculator**: Calculates popularity metrics using Spark. visible in diagram; no further repository context available.
+- **Data Warehouse: AnalyticsDataStore**: Stores analytics data in a data warehouse. visible in diagram; no further repository context available.
+- **Dashboard: PopularityDashboard**: Displays popularity metrics on a dashboard. visible in diagram; no further repository context available.
+- **Feed Push Notifier**: Determines when to send push notifications for feed updates. visible in diagram; no further repository context available.
+- **Notification Service**: Sends push notifications to users. visible in diagram; no further repository context available.
+- **User Device**: Represents the user's device receiving push notifications. visible in diagram; no further repository context available.
+- **Comment Indexer**: Indexes comments for search functionality. visible in diagram; no further repository context available.
+- **Search Index: CommentSearchIndex**: Stores the indexed comments for search. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Action: Comment/Like --> Event Publisher: UserActivityPub`: User actions trigger the publishing of events.
+- `Event Publisher: UserActivityPub --> Kafka Topic: user_activity_events`: Events are published to the Kafka topic.
+- `Kafka Topic: user_activity_events --> Stream Processor: ActivityStreamProcessor`: Events from Kafka are consumed by the stream processor.
+- `Kafka Topic: user_activity_events --> Data Lake Ingestion: ActivityLogIngestor`: Events from Kafka are ingested into the data lake.
+- `Stream Processor: ActivityStreamProcessor -- Valid Activity --> Activity Enricher: UserProfileLookup`: Valid activity events are enriched with user profile information.
+- `Stream Processor: ActivityStreamProcessor -- Invalid Activity --> Dead Letter Queue: InvalidActivityDLQ`: Invalid activity events are sent to the dead letter queue.
+- `Activity Enricher: UserProfileLookup --> Feed Aggregator: TimelineAggregator`: Enriched activity events are aggregated into user timelines.
+- `Feed Aggregator: TimelineAggregator --> Redis Cache: AggregatedFeeds`: Aggregated feeds are cached in Redis.
+- `Redis Cache: AggregatedFeeds --> Feed Push Notifier`: Cached feeds trigger push notification logic.
+- `Redis Cache: AggregatedFeeds --> Comment Indexer`: Cached feeds are used to index comments.
+- `Feed Push Notifier --> Notification Service`: Push notification requests are sent to the notification service.
+- `Notification Service --> User Device`: Push notifications are sent to the user's device.
+- `Comment Indexer --> Search Index: CommentSearchIndex`: Indexed comments are stored in the search index.
+- `Data Lake Ingestion: ActivityLogIngestor --> Data Lake: ActivityDataLake`: Ingested data is stored in the data lake.
+- `Data Lake: ActivityDataLake --> Spark Job: PopularityCalculator`: Data from the data lake is processed by a Spark job.
+- `Spark Job: PopularityCalculator --> Data Warehouse: AnalyticsDataStore`: Results from the Spark job are stored in the data warehouse.
+- `Data Warehouse: AnalyticsDataStore --> Dashboard: PopularityDashboard`: Data from the data warehouse is displayed on a dashboard.
+
+## Repository Context & Terminology
+- **Kafka**: A distributed streaming platform used for building real-time data pipelines and streaming applications.
+- **Stream Processor**: A component that processes data in real-time as it arrives.
+- **Data Lake**: A centralized repository that allows you to store all your structured and unstructured data at any scale.
+- **Spark**: A unified analytics engine for large-scale data processing.
+- **Data Warehouse**: A central repository of integrated data from one or more disparate sources.
+- **Redis**: An in-memory data structure store, used as a cache and message broker.
+- **Dead Letter Queue (DLQ)**: A queue where messages that could not be processed are sent.
+
+## High-Density QA Ground Truth Summary
+The diagram begins with a user interaction, specifically a "Comment/Like" action, which triggers the "Event Publisher: UserActivityPub" to publish an event to the "Kafka Topic: user_activity_events." From the Kafka topic, the event stream splits into two paths: real-time processing and batch processing. In real-time processing, the "Stream Processor: ActivityStreamProcessor" determines if the activity is valid. If valid, the "Activity Enricher: UserProfileLookup" enriches the event with user profile data; otherwise, it's sent to the "Dead Letter Queue: InvalidActivityDLQ." Enriched events are then aggregated by the "Feed Aggregator: TimelineAggregator" and cached in "Redis Cache: AggregatedFeeds." The cached feeds trigger "Feed Push Notifier" for push notifications and also feed the "Comment Indexer." For batch processing, the events are ingested into the "Data Lake: ActivityDataLake" via "Data Lake Ingestion: ActivityLogIngestor." A "Spark Job: PopularityCalculator" processes the data lake content, storing results in the "Data Warehouse: AnalyticsDataStore," which is then visualized on the "Dashboard: PopularityDashboard." The push notification path leads to the "Notification Service" and finally to the "User Device," while the comment indexing path leads to the "Search Index: CommentSearchIndex." Kafka serves as the central message broker, enabling decoupled processing of user activity events for both real-time and batch analytics.

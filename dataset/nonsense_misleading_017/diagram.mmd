@@ -1,0 +1,13 @@
+graph TD
+    A[User Places Order] --> B{Payment Successful?};
+    B -- Yes --> C[Inventory Check];
+    B -- No --> H[Cancel Order];
+    C --> D{Sufficient Stock?};
+    D -- No --> E[Notify User Out of Stock];
+    E --> C;
+    D -- Yes --> F[Package Order];
+    F --> G[Send Shipping Confirmation];
+    G --> H[Cancel Order];
+    H --> I[Update Order Status: Cancelled];
+    G --> I[Update Order Status: Shipped];
+    I --> J[End];

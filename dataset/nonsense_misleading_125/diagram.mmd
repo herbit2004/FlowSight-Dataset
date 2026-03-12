@@ -1,0 +1,14 @@
+graph TD
+    A[Order Received] --> B{Payment Approved?};
+    B -- No --> C[Cancel Order];
+    B -- Yes --> F[Shipping Address Validated];
+    F -- No --> D[Contact Customer for Address Update];
+    D --> F;
+    F -- Yes --> E[Package Items];
+    E --> G{Items in Stock?};
+    G -- No --> C;
+    G -- Yes --> H[Ship Order];
+    H --> A;
+    C --> I[Send Cancellation Email];
+    I --> J[End];
+    H --> J;

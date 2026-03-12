@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow and dependencies within a customer data pipeline. It depicts how various data sources and transformations contribute to creating a 360-degree view of the customer, enabling risk assessment, lifetime value calculation, and customer segmentation. The diagram serves as a high-level overview of the data engineering processes involved in customer analytics.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner. It starts with staging data and progresses through various transformations to reach the final customer 360 view. The start nodes are `stg_customers`, `fact_orders`, and `fact_payments`, and the end node is `customer_360`.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: Data Ingestion, Data Transformation, Customer Insights, and Customer 360 View.
+
+## Node-by-Node Description
+- **stg_customers**: Represents the staging area for customer data. visible in diagram; no further repository context available.
+- **dim_customers**: Represents the customer dimension table, which contains cleaned and transformed customer data. visible in diagram; no further repository context available.
+- **fact_orders**: Represents the fact table containing order information. visible in diagram; no further repository context available.
+- **fact_payments**: Represents the fact table containing payment information. visible in diagram; no further repository context available.
+- **at_risk_customers**: Represents the identification of customers who are at risk of churn. visible in diagram; no further repository context available.
+- **churn_risk_score**: Represents the calculated churn risk score for each customer. visible in diagram; no further repository context available.
+- **customer_lifetime_value**: Represents the calculated customer lifetime value. visible in diagram; no further repository context available.
+- **customer_segments**: Represents the segmentation of customers based on various factors. visible in diagram; no further repository context available.
+- **customer_360**: Represents the final consolidated view of the customer, incorporating all relevant data points. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `stg_customers --> dim_customers`: Data flow from the staging area to the customer dimension table.
+- `dim_customers --> customer_lifetime_value`: Customer dimension data contributes to calculating customer lifetime value.
+- `dim_customers --> at_risk_customers`: Customer dimension data contributes to identifying at-risk customers.
+- `dim_customers --> churn_risk_score`: Customer dimension data contributes to calculating churn risk score.
+- `dim_customers --> customer_360`: Customer dimension data contributes to the customer 360 view.
+- `fact_orders --> customer_lifetime_value`: Order data contributes to calculating customer lifetime value.
+- `fact_orders --> at_risk_customers`: Order data contributes to identifying at-risk customers.
+- `fact_payments --> customer_lifetime_value`: Payment data contributes to calculating customer lifetime value.
+- `at_risk_customers --> churn_risk_score`: At-risk customer identification contributes to calculating churn risk score.
+- `at_risk_customers --> customer_360`: At-risk customer data contributes to the customer 360 view.
+- `churn_risk_score --> customer_360`: Churn risk score contributes to the customer 360 view.
+- `customer_lifetime_value --> customer_segments`: Customer lifetime value contributes to customer segmentation.
+- `customer_lifetime_value --> churn_risk_score`: Customer lifetime value contributes to churn risk score.
+- `customer_lifetime_value --> customer_360`: Customer lifetime value contributes to the customer 360 view.
+- `customer_segments --> customer_360`: Customer segments contribute to the customer 360 view.
+
+## Repository Context & Terminology
+- **stg_customers**: Staging table for customer data, typically the initial landing zone for raw data extracted from source systems.
+- **dim_customers**: Dimension table in a data warehouse, containing descriptive attributes of customers.
+- **fact_orders**: Fact table recording customer order transactions.
+- **fact_payments**: Fact table recording customer payment transactions.
+- **at_risk_customers**: A segment of customers identified as having a high probability of churn.
+- **churn_risk_score**: A numerical score representing the likelihood of a customer churning.
+- **customer_lifetime_value**: A prediction of the net profit attributed to the entire future relationship with a customer.
+- **customer_segments**: Groups of customers with similar characteristics, used for targeted marketing and personalization.
+- **customer_360**: A holistic view of the customer, aggregating data from various sources to provide a complete understanding of their interactions and attributes.
+
+## High-Density QA Ground Truth Summary
+The data pipeline begins with three source nodes: `stg_customers`, `fact_orders`, and `fact_payments`. The `stg_customers` node feeds directly into the `dim_customers` node, which represents the customer dimension table. From `dim_customers`, data flows to `customer_lifetime_value`, `at_risk_customers`, `churn_risk_score`, and `customer_360`. The `fact_orders` node contributes data to both `customer_lifetime_value` and `at_risk_customers`, while `fact_payments` contributes to `customer lifetime value`. The `at_risk_customers` node then feeds into `churn_risk_score` and `customer_360`. The `customer_lifetime_value` node contributes to `customer_segments`, `churn_risk_score`, and `customer_360`. Finally, `customer_segments` feeds into `customer_360`. All the data converges at the `customer_360` node, which represents the comprehensive view of the customer. The `churn_risk_score` also contributes to the `customer_360` view. The `customer_lifetime_value` calculation relies on data from `fact_orders` and `fact_payments`, reflecting the customer's transaction history. The final `customer_360` view integrates customer attributes, order history, payment information, risk scores, and segment assignments to provide a complete customer profile.

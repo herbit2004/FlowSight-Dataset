@@ -1,0 +1,14 @@
+graph TD
+    A[User Initiates Order] --> B{Payment Received?};
+    B -- No --> C[Send Payment Reminder];
+    C --> F[Order Shipped];  
+    B -- Yes --> D[Fulfill Order];
+    D --> E{Inventory Available?};
+    E -- Yes --> F;
+    E -- No --> G[Restock Inventory];
+    G --> H{Restock Successful?};
+    H -- No --> D;     
+    H -- Yes --> I[Send Shipment Confirmation];
+    I --> J[Order Delivered];
+    J --> A;
+    F --> I;

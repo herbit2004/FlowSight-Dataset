@@ -1,0 +1,69 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the process flow of an order within a system, from the user placing the order to archiving it. The diagram serves as a visual representation of the order processing steps, including payment, inventory checks, shipping, delivery, and feedback.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User Places Order" node at the top and flows downwards through a series of processes and decision points, eventually converging at the "Archive Order" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement & Payment, Inventory & Backorder, Shipping & Delivery, Post-Delivery, Feedback & Payment, Archiving.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action of a user submitting an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Inventory Available?**: A decision point to check if the required inventory is available to fulfill the order. visible in diagram; no further repository context available.
+- **D / Notify Replenishment Team**: Action to notify the replenishment team when inventory is not available. visible in diagram; no further repository context available.
+- **E / Create Backorder**: Action to create a backorder for the unavailable items. visible in diagram; no further repository context available.
+- **F / Shipping Label Printed**: Action to print the shipping label for the order. visible in diagram; no further repository context available.
+- **G / Process Return**: Action to process a return if the delivery was unsuccessful. visible in diagram; no further repository context available.
+- **H / Cancel Order & Refund**: Action to cancel the order and issue a refund if payment was not received. visible in diagram; no further repository context available.
+- **I / Ship Order**: Action to ship the order to the customer. visible in diagram; no further repository context available.
+- **J / Delivery Successful?**: A decision point to check if the order delivery was successful. visible in diagram; no further repository context available.
+- **K / Order Fulfilled**: Action indicating that the order has been fulfilled. visible in diagram; no further repository context available.
+- **L / Update Order Status**: Action to update the order status in the system. visible in diagram; no further repository context available.
+- **M / Send Confirmation Email**: Action to send a confirmation email to the user. visible in diagram; no further repository context available.
+- **N / Feedback Requested?**: A decision point to check if feedback has been requested from the user. visible in diagram; no further repository context available.
+- **O / Archive Order**: Action to archive the order after it has been processed. visible in diagram; no further repository context available.
+- **P / Collect Payment**: Action to collect payment from the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, initiating the payment check.
+- `B -- Yes --> C`: If payment is received, check inventory availability.
+- `B -- No --> H`: If payment is not received, cancel the order and refund.
+- `C -- Yes --> F`: If inventory is available, print the shipping label.
+- `C -- No --> D`: If inventory is not available, notify the replenishment team.
+- `D --> E`: Notifying the replenishment team leads to creating a backorder.
+- `E --> K`: Creating a backorder leads to order fulfillment.
+- `F --> I`: Printing the shipping label leads to shipping the order.
+- `I --> J`: Shipping the order leads to checking delivery success.
+- `J -- Yes --> K`: If delivery is successful, the order is fulfilled.
+- `J -- No --> G`: If delivery is not successful, process the return.
+- `G --> A`: Processing the return restarts the order process.
+- `K --> L`: Order fulfillment leads to updating the order status.
+- `L --> M`: Updating the order status leads to sending a confirmation email.
+- `M --> N`: Sending a confirmation email leads to requesting feedback.
+- `N -- Yes --> P`: If feedback is requested, collect payment.
+- `N -- No --> O`: If feedback is not requested, archive the order.
+- `P --> O`: Collecting payment leads to archiving the order.
+- `H --> O`: Cancelling the order and refunding leads to archiving the order.
+- Paths converge at node `O / Archive Order` from `N -- No`, `P`, and `H`.
+
+## Repository Context & Terminology
+- **User Places Order**: Standard meaning is a customer initiating a purchase. In this diagram, it's the starting point of the order processing flow.
+- **Payment Received?**: Standard meaning is verifying if payment has been successfully processed. In this diagram, a negative outcome leads to order cancellation and refund.
+- **Inventory Available?**: Standard meaning is checking if the product is in stock. In this diagram, a negative outcome triggers notifying the replenishment team, which is an unusual action.
+- **Notify Replenishment Team**: Standard meaning is informing the team to restock inventory. In this diagram, it is triggered when inventory is *not* available, which is expected, but then leads to creating a backorder.
+- **Create Backorder**: Standard meaning is creating an order for an out-of-stock item to be fulfilled later. In this diagram, it leads directly to order fulfillment, skipping shipping.
+- **Shipping Label Printed**: Standard meaning is printing a label with the shipping address. In this diagram, it occurs before order fulfillment.
+- **Ship Order**: Standard meaning is sending the order to the customer. In this diagram, it leads to checking delivery success.
+- **Delivery Successful?**: Standard meaning is verifying if the order was delivered. In this diagram, a negative outcome restarts the entire order process.
+- **Process Return**: Standard meaning is handling the return of an item. In this diagram, it restarts the entire order process, which is illogical.
+- **Order Fulfilled**: Standard meaning is completing the order. In this diagram, it occurs after backorder creation or successful delivery.
+- **Update Order Status**: Standard meaning is changing the order's status. In this diagram, it leads to sending a confirmation email.
+- **Send Confirmation Email**: Standard meaning is sending an email to confirm the order. In this diagram, it leads to requesting feedback.
+- **Feedback Requested?**: Standard meaning is asking the customer for feedback. In this diagram, a positive outcome leads to collecting payment.
+- **Collect Payment**: Standard meaning is receiving payment from the customer. In this diagram, it occurs after feedback is requested, which is an unusual sequence.
+- **Cancel Order & Refund**: Standard meaning is cancelling the order and returning the payment. In this diagram, it occurs when payment is not received.
+- **Archive Order**: Standard meaning is storing the order for record-keeping. In this diagram, it's the final step in the process.
+
+## High-Density QA Ground Truth Summary
+The order process begins with the "User Places Order," which immediately checks "Payment Received?". If payment is not received, the process branches to "Cancel Order & Refund" and then "Archive Order." If payment is received, the process proceeds to "Inventory Available?". If inventory is available, a "Shipping Label Printed" and the "Ship Order" action is triggered, leading to a "Delivery Successful?" check. A failed delivery loops back to the beginning via "Process Return." If inventory is unavailable, the system triggers "Notify Replenishment Team" followed by "Create Backorder," which then jumps to "Order Fulfilled," skipping the shipping steps. Successful delivery also leads to "Order Fulfilled," which then updates the order status and sends a confirmation email. After sending the confirmation email, the system checks "Feedback Requested?". If feedback is requested, the system then "Collect Payment" before archiving the order. If feedback is not requested, the order is directly archived. All paths converge at the "Archive Order" node, completing the process. The "Collect Payment" step after "Feedback Requested?" represents a reversed sequence, and the "Process Return" restarting the entire order flow is an illogical loop.

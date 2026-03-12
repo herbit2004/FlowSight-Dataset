@@ -1,0 +1,71 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow. It depicts the sequence of steps from when a user places an order to when the order is completed. The diagram serves as a visual representation of the order processing logic, including payment verification, inventory management, shipping, and feedback collection.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "Start: User Places Order" node at the top and flows downwards through a series of process and decision nodes, eventually leading to the "End: Order Completed" node at the bottom. The diagram contains loops and branches, indicating conditional execution paths.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement & Payment, Inventory & Packaging, Shipping & Delivery, Issue Resolution, Feedback Collection, and Order Completion.
+
+## Node-by-Node Description
+- **A / Start: User Places Order**: Represents the beginning of the order processing workflow when a user initiates an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision node that checks whether the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Send Order Confirmation**: Represents the action of sending an order confirmation to the user. visible in diagram; no further repository context available.
+- **D / Update Inventory**: Represents the action of updating the inventory to reflect the items ordered. visible in diagram; no further repository context available.
+- **E / Inventory Sufficient?**: A decision node that checks whether there is sufficient inventory to fulfill the order. visible in diagram; no further repository context available.
+- **F / Notify User of Delay**: Represents the action of notifying the user about a delay in order processing. visible in diagram; no further repository context available.
+- **G / Cancel Order**: Represents the action of cancelling the order. visible in diagram; no further repository context available.
+- **H / Package Order**: Represents the action of packaging the order for shipment. visible in diagram; no further repository context available.
+- **I / Shipping Address Valid?**: A decision node that checks whether the shipping address provided by the user is valid. visible in diagram; no further repository context available.
+- **J / Send Shipping Notification**: Represents the action of sending a shipping notification to the user. visible in diagram; no further repository context available.
+- **K / Deliver Order**: Represents the action of delivering the order to the user. visible in diagram; no further repository context available.
+- **L / Contact Customer Service**: Represents the action of contacting customer service to resolve issues with the shipping address. visible in diagram; no further repository context available.
+- **M / Resolve Address Issue**: Represents the action of resolving the shipping address issue. visible in diagram; no further repository context available.
+- **N / Order Received?**: A decision node that checks whether the user has received the order. visible in diagram; no further repository context available.
+- **O / Investigate Non-Delivery**: Represents the action of investigating the non-delivery of the order. visible in diagram; no further repository context available.
+- **P / Send Feedback Request**: Represents the action of sending a feedback request to the user. visible in diagram; no further repository context available.
+- **Q / Feedback Received?**: A decision node that checks whether feedback has been received from the user. visible in diagram; no further repository context available.
+- **R / Close Order**: Represents the action of closing the order. visible in diagram; no further repository context available.
+- **S / Process Feedback**: Represents the action of processing the feedback received from the user. visible in diagram; no further repository context available.
+- **T / Refund Payment**: Represents the action of refunding the payment to the user. visible in diagram; no further repository context available.
+- **U / Close Order**: Represents the action of closing the order. visible in diagram; no further repository context available.
+- **End / End: Order Completed**: Represents the end of the order processing workflow. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The order processing workflow starts by checking if payment has been received.
+- `B -- No --> C`: If payment has not been received, send an order confirmation.
+- `B -- Yes --> D`: If payment has been received, update the inventory.
+- `D --> E`: After updating inventory, check if the inventory is sufficient.
+- `E -- No --> F`: If inventory is not sufficient, notify the user of the delay.
+- `F --> G`: After notifying the user, cancel the order.
+- `E -- Yes --> H`: If inventory is sufficient, package the order.
+- `H --> I`: After packaging the order, check if the shipping address is valid.
+- `I -- Yes --> L`: If the shipping address is valid, contact customer service.
+- `I -- No --> J`: If the shipping address is not valid, send a shipping notification.
+- `J --> K`: After sending the shipping notification, deliver the order.
+- `K --> N`: After delivering the order, check if the order has been received.
+- `N -- No --> O`: If the order has not been received, investigate the non-delivery.
+- `O --> N`: After investigating non-delivery, loop back to check if the order has been received.
+- `N -- Yes --> P`: If the order has been received, send a feedback request.
+- `P --> Q`: After sending the feedback request, check if feedback has been received.
+- `Q -- No --> R`: If feedback has not been received, close the order.
+- `Q -- Yes --> S`: If feedback has been received, process the feedback.
+- `S --> R`: After processing feedback, close the order.
+- `G --> T`: After cancelling the order, refund the payment.
+- `T --> U`: After refunding the payment, close the order.
+- `U --> B`: After closing the order, loop back to check if payment has been received.
+- `L --> M`: After contacting customer service, resolve the address issue.
+- `M --> H`: After resolving the address issue, loop back to package the order.
+- `R --> End`: After closing the order, the order processing is completed.
+
+## Repository Context & Terminology
+- **Order**: A request from a user to purchase goods or services. In this diagram, the order is the central object being processed.
+- **Payment**: The act of transferring money in exchange for goods or services. In this diagram, payment verification is a critical step.
+- **Inventory**: The stock of goods available for sale. In this diagram, inventory is updated after payment and checked for sufficiency.
+- **Shipping Address**: The address to which the order will be delivered. In this diagram, the validity of the shipping address is checked.
+- **Feedback**: Information provided by the user about their experience with the order. In this diagram, feedback is collected and processed.
+- **Order Confirmation**: A notification sent to the user confirming their order. In this diagram, the order confirmation is sent before payment verification.
+- **Shipping Notification**: A notification sent to the user when their order has been shipped. In this diagram, the shipping notification is sent if the shipping address is invalid.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with a user placing an order (A), which immediately proceeds to sending an order confirmation (C) before checking for payment (B). If payment is received (B -- Yes --> D), the inventory is updated (D), otherwise the process ends. The system then checks if the inventory is sufficient (E). If not (E -- No --> F), the user is notified of a delay (F), the order is cancelled (G), payment is refunded (T), and the order is closed (U), looping back to the payment check (B). If inventory is sufficient (E -- Yes --> H), the order is packaged (H). The system then checks if the shipping address is valid (I). If it is valid (I -- Yes --> L), customer service is contacted (L), the address issue is resolved (M), and the process loops back to packaging the order (H). If the shipping address is not valid (I -- No --> J), a shipping notification is sent (J), and the order is delivered (K). The system then checks if the order has been received (N). If not (N -- No --> O), non-delivery is investigated (O), looping back to the order received check (N). If the order has been received (N -- Yes --> P), a feedback request is sent (P). The system then checks if feedback has been received (Q). If not (Q -- No --> R), the order is closed (R). If feedback has been received (Q -- Yes --> S), the feedback is processed (S), and the order is closed (R), leading to the end of the workflow (End). The diagram contains several illogical flows, such as sending an order confirmation before payment and looping back to packaging after resolving address issues.

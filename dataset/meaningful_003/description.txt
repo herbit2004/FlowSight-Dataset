@@ -1,0 +1,93 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of inventory deduction and rollback within an e-commerce system. It depicts the flow of an order from its receipt to fulfillment, including inventory management, payment processing, and error handling. The diagram serves as a visual representation of the system's logic and helps in understanding the order processing workflow.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "Order Received" node at the top-left and flows downwards, branching based on decision points. The end nodes are "Order Fulfilled", "Notify Customer: Payment Failed", "Notify Customer: Out of Stock", "Manual Intervention Required", and "Notify Customer: Order Cancelled".
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Inventory Deduction and Rollback System**: The main subgraph encompassing the entire order processing flow.
+- **Rollback Process**: Handles the reversal of operations in case of shipment failure or payment reversal.
+- **Inventory Service**: Manages inventory updates.
+- **Notification Service**: Sends notifications to customers and for internal alerts.
+- **Database**: Represents the database tables involved in the process.
+- **Payment Gateway**: Handles payment authorization and reversal.
+
+## Node-by-Node Description
+- **A / Order Received**: The initial node, representing the receipt of a customer order.
+- **B / Inventory Available?**: A decision node that checks if the requested inventory is available.
+- **C / Reserve Inventory**: Reserves the inventory for the order.
+- **D / Payment Successful?**: A decision node that checks if the payment was successful.
+- **E / Deduct Inventory**: Deducts the reserved inventory from the available stock.
+- **F / Create Shipment Record**: Creates a record of the shipment in the database.
+- **G / Shipment Scheduled**: Schedules the shipment for delivery.
+- **H / Order Fulfilled**: The order is successfully fulfilled.
+- **I / Release Reserved Inventory**: Releases the reserved inventory back into the available stock.
+- **J / Notify Customer: Payment Failed**: Notifies the customer that the payment failed.
+- **K / Notify Customer: Out of Stock**: Notifies the customer that the item is out of stock.
+- **L / Send Low Stock Alert**: Sends an alert indicating low stock levels.
+- **M / Initiate Rollback**: Initiates the rollback process due to shipment failure.
+- **N / Payment Reversed?**: A decision node that checks if the payment was reversed.
+- **O / Increase Inventory**: Increases the inventory level.
+- **P / Update Inventory Records**: Updates the inventory records in the database.
+- **Q / Mark Order as Failed**: Marks the order as failed in the database.
+- **R / Notify Customer: Order Cancelled**: Notifies the customer that the order was cancelled.
+- **S / Escalate Rollback Failure**: Escalates the rollback failure for manual intervention.
+- **T / Manual Intervention Required**: Indicates that manual intervention is required.
+- **U / Inventory Update API**: An API for updating inventory levels.
+- **V / Inventory Update API**: An API for updating inventory levels.
+- **W / Inventory Update API**: An API for updating inventory levels.
+- **X / Send Notification API**: An API for sending notifications.
+- **Y / Send Notification API**: An API for sending notifications.
+- **Z / Send Notification API**: An API for sending notifications.
+- **AA / Send Notification API**: An API for sending notifications.
+- **BB / Inventory Table**: Represents the inventory table in the database.
+- **CC / Shipment Table**: Represents the shipment table in the database.
+- **DD / Order Table**: Represents the order table in the database.
+- **EE / Authorize Payment API**: An API for authorizing payments.
+- **FF / Reverse Payment API**: An API for reversing payments.
+
+## Edges, Branches & Convergence
+- `A --> B`: Order is sent for inventory availability check.
+- `B -- Yes --> C`: Inventory is available, so reserve it.
+- `B -- No --> K`: Inventory is not available, notify the customer.
+- `C --> D`: Reserved inventory is sent for payment processing.
+- `D -- Yes --> E`: Payment is successful, deduct inventory.
+- `D -- No --> I`: Payment failed, release reserved inventory.
+- `E --> F`: Deducted inventory triggers shipment record creation.
+- `F --> G`: Shipment record triggers shipment scheduling.
+- `G --> H`: Shipment is scheduled, order is fulfilled.
+- `H --> M`: Shipment failure triggers rollback initiation.
+- `I --> J`: Release reserved inventory triggers customer notification of payment failure.
+- `K --> L`: Customer notified of out-of-stock, trigger low stock alert.
+- `M --> N`: Rollback initiated, check if payment was reversed.
+- `N -- Yes --> O`: Payment reversed, increase inventory.
+- `N -- No --> S`: Payment not reversed, escalate rollback failure.
+- `O --> P`: Inventory increased, update inventory records.
+- `P --> Q`: Inventory records updated, mark order as failed.
+- `Q --> R`: Order marked as failed, notify customer of cancellation.
+- `S --> T`: Rollback failure escalated, manual intervention required.
+- `O --> U`: Inventory increase triggers inventory update via API.
+- `E --> V`: Inventory deduction triggers inventory update via API.
+- `I --> W`: Releasing reserved inventory triggers inventory update via API.
+- `J --> X`: Payment failure notification triggers notification API.
+- `K --> Y`: Out-of-stock notification triggers notification API.
+- `R --> Z`: Order cancellation notification triggers notification API.
+- `L --> AA`: Low stock alert triggers notification API.
+- `P --> BB`: Inventory records update triggers database update to Inventory Table.
+- `F --> CC`: Shipment record creation triggers database update to Shipment Table.
+- `Q --> DD`: Order marked as failed triggers database update to Order Table.
+- `D --> EE`: Payment processing triggers Authorize Payment API.
+- `N --> FF`: Payment reversal check triggers Reverse Payment API.
+
+## Repository Context & Terminology
+- **Inventory**: The stock of goods available for sale.
+- **Order**: A customer's request to purchase goods or services.
+- **Payment Gateway**: A service that processes payments for online transactions.
+- **Shipment**: The process of delivering goods to a customer.
+- **Rollback**: The process of reversing operations in case of failure.
+- **API (Application Programming Interface)**: A set of rules and specifications that software programs can follow to communicate with each other.
+- **Database**: A structured set of data held in a computer, especially one that is accessible in various ways.
+
+## High-Density QA Ground Truth Summary
+The process begins with an "Order Received," which then checks "Inventory Available?". If inventory is available ("Yes" branch), the system proceeds to "Reserve Inventory" and then checks "Payment Successful?". If payment is successful ("Yes" branch), the system "Deducts Inventory," creates a "Shipment Record," schedules the "Shipment," and fulfills the "Order." If, at the "Inventory Available?" stage, the inventory is not available ("No" branch), the system "Notify Customer: Out of Stock" and "Send Low Stock Alert". If "Payment Successful?" returns "No," the system "Release Reserved Inventory" and "Notify Customer: Payment Failed." A shipment failure triggers a "Rollback Process," starting with "Initiate Rollback" and checking "Payment Reversed?". If reversed ("Yes"), the system "Increase Inventory," "Update Inventory Records," "Mark Order as Failed," and "Notify Customer: Order Cancelled." If not reversed ("No"), the system "Escalate Rollback Failure" and requires "Manual Intervention." The "Inventory Service" subgraph uses an "Inventory Update API" to manage inventory levels after deduction, release, or increase. The "Notification Service" uses a "Send Notification API" to communicate order status to the customer and internal alerts. The database tables ("Inventory Table," "Shipment Table," "Order Table") store relevant data throughout the process. The "Payment Gateway" uses "Authorize Payment API" and "Reverse Payment API" for payment processing.

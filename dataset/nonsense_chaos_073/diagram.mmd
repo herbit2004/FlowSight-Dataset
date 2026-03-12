@@ -1,0 +1,22 @@
+graph TD
+    A[Start: LuminaGenesis Intake] --> B{CoreSync Validation: Enabled?};
+    B -- Yes --> C[SpectraQueue Flush: PreLoad];
+    B -- No --> D[VaultNode Handshake: Initial];
+    C --> E[ArcLane Distributor: Alloc Init];
+    D --> E;
+    E --> F{ZenithGate Auth Layer: Active?};
+    F -- Yes --> G[FluxBridge Router: ProtoEstablish];
+    F -- No --> H[FluxBridge Router: Bypass];
+    G --> I{Temporal Buffer: Full?};
+    H --> I;
+    I -- No --> J[DataShunt Inject: Main];
+    I -- Yes --> K[DataShunt Inject: Overflow];
+    J --> L[CoreSync Validation: PostLoad];
+    K --> L;
+    L --> M[ArcLane Distributor: Alloc Dealloc];
+    M --> N[SpectraQueue Flush: PostLoad];
+    N --> O{VaultNode Handshake: Confirm};
+    O -- Success --> P[Termination Signal: Send];
+    O -- Failure --> Q[Alert: SysFailure];
+    P --> R[End: LuminaGenesis Eject];
+    Q --> R;

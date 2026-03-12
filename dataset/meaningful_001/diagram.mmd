@@ -1,0 +1,39 @@
+graph TD
+    subgraph Order Creation
+        A[User Interaction: Order Entry] --> B{Validate Order Data};
+        B -- Valid --> C[Inventory Check: Available Stock];
+        B -- Invalid --> A;
+        C -- Sufficient Stock --> D[Calculate Order Total];
+        C -- Insufficient Stock --> E[Notify User: Out of Stock];
+        E --> A;
+        D --> F[Generate Order ID];
+        F --> G[Persist Order: Order Database];
+    end
+
+    subgraph Payment Processing
+        G --> H[Initiate Payment: Payment Gateway];
+        H -- Payment Required --> I[Redirect User: Payment Page];
+        I --> J{Payment Received?};
+        J -- Yes --> K[Authorize Payment];
+        J -- No --> L[Payment Timeout];
+        L --> A;
+        K --> M[Capture Payment];
+        M --> N[Update Order Status: Paid];
+    end
+
+    subgraph Order Fulfillment
+       N --> O[Send Order to Warehouse];
+       O --> P[Warehouse Processing];
+       P --> Q[Shipping & Delivery];
+       Q --> R[Order Completed];
+    end
+
+    subgraph Notifications
+      N --> S[Send Confirmation Email];
+      O --> T[Send Shipping Notification];
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style J fill:#ccf,stroke:#333,stroke-width:2px
+    classDef blue fill:#f9f,stroke:#333,stroke-width:2px
+    classDef purple fill:#ccf,stroke:#333,stroke-width:2px

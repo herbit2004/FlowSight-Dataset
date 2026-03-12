@@ -1,0 +1,15 @@
+graph TD
+    A[User Places Order] --> B{Payment Received?};
+    B -- No --> C[Send Order Confirmation];
+    B -- Yes --> D[Order Fulfillment Initiated];
+    D --> E[Items Picked & Packed];
+    E --> F{Shipping Label Printed?};
+    F -- No --> G[Inventory Check];
+    G --> E;
+    F -- Yes --> H[Package Shipped];
+    H --> I[Update Inventory];
+    I --> J[Send Shipping Confirmation];
+    J --> K{Delivery Successful?};
+    K -- No --> L[Investigate Delivery Issue];
+    L --> K;
+    K -- Yes --> A;

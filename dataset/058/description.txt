@@ -1,0 +1,45 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the data flow and component interactions within a software system. It depicts the relationships between various engines, services, and data stores involved in a static analysis and documentation generation pipeline. The diagram serves as a high-level overview of the system's architecture, aiding in understanding the roles and responsibilities of each component.
+
+## Overall Layout
+The diagram's layout is primarily left-to-right, with some feedback loops. The API Service acts as the starting point, triggering the analysis process. The diagram does not have a single explicit end node, but the Orchestration Engine and API Service are points where the process can conclude or loop back.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into several stages: API initiation, orchestration, static analysis, AI interpretation, output generation, and repository management.
+
+## Node-by-Node Description
+- **API Service**: The entry point for initiating analysis jobs. In the repository, this likely corresponds to an API endpoint that receives requests and triggers the orchestration process.
+- **Orchestration Engine**: Manages the overall workflow, coordinating the execution of different analysis engines and data flow. In the repository, this corresponds to `Orchestration_Engine.md`.
+- **Job Database**: Stores the state of analysis jobs. In the repository, this corresponds to `Job_Database.md`.
+- **Static Analysis Engine**: Performs static code analysis. In the repository, this corresponds to `Static_Analysis_Engine.md`.
+- **Output Generation Engine**: Generates documentation based on analysis results. In the repository, this corresponds to `Output_Generation_Engine.md`.
+- **AI Interpretation Layer**: Interprets analysis data using AI techniques. In the repository, this corresponds to `AI_Interpretation_Layer.md`.
+- **Repository Manager**: Manages access to the code repository. In the repository, this corresponds to `Repository_Manager.md`.
+- **Unclassified**: visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `API Service --> Job Database`: The API Service initiates a job, which is recorded in the Job Database.
+- `API Service --> Orchestration Engine`: The API Service triggers the analysis process by sending a request to the Orchestration Engine.
+- `Orchestration Engine --> Job Database`: The Orchestration Engine manages the state of the job in the Job Database.
+- `Orchestration Engine --> Static Analysis Engine`: The Orchestration Engine requests static analysis from the Static Analysis Engine.
+- `Static Analysis Engine --> Orchestration Engine`: The Static Analysis Engine provides richer analysis results back to the Orchestration Engine.
+- `Orchestration Engine --> Output Generation Engine`: The Orchestration Engine passes enhanced insights to the Output Generation Engine for documentation generation.
+- `Output Generation Engine --> API Service`: The Output Generation Engine delivers the generated documentation back to the API Service.
+- `Orchestration Engine --> AI Interpretation Layer`: The Orchestration Engine feeds rich analysis data to the AI Interpretation Layer.
+- `AI Interpretation Layer --> Orchestration Engine`: The AI Interpretation Layer returns enhanced architectural insights to the Orchestration Engine.
+- `AI Interpretation Layer --> Repository Manager`: The AI Interpretation Layer queries diffs from the Repository Manager.
+- `Orchestration Engine --> Repository Manager`: The Orchestration Engine requests code from the Repository Manager.
+- `Repository Manager --> Orchestration Engine`: The Repository Manager provides code to the Orchestration Engine.
+
+## Repository Context & Terminology
+- **API Service**: The entry point for initiating analysis jobs, likely an HTTP endpoint.
+- **Orchestration Engine**: A central component responsible for managing the workflow of the analysis pipeline. It coordinates the execution of different analysis engines and data flow.
+- **Job Database**: A persistent store for tracking the state of analysis jobs. This likely uses a database system.
+- **Static Analysis Engine**: A tool that performs static code analysis to identify potential issues and extract information about the code.
+- **Output Generation Engine**: A component that generates documentation based on the analysis results.
+- **AI Interpretation Layer**: A layer that uses AI techniques to interpret the analysis data and provide higher-level insights.
+- **Repository Manager**: A component that manages access to the code repository, providing code and diffs to other components.
+- **.codeboarding directory**: The diagram references several files within a `.codeboarding` directory, suggesting this directory contains configuration or documentation related to the components in the architecture.
+
+## High-Density QA Ground Truth Summary
+The process begins with the API Service initiating a job and triggering analysis by sending a request to the Orchestration Engine, which then manages the job state in the Job Database. The Orchestration Engine requests static analysis from the Static Analysis Engine, which returns richer analysis results. The Orchestration Engine also requests code from the Repository Manager, which provides the code. Enhanced insights are passed to the Output Generation Engine for documentation generation, and the generated documentation is delivered back to the API Service. Rich analysis data is fed to the AI Interpretation Layer, which queries diffs from the Repository Manager and returns enhanced architectural insights to the Orchestration Engine. The Orchestration Engine, acting as the central coordinator, manages the data flow between the Static Analysis Engine, Output Generation Engine, AI Interpretation Layer, and Repository Manager. The `.codeboarding` directory, referenced in the diagram's links, likely contains configuration and documentation for these components, providing further context for their roles and interactions. The API Service and Orchestration Engine are points where the process can conclude or loop back, while the Job Database persists the state of each analysis run.

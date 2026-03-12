@@ -1,0 +1,24 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- No --> C[Cancel Order];
+    B -- Yes --> D[Acknowledge Order];
+    D --> E[Inventory Check];
+    E --> F{Enough Inventory?};
+    F -- No --> G[Order Fulfilment];
+    F -- Yes --> H[Notify Customer of Backorder];
+    H --> I[Customer Approves Backorder?];
+    I -- Yes --> G;
+    I -- No --> C;
+    G --> J[Package Order];
+    J --> K[Shipping Label Created];
+    K --> L{Shipping Label Issues?};
+    L -- Yes --> M[Shipping Confirmation];
+    L -- No --> N[Order Shipped];
+    N --> O[Update Inventory];
+    O --> P[Mark Order as Complete];
+    P --> A;
+    C --> P;
+    M --> J;
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style P fill:#ccf,stroke:#333,stroke-width:2px

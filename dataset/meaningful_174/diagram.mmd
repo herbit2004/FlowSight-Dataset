@@ -1,0 +1,69 @@
+graph TD
+    subgraph User Interaction
+        A[User Query] --> B(Query Preprocessing);
+        B --> C{Intent Classification};
+        C -- Intent: FAQ --> D[FAQ Retrieval];
+        C -- Intent: Procedural --> E[Procedure Retrieval];
+        C -- Intent: Conceptual --> F[Concept Retrieval];
+        C -- Intent: Unclear/Ambiguous --> G[Clarification Prompt];
+        G --> B;
+    end
+
+    subgraph Knowledge Graph & Databases
+        H[FAQ Database];
+        I[Procedure Knowledge Graph];
+        J[Concept Ontology];
+
+        D --> H;
+        E --> I;
+        F --> J;
+
+        subgraph Graph Traversal & Reasoning
+            I --> K{Rule Engine};
+            K -- Rule Matched --> L[Procedure Step Recommendation];
+            K -- No Rule Matched --> M[Fallback Procedure Suggestion];
+            L --> N(Postprocessing & Formatting);
+            M --> N;
+        end
+
+        subgraph Ontology Reasoning
+           J --> O{Inference Engine};
+           O -- Inference Successful --> P[Relevant Concept Expansion];
+           O -- Inference Failed --> Q[Related Concept Retrieval];
+           P --> R(Concept Summarization);
+           Q --> R;
+           R --> S(Postprocessing & Formatting);
+        end
+    end
+
+    subgraph Retrieval & Ranking
+        H --> T{Similarity Scoring};
+        T --> U[FAQ Ranking];
+
+        L --> V{Contextualization};
+        M --> V;
+        V --> W[Procedure Ranking];
+
+        S --> X{Relevance Filtering};
+        X --> Y[Concept Ranking];
+
+        U --> Z(Fusion & Ranking);
+        W --> Z;
+        Y --> Z;
+
+        Z --> AA(Response Generation);
+        AA --> BB[User Response];
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style BB fill:#f9f,stroke:#333,stroke-width:2px
+
+    classDef process fill:#ccf,stroke:#333,stroke-width:1px
+    classDef decision fill:#ccf,stroke:#333,stroke-width:1px,shape:diamond
+    classDef database fill:#fff,stroke:#333,stroke-width:1px
+    classDef inputOutput fill:#f9f,stroke:#333,stroke-width:1px
+
+    class B,D,E,F,G,L,M,N,P,Q,R,S,U,W,Y,Z,AA process
+    class C,K,O,T,V,X decision
+    class H,I,J database
+    class A,BB inputOutput

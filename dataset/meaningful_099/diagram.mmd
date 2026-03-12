@@ -1,0 +1,52 @@
+graph TD
+    subgraph Distributed Cache System
+        A[Client Request] --> B{Cache Hit?};
+        B -- Yes --> C[Return Cached Value];
+        B -- No --> D[Request Origin Server];
+        D --> E[Origin Server Processing];
+        E --> F[Return Value to Cache & Client];
+        F --> G[Update Cache];
+        G --> H[Return Value to Client];
+        C --> I[Client Receives Value];
+        H --> I;
+
+        subgraph Origin Server
+            E --> J{Data Changed?};
+            J -- Yes --> K[Publish Invalidation Event];
+            J -- No --> L[Return Value Directly];
+            L --> F;
+        end
+
+        subgraph Invalidation Service
+            K --> M[Receive Invalidation Event];
+            M --> N{Local Cache Entry Exists?};
+            N -- Yes --> O[Invalidate Local Cache Entry];
+            N -- No --> P[No Action];
+            O --> Q[Update Last Invalidation Timestamp];
+            Q --> R[Acknowledge Invalidation Event];
+            M --> R;
+        end
+
+        subgraph Cache Node
+            G --> S{Cache Size Limit Reached?};
+            S -- Yes --> T[Evict Least Recently Used Entry];
+            S -- No --> U[Store Value in Cache];
+            T --> U;
+            U --> V[Update Last Access Timestamp];
+        end
+
+    end
+
+    I --> Z[Client Application];
+    R --> Y[Invalidation Confirmation to Origin Server];
+    J --> Y;
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style Z fill:#f9f,stroke:#333,stroke-width:2px
+
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px
+    classDef process fill:#ccf,stroke:#333,stroke-width:2px
+    classDef server fill:#ccf,stroke:#333,stroke-width:2px
+
+    class B,J,N decision;
+    class C,D,E,F,G,H,I,K,L,M,O,P,Q,R,S,T,U,V process;

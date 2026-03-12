@@ -1,0 +1,49 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a network threat detection and response system. It illustrates the flow of network traffic through various stages of analysis, from initial capture to final disposition as either clean traffic or a detected threat, triggering appropriate responses. The diagram serves as a high-level architecture overview of the system.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with live network traffic and progresses through stages of packet capture, feature extraction, machine learning-based classification, and finally, threat detection or safe traffic handling. The start node is "Live Network Traffic" and the end nodes are "CLEAN TRAFFIC Passed all checks Logged & archived", "Auto-Block Firewall rule push", "Threat Report IOC extraction", and "Alert Dispatch SIEM · SOAR · Email".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Live Network Traffic, Packet Capture, Feature Extraction, Classification (LSTM, Isolation Forest, AutoEncoder), Ensemble Voting, and Threat/Clean Traffic Handling.
+
+## Node-by-Node Description
+- **TRAFFIC / Live Network Traffic TCP / UDP / ICMP Stream**: Represents live network traffic entering the system, including TCP, UDP, and ICMP protocols. visible in diagram; no further repository context available.
+- **CAP / Packet Capture Scapy · Wireshark**: Represents the packet capture stage, utilizing tools like Scapy and Wireshark. visible in diagram; no further repository context available.
+- **EXTRACT / Feature Extraction Packet size distribution Flow duration & timing Protocol anomalies Behavioural signatures**: Represents the feature extraction stage, where various network traffic characteristics are extracted. visible in diagram; no further repository context available.
+- **LSTM / LSTM Classifier 128 → 64 units Bidirectional · Dropout 0.2**: Represents an LSTM (Long Short-Term Memory) classifier with 128 input units, 64 bidirectional units, and a dropout rate of 0.2. visible in diagram; no further repository context available.
+- **ISO / Isolation Forest Contamination: 0.01 Estimators: 200**: Represents an Isolation Forest anomaly detection model with a contamination parameter of 0.01 and 200 estimators. visible in diagram; no further repository context available.
+- **AUTO / AutoEncoder Encoder-Decoder Reconstruction error scoring**: Represents an AutoEncoder model used for anomaly detection based on reconstruction error scoring. visible in diagram; no further repository context available.
+- **ENSEMBLE / Ensemble Voting Weighted majority vote + confidence scoring**: Represents an ensemble voting mechanism that combines the outputs of the LSTM, Isolation Forest, and AutoEncoder models using weighted majority voting and confidence scoring. visible in diagram; no further repository context available.
+- **THREAT / THREAT DETECTED Severity: CRITICAL / HIGH / MED MITRE ATT&CK Mapping**: Represents the threat detection outcome, indicating the severity level (CRITICAL, HIGH, or MED) and mapping to MITRE ATT&CK framework. visible in diagram; no further repository context available.
+- **SAFE / CLEAN TRAFFIC Passed all checks Logged & archived**: Represents the outcome where traffic is deemed clean, having passed all checks, and is subsequently logged and archived. visible in diagram; no further repository context available.
+- **BLOCK / Auto-Block Firewall rule push**: Represents the action of automatically blocking the detected threat by pushing a firewall rule. visible in diagram; no further repository context available.
+- **REPORT / Threat Report IOC extraction**: Represents the generation of a threat report and extraction of Indicators of Compromise (IOCs). visible in diagram; no further repository context available.
+- **NOTIFY / Alert Dispatch SIEM · SOAR · Email**: Represents the dispatch of alerts to a SIEM (Security Information and Event Management) system, SOAR (Security Orchestration, Automation and Response) platform, and via email. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `TRAFFIC --> CAP`: Network traffic flows into the packet capture stage.
+- `CAP --> EXTRACT`: Captured packets are processed for feature extraction.
+- `EXTRACT --> LSTM`: Extracted features are fed into the LSTM classifier.
+- `EXTRACT --> ISO`: Extracted features are fed into the Isolation Forest model.
+- `EXTRACT --> AUTO`: Extracted features are fed into the AutoEncoder model.
+- `LSTM & ISO & AUTO --> ENSEMBLE`: Outputs from the LSTM, Isolation Forest, and AutoEncoder models are combined in the ensemble voting mechanism.
+- `ENSEMBLE --> THREAT`: If the ensemble score is greater than 0.85, the traffic is classified as a threat.
+- `ENSEMBLE --> SAFE`: If the ensemble score is less than 0.15, the traffic is classified as safe.
+- `THREAT --> BLOCK`: A detected threat triggers the automatic blocking of the traffic via firewall rule push.
+- `THREAT --> REPORT`: A detected threat triggers the generation of a threat report and IOC extraction.
+- `THREAT --> NOTIFY`: A detected threat triggers the dispatch of alerts to SIEM, SOAR, and via email.
+
+## Repository Context & Terminology
+- **TCP/UDP/ICMP**: Common network protocols used for communication over the internet. TCP provides reliable, connection-oriented communication, UDP provides connectionless communication, and ICMP is used for network diagnostics and error reporting.
+- **Scapy**: A Python-based interactive packet manipulation program & library. It is able to forge or decode packets of a wide number of protocols, send them on the wire, capture them, match requests and replies, and much more.
+- **Wireshark**: A network protocol analyzer that captures and analyzes network traffic.
+- **LSTM (Long Short-Term Memory)**: A type of recurrent neural network (RNN) architecture well-suited for processing sequential data, such as network traffic flows.
+- **Isolation Forest**: An unsupervised machine learning algorithm for anomaly detection that isolates anomalies by randomly partitioning the data.
+- **AutoEncoder**: A type of neural network used for unsupervised learning, typically for dimensionality reduction or anomaly detection. It learns to encode and decode data, and anomalies are identified based on high reconstruction errors.
+- **MITRE ATT&CK**: A knowledge base of adversary tactics and techniques based on real-world observations. It is used to understand and classify cyberattacks.
+- **SIEM (Security Information and Event Management)**: A system that collects and analyzes security logs and events from various sources to detect and respond to threats.
+- **SOAR (Security Orchestration, Automation and Response)**: A platform that automates security tasks and workflows to improve incident response efficiency.
+
+## High-Density QA Ground Truth Summary
+The system begins with live network traffic, encompassing TCP, UDP, and ICMP streams. This traffic is captured using tools like Scapy and Wireshark. The captured packets undergo feature extraction, where characteristics such as packet size distribution, flow duration and timing, protocol anomalies, and behavioral signatures are identified. These extracted features are then fed into three machine learning models: an LSTM classifier (configured with 128 input units, 64 bidirectional units, and a dropout of 0.2), an Isolation Forest model (contamination of 0.01 and 200 estimators), and an AutoEncoder for reconstruction error scoring. The outputs of these models are combined using an ensemble voting mechanism, employing weighted majority voting and confidence scoring. If the resulting ensemble score exceeds 0.85, the traffic is classified as a threat, triggering actions such as automatically blocking the traffic via firewall rule push, generating a threat report with IOC extraction, and dispatching alerts to a SIEM system, SOAR platform, and via email. Conversely, if the ensemble score is below 0.15, the traffic is deemed clean, logged, and archived. The MITRE ATT&CK framework is used to map detected threats to specific adversary tactics and techniques, providing a structured understanding of the attack.

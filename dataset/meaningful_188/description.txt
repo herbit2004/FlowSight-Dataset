@@ -1,0 +1,78 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the user registration and login flow of a typical web application. It outlines the steps a user takes when creating a new account or logging into an existing one, including email verification, multi-factor authentication (MFA), and error handling. The diagram serves as a visual representation of the authentication process, aiding in understanding and debugging the system.
+
+## Overall Layout
+The diagram uses a top-down (TD) layout. It is logically divided into two main flows: user registration and user login. The start nodes are "User initiates registration" and "User initiates login," and the end nodes are "Display success message: Registration complete" and "Redirect to user dashboard."
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: User Registration Initiation, Email Verification, Account Creation, User Login Initiation, and Authentication.
+
+## Node-by-Node Description
+- **A / User initiates registration**: The user begins the registration process. visible in diagram; no further repository context available.
+- **B / Check email address format**: The system validates the format of the email address entered by the user. visible in diagram; no further repository context available.
+- **C / Email already exists?**: The system checks if the email address is already registered in the database. visible in diagram; no further repository context available.
+- **D / Generate temporary token**: A temporary token is generated for email verification. visible in diagram; no further repository context available.
+- **E / Send verification email**: The system sends a verification email to the user's email address. visible in diagram; no further repository context available.
+- **F / Display error: Invalid email**: An error message is displayed if the email format is invalid. visible in diagram; no further repository context available.
+- **G / Display error: Email already registered**: An error message is displayed if the email address is already registered. visible in diagram; no further repository context available.
+- **H / User clicks verification link**: The user clicks on the verification link in the email. visible in diagram; no further repository context available.
+- **I / Token valid and not expired?**: The system checks if the verification token is valid and has not expired. visible in diagram; no further repository context available.
+- **J / Create user account**: A new user account is created in the database. visible in diagram; no further repository context available.
+- **K / Set user status to active**: The user account status is set to active. visible in diagram; no further repository context available.
+- **L / Send welcome email**: A welcome email is sent to the user. visible in diagram; no further repository context available.
+- **M / Display success message: Registration complete**: A success message is displayed to the user, indicating that the registration is complete. visible in diagram; no further repository context available.
+- **N / Display error: Invalid or expired token**: An error message is displayed if the token is invalid or expired. visible in diagram; no further repository context available.
+- **O / User initiates login**: The user begins the login process. visible in diagram; no further repository context available.
+- **P / Username/password valid?**: The system checks if the username and password combination is valid. visible in diagram; no further repository context available.
+- **Q / Account active?**: The system checks if the user account is active. visible in diagram; no further repository context available.
+- **R / Display error: Invalid credentials**: An error message is displayed if the username and password combination is invalid. visible in diagram; no further repository context available.
+- **S / Generate session token**: A session token is generated for the user. visible in diagram; no further repository context available.
+- **T / Display error: Account not activated**: An error message is displayed if the user account is not active. visible in diagram; no further repository context available.
+- **U / MFA enabled?**: The system checks if multi-factor authentication (MFA) is enabled for the user account. visible in diagram; no further repository context available.
+- **V / Send MFA code**: An MFA code is sent to the user's registered device. visible in diagram; no further repository context available.
+- **W / User enters valid MFA code?**: The system checks if the MFA code entered by the user is valid. visible in diagram; no further repository context available.
+- **X / Establish session**: A session is established for the user. visible in diagram; no further repository context available.
+- **Y / Display error: Invalid MFA code**: An error message is displayed if the MFA code is invalid. visible in diagram; no further repository context available.
+- **Z / Redirect to user dashboard**: The user is redirected to their dashboard. visible in diagram; no further repository context available.
+- **AA / Establish session**: A session is established for the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User initiates registration, triggering email format validation.
+- `B -- Valid format --> C`: Email format is valid, proceeding to check if the email already exists.
+- `B -- Invalid format --> F`: Email format is invalid, displaying an error.
+- `C -- Yes --> G`: Email already exists, displaying an error.
+- `C -- No --> D`: Email does not exist, generating a temporary token.
+- `D --> E`: Temporary token generated, sending a verification email.
+- `E --> H`: Verification email sent, user clicks the verification link.
+- `H --> I`: User clicks the link, checking if the token is valid and not expired.
+- `I -- Yes --> J`: Token is valid and not expired, creating a user account.
+- `I -- No --> N`: Token is invalid or expired, displaying an error.
+- `J --> K`: User account created, setting the user status to active.
+- `K --> L`: User status set to active, sending a welcome email.
+- `L --> M`: Welcome email sent, displaying a success message.
+- `A --> O`: User initiates login.
+- `O --> P`: User initiates login, checking username/password validity.
+- `P -- Yes --> Q`: Username/password is valid, checking if the account is active.
+- `P -- No --> R`: Username/password is invalid, displaying an error.
+- `Q -- Yes --> S`: Account is active, generating a session token.
+- `Q -- No --> T`: Account is not active, displaying an error.
+- `S --> U`: Session token generated, checking if MFA is enabled.
+- `U -- Yes --> V`: MFA is enabled, sending an MFA code.
+- `U -- No --> AA`: MFA is not enabled, establishing a session.
+- `V --> W`: MFA code sent, checking if the user enters a valid MFA code.
+- `W -- Yes --> X`: User enters a valid MFA code, establishing a session.
+- `W -- No --> Y`: User enters an invalid MFA code, displaying an error.
+- `X --> Z`: Session established, redirecting to the user dashboard.
+- `AA --> Z`: Session established, redirecting to the user dashboard.
+
+## Repository Context & Terminology
+- **User Registration**: The process of creating a new account in the system.
+- **Login**: The process of accessing an existing account in the system.
+- **Email Verification**: Confirming the validity of a user's email address.
+- **Temporary Token**: A short-lived security token used for email verification.
+- **MFA (Multi-Factor Authentication)**: An authentication method that requires multiple verification factors.
+- **Session Token**: A token that represents an authenticated user session.
+- **User Dashboard**: The main interface for a logged-in user.
+
+## High-Density QA Ground Truth Summary
+The user registration and login flow begins with either "User initiates registration" or "User initiates login." For registration, the system first checks the email address format. If invalid, it displays an error. If valid, it checks if the email already exists. If so, an error is shown; otherwise, a temporary token is generated and sent via email. The user clicks the link, and the system validates the token. If valid, a user account is created, activated, and a welcome email is sent, completing registration. If the token is invalid, an error is displayed. For login, the system validates the username and password. Invalid credentials trigger an error. If valid, the system checks if the account is active. Inactive accounts result in an error. Active accounts generate a session token, and the system checks if MFA is enabled. If MFA is enabled, a code is sent, and its validity is checked. Invalid codes display an error. Valid codes, or disabled MFA, result in establishing a session and redirecting the user to their dashboard. The "Session Token" is a crucial element, representing an authenticated user session and enabling access to protected resources. The flow ensures secure user authentication and account management.

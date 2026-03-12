@@ -1,0 +1,54 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the order processing workflow, from when a user submits an order to logging the order details. The diagram outlines the steps involved in verifying payment, managing inventory, shipping the order, and handling customer satisfaction.
+
+## Overall Layout
+The diagram's primary direction is top-down. It starts with the "User Submits Order" node at the top and flows downwards through various processes and decision points, eventually looping back to the "User Submits Order" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Payment, Inventory Verification, Order Fulfillment, Customer Feedback, Restock Process, and Logging.
+
+## Node-by-Node Description
+- **User Submits Order**: Represents the initial action of a user placing an order. visible in diagram; no further repository context available.
+- **Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **Verify Inventory**: Represents the process of checking if the ordered items are available in the inventory. visible in diagram; no further repository context available.
+- **Send Order Confirmation**: Represents sending a confirmation message to the user after they submit the order, regardless of payment status. visible in diagram; no further repository context available.
+- **Ship Order**: Represents the action of shipping the order to the customer. visible in diagram; no further repository context available.
+- **Restock Inventory**: Represents the action of restocking the inventory when items are unavailable. visible in diagram; no further repository context available.
+- **Send Payment Reminder**: Represents sending a reminder to the user to make the payment. visible in diagram; no further repository context available.
+- **Order Delivered**: Represents the event when the order is delivered to the customer. visible in diagram; no further repository context available.
+- **Notify Supplier**: Represents the action of notifying the supplier about the need to restock inventory. visible in diagram; no further repository context available.
+- **Customer Satisfied?**: A decision point to check if the customer is satisfied with the order. visible in diagram; no further repository context available.
+- **Send Restock Request**: Represents sending a request to the supplier to restock the inventory. visible in diagram; no further repository context available.
+- **Update Inventory**: Represents the action of updating the inventory levels. visible in diagram; no further repository context available.
+- **Log Order Details**: Represents the action of logging all the details of the order. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Submits Order --> Payment Received?`: The user submitting an order triggers the payment verification process.
+- `Payment Received? -- Yes --> Verify Inventory`: If payment is received, the system verifies the inventory.
+- `Payment Received? -- No --> Send Order Confirmation`: If payment is not received, an order confirmation is sent.
+- `Verify Inventory -- Available --> Ship Order`: If the inventory is available, the order is shipped.
+- `Verify Inventory -- Unavailable --> Restock Inventory`: If the inventory is unavailable, the system initiates the restocking process.
+- `Send Order Confirmation --> Send Payment Reminder`: After sending the order confirmation, a payment reminder is sent.
+- `Send Payment Reminder --> Payment Received?`: The payment reminder leads back to checking if payment has been received.
+- `Ship Order --> Order Delivered`: Shipping the order leads to the order being delivered.
+- `Order Delivered --> Customer Satisfied?`: After the order is delivered, customer satisfaction is checked.
+- `Customer Satisfied? -- Yes --> Update Inventory`: If the customer is satisfied, the inventory is updated.
+- `Customer Satisfied? -- No --> Ship Order`: If the customer is not satisfied, the system loops back to shipping the order again.
+- `Restock Inventory --> Notify Supplier`: Restocking the inventory involves notifying the supplier.
+- `Notify Supplier --> Send Restock Request`: Notifying the supplier leads to sending a restock request.
+- `Send Restock Request --> Update Inventory`: Sending a restock request leads directly to updating the inventory.
+- `Update Inventory --> Log Order Details`: Updating the inventory leads to logging the order details.
+- `Log Order Details --> User Submits Order`: Logging the order details leads back to the beginning, where a user submits another order.
+
+## Repository Context & Terminology
+- **User Submits Order**: Standard meaning is a customer placing an order. In this diagram, it's the starting point of the workflow and also the endpoint of a loop, restarting the process.
+- **Payment Received?**: Standard meaning is checking if payment has been made. In this diagram, the "No" branch incorrectly leads to sending an order confirmation *before* payment.
+- **Verify Inventory**: Standard meaning is checking stock levels. In this diagram, the "Available" branch leads to shipping the order.
+- **Send Order Confirmation**: Standard meaning is confirming the order details to the customer. In this diagram, it's sent *before* payment is received, which is an error.
+- **Ship Order**: Standard meaning is sending the order to the customer. In this diagram, it loops back if the customer is not satisfied, which is illogical.
+- **Restock Inventory**: Standard meaning is replenishing stock. In this diagram, it's triggered when inventory is unavailable.
+- **Update Inventory**: Standard meaning is adjusting stock levels. In this diagram, it's triggered by customer satisfaction and also directly after sending a restock request, which is illogical.
+- **Log Order Details**: Standard meaning is recording order information. In this diagram, it's the final step before looping back to the start.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Submits Order," which immediately proceeds to "Payment Received?". If payment is received ("Yes" branch), the system proceeds to "Verify Inventory"; if not ("No" branch), an order confirmation is sent, followed by a payment reminder, looping back to "Payment Received?". If inventory is "Available", the order is shipped; if "Unavailable", the system initiates "Restock Inventory," notifying the supplier and sending a restock request, which incorrectly leads directly to "Update Inventory". After shipping, the "Order Delivered" status is checked, leading to a "Customer Satisfied?" decision. If satisfied ("Yes"), the inventory is updated; if not ("No"), the system loops back to "Ship Order" again. Finally, "Update Inventory" leads to "Log Order Details," completing the cycle and returning to "User Submits Order." The diagram contains several logical errors, including sending order confirmations before payment verification and looping back to shipping the order if the customer is not satisfied. The "Send Restock Request" node incorrectly leads directly to "Update Inventory" instead of re-verifying inventory levels after restocking.

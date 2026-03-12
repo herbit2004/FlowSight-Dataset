@@ -1,0 +1,88 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the user authentication and session management process of an application that uses Single Sign-On (SSO). The diagram outlines the steps involved in checking for an existing session, authenticating the user via an SSO provider if necessary, and managing the application session. It serves as a visual representation of the authentication flow, aiding in understanding and troubleshooting the system.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into four subgraphs representing different stages of the authentication process. The start node is "User opens application," and the end node is "Return response to user."
+
+## Subgraphs / Stages
+The diagram contains four subgraphs:
+- **User Interaction**: Represents the initial interaction of the user with the application.
+- **SSO Authentication**: Represents the authentication process handled by the SSO provider.
+- **Application Session**: Represents the creation and management of the application session.
+- **Request Processing**: Represents the processing of the user's request after authentication and session validation.
+
+## Node-by-Node Description
+- **A / User opens application**: Represents the initial action of the user accessing the application.
+  visible in diagram; no further repository context available.
+- **B / Session exists?**: Represents a decision point where the application checks if a session already exists for the user.
+  visible in diagram; no further repository context available.
+- **C / Fetch session data**: Represents the action of retrieving existing session data.
+  visible in diagram; no further repository context available.
+- **D / Redirect to SSO Provider**: Represents the action of redirecting the user to the SSO provider for authentication.
+  visible in diagram; no further repository context available.
+- **E / Display SSO login page**: Represents the display of the SSO login page to the user.
+  visible in diagram; no further repository context available.
+- **F / User authenticates?**: Represents a decision point where the application checks if the user has successfully authenticated with the SSO provider.
+  visible in diagram; no further repository context available.
+- **G / SSO Provider generates token**: Represents the SSO provider generating a token upon successful authentication.
+  visible in diagram; no further repository context available.
+- **H / Display error, retry**: Represents displaying an error message and retrying the authentication process if the user fails to authenticate.
+  visible in diagram; no further repository context available.
+- **I / SSO Provider redirects back to application with token**: Represents the SSO provider redirecting the user back to the application with the generated token.
+  visible in diagram; no further repository context available.
+- **J / Application server validates token**: Represents the application server validating the token received from the SSO provider.
+  visible in diagram; no further repository context available.
+- **K / Create application session**: Represents the creation of an application session after successful token validation.
+  visible in diagram; no further repository context available.
+- **L / Display SSO error**: Represents displaying an error message if the token validation fails.
+  visible in diagram; no further repository context available.
+- **M / Store session data in Redis**: Represents storing the session data in a Redis database.
+  visible in diagram; no further repository context available.
+- **N / Set session cookie**: Represents setting a session cookie in the user's browser.
+  visible in diagram; no further repository context available.
+- **O / Retrieve session data from Redis**: Represents retrieving session data from the Redis database.
+  visible in diagram; no further repository context available.
+- **P / Session data valid?**: Represents a decision point where the application checks if the retrieved session data is valid.
+  visible in diagram; no further repository context available.
+- **Q / Authorize request**: Represents authorizing the user's request after successful session validation.
+  visible in diagram; no further repository context available.
+- **R / Process request**: Represents processing the user's request.
+  visible in diagram; no further repository context available.
+- **S / Return response to user**: Represents returning the response to the user.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User opens the application, initiating the authentication flow.
+- `B -- Yes --> C`: If a session exists, fetch the session data.
+- `B -- No --> D`: If no session exists, redirect to the SSO provider.
+- `D --> E`: Redirect to SSO provider leads to displaying the SSO login page.
+- `E --> F`: Displaying the SSO login page leads to the user attempting authentication.
+- `F -- Yes --> G`: If the user authenticates successfully, the SSO provider generates a token.
+- `F -- No --> H`: If the user fails to authenticate, display an error and retry.
+- `H --> E`: Retry the authentication process by redisplaying the SSO login page.
+- `G --> I`: The SSO provider redirects back to the application with the token.
+- `I --> J`: The application server validates the token.
+- `J -- Valid --> K`: If the token is valid, create an application session.
+- `J -- Invalid --> L`: If the token is invalid, display an SSO error.
+- `K --> M`: Create application session leads to storing session data in Redis.
+- `M --> N`: Store session data in Redis leads to setting a session cookie.
+- `C --> O`: Fetch session data leads to retrieving session data from Redis.
+- `O --> P`: Retrieve session data from Redis leads to checking if the session data is valid.
+- `P -- Yes --> Q`: If the session data is valid, authorize the request.
+- `P -- No --> L`: If the session data is invalid, display an SSO error.
+- `Q --> R`: Authorize request leads to processing the request.
+- `R --> S`: Process request leads to returning the response to the user.
+- `N --> S`: Setting the session cookie leads to returning the response to the user.
+- `L --> S`: Displaying the SSO error leads to returning the response to the user.
+
+## Repository Context & Terminology
+- **SSO (Single Sign-On)**: An authentication method that enables users to access multiple applications with one set of login credentials.
+- **SSO Provider**: A service that provides SSO capabilities, such as Google, Okta, or Azure AD.
+- **Token**: A security token issued by the SSO provider after successful authentication, used to verify the user's identity.
+- **Redis**: An in-memory data structure store, often used as a cache or session store.
+- **Session**: A server-side representation of a user's interaction with an application, typically stored in a database or cache.
+- **Session Cookie**: A small piece of data stored on the user's computer, used to identify the user's session.
+- **Application Session**: The session created and managed by the application itself, distinct from the SSO session.
+
+## High-Density QA Ground Truth Summary
+The authentication flow begins when the user opens the application. The application first checks if a session exists. If a session exists ("Yes" branch), the application fetches the session data from Redis. If no session exists ("No" branch), the user is redirected to the SSO provider for authentication. The SSO provider displays a login page, and upon successful authentication, generates a token and redirects the user back to the application with the token. The application server then validates the token. If the token is valid, an application session is created, and the session data is stored in Redis, and a session cookie is set. If the token is invalid, an SSO error is displayed. If the session data fetched from Redis is valid, the request is authorized. If the session data is invalid, an SSO error is displayed. After authorization, the request is processed. Finally, the response is returned to the user. The session cookie ensures that subsequent requests from the user are associated with the same session, avoiding repeated authentication. Redis is used as a fast and efficient session store, improving the application's performance.

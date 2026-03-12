@@ -1,0 +1,41 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of an optimization process. It depicts the interaction between an optimizer, a search space, an objective function, and a search data store. The diagram visualizes how the optimizer proposes parameters from the search space, which are then evaluated by the objective function, and the results are stored in the search data, which can be used to warm-start the optimizer.
+
+## Overall Layout
+The diagram has a circular layout, with nodes arranged in a loop. The Optimizer node can be considered the starting point. The flow proceeds from the Optimizer to the Search Space, then to the Objective, and finally back to the Optimizer. The Search Data node is connected to the Optimizer with dashed lines, indicating a less direct flow for warm-starting.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into four stages:
+1. Parameter proposal by the Optimizer.
+2. Parameter selection from the Search Space.
+3. Objective function evaluation.
+4. Data storage and warm-start.
+
+## Node-by-Node Description
+- **Optimizer**: Represents the optimization algorithm, which contains 21 different algorithms.
+  visible in diagram; no further repository context available.
+- **Search Space**: Represents the space of possible parameters, implemented as NumPy arrays.
+  visible in diagram; no further repository context available.
+- **Objective**: Represents the objective function that evaluates the parameters and returns a score. The function takes parameters as input and returns a score: f(params) -> score.
+  visible in diagram; no further repository context available.
+- **Search Data**: Represents the storage of search history.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Optimizer --> Search Space`: The optimizer proposes parameters to the search space.
+- `Search Space --> Objective`: The search space provides parameters to the objective function.
+- `Objective --> Optimizer`: The objective function returns a score to the optimizer.
+- `Optimizer -.-> Search Data`: The optimizer sends data to the search data store.
+- `Search Data -.-> Optimizer`: The search data provides a warm start to the optimizer.
+
+## Repository Context & Terminology
+- **Optimizer**: A component that uses algorithms to find the best parameters within a search space.
+- **Search Space**: The domain of possible parameter values that the optimizer explores. Represented as NumPy arrays.
+- **Objective Function**: A function that evaluates the quality of a given set of parameters.
+- **Score**: The output of the objective function, representing the performance of the parameters.
+- **Search Data**: A repository of past search results, used to inform future searches.
+- **Warm Start**: Using previous search data to initialize the optimizer, potentially speeding up convergence.
+- **NumPy arrays**: Data structures used to represent the search space.
+
+## High-Density QA Ground Truth Summary
+The optimization process begins with the Optimizer, which proposes parameters to the Search Space. These parameters, represented as NumPy arrays, are then passed to the Objective function. The Objective function evaluates these parameters and returns a score, which is then fed back to the Optimizer. This score informs the Optimizer's subsequent parameter proposals. In parallel, the Optimizer sends data to the Search Data store, creating a history of the search process. This history can then be used to provide a warm start to the Optimizer, potentially improving its efficiency. The Optimizer contains 21 different algorithms that can be used to propose parameters. The Search Data node stores the history of the search, which is used to warm start the Optimizer. The process continues iteratively until a satisfactory score is achieved or a stopping criterion is met. The final output is the set of parameters that yield the best score according to the Objective function.

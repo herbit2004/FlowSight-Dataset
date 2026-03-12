@@ -1,0 +1,87 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a distributed lock management system using ZooKeeper. The diagram outlines the process of requesting, acquiring, and releasing a lock, as well as the leader election process in case of failures or network partitions. It serves as a visual representation of the system's workflow and fault tolerance mechanisms.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It depicts a workflow starting with a client application requesting a lock and ending with the lock being returned or a re-election being triggered. The diagram shows the interaction between the client, lock manager, and ZooKeeper cluster.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Client Lock Request, Lock Manager Service, ZooKeeper Interaction, Leader Election, and Lock Release.
+
+## Node-by-Node Description
+- **A / Client Application**: Represents the application that needs to acquire a lock.
+  visible in diagram; no further repository context available.
+- **B / Request Lock**: Represents the action of the client application requesting a lock from the lock manager service.
+  visible in diagram; no further repository context available.
+- **C / Lock Manager Service**: Represents the service responsible for managing locks and coordinating with the ZooKeeper cluster.
+  visible in diagram; no further repository context available.
+- **D / Candidate Lock**: Represents the state where a node is a candidate for acquiring the lock.
+  visible in diagram; no further repository context available.
+- **E / ZooKeeper Cluster**: Represents the ZooKeeper ensemble used for distributed coordination and leader election.
+  visible in diagram; no further repository context available.
+- **F / Create Ephemeral ZNode**: Represents the action of creating an ephemeral ZNode in ZooKeeper to indicate a node's candidacy for leadership.
+  visible in diagram; no further repository context available.
+- **G / Election Monitor**: Represents the component that monitors the ZNodes in ZooKeeper to determine the leader.
+  visible in diagram; no further repository context available.
+- **H / Leader Election**: Represents the process of electing a leader among the candidate nodes.
+  visible in diagram; no further repository context available.
+- **I / Become Leader**: Represents the state where a node has been elected as the leader.
+  visible in diagram; no further repository context available.
+- **J / Become Follower**: Represents the state where a node is following the leader.
+  visible in diagram; no further repository context available.
+- **K / Grant Lock to Client**: Represents the action of granting the lock to the client application.
+  visible in diagram; no further repository context available.
+- **L / Watch Predecessor**: Represents the action of a follower node watching its predecessor ZNode in ZooKeeper.
+  visible in diagram; no further repository context available.
+- **M / Re-election Triggered**: Represents the event that triggers a new leader election.
+  visible in diagram; no further repository context available.
+- **N / Return Lock Token**: Represents the action of returning the lock token to the client application.
+  visible in diagram; no further repository context available.
+- **O / Release Lock**: Represents the action of the client application releasing the lock.
+  visible in diagram; no further repository context available.
+- **P / Remove ZNode**: Represents the action of removing the ZNode from ZooKeeper when the lock is released.
+  visible in diagram; no further repository context available.
+- **Q / Quorum Reached?**: Represents the decision point to determine if a quorum has been reached in the ZooKeeper cluster during a network partition.
+  visible in diagram; no further repository context available.
+- **R / Initiate Fence**: Represents the action of initiating a fencing mechanism to prevent stale operations during a network partition.
+  visible in diagram; no further repository context available.
+- **S / Continue Operations**: Represents the action of continuing operations after a quorum has been reached.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Client application requests a lock.
+- `B --> C`: Lock request is sent to the Lock Manager Service.
+- `C --> D`: Lock Manager determines the candidate for the lock.
+- `D --> E`: Candidate Lock interacts with the ZooKeeper Cluster.
+- `E -- Node Available --> F`: A node is available in the ZooKeeper cluster.
+- `F -- Success --> G`: Ephemeral ZNode creation is successful.
+- `G -- First Node? --> H`: Check if the current node is the first node.
+- `H -- Yes --> I`: The node becomes the leader.
+- `H -- No --> J`: The node becomes a follower.
+- `I --> K`: The lock is granted to the client.
+- `J --> L`: The follower watches its predecessor.
+- `L -- Predecessor Fails --> M`: The predecessor node fails, triggering re-election.
+- `M --> H`: Re-election process starts.
+- `K --> N`: Lock token is returned to the client.
+- `N --> A`: Client receives the lock token.
+- `A -- Use Resource --> O`: Client uses the resource.
+- `O --> P`: Client releases the lock.
+- `P --> E`: ZNode is removed from ZooKeeper.
+- `E -- Lock Node Failure --> M`: Lock node failure triggers re-election.
+- `E -- Network Partition --> Q`: Network partition occurs.
+- `Q -- No --> R`: Quorum is not reached, initiate fence.
+- `Q -- Yes --> S`: Quorum is reached, continue operations.
+- `S --> K`: Continue operations and grant lock to client.
+- `R --> C`: Initiate fence and return to Lock Manager Service.
+
+## Repository Context & Terminology
+- **ZooKeeper**: A centralized service for maintaining configuration information, naming, providing distributed synchronization, and group services.
+- **ZNode**: A node in the ZooKeeper tree, which can store data and have children.
+- **Ephemeral ZNode**: A ZNode that is automatically deleted when the session that created it terminates. Used for leader election.
+- **Leader Election**: The process of selecting a leader among a group of nodes in a distributed system.
+- **Quorum**: The minimum number of nodes that must be available in a distributed system to ensure consistency.
+- **Fencing**: A mechanism to prevent stale operations from being executed in a distributed system during a network partition.
+- **Lock Manager Service**: A service responsible for managing locks and coordinating access to shared resources.
+- **Network Partition**: A situation where a distributed system is divided into two or more isolated parts due to network failures.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the `Client Application` requesting a `Lock` from the `Lock Manager Service`. The `Lock Manager Service` then interacts with the `ZooKeeper Cluster` to determine the lock candidate. If a `Node` is `Available`, an `Ephemeral ZNode` is created. Upon `Success`, the `Election Monitor` checks if the current node is the `First Node`. If `Yes`, the node `Become Leader` and the `Lock` is `Grant`ed to the `Client`. If `No`, the node `Become Follower` and `Watch Predecessor`. If the `Predecessor Fails`, a `Re-election` is `Triggered`, returning to the `Leader Election` process. The `Client Application` can also `Use Resource` and then `Release Lock`, which `Remove ZNode` from the `ZooKeeper Cluster`. A `Lock Node Failure` in the `ZooKeeper Cluster` also triggers a `Re-election`. In case of a `Network Partition`, the system checks if a `Quorum` is `Reached`. If `No`, an `Initiate Fence` action is taken, returning to the `Lock Manager Service`. If `Yes`, the system `Continue Operations` and `Grant Lock to Client`. The `ZooKeeper Cluster` ensures distributed synchronization and group services, while ephemeral ZNodes are used for leader election, automatically deleted upon session termination.

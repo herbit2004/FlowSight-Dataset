@@ -1,0 +1,17 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- No --> C[Notify User of Payment Failure];
+    C --> A;
+    B -- Yes --> D[Fulfill Order];
+    D --> E{Inventory Available?};
+    E -- No --> F[Backorder Item];
+    F --> D;
+    E -- Yes --> G[Ship Order];
+    G --> H[Order Delivered];
+    H --> I{User Satisfied?};
+    I -- No --> J[Process Refund];
+    J --> K[Close Order];
+    I -- Yes --> L[Send Thank-You Note];
+    L --> A;
+    K --> M[Log Order Details];
+    M --> K;

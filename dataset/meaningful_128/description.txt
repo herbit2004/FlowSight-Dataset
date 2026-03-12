@@ -1,0 +1,66 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of coupon issuance and redemption within a system. It outlines the steps involved in both providing coupons to users and processing them when users attempt to redeem them, including eligibility checks, coupon availability, and fund verification. The diagram serves as a visual representation of the coupon management workflow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into two main subgraphs: "Coupon Issuance" and "Coupon Redemption." The process starts with "User Request Coupon" and ends with "Update Coupon Pool."
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Coupon Issuance**: This subgraph details the process of issuing coupons to users, including eligibility checks and coupon generation.
+- **Coupon Redemption**: This subgraph outlines the steps involved in redeeming a coupon, including validation and fund verification.
+
+## Node-by-Node Description
+- **A / User Request Coupon**: Represents a user initiating a request for a coupon. visible in diagram; no further repository context available.
+- **B / Eligibility Check**: Represents the process of verifying if the user is eligible to receive a coupon. visible in diagram; no further repository context available.
+- **C / Coupon Pool Available?**: Represents a decision point to check if there are coupons available in the coupon pool. visible in diagram; no further repository context available.
+- **X / Reject Coupon Request**: Represents the action of rejecting the coupon request if the user is not eligible. visible in diagram; no further repository context available.
+- **D / Allocate Coupon**: Represents the action of allocating an existing coupon to the user. visible in diagram; no further repository context available.
+- **E / Generate New Coupon**: Represents the action of generating a new coupon if none are available in the pool. visible in diagram; no further repository context available.
+- **F / Store New Coupon**: Represents the action of storing the newly generated coupon. visible in diagram; no further repository context available.
+- **G / Send Coupon to User**: Represents the action of sending the allocated coupon to the user. visible in diagram; no further repository context available.
+- **H / User Submits Coupon Code**: Represents the user submitting a coupon code for redemption. visible in diagram; no further repository context available.
+- **I / Validate Coupon**: Represents the process of validating the submitted coupon code. visible in diagram; no further repository context available.
+- **J / Sufficient Funds?**: Represents a decision point to check if there are sufficient funds to apply the coupon discount. visible in diagram; no further repository context available.
+- **Y / Reject Redemption**: Represents the action of rejecting the coupon redemption. visible in diagram; no further repository context available.
+- **K / Apply Discount**: Represents the action of applying the coupon discount to the order. visible in diagram; no further repository context available.
+- **L / Update Order Total**: Represents the action of updating the order total after applying the discount. visible in diagram; no further repository context available.
+- **M / Record Redemption**: Represents the action of recording the coupon redemption. visible in diagram; no further repository context available.
+- **N / Release Coupon**: Represents the action of releasing the coupon after redemption. visible in diagram; no further repository context available.
+- **Z / Insufficient Funds Message**: Represents the action of displaying an insufficient funds message to the user. visible in diagram; no further repository context available.
+- **O / Update Coupon Pool**: Represents the action of updating the coupon pool after redemption. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User requests a coupon, initiating the eligibility check.
+- `B -- Eligible? --> C`: If the user is eligible, check coupon pool availability.
+- `B -- Not Eligible --> X`: If the user is not eligible, reject the coupon request.
+- `C -- Yes --> D`: If coupons are available, allocate a coupon.
+- `C -- No --> E`: If coupons are not available, generate a new coupon.
+- `E --> F`: After generating a new coupon, store it.
+- `F --> D`: After storing the new coupon, allocate it.
+- `D --> G`: Allocate coupon to user.
+- `G --> H`: Send the coupon to the user.
+- `H --> I`: User submits the coupon code, initiating validation.
+- `I -- Valid? --> J`: If the coupon is valid, check for sufficient funds.
+- `I -- Invalid --> Y`: If the coupon is invalid, reject the redemption.
+- `J -- Yes --> K`: If there are sufficient funds, apply the discount.
+- `J -- No --> Z`: If there are insufficient funds, display a message.
+- `Z --> Y`: After displaying the insufficient funds message, reject the redemption.
+- `K --> L`: After applying the discount, update the order total.
+- `L --> M`: After updating the order total, record the redemption.
+- `M --> N`: After recording the redemption, release the coupon.
+- `N --> O`: After releasing the coupon, update the coupon pool.
+
+## Repository Context & Terminology
+- **Coupon Issuance**: The process of generating and distributing coupons to users.
+- **Coupon Redemption**: The process of a user using a coupon to receive a discount on a purchase.
+- **Eligibility Check**: Verifying if a user meets the criteria to receive a coupon.
+- **Coupon Pool**: A collection of available coupons.
+- **Allocate Coupon**: Assigning a specific coupon to a user.
+- **Validate Coupon**: Verifying the authenticity and validity of a coupon code.
+- **Sufficient Funds**: Ensuring that there are enough funds available to cover the discount provided by the coupon.
+- **Apply Discount**: Reducing the order total by the value of the coupon.
+- **Order Total**: The final amount due for an order after applying discounts and taxes.
+- **Record Redemption**: Storing information about the coupon redemption for tracking and analysis.
+
+## High-Density QA Ground Truth Summary
+The coupon management process begins with a "User Request Coupon," which triggers an "Eligibility Check." If the user is deemed ineligible ("Not Eligible" branch), the "Reject Coupon Request" action is taken, terminating the issuance flow. If eligible, the system checks "Coupon Pool Available?". If coupons are available ("Yes" branch), a coupon is "Allocate Coupon" directly. If not ("No" branch), a "Generate New Coupon" action is performed, followed by "Store New Coupon" before allocation. After allocation, the "Send Coupon to User" action completes the issuance phase. The coupon redemption process starts when the "User Submits Coupon Code," leading to "Validate Coupon." An invalid coupon ("Invalid" branch) results in "Reject Redemption." A valid coupon triggers a "Sufficient Funds?" check. Insufficient funds ("No" branch) lead to an "Insufficient Funds Message" and subsequent "Reject Redemption." With sufficient funds ("Yes" branch), the system proceeds to "Apply Discount," "Update Order Total," "Record Redemption," and "Release Coupon." Finally, the "Update Coupon Pool" action concludes the redemption process, reflecting the coupon's usage. The "Coupon Pool" represents a database or storage mechanism for managing available coupons, a critical component for scalability and tracking in a real-world coupon system.

@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a metrics pipeline. It depicts the flow of metrics data from initial scraping to final notification or resolution, outlining the steps involved in processing alerts based on severity and escalation policies. The diagram serves as a visual representation of the alert management process.
+
+## Overall Layout
+The diagram has a left-to-right (LR) primary direction. It starts with "Prometheus Scrape" and ends with either "PagerDuty Notification" or "Acknowledge/Resolve". The diagram illustrates a linear flow with branching based on alert severity and escalation policies.
+
+## Subgraphs / Stages
+The diagram contains one subgraph: "Metrics Pipeline".
+
+## Node-by-Node Description
+- **Prometheus Scrape**: Represents the initial step of scraping metrics data using Prometheus.
+  visible in diagram; no further repository context available.
+- **Alert Rule Evaluation**: Represents the evaluation of alert rules against the scraped metrics.
+  visible in diagram; no further repository context available.
+- **Alertmanager**: Represents the Alertmanager component, responsible for handling alerts.
+  visible in diagram; no further repository context available.
+- **Continue Monitoring**: Represents the state where monitoring continues without triggering an alert.
+  visible in diagram; no further repository context available.
+- **Deduplication & Grouping**: Represents the process of deduplicating and grouping alerts.
+  visible in diagram; no further repository context available.
+- **Severity Level**: Represents the determination of the severity level of an alert.
+  visible in diagram; no further repository context available.
+- **Create JIRA Ticket**: Represents the creation of a JIRA ticket for low-severity alerts.
+  visible in diagram; no further repository context available.
+- **PagerDuty Notification**: Represents sending a notification via PagerDuty for high-severity alerts.
+  visible in diagram; no further repository context available.
+- **Slack Channel Post**: Represents posting an alert to a Slack channel for medium-severity alerts.
+  visible in diagram; no further repository context available.
+- **Escalation Policy Check**: Represents checking the escalation policy for an alert.
+  visible in diagram; no further repository context available.
+- **Acknowledge/Resolve**: Represents acknowledging or resolving an alert.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Prometheus Scrape --> Alert Rule Evaluation`: Metrics data flows from Prometheus to alert rule evaluation.
+- `Alert Rule Evaluation -- Firing Alert --> Alertmanager`: An alert is triggered and sent to Alertmanager.
+- `Alert Rule Evaluation -- No Alert --> Continue Monitoring`: Monitoring continues without triggering an alert.
+- `Alertmanager --> Deduplication & Grouping`: Alerts are passed to deduplication and grouping.
+- `Deduplication & Grouping --> Severity Level`: Alerts are passed to determine the severity level.
+- `Severity Level -- High --> PagerDuty Notification`: High-severity alerts trigger a PagerDuty notification.
+- `Severity Level -- Medium --> Slack Channel Post`: Medium-severity alerts trigger a Slack channel post.
+- `Severity Level -- Low --> Create JIRA Ticket`: Low-severity alerts trigger the creation of a JIRA ticket.
+- `Slack Channel Post --> Escalation Policy Check`: Alerts are passed to check the escalation policy.
+- `Escalation Policy Check -- Escalate --> PagerDuty Notification`: Alerts are escalated to PagerDuty.
+- `Escalation Policy Check -- No Escalation --> Acknowledge/Resolve`: Alerts are acknowledged or resolved.
+- `Escalate --> PagerDuty Notification`: Escalated alerts converge at PagerDuty Notification.
+
+## Repository Context & Terminology
+- **Prometheus**: A popular open-source monitoring and alerting toolkit.
+- **Alertmanager**: A component of Prometheus responsible for handling alerts, including deduplication, grouping, and routing.
+- **JIRA**: A proprietary issue tracking product developed by Atlassian.
+- **PagerDuty**: An incident management platform that provides alerting, on-call scheduling, and other related services.
+- **Slack**: A business communication platform.
+- **Alert Rule**: A rule that defines the conditions under which an alert should be triggered based on metrics data.
+- **Escalation Policy**: A set of rules that define how alerts should be escalated to different individuals or teams based on severity and time.
+
+## High-Density QA Ground Truth Summary
+The metrics pipeline begins with "Prometheus Scrape", where metrics data is collected. This data is then passed to "Alert Rule Evaluation". If an alert rule is triggered ("Firing Alert"), the alert is sent to "Alertmanager"; otherwise ("No Alert"), monitoring continues via "Continue Monitoring". Alertmanager deduplicates and groups alerts before passing them to "Deduplication & Grouping", which then determines the "Severity Level". Based on severity, different actions are taken: "High" severity triggers a "PagerDuty Notification" directly. "Medium" severity results in a "Slack Channel Post", followed by an "Escalation Policy Check". If escalation is required, it leads to "PagerDuty Notification"; otherwise, the alert is "Acknowledge/Resolve". "Low" severity results in "Create JIRA Ticket". The "Escalation Policy Check" node serves as a key decision point, determining whether an alert needs further escalation to PagerDuty based on predefined rules, or whether it can be resolved directly. The pipeline ultimately concludes with either "PagerDuty Notification" for critical alerts or "Acknowledge/Resolve" for less critical issues. Prometheus is used to scrape metrics, and Alertmanager handles the alerts based on severity.

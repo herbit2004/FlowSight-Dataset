@@ -1,0 +1,59 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture and data flow within a compiler. It illustrates the stages of compilation, from package management and parsing to code generation. The diagram serves as a high-level overview of the compiler's internal structure and the sequence of operations performed during the compilation process.
+
+## Overall Layout
+The diagram has a left-to-right (LR) flow. It is hierarchically structured with subgraphs representing different modules. The process starts with the `package-manager` and ends with the `go-compiler`.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs: `package-manager` and `compiler`. The `compiler` subgraph further contains `parser` and `backend` subgraphs.
+
+## Node-by-Node Description
+- **package-manager**: Represents the module responsible for managing packages.
+  visible in diagram; no further repository context available.
+- **git-client**: Represents the Git client within the package manager.
+  visible in diagram; no further repository context available.
+- **file-system**: Represents the file system component within the package manager.
+  visible in diagram; no further repository context available.
+- **compiler**: Represents the overall compiler module.
+  visible in diagram; no further repository context available.
+- **parser**: Represents the parsing stage of the compiler.
+  visible in diagram; no further repository context available.
+- **antlr**: Represents the ANTLR parser generator used in the parsing stage.
+  visible in diagram; no further repository context available.
+- **analyzer**: Represents the analysis stage of the compiler.
+  visible in diagram; no further repository context available.
+- **typesystem**: Represents the type system component within the analyzer.
+  visible in diagram; no further repository context available.
+- **desugarer**: Represents the desugaring stage of the compiler.
+  visible in diagram; no further repository context available.
+- **irgen**: Represents the intermediate representation (IR) generation stage.
+  visible in diagram; no further repository context available.
+- **backend**: Represents the backend stage of the compiler.
+  visible in diagram; no further repository context available.
+- **go-code-generator**: Represents the Go code generator within the backend.
+  visible in diagram; no further repository context available.
+- **go-compiler**: Represents the final Go compiler.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `package-manager --> compiler`: Represents the flow of raw build data from the package manager to the compiler.
+- `parser --> analyzer`: Represents the flow of parsed build data from the parser to the analyzer.
+- `analyzer --> desugarer`: Represents the flow of analyzed build data from the analyzer to the desugarer.
+- `desugarer --> irgen`: Represents the flow of desugared build data from the desugarer to the IR generator.
+- `irgen --> backend`: Represents the flow of intermediate representation (IR) data from the IR generator to the backend.
+- `compiler --> go-compiler`: Represents the flow of Go code from the compiler to the Go compiler.
+
+## Repository Context & Terminology
+- **Package Manager**: A tool or system that automates the process of installing, upgrading, configuring, and removing software packages.
+- **Compiler**: A program that translates source code written in a high-level programming language into a lower-level language (e.g., assembly language or machine code).
+- **Parser**: A component of a compiler that transforms input text into a data structure, often a parse tree, which is suitable for later processing.
+- **ANTLR**: A powerful parser generator that can be used to create parsers for various programming languages.
+- **Analyzer**: A component of a compiler that performs semantic analysis on the parse tree to check for type errors and other inconsistencies.
+- **Type System**: A set of rules that define how types are assigned to expressions in a programming language.
+- **Desugarer**: A component of a compiler that transforms complex language constructs into simpler ones.
+- **IRGen**: A component of a compiler that generates intermediate representation (IR) code from the desugared code.
+- **Backend**: A component of a compiler that translates the intermediate representation (IR) code into machine code or another target language.
+- **Go Code Generator**: A component of the backend that generates Go code from the intermediate representation (IR) code.
+
+## High-Density QA Ground Truth Summary
+The compilation process begins with the `package-manager`, which provides `raw-build` data to the `compiler`. The `compiler`'s first stage is the `parser`, which uses `antlr` to generate `parsed-build` data for the `analyzer`. The `analyzer`, containing the `typesystem`, produces `analyzed-build` data that flows to the `desugarer`. The `desugarer` then generates `desugared-build` data for the `irgen` stage, which creates an intermediate representation (`ir`). This `ir` is passed to the `backend`, specifically the `go-code-generator`. Finally, the `compiler` outputs `go-code` to the `go-compiler`. The `package-manager` subgraph contains `git-client` and `file-system` components, indicating its role in managing external dependencies and local files. The `compiler` subgraph encapsulates the core compilation pipeline, transforming source code into executable code. The `antlr` component within the `parser` suggests the use of a grammar-based approach to parsing the input language. The `typesystem` within the `analyzer` ensures type safety and consistency during compilation.

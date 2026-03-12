@@ -1,0 +1,64 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow for launching an instance, likely within a cloud computing environment such as Oracle Cloud Infrastructure (OCI). The diagram outlines the steps involved in checking for an existing instance, generating SSH keys if needed, gathering resources, launching the instance, handling errors, and checking the instance state. It serves as a visual guide for automating or understanding the instance launch process.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It starts with a "Start" node and ends with an "End" node. The flow includes decision points, linear sequences, and loops for error handling and retries.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Initialization, Instance Check, Launch, Monitoring, and Termination.
+
+## Node-by-Node Description
+- **A / Start**: The starting point of the instance launch process.
+  visible in diagram; no further repository context available.
+- **B / Load Environment Variables**: Loads necessary environment variables required for the subsequent steps.
+  visible in diagram; no further repository context available.
+- **C / Initialize OCI Clients**: Initializes the Oracle Cloud Infrastructure (OCI) clients needed to interact with OCI services.
+  visible in diagram; no further repository context available.
+- **D / Instance Exists?**: A decision point to check if an instance already exists.
+  visible in diagram; no further repository context available.
+- **E / Notify Success**: Notifies the user or system that the instance launch was successful.
+  visible in diagram; no further repository context available.
+- **F / Generate/Read SSH Key**: Generates a new SSH key or reads an existing one for accessing the instance.
+  visible in diagram; no further repository context available.
+- **G / Gather OCI Resources**: Gathers the necessary OCI resources required for launching the instance.
+  visible in diagram; no further repository context available.
+- **K / Launch Instance**: Launches the instance using the gathered resources and SSH key.
+  visible in diagram; no further repository context available.
+- **L / Launch Successful?**: A decision point to check if the instance launch was successful.
+  visible in diagram; no further repository context available.
+- **M / Check Instance State**: Checks the current state of the launched instance.
+  visible in diagram; no further repository context available.
+- **N / Handle Errors**: Handles any errors that occurred during the instance launch process.
+  visible in diagram; no further repository context available.
+- **O / Wait and Retry**: Waits for a specified period and retries the instance launch process.
+  visible in diagram; no further repository context available.
+- **P / End**: The ending point of the instance launch process.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Starts the process by loading environment variables.
+- `B --> C`: Initializes OCI clients after loading environment variables.
+- `C --> D`: Checks if an instance already exists after initializing OCI clients.
+- `D -- Yes --> E`: If an instance exists, notify success.
+- `D -- No --> F`: If an instance does not exist, generate/read an SSH key.
+- `F --> G`: Gathers OCI resources after generating/reading the SSH key.
+- `G --> K`: Launches the instance after gathering OCI resources.
+- `K --> L`: Checks if the instance launch was successful.
+- `L -- Yes --> M`: If the launch was successful, check the instance state.
+- `L -- No --> N`: If the launch was not successful, handle errors.
+- `N --> K`: After handling errors, retry launching the instance.
+- `M -- Running --> E`: If the instance state is running, notify success.
+- `M -- Not Running --> O`: If the instance state is not running, wait and retry.
+- `O --> K`: After waiting, retry launching the instance.
+- `E --> P`: Ends the process after notifying success.
+
+## Repository Context & Terminology
+- **OCI (Oracle Cloud Infrastructure)**: A suite of cloud computing services offered by Oracle. The diagram uses OCI clients and resources, indicating interaction with Oracle's cloud platform.
+- **SSH Key**: A cryptographic key pair used for secure remote access to the instance. The diagram includes a step to generate or read an SSH key, which is essential for secure instance access.
+- **Instance**: A virtual machine running in the cloud. The diagram focuses on the process of launching and managing an instance.
+- **Environment Variables**: Dynamic-named values that can affect the way running processes will behave on a computer. They are used to configure the instance launch process.
+- **Resources**: The compute, network, and storage components required to launch an instance. The diagram includes a step to gather these resources.
+- **State**: The current operational status of the instance (e.g., running, stopped, terminated). The diagram includes a step to check the instance state.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins at the "Start" node, immediately followed by "Load Environment Variables" and "Initialize OCI Clients," setting up the environment and cloud connection. The process then branches at "Instance Exists?": if yes, it proceeds to "Notify Success" and "End," assuming a pre-existing instance is sufficient; if no, it moves to generating or reading an SSH key ("Generate/Read SSH Key") and gathering necessary cloud resources ("Gather OCI Resources"). The core of the process involves launching the instance ("Launch Instance") and then checking for success ("Launch Successful?"). If the launch fails, the system handles errors ("Handle Errors") and retries the launch. If the launch succeeds, the instance state is monitored ("Check Instance State"). If the instance is running, success is notified; if not, the system waits and retries ("Wait and Retry"). The process converges at the "Launch Instance" node after error handling or waiting, and at the "Notify Success" node before reaching the "End" node. The diagram highlights the automated provisioning of cloud instances, using OCI-specific terminology and emphasizing error handling and state management.

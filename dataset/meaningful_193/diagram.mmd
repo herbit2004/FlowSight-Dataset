@@ -1,0 +1,45 @@
+graph TD
+    classDef cacheFill fill:#f9f,stroke:#333,stroke-width:2px
+    classDef invalid fill:#ccf,stroke:#333,stroke-width:2px
+    classDef readwrite fill:#fff,stroke:#333,stroke-width:2px
+
+    subgraph "Application Service"
+        AS(Application Logic)
+    end
+
+    subgraph "Distributed Cache Layer"
+        CC(Cache Controller) --> |Read Request| CM{Cache Miss?}
+        CM -- Yes --> RT(Remote Tier)
+        RT --> |Value from DB| CC
+        RT:::cacheFill
+        CM -- No --> CD(Cache Data)
+        CD --> |Value| AS
+        AS --> |Write Request| CCW(Cache Controller - Write)
+        CCW --> WU{Write Unit Ready?}
+        WU -- Yes --> WV(Write Validator)
+        WV --> |Valid Write| CW(Cache Writer)
+        CW --> CD
+        CW:::readwrite
+        WV -- Invalid Write --> ER((Error Reporting))
+    end
+
+    subgraph "Invalidation Service"
+        EV(Event Listener) --> IF{Invalidate Event?}
+        IF -- Yes --> IK(Invalidation Key Extractor)
+        IK --> IQ(Invalidation Queue)
+        IQ --> IV(Cache Invalidator)
+        IV --> CD
+        IV:::invalid
+        IF -- No --> EV
+    end
+
+    subgraph "Remote Database"
+        DB(Data Store)
+        RT --> DB
+        DB --> |Value| RT
+    end
+
+    EV --> CC
+    ER --> CC
+    CW --> EV
+    AS:::readwrite

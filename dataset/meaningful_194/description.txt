@@ -1,0 +1,106 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the request flow and authentication/authorization process for a client application accessing backend services through an API Gateway. It depicts the steps involved in validating requests, authenticating users, routing requests to appropriate backend services, and handling potential errors or rate limiting. The diagram serves as a visual representation of the system's architecture and request processing logic.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured, with the Client at the top, followed by the API Gateway, Auth Server, and Backend Services. The start node is the "User Application," and the end nodes are "Return Order Response," "Return Payment Response," "Return 400: Bad Request," "Return 403: Forbidden," "Return 429: Too Many Requests," and "Return Error."
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing different components of the system: Client, API Gateway, Auth Server, and Backend Services.
+
+## Node-by-Node Description
+- **User Application**: Represents the client application initiating the request.
+  visible in diagram; no further repository context available.
+- **API Gateway: ingress.example.com**: The entry point for all client requests, responsible for request validation, authentication, authorization, and routing.
+  visible in diagram; no further repository context available.
+- **Request Validation?**: A decision point to determine if the incoming request is valid.
+  visible in diagram; no further repository context available.
+- **Return 400: Bad Request**: Indicates that the request is invalid and returns a 400 error.
+  visible in diagram; no further repository context available.
+- **Authentication?**: A decision point to determine if the request is authenticated.
+  visible in diagram; no further repository context available.
+- **JWT Verification?**: A decision point to verify the validity of the JWT (JSON Web Token).
+  visible in diagram; no further repository context available.
+- **Redirect to Auth Server**: Redirects the user to the authentication server if no token or an invalid token is provided.
+  visible in diagram; no further repository context available.
+- **Authorization?**: A decision point to determine if the user is authorized to access the requested resource.
+  visible in diagram; no further repository context available.
+- **Return 403: Forbidden**: Indicates that the user is not authorized to access the requested resource and returns a 403 error.
+  visible in diagram; no further repository context available.
+- **Routing Logic**: Determines the appropriate backend service to route the request to.
+  visible in diagram; no further repository context available.
+- **Auth Service: auth.example.com**: The authentication server responsible for user login and issuing JWTs.
+  visible in diagram; no further repository context available.
+- **User Login?**: A decision point to validate user credentials.
+  visible in diagram; no further repository context available.
+- **Return Error**: Returns an error if user login fails.
+  visible in diagram; no further repository context available.
+- **Issue JWT**: Issues a JWT upon successful user login.
+  visible in diagram; no further repository context available.
+- **Rate Limiter**: Limits the number of requests from a client within a specific time frame.
+  visible in diagram; no further repository context available.
+- **Return 429: Too Many Requests**: Indicates that the client has exceeded the rate limit and returns a 429 error.
+  visible in diagram; no further repository context available.
+- **Service Discovery**: Discovers available backend services.
+  visible in diagram; no further repository context available.
+- **Backend Service Selection**: Selects the appropriate backend service based on the request.
+  visible in diagram; no further repository context available.
+- **Target Service: orders-api.example.com**: The backend service responsible for handling order-related requests.
+  visible in diagram; no further repository context available.
+- **Process Order Request**: Processes the order request.
+  visible in diagram; no further repository context available.
+- **Return Order Response**: Returns the order response to the client.
+  visible in diagram; no further repository context available.
+- **Target Service: payments-api.example.com**: The backend service responsible for handling payment-related requests.
+  visible in diagram; no further repository context available.
+- **Process Payment Request**: Processes the payment request.
+  visible in diagram; no further repository context available.
+- **Return Payment Response**: Returns the payment response to the client.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Application --> API Gateway`: The user application sends a request to the API Gateway.
+- `API Gateway --> Request Validation?`: The API Gateway initiates request validation.
+- `Request Validation? -- Invalid Request --> Return 400: Bad Request`: If the request is invalid, a 400 error is returned.
+- `Request Validation? -- Valid Request --> Authentication?`: If the request is valid, authentication is initiated.
+- `Authentication? -- No Token --> Redirect to Auth Server`: If no token is present, the user is redirected to the authentication server.
+- `Authentication? -- Valid Token --> JWT Verification?`: If a token is present, JWT verification is initiated.
+- `JWT Verification? -- Invalid Signature/Expired --> Redirect to Auth Server`: If the JWT signature is invalid or expired, the user is redirected to the authentication server.
+- `JWT Verification? -- Valid Signature --> Authorization?`: If the JWT signature is valid, authorization is initiated.
+- `Authorization? -- Unauthorized --> Return 403: Forbidden`: If the user is not authorized, a 403 error is returned.
+- `Authorization? -- Authorized --> Routing Logic`: If the user is authorized, routing logic is initiated.
+- `Routing Logic --> Rate Limiter`: The request is passed to the Rate Limiter.
+- `Rate Limiter -- Throttled --> Return 429: Too Many Requests`: If the client is throttled, a 429 error is returned.
+- `Rate Limiter -- Within Limit --> Service Discovery`: If the client is within the rate limit, service discovery is initiated.
+- `Service Discovery --> Backend Service Selection`: Available backend services are discovered, and the appropriate service is selected.
+- `Backend Service Selection --> Target Service: orders-api.example.com`: The request is routed to the orders service.
+- `Backend Service Selection --> Target Service: payments-api.example.com`: The request is routed to the payments service.
+- `Target Service: orders-api.example.com --> Process Order Request`: The orders service processes the request.
+- `Target Service: payments-api.example.com --> Process Payment Request`: The payments service processes the request.
+- `Process Order Request --> Return Order Response`: The orders service returns the response.
+- `Process Payment Request --> Return Payment Response`: The payments service returns the response.
+- `Auth Service: auth.example.com --> User Login?`: The authentication server validates user credentials.
+- `User Login? -- Invalid Credentials --> Return Error`: If the credentials are invalid, an error is returned.
+- `User Login? -- Valid Credentials --> Issue JWT`: If the credentials are valid, a JWT is issued.
+- `Issue JWT --> API Gateway`: The JWT is returned to the API Gateway.
+- `Return Error --> API Gateway`: The error is returned to the API Gateway.
+- `Return Order Response --> API Gateway`: The order response is returned to the API Gateway.
+- `Return Payment Response --> API Gateway`: The payment response is returned to the API Gateway.
+- `Return 400: Bad Request --> User Application`: The 400 error is returned to the user application.
+- `Return 403: Forbidden --> User Application`: The 403 error is returned to the user application.
+- `Return 429: Too Many Requests --> User Application`: The 429 error is returned to the user application.
+- `API Gateway --> User Application`: The API Gateway returns the response to the user application.
+
+## Repository Context & Terminology
+- **API Gateway**: A reverse proxy that acts as the entry point for all client requests, providing security, routing, and other functionalities.
+- **JWT (JSON Web Token)**: A standard for securely transmitting information between parties as a JSON object. It is commonly used for authentication and authorization.
+- **Authentication**: The process of verifying the identity of a user or client.
+- **Authorization**: The process of determining whether a user or client has permission to access a specific resource.
+- **Rate Limiter**: A mechanism to limit the number of requests from a client within a specific time frame, preventing abuse and ensuring system stability.
+- **Service Discovery**: A mechanism for automatically discovering available services in a distributed system.
+- **Backend Service**: A service that provides specific functionality, such as order processing or payment processing.
+- **400 Bad Request**: An HTTP status code indicating that the server cannot or will not process the request due to something that is perceived to be a client error.
+- **403 Forbidden**: An HTTP status code indicating that the server understands the request but refuses to authorize it.
+- **429 Too Many Requests**: An HTTP status code indicating that the user has sent too many requests in a given amount of time.
+
+## High-Density QA Ground Truth Summary
+The process begins with a User Application sending a request to the API Gateway at ingress.example.com. The API Gateway first performs Request Validation; if the request is invalid, a 400 Bad Request error is returned to the User Application. If the request is valid, the API Gateway proceeds to Authentication. If no token is provided, the user is redirected to the Auth Server at auth.example.com. The Auth Server checks User Login credentials; invalid credentials result in a Return Error to the API Gateway, while valid credentials result in issuing a JWT, which is then returned to the API Gateway. If a token is provided initially, the API Gateway performs JWT Verification. An invalid or expired signature also leads to redirection to the Auth Server. A valid signature leads to Authorization. If the user is unauthorized, a 403 Forbidden error is returned. If authorized, Routing Logic determines the appropriate Backend Service. A Rate Limiter checks for throttling; if throttled, a 429 Too Many Requests error is returned. Otherwise, Service Discovery finds the appropriate backend, and Backend Service Selection routes the request to either the orders-api.example.com or payments-api.example.com service. These services Process the Order or Payment Request, respectively, and return the corresponding response to the API Gateway, which then forwards it to the User Application. The API Gateway acts as a central point for managing security and routing, ensuring that only valid and authorized requests reach the backend services.

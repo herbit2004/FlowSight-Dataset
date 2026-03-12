@@ -1,0 +1,40 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the execution mode selection process within the MoAI Orchestrator. It depicts the decision-making process for choosing between different agent execution strategies, including sub-agent mode, agent teams mode, and an auto-selection mode. The diagram serves as a high-level overview of the orchestration logic.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "MoAI Orchestrator" node and flows downwards through a decision node ("Select Execution Mode") to different execution paths, ultimately leading to either "Sequential Expert Delegation" or "Parallel Team Collaboration".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 3 stages: Orchestration Initialization, Execution Mode Selection, and Execution Strategy.
+
+## Node-by-Node Description
+- **A / 🗿 MoAI Orchestrator**: Represents the starting point of the orchestration process. visible in diagram; no further repository context available.
+- **B / Select Execution Mode**: A decision node where the execution mode is selected. visible in diagram; no further repository context available.
+- **C / Sub-Agent Mode**: Represents the sub-agent execution mode, characterized by sequential expert delegation.
+- **D / Agent Teams Mode**: Represents the agent teams execution mode, characterized by parallel team collaboration.
+- **E / Auto Selection**: Represents the automatic selection of an execution mode based on complexity.
+- **F / Sequential Expert Delegation Task() → Expert Agent**: Represents the outcome of the Sub-Agent Mode, involving sequential expert delegation where a task is delegated to an expert agent. visible in diagram; no further repository context available.
+- **G / Parallel Team Collaboration TeamCreate → SendMessage**: Represents the outcome of the Agent Teams Mode, involving parallel team collaboration where teams are created and messages are sent. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The MoAI Orchestrator initiates the execution mode selection process.
+- `B --> C`: The execution mode is selected as "Sub-Agent Mode" (triggered by "--solo").
+- `B --> D`: The execution mode is selected as "Agent Teams Mode" (triggered by "--team").
+- `B --> E`: The execution mode is set to "Auto Selection" (Default (Auto)).
+- `E --> D`: If the complexity is "High Complexity", the "Agent Teams Mode" is selected.
+- `E --> C`: If the complexity is "Low Complexity", the "Sub-Agent Mode" is selected.
+- `C --> F`: The "Sub-Agent Mode" leads to "Sequential Expert Delegation".
+- `D --> G`: The "Agent Teams Mode" leads to "Parallel Team Collaboration".
+
+## Repository Context & Terminology
+- **MoAI Orchestrator**: The main component responsible for orchestrating the execution of agents. visible in diagram; no further repository context available.
+- **Sub-Agent Mode**: An execution mode where tasks are delegated sequentially to expert agents. visible in diagram; no further repository context available.
+- **Agent Teams Mode**: An execution mode where agents collaborate in parallel as teams. visible in diagram; no further repository context available.
+- **Auto Selection**: An execution mode where the system automatically selects between Sub-Agent Mode and Agent Teams Mode based on the complexity of the task. visible in diagram; no further repository context available.
+- **Sequential Expert Delegation**: A process where tasks are delegated sequentially to expert agents. visible in diagram; no further repository context available.
+- **Parallel Team Collaboration**: A process where agents collaborate in parallel as teams. visible in diagram; no further repository context available.
+- **Task() -> Expert Agent**: Represents the delegation of a task to an expert agent in the Sub-Agent Mode. visible in diagram; no further repository context available.
+- **TeamCreate -> SendMessage**: Represents the creation of a team and sending of messages in the Agent Teams Mode. visible in diagram; no further repository context available.
+
+## High-Density QA Ground Truth Summary
+The MoAI Orchestrator initiates the process by entering the "Select Execution Mode" decision node. From here, the execution can branch into three paths: "--solo" leading to "Sub-Agent Mode", "--team" leading to "Agent Teams Mode", or "Default (Auto)" leading to "Auto Selection". In "Auto Selection", the system chooses between "Sub-Agent Mode" (for "Low Complexity") and "Agent Teams Mode" (for "High Complexity"). The "Sub-Agent Mode" results in "Sequential Expert Delegation" where a "Task() -> Expert Agent". The "Agent Teams Mode" results in "Parallel Team Collaboration" where "TeamCreate -> SendMessage". The selection of execution mode determines whether tasks are processed sequentially by expert agents or in parallel by collaborating teams. The Orchestrator uses these modes to manage and distribute tasks among agents, optimizing for different task complexities and collaboration requirements. The "Auto Selection" mode dynamically adapts to the task's complexity, choosing the most appropriate execution strategy.

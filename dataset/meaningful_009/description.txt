@@ -1,0 +1,77 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a data pipeline and alerting system. It depicts the flow of metrics from ingestion, through validation and aggregation, to storage in a time-series database. The diagram also shows how the system queries the database, applies alerting rules, checks thresholds, and triggers notifications via various channels.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is organized into three subgraphs: Data Pipeline, Alerting System, and Notification Channels. The start node is the Metric Ingestion API, and the end nodes are Email Service, Slack Integration, and PagerDuty Escalation.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Data Pipeline**: This subgraph represents the process of ingesting, validating, and aggregating metrics.
+- **Alerting System**: This subgraph represents the process of querying the time-series database, applying alerting rules, and checking thresholds.
+- **Notification Channels**: This subgraph represents the different channels through which notifications are sent.
+
+## Node-by-Node Description
+- **Metric Ingestion API**: The entry point for metrics into the data pipeline.
+  visible in diagram; no further repository context available.
+- **Kafka Topic: raw_metrics**: A Kafka topic where raw metrics are stored.
+  In the repository this corresponds to a Kafka topic named `raw_metrics` used for initial metric storage.
+- **Metric Parser\n& Validator**: A component that parses and validates incoming metrics.
+  visible in diagram; no further repository context available.
+- **Dead Letter Queue**: A queue for storing invalid metrics.
+  visible in diagram; no further repository context available.
+- **Kafka Topic: validated_metrics**: A Kafka topic where validated metrics are stored.
+  In the repository this corresponds to a Kafka topic named `validated_metrics` used for storing validated metrics.
+- **Aggregation Engine**: A component that aggregates validated metrics.
+  visible in diagram; no further repository context available.
+- **Time-series Database**: A database for storing aggregated metrics.
+  visible in diagram; no further repository context available.
+- **Query API**: An API for querying the time-series database.
+  visible in diagram; no further repository context available.
+- **Alerting Rules Engine**: A component that applies alerting rules to the queried data.
+  visible in diagram; no further repository context available.
+- **Threshold Check**: A component that checks if a threshold has been exceeded.
+  visible in diagram; no further repository context available.
+- **Alert Generation**: A component that generates an alert when a threshold is exceeded.
+  visible in diagram; no further repository context available.
+- **No Action**: Indicates that no action is taken when a threshold is not exceeded.
+  visible in diagram; no further repository context available.
+- **Notification Service**: A service that sends notifications via various channels.
+  visible in diagram; no further repository context available.
+- **Email Service**: A service for sending email notifications.
+  visible in diagram; no further repository context available.
+- **Slack Integration**: An integration for sending Slack notifications.
+  visible in diagram; no further repository context available.
+- **PagerDuty Escalation**: An integration for escalating alerts via PagerDuty.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Metric Ingestion API --> Kafka Topic: raw_metrics`: Metrics are ingested and sent to the `raw_metrics` Kafka topic.
+- `Kafka Topic: raw_metrics --> Metric Parser\n& Validator`: Raw metrics are sent to the Metric Parser & Validator.
+- `Metric Parser\n& Validator -- Invalid Metrics --> Dead Letter Queue`: Invalid metrics are sent to the Dead Letter Queue.
+- `Metric Parser\n& Validator -- Valid Metrics --> Kafka Topic: validated_metrics`: Valid metrics are sent to the `validated_metrics` Kafka topic.
+- `Kafka Topic: validated_metrics --> Aggregation Engine`: Validated metrics are sent to the Aggregation Engine.
+- `Aggregation Engine --> Time-series Database`: Aggregated metrics are stored in the Time-series Database.
+- `Time-series Database --> Query API`: The Alerting System queries the Time-series Database via the Query API.
+- `Query API --> Alerting Rules Engine`: The query is sent to the Alerting Rules Engine.
+- `Alerting Rules Engine -- Rule Triggered --> Threshold Check`: If a rule is triggered, the system proceeds to the Threshold Check.
+- `Threshold Check -- Threshold Exceeded --> Alert Generation`: If the threshold is exceeded, an alert is generated.
+- `Threshold Check -- Threshold Not Exceeded --> No Action`: If the threshold is not exceeded, no action is taken.
+- `Alert Generation --> Notification Service`: The generated alert is sent to the Notification Service.
+- `No Action` is a terminal state.
+- `Notification Service --> Email Service`: Notifications are sent via Email Service.
+- `Notification Service --> Slack Integration`: Notifications are sent via Slack Integration.
+- `Notification Service --> PagerDuty Escalation`: Notifications are sent via PagerDuty Escalation.
+
+## Repository Context & Terminology
+- **Metric Ingestion API**: An API endpoint that receives metrics from various sources.
+- **Kafka**: A distributed streaming platform used for building real-time data pipelines and streaming applications.
+- **Kafka Topic**: A category or feed name to which records are published in Kafka.
+- **Dead Letter Queue**: A message queue used for storing messages that could not be processed.
+- **Aggregation Engine**: A component that performs aggregation operations on metrics, such as calculating averages or sums.
+- **Time-series Database**: A database optimized for storing and querying time-series data.
+- **Alerting Rules Engine**: A component that defines and applies rules for triggering alerts based on metric values.
+- **PagerDuty**: An incident management platform that provides alerting, on-call scheduling, and other related services.
+- **Slack**: A messaging app for business communication.
+
+## High-Density QA Ground Truth Summary
+The data pipeline begins with the Metric Ingestion API, which receives incoming metrics. These metrics are then published to the `raw_metrics` Kafka topic. The Metric Parser & Validator consumes these raw metrics, validating them. Invalid metrics are routed to the Dead Letter Queue, while valid metrics are published to the `validated_metrics` Kafka topic. The Aggregation Engine then processes these validated metrics, and the aggregated data is stored in the Time-series Database. The Alerting System queries this database via the Query API, passing the results to the Alerting Rules Engine. If a rule is triggered, a Threshold Check is performed. If the threshold is exceeded, Alert Generation creates an alert, which is then sent to the Notification Service. If the threshold is not exceeded, No Action is taken. The Notification Service then distributes the alert via multiple channels: Email Service, Slack Integration, and PagerDuty Escalation. Kafka is used as a message broker for the raw and validated metrics, ensuring reliable data delivery between components.

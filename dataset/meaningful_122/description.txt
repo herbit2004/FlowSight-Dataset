@@ -1,0 +1,83 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the flow of commands and telemetry data between an IoT device and a cloud platform. It illustrates the process of sending commands to the device, receiving telemetry data, and handling alerts based on predefined thresholds. The diagram serves as a high-level overview of the system architecture and data flow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into three main sections: IoT Device, Cloud Platform, and a central command processing flow. The start nodes are "Telemetry Sensor" and "API Gateway," and the end nodes are "Cmd Receive," "Reject Request," "PagerDuty," and "Data Store."
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **IoT Device**: Represents the device-side components responsible for sensing telemetry data, formatting it, and receiving commands.
+- **Cloud Platform**: Represents the cloud-based components responsible for handling API requests, authenticating users, processing telemetry data, and managing alerts.
+
+## Node-by-Node Description
+- **Telemetry Sensor**: Represents the sensor on the IoT device that collects telemetry data. visible in diagram; no further repository context available.
+- **Data Formatting**: Represents the process of formatting the telemetry data on the IoT device before sending it to the cloud. visible in diagram; no further repository context available.
+- **Cmd Receive**: Represents the component on the IoT device that receives commands from the cloud. visible in diagram; no further repository context available.
+- **API Gateway**: Represents the entry point for API requests to the cloud platform. In the repository this corresponds to a reverse proxy or load balancer.
+- **Command Dispatch**: Represents the component that dispatches commands to the appropriate handler. visible in diagram; no further repository context available.
+- **Authentication**: Represents the process of authenticating users before processing their requests. In the repository this corresponds to an authentication service.
+- **Traffic Shaping**: Represents the process of controlling the rate of traffic to prevent overload. visible in diagram; no further repository context available.
+- **Message Queue**: Represents a queue for storing messages before processing. In the repository this corresponds to a message broker like RabbitMQ or Kafka.
+- **Telemetry Ingestion**: Represents the process of ingesting telemetry data into the cloud platform. visible in diagram; no further repository context available.
+- **Threshold Exceeded**: Represents the condition where a telemetry value exceeds a predefined threshold. visible in diagram; no further repository context available.
+- **Alerting Engine**: Represents the component that generates alerts when thresholds are exceeded. visible in diagram; no further repository context available.
+- **Data Store**: Represents the storage location for telemetry data and other system data. In the repository this corresponds to a database like PostgreSQL or Cassandra.
+- **Command Type**: Represents a decision point based on the type of command. visible in diagram; no further repository context available.
+- **Config Change**: Represents a configuration change command. visible in diagram; no further repository context available.
+- **Param Validation**: Represents the process of validating the parameters of a command. visible in diagram; no further repository context available.
+- **Reboot Command**: Represents a reboot command. visible in diagram; no further repository context available.
+- **Cmd Queue**: Represents a queue for storing commands before routing. visible in diagram; no further repository context available.
+- **Cmd Router**: Represents the component that routes commands to the appropriate device. visible in diagram; no further repository context available.
+- **Device Type**: Represents a decision point based on the type of device. visible in diagram; no further repository context available.
+- **Sensor**: Represents a sensor device type. visible in diagram; no further repository context available.
+- **Actuator**: Represents an actuator device type. visible in diagram; no further repository context available.
+- **Device Specific Cmd**: Represents a command specific to a device type. visible in diagram; no further repository context available.
+- **Msg Format**: Represents the process of formatting the message before sending it to the device. visible in diagram; no further repository context available.
+- **Encrypt & Sign**: Represents the process of encrypting and signing the message. visible in diagram; no further repository context available.
+- **Send to Device**: Represents the process of sending the message to the device. visible in diagram; no further repository context available.
+- **Escalation Policy**: Represents a decision point based on the escalation policy. visible in diagram; no further repository context available.
+- **Notify Ops**: Represents the action of notifying operations team. visible in diagram; no further repository context available.
+- **Reject w/ Error**: Represents the action of rejecting a command with an error. visible in diagram; no further repository context available.
+- **Reject Request**: Represents the action of rejecting a request. visible in diagram; no further repository context available.
+- **PagerDuty**: Represents the PagerDuty notification system. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Telemetry Sensor --> Data Formatting`: Telemetry data flows from the sensor to the data formatting component.
+- `Data Formatting --> API Gateway`: Formatted telemetry data is sent to the API Gateway.
+- `API Gateway --> Authentication`: API Gateway forwards the request to the Authentication service.
+- `Authentication -- Valid User --> Traffic Shaping`: If the user is authenticated, the request is passed to traffic shaping.
+- `Authentication -- Invalid User --> Reject Request`: If the user is not authenticated, the request is rejected.
+- `Traffic Shaping --> Message Queue`: Traffic shaping forwards the request to the message queue.
+- `Message Queue --> Telemetry Ingestion`: The message queue forwards the request to telemetry ingestion.
+- `Telemetry Ingestion --> Data Store`: Telemetry data is stored in the data store.
+- `Telemetry Ingestion -- Threshold Exceeded --> Alerting Engine`: If a threshold is exceeded, an alert is triggered.
+- `Alerting Engine --> Escalation Policy`: The alerting engine triggers the escalation policy.
+- `Escalation Policy -- Notify Ops --> PagerDuty`: If the escalation policy requires notification, PagerDuty is notified.
+- `Escalation Policy -- Log Only --> Data Store`: If the escalation policy requires logging only, the event is logged to the data store.
+- `API Gateway --> Command Dispatch`: API Gateway forwards the command to the Command Dispatch.
+- `Command Dispatch --> Command Type`: Command Dispatch forwards the command to the Command Type decision point.
+- `Command Type -- Config Change --> Param Validation`: If the command is a config change, it is passed to parameter validation.
+- `Command Type -- Reboot --> Reboot Command`: If the command is a reboot command, it is passed to the reboot command handler.
+- `Param Validation -- Valid Param --> Reboot Command`: If the parameters are valid, the command is passed to the reboot command handler.
+- `Param Validation -- Invalid Param --> Reject w/ Error`: If the parameters are invalid, the command is rejected with an error.
+- `Reboot Command --> Cmd Queue`: The reboot command is added to the command queue.
+- `Cmd Queue --> Cmd Router`: The command queue forwards the command to the command router.
+- `Cmd Router --> Device Type`: The command router forwards the command to the device type decision point.
+- `Device Type -- Sensor --> Device Specific Cmd`: If the device is a sensor, the command is passed to the sensor-specific command handler.
+- `Device Type -- Actuator --> Device Specific Cmd`: If the device is an actuator, the command is passed to the actuator-specific command handler.
+- `Device Specific Cmd --> Msg Format`: The device-specific command is formatted.
+- `Msg Format --> Encrypt & Sign`: The message is encrypted and signed.
+- `Encrypt & Sign --> Send to Device`: The message is sent to the device.
+- `Send to Device --> Cmd Receive`: The device receives the command.
+
+## Repository Context & Terminology
+- **API Gateway**: A server that acts as a single entry point for all API requests.
+- **Authentication**: The process of verifying the identity of a user or device.
+- **Traffic Shaping**: The process of controlling the rate of traffic to prevent overload.
+- **Message Queue**: A queue for storing messages before processing.
+- **Telemetry Ingestion**: The process of ingesting telemetry data into the cloud platform.
+- **Alerting Engine**: A system that generates alerts when predefined thresholds are exceeded.
+- **PagerDuty**: An incident management platform that provides alerting and on-call scheduling.
+
+## High-Density QA Ground Truth Summary
+The process begins with either the "Telemetry Sensor" sending data to "Data Formatting" on the IoT Device, or the "API Gateway" receiving a command on the Cloud Platform. For telemetry, formatted data is sent to the API Gateway, then proceeds through "Authentication," "Traffic Shaping," "Message Queue," and "Telemetry Ingestion" before being stored in the "Data Store." If "Threshold Exceeded" is triggered during telemetry ingestion, the "Alerting Engine" initiates an "Escalation Policy," potentially leading to "Notify Ops" via "PagerDuty" or simply logging the event to the "Data Store." For commands, the "API Gateway" forwards the request to "Command Dispatch," which determines the "Command Type." A "Config Change" command proceeds to "Param Validation"; invalid parameters lead to "Reject w/ Error," while valid parameters and "Reboot" commands are enqueued in "Cmd Queue." The "Cmd Router" then determines the "Device Type" (Sensor or Actuator), routing to the appropriate "Device Specific Cmd" handler. The command is then formatted ("Msg Format"), encrypted and signed ("Encrypt & Sign"), and sent ("Send to Device") to the IoT Device, ultimately reaching "Cmd Receive." Authentication failures at the API Gateway result in "Reject Request." The system handles both telemetry data ingestion and command dispatch to IoT devices, with error handling and alerting mechanisms in place.

@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the flow of observability data within a system. It depicts how different components of a system generate traces, metrics, and logs, and how these are aggregated and used for analysis. The diagram serves to visualize the observability pipeline and its role in providing insights into system health and performance.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It features a "System" subgraph at the top, containing application services and infrastructure. Observability data flows from these components down to traces, metrics, and logs, which are then processed to provide insights.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **System**: This subgraph encapsulates the core components of the system being monitored, including applications/services and infrastructure.
+
+## Node-by-Node Description
+- **Observability**: Represents the observability platform or service responsible for collecting and analyzing traces, metrics, and logs. visible in diagram; no further repository context available.
+- **Logs**: Represents the aggregated logs collected from various system components.
+- **Metrics**: Represents the aggregated metrics collected from various system components.
+- **Traces**: Represents the aggregated traces collected from various system components.
+- **Detailed Event Context**: Represents the detailed event context derived from logs.
+- **Aggregated System Health & Trends**: Represents the aggregated system health and trends derived from metrics.
+- **Request Flow & Bottleneck Analysis**: Represents the request flow and bottleneck analysis derived from traces.
+- **Application/Service 1**: Represents one of the applications or services within the system.
+- **Application/Service 2**: Represents another application or service within the system.
+- **Infrastructure**: Represents the underlying infrastructure components of the system.
+
+## Edges, Branches & Convergence
+- `Observability --> Logs`: Observability platform collects logs.
+- `Observability --> Metrics`: Observability platform collects metrics.
+- `Observability --> Traces`: Observability platform collects traces.
+- `Logs -- Provides --> Detailed Event Context`: Logs provide detailed event context.
+- `Metrics -- Provides --> Aggregated System Health & Trends`: Metrics provide aggregated system health and trends.
+- `Traces -- Provides --> Request Flow & Bottleneck Analysis`: Traces provide request flow and bottleneck analysis.
+- `Application/Service 1 --> Logs`: Application/Service 1 sends data to Logs.
+- `Application/Service 1 --> Metrics`: Application/Service 1 sends data to Metrics.
+- `Application/Service 1 -- Generates Spans For --> Traces`: Application/Service 1 generates spans for Traces.
+- `Application/Service 2 --> Logs`: Application/Service 2 sends data to Logs.
+- `Application/Service 2 --> Metrics`: Application/Service 2 sends data to Metrics.
+- `Application/Service 2 -- Generates Spans For --> Traces`: Application/Service 2 generates spans for Traces.
+- `Infrastructure --> Logs`: Infrastructure sends data to Logs.
+- `Infrastructure --> Metrics`: Infrastructure sends data to Metrics.
+
+## Repository Context & Terminology
+- **Traces**: Distributed tracing provides insights into request flows across services, helping identify bottlenecks and latency issues.
+- **Metrics**: Metrics are numerical measurements collected at regular intervals, providing insights into system performance and resource utilization.
+- **Logs**: Logs are records of events that occur within the system, providing detailed context for debugging and troubleshooting.
+- **Spans**: A span represents a single unit of work within a trace, such as a function call or a network request. Spans are the building blocks of distributed traces.
+- **Observability**: The ability to understand the internal state of a system by examining its outputs, such as traces, metrics, and logs.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates an observability architecture, starting with the "System" subgraph containing "Application/Service 1", "Application/Service 2", and "Infrastructure". These components generate data that feeds into the observability pipeline. "Application/Service 1" and "Application/Service 2" generate spans for "Traces", while all three components send data to both "Metrics" and "Logs". The "Observability" node collects data from "Logs", "Metrics", and "Traces". "Traces" then "Provides" data for "Request Flow & Bottleneck Analysis". "Metrics" "Provides" data for "Aggregated System Health & Trends". "Logs" "Provides" data for "Detailed Event Context". The diagram highlights how distributed tracing (via spans) is used to analyze request flows, while metrics and logs provide insights into system health and event context. The end nodes are "Request Flow & Bottleneck Analysis", "Aggregated System Health & Trends", and "Detailed Event Context", representing the insights gained from the observability data. The term 'spans' refers to a single unit of work within a trace, crucial for understanding distributed request flows.

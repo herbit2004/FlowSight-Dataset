@@ -1,0 +1,88 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of an HTTP request through various layers of a system. It illustrates the different components involved in processing the request, from middleware to data storage, providing a high-level overview of the system's architecture and data flow. The diagram serves as documentation for understanding the system's structure and how different parts interact.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction, showing the flow of a request from the initial HTTP request at the top to the data layer at the bottom. The diagram is hierarchically structured, with distinct layers such as Middleware, Handler Layer, Service Layer, and Data Layer. The start node is "HTTP Request," and the end nodes are the components within the "Data Layer."
+
+## Subgraphs / Stages
+The diagram contains the following explicit subgraphs:
+- **Middleware**: A pipeline of components that process the incoming HTTP request.
+- **Handler Layer**: Contains different types of handlers for processing requests.
+- **Service Layer**: Contains services that provide specific functionalities.
+- **Data Layer**: Contains the data storage and retrieval components.
+
+## Node-by-Node Description
+- **HTTP Request**: Represents the initial HTTP request entering the system.
+  visible in diagram; no further repository context available.
+- **Middleware**: Represents the middleware pipeline.
+  visible in diagram; no further repository context available.
+- **CORS**: Represents the Cross-Origin Resource Sharing middleware.
+  visible in diagram; no further repository context available.
+- **Auth**: Represents the authentication middleware, supporting JWT, OIDC, LDAP, SAML, and API Key authentication methods.
+  visible in diagram; no further repository context available.
+- **Rate Limiter**: Represents the rate limiting middleware.
+  visible in diagram; no further repository context available.
+- **Tracing + Metrics**: Represents the tracing and metrics middleware.
+  visible in diagram; no further repository context available.
+- **Demo Mode Guard**: Represents a middleware component that enables or disables demo mode.
+  visible in diagram; no further repository context available.
+- **Router**: Represents the router component, handling 50+ route groups.
+  visible in diagram; no further repository context available.
+- **Handler Layer**: Represents the handler layer.
+  visible in diagram; no further repository context available.
+- **Format Handlers**: Represents handlers for different data formats (Maven, PyPI, NPM, Docker, and 41 more).
+  visible in diagram; no further repository context available.
+- **Core Handlers**: Represents core handlers for Repos, Artifacts, Users, and Auth.
+  visible in diagram; no further repository context available.
+- **Advanced Handlers**: Represents advanced handlers for Security, Plugins, Peers, and Migration.
+  visible in diagram; no further repository context available.
+- **Service Layer**: Represents the service layer.
+  visible in diagram; no further repository context available.
+- **Artifact Service**: Represents the artifact service.
+  visible in diagram; no further repository context available.
+- **Repository Service**: Represents the repository service.
+  visible in diagram; no further repository context available.
+- **Scanner Service**: Represents the scanner service.
+  visible in diagram; no further repository context available.
+- **Plugin Service**: Represents the plugin service.
+  visible in diagram; no further repository context available.
+- **Search Service**: Represents the search service.
+  visible in diagram; no further repository context available.
+- **Data Layer**: Represents the data layer.
+  visible in diagram; no further repository context available.
+- **PostgreSQL**: Represents the PostgreSQL database.
+  visible in diagram; no further repository context available.
+- **Storage FS / S3**: Represents file storage using either the file system or S3.
+  visible in diagram; no further repository context available.
+- **Meilisearch**: Represents the Meilisearch search engine.
+  visible in diagram; no further repository context available.
+- **Trivy / Grype / OpenSCAP**: Represents security scanning tools.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `HTTP Request --> Middleware`: An HTTP request enters the middleware pipeline.
+- `CORS --> Auth`: The request passes from CORS middleware to the authentication middleware.
+- `Auth --> Rate Limiter`: The request passes from the authentication middleware to the rate limiter middleware.
+- `Rate Limiter --> Tracing + Metrics`: The request passes from the rate limiter middleware to the tracing and metrics middleware.
+- `Tracing + Metrics --> Demo Mode Guard`: The request passes from the tracing and metrics middleware to the demo mode guard.
+- `Middleware --> Router`: The request passes from the middleware pipeline to the router.
+- `Router --> Handler Layer`: The request is routed to the appropriate handler.
+- `Handler Layer --> Service Layer`: The handler invokes the appropriate service.
+- `Service Layer --> Data Layer`: The service interacts with the data layer.
+
+## Repository Context & Terminology
+- **JWT (JSON Web Token)**: A standard for securely transmitting information between parties as a JSON object.
+- **OIDC (OpenID Connect)**: An authentication layer on top of OAuth 2.0.
+- **LDAP (Lightweight Directory Access Protocol)**: An application protocol for accessing and maintaining distributed directory information services.
+- **SAML (Security Assertion Markup Language)**: An open standard for exchanging authentication and authorization data between parties, in particular, between an identity provider and a service provider.
+- **Maven**: A build automation tool primarily used for Java projects.
+- **PyPI (Python Package Index)**: A repository of software for the Python programming language.
+- **NPM (Node Package Manager)**: A package manager for the JavaScript programming language.
+- **Docker**: A platform for developing, shipping, and running applications in containers.
+- **FS / S3**: File System or Amazon Simple Storage Service, used for storing files.
+- **Trivy**: A comprehensive and simple scanner for vulnerabilities in container images, file systems, and Git repositories, as well as configuration issues.
+- **Grype**: A vulnerability scanner for container images and file systems.
+- **OpenSCAP**: A suite of tools for implementing and enforcing security policies.
+
+## High-Density QA Ground Truth Summary
+The architecture diagram illustrates the processing flow of an HTTP request, starting with the "HTTP Request" node, which enters the "Middleware" pipeline. The request then proceeds through a series of middleware components: "CORS," "Auth" (supporting JWT, OIDC, LDAP, SAML, and API Key authentication), "Rate Limiter," "Tracing + Metrics," and "Demo Mode Guard." After the middleware pipeline, the request is routed by the "Router" (handling 50+ route groups) to the "Handler Layer." The "Handler Layer" contains "Format Handlers" (Maven, PyPI, NPM, Docker, and 41 more), "Core Handlers" (Repos, Artifacts, Users, Auth), and "Advanced Handlers" (Security, Plugins, Peers, Migration). The handlers then invoke services in the "Service Layer," including "Artifact Service," "Repository Service," "Scanner Service," "Plugin Service," and "Search Service." Finally, the services interact with the "Data Layer," which includes "PostgreSQL," "Storage FS / S3," "Meilisearch," and security scanning tools like "Trivy / Grype / OpenSCAP." The use of JWT, OIDC, LDAP, and SAML in the "Auth" middleware indicates a focus on secure authentication and authorization. The inclusion of "Trivy / Grype / OpenSCAP" in the "Data Layer" highlights the importance of security scanning and vulnerability management within the system.

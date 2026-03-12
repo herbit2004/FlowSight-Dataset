@@ -1,0 +1,42 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture of a client-server system with relay functionality. It illustrates the flow of data and control between a client source, a server (containing control and relay components), and a client destination. The diagram serves to visualize the communication paths, including direct connections and relayed connections.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It is divided into three main subgraphs: Client Source, Server, and Client Destination. The flow starts at the Client within the Client Source subgraph and ends at the Server within the Client Destination subgraph.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Client Source**: Represents the origin of the data, including the Client and Source components.
+- **Server**: Represents the central server, including the Control Server and Relay Server components.
+- **Client Destination**: Represents the destination of the data, including the Destination and Server components.
+
+## Node-by-Node Description
+- **SC / Client**: Represents the client application or device initiating the communication. visible in diagram; no further repository context available.
+- **S / Source**: Represents the source component within the client application responsible for sending data. visible in diagram; no further repository context available.
+- **C / Control Server**: Represents the control server component within the server responsible for managing connections and relaying information. visible in diagram; no further repository context available.
+- **R / Relay Server**: Represents the relay server component within the server responsible for relaying data between clients. visible in diagram; no further repository context available.
+- **D / Destination**: Represents the destination component within the client application receiving data. visible in diagram; no further repository context available.
+- **DC / Server**: Represents the server component within the client destination. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `SC -..-> S`: Represents the flow of data from the Client to the Source.
+- `S --> C`: Represents the flow of data and control information from the Source to the Control Server, including exchange of direct and relay information.
+- `S --- D`: Represents a direct connection between the Source and the Destination.
+- `S --> R`: Represents a relay connection from the Source to the Relay Server.
+- `C -.-> R`: Represents the flow of relay information from the Control Server to the Relay Server.
+- `R --> D`: Represents a relay connection from the Relay Server to the Destination.
+- `D --> C`: Represents the flow of data and control information from the Destination to the Control Server, including exchange of direct and relay information.
+- `D -..-> DC`: Represents the flow of data from the Destination to the Server.
+
+## Repository Context & Terminology
+- **Client**: A software application or device that initiates communication with a server.
+- **Source**: A component responsible for sending data.
+- **Control Server**: A server component that manages connections and relays information.
+- **Relay Server**: A server component that relays data between clients.
+- **Destination**: A component responsible for receiving data.
+- **Direct Connection**: A direct communication path between the source and destination, bypassing the relay server.
+- **Relay Connection**: A communication path that involves the relay server.
+- **Exchange Direct and Relay Info**: The process of exchanging information necessary for establishing direct or relayed connections.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a client-server architecture with both direct and relayed communication paths. The process begins with the `Client` sending data to the `Source` within the `Client Source` subgraph. The `Source` then attempts a `Direct Connection` to the `Destination` in the `Client Destination` subgraph. Simultaneously, the `Source` exchanges direct and relay information with the `Control Server` within the `Server` subgraph. The `Control Server` communicates `Relay Info` to the `Relay Server`. If a direct connection is not possible or desired, the `Source` establishes a `Relay Connection` to the `Relay Server`. The `Relay Server` then relays the data to the `Destination` via another `Relay Connection`. The `Destination` also exchanges direct and relay information with the `Control Server`. Finally, the `Destination` forwards the data to the `Server` within the `Client Destination` subgraph. The `Control Server` and `Relay Server` components within the `Server` subgraph handle the management and relaying of data, providing alternative communication paths when direct connections are not feasible. The diagram highlights the flexibility of the system in supporting both direct and relayed communication, managed by the central `Control Server`.

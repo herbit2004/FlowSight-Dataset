@@ -1,0 +1,31 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow and interactions between different components in a system that integrates with various AI chat interfaces. The diagram depicts how user input is processed, sent to an AI model, and how the AI's response is relayed back to the user. It serves as a high-level architectural overview of the system.
+
+## Overall Layout
+The diagram has a top-to-bottom (TD) layout. It presents a hierarchical flow, starting from the client and progressing through an API relay server, a browser extension, and finally the chat interface. The flow then returns back up the chain.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into four stages: Client Interaction, API Relay, Browser Extension, and Chat Interface.
+
+## Node-by-Node Description
+- **Client / RooCode**: Represents the client application or RooCode environment initiating the chat request. visible in diagram; no further repository context available.
+- **API Relay Server**: Acts as an intermediary server, relaying requests between the client and the browser extension. visible in diagram; no further repository context available.
+- **Browser Extension**: A browser extension that facilitates communication between the API Relay Server and the Chat Interface. visible in diagram; no further repository context available.
+- **Chat Interface (Gemini / AI Studio / ChatGPT / Claude)**: Represents the chat interface, which can be one of several AI platforms (Gemini, AI Studio, ChatGPT, or Claude). visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Client / RooCode --> API Relay Server`: An HTTP POST request to `/chat/completions` is sent from the client to the API Relay Server.
+- `API Relay Server --> Browser Extension`: The API Relay Server communicates with the Browser Extension via a WebSocket connection.
+- `Browser Extension --> Chat Interface (Gemini / AI Studio / ChatGPT / Claude)`: User input is sent from the Browser Extension to the Chat Interface.
+- `Chat Interface (Gemini / AI Studio / ChatGPT / Claude) --> Browser Extension`: The AI response is sent back from the Chat Interface to the Browser Extension.
+- `Browser Extension --> API Relay Server`: The captured response is sent from the Browser Extension back to the API Relay Server.
+- `API Relay Server --> Client / RooCode`: The API Relay Server sends an OpenAI-format JSON response back to the client.
+
+## Repository Context & Terminology
+- **HTTP POST /chat/completions**: This is a standard HTTP POST request to a specific endpoint, likely used to initiate a chat completion request.
+- **OpenAI-format JSON**: Indicates that the data exchanged between the API Relay Server and the Client/RooCode is structured according to the OpenAI API's JSON format.
+- **WebSocket**: A communication protocol that provides full-duplex communication channels over a single TCP connection, enabling real-time data transfer between the API Relay Server and the Browser Extension.
+- **Gemini / AI Studio / ChatGPT / Claude**: These are different AI platforms or models that the Chat Interface can utilize.
+
+## High-Density QA Ground Truth Summary
+The process begins with the Client/RooCode sending an HTTP POST request to the `/chat/completions` endpoint of the API Relay Server. The request is formatted as OpenAI-format JSON. The API Relay Server then establishes a WebSocket connection with the Browser Extension. User input is sent from the Browser Extension to the Chat Interface, which can be Gemini, AI Studio, ChatGPT, or Claude. The chosen AI model processes the input and generates an AI response, which is then sent back to the Browser Extension. The Browser Extension captures this response and sends it back to the API Relay Server. Finally, the API Relay Server sends the OpenAI-format JSON response back to the Client/RooCode, completing the cycle. The use of OpenAI-format JSON suggests compatibility with OpenAI's API structure, allowing for easy integration with various AI models. The WebSocket connection enables real-time communication between the server and the browser extension, facilitating a responsive chat experience.

@@ -1,0 +1,71 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a data ingestion and transformation pipeline. It depicts the flow of customer transaction data from its raw source through various stages of processing, storage, and analysis. The diagram serves as a high-level architectural overview of the data pipeline.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured into zones and tiers, starting with data ingestion and ending with long-term archival. The start node is "Raw Data Source: Customer Transactions," and the end nodes are "Reporting: Audit & Compliance" and "Disaster Recovery/Compliance."
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing different zones and tiers:
+- **Data Ingestion Zone**: Focuses on the initial intake and validation of raw data.
+- **Transformation Zone**: Encompasses data cleansing, enrichment, and quality checks.
+- **Hot Tier - Optimized for Real-Time Analytics**: Provides low-latency access to frequently used data.
+- **Warm Tier - Optimized for Interactive Analysis**: Supports interactive querying and summarization.
+- **Cold Tier - Optimized for Archival and Batch Processing**: Stores data for historical analysis and reporting.
+- **Deep Freeze Tier - Long Term Archival**: Stores data for long-term retention and disaster recovery.
+
+## Node-by-Node Description
+- **A / Raw Data Source: Customer Transactions**: Represents the origin of the data, which consists of customer transactions. visible in diagram; no further repository context available.
+- **B / Landing Zone: S3 Bucket - /raw**: An S3 bucket used as the initial storage location for raw data. visible in diagram; no further repository context available.
+- **C / Check: Schema Validation?**: A decision point where the schema of the incoming data is validated. visible in diagram; no further repository context available.
+- **D / Staging Zone: S3 Bucket - /staging**: An S3 bucket used to store data that has passed schema validation, ready for transformation. visible in diagram; no further repository context available.
+- **E / Quarantine Zone: S3 Bucket - /quarantine**: An S3 bucket used to store data that fails schema validation. visible in diagram; no further repository context available.
+- **F / Alert: Data Quality Team**: A notification sent to the data quality team when data fails quality checks or schema validation. visible in diagram; no further repository context available.
+- **G / Data Quality Checks**: A process to ensure the data meets certain quality standards. visible in diagram; no further repository context available.
+- **H / Data Cleansing: PySpark Job**: A PySpark job responsible for cleaning and transforming the data. visible in diagram; no further repository context available.
+- **I / Exception Logging**: A process to log any exceptions or errors encountered during data processing. visible in diagram; no further repository context available.
+- **J / Transformation: Deduplication & Enrichment**: A process to remove duplicate records and enrich the data with additional information. visible in diagram; no further repository context available.
+- **K / Parquet Format: S3 Bucket - /hot**: An S3 bucket storing data in Parquet format, optimized for real-time analytics. visible in diagram; no further repository context available.
+- **L / Real-Time Dashboard: Presto/Athena**: A real-time dashboard powered by Presto or Athena for querying and visualizing data. visible in diagram; no further repository context available.
+- **M / Summarization: Spark Aggregation**: A Spark job that aggregates and summarizes data. visible in diagram; no further repository context available.
+- **N / Optimized Parquet: S3 Bucket - /warm**: An S3 bucket storing data in Parquet format, optimized for interactive analysis. visible in diagram; no further repository context available.
+- **O / Interactive BI Tools: Tableau/Looker**: Interactive business intelligence tools used for data exploration and visualization. visible in diagram; no further repository context available.
+- **P / Convert to ORC: S3 Bucket - /cold**: An S3 bucket storing data in ORC format, optimized for archival and batch processing. visible in diagram; no further repository context available.
+- **Q / Historical Data Analysis: EMR/Hive**: Historical data analysis performed using EMR and Hive. visible in diagram; no further repository context available.
+- **R / Reporting: Audit & Compliance**: Reporting activities related to audit and compliance. visible in diagram; no further repository context available.
+- **S / Move to Glacier**: A process to move data to Glacier for long-term archival. visible in diagram; no further repository context available.
+- **T / Disaster Recovery/Compliance**: Activities related to disaster recovery and compliance. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Initial load of raw customer transaction data into the landing zone.
+- `B --> C`: Data flows from the landing zone to schema validation.
+- `C -- Yes --> D`: If schema validation passes, data moves to the staging zone.
+- `C -- No --> E`: If schema validation fails, data moves to the quarantine zone.
+- `E --> F`: An alert is sent to the data quality team when data is quarantined.
+- `D --> G`: Data flows from the staging zone to data quality checks.
+- `G -- Pass --> H`: If data quality checks pass, data is cleansed using a PySpark job.
+- `G -- Fail --> I`: If data quality checks fail, an exception is logged.
+- `I --> F`: An alert is sent to the data quality team when data quality checks fail.
+- `H --> J`: Data is transformed through deduplication and enrichment.
+- `J --> K`: Transformed data is stored in Parquet format in the hot tier S3 bucket.
+- `K --> L`: Data from the hot tier is used to populate a real-time dashboard.
+- `K --> M`: Data from the hot tier is rolled up on a schedule to create aggregations.
+- `M --> N`: Summarized data is stored in Parquet format in the warm tier S3 bucket.
+- `N --> O`: Data from the warm tier is used for interactive BI tools.
+- `N --> P`: Data from the warm tier is periodically archived and converted to ORC format in the cold tier S3 bucket.
+- `P --> Q`: Data from the cold tier is used for historical data analysis.
+- `Q --> R`: Historical data analysis results are used for reporting, audit, and compliance.
+- `P --> S`: Data from the cold tier is moved to Glacier for long-term archival on a monthly basis.
+- `S --> T`: Data in Glacier is used for disaster recovery and compliance.
+
+## Repository Context & Terminology
+- **S3 Bucket**: Scalable storage in the cloud, used for storing data at various stages.
+- **PySpark**: Python API for Apache Spark, a distributed computing framework used for data processing.
+- **Parquet**: Columnar storage format optimized for analytics.
+- **ORC**: Optimized Row Columnar, another columnar storage format optimized for Hive.
+- **Presto/Athena**: Distributed SQL query engines for querying large datasets.
+- **Tableau/Looker**: Business intelligence tools for data visualization and analysis.
+- **EMR/Hive**: Elastic MapReduce and Hive, used for big data processing and querying.
+- **Glacier**: Low-cost storage service for long-term archival.
+
+## High-Density QA Ground Truth Summary
+The data pipeline begins with raw customer transaction data ingested from a data source into the Landing Zone, an S3 bucket designated as `/raw`. An initial load process moves the data to the next stage, where a schema validation check is performed. If the schema is valid (`Yes` branch), the data proceeds to the Staging Zone, another S3 bucket at `/staging`. If the schema is invalid (`No` branch), the data is quarantined in an S3 bucket at `/quarantine`, and an alert is sent to the data quality team. Data in the Staging Zone undergoes data quality checks. Passing these checks (`Pass` branch) leads to data cleansing via a PySpark job, followed by transformation involving deduplication and enrichment. Failing the quality checks (`Fail` branch) triggers exception logging and an alert to the data quality team. Transformed data is then stored in Parquet format in the Hot Tier S3 bucket at `/hot`, optimized for real-time analytics, and used in a Real-Time Dashboard powered by Presto/Athena. A scheduled roll-up process moves data from the Hot Tier to the Warm Tier, where it is summarized using Spark aggregation and stored in an Optimized Parquet S3 bucket at `/warm`. This data is used with interactive BI tools like Tableau/Looker. Periodically, data from the Warm Tier is archived and converted to ORC format in the Cold Tier S3 bucket at `/cold`, used for historical data analysis with EMR/Hive, and ultimately for reporting, audit, and compliance. Monthly, data from the Cold Tier is moved to Glacier for long-term archival, supporting disaster recovery and compliance needs.

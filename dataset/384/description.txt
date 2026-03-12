@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a system architecture, likely for a web application or service. It depicts the flow of data and control between different components, including user authentication, data storage, and caching. The diagram serves as a high-level overview of the system's architecture and how its components interact.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts from the "登录 (Login)" node at the top and progresses downwards through various components to the "前端缓存 (Frontend Cache)" node at the bottom. There is a degree of hierarchy, with the "云数据库user类 (Cloud Database User Class)" node acting as a central hub.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: Authentication (登录), User Data Management (云数据库user类), Data Storage and Retrieval (云存储, 云数据库history类, 云数据库school类, 主页), and Caching (计时器, 前端缓存).
+
+## Node-by-Node Description
+- **云数据库user类 (Cloud Database User Class)**: Represents the user data management component, likely responsible for storing and retrieving user information. visible in diagram; no further repository context available.
+- **登录 (Login)**: Represents the user login process. visible in diagram; no further repository context available.
+- **云存储 (Cloud Storage)**: Represents the cloud storage component, likely used for storing files and other data. visible in diagram; no further repository context available.
+- **主页 (Main Page)**: Represents the main page of the application, likely responsible for displaying information to the user. visible in diagram; no further repository context available.
+- **云数据库history类 (Cloud Database History Class)**: Represents the history data management component, likely responsible for storing and retrieving user history information. visible in diagram; no further repository context available.
+- **云数据库school类 (Cloud Database School Class)**: Represents the school data management component, likely responsible for storing and retrieving school information. visible in diagram; no further repository context available.
+- **计时器 (Timer)**: Represents a timer component, likely used for managing cache expiration. visible in diagram; no further repository context available.
+- **前端缓存 (Frontend Cache)**: Represents the frontend cache, likely used for storing data to improve performance. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `登录 (Login) --> 云数据库user类 (Cloud Database User Class)`: Represents the creation of a user set after a successful login.
+- `云数据库user类 (Cloud Database User Class) --> 主页 (Main Page)`: Represents the transfer of user information to the main page.
+- `云数据库user类 (Cloud Database User Class) --> 计时器 (Timer)`: Represents the transfer of time information to the timer.
+- `云数据库user类 (Cloud Database User Class) --> 前端缓存 (Frontend Cache)`: Represents the transfer of time information to the frontend cache.
+- `云数据库user类 (Cloud Database User Class) --> 云数据库history类 (Cloud Database History Class)`: Represents the recording of the openid.
+- `云数据库user类 (Cloud Database User Class) --> 云数据库school类 (Cloud Database School Class)`: Represents the binding of the user to the school.
+- `云数据库history类 (Cloud Database History Class) --> 云数据库user类 (Cloud Database User Class)`: Represents the recording of the openid.
+- `云存储 (Cloud Storage) --> 云数据库school类 (Cloud Database School Class)`: Represents the storage of school photos.
+- `主页 (Main Page) --> 云数据库history类 (Cloud Database History Class)`: Represents the access of the main page to the history data.
+- `主页 (Main Page) --> 云数据库school类 (Cloud Database School Class)`: Represents the modification and binding of school data.
+- `云数据库school类 (Cloud Database School Class) --> 主页 (Main Page)`: Represents the transfer of school pictures and other information to the main page.
+- `主页 (Main Page) --> 计时器 (Timer)`: Represents the transfer of user information to the timer.
+- `计时器 (Timer) --> 前端缓存 (Frontend Cache)`: Represents the transfer of time information to the frontend cache.
+- `登录 (Login) --> 前端缓存 (Frontend Cache)`: Represents the caching of login information.
+
+## Repository Context & Terminology
+- **云数据库user类 (Cloud Database User Class)**: Likely a class or module responsible for managing user data within a cloud database.
+- **登录 (Login)**: Standard user authentication process.
+- **云存储 (Cloud Storage)**: A service for storing data in the cloud.
+- **主页 (Main Page)**: The primary interface of the application.
+- **云数据库history类 (Cloud Database History Class)**: Likely a class or module responsible for managing user history data within a cloud database.
+- **云数据库school类 (Cloud Database School Class)**: Likely a class or module responsible for managing school data within a cloud database.
+- **计时器 (Timer)**: A component used to manage cache expiration.
+- **前端缓存 (Frontend Cache)**: A mechanism for storing data on the client-side to improve performance.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "登录 (Login)" node, which initiates the user authentication process. Upon successful login, a user set is created and the flow proceeds to the "云数据库user类 (Cloud Database User Class)" node. This node acts as a central hub, managing user data and interacting with other components. User information is then transmitted to the "主页 (Main Page)" node, which displays the application's primary interface. The "云数据库user类 (Cloud Database User Class)" also records the openid in the "云数据库history类 (Cloud Database History Class)" and binds the user to the school via the "云数据库school类 (Cloud Database School Class)". The "主页 (Main Page)" accesses history data from "云数据库history类 (Cloud Database History Class)" and modifies/binds school data with "云数据库school类 (Cloud Database School Class)". School pictures and information are transferred from "云数据库school类 (Cloud Database School Class)" back to the "主页 (Main Page)". The "主页 (Main Page)" also sends user information to the "计时器 (Timer)". Finally, the "计时器 (Timer)" and "登录 (Login)" both send data to the "前端缓存 (Frontend Cache)" for performance optimization. The "前端缓存 (Frontend Cache)" serves as the end node, storing data for faster retrieval. The "云数据库user类 (Cloud Database User Class)" likely corresponds to a specific class or module within the application's backend, responsible for handling user-related data operations.

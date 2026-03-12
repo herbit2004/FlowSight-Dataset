@@ -1,0 +1,76 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow of an e-commerce system. It depicts the sequence of steps from when a user places an order to when the order is completed, cancelled, or requires support intervention. The diagram serves as a visual representation of the order lifecycle, including payment processing, inventory management, shipping, and customer satisfaction.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with the "User Places Order" node at the top and progresses downwards through various decision points and actions, eventually leading to "Order Completion Email Sent", "Order Cancelled", or "Investigate Issue" at the bottom.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement & Payment, Inventory Check, Shipping & Validation, Delivery, Customer Satisfaction, and Resolution.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action where a user submits an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision point to determine if the payment for the order was successful.
+  visible in diagram; no further repository context available.
+- **F / Inventory Check**: Represents the process of verifying the availability of the ordered items in the inventory.
+  visible in diagram; no further repository context available.
+- **D / Inventory Available?**: A decision point to determine if the inventory check confirms sufficient stock.
+  visible in diagram; no further repository context available.
+- **E / Shipping Label Created**: Represents the creation of a shipping label for the order.
+  visible in diagram; no further repository context available.
+- **G / Order Marked as Shipped**: Represents the action of marking the order as shipped in the system.
+  visible in diagram; no further repository context available.
+- **H / Was Label Validated?**: A decision point to determine if the shipping label was validated.
+  visible in diagram; no further repository context available.
+- **I / Package Delivered**: Represents the event where the package is delivered.
+  visible in diagram; no further repository context available.
+- **K / Customer Receives Package**: Represents the event where the customer receives the package.
+  visible in diagram; no further repository context available.
+- **J / Customer Satisfied?**: A decision point to determine if the customer is satisfied with the order.
+  visible in diagram; no further repository context available.
+- **L / Order Completion Email Sent**: Represents the action of sending an order completion email to the customer.
+  visible in diagram; no further repository context available.
+- **C / Order Cancelled**: Represents the event where the order is cancelled.
+  visible in diagram; no further repository context available.
+- **P / Refund Initiated**: Represents the action of initiating a refund for the cancelled order.
+  visible in diagram; no further repository context available.
+- **O / Restock Inventory**: Represents the action of restocking the inventory.
+  visible in diagram; no further repository context available.
+- **M / Dispatch Support Agent**: Represents the action of dispatching a support agent to handle the customer's issue.
+  visible in diagram; no further repository context available.
+- **N / Investigate Issue**: Represents the action of investigating the customer's issue.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The user's order is submitted for payment processing.
+- `B -- Yes --> F`: Payment is successful, proceeding to inventory check.
+- `B -- No --> C`: Payment fails, leading to order cancellation.
+- `F --> D`: Inventory check is performed to determine availability.
+- `D -- Yes --> E`: Inventory is available, proceeding to shipping label creation.
+- `D -- No --> O`: Inventory is not available, triggering inventory restock.
+- `O --> E`: After restocking, the process proceeds to shipping label creation.
+- `E --> G`: Shipping label is created, and the order is marked as shipped.
+- `G --> H`: The order is marked as shipped, and the shipping label is sent for validation.
+- `H -- Yes --> I`: The shipping label is validated, and the package is delivered.
+- `H -- No --> A`: The shipping label is not validated, looping back to "User Places Order".
+- `I --> K`: The package is delivered to the customer.
+- `K --> J`: The customer receives the package, and their satisfaction is assessed.
+- `J -- Yes --> L`: The customer is satisfied, and an order completion email is sent.
+- `J -- No --> M`: The customer is not satisfied, dispatching a support agent.
+- `M --> N`: A support agent is dispatched to investigate the issue.
+- `N --> L`: After investigating the issue, an order completion email is sent.
+- `C --> P`: The order is cancelled, and a refund is initiated.
+- `P --> L`: After a refund is initiated, an order completion email is sent.
+- Paths converge at node `L`: "Order Completion Email Sent" is reached after customer satisfaction, issue investigation, or refund initiation.
+
+## Repository Context & Terminology
+- **User Places Order**: The initial action of a customer submitting an order. In this diagram, it's the starting point of the workflow.
+- **Payment Successful?**: A check to verify if the payment was processed successfully. In this diagram, failure leads to order cancellation, while success leads to inventory check.
+- **Inventory Check**: The process of verifying the availability of items in stock. In this diagram, it determines whether to proceed with shipping or restock inventory.
+- **Shipping Label Created**: The generation of a label for shipping the order. In this diagram, this step is reached after inventory check and restock (if needed).
+- **Order Marked as Shipped**: Updating the order status to indicate that it has been shipped. In this diagram, this happens *before* label validation, which is incorrect.
+- **Package Delivered**: The event of the package being delivered. In this diagram, it follows label validation.
+- **Customer Satisfied?**: A check to determine if the customer is happy with their order. In this diagram, dissatisfaction leads to support intervention.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "User Places Order" node, which initiates the order processing workflow. The first decision point is "Payment Successful?". If payment fails ("No"), the flow proceeds to "Order Cancelled" and then "Refund Initiated", after which an "Order Completion Email Sent" is triggered. If payment is successful ("Yes"), an "Inventory Check" is performed, leading to the "Inventory Available?" decision. If inventory is unavailable ("No"), "Restock Inventory" is triggered, followed by "Shipping Label Created". If inventory is available ("Yes"), the flow proceeds directly to "Shipping Label Created", then "Order Marked as Shipped". Critically, the "Was Label Validated?" decision follows, and a negative validation result loops back to the "User Places Order" node, which is an illogical loop. If the label is validated ("Yes"), the "Package Delivered" and "Customer Receives Package" nodes are reached, followed by the "Customer Satisfied?" decision. A satisfied customer ("Yes") triggers the "Order Completion Email Sent" node. An unsatisfied customer ("No") results in "Dispatch Support Agent" and "Investigate Issue", which then incorrectly merges into "Order Completion Email Sent". The end nodes are "Order Completion Email Sent", "Order Cancelled", and "Investigate Issue". The diagram contains several errors, including an illogical loop after label validation failure, an incorrect order of operations where the order is marked as shipped before label validation, and an incorrect merge of the issue investigation flow into the order completion email.

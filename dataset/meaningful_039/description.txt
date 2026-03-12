@@ -1,0 +1,79 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the data processing pipeline for raw telemetry data, from ingestion to feature store persistence and model training. The diagram serves as a high-level overview of the data flow and transformations applied to the data.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It illustrates a sequential process with some branching decision points. The start node is "Raw Telemetry Data: Kafka Topic" and the end node is "Model Training Pipeline" along with "Drop Column Alert: Slack".
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Data Source". Logically, the diagram is divided into the following stages: Data Ingestion, Data Quality Checks, Feature Preprocessing, Numerical Scaling, Feature Aggregation, Temporal Feature Extraction, Feature Selection, Feature Store Eligibility, and Model Training.
+
+## Node-by-Node Description
+- **A / Raw Telemetry Data: Kafka Topic**: Represents the source of the raw telemetry data, which is a Kafka topic.
+  visible in diagram; no further repository context available.
+- **B / Data Ingestion: Spark Streaming**: Represents the data ingestion process using Spark Streaming.
+  visible in diagram; no further repository context available.
+- **C / Data Quality Checks**: Represents the data quality checks performed on the ingested data.
+  visible in diagram; no further repository context available.
+- **D / Feature Preprocessing: PySpark**: Represents the feature preprocessing step using PySpark.
+  visible in diagram; no further repository context available.
+- **E / Reject Queue: SQS**: Represents a queue for rejected records, implemented using Amazon SQS.
+  visible in diagram; no further repository context available.
+- **F / Numerical Scaling: MinMax Scaler**: Represents the numerical scaling process using MinMax scaling.
+  visible in diagram; no further repository context available.
+- **G / Apply MinMax Scaling**: Represents the application of MinMax scaling to numerical features.
+  visible in diagram; no further repository context available.
+- **H / One-Hot Encoding**: Represents the one-hot encoding of categorical features.
+  visible in diagram; no further repository context available.
+- **I / Feature Aggregation: Pandas**: Represents the feature aggregation step using Pandas.
+  visible in diagram; no further repository context available.
+- **J / Temporal Feature Extractor**: Represents the extraction of temporal features.
+  visible in diagram; no further repository context available.
+- **K / Rolling Statistics Calculation**: Represents the calculation of rolling statistics for time series data.
+  visible in diagram; no further repository context available.
+- **L / Pass Through**: Represents the passing through of static features.
+  visible in diagram; no further repository context available.
+- **M / Feature Selection: Variance Threshold**: Represents the feature selection process using variance thresholding.
+  visible in diagram; no further repository context available.
+- **N / Feature Store Eligibility**: Represents the eligibility check for the feature store.
+  visible in diagram; no further repository context available.
+- **O / Persist to Feature Store: Redis**: Represents the persistence of features to a Redis feature store.
+  visible in diagram; no further repository context available.
+- **P / Drop Column Alert: Slack**: Represents an alert sent to Slack when a column is dropped due to low variance.
+  visible in diagram; no further repository context available.
+- **Q / Model Training Pipeline**: Represents the model training pipeline.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Data flows from the Kafka topic to Spark Streaming for ingestion.
+- `B --> C`: Ingested data is passed to data quality checks.
+- `C -- Valid Records --> D`: Valid records are passed to feature preprocessing.
+- `C -- Invalid Records --> E`: Invalid records are sent to the Reject Queue (SQS).
+- `D --> F`: Preprocessed features are passed to numerical scaling.
+- `F -- Numerical Features --> G`: Numerical features are passed to MinMax scaling.
+- `F -- Categorical Features --> H`: Categorical features are passed to one-hot encoding.
+- `G --> I`: Scaled numerical features are passed to feature aggregation.
+- `H --> I`: One-hot encoded categorical features are passed to feature aggregation.
+- `G & H --> I`: The outputs of MinMax Scaling and One-Hot Encoding converge at Feature Aggregation.
+- `I --> J`: Aggregated features are passed to temporal feature extraction.
+- `J -- Time Series Data --> K`: Time series data is passed to rolling statistics calculation.
+- `J -- Static Features --> L`: Static features are passed through.
+- `K --> M`: Rolling statistics are passed to feature selection.
+- `L --> M`: Static features are passed to feature selection.
+- `K & L --> M`: The outputs of Rolling Statistics Calculation and Pass Through converge at Feature Selection.
+- `M --> N`: Selected features are passed to feature store eligibility check.
+- `N -- High Variance --> O`: Features with high variance are persisted to the Redis feature store.
+- `N -- Low Variance --> P`: Features with low variance trigger a drop column alert to Slack.
+- `O --> Q`: Features in the feature store are used for the model training pipeline.
+
+## Repository Context & Terminology
+- **Kafka**: A distributed streaming platform used for building real-time data pipelines and streaming applications.
+- **Spark Streaming**: An extension of Apache Spark that enables scalable, high-throughput, fault-tolerant stream processing of live data streams.
+- **PySpark**: The Python API for Apache Spark, allowing data processing using Python.
+- **SQS (Simple Queue Service)**: A fully managed message queuing service that enables you to decouple and scale microservices, distributed systems, and serverless applications.
+- **MinMax Scaler**: A data scaling technique that transforms values to fit within a specific range, typically between 0 and 1.
+- **One-Hot Encoding**: A process of converting categorical variables into a numerical format that machine learning algorithms can understand.
+- **Pandas**: A Python data analysis library providing data structures like DataFrames for efficient data manipulation and analysis.
+- **Redis**: An in-memory data structure store, used as a database, cache, and message broker.
+
+## High-Density QA Ground Truth Summary
+The data processing pipeline begins with raw telemetry data residing in a Kafka topic. This data is ingested using Spark Streaming for real-time processing. A crucial initial step involves data quality checks to ensure data integrity; invalid records are immediately routed to a Reject Queue implemented using SQS, while valid records proceed to feature preprocessing using PySpark. The preprocessed data undergoes numerical scaling using a MinMax Scaler, separating numerical and categorical features. Numerical features are scaled, and categorical features are one-hot encoded. Subsequently, feature aggregation is performed using Pandas, combining the processed numerical and categorical features. Temporal Feature Extraction splits the data into time series and static features; rolling statistics are calculated for time series data, while static features are passed through. Feature selection, using a variance threshold, determines feature store eligibility. High-variance features are persisted to a Redis feature store, while low-variance features trigger a "Drop Column Alert" via Slack. Finally, the features stored in Redis are used in the Model Training Pipeline. The use of Kafka for initial data ingestion and Redis for the feature store highlights the pipeline's focus on real-time data processing and efficient feature retrieval for model training.

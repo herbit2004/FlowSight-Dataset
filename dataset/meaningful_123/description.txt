@@ -1,0 +1,54 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a real-time sensor data processing pipeline for anomaly detection. It depicts the flow of data from sensor input, through aggregation and partitioning, to anomaly detection and alerting. The diagram serves as a high-level overview of the data processing steps and decision points within the system.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "Real-Time Sensor Data" node at the top and flows down through a series of processing and decision nodes, ultimately leading to the "Push to Dashboard", "Escalation Service", and "Store Baseline" end nodes.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: data input, time-based windowing, geo-partitioning, region-specific processing (average temperature calculation and anomaly detection), and alerting/storage.
+
+## Node-by-Node Description
+- **A / Real-Time Sensor Data**: Represents the input of real-time data from sensors.
+  visible in diagram; no further repository context available.
+- **B / Time-Based Rolling Window**: Represents a time-based rolling window that aggregates sensor data over a specific time period.
+  visible in diagram; no further repository context available.
+- **C / Pre-Aggregated Stats**: Represents the pre-aggregated statistics calculated from the data within the rolling window.
+  visible in diagram; no further repository context available.
+- **D / Geo-Partitioning**: Represents the partitioning of the aggregated data based on geographical regions.
+  visible in diagram; no further repository context available.
+- **E / Average Temp Calc**: Represents the calculation of the average temperature for a specific region (Region 1).
+  visible in diagram; no further repository context available.
+- **F / Anomaly Detection Module**: Represents the module responsible for detecting anomalies in the data for a specific region (Region 2).
+  visible in diagram; no further repository context available.
+- **G / Alert if Above Threshold**: Represents the process of generating an alert if the average temperature exceeds a predefined threshold.
+  visible in diagram; no further repository context available.
+- **H / Escalation Service**: Represents the service responsible for escalating anomalies that are detected.
+  visible in diagram; no further repository context available.
+- **I / Store Baseline**: Represents the process of storing the baseline data for future anomaly detection.
+  visible in diagram; no further repository context available.
+- **J / Push to Dashboard**: Represents the process of pushing the data to a dashboard for visualization.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Real-time sensor data is fed into the time-based rolling window.
+- `B -- Window Full --> C`: When the time-based rolling window is full, the data is passed to the pre-aggregated stats calculation.
+- `B -- Window Open --> B`: If the time-based rolling window is not full, it continues to collect data.
+- `C --> D`: Pre-aggregated stats are passed to the geo-partitioning stage.
+- `D -- Region 1 --> E`: Data for Region 1 is passed to the average temperature calculation.
+- `D -- Region 2 --> F`: Data for Region 2 is passed to the anomaly detection module.
+- `E --> G`: The calculated average temperature is passed to the alert threshold check.
+- `F -- Anomaly Found --> H`: If an anomaly is detected, the event is passed to the escalation service.
+- `F -- No Anomaly --> I`: If no anomaly is detected, the data is used to store the baseline.
+- `G --> J`: If the average temperature is above the threshold, an alert is generated and pushed to the dashboard.
+
+## Repository Context & Terminology
+- **Real-Time Sensor Data**: Data collected from physical sensors in real-time, such as temperature, pressure, or humidity sensors.
+- **Time-Based Rolling Window**: A technique for aggregating data over a sliding time window, used for smoothing and trend analysis.
+- **Pre-Aggregated Stats**: Statistical summaries calculated from the data within the rolling window, such as average, min, max, and standard deviation.
+- **Geo-Partitioning**: Dividing data based on geographical regions, allowing for region-specific analysis and anomaly detection.
+- **Anomaly Detection Module**: A system or algorithm that identifies data points that deviate significantly from the expected behavior.
+- **Escalation Service**: A service that handles the escalation of detected anomalies, potentially triggering alerts or automated responses.
+- **Baseline**: A reference point or set of data used to compare against current data to identify anomalies.
+
+## High-Density QA Ground Truth Summary
+The process begins with "Real-Time Sensor Data" (A) being fed into a "Time-Based Rolling Window" (B). The window aggregates data over a specific time period. If the "Window Full", the data proceeds to "Pre-Aggregated Stats" (C); otherwise, the window continues to collect data. The pre-aggregated statistics are then passed to "Geo-Partitioning" (D), which divides the data based on geographical regions. Data for "Region 1" is sent to "Average Temp Calc" (E), while data for "Region 2" goes to the "Anomaly Detection Module" (F). For Region 1, if the "Average Temp Calc" exceeds a predefined threshold, an "Alert if Above Threshold" (G) is triggered, and the data is "Push to Dashboard" (J). For Region 2, the "Anomaly Detection Module" either finds an "Anomaly Found", triggering the "Escalation Service" (H), or finds "No Anomaly", leading to "Store Baseline" (I). The "Time-Based Rolling Window" is a common technique used in time series analysis to smooth data and identify trends, which is crucial for effective anomaly detection. The final outputs are either pushing data to a dashboard, escalating anomalies, or storing baseline data for future comparisons.

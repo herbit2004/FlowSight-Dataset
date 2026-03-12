@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the architecture and data flow within a GraphQL schema registry system. It depicts how queries are processed, schemas are registered and validated, and how schema updates are managed. The diagram serves as a high-level overview of the system's components and their interactions.
+
+## Overall Layout
+The diagram is laid out in a left-to-right (LR) direction. The `federated-gateway` acts as the central starting point. The diagram illustrates the flow of queries and schema updates, culminating in data storage in Postgres and Redis, and schema updates being published to Kafka.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages:
+1. Query Ingress: `federated-gateway` receives queries.
+2. Service Interaction: Queries are routed to `service A` or `service B`.
+3. Schema Registration: Services register schemas with the `schema registry`.
+4. Schema Analysis & Persistence: The `query analyzer` processes queries, and schemas are stored in `postgres` and `redis`.
+5. Schema Updates: Schema changes are published to a Kafka topic.
+
+## Node-by-Node Description
+- **GW / federated-gateway**: The entry point for queries, acting as a gateway to the services.
+  visible in diagram; no further repository context available.
+- **KF2 / kafka\n(gql-schema-registry-kafka)\ngraphql-queries topic**: A Kafka topic where GraphQL queries are published.
+  visible in diagram; no further repository context available.
+- **QA / query analyzer\n(gql-schema-registry-worker)**: A worker responsible for analyzing GraphQL queries.
+  visible in diagram; no further repository context available.
+- **DB / postgres 18\n(gql-schema-registry-db)**: A Postgres database used to store schema hits and other schema-related data.
+  visible in diagram; no further repository context available.
+- **SR / schema registry\n(gql-schema-registry)**: The central component responsible for managing and validating schemas.
+  visible in diagram; no further repository context available.
+- **R / redis 6\n(gql-schema-registry-redis)**: A Redis instance used for caching persisted queries and storing query logs.
+  visible in diagram; no further repository context available.
+- **KF1 / kafka\n(gql-schema-registry-kafka)\ngraphql-schema-updates topic**: A Kafka topic where schema updates are published.
+  visible in diagram; no further repository context available.
+- **S1 / service A**: A service that registers its schema with the schema registry.
+  visible in diagram; no further repository context available.
+- **S2 / service B**: Another service that registers its schema with the schema registry.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `GW --> KF2`: The `federated-gateway` publishes queries to the `graphql-queries topic`.
+- `KF2 --> QA`: The `query analyzer` consumes queries from the `graphql-queries topic`.
+- `QA --> DB`: The `query analyzer` stores update schema hits in the `postgres` database.
+- `GW --> S1`: The `federated-gateway` routes query A to `service A`.
+- `S1 --> SR`: `service A` registers its schema in runtime with the `schema registry`.
+- `GW --> S2`: The `federated-gateway` routes query B to `service B`.
+- `S2 --> SR`: `service B` registers its schema in runtime with the `schema registry`.
+- `S2 -.-> SR`: `service B` validates schema on commit/cli/CI with the `schema registry`.
+- `SR --> DB`: The `schema registry` stores schemas in the `postgres` database.
+- `SR --> R`: The `schema registry` caches persisted queries and stores query logs in `redis`.
+- `SR --> KF1`: The `schema registry` publishes schema changes to the `graphql-schema-updates topic`.
+- `KF1 --> GW`: The `federated-gateway` listens for schema updates from the `graphql-schema-updates topic`.
+- `GW == poll schema every 10 sec\n POST /schema/compose ==> SR`: The `federated-gateway` polls the `schema registry` every 10 seconds using a POST request to `/schema/compose`.
+
+## Repository Context & Terminology
+- **GraphQL Schema Registry**: A system for managing and validating GraphQL schemas.
+- **Federated Gateway**: A gateway that routes queries to different services.
+- **Kafka**: A distributed streaming platform used for publishing and subscribing to streams of records.
+- **Postgres**: A relational database used for storing structured data.
+- **Redis**: An in-memory data structure store, used as a cache and message broker.
+- **Schema Composition**: The process of combining multiple GraphQL schemas into a single schema.
+- **Schema Validation**: The process of verifying that a GraphQL schema is valid and conforms to the GraphQL specification.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the flow of GraphQL queries and schema updates within a schema registry system. The process begins with the `federated-gateway`, which receives incoming queries and routes them to either `service A` or `service B`. The gateway also polls the `schema registry` every 10 seconds using a POST request to `/schema/compose`. Both `service A` and `service B` register their schemas in runtime with the central `schema registry`. `Service B` also validates its schema on commit/cli/CI. The `schema registry` then stores these schemas in a `postgres` database and caches queries and logs in `redis`. A `query analyzer` consumes queries from the `graphql-queries topic` and stores update schema hits in the `postgres` database. Schema changes are published to the `graphql-schema-updates topic` via Kafka, and the `federated-gateway` listens for these updates. The system uses Kafka topics for asynchronous communication of queries and schema updates, ensuring loose coupling between components. The `federated-gateway` acts as the central entry point and also as a consumer of schema updates, completing the cycle. The `postgres` and `redis` databases serve as persistent storage for schema information and query data.

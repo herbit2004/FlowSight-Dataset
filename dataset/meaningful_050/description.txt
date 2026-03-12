@@ -1,0 +1,95 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the handling of incoming requests in a system, incorporating dynamic configuration updates, rate limiting, and circuit breaker patterns for resilience. The diagram outlines the flow of a client request through various stages, including rate limit checks, circuit breaker checks, routing to upstream services, and response validation. It serves as a visual representation of the request processing logic and the fault tolerance mechanisms in place.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It is organized into subgraphs representing different stages of request processing and configuration management. The start node is "Client Request," and the end nodes are "Return Validated Response," "Log Rate Limit Event," "Log Circuit Breaker Event," and "Set Circuit Open State."
+
+## Subgraphs / Stages
+The diagram contains four explicit subgraphs:
+- **Dynamic Configuration Updates**: Manages the configuration of rate limits and circuit breakers.
+- **Incoming Request Handling**: Processes incoming client requests, including rate limiting and circuit breaker checks.
+- **Upstream Service Interaction**: Handles the routing and interaction with upstream services.
+- **Circuit Breaker Management**: Manages the state of the circuit breaker based on the success or failure of upstream service calls.
+
+## Node-by-Node Description
+- **Client Request**: Represents an incoming request from a client.
+  visible in diagram; no further repository context available.
+- **Rate Limit Check**: Checks if the incoming request exceeds the defined rate limits.
+  visible in diagram; no further repository context available.
+- **Return 429 Error**: Returns a 429 HTTP status code indicating that the client has exceeded the rate limit.
+  visible in diagram; no further repository context available.
+- **Circuit Breaker Check**: Checks if the circuit breaker is open or closed.
+  visible in diagram; no further repository context available.
+- **Fallback Response**: Returns a fallback response when the circuit breaker is open.
+  visible in diagram; no further repository context available.
+- **Route to Upstream Service**: Routes the request to an upstream service.
+  visible in diagram; no further repository context available.
+- **Upstream Service A**: Represents an upstream service.
+  visible in diagram; no further repository context available.
+- **Upstream Service B**: Represents another upstream service.
+  visible in diagram; no further repository context available.
+- **Response Validation**: Validates the response received from the upstream service.
+  visible in diagram; no further repository context available.
+- **Record Failure - A**: Records a failure from Upstream Service A.
+  visible in diagram; no further repository context available.
+- **Record Failure - B**: Records a failure from Upstream Service B.
+  visible in diagram; no further repository context available.
+- **Failure Threshold Reached?**: Checks if the failure threshold for the circuit breaker has been reached.
+  visible in diagram; no further repository context available.
+- **Return Validated Response**: Returns the validated response to the client.
+  visible in diagram; no further repository context available.
+- **Open Circuit**: Opens the circuit breaker to prevent further requests from being sent to the failing upstream service.
+  visible in diagram; no further repository context available.
+- **Continue Monitoring**: Continues monitoring the upstream service after a failure.
+  visible in diagram; no further repository context available.
+- **Set Circuit Open State**: Sets the state of the circuit breaker to open.
+  visible in diagram; no further repository context available.
+- **Configuration Server**: A server that provides configuration updates.
+  visible in diagram; no further repository context available.
+- **Rate Limits Config**: Configuration for rate limits.
+  visible in diagram; no further repository context available.
+- **Circuit Breaker Config**: Configuration for the circuit breaker.
+  visible in diagram; no further repository context available.
+- **Log Rate Limit Event**: Logs an event indicating that a rate limit has been exceeded.
+  visible in diagram; no further repository context available.
+- **Log Circuit Breaker Event**: Logs an event related to the circuit breaker.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Client Request --> Rate Limit Check`: An incoming request is sent for rate limit checking.
+- `Rate Limit Check -- Exceeds Limit? Yes --> Return 429 Error`: If the rate limit is exceeded, a 429 error is returned.
+- `Rate Limit Check -- No --> Circuit Breaker Check`: If the rate limit is not exceeded, the request is sent for circuit breaker checking.
+- `Circuit Breaker Check -- Circuit Open? Yes --> Fallback Response`: If the circuit breaker is open, a fallback response is returned.
+- `Circuit Breaker Check -- No --> Route to Upstream Service`: If the circuit breaker is closed, the request is routed to an upstream service.
+- `Route to Upstream Service --> Upstream Service A`: The request is routed to Upstream Service A.
+- `Route to Upstream Service --> Upstream Service B`: The request is routed to Upstream Service B.
+- `Upstream Service A -- Success --> Response Validation`: If Upstream Service A is successful, the response is sent for validation.
+- `Upstream Service B -- Success --> Response Validation`: If Upstream Service B is successful, the response is sent for validation.
+- `Upstream Service A -- Failure --> Record Failure - A`: If Upstream Service A fails, the failure is recorded.
+- `Upstream Service B -- Failure --> Record Failure - B`: If Upstream Service B fails, the failure is recorded.
+- `Record Failure - A --> Failure Threshold Reached?`: The failure is recorded and checked against the failure threshold.
+- `Record Failure - B --> Failure Threshold Reached?`: The failure is recorded and checked against the failure threshold.
+- `Response Validation --> Return Validated Response`: The validated response is returned to the client.
+- `Failure Threshold Reached? -- Yes --> Open Circuit`: If the failure threshold is reached, the circuit breaker is opened.
+- `Failure Threshold Reached? -- No --> Continue Monitoring`: If the failure threshold is not reached, monitoring continues.
+- `Open Circuit --> Set Circuit Open State`: The circuit breaker state is set to open.
+- `Continue Monitoring --> Circuit Breaker Check`: Monitoring continues, and the circuit breaker is checked again.
+- `Configuration Server -- Poll Updates --> Rate Limits Config`: The configuration server polls updates to the rate limits configuration.
+- `Configuration Server -- Poll Updates --> Circuit Breaker Config`: The configuration server polls updates to the circuit breaker configuration.
+- `Rate Limits Config --> Rate Limit Check`: The rate limits configuration is used for rate limit checking.
+- `Circuit Breaker Config --> Circuit Breaker Check`: The circuit breaker configuration is used for circuit breaker checking.
+- `Return 429 Error --> Log Rate Limit Event`: A rate limit event is logged.
+- `Fallback Response --> Log Circuit Breaker Event`: A circuit breaker event is logged.
+- `Set Circuit Open State --> Circuit Breaker Check`: After setting the circuit open state, the system returns to the circuit breaker check.
+
+## Repository Context & Terminology
+- **Rate Limiting**: A technique used to control the rate of requests that a client can make to a service, preventing abuse and ensuring fair usage.
+- **Circuit Breaker**: A design pattern used to prevent cascading failures in distributed systems. It monitors for failures and "opens" the circuit to prevent further requests from being sent to a failing service.
+- **Fallback Response**: A pre-defined response returned when the primary service is unavailable, providing a degraded but functional experience.
+- **Upstream Service**: A service that the current service depends on.
+- **429 Error**: HTTP status code indicating that the user has sent too many requests in a given amount of time.
+- **Failure Threshold**: The maximum number of failures allowed before the circuit breaker opens.
+- **Dynamic Configuration**: The ability to change the configuration of a system without requiring a restart.
+
+## High-Density QA Ground Truth Summary
+The process begins with a "Client Request" which is immediately subjected to a "Rate Limit Check." If the "Rate Limit Check" determines that the request "Exceeds Limit? Yes," a "Return 429 Error" is triggered, and a "Log Rate Limit Event" is recorded. Otherwise, if the rate limit is not exceeded ("No"), the request proceeds to a "Circuit Breaker Check." If the "Circuit Breaker Check" determines that the "Circuit Open? Yes," a "Fallback Response" is returned, and a "Log Circuit Breaker Event" is recorded. If the circuit is closed ("No"), the request is routed via "Route to Upstream Service" to either "Upstream Service A" or "Upstream Service B." Upon success, the "Response Validation" occurs, leading to "Return Validated Response." Upon failure, "Record Failure - A" or "Record Failure - B" is triggered, and the system checks if the "Failure Threshold Reached?". If "Yes," the "Open Circuit" is activated, and the "Set Circuit Open State" is set. If "No," the system proceeds to "Continue Monitoring." The "Configuration Server" provides dynamic updates to both "Rate Limits Config" and "Circuit Breaker Config," influencing the "Rate Limit Check" and "Circuit Breaker Check" respectively. The end nodes are "Return Validated Response," "Log Rate Limit Event," "Log Circuit Breaker Event," and "Set Circuit Open State," representing successful request processing, rate limit violations, circuit breaker activation, and circuit breaker state update, respectively. The circuit breaker pattern is a key element, preventing cascading failures by stopping requests to unhealthy upstream services.

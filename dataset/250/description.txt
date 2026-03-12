@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the high-level components and data flow of a Retrieval Augmented Generation (RAG) system deployed on Kubernetes. It illustrates how user requests are routed, authenticated, and processed by various services, including a Rust web server, a RAG engine, a document engine, and a database. The diagram serves as a visual representation of the system's architecture, aiding in understanding its functionality and deployment.
+
+## Overall Layout
+The diagram is laid out in a left-to-right (LR) direction. It features a primary subgraph representing the Kubernetes cluster, containing most of the core components. The flow starts with the User and ends with interactions with external services like the External Identity Provider, LLM Provider, and S3-Compatible Object Storage.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Kubernetes**: This subgraph encapsulates the core services running within a Kubernetes cluster, including the Nginx Router, OAuth2 Proxy, High Performance Rust Web Server, High Performance RAG Engine, Rust Document Engine, and Postgres database. It is labeled with common Kubernetes distributions: EKS, AKS, GKE, and k3s.
+
+## Node-by-Node Description
+- **User**: Represents an external user initiating a request to the system. visible in diagram; no further repository context available.
+- **Nginx Router**: An Nginx instance acting as a reverse proxy and load balancer, routing incoming traffic. visible in diagram; no further repository context available.
+- **OAuth2 Proxy**: A proxy responsible for authenticating users via OAuth2. visible in diagram; no further repository context available.
+- **High Performance Rust Web Server**: A Rust-based web server handling user requests and coordinating with other services. visible in diagram; no further repository context available.
+- **High Performance RAG Engine**: The core RAG engine responsible for retrieving relevant information from the document store and generating responses. visible in diagram; no further repository context available.
+- **Rust Document Engine**: A component responsible for processing and indexing documents. visible in diagram; no further repository context available.
+- **Postgres Relational DB & PgVector**: A Postgres database used for storing relational data and vector embeddings for semantic search. visible in diagram; no further repository context available.
+- **External Identity Provider**: An external service used for user authentication (e.g., Okta, Auth0). visible in diagram; no further repository context available.
+- **LLM Provider Ollama / OpenAI / Anthropic**: An external service providing Large Language Model (LLM) capabilities (e.g., Ollama, OpenAI, Anthropic). visible in diagram; no further repository context available.
+- **S3-Compatible Object Storage**: An object storage service (e.g., AWS S3, MinIO) used for storing documents and other data. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User --> Nginx Router`: User initiates a request, which is routed to the Nginx Router.
+- `Nginx Router --> OAuth2 Proxy`: Nginx Router forwards the request to the OAuth2 Proxy for authentication.
+- `OAuth2 Proxy --> High Performance Rust Web Server`: OAuth2 Proxy forwards the authenticated request to the Rust Web Server.
+- `OAuth2 Proxy --> External Identity Provider`: OAuth2 Proxy redirects the user to the External Identity Provider for authentication.
+- `External Identity Provider --> OAuth2 Proxy`: External Identity Provider redirects the user back to the OAuth2 Proxy after successful authentication.
+- `High Performance Rust Web Server --> High Performance RAG Engine`: Rust Web Server sends a request to the RAG Engine for information retrieval.
+- `High Performance Rust Web Server --> LLM Provider`: Rust Web Server sends a request to the LLM Provider for generating responses.
+- `High Performance Rust Web Server --> Postgres Relational DB & PgVector`: Rust Web Server interacts with the Postgres database for data storage and retrieval.
+- `High Performance RAG Engine --> Postgres Relational DB & PgVector`: RAG Engine queries the Postgres database for relevant information.
+- `High Performance RAG Engine --> Rust Document Engine`: RAG Engine interacts with the Document Engine to process and index documents.
+- `LLM Provider --> S3-Compatible Object Storage`: LLM Provider accesses data stored in the S3-Compatible Object Storage.
+
+## Repository Context & Terminology
+- **Kubernetes**: A container orchestration platform used for deploying and managing the system's services.
+- **EKS, AKS, GKE, k3s**: Different distributions of Kubernetes offered by cloud providers (Amazon EKS, Azure AKS, Google GKE) and a lightweight distribution (k3s).
+- **RAG (Retrieval Augmented Generation)**: A technique that combines information retrieval with language generation to improve the quality and relevance of generated text.
+- **PgVector**: A Postgres extension that enables storing and querying vector embeddings, used for semantic search.
+- **Ollama / OpenAI / Anthropic**: Examples of LLM providers that can be integrated with the system.
+- **S3-Compatible Object Storage**: An object storage service that adheres to the S3 API, allowing for flexible and scalable data storage.
+- **OAuth2 Proxy**: An authentication proxy that handles OAuth2 authentication flows, protecting the web server from unauthorized access.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with a User initiating a request, which is first intercepted by the Nginx Router acting as an ingress point. The Nginx Router then forwards the request to the OAuth2 Proxy for authentication. If the user is not authenticated, the OAuth2 Proxy redirects them to an External Identity Provider. Upon successful authentication, the External Identity Provider redirects the user back to the OAuth2 Proxy, which then forwards the authenticated request to the High Performance Rust Web Server. The Rust Web Server orchestrates the core logic, interacting with the High Performance RAG Engine for information retrieval, the LLM Provider (such as Ollama, OpenAI, or Anthropic) for generating responses, and the Postgres Relational DB & PgVector for data storage and retrieval. The RAG Engine further interacts with the Rust Document Engine for document processing and indexing, and queries the Postgres database for relevant information. The LLM Provider may also access data stored in S3-Compatible Object Storage. The system is deployed on Kubernetes, potentially using EKS, AKS, GKE, or k3s distributions, leveraging PgVector for efficient vector-based similarity searches within the Postgres database to enhance the RAG process.

@@ -1,0 +1,61 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the data flow and component interaction within the Z-Image Turbo Worker system. It shows how client requests are processed, transformed, and served through various internal services and external APIs. The diagram provides a high-level overview of the system's architecture, focusing on the interaction between different modules and the flow of data.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It shows a hierarchical structure, starting from the "Upstream Service" on the left, flowing through the "Z-Image Turbo Worker" in the middle, and ending at the "Client Layer" on the right. The "Upstream Service" acts as the starting point, and the "Client Layer" represents the end point of the data flow.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Upstream Service**: Represents the initial entry point for image requests.
+- **Z-Image Turbo Worker**: Represents the core processing unit of the system, handling image transformations and related tasks.
+- **Client Layer**: Represents the client-side components that consume the processed images and interact with the system.
+
+## Node-by-Node Description
+- **A / Cherry Studio 聊天客户端**: Represents the Cherry Studio client application. visible in diagram; no further repository context available.
+- **B / NextChat WebUI**: Represents the NextChat web user interface. visible in diagram; no further repository context available.
+- **C / 开发者驾驶舱 HTML5 UI**: Represents the developer dashboard implemented using HTML5. visible in diagram; no further repository context available.
+- **D / 标准 API 客户端 curl/Python**: Represents standard API clients using curl or Python. visible in diagram; no further repository context available.
+- **E / 路由分发器 /v1/\***: Represents the routing dispatcher that handles incoming requests to the `/v1/` endpoint. visible in diagram; no further repository context available.
+- **F / 身份伪装引擎 IdentityForge**: Represents the IdentityForge module responsible for identity spoofing. visible in diagram; no further repository context available.
+- **G / 图像生成 API /v1/images/generations**: Represents the image generation API endpoint. visible in diagram; no further repository context available.
+- **H / 聊天适配器 /v1/chat/completions**: Represents the chat adapter for handling chat completions. visible in diagram; no further repository context available.
+- **I / 状态查询 /v1/query/status**: Represents the status query endpoint. visible in diagram; no further repository context available.
+- **J / 服务端轮询模式**: Represents the server-side polling mode within the Polling Engine. visible in diagram; no further repository context available.
+- **K / 客户端轮询模式**: Represents the client-side polling mode within the Polling Engine. visible in diagram; no further repository context available.
+- **L / TransformStream SSE 实时流**: Represents the TransformStream module for real-time SSE streaming. visible in diagram; no further repository context available.
+- **M / 响应标准化 OpenAI Format**: Represents the OpenAI Format module for standardizing responses. visible in diagram; no further repository context available.
+- **N / Z-Image 原始接口 z-image.62tool.com**: Represents the original Z-Image API endpoint. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> E`: Cherry Studio sends OpenAI standard requests to the routing dispatcher.
+- `B --> E`: NextChat WebUI sends standard API calls to the routing dispatcher.
+- `C --> E`: The HTML5 UI sends WebSocket/HTTP requests to the routing dispatcher.
+- `D --> E`: Standard API clients send REST API requests to the routing dispatcher.
+- `E --> F`: The routing dispatcher forwards requests to the IdentityForge module.
+- `F --> G`: IdentityForge forwards requests to the image generation API after dynamic spoofing.
+- `F --> H`: IdentityForge maintains sessions with the chat adapter.
+- `G --> J`: The image generation API submits tasks to the server-side polling mode.
+- `G --> K`: The image generation API returns task IDs to the client-side polling mode.
+- `H --> L`: The chat adapter sends data to the TransformStream for real-time streaming.
+- `L --> A`: TransformStream provides streaming progress feedback to Cherry Studio.
+- `L --> J`: TransformStream triggers asynchronous polling in the server-side polling mode.
+- `J --> N`: The server-side polling mode sends polling status to the Z-Image original interface.
+- `K --> I`: The client-side polling mode sends client-side polling requests to the status query endpoint.
+- `I --> N`: The status query endpoint sends query status to the Z-Image original interface.
+- `N --> M`: The Z-Image original interface returns image URLs to the OpenAI Format module.
+- `M --> A`: OpenAI Format sends standardized responses to Cherry Studio.
+- `M --> B`: OpenAI Format sends Markdown/JSON data to NextChat WebUI.
+- `M --> C`: OpenAI Format sends HTML previews to the HTML5 UI.
+- `M --> D`: OpenAI Format sends structured data to standard API clients.
+
+## Repository Context & Terminology
+- **Z-Image Turbo Worker**: The core service responsible for processing and transforming images.
+- **IdentityForge**: A module responsible for identity spoofing, likely used for security or testing purposes.
+- **Core Handlers**: A group of modules that handle core functionalities such as image generation and chat completions.
+- **Polling Engine**: A module that manages asynchronous tasks and provides status updates through polling mechanisms.
+- **TransformStream**: A module that handles real-time streaming of data using Server-Sent Events (SSE).
+- **OpenAI Format**: A module responsible for standardizing responses into a format compatible with OpenAI APIs.
+- **Upstream Service**: The initial entry point for image requests, represented by the Z-Image original interface.
+
+## High-Density QA Ground Truth Summary
+The process begins with a client request originating from either Cherry Studio, NextChat WebUI, an HTML5 UI, or a standard API client. These requests are routed by the `/v1/*` dispatcher to the IdentityForge module for identity spoofing. From IdentityForge, requests are forwarded to either the image generation API (`/v1/images/generations`) or the chat adapter (`/v1/chat/completions`). The image generation API submits tasks to the server-side polling engine and returns task IDs to the client-side polling mode. The chat adapter sends data to the TransformStream for real-time SSE streaming, which provides progress feedback to Cherry Studio and triggers asynchronous polling. The polling engine and status query endpoint (`/v1/query/status`) interact with the Z-Image original interface to retrieve image URLs. Finally, the OpenAI Format module standardizes responses and sends them back to the client applications in various formats (Markdown/JSON, HTML, structured data). The system relies on a combination of REST APIs, WebSocket/HTTP connections, and SSE streaming to handle requests and deliver results.

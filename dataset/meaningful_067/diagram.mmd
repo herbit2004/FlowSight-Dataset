@@ -1,0 +1,16 @@
+graph TD
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px
+    A[Order Received] --> B{Validate Order Data};
+    B -- Valid --> C[Inventory Check];
+    B -- Invalid --> D[Reject Order];
+    C -- In Stock --> E[Allocate Inventory];
+    C -- Out of Stock --> F[Create Backorder];
+    E --> G[Payment Capture];
+    F --> G;
+    G -- Payment Successful --> H[Packing Request Sent];
+    G -- Payment Failed --> I[Cancel Order];
+    H --> J[Warehouse Picks Items];
+    J --> K[Order Packed];
+    K --> L[Shipment Scheduled];
+    L --> M[Order Shipped];
+    M:::highlight

@@ -1,0 +1,32 @@
+graph TD
+    subgraph Shard Router
+        A[API Gateway] --> B{Rate Limiter};
+        B -- Within Limit? --> C[Request Validator];
+        B -- Exceeded Limit --> Z[Reject Request];
+        C -- Valid Request? --> D{Authentication Service};
+        C -- Invalid Request --> Y[Return Error];
+        D -- Authenticated? --> E[Session Manager];
+        D -- Not Authenticated --> X[Return Auth Error];
+        E --> F{Consistent Hash};
+        F --> G[Shard Map Lookup];
+        G --> H{Shard Region ID};
+        H --> I[Router Cache Layer];
+        I -- Cache Hit? --> J[Route to Shard];
+        I -- Cache Miss? --> K[Shard Discovery Service];
+        K --> L{Shard Endpoint};
+        L --> M[Update Router Cache];
+        M --> J;
+        subgraph Shard Cluster
+            J --> N[Shard Coordinator];
+            N --> O{Data Shard 1};
+            N --> P{Data Shard 2};
+            N --> Q{Data Shard 3};
+            O --> R[Data Storage];
+            P --> S[Data Storage];
+            Q --> T[Data Storage];
+        end
+        J --> W[Metrics Pipeline];
+        W --> V[Monitoring Dashboard];
+    end
+    classDef routing fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,W,V,X,Y,Z routing

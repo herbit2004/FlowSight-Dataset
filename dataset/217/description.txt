@@ -1,0 +1,44 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture and data flow within a rule-based system, likely for document checking or content validation. It illustrates the interaction between different components, including user roles, services, data stores, and configuration files, to manage and apply rules. The diagram serves as a high-level overview of the system's architecture and how rules are managed and applied.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It shows the flow of data and control from user roles and external sources (Google Sheet) through various services to data stores (Postgres DB, typerighter-rules.json). The start nodes are "Rule owner role" and "Rule user role", and the end nodes are "Postgres DB" and "typerighter-rules.json".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages:
+1. Rule definition and management (Rule owner role, Google Sheet).
+2. Rule serving and caching (Manager service, Postgres DB).
+3. Client request and matching (Rule user role, Typerighter client, Checker service).
+4. Rule artefact storage (typerighter-rules.json).
+
+## Node-by-Node Description
+- **Rule owner role**: Represents the user responsible for creating and editing rules. visible in diagram; no further repository context available.
+- **Google Sheet**: Represents a Google Sheet used to store and manage rules. visible in diagram; no further repository context available.
+- **Manager service**: A service responsible for fetching rules, storing them in a database, and writing rule artefacts. visible in diagram; no further repository context available.
+- **Postgres DB**: A Postgres database used to store rules. visible in diagram; no further repository context available.
+- **Rule user role**: Represents the user who requests document checks. visible in diagram; no further repository context available.
+- **Typerighter client**: A client application that sends requests for document checks. visible in diagram; no further repository context available.
+- **Checker service**: A service that receives requests for document checks and applies the rules. visible in diagram; no further repository context available.
+- **typerighter-rules.json**: A JSON file containing rule artefacts. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Rule owner role --> Google Sheet`: The rule owner edits rules in the Google Sheet.
+- `Google Sheet --> Manager service`: The manager service retrieves rules from the Google Sheet.
+- `Rule owner role --> Manager service`: The rule owner can force the manager to re-fetch the sheet.
+- `Manager service --> Postgres DB`: The manager service writes rules to the Postgres database.
+- `Postgres DB --> Manager service`: The manager service reads rules from the Postgres database.
+- `Manager service --> typerighter-rules.json`: The manager service writes rule artefacts to the typerighter-rules.json file.
+- `Rule user role --> Typerighter client`: The rule user requests a document check, which is sent to the Typerighter client.
+- `Typerighter client --> Checker service`: The Typerighter client requests matches from the checker service.
+- `Checker service --> typerighter-rules.json`: The checker service reads rule artefacts from the typerighter-rules.json file.
+
+## Repository Context & Terminology
+- **Rule**: A condition or pattern used to validate or transform content.
+- **Rule artefact**: A compiled or processed form of a rule, optimized for efficient matching.
+- **Manager service**: This service likely handles the synchronization of rules between the Google Sheet, the Postgres database, and the rule artefact storage.
+- **Checker service**: This service is responsible for applying the rules to the content being checked.
+- **typerighter-rules.json**: This file likely contains a serialized representation of the rules, optimized for fast loading and matching by the Checker service.
+- **Postgres DB**: Used for persistent storage of rules, allowing for versioning and auditing.
+
+## High-Density QA Ground Truth Summary
+The process begins with the "Rule owner role" who can "Edit rules" in a "Google Sheet". The "Google Sheet" then provides rules to the "Manager service" via a "Get rules" flow. The "Rule owner role" can also trigger a "Force manager to re-fetch sheet" action. The "Manager service" is central, responsible for both "Write rules" to and "Read rules" from a "Postgres DB". It also "Write rule artefact" to "typerighter-rules.json". Separately, a "Rule user role" initiates a "Request document check" which is handled by the "Typerighter client". The "Typerighter client" then sends a "Request matches" to the "Checker service". Finally, the "Checker service" "Read rule artefact" from "typerighter-rules.json". The "Postgres DB" and "typerighter-rules.json" serve as the end points for rule storage and artefact delivery, respectively. The "Manager service" acts as a synchronisation point between the Google Sheet, the Postgres database, and the rule artefact storage, ensuring that the rules are consistently applied across the system.

@@ -1,0 +1,18 @@
+graph TD
+    A[User Submits Order] --> B{Inventory Available?};
+    B -- No --> C[Notify User: Out of Stock];
+    C --> F[End];
+    B -- Yes --> D[Process Payment];
+    D --> E{Payment Successful?};
+    E -- No --> G[Acknowledge Order];
+    G --> F;
+    E -- Yes --> H[Ship Order];
+    H --> I{Delivery Confirmed?};
+    I -- No --> J[Investigate Delivery];
+    J --> H;
+    I -- Yes --> K[Send Order Confirmation];
+    K --> L{Order Completed?};
+    L -- Yes --> M[Release Hold on Funds];
+    L -- No --> D;
+    M --> F;
+    F[End];

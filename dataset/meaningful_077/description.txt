@@ -1,0 +1,72 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the billing process within a system. It outlines the steps involved from receiving a bill request to completing the billing process, including validation, usage calculation, discount application, balance checks, bill generation, delivery, and system updates. The diagram serves as a visual representation of the billing workflow, aiding in understanding and potentially optimizing the process.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "Bill Request Received" node at the top and flows downwards through a series of processes and decision points, ultimately ending with the "Billing Process Complete" node. The diagram depicts a sequential process with branching based on validation results, billing cycles, outstanding balances, and delivery methods.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Request Validation, Usage Calculation, Balance Handling, Bill Generation, Delivery Method Selection, and Billing System Update.
+
+## Node-by-Node Description
+- **A / Bill Request Received**: Represents the initial point where a bill request is received by the system. visible in diagram; no further repository context available.
+- **B / Validate Request**: Represents the process of validating the received bill request. visible in diagram; no further repository context available.
+- **C / Retrieve Customer Account**: Represents the process of retrieving the customer account information. visible in diagram; no further repository context available.
+- **Z / Reject Request + Log Error**: Represents the action of rejecting the bill request and logging an error. visible in diagram; no further repository context available.
+- **D / Determine Billing Cycle**: Represents the process of determining the billing cycle (monthly or quarterly). visible in diagram; no further repository context available.
+- **E / Calculate Monthly Usage**: Represents the calculation of monthly usage. visible in diagram; no further repository context available.
+- **F / Calculate Quarterly Usage**: Represents the calculation of quarterly usage. visible in diagram; no further repository context available.
+- **G / Apply Discounts and Taxes**: Represents the application of discounts and taxes to the bill. visible in diagram; no further repository context available.
+- **H / Check for Outstanding Balance**: Represents the process of checking for any outstanding balance. visible in diagram; no further repository context available.
+- **I / Add Remaining Balance**: Represents the action of adding the remaining balance to the current bill. visible in diagram; no further repository context available.
+- **J / Continue**: Represents a continuation point in the process. visible in diagram; no further repository context available.
+- **K / Generate Bill Summary**: Represents the generation of a bill summary. visible in diagram; no further repository context available.
+- **L / Create PDF Bill**: Represents the creation of a PDF version of the bill. visible in diagram; no further repository context available.
+- **M / Store Bill in Repository**: Represents the storage of the bill in a repository. visible in diagram; no further repository context available.
+- **N / Delivery Method?**: Represents the decision point for selecting the delivery method. visible in diagram; no further repository context available.
+- **O / Send Email Notification**: Represents sending an email notification. visible in diagram; no further repository context available.
+- **P / Print and Mail Bill**: Represents the printing and mailing of the bill. visible in diagram; no further repository context available.
+- **Q / Update Online Portal**: Represents updating the online portal with the bill information. visible in diagram; no further repository context available.
+- **R / Update Billing System**: Represents updating the billing system with the generated bill. visible in diagram; no further repository context available.
+- **S / Mark Bill as Generated**: Represents marking the bill as generated in the system. visible in diagram; no further repository context available.
+- **T / Billing Process Complete**: Represents the final stage where the billing process is completed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Bill request is sent for validation.
+- `B -- Valid --> C`: If the request is valid, retrieve the customer account.
+- `B -- Invalid --> Z`: If the request is invalid, reject it and log the error.
+- `C --> D`: Determine the billing cycle after retrieving the customer account.
+- `D -- Monthly --> E`: If the billing cycle is monthly, calculate monthly usage.
+- `D -- Quarterly --> F`: If the billing cycle is quarterly, calculate quarterly usage.
+- `E --> G`: Apply discounts and taxes after calculating monthly usage.
+- `F --> G`: Apply discounts and taxes after calculating quarterly usage.
+- `G --> H`: Check for any outstanding balance after applying discounts and taxes.
+- `H -- Yes --> I`: If there is an outstanding balance, add it to the current bill.
+- `H -- No --> J`: If there is no outstanding balance, continue to the next step.
+- `I --> J`: Continue after adding the remaining balance.
+- `J --> K`: Generate the bill summary after checking for outstanding balance.
+- `K --> L`: Create a PDF bill after generating the bill summary.
+- `L --> M`: Store the bill in the repository after creating the PDF bill.
+- `M --> N`: Determine the delivery method after storing the bill.
+- `N -- Email --> O`: If the delivery method is email, send an email notification.
+- `N -- Postal --> P`: If the delivery method is postal, print and mail the bill.
+- `N -- Online Portal --> Q`: If the delivery method is online portal, update the online portal.
+- `O --> R`: Update the billing system after sending the email notification.
+- `P --> R`: Update the billing system after printing and mailing the bill.
+- `Q --> R`: Update the billing system after updating the online portal.
+- `R --> S`: Mark the bill as generated after updating the billing system.
+- `S --> T`: The billing process is complete after marking the bill as generated.
+
+## Repository Context & Terminology
+- **Bill Request**: A request to generate a bill for a customer, containing necessary information like account details and billing period.
+- **Validation**: The process of verifying the accuracy and completeness of the bill request.
+- **Billing Cycle**: The regular interval at which bills are generated (e.g., monthly, quarterly).
+- **Usage Calculation**: The process of determining the amount of service or product consumed by the customer during the billing cycle.
+- **Discounts and Taxes**: Reductions in price or additional charges applied to the bill based on various factors.
+- **Outstanding Balance**: The amount of money owed by the customer from previous billing cycles.
+- **Bill Summary**: A concise overview of the charges, discounts, and total amount due on the bill.
+- **PDF Bill**: A digital version of the bill in PDF format.
+- **Repository**: A storage location for bills, typically a database or file system.
+- **Delivery Method**: The means by which the bill is delivered to the customer (e.g., email, postal mail, online portal).
+
+## High-Density QA Ground Truth Summary
+The billing process begins with a "Bill Request Received" (A), which is then sent for "Validate Request" (B). If the request is "Valid", the process proceeds to "Retrieve Customer Account" (C); otherwise, the request is "Reject Request + Log Error" (Z), terminating the process early. After retrieving the customer account, the system determines the "Billing Cycle" (D), branching into either "Calculate Monthly Usage" (E) or "Calculate Quarterly Usage" (F) based on whether the cycle is "Monthly" or "Quarterly", respectively. Both usage calculation paths converge at "Apply Discounts and Taxes" (G). Next, the system "Check for Outstanding Balance" (H); if "Yes", the "Add Remaining Balance" (I) step is executed before proceeding to "Continue" (J); if "No", the process skips directly to "Continue" (J). From "Continue", the system proceeds to "Generate Bill Summary" (K), "Create PDF Bill" (L), and "Store Bill in Repository" (M). The process then branches based on the "Delivery Method?" (N): "Email" leads to "Send Email Notification" (O), "Postal" leads to "Print and Mail Bill" (P), and "Online Portal" leads to "Update Online Portal" (Q). All three delivery paths converge at "Update Billing System" (R), followed by "Mark Bill as Generated" (S), and finally, "Billing Process Complete" (T). The "Repository" node (M) refers to a storage system, likely a database or cloud storage, where generated bills are archived for future reference and auditing.

@@ -1,0 +1,52 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the request processing flow within a client application, including API gateway, rate limiting, authentication, authorization, and backend service interaction. It depicts the steps involved in handling a user request, including security checks, routing, and data persistence. The diagram serves as a visual representation of the system's architecture and request lifecycle.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "User Request" node and ends with the "Return Response" node. The flow progresses through various stages of request processing, including rate limiting, authentication, authorization, and backend service interaction.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Client Application**: This subgraph encapsulates the initial steps of the request processing flow, including the "User Request" and "API Gateway" components.
+
+## Node-by-Node Description
+- **A / User Request**: Represents the initial request made by a user. visible in diagram; no further repository context available.
+- **B / API Gateway**: Represents the API Gateway component responsible for routing and managing incoming requests. visible in diagram; no further repository context available.
+- **C / Rate Limit Check**: Represents the rate limiting check to ensure the user is within their allowed request quota. visible in diagram; no further repository context available.
+- **D / Return 429 - Too Many Requests**: Represents the response returned when the user exceeds their request quota. visible in diagram; no further repository context available.
+- **E / Quota Update**: Represents the process of updating the user's request quota. visible in diagram; no further repository context available.
+- **F / Request Router**: Represents the component responsible for routing the request to the appropriate backend service. visible in diagram; no further repository context available.
+- **G / Authentication Service**: Represents the service responsible for authenticating the user. visible in diagram; no further repository context available.
+- **H / Authorization Service**: Represents the service responsible for authorizing the user to access the requested resource. visible in diagram; no further repository context available.
+- **I / Backend Service A**: Represents the backend service that processes the request. visible in diagram; no further repository context available.
+- **J / Data Store Update Required?**: Represents the decision point to determine if a data store update is required. visible in diagram; no further repository context available.
+- **K / Persistence Layer**: Represents the persistence layer responsible for updating the data store. visible in diagram; no further repository context available.
+- **L / Return Response**: Represents the final response returned to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User request is sent to the API Gateway.
+- `B --> C`: API Gateway forwards the request to the Rate Limit Check.
+- `C -- Exceeds Quota --> D`: If the request exceeds the quota, return a 429 error.
+- `C -- Within Quota --> E`: If the request is within the quota, proceed to Quota Update.
+- `E --> F`: Quota Update leads to the Request Router.
+- `F --> G`: Request Router forwards the request to the Authentication Service.
+- `G -- Validated --> H`: If the user is authenticated, proceed to the Authorization Service.
+- `G -- Invalid Credentials --> D`: If the user is not authenticated, return a 429 error.
+- `H -- Authorized --> I`: If the user is authorized, proceed to Backend Service A.
+- `H -- Unauthorized --> D`: If the user is not authorized, return a 429 error.
+- `I --> J`: Backend Service A processes the request and determines if a data store update is required.
+- `J -- Yes --> K`: If a data store update is required, proceed to the Persistence Layer.
+- `J -- No --> L`: If a data store update is not required, proceed to Return Response.
+- `K --> L`: Persistence Layer updates the data store and proceeds to Return Response.
+- `L --> B`: Return Response is sent back to the API Gateway.
+
+## Repository Context & Terminology
+- **API Gateway**: A reverse proxy that accepts all API calls, authenticates them, and forwards them to the appropriate backend service.
+- **Rate Limiting**: A technique used to control the amount of traffic to a service, preventing abuse and ensuring availability.
+- **Authentication**: The process of verifying the identity of a user or service.
+- **Authorization**: The process of determining whether a user or service has permission to access a specific resource.
+- **Backend Service**: A service that processes requests and returns responses.
+- **Persistence Layer**: The part of an application that handles storing and retrieving data from a database or other storage system.
+- **429 Too Many Requests**: An HTTP status code indicating that the user has sent too many requests in a given amount of time.
+
+## High-Density QA Ground Truth Summary
+The process begins with a "User Request" being sent to the "API Gateway." The API Gateway then forwards the request to the "Rate Limit Check." If the request "Exceeds Quota," a "Return 429 - Too Many Requests" error is triggered, terminating the flow. If "Within Quota," the flow proceeds to "Quota Update" and then to the "Request Router." The Request Router directs the request to the "Authentication Service." If authentication fails ("Invalid Credentials"), a "Return 429 - Too Many Requests" error is triggered. If authentication is successful ("Validated"), the request proceeds to the "Authorization Service." If authorization fails ("Unauthorized"), a "Return 429 - Too Many Requests" error is triggered. If authorization is successful ("Authorized"), the request is sent to "Backend Service A." Backend Service A then determines if a "Data Store Update Required?". If "Yes," the request proceeds to the "Persistence Layer" for data storage. If "No," the flow bypasses the persistence layer. Finally, the flow converges at the "Return Response" node, which sends the response back to the API Gateway, completing the request lifecycle. The API Gateway acts as a central point for managing and securing API requests, implementing rate limiting to prevent abuse and ensuring that only authenticated and authorized users can access backend services.

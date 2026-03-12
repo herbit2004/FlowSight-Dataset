@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting data flow and dependencies between different tables and materialized views within a data processing or database system. The diagram illustrates how data is transformed and distributed across various tables, including base tables, materialized views, and distributed tables. It serves as a visual representation of the data pipeline and dependencies between different data stores.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TB). It shows a hierarchical structure where base tables feed into materialized views, which in turn populate other tables, including distributed tables. The start nodes are `tree.base_table` and `tree.another_base_table`, and the end nodes are `tree.target_2_distributed` and `tree.target_distributed`.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into three stages:
+1. **Base Tables**: `tree.base_table`, `tree.another_base_table`, and `default.value_dict` represent the initial data sources.
+2. **Materialized Views**: `tree.mid_table_mv`, `tree.target_table_mv`, and `tree.target_table_mv_2` transform and aggregate data from the base tables.
+3. **Target Tables**: `tree.mid_table`, `tree.target_table`, `tree.mid_distributed`, `tree.target_2_distributed`, and `tree.target_distributed` store the final processed data.
+
+## Node-by-Node Description
+- **tree.base_table (Null)**: Represents a base table named `tree.base_table`. The `(Null)` indicates that it might initially be empty or populated with default values. visible in diagram; no further repository context available.
+- **tree.mid_table_mv (MaterializedView)**: Represents a materialized view named `tree.mid_table_mv`. Materialized views store the results of a query, providing faster access to pre-computed data. visible in diagram; no further repository context available.
+- **tree.mid_table (ReplacingMergeTree)**: Represents a table named `tree.mid_table` with the engine type `ReplacingMergeTree`. `ReplacingMergeTree` is a ClickHouse table engine that allows for deduplication of data based on a specified order. visible in diagram; no further repository context available.
+- **tree.mid_distributed (Distributed)**: Represents a distributed table named `tree.mid_distributed`. Distributed tables in ClickHouse do not store data themselves but act as a proxy to access data stored on multiple nodes. visible in diagram; no further repository context available.
+- **tree.target_table_mv (MaterializedView)**: Represents a materialized view named `tree.target_table_mv`. visible in diagram; no further repository context available.
+- **tree.another_base_table (Null)**: Represents another base table named `tree.another_base_table`. The `(Null)` indicates that it might initially be empty or populated with default values. visible in diagram; no further repository context available.
+- **default.value_dict (Dictionary)**: Represents a dictionary named `default.value_dict`. Dictionaries in ClickHouse are key-value stores that can be used to enrich data during query processing. visible in diagram; no further repository context available.
+- **tree.target_table_mv_2 (MaterializedView)**: Represents a materialized view named `tree.target_table_mv_2`. visible in diagram; no further repository context available.
+- **tree.target_table (ReplacingMergeTree)**: Represents a table named `tree.target_table` with the engine type `ReplacingMergeTree`. visible in diagram; no further repository context available.
+- **tree.target_2_distributed (Distributed)**: Represents a distributed table named `tree.target_2_distributed`. visible in diagram; no further repository context available.
+- **tree.target_distributed (Distributed)**: Represents a distributed table named `tree.target_distributed`. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `tree.base_table (Null) --> tree.mid_table_mv (MaterializedView)`: Data flows from the base table `tree.base_table` to the materialized view `tree.mid_table_mv`.
+- `tree.mid_table_mv (MaterializedView) --> tree.mid_table (ReplacingMergeTree)`: Data flows from the materialized view `tree.mid_table_mv` to the table `tree.mid_table`.
+- `tree.mid_table (ReplacingMergeTree) --> tree.mid_distributed (Distributed)`: Data flows from the table `tree.mid_table` to the distributed table `tree.mid_distributed`.
+- `tree.mid_table (ReplacingMergeTree) --> tree.target_table_mv (MaterializedView)`: Data flows from the table `tree.mid_table` to the materialized view `tree.target_table_mv`.
+- `tree.target_table_mv (MaterializedView) --> tree.target_table (ReplacingMergeTree)`: Data flows from the materialized view `tree.target_table_mv` to the table `tree.target_table`.
+- `tree.another_base_table (Null) --> tree.target_table_mv_2 (MaterializedView)`: Data flows from the base table `tree.another_base_table` to the materialized view `tree.target_table_mv_2`.
+- `default.value_dict (Dictionary) --> tree.target_table_mv_2 (MaterializedView)`: Data flows from the dictionary `default.value_dict` to the materialized view `tree.target_table_mv_2`.
+- `tree.target_table_mv_2 (MaterializedView) --> tree.target_table (ReplacingMergeTree)`: Data flows from the materialized view `tree.target_table_mv_2` to the table `tree.target_table`.
+- `tree.target_table (ReplacingMergeTree) --> tree.target_2_distributed (Distributed)`: Data flows from the table `tree.target_table` to the distributed table `tree.target_2_distributed`.
+- `tree.target_table (ReplacingMergeTree) --> tree.target_distributed (Distributed)`: Data flows from the table `tree.target_table` to the distributed table `tree.target_distributed`.
+
+## Repository Context & Terminology
+- **MaterializedView**: A database object that contains the results of a query. It's a pre-computed view of data, which can improve query performance.
+- **ReplacingMergeTree**: A ClickHouse table engine that allows for deduplication of data based on a specified order. When merging data parts, ClickHouse removes rows with duplicate values in the ORDER BY key, keeping only the last row in each duplicate set.
+- **Distributed Table**: A ClickHouse table that does not store data itself but acts as a proxy to access data stored on multiple nodes. It allows querying data distributed across a cluster as if it were a single table.
+- **Dictionary**: A ClickHouse feature that allows loading data from external sources into memory for fast lookups during query processing.
+- **Null**: Indicates that a table or field might initially be empty or populated with default values.
+- **ClickHouse**: An open-source, column-oriented database management system that allows generating analytical data reports in real time.
+
+## High-Density QA Ground Truth Summary
+The data flow begins with `tree.base_table` and `tree.another_base_table`, both potentially initialized with `Null` values, and `default.value_dict`, a ClickHouse dictionary. Data from `tree.base_table` flows into the `tree.mid_table_mv` materialized view. The materialized view `tree.mid_table_mv` feeds into `tree.mid_table`, a `ReplacingMergeTree` table, which deduplicates data during merges. From `tree.mid_table`, data is distributed to `tree.mid_distributed`, a distributed table, and also flows into `tree.target_table_mv`. Simultaneously, `tree.another_base_table` and `default.value_dict` feed into `tree.target_table_mv_2`, another materialized view. The materialized views `tree.target_table_mv` and `tree.target_table_mv_2` both contribute data to `tree.target_table`, which is also a `ReplacingMergeTree` table. Finally, `tree.target_table` distributes data to `tree.target_2_distributed` and `tree.target_distributed`, both distributed tables. The use of `ReplacingMergeTree` suggests a need for data deduplication, while the distributed tables indicate a distributed architecture for handling large datasets, common in ClickHouse deployments for analytical workloads.

@@ -1,0 +1,43 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the workflow of an order processing system. It illustrates the sequence of steps involved from when a user submits an order to when the order is completed, including payment verification, shipment preparation, inventory checks, and handling of delays or cancellations. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram's layout is top-down (TD). The flow starts with the "User Submits Order" node at the top and progresses downwards through a series of processes and decision points, eventually leading to the "Complete Order" node. The diagram contains an illogical loop where the "Complete Order" node leads back to the "User Submits Order" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission, Payment Verification, Shipment Preparation, Inventory Check, Order Fulfillment/Cancellation, and Order Completion.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action where a user places an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Prepare Shipment**: Represents the process of preparing the order for shipment. visible in diagram; no further repository context available.
+- **D / Inventory Available?**: A decision point to check if the required inventory is available to fulfill the order. visible in diagram; no further repository context available.
+- **E / Notify User of Delay**: Represents the action of informing the user about a delay in order fulfillment. visible in diagram; no further repository context available.
+- **F / Ship Order**: Represents the action of shipping the order to the user. visible in diagram; no further repository context available.
+- **G / Complete Order**: Represents the final stage where the order is marked as completed. visible in diagram; no further repository context available.
+- **H / Cancel Order**: Represents the action of canceling the order. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, triggering the payment verification process.
+- `B -- Yes --> C`: If payment is received, the process moves to preparing the shipment.
+- `B -- No --> H`: If payment is not received, the order is canceled.
+- `C --> D`: After preparing the shipment, the system checks for inventory availability.
+- `D -- Yes --> F`: If inventory is available, the order is shipped.
+- `D -- No --> E`: If inventory is not available, the user is notified of a delay.
+- `E --> C`: After notifying the user of a delay, the process loops back to preparing the shipment (illogical).
+- `F --> G`: After shipping the order, the order is marked as complete.
+- `G --> A`: After completing the order, the process loops back to the user submitting an order (illogical).
+- `H --> G`: After canceling the order, the order is marked as complete (illogical).
+
+## Repository Context & Terminology
+- **User Submits Order**: Standard meaning is the action of a customer placing an order. In this diagram, it's the starting point of the workflow and also an illogical loop destination from "Complete Order".
+- **Payment Received?**: Standard meaning is a check to verify if payment has been successfully processed. In this diagram, it's a decision point that determines whether to proceed with shipment preparation or cancel the order.
+- **Prepare Shipment**: Standard meaning is the process of packaging and preparing an order for shipping. In this diagram, it occurs before checking inventory availability (reversed sequence).
+- **Inventory Available?**: Standard meaning is a check to ensure sufficient stock is available to fulfill the order. In this diagram, it's a decision point that determines whether to ship the order or notify the user of a delay.
+- **Notify User of Delay**: Standard meaning is informing the customer about a delay in fulfilling their order. In this diagram, it occurs after a failed inventory check and then loops back to shipment preparation (wrong causal direction).
+- **Ship Order**: Standard meaning is the process of sending the order to the customer. In this diagram, it occurs after a successful inventory check.
+- **Complete Order**: Standard meaning is the final stage where the order is marked as fulfilled. In this diagram, it's the end point of the workflow, but also an illogical loop source back to "User Submits Order" and is reached even after order cancellation (wrong merge of parallel paths).
+- **Cancel Order**: Standard meaning is the process of terminating an order. In this diagram, it occurs when payment is not received, but then leads to order completion (swapped branch outcomes).
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "User Submits Order" node, which immediately transitions to the "Payment Received?" decision point. If payment is received ("Yes" branch), the process moves to "Prepare Shipment"; otherwise ("No" branch), the order is "Cancel Order", which then leads to "Complete Order". After preparing the shipment, the system checks "Inventory Available?". If inventory is available ("Yes" branch), the order is "Ship Order", leading to "Complete Order". If inventory is not available ("No" branch), the user is "Notify User of Delay", after which the process loops back to "Prepare Shipment". The "Complete Order" node is reached from both "Ship Order" and "Cancel Order", and then illogically loops back to "User Submits Order". The diagram contains several logical errors, including preparing the shipment before checking inventory, notifying the user of a delay before checking inventory, completing the order after cancellation, and looping back to order submission after completion. These errors deviate from standard order processing workflows.

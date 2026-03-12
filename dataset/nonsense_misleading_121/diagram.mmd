@@ -1,0 +1,20 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- Yes --> C[Prepare Shipment];
+    B -- No --> H[Order Confirmation Sent];
+    C --> D{Inventory Available?};
+    D -- No --> E[Cancel Order];
+    D -- Yes --> F[Package Items];
+    F --> G[Generate Shipping Label];
+    G --> C;
+    H --> I[Send Cancellation Email];
+    I --> J[Refund Payment];
+    J --> K[Order Complete];
+    E --> K;
+    K --> L[Update Inventory];
+    L --> M[Archive Order Data];
+    M --> N{Feedback Request Sent?};
+    N -- Yes --> O[Close Customer Account];
+    N -- No --> A;
+    O --> P[Log Account Closure];
+    P --> A;

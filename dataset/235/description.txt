@@ -1,0 +1,44 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of requests from various clients through a service and aggregator to multiple authorities. It illustrates how client requests are processed and distributed to different authorities for validation or processing, showing the interaction between different components of the system. The diagram provides a high-level overview of the system's architecture and data flow.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It shows a hierarchical structure where client requests are aggregated and then distributed to multiple authorities. The start nodes are the client types (CLI, REST, RPC), and the end nodes are the Authority states.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs: Authority1 and Authority2. These subgraphs represent individual authorities and contain their respective AuthorityState.
+
+## Node-by-Node Description
+- **CLI Client**: Represents a command-line interface client. visible in diagram; no further repository context available.
+- **Rest Client**: Represents a REST API client. visible in diagram; no further repository context available.
+- **RPC Client**: Represents an RPC client. visible in diagram; no further repository context available.
+- **ClientService**: Represents a service that handles requests from different clients. visible in diagram; no further repository context available.
+- **AuthorityAggregator**: Represents a component that aggregates requests and distributes them to different authorities. visible in diagram; no further repository context available.
+- **AuthorityClient**: Represents a client that communicates with an authority. visible in diagram; no further repository context available.
+- **Authority1**: Represents the first authority. visible in diagram; no further repository context available.
+- **AuthorityState**: Represents the state of the first authority. visible in diagram; no further repository context available.
+- **Authority2**: Represents the second authority. visible in diagram; no further repository context available.
+- **AuthorityState**: Represents the state of the second authority. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `CLI Client --> ClientService`: A CLI client sends a request to the ClientService.
+- `Rest Client --> ClientService`: A REST client sends a request to the ClientService.
+- `RPC Client --> ClientService`: An RPC client sends a request to the ClientService.
+- `ClientService --> AuthorityAggregator`: The ClientService forwards the request to the AuthorityAggregator.
+- `AuthorityAggregator --> AuthorityClient`: The AuthorityAggregator distributes the request to AuthorityClient for Authority1.
+- `AuthorityAggregator --> AuthorityClient`: The AuthorityAggregator distributes the request to AuthorityClient for Authority2.
+- `AuthorityClient <==> Authority1`: AuthorityClient communicates with Authority1 via Network TCP.
+- `AuthorityClient <==> Authority2`: AuthorityClient communicates with Authority2 via Network TCP.
+
+## Repository Context & Terminology
+- **CLI Client**: A client that interacts with the system through a command-line interface.
+- **REST Client**: A client that interacts with the system through RESTful APIs.
+- **RPC Client**: A client that interacts with the system through Remote Procedure Calls.
+- **ClientService**: A service responsible for handling client requests and routing them to the appropriate backend components.
+- **AuthorityAggregator**: A component that aggregates requests from the ClientService and distributes them to different authorities.
+- **AuthorityClient**: A client that communicates with an authority over a network.
+- **Authority**: A system or service that provides authorization or validation services.
+- **AuthorityState**: The internal state of an authority.
+- **Network TCP**: The communication protocol used between the AuthorityClient and the Authority.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a system where client requests from CLI, REST, and RPC clients are first handled by the ClientService. The ClientService then forwards these requests to the AuthorityAggregator. The AuthorityAggregator distributes these requests to two AuthorityClient instances. Each AuthorityClient communicates with its respective Authority (Authority1 and Authority2) using Network TCP. Authority1 and Authority2 each maintain an AuthorityState. The diagram highlights the flow of requests from various client types, through the ClientService and AuthorityAggregator, to the individual AuthorityClients and Authorities. The AuthorityClients act as intermediaries, facilitating communication between the AuthorityAggregator and the Authorities over a network using TCP. The AuthorityState represents the internal state of each authority, which could include information about authorized users, permissions, or other relevant data. The diagram provides a clear overview of the system's architecture and the interactions between its key components.

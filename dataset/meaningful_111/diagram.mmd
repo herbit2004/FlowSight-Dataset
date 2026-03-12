@@ -1,0 +1,10 @@
+graph TD
+    A[Payment Gateway: Sends Callback] --> B{Callback Router: Validates Signature & Route};
+    B -- Valid Signature, Route to Callback Processor --> C[Callback Processor: Extracts Payment Data];
+    B -- Invalid Signature --> D[Error Queue: Dead Letter Queue];
+    C --> E[Reconciliation Service: Matches Callback with Transaction];
+    E -- Match Found --> F[Transaction Updater: Updates Transaction Status to 'Settled'];
+    E -- No Match Found --> G[Exception Queue: Needs Manual Investigation];
+
+    classDef errorFill fill:#f9f,stroke:#333,stroke-width:2px
+    class D,G errorFill

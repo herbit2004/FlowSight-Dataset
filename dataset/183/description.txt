@@ -1,0 +1,53 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a deployment pipeline. It illustrates the steps involved in making changes to an application, building and testing the frontend and backend, deploying the application, and ensuring the system remains operational. The diagram serves as a visual representation of the deployment process, outlining the sequence of actions and decision points.
+
+## Overall Layout
+The diagram flows from left to right (LR). It starts with making changes to the application and ends with either the updates being live or manual intervention being required. The diagram includes decision points based on the success of various stages.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Application Change & Build, Host Machine Update, Frontend/Backend Build, Deployment, and Post-Deployment Monitoring.
+
+## Node-by-Node Description
+- **nv / Make changes to\nthe application**: Represents the initial step of modifying the application code. visible in diagram; no further repository context available.
+- **n7 / Build and test frontend\nand backend**: Represents the process of building and testing the frontend and backend components of the application. visible in diagram; no further repository context available.
+- **nf / Success?**: A decision point to check if the build and test process was successful. visible in diagram; no further repository context available.
+- **n2 / Logs into host machine\nand copy all relevant files\nfrom repo to it**: Represents logging into the host machine and copying the necessary files from the repository. visible in diagram; no further repository context available.
+- **n5 / Success?**: A decision point to check if the file copying process was successful. visible in diagram; no further repository context available.
+- **nx / Builds the frontend\nand the backend**: Represents the process of building the frontend and backend components. visible in diagram; no further repository context available.
+- **nj / Success?**: A decision point to check if the build process was successful. visible in diagram; no further repository context available.
+- **nd / Deploy**: Represents the deployment of the application. visible in diagram; no further repository context available.
+- **nc / Starts gunicorn server under\nsupervisor to ensure the\nsystem is never down**: Represents starting the Gunicorn server under Supervisor to ensure continuous operation. visible in diagram; no further repository context available.
+- **na / Success?**: A decision point to check if the deployment was successful. visible in diagram; no further repository context available.
+- **ng / Better manually log in\ninto host and fix it**: Represents manual intervention to fix any issues. visible in diagram; no further repository context available.
+- **nk / Updates are live**: Represents the final state where the updates are live and the application is running. visible in diagram; no further repository context available.
+- **n4 / Cancel pipeline**: Represents the cancellation of the pipeline. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `nv --> n7`: Committing changes triggers the build and test process.
+- `n7 --> nf`: After building and testing, the pipeline checks for success.
+- `nf -- Yes --> n2`: If the build and test are successful, the pipeline logs into the host machine and copies files.
+- `nf -- No --> n4`: If the build and test fail, the pipeline is canceled.
+- `n2 --> n5`: After copying files, the pipeline checks for success.
+- `n5 -- Yes --> nx`: If the file copying is successful, the pipeline builds the frontend and backend.
+- `n5 -- No --> n4`: If the file copying fails, the pipeline is canceled.
+- `nx --> nj`: After building the frontend and backend, the pipeline checks for success.
+- `nj -- Yes --> nd`: If the build is successful, the pipeline deploys the application.
+- `nj -- No --> n4`: If the build fails, the pipeline is canceled.
+- `nd --> nc`: After deployment, the Gunicorn server is started under Supervisor.
+- `nc --> na`: After starting the server, the pipeline checks for success.
+- `na -- Yes --> nk`: If the deployment is successful, the updates are live.
+- `na -- No --> ng`: If the deployment fails, manual intervention is required.
+- `n5 -- No --> n4`: If copying files fails, the pipeline cancels.
+- `nj -- No --> n4`: If building the frontend and backend fails, the pipeline cancels.
+
+## Repository Context & Terminology
+- **Frontend**: The user interface part of the application.
+- **Backend**: The server-side logic and database interactions of the application.
+- **Gunicorn**: A Python WSGI HTTP server for deploying Python web applications.
+- **Supervisor**: A process control system that allows monitoring and controlling processes.
+- **Deployment Pipeline**: An automated process for building, testing, and deploying software.
+- **Host Machine**: The server where the application is deployed.
+- **Repo**: Short for repository, typically referring to a version control repository (e.g., Git).
+
+## High-Density QA Ground Truth Summary
+The deployment pipeline begins with 'Make changes to the application', followed by a 'Commit' which triggers the 'Build and test frontend and backend' stage. A 'Success?' decision node determines the next step. If successful ('Yes'), the pipeline proceeds to 'Logs into host machine and copy all relevant files from repo to it'. If unsuccessful ('No'), the pipeline is canceled at 'Cancel pipeline'. After logging into the host machine and copying files, another 'Success?' check is performed; failure again leads to 'Cancel pipeline', while success leads to 'Builds the frontend and the backend'. Another 'Success?' check follows; failure cancels the pipeline, success leads to 'Deploy'. Post-deployment, 'Starts gunicorn server under supervisor to ensure the system is never down'. A final 'Success?' check determines the outcome: 'Updates are live' if successful, or 'Better manually log in into host and fix it' if not. Gunicorn and Supervisor are used to ensure the system is continuously running after deployment. The pipeline aims for automated deployment, but includes manual intervention as a fallback.

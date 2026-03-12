@@ -1,0 +1,20 @@
+graph TD
+    subgraph Client Application
+        A[User Request] --> B(API Gateway);
+    end
+    B --> C{Rate Limit Check};
+    C -- Exceeds Quota --> D[Return 429 - Too Many Requests];
+    C -- Within Quota --> E[Quota Update];
+    E --> F[Request Router];
+    F --> G[Authentication Service];
+    G -- Validated --> H[Authorization Service];
+    G -- Invalid Credentials --> D;
+    H -- Authorized --> I[Backend Service A];
+    H -- Unauthorized --> D;
+    I --> J{Data Store Update Required?};
+    J -- Yes --> K[Persistence Layer];
+    J -- No --> L[Return Response];
+    K --> L;
+    L --> B;
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class D error

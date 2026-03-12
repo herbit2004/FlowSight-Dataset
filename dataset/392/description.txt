@@ -1,0 +1,42 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of requests and data within the Git-Captain application. It illustrates the interaction between a user, the application's various components, and external services like GitHub. The diagram serves as a high-level overview of the system's architecture and how different parts of the application interact.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It shows a hierarchical flow starting from the user and progressing through the browser, reverse proxy, Git-Captain application, and finally branching out to various services and components. The start node is the "User" and the end nodes are "Security Layer", "GitHub OAuth", "GitHub API", "Winston Logging", and "Static Assets".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: User Interaction, Network Routing, Application Core, Authentication & API, and Auxiliary Services.
+
+## Node-by-Node Description
+- **User**: Represents the end-user interacting with the application. visible in diagram; no further repository context available.
+- **Browser**: Represents the user's web browser. visible in diagram; no further repository context available.
+- **Reverse Proxy**: Represents a reverse proxy server. visible in diagram; no further repository context available.
+- **Git-Captain App / Node.js + Express**: Represents the core Git-Captain application built using Node.js and Express.
+- **Security Layer / Helmet + CORS + Rate Limiting**: Represents the security layer of the application, utilizing Helmet, CORS, and rate limiting. visible in diagram; no further repository context available.
+- **GitHub OAuth / Authentication**: Represents the GitHub OAuth authentication process. visible in diagram; no further repository context available.
+- **GitHub API / Repository Operations**: Represents the interaction with the GitHub API for repository operations. visible in diagram; no further repository context available.
+- **Winston Logging**: Represents the Winston logging service used by the application. visible in diagram; no further repository context available.
+- **Static Assets**: Represents the static assets served by the application. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User --> Browser`: Represents the user interacting with the application through their browser.
+- `Browser --> Reverse Proxy`: Represents the browser sending HTTPS requests to the reverse proxy.
+- `Reverse Proxy --> Git-Captain App`: Represents the reverse proxy forwarding requests to the Git-Captain application.
+- `Git-Captain App --> Security Layer`: Represents the application's security layer.
+- `Git-Captain App --> GitHub OAuth`: Represents the application using GitHub OAuth for authentication.
+- `Git-Captain App --> GitHub API`: Represents the application interacting with the GitHub API.
+- `Git-Captain App --> Winston Logging`: Represents the application using Winston for logging.
+- `Git-Captain App --> Static Assets`: Represents the application serving static assets.
+
+## Repository Context & Terminology
+- **Node.js**: A JavaScript runtime built on Chrome's V8 JavaScript engine.
+- **Express**: A minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
+- **Helmet**: A collection of middleware functions that set security-related HTTP headers.
+- **CORS (Cross-Origin Resource Sharing)**: A mechanism that uses additional HTTP headers to tell browsers to give a web application running at one origin, access to selected resources from a different origin.
+- **Rate Limiting**: A technique used to control the rate of traffic received or sent by a network interface controller.
+- **GitHub OAuth**: A protocol that allows users to authorize third-party applications to access their GitHub account without sharing their password.
+- **GitHub API**: A set of RESTful APIs that allow developers to interact with GitHub programmatically.
+- **Winston Logging**: A flexible and versatile logging library for Node.js.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with a User interacting with the application through a Browser. The Browser sends HTTPS requests to a Reverse Proxy, which then forwards these requests to the core Git-Captain App, built using Node.js and Express. From the Git-Captain App, the flow branches out to several key components. One branch leads to the Security Layer, which implements Helmet, CORS, and Rate Limiting for enhanced security. Another branch handles GitHub OAuth Authentication, allowing users to securely authorize the application to access their GitHub account. A third branch connects to the GitHub API, enabling the application to perform repository operations. The application also utilizes Winston Logging for recording events and errors. Finally, the application serves Static Assets, such as HTML, CSS, and JavaScript files, to the user's browser. The use of Node.js and Express for the application core indicates a JavaScript-based backend, while GitHub OAuth and API integration highlights the application's focus on GitHub repository management.

@@ -1,0 +1,64 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the GlobaCore dispatch process. It outlines the sequence of steps, decision points, and components involved in handling an ingress request, performing prechecks, authentication, routing, concurrency management, and final dispatch. The diagram serves as a visual representation of the GlobaCore system's workflow.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "GlobaCore Ingress" node at the top and flows downwards through a series of processes and decision points, eventually ending with the "GlobaCore Dispatch" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: GlobaCore Ingress, DataFlux Precheck & Redirection/Allocation, ZenithGate Authentication, VaultNode Handshake & Routing/Flushing, CoreSync Validation, CoreRelay Concurrency Management, ApexFrame Transmission & FluxBridge Routing, and CoreSync Complete Notification & GlobaCore Dispatch.
+
+## Node-by-Node Description
+- **A / Start: GlobaCore Ingress**: Represents the starting point of the GlobaCore dispatch process, where an incoming request is received. visible in diagram; no further repository context available.
+- **B / DataFlux Precheck?**: A decision point to determine if a DataFlux precheck is required. visible in diagram; no further repository context available.
+- **C / PhasicBuffer Allocation**: Allocates a PhasicBuffer if the DataFlux precheck is successful. visible in diagram; no further repository context available.
+- **D / TransVector Redirect**: Redirects the process via TransVector if the DataFlux precheck fails. visible in diagram; no further repository context available.
+- **E / ZenithGate Auth Layer**: Represents the authentication layer using ZenithGate. visible in diagram; no further repository context available.
+- **F / VaultNode Handshake Success?**: A decision point to determine if the VaultNode handshake was successful. visible in diagram; no further repository context available.
+- **G / ArcLane Distributor Routing**: Routes the process via ArcLane Distributor if the VaultNode handshake is successful. visible in diagram; no further repository context available.
+- **H / SpectraQueue Flush Request**: Requests a SpectraQueue flush if the VaultNode handshake fails. visible in diagram; no further repository context available.
+- **I / CoreSync Validation**: Validates the CoreSync process. visible in diagram; no further repository context available.
+- **J / CoreRelay Concurrency Limit Triggered?**: A decision point to determine if the CoreRelay concurrency limit has been triggered. visible in diagram; no further repository context available.
+- **K / DynamicSpan Throttle**: Throttles the process using DynamicSpan if the concurrency limit is triggered. visible in diagram; no further repository context available.
+- **L / ApexFrame Transmission**: Transmits the process via ApexFrame. visible in diagram; no further repository context available.
+- **M / FluxBridge Router Processing**: Processes the process via FluxBridge Router. visible in diagram; no further repository context available.
+- **N / CoreSync Complete Notification**: Sends a CoreSync complete notification. visible in diagram; no further repository context available.
+- **Z / End: GlobaCore Dispatch**: Represents the end point of the GlobaCore dispatch process. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The process starts at GlobaCore Ingress and proceeds to the DataFlux Precheck.
+- `B -- Yes --> C`: If DataFlux Precheck is successful, the process proceeds to PhasicBuffer Allocation.
+- `B -- No --> D`: If DataFlux Precheck fails, the process is redirected to TransVector Redirect.
+- `D --> E`: TransVector Redirect leads to ZenithGate Auth Layer.
+- `C --> E`: PhasicBuffer Allocation leads to ZenithGate Auth Layer.
+- `E --> F`: ZenithGate Auth Layer leads to VaultNode Handshake.
+- `F -- Yes --> G`: If VaultNode Handshake is successful, the process proceeds to ArcLane Distributor Routing.
+- `F -- No --> H`: If VaultNode Handshake fails, a SpectraQueue Flush Request is initiated.
+- `G --> I`: ArcLane Distributor Routing leads to CoreSync Validation.
+- `H --> I`: SpectraQueue Flush Request leads to CoreSync Validation.
+- `I --> J`: CoreSync Validation leads to CoreRelay Concurrency Limit check.
+- `J -- Yes --> K`: If CoreRelay Concurrency Limit is triggered, the process is throttled by DynamicSpan Throttle.
+- `J -- No --> L`: If CoreRelay Concurrency Limit is not triggered, the process proceeds to ApexFrame Transmission.
+- `K --> L`: DynamicSpan Throttle leads to ApexFrame Transmission.
+- `L --> M`: ApexFrame Transmission leads to FluxBridge Router Processing.
+- `M --> N`: FluxBridge Router Processing leads to CoreSync Complete Notification.
+- `N --> Z`: CoreSync Complete Notification leads to the end of GlobaCore Dispatch.
+
+## Repository Context & Terminology
+- **GlobaCore Ingress**: The entry point for incoming requests to the GlobaCore system.
+- **DataFlux Precheck**: A preliminary check performed on incoming data.
+- **TransVector Redirect**: A redirection mechanism used when the DataFlux precheck fails.
+- **PhasicBuffer Allocation**: Allocation of a buffer, likely for data processing, when the DataFlux precheck is successful.
+- **ZenithGate Auth Layer**: An authentication layer responsible for verifying the identity of the request.
+- **VaultNode Handshake**: A handshake process with a VaultNode, likely for secure access or data retrieval.
+- **ArcLane Distributor Routing**: A routing mechanism that distributes the process via ArcLane.
+- **SpectraQueue Flush Request**: A request to flush a SpectraQueue, likely to clear or reset a queue.
+- **CoreSync Validation**: Validation of the CoreSync process, ensuring data consistency or integrity.
+- **CoreRelay Concurrency Limit**: A limit on the number of concurrent processes handled by CoreRelay.
+- **DynamicSpan Throttle**: A throttling mechanism used to control the rate of processes when the concurrency limit is triggered.
+- **ApexFrame Transmission**: Transmission of data or process via ApexFrame.
+- **FluxBridge Router Processing**: Processing of the process via FluxBridge Router.
+- **CoreSync Complete Notification**: A notification indicating the completion of the CoreSync process.
+- **GlobaCore Dispatch**: The final stage of the GlobaCore process, where the request is dispatched or completed.
+
+## High-Density QA Ground Truth Summary
+The GlobaCore dispatch process begins with the 'Start: GlobaCore Ingress' node, representing the entry point for incoming requests. The first decision point is 'DataFlux Precheck?'. If the precheck is successful ('Yes' branch), the process proceeds to 'PhasicBuffer Allocation'; otherwise ('No' branch), it's redirected via 'TransVector Redirect'. Both paths converge at the 'ZenithGate Auth Layer', which handles authentication. Next, 'VaultNode Handshake Success?' determines the routing path. A successful handshake ('Yes') leads to 'ArcLane Distributor Routing', while a failure ('No') triggers a 'SpectraQueue Flush Request'. These paths converge at 'CoreSync Validation', followed by a check for 'CoreRelay Concurrency Limit Triggered?'. If the limit is triggered ('Yes'), 'DynamicSpan Throttle' is applied; otherwise ('No'), the process proceeds directly. Both paths then converge at 'ApexFrame Transmission', followed by 'FluxBridge Router Processing' and 'CoreSync Complete Notification'. Finally, the process concludes at 'End: GlobaCore Dispatch'. The ZenithGate Auth Layer suggests a security focus, while CoreRelay Concurrency Limit indicates a resource management aspect within the GlobaCore system.

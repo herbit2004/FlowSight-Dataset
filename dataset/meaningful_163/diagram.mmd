@@ -1,0 +1,45 @@
+graph TD
+    subgraph User Interaction
+        A[User Action: Comment/Like] --> B(API Gateway: /comments, /likes);
+    end
+
+    subgraph Backend Processing
+        B --> C{AuthN/AuthZ};
+        C -- Valid User --> D[Comment/Like Service];
+        C -- Invalid User --> E[Error: Authentication Required];
+        D --> F{Data Store: Comment/Like DB};
+        F -- Success --> G[Kafka Topic: user_activity];
+        F -- Failure --> H[Error: DB Write Failed];
+    end
+
+    subgraph Feed Aggregation Pipeline
+        G --> I[Activity Processor];
+        I --> J{Filter: Relevance Score > Threshold};
+        J -- Relevant --> K[Feed Aggregator];
+        J -- Not Relevant --> L[Discard Event];
+        K --> M{Data Store: User Feed DB};
+        M -- Success --> N[Cache Invalidator];
+        M -- Failure --> O[Error: Feed Update Failed];
+        N --> P[Redis Cache: User Feeds];
+    end
+
+    subgraph Delivery to User
+        P --> Q[Feed Delivery Service];
+        Q --> R[API Gateway: /user/feed];
+        R --> S[User Client];
+    end
+
+    subgraph Analytics & Monitoring
+        G --> T[Analytics Pipeline];
+        T --> U[Data Lake];
+        U --> V[Reporting Dashboard];
+        D --> W[Metrics Service];
+        W --> X[Monitoring Dashboard];
+    end
+
+    style E fill:#f9f,stroke:#333,stroke-width:2px
+    style H fill:#f9f,stroke:#333,stroke-width:2px
+    style O fill:#f9f,stroke:#333,stroke-width:2px
+    style L fill:#ccf,stroke:#333,stroke-width:2px
+
+    classDef errorFill fill:#fbb

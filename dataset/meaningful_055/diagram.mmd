@@ -1,0 +1,15 @@
+graph TD
+    A[Resource Requester: Submits Request] --> B{Capacity Check: Available?}
+    B -- Yes --> C[Approval Workflow: Initiate]
+    B -- No --> D[Request Denied: Insufficient Capacity]
+    C --> E{Manager Approval Needed?}
+    E -- Yes --> F[Manager: Review & Approve/Reject]
+    F -- Approve --> G[Security Review: Verify Permissions]
+    F -- Reject --> H[Request Denied: Manager Rejection]
+    G -- Pass --> I[Provisioning System: Create Resources]
+    G -- Fail --> J[Request Denied: Security Violation]
+    I --> K[Resource Allocation: System Configured]
+    K --> L[Notification: Request Fulfilled]
+    E -- No --> G
+    classDef denied fill:#f9f,stroke:#333,stroke-width:2px
+    class D,H,J denied

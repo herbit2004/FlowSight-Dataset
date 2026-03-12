@@ -1,0 +1,24 @@
+graph TD
+    subgraph CoreData Processing
+        A[Start: Initial Intake] --> B{Verify SpectraFormat};
+        B -- Yes --> C[GrapheneMesh Adapter];
+        B -- No --> D[Format Conversion via ArcLane Distributor];
+        D --> C;
+        C --> E[VaultNode Handshake];
+        E --> F{CoreSync Validation};
+        F -- Pass --> G[FluxBridge Router];
+        F -- Fail --> H[Retry Logic via ZenithGate Auth Layer];
+        H --> E;
+        G --> I[SpectraQueue Flush];
+        I --> J[End: CoreData Publication];
+    end
+    subgraph Auxiliary Services
+        K[Background: Event Log Aggregation] --> L[Anonymization Protocol];
+        L --> I;
+    end
+    subgraph Error Handling
+        H --> M[Alert: Core Error Reporting];
+        M --> I;
+    end
+    J --> N[System Idle];
+    N --> A;

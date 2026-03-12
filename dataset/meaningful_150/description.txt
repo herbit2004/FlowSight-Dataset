@@ -1,0 +1,43 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of an image build process. It outlines the steps involved in building, validating, and pushing a container image to a registry. The diagram serves as a visual representation of the build pipeline's logic, aiding in understanding and troubleshooting the process.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with an "Image Build Triggered" node at the top and flows downwards through a series of decision points and actions, ultimately leading to either pushing the image to a registry or notifying a build failure.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into four stages: Trigger, Validation, Build, and Completion.
+
+## Node-by-Node Description
+- **A / Image Build Triggered**: Represents the initial event that starts the image build process.
+  visible in diagram; no further repository context available.
+- **B / Git Tag Validated?**: A decision point to check if the Git tag associated with the build is valid.
+  visible in diagram; no further repository context available.
+- **C / Container Build Job Started**: Indicates the start of the container build job after successful Git tag validation.
+  visible in diagram; no further repository context available.
+- **D / Log Invalid Tag Error**: Represents logging an error when the Git tag is invalid.
+  visible in diagram; no further repository context available.
+- **E / Image Build Successful?**: A decision point to check if the image build was successful.
+  visible in diagram; no further repository context available.
+- **F / Push Image to Registry**: Represents pushing the built image to a container registry.
+  visible in diagram; no further repository context available.
+- **G / Notify Build Failure**: Represents notifying the relevant parties about a build failure.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The image build trigger initiates the Git tag validation process.
+- `B -- Yes --> C`: If the Git tag is validated, the container build job starts.
+- `B -- No --> D`: If the Git tag is not validated, an invalid tag error is logged.
+- `C --> E`: The container build job leads to a check for build success.
+- `E -- Yes --> F`: If the image build is successful, the image is pushed to the registry.
+- `E -- No --> G`: If the image build is not successful, a build failure notification is sent.
+
+## Repository Context & Terminology
+- **Image Build**: The process of creating a container image from source code and dependencies.
+- **Git Tag**: A reference to a specific point in a Git repository's history, often used to mark releases.
+- **Container Build Job**: A task or process that builds a container image.
+- **Container Registry**: A repository for storing and distributing container images (e.g., Docker Hub, AWS ECR, Google Container Registry).
+- **Build Failure**: An event indicating that the image build process failed to complete successfully.
+- **Notification**: A message or alert sent to inform stakeholders about the status of the build process.
+
+## High-Density QA Ground Truth Summary
+The image build process starts with an "Image Build Triggered" event. The first step is to validate the Git tag associated with the build. If the tag is valid ("Yes" branch), a "Container Build Job Started." If the tag is invalid ("No" branch), an "Log Invalid Tag Error" is recorded. After the container build job starts, the process checks if the "Image Build Successful?". If the build was successful ("Yes" branch), the image is pushed to a container registry ("Push Image to Registry"). If the build failed ("No" branch), a "Notify Build Failure" message is sent. The container registry is a central component, acting as the repository for storing and distributing the built container images, ensuring that the correct versions of the application are deployed. The process ensures that only builds with valid Git tags are initiated, and failures are promptly reported.

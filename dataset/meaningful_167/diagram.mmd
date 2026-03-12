@@ -1,0 +1,34 @@
+graph TD
+    subgraph Watermark & Authorization System
+    A[Client Application] --> B{Request Access};
+    B -- Missing Watermark? --> C[Watermark Addition Module];
+    B -- Watermark Present --> D{Verify Watermark};
+    C --> E[Retrieve Watermark Metadata];
+    E --> F[Apply Watermark];
+    F --> D;
+    D -- Valid Watermark --> G[Authorization Service];
+    D -- Invalid Watermark --> H[Access Denied - Invalid Watermark];
+    G -- Authorized --> I[Resource Server];
+    G -- Unauthorized --> H[Access Denied - Insufficient Permissions];
+    I --> J[Deliver Requested Resource];
+    J --> A;
+    H --> A;
+    E -- Watermark Metadata Not Found --> K[Generate Emergency Watermark];
+    K --> L[Store Emergency Watermark];
+    L --> F;
+
+    subgraph Authorization Service Details
+    G --> M{Evaluate Policies};
+    M -- Policy Match --> N[Grant Access Token];
+    M -- No Match --> O[Log Access Attempt];
+    N --> I;
+    O --> H;
+
+    end
+    end
+
+    classDef auth fill:#f9f,stroke:#333,stroke-width:2px
+    classDef watermark fill:#ccf,stroke:#333,stroke-width:2px
+
+    class G,M,N auth
+    class C,E,F,K,L watermark

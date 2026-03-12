@@ -1,0 +1,32 @@
+graph TD
+    subgraph User Onboarding Funnel
+        A[New User Arrives] --> B{Creates Account?};
+        B -- No --> C[Display Error Message];
+        C --> A;  
+        B -- Yes --> D[Email Verification Sent];
+        D --> E{Email Verified?};
+        E -- No --> F[Account Activated];
+        F --> G[Welcome Email Sent];
+        E -- Yes --> G;
+        G --> H[Profile Setup Begins];
+        H --> I{Profile Completed?};
+        I -- No --> J[Send Reminder Email];
+        J --> I;
+        I -- Yes --> K[Feature Tutorials Shown];
+        K --> L{First Purchase Made?};
+        L -- Yes --> M[Offer Loyalty Program];
+        M --> N[Onboarding Complete];
+        L -- No --> O[Onboarding Complete];
+        O --> P[Grant Access to Basic Features];
+        P --> K;  
+        subgraph Retention Loop
+        N --> Q[User Active];
+        Q --> R{User Engaging with Content?};
+        R -- No --> S[Personalized Offers Sent];
+        S --> Q;
+        R -- Yes --> Q;
+        end
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style N fill:#ccf,stroke:#333,stroke-width:2px

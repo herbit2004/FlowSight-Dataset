@@ -1,0 +1,61 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a batch job data enrichment pipeline. It illustrates the flow of data from intake, through various transformation and enrichment steps, to its final destination in a data lake. The diagram serves as a visual representation of the data processing steps involved in enriching raw data.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "Start: Data Intake" node at the top-left and ends with the "End: Success" node at the bottom-right. The flow progresses from left to right, with some branching and convergence.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Batch Job: Data Enrichment Pipeline".
+
+## Node-by-Node Description
+- **A / Start: Data Intake**: Represents the beginning of the data enrichment pipeline, where raw data is ingested. visible in diagram; no further repository context available.
+- **B / Validate Schema**: Represents the schema validation step, where the incoming data's schema is checked for correctness. visible in diagram; no further repository context available.
+- **C / Routing Logic: Source Type**: Represents a decision point where the data is routed based on its source type. visible in diagram; no further repository context available.
+- **D / Transform: Log Parser A**: Represents a transformation step where raw logs of type A are parsed. visible in diagram; no further repository context available.
+- **E / Transform: Sensor Normalizer**: Represents a transformation step where sensor data of type B is normalized. visible in diagram; no further repository context available.
+- **F / Enrich: Geo-IP Lookup**: Represents an enrichment step where the data is enriched with geographical information based on IP addresses. visible in diagram; no further repository context available.
+- **G / Enrich: Customer Profile**: Represents an enrichment step where the data is enriched with customer profile information. visible in diagram; no further repository context available.
+- **H / Aggregation Needed?**: Represents a decision point where it is determined whether aggregation is needed. visible in diagram; no further repository context available.
+- **I / Aggregate: Sessionize**: Represents an aggregation step where data is aggregated into sessions. visible in diagram; no further repository context available.
+- **J / Write: Enriched Data Sink**: Represents a step where the enriched data is written to a data sink. visible in diagram; no further repository context available.
+- **K / Publish to Data Lake?**: Represents a decision point where it is determined whether the data should be published to a data lake. visible in diagram; no further repository context available.
+- **L / Publish: Data Lake**: Represents a step where the data is published to a data lake. visible in diagram; no further repository context available.
+- **M / End: Success**: Represents the end of the pipeline, indicating successful completion. visible in diagram; no further repository context available.
+- **N / Fail: Schema Error**: Represents a failure state where the schema validation fails. visible in diagram; no further repository context available.
+- **O / Fail: Unsupported Source**: Represents a failure state where the data source is not supported. visible in diagram; no further repository context available.
+- **P / Notify: Error Reporting**: Represents a step where error reporting is performed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Data flows from data intake to schema validation.
+- `B -- Valid Schema --> C`: If the schema is valid, the data is routed based on its source type.
+- `C -- Type A: Raw Log --> D`: Raw logs of type A are sent to the log parser.
+- `C -- Type B: Sensor Data --> E`: Sensor data of type B is sent to the sensor normalizer.
+- `D --> F`: Parsed logs are sent for Geo-IP lookup.
+- `E --> F`: Normalized sensor data is sent for Geo-IP lookup.
+- `F --> G`: Data with Geo-IP information is sent for customer profile enrichment.
+- `G --> H`: Enriched data is evaluated for aggregation needs.
+- `H -- Yes --> I`: If aggregation is needed, the data is aggregated into sessions.
+- `H -- No --> J`: If aggregation is not needed, the data is written to the enriched data sink.
+- `I --> J`: Aggregated data is written to the enriched data sink.
+- `J --> K`: Data in the enriched data sink is evaluated for publishing to the data lake.
+- `K -- Yes --> L`: If publishing to the data lake is needed, the data is published.
+- `K -- No --> M`: If publishing to the data lake is not needed, the pipeline ends successfully.
+- `L --> M`: Data published to the data lake results in successful pipeline completion.
+- `B -- Invalid Schema --> N`: If the schema is invalid, the pipeline fails with a schema error.
+- `C -- Unknown Source --> O`: If the data source is unknown, the pipeline fails with an unsupported source error.
+- `N --> P`: Schema errors trigger error reporting.
+- `O --> P`: Unsupported source errors trigger error reporting.
+- `P --> M`: Error reporting leads to the end of the pipeline.
+
+## Repository Context & Terminology
+- **Data Intake**: The process of receiving and ingesting raw data into the pipeline.
+- **Schema Validation**: The process of verifying that the incoming data conforms to a predefined schema.
+- **Routing Logic**: The logic used to determine the appropriate processing path for data based on its source type.
+- **Log Parser**: A component that parses raw log data into a structured format.
+- **Sensor Normalizer**: A component that normalizes sensor data to a consistent scale or format.
+- **Geo-IP Lookup**: A process of determining the geographical location of an IP address.
+- **Customer Profile Enrichment**: The process of adding customer profile information to the data.
+- **Data Lake**: A centralized repository for storing large volumes of structured and unstructured data.
+
+## High-Density QA Ground Truth Summary
+The data enrichment pipeline begins with "Start: Data Intake" (A), followed by "Validate Schema" (B). If the schema is valid, the flow proceeds to "Routing Logic: Source Type" (C), which routes data based on its source. Raw logs (Type A) are transformed by "Transform: Log Parser A" (D), while sensor data (Type B) is transformed by "Transform: Sensor Normalizer" (E). Both transformed data types converge at "Enrich: Geo-IP Lookup" (F), followed by "Enrich: Customer Profile" (G). A key decision point, "Aggregation Needed?" (H), determines whether to "Aggregate: Sessionize" (I); otherwise, the flow proceeds directly to "Write: Enriched Data Sink" (J). Another decision, "Publish to Data Lake?" (K), determines whether to "Publish: Data Lake" (L), leading to "End: Success" (M). If either schema validation fails (B) or an unknown source is encountered (C), the pipeline branches to failure states "Fail: Schema Error" (N) or "Fail: Unsupported Source" (O), respectively, triggering "Notify: Error Reporting" (P) before terminating at "End: Success" (M). The "Geo-IP Lookup" enrichment step leverages IP addresses present in the data to add geographical context, a common practice in data enrichment pipelines to provide location-based insights.

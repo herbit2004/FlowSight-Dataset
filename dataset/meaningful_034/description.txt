@@ -1,0 +1,51 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of applying a coupon in an e-commerce system. It outlines the steps involved in validating the coupon, checking for usage limits, applying the discount, and updating the order total. The diagram serves as a visual representation of the coupon redemption workflow, aiding in understanding and troubleshooting the process.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "User Request: Apply Coupon" node at the top and flows downwards through a series of decision points and actions, ultimately leading to either a successful payment processing or an error display.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages:
+1. Coupon Validation: "User Request: Apply Coupon" to "Redemption Engine".
+2. Usage Check: "Redemption Engine" to "Update Usage Count" or "Error: Coupon Limit Reached".
+3. Discount Application: "Update Usage Count" to "Order Total Updated".
+4. Finalization: "Order Total Updated" to "Payment Processing" or error display.
+
+## Node-by-Node Description
+- **A / User Request: Apply Coupon**: Represents the initial user action of attempting to apply a coupon to their order. visible in diagram; no further repository context available.
+- **B / Coupon Valid?**: A decision point to determine if the entered coupon is valid. visible in diagram; no further repository context available.
+- **C / Redemption Engine**: Represents the component responsible for handling coupon redemption logic. visible in diagram; no further repository context available.
+- **D / Coupon Exhausted?**: A decision point to determine if the coupon's usage limit has been reached. visible in diagram; no further repository context available.
+- **E / Update Usage Count**: Represents the action of incrementing the coupon's usage count. visible in diagram; no further repository context available.
+- **F / Apply Discount**: Represents the action of applying the coupon's discount to the order. visible in diagram; no further repository context available.
+- **G / Order Total Updated**: Represents the state where the order total has been updated with the discount. visible in diagram; no further repository context available.
+- **H / Error: Coupon Limit Reached**: Represents an error state indicating that the coupon's usage limit has been reached. visible in diagram; no further repository context available.
+- **I / Error: Invalid Coupon**: Represents an error state indicating that the entered coupon is invalid. visible in diagram; no further repository context available.
+- **J / Display Error**: Represents the action of displaying an error message to the user. visible in diagram; no further repository context available.
+- **K / Payment Processing**: Represents the final stage of processing the payment after the coupon has been applied. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The user request is sent to validate the coupon.
+- `B -- Yes --> C`: If the coupon is valid, the process proceeds to the redemption engine.
+- `B -- No --> I`: If the coupon is invalid, an "Error: Invalid Coupon" is triggered.
+- `C --> D`: The redemption engine checks if the coupon is exhausted.
+- `D -- No --> E`: If the coupon is not exhausted, the usage count is updated.
+- `D -- Yes --> H`: If the coupon is exhausted, an "Error: Coupon Limit Reached" is triggered.
+- `E --> F`: After updating the usage count, the discount is applied.
+- `F --> G`: The order total is updated with the discount.
+- `G --> K`: The updated order proceeds to payment processing.
+- `H --> J`: The "Error: Coupon Limit Reached" leads to displaying an error.
+- `I --> J`: The "Error: Invalid Coupon" leads to displaying an error.
+- `H --> J` and `I --> J`: The paths converge at the "Display Error" node.
+
+## Repository Context & Terminology
+- **Coupon**: A voucher or code that entitles the holder to a discount on a purchase.
+- **Redemption Engine**: A software component responsible for managing the process of applying coupons and discounts.
+- **Usage Count**: The number of times a coupon has been used.
+- **Order Total**: The total amount of the purchase before and after discounts.
+- **Payment Processing**: The process of securely handling financial transactions.
+- **Discount**: A reduction in the price of a product or service.
+- **Error Handling**: The process of detecting and responding to errors during program execution.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Request: Apply Coupon," initiating the coupon redemption process. The first decision point, "Coupon Valid?," checks the coupon's validity. If valid ("Yes" branch), the process proceeds to the "Redemption Engine," which manages the coupon application. If invalid ("No" branch), an "Error: Invalid Coupon" is triggered, leading to the "Display Error" node. From the "Redemption Engine," the flowchart moves to "Coupon Exhausted?," checking if the coupon's usage limit has been reached. If the limit is not reached ("No" branch), the "Update Usage Count" node increments the coupon's usage, followed by "Apply Discount" and "Order Total Updated." The process then concludes with "Payment Processing." If the coupon limit is reached ("Yes" branch), an "Error: Coupon Limit Reached" is triggered, also leading to the "Display Error" node. Both error paths converge at the "Display Error" node, ensuring the user is informed of the issue. The "Redemption Engine" component is central to this process, handling validation and usage checks, which are critical for maintaining coupon integrity within the e-commerce system.

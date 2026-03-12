@@ -1,0 +1,65 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of telemetry data and command requests in a system involving mobile devices, edge gateways, and cloud infrastructure. The diagram depicts the data processing pipeline, validation steps, and communication pathways between different components. It serves as a visual representation of the system's architecture and data flow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured into four subgraphs: Mobile Device, Edge Gateway, Cloud Infrastructure, and Management Console. The start nodes are "Telemetry Module: Collect Data" and "User Interface," and the end nodes are "Display Telemetry Data" and "Edge Agent: Forward to Device."
+
+## Subgraphs / Stages
+- **Mobile Device**: Represents the data collection and processing on the mobile device itself.
+- **Edge Gateway**: Represents the edge processing and validation of data received from the mobile device.
+- **Cloud Infrastructure**: Represents the cloud-based components for message brokering, command dispatching, and data storage.
+- **Management Console**: Represents the user interface for issuing commands and displaying telemetry data.
+
+## Node-by-Node Description
+- **A / Telemetry Module: Collect Data**: Represents the module on the mobile device responsible for collecting telemetry data. visible in diagram; no further repository context available.
+- **B / GPS Valid?**: Represents a decision point to check if the GPS data is valid. visible in diagram; no further repository context available.
+- **C / Package and Buffer**: Represents the process of packaging and buffering the telemetry data. visible in diagram; no further repository context available.
+- **D / Use Last Known, Mark Stale**: Represents the action of using the last known GPS data and marking it as stale. visible in diagram; no further repository context available.
+- **E / Edge Agent: Receive Data**: Represents the edge agent receiving data from the mobile device. visible in diagram; no further repository context available.
+- **F / Validate Payload**: Represents the process of validating the received payload. visible in diagram; no further repository context available.
+- **G / MQTT Publish to Broker**: Represents publishing the validated data to an MQTT broker. visible in diagram; no further repository context available.
+- **H / Log Error, Discard**: Represents logging an error and discarding the invalid data. visible in diagram; no further repository context available.
+- **I / Message Broker**: Represents the message broker in the cloud infrastructure. visible in diagram; no further repository context available.
+- **J / Command Request for Device X?**: Represents a decision point to check if there is a command request for a specific device. visible in diagram; no further repository context available.
+- **K / Command Dispatcher**: Represents the component responsible for dispatching commands. visible in diagram; no further repository context available.
+- **L / Send Command to Edge**: Represents sending the command to the edge gateway. visible in diagram; no further repository context available.
+- **M / Edge Agent: Forward to Device**: Represents the edge agent forwarding the command to the device. visible in diagram; no further repository context available.
+- **N / Time-Series Database**: Represents the time-series database for storing telemetry data. visible in diagram; no further repository context available.
+- **O / User Interface**: Represents the user interface in the management console. visible in diagram; no further repository context available.
+- **P / Issue Command Request?**: Represents a decision point to check if a command request has been issued. visible in diagram; no further repository context available.
+- **Q / API Gateway**: Represents the API gateway for handling command requests. visible in diagram; no further repository context available.
+- **R / Display Telemetry Data**: Represents displaying the telemetry data in the management console. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Telemetry data is sent for GPS validity check.
+- `B -- Yes --> C`: If GPS data is valid, package and buffer the data.
+- `B -- No --> D`: If GPS data is invalid, use the last known GPS data and mark it as stale.
+- `D --> C`: After using the last known GPS data, package and buffer the data.
+- `C --> E`: Packaged data is sent to the edge agent.
+- `E --> F`: Received data is validated.
+- `F -- Valid --> G`: Valid data is published to the MQTT broker.
+- `F -- Invalid --> H`: Invalid data is logged and discarded.
+- `G --> I`: Data from MQTT broker is sent to the message broker.
+- `I --> J`: Data from the message broker is checked for command requests.
+- `J -- Yes --> K`: If there is a command request, dispatch the command.
+- `K --> L`: Command is sent to the edge.
+- `L --> M`: Command is forwarded to the device.
+- `J -- No --> N`: If there is no command request, store the data in the time-series database.
+- `I --> N`: Telemetry data is also sent to the time-series database.
+- `O --> P`: User interface sends a request to check if a command has been issued.
+- `P -- Yes --> Q`: If a command request has been issued, send it through the API gateway.
+- `Q --> K`: The API gateway sends the command to the command dispatcher.
+- `P -- No --> R`: If no command request, display telemetry data.
+- `N --> R`: Telemetry data is displayed from the time-series database.
+
+## Repository Context & Terminology
+- **Telemetry**: Data collected from a remote source, such as a mobile device, typically including sensor readings, location data, and device status.
+- **Edge Gateway**: A device or system that acts as an intermediary between edge devices (like mobile devices) and the cloud, providing local processing and connectivity.
+- **MQTT (Message Queuing Telemetry Transport)**: A lightweight messaging protocol used for machine-to-machine (M2M) communication, often used in IoT applications.
+- **Message Broker**: A software application that facilitates the exchange of messages between different systems or components.
+- **API Gateway**: A service that acts as a single entry point for clients to access backend services, providing routing, authentication, and other functionalities.
+- **Time-Series Database**: A database optimized for storing and retrieving time-series data, which is data indexed by time.
+- **Command Dispatcher**: A component responsible for routing and executing commands received from a management console or other source.
+
+## High-Density QA Ground Truth Summary
+The process begins with the "Telemetry Module: Collect Data" on the mobile device, which gathers data. The collected data is then checked for GPS validity at the "GPS Valid?" decision point. If the GPS data is valid, the process proceeds to "Package and Buffer." If not, the "Use Last Known, Mark Stale" node is executed, using the last known GPS data and marking it as stale, before proceeding to "Package and Buffer." The packaged data is then sent to the "Edge Agent: Receive Data" at the edge gateway. The edge agent validates the payload at "Validate Payload." If the payload is valid, it's published to the MQTT broker ("MQTT Publish to Broker"); otherwise, an error is logged, and the data is discarded ("Log Error, Discard"). Valid data reaches the "Message Broker" in the cloud infrastructure. The message broker checks for command requests for a specific device at "Command Request for Device X?". If a command request exists, the "Command Dispatcher" is invoked, and the command is sent to the edge and forwarded to the device via "Edge Agent: Forward to Device." If no command request exists, the data is stored in the "Time-Series Database." The "Management Console" allows users to issue command requests through the "API Gateway," which then triggers the command dispatching process. Telemetry data from the time-series database can be displayed on the user interface ("Display Telemetry Data"). The MQTT protocol is used for lightweight messaging between the edge gateway and the cloud infrastructure.

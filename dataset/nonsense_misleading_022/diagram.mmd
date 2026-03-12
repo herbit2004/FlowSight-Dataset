@@ -1,0 +1,15 @@
+graph TD
+    A[Receive Customer Order] --> B{Inventory Check?};
+    B -- Yes --> C[Generate Picking List];
+    B -- No --> H[Send 'Out of Stock' Notification];
+    C --> D{Payment Received?};
+    D -- No --> I[Cancel Order];
+    D --> E[Package Items];
+    E --> F{Shipping Label Created?};
+    F -- No --> K[Generate Shipping Label];
+    F -- Yes --> G[Arrange Shipment];
+    G --> J[Deliver Order];
+    I --> A;
+    K --> L[Send Shipment Confirmation];
+    L --> J;
+    H --> J;

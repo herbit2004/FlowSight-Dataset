@@ -1,0 +1,76 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the form flow and background tasks involved in a user submission process. It illustrates the steps a user takes when filling out a form, including validation checks and address auto-completion, as well as the automated background processes that occur after the form is submitted, such as fraud detection and email confirmation. The diagram serves as a visual representation of the system's workflow, aiding in understanding and troubleshooting the submission process.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It is hierarchically divided into two subgraphs: "Form Flow" and "Background Tasks". The process starts with the user entering personal information and ends with sending a confirmation email to the user.
+
+## Subgraphs / Stages
+- **Form Flow**: This subgraph represents the user-facing steps of the submission process, including data entry, validation, address auto-completion, and payment information.
+- **Background Tasks**: This subgraph represents the automated server-side processes that occur after the user submits the form, including queueing the submission, fraud detection, database recording, and sending a confirmation email.
+
+## Node-by-Node Description
+- **A / User Enters Details on Step 1: Personal Information**: The user inputs their personal information on the first step of the form. visible in diagram; no further repository context available.
+- **B / Validate Step 1**: The system validates the personal information entered by the user. visible in diagram; no further repository context available.
+- **C / User Proceeds to Step 2: Address Verification**: The user proceeds to the address verification step. visible in diagram; no further repository context available.
+- **D / Validate Step 2 - Address Format Only**: The system validates the format of the address entered by the user. visible in diagram; no further repository context available.
+- **E / Address Autocomplete API Call**: The system calls an external API to provide address auto-completion suggestions. visible in diagram; no further repository context available.
+- **F / Address Autocomplete Found?**: A decision node to determine if address autocomplete suggestions were found. visible in diagram; no further repository context available.
+- **G / Display Autocomplete Suggestions**: The system displays address auto-completion suggestions to the user. visible in diagram; no further repository context available.
+- **H / Allow Manual Address Entry**: The system allows the user to manually enter their address. visible in diagram; no further repository context available.
+- **I / User Selects Autocomplete Suggestion**: The user selects an address from the auto-completion suggestions. visible in diagram; no further repository context available.
+- **I / User Manually Enters Address**: The user manually enters their address. visible in diagram; no further repository context available.
+- **J / Validate Step 2 - Full Address**: The system validates the full address entered by the user. visible in diagram; no further repository context available.
+- **K / User Proceeds to Step 3: Payment Information**: The user proceeds to the payment information step. visible in diagram; no further repository context available.
+- **L / Validate Step 3**: The system validates the payment information entered by the user. visible in diagram; no further repository context available.
+- **M / Credit Card CVV Auth API**: The system calls an API to authenticate the credit card CVV. visible in diagram; no further repository context available.
+- **N / CVV Auth Success?**: A decision node to determine if the CVV authentication was successful. visible in diagram; no further repository context available.
+- **O / Display Confirmation Page**: The system displays a confirmation page to the user. visible in diagram; no further repository context available.
+- **P / Display CVV Error Message**: The system displays an error message to the user if the CVV authentication failed. visible in diagram; no further repository context available.
+- **Q / Queue Submission Job**: The system queues a job to process the submission. visible in diagram; no further repository context available.
+- **R / Submission Job Processor**: A processor that handles the submission job. visible in diagram; no further repository context available.
+- **S / Fraud Check Passed?**: A decision node to determine if the submission passed the fraud check. visible in diagram; no further repository context available.
+- **T / Record Submission in Database**: The system records the submission in the database. visible in diagram; no further repository context available.
+- **U / Flag Submission for Manual Review**: The system flags the submission for manual review. visible in diagram; no further repository context available.
+- **V / Send Confirmation Email to User**: The system sends a confirmation email to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits personal information.
+- `B -- Success --> C`: Personal information is valid, user proceeds to address verification.
+- `B -- Errors --> A`: Personal information is invalid, user returns to enter details.
+- `C --> D`: User proceeds to address verification.
+- `D -- Success --> E`: Address format is valid, address autocomplete API is called.
+- `D -- Errors --> C`: Address format is invalid, user returns to address verification.
+- `E --> F`: Address autocomplete API call is made.
+- `F -- Yes --> G`: Address autocomplete suggestions are found, display suggestions.
+- `F -- No --> H`: Address autocomplete suggestions are not found, allow manual entry.
+- `G --> I`: User selects an autocomplete suggestion.
+- `H --> I`: User manually enters address.
+- `I --> J`: User has entered address.
+- `J -- Success --> K`: Full address is valid, user proceeds to payment information.
+- `J -- Errors --> C`: Full address is invalid, user returns to address verification.
+- `K --> L`: User proceeds to payment information.
+- `L -- Success --> M`: Payment information is valid, credit card CVV auth API is called.
+- `L -- Errors --> K`: Payment information is invalid, user returns to payment information.
+- `M --> N`: Credit card CVV auth API call is made.
+- `N -- Yes --> O`: CVV auth is successful, display confirmation page.
+- `N -- No --> P`: CVV auth is unsuccessful, display CVV error message.
+- `P --> K`: CVV auth failed, user returns to payment information.
+- `O --> Q`: Display confirmation page, queue submission job.
+- `Q --> R`: Submission job is queued, submission job processor handles the job.
+- `R --> S`: Submission job processor handles the job, fraud check is performed.
+- `S -- Yes --> T`: Fraud check passed, record submission in database.
+- `S -- No --> U`: Fraud check failed, flag submission for manual review.
+- `T --> V`: Submission recorded in database, send confirmation email to user.
+- `U --> V`: Submission flagged for manual review, send confirmation email to user.
+
+## Repository Context & Terminology
+- **Address Autocomplete API**: An external service that suggests addresses based on partial input, improving user experience and data accuracy.
+- **CVV Auth API**: An API used to authenticate the Card Verification Value (CVV) of a credit card, helping to prevent fraud.
+- **Fraud Check**: An automated process to detect potentially fraudulent submissions based on various criteria.
+- **Submission Job**: A unit of work representing a user's form submission, queued for processing.
+- **Submission Job Processor**: A component responsible for executing the tasks associated with a submission job.
+- **Database**: A structured collection of data, used to store submission records.
+- **Manual Review**: A process where a human reviews a flagged submission to determine its validity.
+
+## High-Density QA Ground Truth Summary
+The form flow begins with the user entering personal information (A), which is then validated (B). If validation fails, the user returns to (A); otherwise, they proceed to address verification (C). Address format is validated (D); if invalid, the user returns to (C). If valid, an address autocomplete API (E) is called. If suggestions are found (F -- Yes), they are displayed (G); otherwise (F -- No), manual entry is allowed (H). The user selects or enters an address (I), which is then fully validated (J). If invalid, the user returns to (C). If valid, the user proceeds to payment information (K), which is validated (L). If invalid, the user returns to (K). A CVV auth API (M) is called. If successful (N -- Yes), a confirmation page is displayed (O); otherwise (N -- No), a CVV error message is displayed (P), and the user returns to (K). After displaying the confirmation page, a submission job is queued (Q) and processed (R). A fraud check is performed (S). If it passes (S -- Yes), the submission is recorded in the database (T); otherwise (S -- No), it is flagged for manual review (U). Finally, a confirmation email is sent to the user (V), marking the end of both the form flow and background tasks. The address autocomplete API is a key element for improving data accuracy and user experience.

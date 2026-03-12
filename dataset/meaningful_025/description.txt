@@ -1,0 +1,103 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the request routing process in a sharded system. It depicts how an incoming request is handled by a GlobalShardManager, routed to an appropriate ShardRouter (A or B), processed by a DataNode, and the result is returned. The diagram serves as a visual representation of the system's architecture and request flow, aiding in understanding and troubleshooting.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured with a GlobalShardManager at the top, followed by ShardRouters and DataNodes. The start node is "Incoming Request" and the end node is "GlobalShardManager: Return Result".
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **GlobalShardManager**: Handles the initial request and determines the appropriate shard router.
+- **ShardRouter_A**: Receives requests, looks up the shard location, and forwards to DataNode_A.
+- **ShardRouter_B**: Receives requests, looks up the shard location, and forwards to DataNode_B.
+
+## Node-by-Node Description
+- **A / Incoming Request**: Represents the initial request received by the system.
+  visible in diagram; no further repository context available.
+- **B / Tenant ID Present?**: A decision point to check if the request contains a Tenant ID.
+  visible in diagram; no further repository context available.
+- **C / Extract Tenant ID**: Extracts the Tenant ID from the request.
+  visible in diagram; no further repository context available.
+- **D / Default Tenant ID**: Assigns a default Tenant ID if one is not present in the request.
+  visible in diagram; no further repository context available.
+- **E / Lookup Shard Key Range**: Looks up the shard key range based on the Tenant ID.
+  visible in diagram; no further repository context available.
+- **F / Shard Key Range Found?**: A decision point to check if a shard key range was found.
+  visible in diagram; no further repository context available.
+- **G / Route to Appropriate Shard Router**: Routes the request to the appropriate shard router (A or B).
+  visible in diagram; no further repository context available.
+- **H / Error: No Shard Key Range**: Indicates an error when no shard key range is found.
+  visible in diagram; no further repository context available.
+- **I / ShardRouter_A: Receive Request**: ShardRouter_A receives the request.
+  visible in diagram; no further repository context available.
+- **J / ShardRouter Lookup**: ShardRouter_A looks up the shard location.
+  visible in diagram; no further repository context available.
+- **K / Shard Location Found?**: A decision point to check if the shard location was found.
+  visible in diagram; no further repository context available.
+- **L / Forward to DataNode_A**: Forwards the request to DataNode_A.
+  visible in diagram; no further repository context available.
+- **M / Fallback Router**: Handles the request if the shard location is not found in ShardRouter_A.
+  visible in diagram; no further repository context available.
+- **N / ShardRouter_B: Receive Request**: ShardRouter_B receives the request.
+  visible in diagram; no further repository context available.
+- **O / ShardRouter Lookup**: ShardRouter_B looks up the shard location.
+  visible in diagram; no further repository context available.
+- **P / Shard Location Found?**: A decision point to check if the shard location was found in ShardRouter_B.
+  visible in diagram; no further repository context available.
+- **Q / Forward to DataNode_B**: Forwards the request to DataNode_B.
+  visible in diagram; no further repository context available.
+- **R / Alerting: Data Inconsistency**: Indicates a data inconsistency if the shard location is not found in ShardRouter_B.
+  visible in diagram; no further repository context available.
+- **S / DataNode_A: Process Request**: DataNode_A processes the request.
+  visible in diagram; no further repository context available.
+- **T / DataNode_B: Process Request**: DataNode_B processes the request.
+  visible in diagram; no further repository context available.
+- **U / DataNode_A: Return Result**: DataNode_A returns the result.
+  visible in diagram; no further repository context available.
+- **V / DataNode_B: Return Result**: DataNode_B returns the result.
+  visible in diagram; no further repository context available.
+- **W / ShardRouter_A: Return Result**: ShardRouter_A returns the result.
+  visible in diagram; no further repository context available.
+- **Y / ShardRouter_B: Return Result**: ShardRouter_B returns the result.
+  visible in diagram; no further repository context available.
+- **X / GlobalShardManager: Return Result**: GlobalShardManager returns the final result.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Incoming request is passed to check for Tenant ID.
+- `B -- Yes --> C`: If Tenant ID is present, extract it.
+- `B -- No --> D`: If Tenant ID is not present, use the default Tenant ID.
+- `C --> E`: Extracted Tenant ID is used to lookup the shard key range.
+- `D --> E`: Default Tenant ID is used to lookup the shard key range.
+- `E --> F`: Shard key range lookup result is checked.
+- `F -- Yes --> G`: If shard key range is found, route to the appropriate shard router.
+- `F -- No --> H`: If shard key range is not found, raise an error.
+- `G --> I`: Request is passed to ShardRouter_A.
+- `I --> J`: ShardRouter_A looks up the shard location.
+- `J --> K`: Shard location lookup result is checked.
+- `K -- Yes --> L`: If shard location is found, forward to DataNode_A.
+- `K -- No --> M`: If shard location is not found, fallback to ShardRouter_B.
+- `M --> N`: Request is passed to ShardRouter_B.
+- `N --> O`: ShardRouter_B looks up the shard location.
+- `O --> P`: Shard location lookup result is checked.
+- `P -- Yes --> Q`: If shard location is found, forward to DataNode_B.
+- `P -- No --> R`: If shard location is not found, raise a data inconsistency alert.
+- `L --> S`: Request is passed to DataNode_A for processing.
+- `Q --> T`: Request is passed to DataNode_B for processing.
+- `S --> U`: DataNode_A returns the result.
+- `T --> V`: DataNode_B returns the result.
+- `U --> W`: ShardRouter_A returns the result.
+- `V --> Y`: ShardRouter_B returns the result.
+- `W --> X`: ShardRouter_A returns the final result to GlobalShardManager.
+- `Y --> X`: ShardRouter_B returns the final result to GlobalShardManager.
+
+## Repository Context & Terminology
+- **Sharding**: A database partitioning technique that separates very large databases into smaller, faster, more easily managed parts called data shards.
+- **Tenant ID**: An identifier for a specific tenant or customer in a multi-tenant system.
+- **Shard Key**: A value used to determine which shard a particular piece of data belongs to.
+- **Shard Router**: A component responsible for routing requests to the appropriate shard.
+- **DataNode**: A node in the system that stores and processes data for a specific shard.
+- **GlobalShardManager**: A central component responsible for managing shards and routing requests.
+- **Fallback Router**: A secondary router used when the primary shard location is not found.
+
+## High-Density QA Ground Truth Summary
+The process begins with an "Incoming Request" to the "GlobalShardManager". The first decision point is "Tenant ID Present?". If 'Yes', the "Tenant ID" is extracted; if 'No', a "Default Tenant ID" is used. Next, "Lookup Shard Key Range" is performed, and a check "Shard Key Range Found?" determines the subsequent path. If 'Yes', the request is routed to the "Route to Appropriate Shard Router"; if 'No', an "Error: No Shard Key Range" is raised. The request then reaches either "ShardRouter_A" or "ShardRouter_B", where a "ShardRouter Lookup" is performed. A "Shard Location Found?" check determines whether to "Forward to DataNode_A/B" or, in the case of ShardRouter_A, to a "Fallback Router" which then routes to ShardRouter_B. If the shard location is not found in ShardRouter_B, an "Alerting: Data Inconsistency" is triggered. DataNodes process the request and return results to their respective ShardRouters, which then return the final result to the "GlobalShardManager: Return Result" node, completing the flow. Sharding is a key concept here, enabling horizontal scaling by partitioning data across multiple DataNodes, and the ShardRouter ensures requests are directed to the correct partition based on the Tenant ID and Shard Key.

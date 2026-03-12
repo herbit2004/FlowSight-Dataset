@@ -1,0 +1,38 @@
+graph TD
+    subgraph CustomerOrder
+        A[Customer Places Order] --> B(Order Validation);
+        B -- Valid Order --> C{Inventory Check};
+        B -- Invalid Order --> D[Order Cancellation];
+    end
+
+    C -- In Stock --> E[Create Shipment Request];
+    C -- Out of Stock --> F[Backorder Processing];
+    F --> G(Notify Customer);
+    G --> H[Await Inventory Restock];
+    H --> C;
+
+    E --> I(Package Selection);
+    I --> J[Assign Tracking Number];
+    J --> K(Warehouse Pick & Pack);
+    K --> L{Shipping Provider Selection};
+
+    L -- Lowest Cost --> M[Send to Shipping Provider A];
+    L -- Fastest Delivery --> N[Send to Shipping Provider B];
+    L -- Customer Preference --> O[Send to Shipping Provider C];
+
+    M --> P(Shipping Provider A - Transit);
+    N --> Q(Shipping Provider B - Transit);
+    O --> R(Shipping Provider C - Transit);
+
+    P --> S{Delivery Attempt};
+    Q --> S;
+    R --> S;
+
+    S -- Success --> T[Delivery Confirmation];
+    S -- Failure --> U[Delivery Exception Handling];
+    U --> V(Notify Customer & Support);
+    V --> S;
+    T --> W[Order Completion];
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    class B,C,I,K,L,P,Q,R,S,U process

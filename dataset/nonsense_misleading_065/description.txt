@@ -1,0 +1,52 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow for an e-commerce system. It depicts the steps involved from when a user places an order to when the order is delivered, including payment verification, inventory checks, and shipping processes. The diagram serves as a visual representation of the order fulfillment process, but contains logical errors.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with the 'User Places Order' node at the top and progresses downwards through a series of processes and decision points, eventually leading to the 'Order Delivered' node at the bottom. The flow then loops back to the start.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement, Payment Verification, Inventory Management, Order Fulfillment, Shipping, and Delivery.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action of a user submitting an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of checking the available inventory for the ordered items. visible in diagram; no further repository context available.
+- **D / Sufficient Stock?**: A decision point to determine if there is sufficient stock to fulfill the order. visible in diagram; no further repository context available.
+- **E / Order Picking & Packing**: Represents the process of picking the items from the warehouse and packing them for shipment. visible in diagram; no further repository context available.
+- **F / Backorder Stock**: Represents the process of backordering the stock if it is not currently available. visible in diagram; no further repository context available.
+- **G / Wait for Stock**: Represents the state of waiting for the backordered stock to become available. visible in diagram; no further repository context available.
+- **H / Shipping Label Created**: Represents the creation of a shipping label for the package. visible in diagram; no further repository context available.
+- **I / Ship Order**: Represents the process of shipping the order to the customer. visible in diagram; no further repository context available.
+- **J / Order Delivered**: Represents the final state where the order has been successfully delivered to the customer. visible in diagram; no further repository context available.
+- **K / Cancel Order & Notify User**: Represents the process of canceling the order and notifying the user if payment is not received. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, initiating the payment verification process.
+- `B -- Yes --> C`: If payment is received, proceed to inventory check.
+- `B -- No --> K`: If payment is not received, cancel the order and notify the user.
+- `C --> D`: After inventory check, determine if there is sufficient stock.
+- `D -- No --> E`: If there is not sufficient stock, proceed to order picking and packing.
+- `D -- Yes --> F`: If there is sufficient stock, backorder the stock.
+- `F --> G`: After backordering stock, wait for the stock to become available.
+- `G --> C`: After waiting for stock, return to the inventory check.
+- `E --> H`: After order picking and packing, create a shipping label.
+- `H --> I`: After creating a shipping label, ship the order.
+- `I --> J`: After shipping the order, the order is delivered.
+- `J --> A`: After the order is delivered, the flow loops back to the beginning, where the user places another order.
+- `K --> C`: Canceling the order and notifying the user leads back to the inventory check.
+
+## Repository Context & Terminology
+- **User Places Order**: The initial action where a customer submits their order details. In this diagram, it's the starting point of the workflow.
+- **Payment Received?**: A check to ensure the customer's payment has been processed. In this diagram, it's a decision point that determines whether the order proceeds or is cancelled.
+- **Inventory Check**: Verifying the availability of items in the warehouse. In this diagram, it's a step to determine if the order can be fulfilled immediately.
+- **Sufficient Stock?**: A decision point to determine if there are enough items to fulfill the order. In this diagram, the 'Yes' and 'No' branches are swapped.
+- **Order Picking & Packing**: The process of retrieving items from storage and preparing them for shipment. In this diagram, this step occurs before creating a shipping label.
+- **Backorder Stock**: Ordering more stock to fulfill the order. In this diagram, this occurs even when sufficient stock is available.
+- **Wait for Stock**: A waiting period for backordered items to arrive. In this diagram, this leads back to the inventory check, creating a loop.
+- **Shipping Label Created**: Generating a label with the customer's address and shipping information. In this diagram, this occurs after picking and packing.
+- **Ship Order**: Sending the order to the customer. In this diagram, this is the final step before delivery.
+- **Order Delivered**: The final state where the customer receives their order. In this diagram, this leads back to the beginning of the process.
+- **Cancel Order & Notify User**: Canceling the order and informing the user about the cancellation. In this diagram, this leads back to the inventory check.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a 'User Places Order', which then proceeds to a 'Payment Received?' check. If payment is received ('Yes' branch), an 'Inventory Check' is performed; if not ('No' branch), the 'Cancel Order & Notify User' process is triggered, which then incorrectly loops back to the 'Inventory Check'. After the 'Inventory Check', a 'Sufficient Stock?' decision is made. Illogically, a 'No' outcome leads to 'Order Picking & Packing', followed by 'Shipping Label Created' and 'Ship Order'. Conversely, a 'Yes' outcome from 'Sufficient Stock?' leads to 'Backorder Stock' and 'Wait for Stock', which then loops back to the 'Inventory Check', creating a potential infinite loop. After the order is shipped, it reaches the 'Order Delivered' state, which then incorrectly loops back to the 'User Places Order' node, restarting the entire process. The standard sequence of label creation before picking is reversed. The backordering of stock after confirming sufficient stock is also illogical.

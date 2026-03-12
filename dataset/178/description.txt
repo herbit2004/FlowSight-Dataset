@@ -1,0 +1,110 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the transaction processing logic for a cryptocurrency token monitoring system. It outlines the steps involved in analyzing incoming transactions, determining if they should be flagged for further investigation, and executing buy orders based on detected signals. The diagram serves as a visual representation of the system's decision-making process and helps in understanding the flow of data and control.
+
+## Overall Layout
+The diagram has a top-to-bottom (TD) layout. It starts with "Transaction Received" at the top and progresses through a series of decision points and processing steps, eventually leading to either executing a buy order or continuing monitoring. The start node is "Transaction Received", and the end nodes are "Execute Buy: buy_amount_rising SOL", "Execute Buy: buy_amount_recovery SOL", and "Continue Monitoring".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages:
+1. Transaction Reception and Type Detection
+2. Focus Determination
+3. Enhanced Transaction Handling
+4. Buy Signal Monitoring
+5. Buy Execution
+
+## Node-by-Node Description
+- **A / Transaction Received**: Represents the initial point where a transaction enters the system.
+  visible in diagram; no further repository context available.
+- **B / detect_transaction_type**: Represents the process of identifying the type of transaction.
+  visible in diagram; no further repository context available.
+- **C / Transaction Type?**: A decision node that branches based on the type of transaction.
+  visible in diagram; no further repository context available.
+- **D / Migration Detected**: Indicates that a migration transaction type has been detected.
+  visible in diagram; no further repository context available.
+- **E / Token Mint + Dev Buy Check**: Represents a check performed on token minting and developer buying activity.
+  visible in diagram; no further repository context available.
+- **F / Buy/Sell Transaction**: Represents a buy or sell transaction, specifically related to PumpFun/PumpSwap activity.
+  visible in diagram; no further repository context available.
+- **G / Skip Transaction**: Indicates that the transaction is skipped from further processing.
+  visible in diagram; no further repository context available.
+- **H / should_focus = true, focus_reason = Migration**: Sets the focus to true and indicates the reason is migration.
+  visible in diagram; no further repository context available.
+- **I / Dev Buy >= Threshold?**: A decision node that checks if developer buying is above a certain threshold.
+  visible in diagram; no further repository context available.
+- **J / should_focus = true, focus_reason = DevBuyAboveThreshold**: Sets the focus to true and indicates the reason is developer buying above the threshold.
+  visible in diagram; no further repository context available.
+- **K / should_focus = true, New token detected**: Sets the focus to true and indicates a new token has been detected.
+  visible in diagram; no further repository context available.
+- **L / Already in Focus List?**: A decision node that checks if the token is already in the focus list.
+  visible in diagram; no further repository context available.
+- **M / should_focus = true, Continue monitoring**: Sets the focus to true and continues monitoring the token.
+  visible in diagram; no further repository context available.
+- **N / Large Buy >= Threshold?**: A decision node that checks if a large buy order is above a certain threshold.
+  visible in diagram; no further repository context available.
+- **O / should_focus = true, focus_reason = DevBuyAboveThreshold**: Sets the focus to true and indicates the reason is developer buying above the threshold.
+  visible in diagram; no further repository context available.
+- **P / should_focus = false, Skip transaction**: Sets the focus to false and skips the transaction.
+  visible in diagram; no further repository context available.
+- **Q / handle_enhanced_transaction**: Represents the process of handling an enhanced transaction.
+  visible in diagram; no further repository context available.
+- **R / should_focus = true?**: A decision node that checks if the focus is set to true.
+  visible in diagram; no further repository context available.
+- **S / Add to FOCUS_TOKEN_LIST, Initialize price tracking**: Adds the token to the focus list and initializes price tracking.
+  visible in diagram; no further repository context available.
+- **T / Skip processing**: Skips further processing of the transaction.
+  visible in diagram; no further repository context available.
+- **U / Monitor for Buy Signals**: Monitors the token for buy signals.
+  visible in diagram; no further repository context available.
+- **V / Buy Signal Detected?**: A decision node that checks if a buy signal has been detected.
+  visible in diagram; no further repository context available.
+- **W / Execute Buy: buy_amount_rising SOL**: Executes a buy order with a rising SOL amount.
+  visible in diagram; no further repository context available.
+- **X / Execute Buy: buy_amount_recovery SOL**: Executes a buy order with a recovery SOL amount.
+  visible in diagram; no further repository context available.
+- **Y / Execute Buy: buy_amount_recovery SOL**: Executes a buy order with a recovery SOL amount.
+  visible in diagram; no further repository context available.
+- **Z / Continue Monitoring**: Continues monitoring the token.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: A transaction is received and passed to detect the transaction type.
+- `B --> C`: The transaction type is passed to the "Transaction Type?" decision node.
+- `C -- Migration --> D`: If the transaction type is "Migration", the flow proceeds to "Migration Detected".
+- `C -- TokenMint --> E`: If the transaction type is "TokenMint", the flow proceeds to "Token Mint + Dev Buy Check".
+- `C -- PumpFun/PumpSwap Buy/Sell --> F`: If the transaction type is "PumpFun/PumpSwap Buy/Sell", the flow proceeds to "Buy/Sell Transaction".
+- `C -- Unknown --> G`: If the transaction type is "Unknown", the flow proceeds to "Skip Transaction".
+- `D --> H`: After migration detection, set focus to true with reason "Migration".
+- `E --> I`: After token mint and dev buy check, check if "Dev Buy >= Threshold?".
+- `I -- Yes --> J`: If "Dev Buy >= Threshold?" is true, set focus to true with reason "DevBuyAboveThreshold".
+- `I -- No --> K`: If "Dev Buy >= Threshold?" is false, set focus to true with reason "New token detected".
+- `F --> L`: After buy/sell transaction, check if "Already in Focus List?".
+- `L -- Yes --> M`: If "Already in Focus List?" is true, set focus to true and continue monitoring.
+- `L -- No --> N`: If "Already in Focus List?" is false, check if "Large Buy >= Threshold?".
+- `N -- Yes --> O`: If "Large Buy >= Threshold?" is true, set focus to true with reason "DevBuyAboveThreshold".
+- `N -- No --> P`: If "Large Buy >= Threshold?" is false, set focus to false and skip transaction.
+- `H --> Q`: The flow converges at "handle_enhanced_transaction" after migration detection.
+- `J --> Q`: The flow converges at "handle_enhanced_transaction" after dev buy above threshold.
+- `K --> Q`: The flow converges at "handle_enhanced_transaction" after new token detection.
+- `M --> Q`: The flow converges at "handle_enhanced_transaction" after continuing monitoring.
+- `O --> Q`: The flow converges at "handle_enhanced_transaction" after dev buy above threshold.
+- `Q --> R`: After handling the enhanced transaction, check if "should_focus = true?".
+- `R -- Yes --> S`: If "should_focus = true?" is true, add to FOCUS_TOKEN_LIST and initialize price tracking.
+- `R -- No --> T`: If "should_focus = true?" is false, skip processing.
+- `S --> U`: After adding to the focus list, monitor for buy signals.
+- `U --> V`: After monitoring for buy signals, check if "Buy Signal Detected?".
+- `V -- DramaticRise --> W`: If a dramatic rise buy signal is detected, execute a buy with a rising SOL amount.
+- `V -- DropStableRise --> X`: If a drop stable rise buy signal is detected, execute a buy with a recovery SOL amount.
+- `V -- TimeSeriesReversal --> Y`: If a time series reversal buy signal is detected, execute a buy with a recovery SOL amount.
+- `V -- No Signal --> Z`: If no buy signal is detected, continue monitoring.
+
+## Repository Context & Terminology
+- **Transaction Type**: Refers to the classification of incoming transactions based on their characteristics and purpose (e.g., Migration, TokenMint, Buy/Sell).
+- **Dev Buy**: Represents the buying activity of the token by the developer or related entities.
+- **Threshold**: A predefined value used as a benchmark to determine if certain activities (e.g., Dev Buy, Large Buy) are significant enough to trigger further actions.
+- **FOCUS_TOKEN_LIST**: A list of tokens that are currently being monitored closely for potential buy signals.
+- **Buy Signal**: An indication that the price or other characteristics of a token suggest a favorable buying opportunity.
+- **buy_amount_rising SOL**: A strategy for executing buy orders where the amount of SOL used increases as the price rises.
+- **buy_amount_recovery SOL**: A strategy for executing buy orders where the amount of SOL used is based on the recovery potential of the token.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Transaction Received", which is immediately followed by "detect_transaction_type" to classify the incoming transaction. The "Transaction Type?" decision node then routes the flow based on the identified type: "Migration" transactions are flagged, "TokenMint" transactions undergo a "Dev Buy >= Threshold?" check, "PumpFun/PumpSwap Buy/Sell" transactions are evaluated for inclusion in the "FOCUS_TOKEN_LIST", and "Unknown" transactions are skipped. For "TokenMint" transactions, if "Dev Buy >= Threshold?", the system sets focus with reason "DevBuyAboveThreshold"; otherwise, it sets focus for "New token detected". "Buy/Sell" transactions are checked against the "FOCUS_TOKEN_LIST"; if already present, monitoring continues; otherwise, a "Large Buy >= Threshold?" check determines if focus should be set due to "DevBuyAboveThreshold" or if the transaction should be skipped. All focus-setting paths converge at "handle_enhanced_transaction", followed by a "should_focus = true?" check. If true, the token is added to the "FOCUS_TOKEN_LIST" and price tracking is initialized. The system then "Monitor for Buy Signals", branching based on signal type: "DramaticRise", "DropStableRise", or "TimeSeriesReversal", each triggering a specific "Execute Buy" strategy using either "buy_amount_rising SOL" or "buy_amount_recovery SOL". If "No Signal" is detected, monitoring continues. The end nodes are the three "Execute Buy" nodes and the "Continue Monitoring" node, representing the possible outcomes of the transaction processing logic.

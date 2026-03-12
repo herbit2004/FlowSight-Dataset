@@ -1,0 +1,46 @@
+graph TD
+    subgraph Data Acquisition
+        A[Report Request] --> B(Data Validation)
+        B -- Valid --> C{Data Source Selection}
+        B -- Invalid --> E[Error Handling & Logging]
+        C -- Database --> D[Database Query]
+        C -- API --> F[API Request]
+        D --> G(Data Aggregation)
+        F --> G
+        G --> H{Data Transformation Needed?}
+        H -- Yes --> I[Data Transformation Module]
+        H -- No --> K(Transformed Data)
+        I --> K
+    end
+
+    subgraph Report Generation
+        K --> L(Template Selection)
+        L --> M[Report Generation Engine]
+        M --> N{Formatting Required?}
+        N -- Yes --> O[Formatting Module]
+        N -- No --> P(Formatted Report)
+        O --> P
+    end
+
+    subgraph Export & Delivery
+        P --> Q{Export Format Selection}
+        Q -- PDF --> R[PDF Conversion Module]
+        Q -- CSV --> S(CSV Export)
+        Q -- XLSX --> T[XLSX Export Module]
+        R --> U(PDF File)
+        S --> V(CSV File)
+        T --> W(XLSX File)
+        U --> X{Delivery Method}
+        V --> X
+        W --> X
+        X -- Email --> Y[Email Service]
+        X -- SFTP --> Z[SFTP Server]
+        Y --> AA(Delivery Confirmation)
+        Z --> AA
+    end
+
+    E --> AA
+    AA --> AB(Operation Complete)
+
+    classDef dataFill fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,F,G,H,I,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,AA,AB dataFill

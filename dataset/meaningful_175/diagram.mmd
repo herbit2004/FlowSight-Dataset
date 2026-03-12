@@ -1,0 +1,45 @@
+graph TD
+    subgraph Data Acquisition Layer
+        A[Order System Event] --> B(Kafka Topic: order.events);
+        B --> C{Order Accepted?};
+        C -- Yes --> D[Sampling Service API];
+        C -- No --> E[Reject, Log Error];
+    end
+
+    subgraph Sampling & Assignment
+        D --> F{Met sampling criteria?};
+        F -- Yes --> G[Create Review Task];
+        F -- No --> H[Skip Review];
+        G --> I(Task Queue: Review Assignments);
+    end
+
+    subgraph Review & Analysis
+        I --> J[Review Task API];
+        J --> K{Reviewer Claims Task};
+        K -- Yes --> L[Populate Review Form];
+        K -- No --> I;
+        L --> M[Reviewer Input];
+        M --> N[Submit Review];
+        N --> O{Pass/Fail Criteria Met?};
+        O -- Pass --> P[Report: Review Passed];
+        O -- Fail --> Q[Initiate Escalation];
+        Q --> R[Escalation Workflow];
+    end
+
+    subgraph Reporting & Feedback
+        P --> S[Update Order Status];
+        R --> S;
+        S --> T(Kafka Topic: order.updates);
+        T --> U[Order System];
+        E --> V[Error Logging];
+        N --> W[Review Score Calculation];
+        W --> X[Store in Review DB];
+        X --> Y[Dashboard Updates];
+    end
+
+    classDef kafka fill:#f9f,stroke:#333,stroke-width:2px
+    classDef api fill:#ccf,stroke:#333,stroke-width:2px
+    classDef db fill:#ffc,stroke:#333,stroke-width:2px
+    class B,T kafka;
+    class D,J api;
+    class X db;

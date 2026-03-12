@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the logic of a circuit breaker pattern implementation. The diagram illustrates the flow of a request through the circuit breaker, including checks for circuit state, external service calls, failure tracking, and timeout mechanisms. It serves as a visual representation of the circuit breaker's state transitions and decision-making process.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with a "Request Received" node and flows through a series of decision points and actions. The flow can either end by returning a service response or a cached error, or it can loop back to the "Circuit Open?" check after a timeout period.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages:
+1. Initial Request Handling: "Request Received" to "Circuit Open?".
+2. Circuit State Check: "Circuit Open?" decision.
+3. Service Invocation and Result: "Call External Service" to "Service Successful?".
+4. Failure Handling: "Service Successful?" to "Failure Count > Threshold?".
+5. Circuit Breaker Cooling: "Open Circuit Breaker" to "Timeout Complete?".
+
+## Node-by-Node Description
+- **A / Request Received**: Represents the initial point where a request enters the circuit breaker. visible in diagram; no further repository context available.
+- **B / Circuit Open?**: A decision point that checks if the circuit breaker is currently open. visible in diagram; no further repository context available.
+- **C / Return Cached Error**: Represents the action of returning a cached error when the circuit breaker is open. visible in diagram; no further repository context available.
+- **D / Call External Service**: Represents the action of calling the external service. visible in diagram; no further repository context available.
+- **E / Service Successful?**: A decision point that checks if the external service call was successful. visible in diagram; no further repository context available.
+- **F / Reset Failure Count**: Represents the action of resetting the failure count after a successful service call. visible in diagram; no further repository context available.
+- **G / Return Service Response**: Represents the action of returning the response from the external service. visible in diagram; no further repository context available.
+- **H / Increment Failure Count**: Represents the action of incrementing the failure count after an unsuccessful service call. visible in diagram; no further repository context available.
+- **I / Failure Count > Threshold?**: A decision point that checks if the failure count exceeds a predefined threshold. visible in diagram; no further repository context available.
+- **J / Open Circuit Breaker**: Represents the action of opening the circuit breaker when the failure count exceeds the threshold. visible in diagram; no further repository context available.
+- **K / Start Cooling Timeout Task**: Represents the action of starting a timeout task to allow the circuit breaker to cool down. visible in diagram; no further repository context available.
+- **L / Circuit Breaker Cooling**: Represents the state where the circuit breaker is in a cooling-down period. visible in diagram; no further repository context available.
+- **M / Timeout Complete?**: A decision point that checks if the timeout period has completed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Request is passed to the circuit breaker for processing.
+- `B -- Yes (Immediate Fail) --> C`: If the circuit is open, return a cached error immediately.
+- `B -- No --> D`: If the circuit is closed, call the external service.
+- `D --> E`: The result of the external service call is passed to the success check.
+- `E -- Yes --> F`: If the service call was successful, reset the failure count.
+- `F --> G`: After resetting the failure count, return the service response.
+- `E -- No --> H`: If the service call was unsuccessful, increment the failure count.
+- `H --> I`: The updated failure count is passed to the threshold check.
+- `I -- Yes --> J`: If the failure count exceeds the threshold, open the circuit breaker.
+- `J --> K`: After opening the circuit breaker, start the cooling timeout task.
+- `I -- No --> G`: If the failure count does not exceed the threshold, return the service response.
+- `K --> L`: The circuit breaker enters the cooling state.
+- `L --> M`: The cooling state transitions to a timeout completion check.
+- `M -- Yes --> B`: If the timeout is complete, the circuit breaker is reset and the process starts again from the "Circuit Open?" check.
+- `M -- No --> L`: If the timeout is not complete, the circuit breaker remains in the cooling state.
+- Paths converge at node G, "Return Service Response", from "Reset Failure Count" and "Failure Count > Threshold? (No)".
+
+## Repository Context & Terminology
+- **Circuit Breaker**: A design pattern used to prevent cascading failures in distributed systems by preventing an application from repeatedly trying to execute an operation that is likely to fail.
+- **Failure Count**: A counter that tracks the number of consecutive failures when calling the external service.
+- **Threshold**: A predefined limit for the failure count. If the failure count exceeds this threshold, the circuit breaker opens.
+- **Timeout**: A period during which the circuit breaker remains open, allowing the external service to recover.
+- **Cached Error**: A pre-computed error response that is returned when the circuit breaker is open, preventing further calls to the failing service.
+- **External Service**: The service that the circuit breaker is protecting.
+- **Cooling Timeout Task**: A task that runs for a specified duration after the circuit breaker opens, allowing the external service to recover before the circuit breaker allows further requests.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "Request Received," which immediately proceeds to a "Circuit Open?" check. If the circuit is open ("Yes" branch), a "Cached Error" is returned, providing immediate feedback and preventing further load on the failing service. If the circuit is closed ("No" branch), the "External Service" is called. The success of this call is then evaluated. If "Service Successful?", the "Failure Count" is reset, and the "Service Response" is returned. However, if the service call fails, the "Failure Count" is incremented. This incremented count is then compared against a predefined "Threshold". If the "Failure Count" exceeds the "Threshold", the "Circuit Breaker" is opened, and a "Cooling Timeout Task" is initiated. During this timeout, the system remains in a "Circuit Breaker Cooling" state, repeatedly checking if the "Timeout" is "Complete?". Once the "Timeout" is "Complete?", the flow returns to the initial "Circuit Open?" check, potentially allowing requests to pass through again if the external service has recovered. The circuit breaker pattern, as depicted, aims to provide resilience by preventing cascading failures and allowing recovery periods for unstable external services.

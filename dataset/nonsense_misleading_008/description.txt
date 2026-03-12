@@ -1,0 +1,92 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the lifecycle of a customer order, system integration, and monitoring/alerting processes. It illustrates the flow of an order from placement to completion, including feedback integration and system health monitoring. The diagram serves as a visual representation of the order processing workflow, highlighting key decision points and actions.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically divided into three subgraphs: Customer_Order, System_Integration, and Monitoring_and_Alerting. The start node is "Customer Places Order" and the end node is "End Process".
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Customer_Order**: Focuses on the initial stages of order processing, from order placement to delivery.
+- **System_Integration**: Deals with customer feedback integration and payment release to the supplier.
+- **Monitoring_and_Alerting**: Covers system health monitoring, data archiving, and customer satisfaction evaluation.
+
+## Node-by-Node Description
+- **A / Customer Places Order**: Represents the initial action of a customer placing an order.
+  visible in diagram; no further repository context available.
+- **B / Inventory Check**: Represents a check to determine if the ordered items are in stock.
+  visible in diagram; no further repository context available.
+- **C / Create Shipping Label**: Represents the creation of a shipping label for the order.
+  visible in diagram; no further repository context available.
+- **D / Request Payment**: Represents the action of requesting payment from the customer.
+  visible in diagram; no further repository context available.
+- **E / Package Items**: Represents the action of packaging the ordered items.
+  visible in diagram; no further repository context available.
+- **F / Submit Order to Warehouse**: Represents the submission of the order to the warehouse for fulfillment.
+  visible in diagram; no further repository context available.
+- **G / Forward to Shipping Carrier**: Represents the forwarding of the packaged order to a shipping carrier.
+  visible in diagram; no further repository context available.
+- **H / Order Delivered**: Represents the successful delivery of the order to the customer.
+  visible in diagram; no further repository context available.
+- **I / Send Out-of-Stock Notification**: Represents sending a notification to the customer if an item is out of stock.
+  visible in diagram; no further repository context available.
+- **J / Feedback Received?**: Represents a decision point to determine if customer feedback has been received.
+  visible in diagram; no further repository context available.
+- **K / Close Order Cycle**: Represents the closing of the order cycle.
+  visible in diagram; no further repository context available.
+- **L / Record Customer Feedback**: Represents the recording of customer feedback.
+  visible in diagram; no further repository context available.
+- **M / Feedback Positive?**: Represents a decision point to determine if the customer feedback is positive.
+  visible in diagram; no further repository context available.
+- **N / Release Payment to Supplier**: Represents the release of payment to the supplier.
+  visible in diagram; no further repository context available.
+- **O / Contact Customer Service**: Represents contacting customer service.
+  visible in diagram; no further repository context available.
+- **P / System Health Below Alert Threshold?**: Represents a decision point to determine if the system health is below the alert threshold.
+  visible in diagram; no further repository context available.
+- **Q / Send System Health Report**: Represents sending a system health report.
+  visible in diagram; no further repository context available.
+- **S / Archive Order Data**: Represents archiving the order data.
+  visible in diagram; no further repository context available.
+- **R / Evaluate Customer Satisfaction**: Represents evaluating customer satisfaction.
+  visible in diagram; no further repository context available.
+- **T / End Process**: Represents the end of the entire process.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Customer places order, initiating the inventory check.
+- `B -- Yes --> C`: If the inventory check is successful (items in stock), create a shipping label.
+- `B -- No --> I`: If the inventory check fails (items out of stock), send an out-of-stock notification.
+- `C --> D`: After creating the shipping label, request payment.
+- `D -- Approved --> E`: If payment is approved, package the items.
+- `D -- Declined --> A`: If payment is declined, loop back to "Customer Places Order".
+- `E --> F`: After packaging the items, submit the order to the warehouse.
+- `F --> G`: Forward the order to the shipping carrier.
+- `G --> H`: The shipping carrier delivers the order.
+- `I --> H`: The out-of-stock notification leads to order delivered.
+- `H --> J`: After order delivery, check if feedback is received.
+- `J -- No --> K`: If no feedback is received, close the order cycle.
+- `J -- Yes --> L`: If feedback is received, record the customer feedback.
+- `L --> M`: After recording feedback, determine if the feedback is positive.
+- `M -- Yes --> N`: If feedback is positive, release payment to the supplier.
+- `M -- No --> O`: If feedback is negative, contact customer service.
+- `O --> N`: Contacting customer service leads to releasing payment to the supplier.
+- `N --> K`: Releasing payment to the supplier leads to closing the order cycle.
+- `K --> P`: After closing the order cycle, check if the system health is below the alert threshold.
+- `P -- Yes --> Q`: If the system health is below the alert threshold, send a system health report.
+- `P -- No --> S`: If the system health is not below the alert threshold, archive the order data.
+- `S --> R`: After archiving the order data, evaluate customer satisfaction.
+- `R --> Q`: Evaluating customer satisfaction leads to sending a system health report.
+- `Q --> T`: After sending the system health report, the process ends.
+
+## Repository Context & Terminology
+- **Customer Order**: In standard practice, this refers to a request from a customer to purchase goods or services. In this diagram, it represents the entire process from order placement to delivery and feedback.
+- **Inventory Check**: In standard practice, this verifies the availability of items in stock. In this diagram, a failed inventory check leads to an out-of-stock notification, which then leads to order delivery.
+- **Shipping Label**: In standard practice, this contains information for shipping an order. In this diagram, the shipping label is created *before* packaging, which is an unusual sequence.
+- **Request Payment**: In standard practice, this is the process of billing the customer. In this diagram, a declined payment loops back to the start.
+- **Order Delivered**: In standard practice, this signifies the successful arrival of the order to the customer. In this diagram, it is also reached after sending an out-of-stock notification.
+- **Feedback Received?**: In standard practice, this is a check for customer feedback. In this diagram, it triggers different paths based on whether feedback is received.
+- **Release Payment to Supplier**: In standard practice, this is the act of paying the supplier. In this diagram, it is triggered by positive feedback or after contacting customer service, and is followed by closing the order cycle.
+- **System Health Below Alert Threshold?**: In standard practice, this checks if system performance is below a certain level. In this diagram, if the system health is below the threshold, a system health *report* is sent, rather than an alert.
+
+## High-Density QA Ground Truth Summary
+The process begins with the customer placing an order (A), which triggers an inventory check (B). If the inventory check is successful (B -- Yes --> C), a shipping label is created (C), followed by a request for payment (D). If the inventory check fails (B -- No --> I), an out-of-stock notification is sent (I), which incorrectly leads to the order being marked as delivered (H). If payment is approved (D -- Approved --> E), the items are packaged (E), submitted to the warehouse (F), and forwarded to the shipping carrier (G), eventually leading to order delivery (H). A declined payment (D -- Declined --> A) loops back to the initial order placement. After delivery (H), the system checks for customer feedback (J). If no feedback is received (J -- No --> K), the order cycle is closed (K). If feedback is received (J -- Yes --> L), it is recorded (L), and the system determines if the feedback is positive (M). Positive feedback (M -- Yes --> N) leads to releasing payment to the supplier (N), while negative feedback (M -- No --> O) results in contacting customer service (O), which then *also* leads to releasing payment to the supplier (N). Releasing payment closes the order cycle (K), which then triggers a check on system health (P). If system health is below the alert threshold (P -- Yes --> Q), a system health report is sent (Q). Otherwise (P -- No --> S), order data is archived (S), and customer satisfaction is evaluated (R), which then leads back to sending a system health report (Q). Finally, the process ends (T). The unusual flow where an out-of-stock notification leads to order delivery highlights a critical flaw in the depicted system.

@@ -1,0 +1,53 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow of an e-commerce system. It outlines the steps involved from when a user submits an order to when the order is completed. The diagram serves as a visual representation of the order fulfillment process, but contains intentional errors.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with "Start: User Submits Order" at the top and ends with "End: Order Completed" at the bottom. The diagram illustrates a sequence of steps with decision points that determine the path of the order processing.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Order Submission, Payment Processing, Inventory Management, Packaging, Shipping, Delivery Confirmation, and Order Completion.
+
+## Node-by-Node Description
+- **A / Start: User Submits Order**: Represents the beginning of the order process when a user places an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **D / Inventory Available?**: A decision point to check if the required inventory is available. visible in diagram; no further repository context available.
+- **E / Package Items**: Represents the process of packaging the ordered items. visible in diagram; no further repository context available.
+- **F / Notify User: Backorder**: Represents notifying the user that the order is backordered. visible in diagram; no further repository context available.
+- **G / Send Payment Reminder**: Represents sending a reminder to the user to make the payment. visible in diagram; no further repository context available.
+- **H / Shipping Started**: Represents the start of the shipping process. visible in diagram; no further repository context available.
+- **I / Delivery Successful?**: A decision point to check if the delivery was successful. visible in diagram; no further repository context available.
+- **J / Investigate Delivery Problem**: Represents the process of investigating a delivery problem. visible in diagram; no further repository context available.
+- **K / Order Confirmation Sent**: Represents sending an order confirmation to the user. visible in diagram; no further repository context available.
+- **L / Update Inventory**: Represents updating the inventory after the order is processed. visible in diagram; no further repository context available.
+- **M / End: Order Completed**: Represents the end of the order processing workflow. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the payment check.
+- `B -- Yes --> C`: Payment received, proceed to inventory check.
+- `B -- No --> G`: Payment not received, send a payment reminder.
+- `C --> D`: Inventory check is performed, leading to inventory availability check.
+- `D -- No --> F`: Inventory not available, notify user of backorder.
+- `D -- Yes --> E`: Inventory available, proceed to package items.
+- `E --> H`: Items are packaged, and shipping starts.
+- `H --> I`: Shipping has started, leading to delivery success check.
+- `I -- No --> J`: Delivery not successful, investigate the delivery problem.
+- `J --> H`: After investigating the delivery problem, shipping is restarted.
+- `I -- Yes --> K`: Delivery successful, send order confirmation.
+- `K --> L`: Order confirmation sent, update inventory.
+- `L --> M`: Inventory updated, order completed.
+- `F --> M`: User notified of backorder, order completed.
+- `G --> A`: Payment reminder sent, loops back to user submits order.
+- `H -- Success --> F`: Shipping success leads to notifying user of backorder.
+
+## Repository Context & Terminology
+- **Order**: A request from a customer to purchase goods or services. In this diagram, it represents the entire process from submission to completion.
+- **Payment**: The transfer of money in exchange for goods or services. In this diagram, it's a key decision point that determines whether the order proceeds.
+- **Inventory**: The stock of goods available for sale. In this diagram, it's checked for availability before packaging.
+- **Backorder**: An order that cannot be fulfilled immediately due to insufficient stock. In this diagram, the user is notified of a backorder, which then leads to order completion, bypassing other steps.
+- **Shipping**: The process of transporting goods from the seller to the customer. In this diagram, shipping success incorrectly leads to backorder notification.
+- **Delivery**: The act of delivering the goods to the customer. In this diagram, delivery success leads to order confirmation.
+- **Order Confirmation**: A notification sent to the customer confirming that their order has been processed. In this diagram, it precedes inventory update.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins when the user submits an order (A), which immediately proceeds to a check for payment receipt (B). If payment is received (B -- Yes --> C), an inventory check is initiated; otherwise (B -- No --> G), a payment reminder is sent, looping back to the start (G --> A). If inventory is available (D -- Yes --> E), the items are packaged (E) and shipping starts (H). A successful delivery (I -- Yes --> K) triggers an order confirmation (K), followed by an inventory update (L), and finally, order completion (M). However, if delivery fails (I -- No --> J), the delivery problem is investigated (J), and shipping restarts (J --> H). Critically, shipping success (H -- Success --> F) incorrectly leads to notifying the user of a backorder (F), which then bypasses inventory update and goes directly to order completion (F --> M). Furthermore, if inventory is unavailable (D -- No --> F), the user is notified of a backorder, and the process jumps to order completion, skipping essential steps. The 'Update Inventory' step (L) happens *before* 'Order Completed' (M), which is a reversed sequence. The 'Send Payment Reminder' (G) incorrectly loops back to 'User Submits Order' (A), instead of the 'Payment Received' check (B).

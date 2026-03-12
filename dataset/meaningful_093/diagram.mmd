@@ -1,0 +1,24 @@
+graph TD
+    subgraph Release Gate: Environment Sanity
+        A[Trigger: Release Candidate Build] --> B{Security Scan Results: Acceptable?};
+        B -- Yes --> C{Code Quality Metrics: Pass Threshold?};
+        B -- No --> E[Security Remediation Required];
+
+        C -- Yes --> D{Infrastructure Availability: Enough Capacity?};
+        C -- No --> F[Code Refactoring Needed];
+
+        D -- Yes --> G[Deploy to Staging Environment];
+        D -- No --> H[Provision Additional Resources];
+
+        G --> I{Automated Regression Tests: Pass?};
+        I -- Yes --> J{Performance Tests: Meet SLAs?};
+        I -- No --> K[Bug Fixes and Re-deployment];
+
+        J -- Yes --> L[Promote to Production];
+        J -- No --> M[Performance Optimization Required];
+
+        E --> N[Notify Security Team];
+        F --> O[Notify Development Team];
+        H --> P[Notify Infrastructure Team];
+        M --> Q[Notify Performance Engineering];
+    end

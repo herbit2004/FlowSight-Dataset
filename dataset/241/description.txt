@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the audio processing pipeline for a speech recognition system. It illustrates the sequence of operations from audio capture through voice activity detection (VAD), speech accumulation, silence detection, and finally, automatic speech recognition (ASR). The diagram also includes a branch for interruption handling based on whether speech is detected.
+
+## Overall Layout
+The diagram is laid out from left to right (LR). It is divided into three subgraphs: Audio Capture, Speech Recognition, and Interruption Handling. The process starts with the Microphone node and ends with either the Parakeet ASR node or the Clip Response node.
+
+## Subgraphs / Stages
+- **Audio Capture**: This subgraph handles the initial audio input, voice activity detection, and pre-activation buffering.
+- **Speech Recognition**: This subgraph processes the detected speech, accumulates it, detects silence, and performs automatic speech recognition.
+- **Interruption Handling**: This subgraph manages interruptions based on whether speech is currently being detected.
+
+## Node-by-Node Description
+- **mic / Microphone 16kHz**: Represents the microphone capturing audio at a sampling rate of 16kHz. visible in diagram; no further repository context available.
+- **vad / Silero VAD 32ms chunks**: Represents the Silero Voice Activity Detector processing audio in 32ms chunks. visible in diagram; no further repository context available.
+- **buffer / Pre-activation Buffer 800ms**: Represents a buffer that stores 800ms of audio before activation. visible in diagram; no further repository context available.
+- **detect / Voice Detected VAD > 0.8**: Represents the voice detection process, where the VAD score must be greater than 0.8 to be considered speech. visible in diagram; no further repository context available.
+- **accumulate / Accumulate Speech**: Represents the accumulation of detected speech segments. visible in diagram; no further repository context available.
+- **silence / Silence Detection 640ms pause**: Represents the detection of silence with a 640ms pause threshold. visible in diagram; no further repository context available.
+- **asr / Parakeet ASR**: Represents the Parakeet Automatic Speech Recognition system. visible in diagram; no further repository context available.
+- **speaking / Speaking?**: Represents a decision point to determine if someone is speaking. visible in diagram; no further repository context available.
+- **stop / Stop Playback**: Represents the action of stopping the current playback. visible in diagram; no further repository context available.
+- **clip / Clip Response**: Represents the action of playing a clip response. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `mic --> vad`: Audio data flows from the microphone to the Silero VAD.
+- `vad --> buffer`: Audio data flows from the Silero VAD to the pre-activation buffer.
+- `buffer --> detect`: Audio data flows from the pre-activation buffer to the voice detection process.
+- `detect --> accumulate`: Detected voice data flows to the speech accumulation process.
+- `accumulate --> silence`: Accumulated speech data flows to the silence detection process.
+- `silence --> asr`: Speech data flows from silence detection to the Parakeet ASR system.
+- `detect --> speaking`: The voice detection result is used to determine if someone is speaking.
+- `speaking -- Yes --> stop`: If someone is speaking, the playback is stopped.
+- `stop --> clip`: After stopping playback, a clip response is played.
+
+## Repository Context & Terminology
+- **Microphone**: The audio input device.
+- **16kHz**: The sampling rate of the audio input.
+- **Silero VAD**: A voice activity detection model used to identify speech segments.
+- **32ms chunks**: The size of the audio chunks processed by the Silero VAD.
+- **Pre-activation Buffer**: A buffer that stores audio data before speech is detected.
+- **VAD > 0.8**: A threshold for the voice activity detection score to be considered speech.
+- **Parakeet ASR**: An automatic speech recognition system.
+- **640ms pause**: A threshold for silence detection.
+
+## High-Density QA Ground Truth Summary
+The audio processing pipeline begins with the `Microphone 16kHz` capturing audio, which is then fed into the `Silero VAD 32ms chunks` for voice activity detection. The VAD processes the audio in 32ms chunks. The detected audio is then stored in the `Pre-activation Buffer 800ms`. Next, the `Voice Detected VAD > 0.8` node determines if the VAD score is above 0.8, indicating speech. If speech is detected, the audio is passed to the `Accumulate Speech` node, followed by `Silence Detection 640ms pause`, which identifies pauses in the speech. The accumulated speech is then processed by the `Parakeet ASR` for automatic speech recognition. Simultaneously, the output of `Voice Detected VAD > 0.8` feeds into the `Speaking?` decision node. If the answer is "Yes", indicating speech, the process branches to `Stop Playback` and then `Clip Response`. Thus, the pipeline terminates either at `Parakeet ASR` after speech recognition or at `Clip Response` after an interruption. The Silero VAD is a key component for identifying speech segments, while Parakeet ASR performs the final speech-to-text conversion.

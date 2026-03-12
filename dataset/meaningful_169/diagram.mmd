@@ -1,0 +1,40 @@
+graph TD
+    subgraph Customer
+        A(Initiate Contract Request) --> B{Contract Details Validated?};
+        B -- Yes --> C(Generate Pre-Draft Contract);
+        B -- No --> Z[Validation Rejection];
+    end
+
+    subgraph Legal Department
+        C --> D(Legal Review);
+        D --> E{Approved?};
+        E -- Yes --> F(Finalize Contract Draft);
+        E -- No --> C2(Revise Pre-Draft);
+        C2 --> D;
+    end
+
+    subgraph System
+        F --> G(Send Notification: Signing Required);
+        G --> H{Customer Signed?};
+        H -- Yes --> I(Record Customer Signature);
+        H -- No --> J(Resend Notification After Delay);
+        J --> H;
+        I --> K(Send Notification: Legal Signature Required);
+    end
+
+    subgraph Legal Department
+        K --> L(Legal Sign Contract);
+        L --> M(Record Legal Signature);
+    end
+
+    subgraph System
+        M --> N{All Signatures Present?};
+        N -- Yes --> O(Update Contract Status: Signed);
+        N -- No --> Z2[Signature Error];
+        O --> P(Archive Contract PDF);
+        P --> Q(Send Contract to Stakeholders);
+    end
+
+    classDef critical fill:#f9f,stroke:#333,stroke-width:2px;
+    Z2:::critical
+    Z:::critical

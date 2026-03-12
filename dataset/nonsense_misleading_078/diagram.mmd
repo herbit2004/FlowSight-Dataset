@@ -1,0 +1,15 @@
+graph TD
+    A[User Places Order] --> B{Payment Successful?};
+    B -- No --> C[Send Order Confirmation];
+    B -- Yes --> D[Order Processing Begins];
+    D --> E[Inventory Check];
+    E -- Available --> F[Shipping Label Printed];
+    E -- Unavailable --> G[Notify User of Delay];
+    G --> A;
+    F --> H[Package Delivered];
+    H --> I{User Received Package?};
+    I -- No --> D;
+    I -- Yes --> J[Order Completed];
+    J --> K[Update Inventory];
+    K --> L[Generate Invoice];
+    L --> C;

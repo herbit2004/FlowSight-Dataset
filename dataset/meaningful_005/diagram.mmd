@@ -1,0 +1,39 @@
+graph TD
+    subgraph UserAction [User Action]
+        U1[User Writes Data] --> QW[Queue Write Request]
+    end
+
+    subgraph WritePath [Write Path]
+        QW --> WM(Write Manager: Validate & Route);
+        WM --> |Write to Primary| DB[Primary Database];
+        WM --> |Async Event| QI[Queue Invalidation Request];
+        DB --> |Write ACK| WM;
+        WM --> |Ack to User| U1;
+    end
+
+    subgraph InvalidationPath [Invalidation Path]
+        QI --> IM[Invalidation Manager];
+        IM --> |Iterate Cache Groups| CG[Cache Group Lookup];
+        CG --> |Cache Group Found| RC(Remote Cache: Invalidate Entry);
+        RC --> IM;
+        IM --> |All Groups Processed| ILog[Invalidation Log: Record Completion];
+    end
+
+    subgraph ReadPath [Read Path]
+        UR[User Reads Data] --> CL(Cache Layer: Check Cache);
+
+        CL --> |Cache Hit| CD[Cache Data Returned];
+        CL --> |Cache Miss| DB2[Primary Database];
+        DB2 --> |Data Retrieved| CR(Cache Refill);
+        CR --> CL;
+        CD --> UserAction;
+        DB2 --> UserAction;
+
+    end
+
+    subgraph CacheMonitoring [Cache Monitoring]
+        ILog --> Alert(Alerting System: Check Thresholds);
+        Alert --> Admin(Administrator);
+    end
+    classDef critical fill:#f9f,stroke:#333,stroke-width:2px;
+    class WM,IM,RC critical;

@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the event flow for handling projectile hits in a game. It depicts the sequence of events from the initial physics collision to the resulting gameplay effects, visual effects, audio cues, and achievement updates. The diagram serves as a high-level overview of the interaction between different game systems when a projectile hits an enemy.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the physics system detecting a collision and ends with updates to audio, visual effects, and achievements. The diagram is hierarchically structured with subgraphs representing different game systems.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **physics**: Represents the physics system's role in detecting projectile-enemy collisions.
+- **gameplay**: Represents the gameplay logic for handling projectile hits.
+- **audio**: Represents the audio system's role in playing hit sound effects.
+- **vfx**: Represents the visual effects system's role in playing hit visual effects.
+- **achievement**: Represents the achievement system's role in tracking damage totals.
+
+## Node-by-Node Description
+- **Projectile intersects Enemy**: Represents the event where a projectile collides with an enemy within the physics system.
+  visible in diagram; no further repository context available.
+- **EventWriter::<ProjectileHitEvent>::send()**: Represents the sending of a `ProjectileHitEvent` via the `EventWriter` class.
+  visible in diagram; no further repository context available.
+- **ProjectileHitEvent**: Represents the event data structure containing information about the projectile and the enemy involved in the collision. It includes fields for `projectile` and `enemy`.
+  visible in diagram; no further repository context available.
+- **Handle Projectile Hit**: Represents the gameplay logic that processes the `ProjectileHitEvent`.
+  visible in diagram; no further repository context available.
+- **EventWriter::<EnemyHitEvent>::send()**: Represents the sending of an `EnemyHitEvent` via the `EventWriter` class.
+  visible in diagram; no further repository context available.
+- **EnemyHitEvent**: Represents the event data structure containing information about the enemy hit. It includes fields for `player`, `enemy`, and `damage`.
+  visible in diagram; no further repository context available.
+- **Play Hit SFX**: Represents the action of playing a sound effect when an enemy is hit.
+  visible in diagram; no further repository context available.
+- **Play Hit VFX**: Represents the action of playing a visual effect when an enemy is hit.
+  visible in diagram; no further repository context available.
+- **Damage Total**: Represents the action of updating the total damage dealt to enemies, contributing to achievement progress.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Projectile intersects Enemy -.-> EventWriter::<ProjectileHitEvent>::send()`: A projectile intersecting an enemy triggers the sending of a `ProjectileHitEvent`.
+- `EventWriter::<ProjectileHitEvent>::send() --> ProjectileHitEvent`: The `EventWriter` sends the `ProjectileHitEvent` to the `ProjectileHitEvent` node.
+- `ProjectileHitEvent --> Handle Projectile Hit`: The `ProjectileHitEvent` triggers the handling of the projectile hit within the gameplay system.
+- `Handle Projectile Hit --> EventWriter::<EnemyHitEvent>::send()`: Handling the projectile hit triggers the sending of an `EnemyHitEvent`.
+- `EventWriter::<EnemyHitEvent>::send() --> EnemyHitEvent`: The `EventWriter` sends the `EnemyHitEvent` to the `EnemyHitEvent` node.
+- `EnemyHitEvent --> Play Hit SFX`: The `EnemyHitEvent` triggers the playing of a hit sound effect.
+- `EnemyHitEvent --> Play Hit VFX`: The `EnemyHitEvent` triggers the playing of a hit visual effect.
+- `EnemyHitEvent --> Damage Total`: The `EnemyHitEvent` triggers the updating of the total damage dealt.
+
+## Repository Context & Terminology
+- **ProjectileHitEvent**: An event triggered when a projectile intersects with an enemy. It likely contains information about the projectile and the enemy involved.
+- **EnemyHitEvent**: An event triggered when an enemy is hit. It likely contains information about the player, the enemy, and the damage dealt.
+- **EventWriter**: A class or component responsible for sending events to different parts of the game system. It likely uses a publish-subscribe pattern or similar mechanism.
+- **SFX**: Short for sound effects.
+- **VFX**: Short for visual effects.
+- **physics**: The game engine module responsible for simulating physical interactions between game objects.
+- **gameplay**: The game engine module responsible for game rules, player actions, and event handling.
+
+## High-Density QA Ground Truth Summary
+The diagram begins with the `Projectile intersects Enemy` event in the physics system. This triggers the `EventWriter` to send a `ProjectileHitEvent`. The `ProjectileHitEvent` contains data about the projectile and enemy involved in the collision. This event is then passed to the `Handle Projectile Hit` node within the gameplay system. The `Handle Projectile Hit` node processes the event and triggers the `EventWriter` to send an `EnemyHitEvent`. The `EnemyHitEvent` contains information about the player, the enemy, and the damage dealt. From the `EnemyHitEvent`, three parallel actions are triggered: `Play Hit SFX` in the audio system, `Play Hit VFX` in the visual effects system, and `Damage Total` in the achievement system. The `EventWriter` likely implements a publish-subscribe pattern, allowing different game systems to react to events without direct dependencies. The `ProjectileHitEvent` and `EnemyHitEvent` act as data transfer objects, encapsulating relevant information for each stage of the event flow. The diagram illustrates how a single physics event cascades into multiple gameplay effects, enhancing the player experience through audio-visual feedback and achievement progression.

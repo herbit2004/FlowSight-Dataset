@@ -1,0 +1,56 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the redemption orchestration service within a points-based reward system. It outlines the process flow from a user-initiated redemption request to the final audit log entry, including validation, point deduction, external system calls, and notifications. The diagram serves as a visual representation of the redemption process, aiding in understanding and troubleshooting the system.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured into three subgraphs: User Interaction, Redemption Orchestration Service, and Data Layer. The process starts with the "User Initiates Redemption Request" node and ends with the "Audit Log Entry" and "Redemption History Database" nodes.
+
+## Subgraphs / Stages
+- **User Interaction**: Represents the initial stage where the user triggers the redemption process.
+- **Redemption Orchestration Service**: Encompasses the core logic for validating the request, deducting points, interacting with external reward providers, and handling success or failure scenarios.
+- **Data Layer**: Represents the data storage and retrieval components, including the points balance database, redemption history database, and reward provider API.
+
+## Node-by-Node Description
+- **A / User Initiates Redemption Request**: Represents the starting point of the redemption process, where the user submits a request to redeem their points. visible in diagram; no further repository context available.
+- **B / Request Validation**: Represents the process of validating the redemption request, ensuring it meets the required criteria. visible in diagram; no further repository context available.
+- **C / Sufficient Points?**: Represents a decision point where the system checks if the user has enough points to fulfill the redemption request. visible in diagram; no further repository context available.
+- **D / Point Deduction**: Represents the process of deducting the redeemed points from the user's account balance. visible in diagram; no further repository context available.
+- **E / External System Call to Reward Provider**: Represents the interaction with an external system (reward provider) to fulfill the redemption request. visible in diagram; no further repository context available.
+- **F / External System Success?**: Represents a decision point where the system checks if the external system call was successful. visible in diagram; no further repository context available.
+- **G / Confirmation Notification Sent to User**: Represents the process of sending a confirmation notification to the user upon successful redemption. visible in diagram; no further repository context available.
+- **H / Compensation/Retry Logic**: Represents the logic for handling failed external system calls, including compensation mechanisms and retry attempts. visible in diagram; no further repository context available.
+- **I / Failure Notification Sent to User**: Represents the process of sending a failure notification to the user if the redemption request fails. visible in diagram; no further repository context available.
+- **J / Audit Log Entry**: Represents the process of creating an audit log entry for the redemption transaction. visible in diagram; no further repository context available.
+- **K / Points Balance Database**: Represents the database that stores the users' point balances. visible in diagram; no further repository context available.
+- **L / Redemption History Database**: Represents the database that stores the history of redemption transactions. visible in diagram; no further repository context available.
+- **M / Reward Provider API**: Represents the API used to interact with the external reward provider. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The user-initiated redemption request triggers the request validation process.
+- `B --> C`: The validated request is passed to the "Sufficient Points?" decision point.
+- `C -- Yes --> D`: If the user has sufficient points, the process proceeds to point deduction.
+- `C -- No --> I`: If the user does not have sufficient points, a failure notification is sent.
+- `D --> K`: Point deduction updates the Points Balance Database.
+- `D --> E`: After point deduction, an external system call is made to the reward provider.
+- `E --> M`: The external system call interacts with the Reward Provider API.
+- `M -- Success --> F`: A successful call to the Reward Provider API leads to the "External System Success?" decision.
+- `M -- Failure --> H`: A failed call to the Reward Provider API triggers the Compensation/Retry Logic.
+- `F -- Yes --> G`: If the external system call is successful, a confirmation notification is sent to the user.
+- `F -- No --> H`: If the external system call fails, the Compensation/Retry Logic is triggered.
+- `H --> E`: The Compensation/Retry Logic attempts to retry the external system call.
+- `H --> I`: The Compensation/Retry Logic may also lead to a failure notification.
+- `G --> J`: A successful redemption results in an audit log entry.
+- `I --> J`: A failed redemption also results in an audit log entry.
+- `K --> L`: The Points Balance Database updates the Redemption History Database.
+- `J --> L`: The Audit Log Entry updates the Redemption History Database.
+
+## Repository Context & Terminology
+- **Redemption Orchestration Service**: A service responsible for managing the entire redemption process, from request validation to fulfillment and notification.
+- **Points Balance Database**: A database that stores the current point balance for each user in the reward system.
+- **Redemption History Database**: A database that stores a record of all redemption transactions, including details such as user, points redeemed, reward, and timestamp.
+- **Reward Provider API**: An API provided by an external reward provider that allows the system to redeem points for rewards.
+- **External System Call**: A call to an external system, such as a reward provider, to fulfill a redemption request.
+- **Compensation/Retry Logic**: Logic to handle failures in external system calls, including compensating the user and retrying the request.
+- **Audit Log Entry**: A record of a redemption transaction, used for auditing and tracking purposes.
+
+## High-Density QA Ground Truth Summary
+The redemption process begins with a "User Initiates Redemption Request," which triggers the "Request Validation" within the Redemption Orchestration Service. The system then checks "Sufficient Points?". If "Yes," points are deducted via "Point Deduction," updating the "Points Balance Database," and an "External System Call to Reward Provider" is initiated. If "No," a "Failure Notification Sent to User." The "External System Call" interacts with the "Reward Provider API." A successful API call leads to "External System Success?", and if "Yes," a "Confirmation Notification Sent to User" is sent. If the "External System Success?" is "No," or if the "Reward Provider API" call fails, "Compensation/Retry Logic" is invoked, potentially retrying the "External System Call" or sending a "Failure Notification." Both successful and failed redemptions result in an "Audit Log Entry." The "Points Balance Database" and "Audit Log Entry" both update the "Redemption History Database." The "Reward Provider API" is a key component, enabling interaction with external systems to fulfill redemption requests, and its success or failure dictates the subsequent flow of the process.

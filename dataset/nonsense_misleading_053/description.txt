@@ -1,0 +1,74 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow of an e-commerce system. It outlines the steps involved from when a user submits an order to when the order is closed, including payment processing, inventory management, shipping, and handling delays. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "User Submits Order" node at the top and progresses downwards through a series of process and decision nodes, eventually leading to the "Close Order" and "Investigate Delay" end nodes.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Payment, Confirmation & Inventory, Packaging & Shipping Cost, Shipping Label Generation, Order Delivery, and Order Closure/Delay Investigation.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision node that checks if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **C / Cancel Order**: Represents the action of canceling the order.
+  visible in diagram; no further repository context available.
+- **F / Send Confirmation Email**: Represents sending a confirmation email to the user.
+  visible in diagram; no further repository context available.
+- **D / Inventory Check**: Represents the process of checking the inventory for the ordered items.
+  visible in diagram; no further repository context available.
+- **E / Sufficient Stock?**: A decision node that checks if there is sufficient stock for the ordered items.
+  visible in diagram; no further repository context available.
+- **G / Package Items**: Represents the process of packaging the ordered items.
+  visible in diagram; no further repository context available.
+- **H / Calculate Shipping Cost**: Represents the process of calculating the shipping cost for the order.
+  visible in diagram; no further repository context available.
+- **J / Shipping Cost Approved?**: A decision node that checks if the calculated shipping cost is approved.
+  visible in diagram; no further repository context available.
+- **I / Generate Shipping Label**: Represents the process of generating a shipping label for the order.
+  visible in diagram; no further repository context available.
+- **K / Ship Order**: Represents the action of shipping the order.
+  visible in diagram; no further repository context available.
+- **L / Order Arrived?**: A decision node that checks if the order has arrived at its destination.
+  visible in diagram; no further repository context available.
+- **M / Close Order**: Represents the action of closing the order.
+  visible in diagram; no further repository context available.
+- **N / Investigate Delay**: Represents the action of investigating a delay in the order delivery.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submission triggers payment check.
+- `B -- No --> F`: If payment is not received, a confirmation email is sent.
+- `B -- Yes --> D`: If payment is received, an inventory check is performed.
+- `F --> D`: After sending the confirmation email, an inventory check is performed.
+- `D --> E`: Inventory check leads to stock sufficiency check.
+- `E -- Yes --> G`: If there is sufficient stock, the items are packaged.
+- `G --> H`: Packaging leads to shipping cost calculation.
+- `H --> J`: Shipping cost calculation leads to shipping cost approval check.
+- `J -- No --> C`: If the shipping cost is not approved, the order is canceled.
+- `J -- Yes --> I`: If the shipping cost is approved, a shipping label is generated.
+- `I --> K`: Shipping label generation leads to shipping the order.
+- `K --> L`: Shipping the order leads to checking if the order has arrived.
+- `L -- Yes --> M`: If the order has arrived, the order is closed.
+- `L -- No --> N`: If the order has not arrived, the delay is investigated.
+- `N --> G`: Investigating the delay loops back to packaging items.
+- `C --> M`: Canceling the order leads to closing the order.
+
+## Repository Context & Terminology
+- **User Submits Order**: In standard e-commerce, this refers to the customer initiating a purchase. In this diagram, it's the starting point of the workflow.
+- **Payment Received?**: Standard meaning is checking if the payment has been successfully processed. In this diagram, a negative outcome is incorrectly linked to sending a confirmation email.
+- **Send Confirmation Email**: Standard meaning is sending an email to confirm the order. In this diagram, it is sent before inventory check and also incorrectly triggered by a failed payment.
+- **Inventory Check**: Standard meaning is verifying the availability of items in stock. In this diagram, it occurs after sending the confirmation email.
+- **Sufficient Stock?**: Standard meaning is checking if there are enough items to fulfill the order. In this diagram, it determines whether to proceed with packaging.
+- **Package Items**: Standard meaning is preparing the items for shipment. In this diagram, it precedes the calculation of shipping costs.
+- **Calculate Shipping Cost**: Standard meaning is determining the cost of shipping. In this diagram, it's calculated after packaging.
+- **Shipping Cost Approved?**: Standard meaning is checking if the shipping cost is acceptable. In this diagram, a negative outcome leads to order cancellation.
+- **Generate Shipping Label**: Standard meaning is creating a label for the package. In this diagram, it follows shipping cost approval.
+- **Ship Order**: Standard meaning is sending the order to the customer. In this diagram, it precedes the arrival check.
+- **Order Arrived?**: Standard meaning is checking if the order has been delivered. In this diagram, a negative outcome leads to delay investigation.
+- **Investigate Delay**: Standard meaning is determining the cause of a delay. In this diagram, it loops back to packaging items.
+- **Close Order**: Standard meaning is marking the order as complete. In this diagram, it's the final step after arrival or cancellation.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Submits Order," which leads to the "Payment Received?" decision. If payment is *not* received, the process *incorrectly* proceeds to "Send Confirmation Email"; if payment *is* received, the process moves to "Inventory Check." After the confirmation email, the process continues to "Inventory Check," which then leads to the "Sufficient Stock?" decision. If there is sufficient stock, the process continues to "Package Items," followed by "Calculate Shipping Cost." The "Shipping Cost Approved?" decision then determines whether to "Generate Shipping Label" (if approved) or "Cancel Order" (if not approved). "Generate Shipping Label" leads to "Ship Order," which is followed by the "Order Arrived?" decision. If the order has arrived, the process ends with "Close Order." If the order has *not* arrived, the process goes to "Investigate Delay," which *illogically* loops back to "Package Items." Canceling the order also leads to "Close Order." The standard e-commerce flow is disrupted by the incorrect sequence of sending a confirmation email before checking inventory and the illogical loop from delay investigation back to packaging.

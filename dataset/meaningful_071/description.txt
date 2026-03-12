@@ -1,0 +1,70 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a video transcoding pipeline. It depicts the steps involved in receiving a video upload, validating it, transcoding it, generating thumbnails, extracting metadata, and publishing it to a CDN. The diagram serves as a visual representation of the workflow, aiding in understanding the system's architecture and data flow.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It is hierarchically structured into stages: Input, Transcoding, Thumbnail Generation, Metadata Enrichment, and Output. The start node is "Receive Video Upload," and the end node is "Update User Dashboard."
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Input Stage**: Handles the initial reception and validation of the uploaded video.
+- **Transcoding Cluster**: Manages the allocation of transcoding resources and the actual transcoding process.
+- **Thumbnail Generation**: Generates thumbnails for the transcoded video.
+- **Metadata Enrichment**: Extracts metadata from the transcoded video.
+- **Output Stage**: Creates a manifest and publishes the video to a CDN.
+
+## Node-by-Node Description
+- **A / Receive Video Upload**: Represents the initial step of receiving a video upload. visible in diagram; no further repository context available.
+- **B / Validation Checks**: Represents the process of validating the uploaded video. visible in diagram; no further repository context available.
+- **C / Transcoding Queue**: Represents a queue where videos are placed to await transcoding. visible in diagram; no further repository context available.
+- **Z / Reject + Notify User**: Represents the action of rejecting the video and notifying the user if validation fails. visible in diagram; no further repository context available.
+- **D / Scheduler**: Represents the component responsible for scheduling transcoding jobs. visible in diagram; no further repository context available.
+- **E / Resource Available?**: Represents a decision point to check if transcoding resources are available. visible in diagram; no further repository context available.
+- **F / Allocate Transcoder**: Represents the allocation of a transcoder to a video. visible in diagram; no further repository context available.
+- **G / Start Transcoding Job**: Represents the start of the transcoding job. visible in diagram; no further repository context available.
+- **H / Transcoding Success?**: Represents a decision point to check if the transcoding was successful. visible in diagram; no further repository context available.
+- **I / Store Transcoded Video**: Represents the storage of the transcoded video. visible in diagram; no further repository context available.
+- **J / Log Error + Retry Limit Check**: Represents logging an error and checking if the retry limit has been reached. visible in diagram; no further repository context available.
+- **K / Notify Failure + Archive**: Represents notifying the user of failure and archiving the video. visible in diagram; no further repository context available.
+- **L / Generate Thumbnails**: Represents the generation of thumbnails for the video. visible in diagram; no further repository context available.
+- **M / Store Thumbnails**: Represents the storage of the generated thumbnails. visible in diagram; no further repository context available.
+- **N / Extract Metadata**: Represents the extraction of metadata from the video. visible in diagram; no further repository context available.
+- **O / Store Metadata**: Represents the storage of the extracted metadata. visible in diagram; no further repository context available.
+- **P / Create Manifest**: Represents the creation of a manifest file for the video. visible in diagram; no further repository context available.
+- **Q / Publish to CDN**: Represents the publishing of the video to a Content Delivery Network (CDN). visible in diagram; no further repository context available.
+- **R / Update User Dashboard**: Represents updating the user dashboard with the status of the video. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Video upload is passed for validation checks.
+- `B -- Valid --> C`: If the video is valid, it is added to the transcoding queue.
+- `B -- Invalid --> Z`: If the video is invalid, it is rejected, and the user is notified.
+- `C --> D`: The scheduler picks up the video from the transcoding queue.
+- `D --> E`: The scheduler checks if transcoding resources are available.
+- `E -- Yes --> F`: If resources are available, a transcoder is allocated.
+- `E -- No --> C`: If resources are not available, the video remains in the transcoding queue.
+- `F --> G`: The transcoding job is started.
+- `G --> H`: The system checks if the transcoding was successful.
+- `H -- Yes --> I`: If the transcoding was successful, the transcoded video is stored.
+- `H -- No --> J`: If the transcoding failed, an error is logged, and the retry limit is checked.
+- `J -- Retry Allowed --> G`: If retries are allowed, the transcoding job is restarted.
+- `J -- Retry Exhausted --> K`: If retries are exhausted, the user is notified of the failure, and the video is archived.
+- `I --> L`: Thumbnails are generated for the transcoded video.
+- `I --> N`: Metadata is extracted from the transcoded video.
+- `I --> P`: The transcoded video is used to create a manifest.
+- `L --> M`: The generated thumbnails are stored.
+- `N --> O`: The extracted metadata is stored.
+- `M --> P`: The stored thumbnails are used to create a manifest.
+- `O --> P`: The stored metadata is used to create a manifest.
+- `P --> Q`: The video is published to a CDN.
+- `Q --> R`: The user dashboard is updated.
+
+## Repository Context & Terminology
+- **Transcoding**: The process of converting a video file from one format to another.
+- **Transcoder**: A software or hardware component that performs video transcoding.
+- **CDN (Content Delivery Network)**: A distributed network of servers that delivers content to users based on their geographic location.
+- **Manifest**: A file that describes the structure and content of a video, used for streaming.
+- **Scheduler**: A component that manages and prioritizes transcoding jobs.
+- **Metadata**: Data that provides information about other data, such as the title, author, and description of a video.
+- **Thumbnail**: A reduced-size version of a video frame, used for previewing.
+
+## High-Density QA Ground Truth Summary
+The video transcoding pipeline begins with "Receive Video Upload," where a video is ingested, followed by "Validation Checks" to ensure the video meets required criteria. If validation fails, the process branches to "Reject + Notify User," terminating the pipeline for that video. Upon successful validation, the video enters the "Transcoding Queue." The "Scheduler" then retrieves the video and checks "Resource Available?" If no resources are available, the video remains queued. With available resources, "Allocate Transcoder" assigns a transcoder, and "Start Transcoding Job" initiates the conversion. "Transcoding Success?" determines the next step. Successful transcoding leads to "Store Transcoded Video," which then triggers parallel processes: "Generate Thumbnails" and "Extract Metadata," storing them respectively. A "Manifest" is created, incorporating the transcoded video, thumbnails, and metadata. Finally, "Publish to CDN" distributes the video, and "Update User Dashboard" reflects the completed process. If transcoding fails, "Log Error + Retry Limit Check" determines if retries are allowed; if so, the process loops back to "Start Transcoding Job." Exhausted retries lead to "Notify Failure + Archive," marking the end of the pipeline for that video. The CDN ensures efficient delivery of the transcoded video to end-users.

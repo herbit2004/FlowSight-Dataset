@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the order processing workflow, from when a user submits an order to when the order is closed and inventory is updated. The diagram outlines the steps involved in fulfilling an order, handling inventory shortages, and resolving delivery issues.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The start node is "User Submits Order," and the end nodes are "Update Inventory". The diagram shows a linear flow with decision points that can lead to different paths, including loops and cancellation scenarios.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Payment, Inventory Check & Restock, Order Shipment, Delivery, Resolution, and Order Closure.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Order Acknowledged**: Indicates that the order has been successfully acknowledged. visible in diagram; no further repository context available.
+- **D / Inventory Available?**: A decision point to check if the required inventory is available to fulfill the order. visible in diagram; no further repository context available.
+- **E / Order Shipped**: Indicates that the order has been shipped to the customer. visible in diagram; no further repository context available.
+- **F / Cancel Order**: Represents the cancellation of the order. visible in diagram; no further repository context available.
+- **G / Notify Shortage**: Indicates that a shortage of inventory has been identified. visible in diagram; no further repository context available.
+- **H / Attempt Restock**: Represents the action of attempting to restock the inventory. visible in diagram; no further repository context available.
+- **I / Restock Successful?**: A decision point to check if the restock attempt was successful. visible in diagram; no further repository context available.
+- **J / Send Shipping Confirmation**: Represents sending a shipping confirmation to the customer. visible in diagram; no further repository context available.
+- **K / Delivery Successful?**: A decision point to check if the delivery was successful. visible in diagram; no further repository context available.
+- **L / Investigate Delivery**: Represents the action of investigating a delivery issue. visible in diagram; no further repository context available.
+- **M / Resolution Found?**: A decision point to check if a resolution has been found for the delivery issue. visible in diagram; no further repository context available.
+- **N / Refund Payment**: Represents refunding the payment to the customer. visible in diagram; no further repository context available.
+- **O / Close Order**: Represents closing the order. visible in diagram; no further repository context available.
+- **P / Update Inventory**: Represents updating the inventory levels. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the workflow.
+- `B -- Yes --> C`: Payment is received, proceeding to order acknowledgement.
+- `B -- No --> F`: Payment is not received, leading to order cancellation.
+- `C --> D`: Order is acknowledged, proceeding to inventory availability check.
+- `D -- Yes --> E`: Inventory is available, leading to order shipment.
+- `D -- No --> G`: Inventory is not available, leading to shortage notification.
+- `G --> H`: Shortage is notified, proceeding to attempt restock.
+- `H --> I`: Attempt to restock inventory.
+- `I -- Yes --> D`: Restock is successful, incorrectly looping back to "Inventory Available?".
+- `I -- No --> F`: Restock is unsuccessful, leading to order cancellation.
+- `E --> J`: Order is shipped, proceeding to send shipping confirmation.
+- `J --> K`: Shipping confirmation is sent, proceeding to delivery success check.
+- `K -- Yes --> A`: Delivery is successful, incorrectly looping back to "User Submits Order".
+- `K -- No --> L`: Delivery is unsuccessful, leading to delivery investigation.
+- `L --> M`: Delivery is investigated, proceeding to resolution check.
+- `M -- Yes --> J`: Resolution is found, proceeding to send shipping confirmation again.
+- `M -- No --> F`: Resolution is not found, leading to order cancellation.
+- `F --> N`: Order is cancelled, proceeding to refund payment.
+- `N --> O`: Payment is refunded, proceeding to close order.
+- `O --> P`: Order is closed, proceeding to update inventory.
+
+## Repository Context & Terminology
+- **Order**: A request from a customer to purchase goods or services. In this diagram, it represents the entire process from submission to closure.
+- **Payment**: The act of transferring money in exchange for goods or services. Here, it's a binary check: received or not.
+- **Inventory**: The stock of goods available for sale. In this diagram, it's checked for availability and updated after the order is closed.
+- **Restock**: The process of replenishing inventory. In this diagram, it's attempted when a shortage is detected.
+- **Shipping Confirmation**: A notification sent to the customer confirming that their order has been shipped. In this diagram, it's sent after the order is shipped.
+- **Delivery**: The process of transporting goods to the customer. In this diagram, its success is checked, and failures are investigated.
+- **Refund**: The act of returning money to the customer. In this diagram, it's issued when an order is cancelled.
+
+## High-Density QA Ground Truth Summary
+The process starts when a user submits an order (A), which then checks if payment is received (B). If payment is received (B -- Yes --> C), the order is acknowledged (C); otherwise (B -- No --> F), the order is cancelled (F), the payment is refunded (N), the order is closed (O), and the inventory is updated (P). After acknowledgement, the system checks if the inventory is available (D). If inventory is available (D -- Yes --> E), the order is shipped (E), and a shipping confirmation is sent (J). If inventory is not available (D -- No --> G), a shortage is notified (G), and a restock is attempted (H). If the restock is successful (I -- Yes --> D), the process incorrectly loops back to check inventory availability again (D). If the restock is unsuccessful (I -- No --> F), the order is cancelled (F), and the process continues to refund payment (N), close the order (O), and update inventory (P). After shipping confirmation (J), the system checks if the delivery was successful (K). If delivery is successful (K -- Yes --> A), the process incorrectly loops back to the beginning, where the user submits an order (A). If delivery is not successful (K -- No --> L), the delivery is investigated (L). If a resolution is found (M -- Yes --> J), a shipping confirmation is sent again (J). If a resolution is not found (M -- No --> F), the order is cancelled (F), and the process continues to refund payment (N), close the order (O), and update inventory (P). The final steps after cancellation involve refunding the payment (N), closing the order (O), and finally updating the inventory (P).

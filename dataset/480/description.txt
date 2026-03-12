@@ -1,0 +1,133 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the end-to-end process of chunking and processing COBOL source files using Azure OpenAI. It outlines the steps involved in file intake, smart chunking, token estimation, rate limiting, API calls, and reconciliation, ultimately converting the code and writing it to an output directory. The diagram serves as a visual representation of the system's architecture and workflow.
+
+## Overall Layout
+The diagram flows from top to bottom (TB). It is hierarchically structured into several subgraphs representing different stages of the process. The start node is "FILE INTAKE" and the end node is "FINAL OUTPUT".
+
+## Subgraphs / Stages
+The diagram is divided into the following subgraphs:
+- **FILE INTAKE**: Handles the initial processing of the COBOL source file, including size checks.
+- **SMART CHUNKING**: Identifies semantic units within the file for chunking.
+- **TOKEN ESTIMATION**: Estimates the number of tokens in the input.
+- **THREE-TIER COMPLEXITY SCORING**: Calculates a complexity score based on regex weight and density bonuses.
+- **OUTPUT TOKEN CALCULATION**: Calculates the final output tokens based on the estimated input and a multiplier.
+- **CONTEXT WINDOW MANAGEMENT**: Manages the context of the chunks.
+- **DUAL RATE LIMITING**: Implements rate limiting using two systems.
+- **API CALL + ESCALATION**: Calls the Azure OpenAI API and handles responses, including retries and escalation strategies.
+- **RECONCILIATION**: Reconciles the results of the chunk processing.
+- **FINAL OUTPUT**: Converts the code and writes it to the output directory.
+
+## Node-by-Node Description
+- **A / COBOL Source File**: Represents the input COBOL source file. visible in diagram; no further repository context available.
+- **B / File Size Check**: Checks the size of the input file. visible in diagram; no further repository context available.
+- **C / Single-File Processing**: Processes the file as a single unit. visible in diagram; no further repository context available.
+- **D / Smart Chunking Required**: Indicates that smart chunking is required. visible in diagram; no further repository context available.
+- **E / TokenHelper.EstimateCobolTokens**: Estimates the number of tokens in the input file. visible in diagram; no further repository context available.
+- **F / Estimated Input Tokens**: Represents the estimated number of input tokens. visible in diagram; no further repository context available.
+- **G / Complexity Score Calculation**: Calculates the complexity score of the input. visible in diagram; no further repository context available.
+- **H / Score Threshold**: Determines the score threshold. visible in diagram; no further repository context available.
+- **I / LOW**: Represents a low effort level. visible in diagram; no further repository context available.
+- **J / MEDIUM**: Represents a medium effort level. visible in diagram; no further repository context available.
+- **K / HIGH**: Represents a high effort level. visible in diagram; no further repository context available.
+- **L / estimatedOutput = input × multiplier**: Calculates the estimated output based on the input and multiplier. visible in diagram; no further repository context available.
+- **M / clamp(estimated, minTokens, maxTokens)**: Clamps the estimated output between the minimum and maximum tokens. visible in diagram; no further repository context available.
+- **N / Final maxOutputTokens**: Represents the final maximum output tokens. visible in diagram; no further repository context available.
+- **O / CobolAdapter.IdentifySemanticUnits**: Identifies semantic units in the COBOL code. visible in diagram; no further repository context available.
+- **P / Divisions / Sections / Paragraphs**: Represents the divisions, sections, and paragraphs in the COBOL code. visible in diagram; no further repository context available.
+- **Q / SemanticUnitChunker.ChunkFileAsync**: Chunks the file asynchronously based on semantic units. visible in diagram; no further repository context available.
+- **R / Chunking Decision**: Decides how to chunk the file. visible in diagram; no further repository context available.
+- **S / Single Chunk**: Represents a single chunk of code. visible in diagram; no further repository context available.
+- **T / Semantic Boundary Split**: Splits the code at semantic boundaries. visible in diagram; no further repository context available.
+- **U / Line-Based Fallback**: Falls back to line-based chunking. visible in diagram; no further repository context available.
+- **V / ChunkContextManager**: Manages the context of the chunks. visible in diagram; no further repository context available.
+- **W / Full Detail Window**: Represents the full detail window. visible in diagram; no further repository context available.
+- **X / Compressed History**: Represents the compressed history. visible in diagram; no further repository context available.
+- **Y / Cross-Chunk State**: Represents the cross-chunk state. visible in diagram; no further repository context available.
+- **Z / ChunkContext**: Represents the chunk context. visible in diagram; no further repository context available.
+- **AA / System A: RateLimiter**: Implements rate limiting using a token bucket and semaphore. visible in diagram; no further repository context available.
+- **AB / System B: RateLimitTracker**: Implements rate limiting using a sliding window. visible in diagram; no further repository context available.
+- **AC / Capacity Check**: Checks the capacity for processing. visible in diagram; no further repository context available.
+- **AD / Wait / Proceed**: Waits or proceeds based on capacity. visible in diagram; no further repository context available.
+- **AE / Azure OpenAI Responses API**: Represents the Azure OpenAI API. visible in diagram; no further repository context available.
+- **AF / Response Status**: Checks the response status from the API. visible in diagram; no further repository context available.
+- **AG / Success**: Indicates a successful API call. visible in diagram; no further repository context available.
+- **AH / Escalation Loop**: Escalates the processing if needed. visible in diagram; no further repository context available.
+- **AI / Adaptive Re-Chunking**: Adapts the chunking strategy. visible in diagram; no further repository context available.
+- **AJ / Exponential Backoff**: Implements exponential backoff for retries. visible in diagram; no further repository context available.
+- **AK / Record Chunk Result**: Records the result of the chunk processing. visible in diagram; no further repository context available.
+- **AL / Validate Chunk Output**: Validates the chunk output. visible in diagram; no further repository context available.
+- **AM / More Chunks?**: Checks if there are more chunks to process. visible in diagram; no further repository context available.
+- **AN / Reconciliation Pass**: Performs a reconciliation pass. visible in diagram; no further repository context available.
+- **AO / Merge Results**: Merges the results. visible in diagram; no further repository context available.
+- **AP / Converted Java/C# Code**: Represents the converted code. visible in diagram; no further repository context available.
+- **AQ / Write to Output Directory**: Writes the converted code to the output directory. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The COBOL source file is passed to the file size check.
+- `B --> C`: If the file size is less than or equal to 3,000 lines and 150,000 characters, it is processed as a single file.
+- `B --> D`: If the file size is greater than 3,000 lines or 150,000 characters, smart chunking is required.
+- `C --> E`: Single-file processing leads to token estimation.
+- `D --> E`: Smart chunking required also leads to token estimation.
+- `E --> F`: TokenHelper estimates the input tokens.
+- `E --> F`: TokenHelper estimates the input tokens, using different character counts for COBOL and general files.
+- `F --> G`: Estimated input tokens are used for complexity score calculation.
+- `G --> H`: Complexity score is used to determine the score threshold.
+- `H --> I`: If the score is less than 5, the effort is low.
+- `H --> J`: If the score is between 5 and 14, the effort is medium.
+- `H --> K`: If the score is greater than or equal to 15, the effort is high.
+- `I --> L`: Low effort leads to output token calculation.
+- `J --> L`: Medium effort leads to output token calculation.
+- `K --> L`: High effort leads to output token calculation.
+- `L --> M`: Estimated output is clamped between min and max tokens.
+- `M --> N`: Final maxOutputTokens are determined based on Codex or Chat.
+- `D --> O`: Smart chunking is initiated.
+- `O --> P`: Semantic units are identified.
+- `P --> Q`: The file is chunked asynchronously.
+- `Q --> R`: A chunking decision is made.
+- `R --> S`: If the number of units is less than or equal to MaxLinesPerChunk, a single chunk is created.
+- `R --> T`: If semantic units are found, the code is split at semantic boundaries.
+- `R --> U`: If no units are found or the units are oversized, line-based fallback is used.
+- `S --> V`: Single chunk leads to context management.
+- `T --> V`: Semantic boundary split leads to context management.
+- `U --> V`: Line-based fallback leads to context management.
+- `V --> W`: Full detail window is created.
+- `V --> X`: Compressed history is created.
+- `V --> Y`: Cross-chunk state is managed.
+- `W --> Z`: Full detail window leads to chunk context.
+- `X --> Z`: Compressed history leads to chunk context.
+- `Y --> Z`: Cross-chunk state leads to chunk context.
+- `Z --> AA`: Chunk context leads to rate limiting system A.
+- `Z --> AB`: Chunk context leads to rate limiting system B.
+- `AA --> AC`: Rate limiting system A leads to capacity check.
+- `AB --> AC`: Rate limiting system B leads to capacity check.
+- `AC --> AD`: Capacity check leads to wait/proceed.
+- `AD --> AE`: Wait/proceed leads to API call.
+- `AE --> AF`: API call leads to response status check.
+- `AF --> AG`: If the response is complete, it is considered a success.
+- `AF --> AH`: If reasoning exhaustion is detected, an escalation loop is initiated.
+- `AF --> AJ`: If a 429 rate limit is encountered, exponential backoff is used.
+- `AH --> AE`: Escalation loop leads back to API call.
+- `AI --> AE`: Adaptive re-chunking leads back to API call.
+- `AJ --> AE`: Exponential backoff leads back to API call.
+- `AH --> AI`: If all retries fail in the escalation loop, adaptive re-chunking is initiated.
+- `AG --> AK`: Success leads to recording the chunk result.
+- `AK --> AL`: Chunk result is validated.
+- `AL --> AM`: A check is performed to see if there are more chunks.
+- `AM --> V`: If there are more chunks, the process loops back to context management.
+- `AM --> AN`: If there are no more chunks, a reconciliation pass is performed.
+- `AN --> AO`: Reconciliation pass leads to merging results.
+- `AO --> AP`: Results are merged and converted to Java/C# code.
+- `AP --> AQ`: Converted code is written to the output directory.
+
+## Repository Context & Terminology
+- **COBOL**: A high-level programming language primarily used for business, finance, and administrative systems.
+- **Azure OpenAI**: A service providing access to OpenAI's powerful language models on the Azure cloud platform.
+- **TokenHelper.EstimateCobolTokens**: A component responsible for estimating the number of tokens in a COBOL source file, used for cost and rate limiting purposes.
+- **SemanticUnitChunker.ChunkFileAsync**: A component that chunks a file asynchronously based on identified semantic units.
+- **RateLimiter**: A system that controls the rate at which requests are processed to prevent overload and ensure fair usage.
+- **ChunkContextManager**: A component that manages the context of the chunks, including full detail windows, compressed history, and cross-chunk state.
+- **Adaptive Re-Chunking**: A strategy to re-chunk the input file based on API responses or other factors, such as reasoning exhaustion.
+- **Escalation Loop**: A mechanism to increase the effort and resources allocated to processing a chunk, such as doubling max tokens or promoting effort.
+
+## High-Density QA Ground Truth Summary
+The process begins with a COBOL source file entering the "

@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow for an e-commerce system. It depicts the sequence of steps from when a user places an order to when the order is completed or cancelled. This diagram serves as a visual representation of the order management process, but contains deliberate errors and deviations from standard practice.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with "User Places Order" at the top and progresses downwards towards the end states "Order Completed" and "Order Cancelled - Insufficient Funds". The diagram includes loops and branches, indicating decision points and potential re-routings in the order processing flow.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement, Payment Processing, Inventory Management, Order Fulfillment, Delivery & Returns, and Order Completion/Cancellation.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial step where a user submits an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of verifying the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **D / Inventory Available?**: A decision point to determine if the inventory is sufficient to fulfill the order. visible in diagram; no further repository context available.
+- **E / Notify User of Backorder**: Represents the action of informing the user that the order is on backorder due to insufficient inventory. visible in diagram; no further repository context available.
+- **F / Pack Order**: Represents the process of packing the order for shipment. visible in diagram; no further repository context available.
+- **G / Ship Order**: Represents the process of shipping the packed order to the user. visible in diagram; no further repository context available.
+- **H / Order Delivered**: Represents the event when the order is successfully delivered to the user. visible in diagram; no further repository context available.
+- **I / User Returns Item?**: A decision point to check if the user has returned any item from the order. visible in diagram; no further repository context available.
+- **J / Order Completed**: Represents the final state where the order is successfully processed and no further actions are required. visible in diagram; no further repository context available.
+- **K / Update Inventory**: Represents the process of updating the inventory levels after an order is completed. visible in diagram; no further repository context available.
+- **Z / Order Cancelled - Insufficient Funds**: Represents the final state where the order is cancelled due to insufficient funds. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, initiating the payment processing step.
+- `B -- Yes --> C`: Payment is received, proceeding to inventory check.
+- `B -- No --> Z`: Payment is not received, order is cancelled due to insufficient funds.
+- `C --> D`: Inventory check is performed, leading to inventory availability assessment.
+- `D -- Yes --> F`: Inventory is available, proceeding to pack the order.
+- `D -- No --> E`: Inventory is not available, notifying the user of backorder.
+- `E --> A`: User is notified of backorder, looping back to the "User Places Order" step.
+- `F --> G`: Order is packed, proceeding to ship the order.
+- `G --> H`: Order is shipped, leading to order delivery.
+- `H --> I`: Order is delivered, checking if the user returns any item.
+- `I -- No --> J`: User does not return any item, order is completed.
+- `I -- Yes --> C`: User returns an item, looping back to the "Inventory Check" step.
+- `J --> K`: Order is completed, proceeding to update inventory.
+- `K --> Z`: Inventory is updated, leading to order cancellation due to insufficient funds.
+
+## Repository Context & Terminology
+- **User Places Order**: The initial action by a customer to request goods or services. In this diagram, it incorrectly loops back from backorder notification.
+- **Payment Received?**: A check to confirm that the customer's payment has been successfully processed. In this diagram, failure leads to order cancellation.
+- **Inventory Check**: The process of verifying the availability of items in stock. In this diagram, it is incorrectly triggered by a user returning an item.
+- **Inventory Available?**: A decision point to determine if there is sufficient stock to fulfill the order. In this diagram, unavailability triggers a backorder notification.
+- **Notify User of Backorder**: Informing the customer that their order will be delayed due to insufficient stock. In this diagram, it incorrectly loops back to the "User Places Order" step.
+- **Pack Order**: Preparing the items for shipment. In this diagram, there is no step for generating a shipping label.
+- **Ship Order**: Sending the packed order to the customer. visible in diagram; no further repository context available.
+- **Order Delivered**: Confirmation that the customer has received the order. visible in diagram; no further repository context available.
+- **User Returns Item?**: A check to see if the customer has returned any items from the order. In this diagram, a "Yes" response incorrectly loops back to the "Inventory Check" step.
+- **Order Completed**: The final state where the order has been successfully processed and delivered. In this diagram, it incorrectly leads to inventory update.
+- **Update Inventory**: Adjusting the stock levels based on the order. In this diagram, it incorrectly leads to order cancellation.
+- **Order Cancelled - Insufficient Funds**: The final state where the order is cancelled due to payment issues. visible in diagram; no further repository context available.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "User Places Order" node, which transitions to the "Payment Received?" decision. If payment is received ("Yes" branch), the flow proceeds to "Inventory Check"; otherwise ("No" branch), the "Order Cancelled - Insufficient Funds" end node is reached. After the inventory check, the "Inventory Available?" decision determines the next step. If inventory is available ("Yes"), the order is "Pack Order", then "Ship Order", and finally "Order Delivered". If inventory is unavailable ("No"), the "Notify User of Backorder" node is reached, which then loops back to "User Places Order". After "Order Delivered", the "User Returns Item?" decision determines whether to loop back to "Inventory Check" ("Yes") or proceed to "Order Completed" ("No"). "Order Completed" then transitions to "Update Inventory", which finally leads to "Order Cancelled - Insufficient Funds". This diagram contains several errors, including a backorder notification looping back to order placement, user returns triggering inventory checks, and order completion leading to inventory updates and then order cancellation. The standard process of generating a shipping label is also skipped.

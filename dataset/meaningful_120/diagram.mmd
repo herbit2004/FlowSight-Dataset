@@ -1,0 +1,23 @@
+graph TD
+    subgraph Transaction Saga
+        A[Client Request] --> B{Order Placement Service};
+        B -- Valid Order --> C[Inventory Service: Reserve Stock];
+        C -- Stock Reserved --> D[Payment Service: Authorize Payment];
+        D -- Payment Authorized --> E[Delivery Service: Schedule Delivery];
+        E -- Delivery Scheduled --> F[Order Service: Mark Order as Processing];
+        F --> G{Success Check};
+        subgraph Compensation Flow
+            G -- Failure --> H[Order Service: Mark Order as Failed];
+            H --> I[Delivery Service: Cancel Delivery];
+            I --> J[Payment Service: Refund Payment];
+            J --> K[Inventory Service: Return Stock];
+            K --> L[Notify Client of Failure];
+        end
+        G -- Success --> M[Order Service: Mark Order as Completed];
+        M --> N[Notify Client of Success];
+
+    end
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style G fill:#ccf,stroke:#333,stroke-width:2px
+    classDef service fill:#E2E2E2,stroke:#333,stroke-width:1px
+    class C,D,E service

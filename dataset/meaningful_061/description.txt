@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a cluster membership and failover process. It depicts how nodes in a distributed system maintain cluster membership through heartbeats, how failover is initiated upon heartbeat loss, and how a new active node is selected. The diagram serves as a visual representation of the system's fault tolerance mechanism.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into three main subgraphs: Cluster Membership, Failover Process, and Active/Passive Role Assignment. The process starts with nodes sending heartbeats and ends with data replication to passives or maintaining a passive state.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Cluster Membership**: Describes how nodes communicate their availability using heartbeats.
+- **Failover Process**: Details the steps taken when a node detects a loss of heartbeat from the active node, leading to an election.
+- **Active/Passive Role Assignment**: Explains how a new active node is designated and passive nodes are put into standby mode after a quorum is achieved.
+
+## Node-by-Node Description
+- **Node A: Heartbeat Sender**: Node A sends heartbeat signals to Node B and Node C. visible in diagram; no further repository context available.
+- **Node B: Heartbeat Receiver**: Node B receives heartbeat signals from Node A and Node C. visible in diagram; no further repository context available.
+- **Node C: Heartbeat Sender**: Node C sends heartbeat signals to Node A and Node B. visible in diagram; no further repository context available.
+- **Election Manager**: This node represents the process of electing a new active node. visible in diagram; no further repository context available.
+- **Quorum Size Check**: This node represents the check to ensure a sufficient number of nodes are available to form a quorum. visible in diagram; no further repository context available.
+- **Designate Primary Node**: This node represents the designation of a primary node after a quorum is achieved. visible in diagram; no further repository context available.
+- **Active Node Selection**: This node represents the selection process of an active node. visible in diagram; no further repository context available.
+- **New Active Handles Requests**: The newly selected active node begins handling incoming requests. visible in diagram; no further repository context available.
+- **Data Replication to Passives**: The active node replicates data to the passive nodes. visible in diagram; no further repository context available.
+- **Node B Proposes Failover**: Node B proposes a failover. visible in diagram; no further repository context available.
+- **Node C Proposes Failover**: Node C proposes a failover. visible in diagram; no further repository context available.
+- **Maintain Passive State**: The node remains in a passive state. visible in diagram; no further repository context available.
+- **Standby for Failover**: The node is in standby mode, ready to take over if the active node fails. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Node A --> Node B`: Node A sends a heartbeat to Node B.
+- `Node B --> Node A`: Node B sends a heartbeat to Node A.
+- `Node C --> Node A`: Node C sends a heartbeat to Node A.
+- `Node A --> Node C`: Node A sends a heartbeat to Node C.
+- `Node B --> Node C`: Node B sends a heartbeat to Node C.
+- `Node C --> Node B`: Node C sends a heartbeat to Node B.
+- `Node A --> Election Manager`: Node A's heartbeat status is reported to the Election Manager.
+- `Node B --> Election Manager`: Node B's heartbeat status is reported to the Election Manager.
+- `Node C --> Election Manager`: Node C's heartbeat status is reported to the Election Manager.
+- `Node B -- Heartbeat Loss from Active --> Node B Proposes Failover`: Node B detects a loss of heartbeat from the active node and proposes a failover.
+- `Node C -- Heartbeat Loss from Active --> Node C Proposes Failover`: Node C detects a loss of heartbeat from the active node and proposes a failover.
+- `Node B Proposes Failover --> Election Manager`: Node B's failover proposal is sent to the Election Manager.
+- `Node C Proposes Failover --> Election Manager`: Node C's failover proposal is sent to the Election Manager.
+- `Election Manager --> Quorum Size Check`: The Election Manager initiates a quorum size check.
+- `Quorum Size Check -- Yes --> Designate Primary Node`: If a quorum is achieved, a primary node is designated.
+- `Quorum Size Check -- No --> Maintain Passive State`: If a quorum is not achieved, the node maintains a passive state.
+- `Designate Primary Node --> Active Node Selection`: After designating a primary node, the active node is selected.
+- `Active Node Selection -- Assign Active Role --> New Active Handles Requests`: The selected active node begins handling requests.
+- `Active Node Selection -- Assign Passive Role --> Standby for Failover`: Passive nodes are put into standby mode.
+- `New Active Handles Requests --> Data Replication to Passives`: The active node replicates data to the passive nodes.
+
+## Repository Context & Terminology
+- **Heartbeat**: A periodic signal sent by a node to indicate its availability and health.
+- **Cluster Membership**: The state of nodes being part of a distributed system, maintained through heartbeat mechanisms.
+- **Failover**: The process of automatically transferring control to a redundant or standby system upon the failure of the primary system.
+- **Election Manager**: A component responsible for managing the election process to select a new active node.
+- **Quorum**: The minimum number of nodes required to be available for the system to operate correctly.
+- **Active Node**: The node currently responsible for handling requests and managing the system.
+- **Passive Node**: A node that is in standby mode, ready to take over if the active node fails.
+
+## High-Density QA Ground Truth Summary
+The cluster membership process begins with Node A, Node B, and Node C sending heartbeats to each other to maintain awareness of their availability. If a node detects a loss of heartbeat from the active node, such as Node B detecting a loss from Node A, it proposes a failover. These proposals converge at the Election Manager, which initiates a Quorum Size Check to ensure enough nodes are available. If a quorum is achieved ("Yes" branch), the process proceeds to designate a primary node and then selects an active node. The active node is assigned the "Active Role" and begins handling requests, while other nodes are assigned the "Passive Role" and enter "Standby for Failover." The new active node then replicates data to the passive nodes. If a quorum is not achieved ("No" branch), the node maintains a passive state. The heartbeat mechanism and quorum check are crucial for ensuring fault tolerance and data consistency in the distributed system. The failover process ensures that the system can continue to operate even if one or more nodes fail.

@@ -1,0 +1,95 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the data flow and processing steps within a system. It illustrates the interaction between different components, including serial communication, image processing, posture estimation, camera input, and data queuing. The diagram serves as a high-level overview of the system's architecture and the sequence of operations performed by its various modules.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It is organized into subgraphs representing different functional areas: source, queue, thread, detector, camera, and serial. The start nodes are "detector start", "camera start", and "serial start". The end nodes are the "end a loop" nodes within the detector, camera, and serial subgraphs, and the "picture queue" and "serial data queue" nodes.
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **source**: Represents the data sources, including the camera and STM32.
+- **queue**: Represents the data queues for pictures and serial data.
+- **thread**: Encompasses the detector, camera, and serial subgraphs, representing the main processing thread.
+- **detector**: Handles image processing, posture estimation, and communication with the STM32.
+- **camera**: Manages image acquisition from the camera and data queuing.
+- **serial**: Deals with serial communication and data queuing.
+
+## Node-by-Node Description
+- **detector start**: Represents the starting point of the detector process.
+  visible in diagram; no further repository context available.
+- **wait for a picture**: Waits for a picture to be available.
+  visible in diagram; no further repository context available.
+- **wait for a serial data**: Waits for serial data to be available.
+  visible in diagram; no further repository context available.
+- **image process**: Processes the image data.
+  visible in diagram; no further repository context available.
+- **posture estimate**: Estimates the posture based on the processed image.
+  visible in diagram; no further repository context available.
+- **state estimate**: Estimates the state based on the posture.
+  visible in diagram; no further repository context available.
+- **send data to stm32**: Sends the processed data to the STM32 microcontroller.
+  visible in diagram; no further repository context available.
+- **end a loop**: Marks the end of a loop in the detector process.
+  visible in diagram; no further repository context available.
+- **camera start**: Represents the starting point of the camera process.
+  visible in diagram; no further repository context available.
+- **wait for image from camera**: Waits for an image to be received from the camera.
+  visible in diagram; no further repository context available.
+- **send data to queue**: Sends the camera data to the picture queue.
+  visible in diagram; no further repository context available.
+- **end a loop**: Marks the end of a loop in the camera process.
+  visible in diagram; no further repository context available.
+- **serial start**: Represents the starting point of the serial communication process.
+  visible in diagram; no further repository context available.
+- **wait for serial data**: Waits for serial data to be received.
+  visible in diagram; no further repository context available.
+- **send data to queue**: Sends the serial data to the serial data queue.
+  visible in diagram; no further repository context available.
+- **end a loop**: Marks the end of a loop in the serial communication process.
+  visible in diagram; no further repository context available.
+- **stm32**: Represents the STM32 microcontroller.
+  visible in diagram; no further repository context available.
+- **Camera**: Represents the camera.
+  visible in diagram; no further repository context available.
+- **picture queue**: Represents the queue for storing picture data.
+  visible in diagram; no further repository context available.
+- **serial data queue**: Represents the queue for storing serial data.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `detector start --> wait for a picture`: Starts the detector process and waits for a picture.
+- `wait for a picture --> wait for a serial data`: After receiving a picture, waits for serial data.
+- `wait for a serial data --> image process`: After receiving serial data, processes the image.
+- `image process --> posture estimate`: After processing the image, estimates the posture.
+- `posture estimate --> state estimate`: After estimating the posture, estimates the state.
+- `state estimate --> send data to stm32`: After estimating the state, sends the data to the STM32.
+- `send data to stm32 --> stm32`: Sends the data to the STM32 microcontroller.
+- `send data to stm32 --> end a loop`: After sending data to the STM32, the detector process loops back.
+- `end a loop --> wait for a picture`: Loops back to wait for another picture.
+- `camera start --> wait for image from camera`: Starts the camera process and waits for an image.
+- `wait for image from camera --> send data to queue`: After receiving an image, sends the data to the picture queue.
+- `send data to queue --> picture queue`: Sends the data to the picture queue.
+- `send data to queue --> end a loop`: After sending data to the picture queue, the camera process loops back.
+- `end a loop --> wait for image from camera`: Loops back to wait for another image.
+- `serial start --> wait for serial data`: Starts the serial communication process and waits for serial data.
+- `wait for serial data --> send data to queue`: After receiving serial data, sends the data to the serial data queue.
+- `send data to queue --> serial data queue`: Sends the data to the serial data queue.
+- `send data to queue --> end a loop`: After sending data to the serial data queue, the serial communication process loops back.
+- `end a loop --> wait for serial data`: Loops back to wait for more serial data.
+- `stm32 --> wait for a serial data`: The STM32 sends data to the detector thread, which then waits for serial data.
+- `Camera --> wait for image from camera`: The Camera sends a picture to the camera thread, which then waits for an image from the camera.
+- `picture queue <-- send data to queue`: The picture queue receives data from the camera thread.
+- `serial data queue <-- send data to queue`: The serial data queue receives data from the serial thread.
+- `wait for a picture <-- picture queue`: The detector thread waits for a picture from the picture queue.
+- `wait for a serial data <-- serial data queue`: The detector thread waits for serial data from the serial data queue.
+
+## Repository Context & Terminology
+- **STM32**: A series of 32-bit microcontroller integrated circuits from STMicroelectronics.
+- **Camera**: A device for recording or capturing images.
+- **Detector**: A module responsible for processing image and serial data to estimate posture and state.
+- **Queue**: A data structure used for managing data flow between different components.
+- **Serial Communication**: A method of transmitting data one bit at a time over a single communication line.
+- **Image Processing**: The process of analyzing and manipulating digital images to improve their quality or extract useful information.
+- **Posture Estimation**: The process of determining the position and orientation of a body or object in an image or video.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a multi-threaded system involving a detector, camera, and serial communication. The detector thread begins at "detector start", then waits for a picture and serial data. The camera thread starts at "camera start", waiting for images from the camera and sending the data to the picture queue. The serial thread starts at "serial start", waiting for serial data and sending it to the serial data queue. The detector thread processes image and serial data to estimate posture and state, sending the results to the STM32 microcontroller. The STM32 sends data back to the detector thread. Each thread contains a loop, indicated by the "end a loop" nodes, which return to the initial waiting state. The "send data to stm32" node triggers a loop back to "wait for a picture" in the detector thread. The camera and serial threads similarly loop back to their respective waiting states after sending data to their queues. The STM32 microcontroller sends data to the "wait for a serial data" node in the detector thread, facilitating continuous processing. The queues act as buffers between the camera/serial threads and the detector thread, enabling asynchronous data processing.

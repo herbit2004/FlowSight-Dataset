@@ -1,0 +1,34 @@
+graph TD
+    subgraph "Client Request"
+        A[User Search Query] --> B(Query Router);
+    end
+
+    subgraph "Indexing Pipeline"
+        B --> C{Is Incremental Update?};
+        C -- Yes --> D[Parse Delta Feed];
+        C -- No --> E[Full Index Build Triggered];
+        E --> F[Snapshot Data from Source];
+        D --> G[Transform Delta Records];
+        F --> G;
+        G --> H{Apply Schema & Validation};
+        H -- Valid --> I[Apply Delta to Inverted Index];
+        H -- Invalid --> J[Write to Error Queue];
+        I --> K[Update Bloom Filters];
+        K --> L[Commit Index Segments];
+    end
+
+    subgraph "Index Serving"
+        L --> M[Push Segments to Search Nodes];
+        M --> N{Replication Complete?};
+        N -- Yes --> O[Rollout New Segments];
+        N -- No --> P[Retry Push];
+        P --> M;
+        O --> Q[Invalidate Cache & Load];
+        Q --> R[Index Ready];
+    end
+
+    R --> S[Search Nodes Ready to Serve];
+
+    classDef search fill:#f9f,stroke:#333,stroke-width:2px
+    A:::search
+    S:::search

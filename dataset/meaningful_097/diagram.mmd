@@ -1,0 +1,27 @@
+graph TD
+    subgraph InventoryDeductionAndRollback
+    A[API Request: Place Order] --> B{Validate Order};
+    B -- Valid --> C[Check Inventory: ProductA];
+    B -- Invalid --> Z[Reject Order: Validation Failed];
+    C -- In Stock --> D[Reserve Inventory: ProductA];
+    C -- Out of Stock --> Z[Reject Order: Insufficient Stock];
+    D --> E[Check Inventory: ProductB];
+    E -- In Stock --> F[Reserve Inventory: ProductB];
+    E -- Out of Stock --> G[Rollback: ProductA Reservation];
+    G --> Z[Reject Order: Insufficient Stock];
+    F --> H{All Products Reserved?};
+    H -- Yes --> I[Create Order Record];
+    H -- No --> E;
+    I --> J[Deduct Inventory: ProductA];
+    J --> K[Deduct Inventory: ProductB];
+    K --> L[Notify Warehouse: Order Ready];
+    L --> M[Payment Processing];
+    M -- Success --> N[Order Confirmation];
+    M -- Failure --> AA[Rollback: ProductA & ProductB Deductions];
+    AA --> Z[Reject Order: Payment Failed];
+    N --> O[Ship Order];
+    O --> P[Update Order Status: Shipped];
+    end
+
+    classDef rollback fill:#f9f,stroke:#333,stroke-width:2px;
+    class G,AA rollback;

@@ -1,0 +1,53 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the continuous integration and continuous deployment (CI/CD) pipeline for two applications, App 1 and App 2. It illustrates the flow of code changes from developer working copies through a mainstream repository, triggering automated pipelines that build, test, and deploy the applications to a system. The diagram serves as a high-level overview of the deployment process.
+
+## Overall Layout
+The diagram is laid out from left to right. It is divided into three main stages: Code, Pipelines, and System. The "Code" stage serves as the starting point, with code changes flowing towards the "System" stage, which represents the deployed applications.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Code**: Represents the code repository and developer working copies.
+- **Pipelines**: Contains two sub-subgraphs, "App 1 Pipelines" and "App 2 Pipelines", representing the CI/CD pipelines for each application.
+- **System**: Represents the deployed applications.
+
+## Node-by-Node Description
+- **Working Copy 1**: Represents a developer's local copy of the codebase for App 1. visible in diagram; no further repository context available.
+- **Working Copy 2**: Represents a developer's local copy of the codebase for App 2. visible in diagram; no further repository context available.
+- **Working Copy 3**: Represents a developer's local copy of the codebase for App 2. visible in diagram; no further repository context available.
+- **Mainstream**: Represents the central code repository where developers merge their changes. visible in diagram; no further repository context available.
+- **App 1 Infrastructure Trigger**: Represents the trigger that initiates the infrastructure pipeline for App 1. visible in diagram; no further repository context available.
+- **App 1 Code Trigger**: Represents the trigger that initiates the code pipeline for App 1. visible in diagram; no further repository context available.
+- **Infrastructure Pipeline (App 1)**: Represents the pipeline responsible for managing the infrastructure required by App 1. visible in diagram; no further repository context available.
+- **Code Pipeline (App 1)**: Represents the pipeline responsible for building, testing, and deploying the code for App 1. visible in diagram; no further repository context available.
+- **App 2 Infrastructure Trigger**: Represents the trigger that initiates the infrastructure pipeline for App 2. visible in diagram; no further repository context available.
+- **App 2 Code Trigger**: Represents the trigger that initiates the code pipeline for App 2. visible in diagram; no further repository context available.
+- **Infrastructure Pipeline (App 2)**: Represents the pipeline responsible for managing the infrastructure required by App 2. visible in diagram; no further repository context available.
+- **Code Pipeline (App 2)**: Represents the pipeline responsible for building, testing, and deploying the code for App 2. visible in diagram; no further repository context available.
+- **App 1**: Represents the deployed instance of App 1. visible in diagram; no further repository context available.
+- **App 2**: Represents the deployed instance of App 2. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Working Copy 1 --> Mainstream`: Code changes from Working Copy 1 are merged into the Mainstream repository.
+- `Working Copy 2 --> Mainstream`: Code changes from Working Copy 2 are merged into the Mainstream repository.
+- `Working Copy 3 --> Mainstream`: Code changes from Working Copy 3 are merged into the Mainstream repository.
+- `Mainstream -- App 1 Infrastructure Trigger --> Infrastructure Pipeline (App 1)`: A change to the infrastructure configuration in the Mainstream repository triggers the App 1 Infrastructure Pipeline.
+- `Mainstream -- App 1 Code Trigger --> Code Pipeline (App 1)`: A change to the application code in the Mainstream repository triggers the App 1 Code Pipeline.
+- `Mainstream -- App 2 Infrastructure Trigger --> Infrastructure Pipeline (App 2)`: A change to the infrastructure configuration in the Mainstream repository triggers the App 2 Infrastructure Pipeline.
+- `Mainstream -- App 2 Code Trigger --> Code Pipeline (App 2)`: A change to the application code in the Mainstream repository triggers the App 2 Code Pipeline.
+- `Infrastructure Pipeline (App 1) --> App 1`: The App 1 Infrastructure Pipeline deploys infrastructure changes to App 1.
+- `Code Pipeline (App 1) --> App 1`: The App 1 Code Pipeline deploys code changes to App 1.
+- `Infrastructure Pipeline (App 2) --> App 2`: The App 2 Infrastructure Pipeline deploys infrastructure changes to App 2.
+- `Code Pipeline (App 2) --> App 2`: The App 2 Code Pipeline deploys code changes to App 2.
+- `Infrastructure Pipeline (App 1), Code Pipeline (App 1) --> App 1`: Both pipelines converge to deploy App 1.
+- `Infrastructure Pipeline (App 2), Code Pipeline (App 2) --> App 2`: Both pipelines converge to deploy App 2.
+
+## Repository Context & Terminology
+- **CI/CD Pipeline**: An automated process that builds, tests, and deploys software changes.
+- **Infrastructure Pipeline**: A pipeline that manages the infrastructure required by an application, such as servers, databases, and networking.
+- **Code Pipeline**: A pipeline that builds, tests, and deploys the application code itself.
+- **Trigger**: An event that initiates a pipeline, such as a code commit or a scheduled event.
+- **Mainstream**: The central code repository where developers merge their changes.
+- **Working Copy**: A developer's local copy of the codebase.
+
+## High-Density QA Ground Truth Summary
+The CI/CD architecture begins with developers making changes in their local "Working Copy" repositories (Working Copy 1, Working Copy 2, Working Copy 3). These changes are then merged into the central "Mainstream" repository. Commits to the Mainstream repository trigger separate pipelines for App 1 and App 2. For App 1, an "App 1 Infrastructure Trigger" initiates the "Infrastructure Pipeline (App 1)", while an "App 1 Code Trigger" starts the "Code Pipeline (App 1)". Similarly, for App 2, "App 2 Infrastructure Trigger" and "App 2 Code Trigger" initiate "Infrastructure Pipeline (App 2)" and "Code Pipeline (App 2)" respectively. The Infrastructure Pipelines handle infrastructure-related changes, while the Code Pipelines handle code deployments. Both pipelines for each application converge, deploying changes to the respective "App 1" and "App 2" instances within the "System". The diagram illustrates a common pattern where infrastructure and code deployments are handled by separate pipelines, allowing for independent updates and rollbacks. The use of triggers ensures that pipelines are automatically initiated upon code or infrastructure changes, enabling continuous delivery.

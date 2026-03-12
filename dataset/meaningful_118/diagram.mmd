@@ -1,0 +1,86 @@
+graph TD
+    subgraph Client Application
+        C[Client Application]
+    end
+
+    subgraph Load Balancer
+        LB[Load Balancer]
+    end
+
+    subgraph Primary Database Cluster
+        P1[Primary DB Node 1]
+        P2[Primary DB Node 2]
+        P3[Primary DB Node 3]
+    end
+
+    subgraph Replica Database Cluster
+        R1[Replica DB Node 1]
+        R2[Replica DB Node 2]
+        R3[Replica DB Node 3]
+    end
+
+    C --> LB
+    LB -- Read Request --> ReadRouter
+    LB -- Write Request --> WriteRouter
+
+    subgraph Read Router
+        ReadRouter[Read Router Service]
+    end
+
+    subgraph Write Router
+        WriteRouter[Write Router Service]
+    end
+
+    ReadRouter --> RRC[Replica Router Component]
+    WriteRouter --> WRC[Primary Router Component]
+
+    RRC -- Read only, low latency --> ReadReplicaSelection
+    WRC -- Write and replication --> PrimaryDbSelection
+
+    subgraph Read Replica Selection
+        ReadReplicaSelection[Replica Selection Logic]
+    end
+
+    subgraph Primary DB Selection
+        PrimaryDbSelection[Primary DB Selection Logic]
+    end
+
+    ReadReplicaSelection -- Healthy Replica Found --> ReplicaDB
+    ReadReplicaSelection -- No Healthy Replica --> PrimaryDB
+
+    PrimaryDbSelection --> PrimaryDB
+
+    subgraph Replica DB
+        ReplicaDB[Replica DB Endpoint]
+    end
+
+    subgraph Primary DB
+        PrimaryDB[Primary DB Endpoint]
+    end
+
+    ReplicaDB --> R1
+    ReplicaDB --> R2
+    ReplicaDB --> R3
+    PrimaryDB --> P1
+    PrimaryDB --> P2
+    PrimaryDB --> P3
+
+    P1 -- Replication --> R1
+    P2 -- Replication --> R2
+    P3 -- Replication --> R3
+
+    PrimaryDB --> AsyncReplicationQueue
+    subgraph Async Replication Queue
+        AsyncReplicationQueue[Async Replication Queue]
+    end
+
+    AsyncReplicationQueue --> ReplicationService
+
+    subgraph Replication Service
+        ReplicationService[Replication Service]
+    end
+
+    ReplicationService --> ReplicaDB
+
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px
+    class C,LB,ReadRouter,WriteRouter,RRC,WRC,ReadReplicaSelection,PrimaryDbSelection,ReplicaDB,PrimaryDB,P1,P2,P3,R1,R2,R3,AsyncReplicationQueue,ReplicationService default

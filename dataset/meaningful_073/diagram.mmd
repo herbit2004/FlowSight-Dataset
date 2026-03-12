@@ -1,0 +1,42 @@
+graph TD
+    subgraph Device
+        A[User App Request] --> B(Watermark Request);
+        B --> C{Authorization Server};
+    end
+
+    C -- Valid Credentials? --> D{Policy Check};
+    D -- No --> E(Rejection Response);
+    D -- Yes --> F(Watermark Generation);
+
+    subgraph Watermark Service
+        F --> G{Retrieve Metadata};
+        G --> H(Watermark Payload);
+        H --> I(Image Processing);
+        I --> J(Embed Watermark);
+        J --> K(Return Watermarked Image);
+    end
+
+    K --> L(Signed Assertion);
+    L --> M{Send Watermarked Content};
+    M --> N[User App Display];
+
+    E --> O(Error Response);
+    O --> P[User App Error];
+
+    subgraph Verification Service
+        N --> Q{Content Validation};
+        Q -- Valid Signature? --> R(Extract Watermark);
+        Q -- Invalid Signature --> S(Flag as Suspicious);
+    end
+
+    R --> T{Compare Watermark};
+    T -- Match Original? --> U(Content Approved);
+    T -- No Match --> V(Log Anomaly);
+
+    subgraph Security Logging
+        V --> W[Security Dashboard];
+        S --> X[Security Alert];
+    end
+
+    classDef flow fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X flow

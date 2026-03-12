@@ -1,0 +1,77 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing and fulfillment workflow for a customer order. It depicts the various stages from order placement to order completion, including validation, inventory check, shipment processing, and delivery. The diagram serves as a visual representation of the order management process, aiding in understanding and optimizing the system.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "Customer Places Order" node at the top and ends with the "Order Completion" node at the bottom. The diagram is hierarchically structured, with the "CustomerOrder" process as the top-level container.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "CustomerOrder". Logically, the diagram is divided into the following stages: Order Placement & Validation, Inventory Check, Shipment Processing, Shipping Provider Selection, Delivery, and Completion.
+
+## Node-by-Node Description
+- **A / Customer Places Order**: Represents the initial step where a customer submits an order. visible in diagram; no further repository context available.
+- **B / Order Validation**: Represents the process of validating the order details. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of checking the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **D / Order Cancellation**: Represents the process of cancelling the order if it is invalid. visible in diagram; no further repository context available.
+- **E / Create Shipment Request**: Represents the process of creating a shipment request for the order. visible in diagram; no further repository context available.
+- **F / Backorder Processing**: Represents the process of handling the order when the items are out of stock. visible in diagram; no further repository context available.
+- **G / Notify Customer**: Represents the process of notifying the customer about the backorder. visible in diagram; no further repository context available.
+- **H / Await Inventory Restock**: Represents the process of waiting for the inventory to be restocked. visible in diagram; no further repository context available.
+- **I / Package Selection**: Represents the process of selecting the appropriate packaging for the order. visible in diagram; no further repository context available.
+- **J / Assign Tracking Number**: Represents the process of assigning a tracking number to the shipment. visible in diagram; no further repository context available.
+- **K / Warehouse Pick & Pack**: Represents the process of picking the items from the warehouse and packing them for shipment. visible in diagram; no further repository context available.
+- **L / Shipping Provider Selection**: Represents the process of selecting a shipping provider based on cost, delivery time, or customer preference. visible in diagram; no further repository context available.
+- **M / Send to Shipping Provider A**: Represents sending the shipment to shipping provider A. visible in diagram; no further repository context available.
+- **N / Send to Shipping Provider B**: Represents sending the shipment to shipping provider B. visible in diagram; no further repository context available.
+- **O / Send to Shipping Provider C**: Represents sending the shipment to shipping provider C. visible in diagram; no further repository context available.
+- **P / Shipping Provider A - Transit**: Represents the shipment being in transit with shipping provider A. visible in diagram; no further repository context available.
+- **Q / Shipping Provider B - Transit**: Represents the shipment being in transit with shipping provider B. visible in diagram; no further repository context available.
+- **R / Shipping Provider C - Transit**: Represents the shipment being in transit with shipping provider C. visible in diagram; no further repository context available.
+- **S / Delivery Attempt**: Represents the attempt to deliver the shipment to the customer. visible in diagram; no further repository context available.
+- **T / Delivery Confirmation**: Represents the confirmation of successful delivery. visible in diagram; no further repository context available.
+- **U / Delivery Exception Handling**: Represents the process of handling delivery exceptions. visible in diagram; no further repository context available.
+- **V / Notify Customer & Support**: Represents the process of notifying the customer and providing support in case of delivery exceptions. visible in diagram; no further repository context available.
+- **W / Order Completion**: Represents the final step where the order is completed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Customer places an order, triggering order validation.
+- `B -- Valid Order --> C`: Order is valid, proceeding to inventory check.
+- `B -- Invalid Order --> D`: Order is invalid, proceeding to order cancellation.
+- `C -- In Stock --> E`: Items are in stock, proceeding to create shipment request.
+- `C -- Out of Stock --> F`: Items are out of stock, proceeding to backorder processing.
+- `F --> G`: Backorder processing triggers customer notification.
+- `G --> H`: Customer notified, awaiting inventory restock.
+- `H --> C`: Inventory restocked, returning to inventory check.
+- `E --> I`: Shipment request created, proceeding to package selection.
+- `I --> J`: Package selected, assigning tracking number.
+- `J --> K`: Tracking number assigned, proceeding to warehouse pick & pack.
+- `K --> L`: Warehouse pick & pack completed, proceeding to shipping provider selection.
+- `L -- Lowest Cost --> M`: Shipping provider selected based on lowest cost.
+- `L -- Fastest Delivery --> N`: Shipping provider selected based on fastest delivery.
+- `L -- Customer Preference --> O`: Shipping provider selected based on customer preference.
+- `M --> P`: Shipment sent to shipping provider A, now in transit.
+- `N --> Q`: Shipment sent to shipping provider B, now in transit.
+- `O --> R`: Shipment sent to shipping provider C, now in transit.
+- `P --> S`: Shipment in transit with provider A, proceeding to delivery attempt.
+- `Q --> S`: Shipment in transit with provider B, proceeding to delivery attempt.
+- `R --> S`: Shipment in transit with provider C, proceeding to delivery attempt.
+- `S -- Success --> T`: Delivery attempt successful, proceeding to delivery confirmation.
+- `S -- Failure --> U`: Delivery attempt failed, proceeding to delivery exception handling.
+- `U --> V`: Delivery exception handled, notifying customer and support.
+- `V --> S`: Customer notified and support provided, returning to delivery attempt.
+- `T --> W`: Delivery confirmed, order completion.
+
+## Repository Context & Terminology
+- **CustomerOrder**: Represents the entire process related to a customer's order, from placement to completion.
+- **Order Validation**: The process of verifying the accuracy and completeness of an order, including payment information and address details.
+- **Inventory Check**: The process of verifying the availability of the ordered items in the warehouse.
+- **Backorder Processing**: The process of handling orders for items that are currently out of stock.
+- **Shipment Request**: A request to create a shipment for an order, including details such as items, quantity, and destination address.
+- **Package Selection**: The process of choosing the appropriate packaging for the items to be shipped.
+- **Tracking Number**: A unique identifier assigned to a shipment, allowing the customer to track its progress.
+- **Warehouse Pick & Pack**: The process of retrieving the ordered items from the warehouse and packing them for shipment.
+- **Shipping Provider**: A company that provides shipping and delivery services.
+- **Delivery Attempt**: An effort to deliver the shipment to the customer's specified address.
+- **Delivery Exception**: An unexpected event that prevents the successful delivery of a shipment, such as a damaged package or an incorrect address.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with the "Customer Places Order" node, which initiates the "Order Validation" process. If the order is valid, the workflow proceeds to "Inventory Check"; otherwise, it branches to "Order Cancellation." If the items are in stock, a "Shipment Request" is created, followed by "Package Selection" and "Assign Tracking Number." The order then undergoes "Warehouse Pick & Pack" before "Shipping Provider Selection," where the system chooses a provider based on "Lowest Cost," "Fastest Delivery," or "Customer Preference," leading to "Send to Shipping Provider A/B/C." The shipment enters "Shipping Provider A/B/C - Transit" before a "Delivery Attempt." A successful attempt leads to "Delivery Confirmation" and "Order Completion." A failed attempt triggers "Delivery Exception Handling" and "Notify Customer & Support," looping back to "Delivery Attempt." The "Inventory Check" also branches to "Backorder Processing" if items are out of stock, which triggers "Notify Customer" and "Await Inventory Restock," eventually returning to "Inventory Check." The selection of a shipping provider is a key decision point, influencing delivery speed and cost, and the "Delivery Exception Handling" ensures that customers are informed and supported in case of any issues during shipment.

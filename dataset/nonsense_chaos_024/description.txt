@@ -1,0 +1,62 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the operational logic of the CoreForge system. It outlines the sequence of steps, decision points, and processes involved in the system's initialization, operation, and termination. The diagram serves as a visual representation of the CoreForge's control flow and decision-making process.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with an initialization node at the top and progresses through a series of decision diamonds and process rectangles, eventually leading to a completion node at the bottom. The diagram illustrates a sequential flow with branching based on conditions.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Initialization, ArcPath Activation Check, VaultNode Connection Check, SynapseKey Validation, and Completion.
+
+## Node-by-Node Description
+- **A / Init: CoreForge Start**: Represents the initialization phase of the CoreForge system.
+  visible in diagram; no further repository context available.
+- **B / Is ArcPath Active?**: A decision node that checks if the ArcPath is active.
+  visible in diagram; no further repository context available.
+- **C / Engage FluxGate Protocol**: Represents the process of engaging the FluxGate Protocol.
+  visible in diagram; no further repository context available.
+- **D / Perform ZenithMesh Handshake**: Represents the process of performing a ZenithMesh Handshake.
+  visible in diagram; no further repository context available.
+- **E / VaultNode Connected?**: A decision node that checks if the VaultNode is connected.
+  visible in diagram; no further repository context available.
+- **F / Execute SpectraCore Query**: Represents the process of executing a SpectraCore Query.
+  visible in diagram; no further repository context available.
+- **G / Trigger DeltaQueue Retry**: Represents the process of triggering a DeltaQueue Retry.
+  visible in diagram; no further repository context available.
+- **H / Validate SynapseKey Integrity**: Represents the process of validating the SynapseKey Integrity.
+  visible in diagram; no further repository context available.
+- **I / ArcLane Distributor Commit**: Represents the process of committing via the ArcLane Distributor.
+  visible in diagram; no further repository context available.
+- **J / CoreSync Abort Sequence**: Represents the process of initiating the CoreSync Abort Sequence.
+  visible in diagram; no further repository context available.
+- **K / Complete: CoreForge Halt**: Represents the completion phase of the CoreForge system.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Transition from initialization to the ArcPath activation check.
+- `B -- Yes --> C`: If ArcPath is active, engage the FluxGate Protocol.
+- `B -- No --> D`: If ArcPath is not active, perform the ZenithMesh Handshake.
+- `C --> E`: Transition from engaging FluxGate Protocol to checking VaultNode connection.
+- `D --> E`: Transition from performing ZenithMesh Handshake to checking VaultNode connection.
+- `E -- Yes --> F`: If VaultNode is connected, execute the SpectraCore Query.
+- `E -- No --> G`: If VaultNode is not connected, trigger the DeltaQueue Retry.
+- `F --> H`: Transition from executing SpectraCore Query to validating SynapseKey Integrity.
+- `G --> H`: Transition from triggering DeltaQueue Retry to validating SynapseKey Integrity.
+- `H -- Valid --> I`: If SynapseKey Integrity is valid, perform ArcLane Distributor Commit.
+- `H -- Invalid --> J`: If SynapseKey Integrity is invalid, initiate CoreSync Abort Sequence.
+- `I --> K`: Transition from ArcLane Distributor Commit to CoreForge Halt.
+- `J --> K`: Transition from CoreSync Abort Sequence to CoreForge Halt.
+
+## Repository Context & Terminology
+- **CoreForge**: The overall system or process being described by the flowchart. It encompasses initialization, various protocol engagements, data validation, and either a commit or abort sequence before halting.
+- **ArcPath**: A component or service whose activation status determines the initial path of the workflow. If active, the system engages the FluxGate Protocol; otherwise, it performs a ZenithMesh Handshake.
+- **FluxGate Protocol**: A protocol engaged when ArcPath is active. Its purpose is not explicitly defined in the diagram but it precedes a VaultNode connection check.
+- **ZenithMesh Handshake**: A handshake process performed when ArcPath is not active. It also precedes a VaultNode connection check.
+- **VaultNode**: A node whose connection status is checked after either the FluxGate Protocol engagement or the ZenithMesh Handshake.
+- **SpectraCore Query**: A query executed if the VaultNode is connected. It precedes the validation of SynapseKey Integrity.
+- **DeltaQueue Retry**: A retry mechanism triggered if the VaultNode is not connected. It also precedes the validation of SynapseKey Integrity.
+- **SynapseKey**: A key whose integrity is validated. The outcome of this validation determines whether the system proceeds with a commit or an abort sequence.
+- **ArcLane Distributor Commit**: A commit process performed if the SynapseKey Integrity is valid.
+- **CoreSync Abort Sequence**: An abort sequence initiated if the SynapseKey Integrity is invalid.
+
+## High-Density QA Ground Truth Summary
+The CoreForge process begins with the "Init: CoreForge Start" node, immediately followed by a check to determine if "ArcPath" is active. If "ArcPath" is active, the system engages the "FluxGate Protocol"; otherwise, it performs a "ZenithMesh Handshake". Both paths converge at the "VaultNode Connected?" decision point. If the "VaultNode" is connected, the system executes a "SpectraCore Query"; if not, it triggers a "DeltaQueue Retry". Both of these processes then lead to the "Validate SynapseKey Integrity" node. The integrity validation determines the final path: a "Valid" SynapseKey leads to an "ArcLane Distributor Commit", while an "Invalid" key triggers a "CoreSync Abort Sequence". Both the commit and abort sequences ultimately lead to the "Complete: CoreForge Halt" node, signifying the end of the process. The "ArcPath" and "VaultNode" checks act as gatekeepers, directing the flow based on system state, while the "SynapseKey" validation ensures data integrity before the final commit or abort.

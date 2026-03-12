@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the order processing workflow for an e-commerce system, from when a user places an order to either successful delivery or order cancellation. The diagram serves as a visual representation of the steps involved in fulfilling an order and handling potential issues like payment failures, inventory shortages, or address validation problems.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "User Places Order" node at the top and flows downwards through a series of decision points and processes, ultimately leading to either "End: Order Delivered" or "End: Order Cancelled" at the bottom.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Placement & Payment, Inventory Check, Address Validation, Shipping, and Order Completion/Cancellation.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action of a user submitting an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to determine if the payment for the order has been successfully received. visible in diagram; no further repository context available.
+- **C / Send Order Cancellation Email**: Represents sending an email to the user to inform them that their order has been cancelled due to payment failure. visible in diagram; no further repository context available.
+- **D / Inventory Check**: Represents the process of verifying if the items ordered are available in stock. visible in diagram; no further repository context available.
+- **E / Packaging**: Represents the process of preparing the order for shipment. visible in diagram; no further repository context available.
+- **F / Address Valid?**: A decision point to determine if the shipping address provided by the user is valid. visible in diagram; no further repository context available.
+- **G / Hold Order**: Represents placing the order on hold due to an invalid address. visible in diagram; no further repository context available.
+- **K / Update Inventory Count**: Represents updating the inventory records to reflect the items that have been allocated to the order. visible in diagram; no further repository context available.
+- **L / Shipping**: Represents the process of physically shipping the order to the user. visible in diagram; no further repository context available.
+- **M / Delivery Attempted?**: A decision point to determine if a delivery attempt has been made. visible in diagram; no further repository context available.
+- **N / Delivery Success Email**: Represents sending an email to the user to confirm that their order has been successfully delivered. visible in diagram; no further repository context available.
+- **H / End: Order Cancelled**: Represents the final state where the order has been cancelled. visible in diagram; no further repository context available.
+- **O / End: Order Delivered**: Represents the final state where the order has been successfully delivered. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, initiating the payment verification process.
+- `B -- No --> C`: If payment is not received, send an order cancellation email.
+- `B -- Yes --> D`: If payment is received, proceed to inventory check.
+- `D -- In Stock --> E`: If the items are in stock, proceed to packaging.
+- `D -- Out of Stock --> H`: If the items are out of stock, end the order as cancelled.
+- `E --> F`: After packaging, validate the shipping address.
+- `F -- No --> G`: If the address is invalid, hold the order.
+- `F -- Yes --> K`: If the address is valid, update the inventory count.
+- `K --> L`: After updating the inventory count, proceed to shipping.
+- `L --> M`: Attempt delivery of the shipment.
+- `M -- Yes --> N`: If delivery is successful, send a delivery success email.
+- `M -- No --> L`: If delivery fails, return to the shipping stage (loop).
+- `C --> H`: Sending the cancellation email leads to the order being cancelled.
+- `G --> H`: Holding the order due to an invalid address leads to the order being cancelled.
+- `N --> O`: Sending the delivery success email leads to the order being delivered.
+- `C, G, D converge on H`: The "Send Order Cancellation Email", "Hold Order", and "Out of Stock" paths all converge at the "End: Order Cancelled" node.
+
+## Repository Context & Terminology
+- **User Places Order**: Standard term for a customer initiating a purchase. In this diagram, it's the starting point of the workflow.
+- **Payment Received?**: Standard check to ensure funds are available. Here, a "No" leads to immediate cancellation without a refund process.
+- **Inventory Check**: Standard process to verify stock levels. In this diagram, "Out of Stock" leads directly to order cancellation without attempting backorders or partial fulfillment.
+- **Packaging**: Standard process of preparing items for shipment. In this diagram, it precedes address validation.
+- **Address Valid?**: Standard check to ensure deliverability. In this diagram, an invalid address leads to holding the order, but not sending a cancellation email.
+- **Hold Order**: Standard term for temporarily pausing an order. In this diagram, it leads to order cancellation.
+- **Update Inventory Count**: Standard process to adjust stock levels. In this diagram, it occurs *after* shipping, which is incorrect.
+- **Shipping**: Standard process of physically delivering the order. In this diagram, a failed delivery attempt loops back to shipping indefinitely.
+- **Delivery Attempted?**: Standard check to see if delivery was successful. In this diagram, a "Yes" leads to a success email, but a "No" loops back to shipping.
+- **Delivery Success Email**: Standard confirmation to the customer. In this diagram, it's the final step before marking the order as delivered.
+- **End: Order Cancelled**: Standard final state for cancelled orders. In this diagram, it's reached from various points, including payment failure and inventory shortage.
+- **End: Order Delivered**: Standard final state for successful orders. In this diagram, it's reached after a delivery success email.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Places Order," which triggers a "Payment Received?" check. If payment fails ("No"), a "Send Order Cancellation Email" is dispatched, and the process ends at "End: Order Cancelled." If payment succeeds ("Yes"), an "Inventory Check" is performed. If items are "Out of Stock," the order is immediately "End: Order Cancelled" without a refund. If "In Stock," the order proceeds to "Packaging," followed by an "Address Valid?" check. A "No" outcome results in the order being put on "Hold Order" and then "End: Order Cancelled." A "Yes" outcome incorrectly leads to "Update Inventory Count" *after* "Shipping." Following shipping, a "Delivery Attempted?" check determines the next step. A "Yes" triggers a "Delivery Success Email" and "End: Order Delivered." A "No" loops back to "Shipping," creating an infinite delivery loop. The diagram contains several errors, including updating inventory count after shipping, a missing refund process for cancelled orders, and an infinite loop for failed deliveries. The "Hold Order" state also incorrectly leads directly to "End: Order Cancelled" without further resolution attempts.

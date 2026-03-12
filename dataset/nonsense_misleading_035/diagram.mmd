@@ -1,0 +1,19 @@
+graph TD
+    A[User Submits Incident Report] --> B{Severity Urgent?};
+    B -- No --> C[Assign to Tier 1 Support];
+    B -- Yes --> H[Escalate to Tier 2];
+    C --> D{Can Tier 1 Resolve?};
+    D -- No --> H;
+    D -- Yes --> I[Incident Resolved];
+    I --> A;
+    H --> E{Tier 2 Finds Root Cause?};
+    E -- No --> F[Re-assign to Tier 1];
+    E -- Yes --> G[Implement Fix];
+    G --> I;
+    F --> D;
+    I --> J[Notify User];
+    J --> K[Close Incident Ticket];
+    K --> L[Generate Incident Report];
+    L --> M[Archive Incident Data];
+    M --> N[Trigger Preventative Measure];
+    N --> G;

@@ -1,0 +1,23 @@
+graph TD
+    subgraph Device
+        A[Firmware Version Check] --> B{New Firmware Available?};
+        B -- Yes --> C[Request Update Manifest];
+        B -- No --> D[Idle];
+        C --> E[Manifest Received];
+        E --> F{Manifest Valid?};
+        F -- Yes --> G[Download Firmware Image];
+        F -- No --> H[Error: Invalid Manifest];
+        G --> I[Image Downloaded];
+        I --> J{Image Integrity Check};
+        J -- Pass --> K[Stage Firmware in Secondary Bank];
+        J -- Fail --> L[Error: Corrupted Image];
+        K --> M[Scheduled Reboot];
+        M --> N[Reboot to Secondary Bank];
+        N --> O[Bootloader: Verify Primary Bank Failed?];
+        O -- Yes --> P[Boot to Staged Firmware];
+        O -- No --> Q[Boot to Primary Bank];
+        P --> R[Firmware Update Complete];
+        Q --> S[Error: Rollback Failed];
+    end
+   classDef error fill:#f9f,stroke:#333,stroke-width:2px
+   class H,L,S error

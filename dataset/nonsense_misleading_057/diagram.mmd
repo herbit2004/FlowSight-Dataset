@@ -1,0 +1,25 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- No --> C[Send Payment Reminder];
+    C --> D{Reminder Effective?};
+    D -- Yes --> E[Order Fulfillment Initiated];
+    D -- No --> F[Cancel Order];
+    F --> H[Order Cancellation Confirmed];
+    B -- Yes --> E;
+    E --> I{Inventory Available?};
+    I -- No --> J[Backorder Item];
+	J --> I;
+    I -- Yes --> G[Package Items];
+    G --> K[Shipping Label Printed];
+    K --> L[Ship Order];
+    L --> M[Order Delivered];
+    M --> N{Customer Satisfied?};
+    N -- No --> O[Request Feedback];
+    O --> M;
+	N -- Yes --> P[Close Order];
+    P --> Q[Update Inventory];
+	Q --> R[Generate Report];
+    R --> S{Report Approved?};
+    S -- No --> T[Send Report for Revision];
+    T --> R;
+    S -- Yes --> U[Archive Order Data];

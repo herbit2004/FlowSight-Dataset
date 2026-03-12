@@ -1,0 +1,119 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow and processing steps within a knowledge graph visualization pipeline. It outlines the different phases of the pipeline, from initial text extraction to final HTML visualization, and the modules involved in each phase. The diagram serves as a high-level architecture overview, showing the dependencies and relationships between different components of the system.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the `main.py` entry point and progresses through several phases of data processing, branching based on configuration options, and culminating in HTML visualization and JSON data export.
+
+## Subgraphs / Stages
+The diagram contains four explicit subgraphs representing the main phases of the pipeline:
+- **Phase 1: Triple Extraction**: Focuses on extracting structured data from text.
+- **Phase 2: Entity Standardization**: Standardizes entities identified in the text.
+- **Phase 3: Relationship Inference**: Infers relationships between entities.
+- **Phase 4: Visualization**: Generates the final knowledge graph visualization.
+
+## Node-by-Node Description
+- **main.py - Entry Point**: The starting point of the application.
+  In the repository this corresponds to the `main.py` file, which likely contains the main function and program execution logic.
+- **Parse Arguments**: Parses command-line arguments to configure the pipeline.
+  visible in diagram; no further repository context available.
+- **sample_data_visualization**: A visualization process using sample data, triggered by a test flag.
+  visible in diagram; no further repository context available.
+- **visualize_knowledge_graph**: Generates the knowledge graph visualization.
+  In the repository this corresponds to the `visualize_knowledge_graph` function, which likely uses the processed data to create a visual representation of the knowledge graph.
+- **load_config**: Loads configuration settings from a file.
+  In the repository this corresponds to loading the configuration from `config.py`.
+- **process_text_in_chunks**: Processes the input text in chunks.
+  visible in diagram; no further repository context available.
+- **chunk_text**: Divides the input text into smaller chunks.
+  visible in diagram; no further repository context available.
+- **process_with_llm**: Processes the text chunks using a Large Language Model (LLM).
+  visible in diagram; no further repository context available.
+- **call_llm**: Invokes the Large Language Model (LLM) to process the text.
+  visible in diagram; no further repository context available.
+- **extract_json_from_text**: Extracts JSON data from the processed text.
+  visible in diagram; no further repository context available.
+- **standardization enabled?**: A decision node that checks if entity standardization is enabled.
+  visible in diagram; no further repository context available.
+- **standardize_entities**: Standardizes the entities identified in the text.
+  In the repository this corresponds to the `standardize_entities` function, which likely uses techniques like entity linking or normalization to standardize the entities.
+- **inference enabled?**: A decision node that checks if relationship inference is enabled.
+  visible in diagram; no further repository context available.
+- **infer_relationships**: Infers relationships between entities.
+  visible in diagram; no further repository context available.
+- **_calculate_centrality_metrics**: Calculates centrality metrics for the nodes in the graph.
+  visible in diagram; no further repository context available.
+- **_detect_communities**: Detects communities within the graph.
+  visible in diagram; no further repository context available.
+- **_calculate_node_sizes**: Calculates the sizes of the nodes based on some criteria.
+  visible in diagram; no further repository context available.
+- **_add_nodes_and_edges_to_network**: Adds nodes and edges to the network representation of the graph.
+  visible in diagram; no further repository context available.
+- **_get_visualization_options**: Retrieves visualization options.
+  visible in diagram; no further repository context available.
+- **_save_and_modify_html**: Saves and modifies the HTML file for the visualization.
+  visible in diagram; no further repository context available.
+- **_resolve_entities_with_llm**: Resolves entities using a Large Language Model (LLM).
+  visible in diagram; no further repository context available.
+- **_identify_communities**: Identifies communities within the graph.
+  visible in diagram; no further repository context available.
+- **_infer_relationships_with_llm**: Infers relationships using a Large Language Model (LLM).
+  visible in diagram; no further repository context available.
+- **_infer_within_community_relationships**: Infers relationships within communities.
+  visible in diagram; no further repository context available.
+- **_apply_transitive_inference**: Applies transitive inference to infer new relationships.
+  visible in diagram; no further repository context available.
+- **_infer_relationships_by_lexical_similarity**: Infers relationships based on lexical similarity.
+  visible in diagram; no further repository context available.
+- **_deduplicate_triples**: Deduplicates the extracted triples.
+  visible in diagram; no further repository context available.
+- **HTML Visualization**: The final HTML visualization of the knowledge graph.
+  visible in diagram; no further repository context available.
+- **JSON Data Export**: Exports the processed data in JSON format.
+  visible in diagram; no further repository context available.
+- **prompts.py**: Provides prompts for the LLM.
+  In the repository this corresponds to the `prompts.py` file, which likely contains a collection of prompts used to guide the LLM in various tasks such as entity resolution and relationship inference.
+
+## Edges, Branches & Convergence
+- `main.py - Entry Point --> Parse Arguments`: The application starts by parsing command-line arguments.
+- `Parse Arguments -- test flag --> sample_data_visualization`: If the test flag is set, the pipeline uses sample data for visualization.
+- `Parse Arguments -- normal processing --> load_config`: If the test flag is not set, the pipeline loads configuration settings.
+- `load_config --> process_text_in_chunks`: After loading the configuration, the input text is processed in chunks.
+- `process_text_in_chunks --> chunk_text`: The text is divided into smaller chunks.
+- `chunk_text --> process_with_llm`: The text chunks are processed using an LLM.
+- `process_with_llm --> call_llm`: The LLM is invoked to process the text.
+- `call_llm --> extract_json_from_text`: JSON data is extracted from the processed text.
+- `process_text_in_chunks --> standardization enabled?`: After chunking, a check is performed to see if standardization is enabled.
+- `standardization enabled? -- Yes --> standardize_entities`: If standardization is enabled, the entities are standardized.
+- `standardization enabled? -- No --> inference enabled?`: If standardization is not enabled, a check is performed to see if inference is enabled.
+- `standardize_entities --> inference enabled?`: After standardization, a check is performed to see if inference is enabled.
+- `inference enabled? -- Yes --> infer_relationships`: If inference is enabled, relationships are inferred.
+- `inference enabled? -- No --> visualize_knowledge_graph`: If inference is not enabled, the knowledge graph is visualized directly.
+- `infer_relationships --> visualize_knowledge_graph`: After inference, the knowledge graph is visualized.
+- `visualize_knowledge_graph --> _calculate_centrality_metrics`: Centrality metrics are calculated for the nodes in the graph.
+- `visualize_knowledge_graph --> _detect_communities`: Communities within the graph are detected.
+- `visualize_knowledge_graph --> _calculate_node_sizes`: The sizes of the nodes are calculated.
+- `visualize_knowledge_graph --> _add_nodes_and_edges_to_network`: Nodes and edges are added to the network representation of the graph.
+- `visualize_knowledge_graph --> _get_visualization_options`: Visualization options are retrieved.
+- `visualize_knowledge_graph --> _save_and_modify_html`: The HTML file for the visualization is saved and modified.
+- `_save_and_modify_html --> HTML Visualization`: The final HTML visualization is generated.
+- `process_text_in_chunks --> JSON Data Export`: The processed data is exported in JSON format.
+- `standardize_entities --> _resolve_entities_with_llm`: Entities are resolved using an LLM.
+- `infer_relationships --> _identify_communities`: Communities are identified within the graph.
+- `infer_relationships --> _infer_relationships_with_llm`: Relationships are inferred using an LLM.
+- `infer_relationships --> _infer_within_community_relationships`: Relationships within communities are inferred.
+- `infer_relationships --> _apply_transitive_inference`: Transitive inference is applied to infer new relationships.
+- `infer_relationships --> _infer_relationships_by_lexical_similarity`: Relationships are inferred based on lexical similarity.
+- `infer_relationships --> _deduplicate_triples`: The extracted triples are deduplicated.
+
+## Repository Context & Terminology
+- **main.py**: The main entry point of the application, responsible for orchestrating the different phases of the pipeline.
+- **config.py**: Contains configuration settings for the pipeline, such as file paths, LLM parameters, and feature flags.
+- **text_utils.py**: Likely contains utility functions for text processing, such as tokenization, stemming, and stop word removal.
+- **llm.py**: Likely contains functions for interacting with Large Language Models (LLMs), such as sending prompts and receiving responses.
+- **entity_standardization.py**: Contains functions for standardizing entities, such as entity linking and normalization.
+- **visualization.py**: Contains functions for generating the knowledge graph visualization.
+- **prompts.py**: Contains a collection of prompts used to guide the LLM in various tasks.
+- **JSON Data Export**: The process of exporting the extracted and processed data into a JSON format, which can be used for further analysis or storage.
+
+## High-Density QA Ground Truth Summary
+The pipeline begins at `main.py - Entry Point`, which parses arguments to determine the execution path. If the `test flag` is present, the pipeline proceeds to `sample_data_visualization` and then directly to `visualize_knowledge_graph`. Otherwise, the pipeline loads configuration settings from `load_config` and processes the input text in chunks via `process_text_in_chunks`, which leads to `chunk_text`, `process_with_llm`, `call_llm`, and `extract_json_from_text`. A key branch occurs after `process_text_in_chunks`: if `standardization enabled?` is true, the pipeline standardizes entities using `standardize_entities` and `_resolve_entities_with_llm`; otherwise, it proceeds to check `inference enabled?`. If `inference enabled?` is true, the pipeline infers relationships using `infer_relationships` and its sub-processes (`_identify_communities`, `_infer_relationships_with_llm`, `_infer_within_community_relationships`, `_apply_transitive_inference`, `_infer_relationships_by_lexical_similarity`, `_deduplicate_triples`). Regardless of the inference decision, the pipeline converges at `visualize_knowledge_graph`, which performs several operations to prepare the visualization (`_calculate_centrality_metrics`, `_detect_communities`, `_calculate_node_sizes`, `_add_nodes_and_edges_to_network`, `_get_visualization_options`, `_save_and_modify_html`). The pipeline concludes with `HTML Visualization` and `JSON Data Export`. The `prompts.py` module provides prompts for the LLM during entity resolution and relationship inference, influencing the quality of the extracted knowledge graph.

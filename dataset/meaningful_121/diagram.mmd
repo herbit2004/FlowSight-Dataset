@@ -1,0 +1,41 @@
+graph TD
+    subgraph Customer Interface
+        A[Customer Web App] --> B(Order Entry API)
+        B --> C{Validate Order}
+    end
+
+    subgraph Order Processing
+        C -- Valid --> D[Order Accepted Event Producer]
+        C -- Invalid --> E[Order Rejection Event Producer]
+        D --> F((Kafka Topic: order.accepted))
+        E --> G((Kafka Topic: order.rejected))
+    end
+
+    subgraph Warehouse Management
+        F --> H{Inventory Check}
+        H -- Sufficient Inventory --> I[Warehouse Order Event Producer]
+        H -- Insufficient Inventory --> J[Backorder Event Producer]
+        I --> K((Kafka Topic: warehouse.order))
+        J --> L((Kafka Topic: backorder.created))
+    end
+
+    subgraph Shipping
+        K --> M[Package Order]
+        M --> N[Ship Order Event Producer]
+        N --> O((Kafka Topic: order.shipped))
+    end
+
+    subgraph Order History Service
+        F -->P([Order Accepted Event Consumer])
+        G -->Q([Order Rejected Event Consumer])
+        O -->R([Order Shipped Event Consumer])
+        L -->S([Backorder Event Consumer])
+
+        P --> T(Order History DB)
+        Q --> T
+        R --> T
+        S --> T
+    end
+
+    classDef kafka fill:#f9f,stroke:#333,stroke-width:2px
+    class F,G,K,O,L kafka

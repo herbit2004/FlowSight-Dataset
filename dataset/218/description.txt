@@ -1,0 +1,71 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a decision-making process for selecting appropriate analysis methods based on the type of data being analyzed. It guides users through a series of questions about their data (spatial coordinates, multi-modality, etc.) to suggest relevant computational methods available in the `liana-py` package. The diagram serves as a visual guide for researchers to choose the most suitable analysis technique for their specific dataset.
+
+## Overall Layout
+The flowchart has a top-down (TD) layout. It starts with a "What type of data?" node at the top and branches out based on the answers to subsequent questions. The end nodes represent specific analysis methods or tutorials.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into three stages:
+1. **Data Type Identification**: Determining the fundamental characteristics of the data (spatial coordinates, multi-modality).
+2. **Comparative Analysis**: Assessing the data's structure and suitability for comparative methods (across samples, specific contrasts).
+3. **Method Selection**: Recommending specific analysis techniques based on the data's properties.
+
+## Node-by-Node Description
+- **Start / What type of data?**: The starting point of the flowchart, representing the initial question about the nature of the data being analyzed. visible in diagram; no further repository context available.
+- **Spatial / Spatial coordinates?**: A decision node asking whether the data contains spatial coordinates. visible in diagram; no further repository context available.
+- **SpatialRes / Resolution?**: A decision node asking about the resolution of the spatial data. visible in diagram; no further repository context available.
+- **Inflow / Inflow Score**: Represents the "Inflow Score" analysis method. In the repository this corresponds to a method for analyzing single-cell data with spatial coordinates.
+- **SpatialType / Analysis type?**: A decision node asking about the type of analysis to be performed on spot-based spatial data. visible in diagram; no further repository context available.
+- **LocalQ / Local interactions?**: A decision node asking whether to focus on local interactions. visible in diagram; no further repository context available.
+- **Local / Local Bivariate Metrics**: Represents the "Local Bivariate Metrics" analysis method. In the repository this corresponds to a method for analyzing local interactions in spot-based spatial data.
+- **Global / Global Bivariate Metrics**: Represents the "Global Bivariate Metrics" analysis method. In the repository this corresponds to a method for analyzing global interactions in spot-based spatial data.
+- **MISTy / Multi-view Learning**: Represents the "Multi-view Learning" analysis method. In the repository this corresponds to a method for unsupervised analysis of spot-based spatial data.
+- **Modal / Multi-modal?**: A decision node asking whether the data is multi-modal. visible in diagram; no further repository context available.
+- **Compare / Compare across samples?**: A decision node asking whether to compare across samples. visible in diagram; no further repository context available.
+- **Contrast / Specific contrast?**: A decision node asking whether there is a specific contrast of interest. visible in diagram; no further repository context available.
+- **Targeted / Differential Contrasts**: Represents the "Differential Contrasts" analysis method. In the repository this corresponds to a method for analyzing specific contrasts across samples.
+- **MOFA / MOFA+**: Represents the "MOFA+" analysis method. In the repository this corresponds to a method for analyzing data without a specific contrast across samples.
+- **Tensor / Tensor-cell2cell**: Represents the "Tensor-cell2cell" analysis method. In the repository this corresponds to a method for analyzing data without a specific contrast across samples.
+- **TensorExt / Extended Tutorials**: Represents a link to extended tutorials. In the repository this corresponds to tutorials on cell-cell communication protocols.
+- **Steady / Steady-state LR Inference**: Represents the "Steady-state LR Inference" analysis method. In the repository this corresponds to a method for analyzing data without comparing across samples.
+- **SMA / Multi-Modal Spatial**: Represents the "Multi-Modal Spatial" analysis method. In the repository this corresponds to a method for analyzing multi-modal data with spatial coordinates.
+- **SCMulti / Multi-Modal Single-Cell**: Represents the "Multi-Modal Single-Cell" analysis method. In the repository this corresponds to a method for analyzing multi-modal single-cell data.
+- **Metab / Metabolite-mediated CCC**: Represents the "Metabolite-mediated CCC" analysis method. In the repository this corresponds to a method for analyzing metabolite-mediated cell-cell communication from transcriptomics data.
+
+## Edges, Branches & Convergence
+- `Start --> Spatial`: Transition based on the type of data.
+- `Start --> Modal`: Transition based on the type of data.
+- `Spatial -- Yes --> SpatialRes`: If the data contains spatial coordinates, proceed to determine the resolution.
+- `Spatial -- No --> Compare`: If the data does not contain spatial coordinates, proceed to compare across samples.
+- `SpatialRes -- Single-cell --> Inflow`: If the resolution is single-cell, use the Inflow Score method.
+- `SpatialRes -- Spot-based --> SpatialType`: If the resolution is spot-based, determine the analysis type.
+- `SpatialType -- Bivariate --> LocalQ`: If the analysis type is bivariate, determine if local interactions are of interest.
+- `SpatialType -- Unsupervised --> MISTy`: If the analysis type is unsupervised, use the Multi-view Learning method.
+- `LocalQ -- Yes --> Local`: If local interactions are of interest, use the Local Bivariate Metrics method.
+- `LocalQ -- No --> Global`: If local interactions are not of interest, use the Global Bivariate Metrics method.
+- `Modal -- Spatial --> SMA`: If the data is multi-modal and spatial, use the Multi-Modal Spatial method.
+- `Modal -- Non-Spatial --> SCMulti`: If the data is multi-modal and non-spatial, use the Multi-Modal Single-Cell method.
+- `Compare -- Yes --> Contrast`: If comparing across samples, determine if there is a specific contrast.
+- `Compare -- No --> Steady`: If not comparing across samples, use the Steady-state LR Inference method.
+- `Contrast -- Yes --> Targeted`: If there is a specific contrast, use the Differential Contrasts method.
+- `Contrast -- No --> MOFA`: If there is no specific contrast, use the MOFA+ method.
+- `Contrast -- No --> Tensor`: If there is no specific contrast, use the Tensor-cell2cell method.
+- `Tensor --> TensorExt`: After Tensor-cell2cell, proceed to Extended Tutorials.
+- `SCMulti --> Metab`: For Multi-Modal Single-Cell data, use the Metabolite-mediated CCC method.
+
+## Repository Context & Terminology
+- **Inflow Score**: A method for analyzing single-cell data with spatial coordinates, available in the `liana-py` package.
+- **Local Bivariate Metrics**: A method for analyzing local interactions in spot-based spatial data, available in the `liana-py` package.
+- **Global Bivariate Metrics**: A method for analyzing global interactions in spot-based spatial data, available in the `liana-py` package.
+- **Multi-view Learning (MISTy)**: A method for unsupervised analysis of spot-based spatial data, available in the `liana-py` package.
+- **Differential Contrasts**: A method for analyzing specific contrasts across samples, available in the `liana-py` package.
+- **MOFA+**: A method for analyzing data without a specific contrast across samples, available in the `liana-py` package.
+- **Tensor-cell2cell**: A method for analyzing data without a specific contrast across samples, available in the `liana-py` package.
+- **Steady-state LR Inference**: A method for analyzing data without comparing across samples, available in the `liana-py` package.
+- **Multi-Modal Spatial**: A method for analyzing multi-modal data with spatial coordinates, available in the `liana-py` package.
+- **Multi-Modal Single-Cell**: A method for analyzing multi-modal single-cell data, available in the `liana-py` package.
+- **Metabolite-mediated CCC**: A method for analyzing metabolite-mediated cell-cell communication from transcriptomics data, available in the `liana-py` package.
+- **Extended Tutorials**: Tutorials on cell-cell communication protocols, available at `https://ccc-protocols.readthedocs.io/en/latest/`.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "What type of data?" node, branching into two primary paths based on whether the data has spatial coordinates or is multi-modal. If spatial coordinates are present, the flow proceeds to "Resolution?" to determine if the data is single-cell or spot-based. Single-cell data leads to the "Inflow Score" method, while spot-based data prompts a question about the "Analysis type?" (bivariate or unsupervised). Bivariate analysis further branches based on "Local interactions?" leading to either "Local Bivariate Metrics" or "Global Bivariate Metrics." Unsupervised analysis leads to "Multi-view Learning." If the initial data type is not spatial, the flow asks "Compare across samples?" If yes, it asks "Specific contrast?" leading to "Differential Contrasts," "MOFA+," or "Tensor-cell2cell," with the latter connecting to "Extended Tutorials" for cell-cell communication protocols. If "Compare across samples?" is no, the flow leads to "Steady-state LR Inference." Alternatively, if the initial data type is multi-modal, it branches into "Multi-Modal Spatial" if spatial, or "Multi-Modal Single-Cell" if non-spatial, with the latter leading to "Metabolite-mediated CCC" for analyzing cell-cell communication from transcriptomics data. The `liana-py` package provides implementations for many of these analysis methods.

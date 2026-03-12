@@ -1,0 +1,73 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the workflow of a user search query processing and highlighted snippet generation system. It illustrates the steps involved in parsing a user query, retrieving relevant documents, highlighting relevant sections within those documents, and returning a highlighted snippet to the user. The diagram serves as a visual representation of the system's architecture and the flow of data through its various components.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "User Interaction" subgraph at the top and flows downwards through various processing stages to the "Output" subgraph at the bottom. The start node is "User Search Query" and the end node is "Return Highlighted Snippet to User".
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **User Interaction**: This subgraph represents the initial stage where the user enters a search query, and the query is parsed and analyzed.
+- **Output**: This subgraph represents the final stage where a highlighted snippet is generated and returned to the user.
+
+## Node-by-Node Description
+- **A / User Search Query**: Represents the initial user input, the search query itself. visible in diagram; no further repository context available.
+- **B / Query Parser & Analyzer**: This node represents the component responsible for parsing and analyzing the user's search query. visible in diagram; no further repository context available.
+- **C / Query Type?**: A decision node that determines the type of query (Exact Match or Fuzzy/Partial Match). visible in diagram; no further repository context available.
+- **D / Exact Match Index Lookup**: Represents the process of looking up documents using an exact match index. visible in diagram; no further repository context available.
+- **E / Fuzzy Search Engine**: Represents the component responsible for performing fuzzy or partial match searches. visible in diagram; no further repository context available.
+- **F / Retrieve Document IDs**: Represents the retrieval of document IDs based on the search results. visible in diagram; no further repository context available.
+- **G / Document Cache Hit?**: A decision node that checks if the document is present in the cache. visible in diagram; no further repository context available.
+- **H / Load Document from Cache**: Represents loading the document from the cache. visible in diagram; no further repository context available.
+- **I / Fetch Document from Document Store**: Represents fetching the document from the document store. visible in diagram; no further repository context available.
+- **J / Document Preprocessor**: Represents the component responsible for preprocessing the document. visible in diagram; no further repository context available.
+- **K / Cache Document**: Represents caching the document. visible in diagram; no further repository context available.
+- **L / Highlighting Engine**: Represents the component responsible for highlighting relevant sections in the document. visible in diagram; no further repository context available.
+- **M / Highlighting Type?**: A decision node that determines the type of highlighting to apply (Simple Keyword or Contextual). visible in diagram; no further repository context available.
+- **N / Simple Keyword Match**: Represents the process of matching keywords in the document. visible in diagram; no further repository context available.
+- **O / Contextual Similarity Algorithm**: Represents the algorithm used to determine contextual similarity. visible in diagram; no further repository context available.
+- **P / Apply Keyword Highlighting**: Represents applying highlighting based on keyword matches. visible in diagram; no further repository context available.
+- **Q / Rank Highlight Candidates**: Represents ranking the highlight candidates based on contextual similarity. visible in diagram; no further repository context available.
+- **R / Apply Contextual Highlighting**: Represents applying highlighting based on contextual similarity. visible in diagram; no further repository context available.
+- **S / Post-Highlighting Rules**: Represents applying post-highlighting rules. visible in diagram; no further repository context available.
+- **T / Generate Highlighted Snippet**: Represents generating the highlighted snippet. visible in diagram; no further repository context available.
+- **U / Return Highlighted Snippet to User**: Represents returning the highlighted snippet to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User search query is passed to the query parser and analyzer.
+- `B --> C`: Parsed query is passed to the query type decision node.
+- `C -- Exact Match --> D`: If the query type is an exact match, proceed with exact match index lookup.
+- `C -- Fuzzy / Partial Match --> E`: If the query type is fuzzy or partial match, proceed with fuzzy search engine.
+- `D --> F`: Document IDs are retrieved from the exact match index lookup.
+- `E --> F`: Document IDs are retrieved from the fuzzy search engine.
+- `F --> G`: Retrieved document IDs are passed to the document cache hit decision node.
+- `G -- Yes --> H`: If the document is in the cache, load it from the cache.
+- `G -- No --> I`: If the document is not in the cache, fetch it from the document store.
+- `I --> J`: Fetched document is passed to the document preprocessor.
+- `J --> K`: Preprocessed document is cached.
+- `K --> H`: Cached document is then loaded from cache.
+- `H --> L`: Loaded document is passed to the highlighting engine.
+- `L --> M`: Document is passed to the highlighting type decision node.
+- `M -- Simple Keyword --> N`: If the highlighting type is simple keyword, proceed with simple keyword match.
+- `M -- Contextual --> O`: If the highlighting type is contextual, proceed with contextual similarity algorithm.
+- `N --> P`: Keyword matches are used to apply keyword highlighting.
+- `O --> Q`: Contextual similarity algorithm is used to rank highlight candidates.
+- `Q --> R`: Ranked highlight candidates are used to apply contextual highlighting.
+- `P --> S`: Keyword highlighting results are passed to post-highlighting rules.
+- `R --> S`: Contextual highlighting results are passed to post-highlighting rules.
+- `S --> T`: Post-highlighting rules are applied to generate the highlighted snippet.
+- `T --> U`: Highlighted snippet is returned to the user.
+
+## Repository Context & Terminology
+- **User Search Query**: The text entered by a user to search for information.
+- **Query Parser & Analyzer**: A component that breaks down the user's query into its constituent parts and analyzes its structure and meaning.
+- **Exact Match Index Lookup**: A search technique that finds documents containing the exact keywords specified in the query.
+- **Fuzzy Search Engine**: A search engine that finds documents containing keywords that are similar to, but not exactly the same as, those specified in the query.
+- **Document Cache**: A temporary storage location for frequently accessed documents, used to improve performance.
+- **Document Store**: A persistent storage location for all documents in the system.
+- **Document Preprocessor**: A component that prepares documents for indexing and searching by performing tasks such as stemming, stop word removal, and tokenization.
+- **Highlighting Engine**: A component that identifies and highlights relevant sections of a document based on the search query.
+- **Contextual Similarity Algorithm**: An algorithm that measures the similarity between the context of a keyword in a document and the context of the same keyword in the query.
+- **Post-Highlighting Rules**: Rules that are applied after highlighting to refine the highlighting results, such as removing overlapping highlights or adjusting the length of highlighted snippets.
+
+## High-Density QA Ground Truth Summary
+The process begins with a user entering a "User Search Query," which is then passed to the "Query Parser & Analyzer." The system then determines the "Query Type?" branching to either "Exact Match Index Lookup" or "Fuzzy Search Engine" depending on whether an exact or partial match is required. Document IDs are retrieved, and the system checks for a "Document Cache Hit?". If the document is cached, it's loaded directly; otherwise, it's fetched from the "Document Store," preprocessed, and cached for future use. The "Highlighting Engine" then takes over, deciding on the "Highlighting Type?" which leads to either "Simple Keyword Match" or a "Contextual Similarity Algorithm" to identify relevant sections. "Keyword Highlighting" or "Contextual Highlighting" is applied, followed by "Post-Highlighting Rules" to refine the results. Finally, a "Highlighted Snippet" is generated and returned to the user. The "Document Preprocessor" prepares documents by stemming, removing stop words, and tokenizing, ensuring efficient indexing and searching. The choice between exact and fuzzy matching allows the system to handle a variety of user queries effectively.

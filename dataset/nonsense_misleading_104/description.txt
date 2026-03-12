@@ -1,0 +1,72 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting an order processing workflow. It outlines the steps involved from receiving an order to marking it as complete, including inventory checks, payment processing, shipping, and delivery confirmation. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "Start: Order Received" node at the top and progresses downwards through various stages of order processing, eventually converging at the "Mark Order Complete" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Reception & Inventory, Payment Processing, Packaging & Shipping, Delivery, Undelivered Investigation, and Order Completion.
+
+## Node-by-Node Description
+- **A / Start: Order Received**: Represents the beginning of the order processing workflow, when an order is initially received.
+  visible in diagram; no further repository context available.
+- **B / Inventory Check: Available?**: Represents a decision point where the system checks if the ordered items are available in the inventory.
+  visible in diagram; no further repository context available.
+- **C / Send Out-of-Stock Notification**: Represents the action of sending a notification to the customer if the ordered items are out of stock.
+  visible in diagram; no further repository context available.
+- **D / Confirm Order Receipt**: Represents the action of confirming the order receipt.
+  visible in diagram; no further repository context available.
+- **E / Payment Received?**: Represents a decision point where the system checks if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **F / Cancel Order**: Represents the action of canceling the order.
+  visible in diagram; no further repository context available.
+- **G / Package Items**: Represents the action of packaging the ordered items.
+  visible in diagram; no further repository context available.
+- **H / Shipping Label Printed**: Represents the action of printing the shipping label for the package.
+  visible in diagram; no further repository context available.
+- **I / Label Scanned?**: Represents a decision point where the system checks if the shipping label has been successfully scanned.
+  visible in diagram; no further repository context available.
+- **J / Ship Order**: Represents the action of shipping the order.
+  visible in diagram; no further repository context available.
+- **K / Delivery Received?**: Represents a decision point where the system checks if the delivery has been received.
+  visible in diagram; no further repository context available.
+- **L / Investigate Undelivered**: Represents the action of investigating an undelivered order.
+  visible in diagram; no further repository context available.
+- **N / Send Delivery Confirmation**: Represents the action of sending a delivery confirmation to the customer.
+  visible in diagram; no further repository context available.
+- **M / Mark Order Complete**: Represents the end of the order processing workflow, when the order is marked as complete.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `A --> B`: Order received triggers inventory check.
+  `B -- No --> C`: If inventory is not available, send out-of-stock notification.
+  `B -- Yes --> D`: If inventory is available, confirm order receipt.
+  `D --> E`: Order receipt confirmation triggers payment check.
+  `E -- No --> F`: If payment is not received, cancel the order.
+  `E -- Yes --> G`: If payment is received, package the items.
+  `G --> H`: Packaging items triggers shipping label printing.
+  `H --> I`: Shipping label printing triggers label scanning.
+  `I -- No --> G`: If the label is not scanned, return to packaging items.
+  `I -- Yes --> J`: If the label is scanned, ship the order.
+  `J --> K`: Shipping the order triggers delivery check.
+  `K -- No --> L`: If delivery is not received, investigate undelivered order.
+  `K -- Yes --> N`: If delivery is received, send delivery confirmation.
+  `N --> A`: Sending delivery confirmation loops back to start: order received.
+  `C --> M`: Sending out-of-stock notification leads to marking order complete.
+  `F --> M`: Canceling the order leads to marking order complete.
+  `L --> M`: Investigating undelivered order leads to marking order complete.
+  Paths from C, F, and L converge at M.
+
+## Repository Context & Terminology
+- **Order Received**: In standard practice, this refers to the initial submission of an order by a customer. In this diagram, it marks the start of the workflow, but also, counterfactually, the return point after delivery confirmation.
+- **Inventory Check**: In standard practice, this is a process to verify the availability of items in stock. In this diagram, a negative check leads directly to order completion, skipping cancellation.
+- **Payment Received**: In standard practice, this refers to the confirmation of successful payment for an order. In this diagram, if payment is not received, the order is canceled.
+- **Package Items**: In standard practice, this refers to the process of preparing the items for shipment. In this diagram, it is part of a loop with shipping label printing and scanning.
+- **Shipping Label**: In standard practice, this is a label containing information for shipping the package. In this diagram, a failed scan loops back to packaging, not label reprinting.
+- **Ship Order**: In standard practice, this refers to the process of sending the package to the customer. In this diagram, it follows successful label scanning.
+- **Delivery Received**: In standard practice, this refers to the confirmation that the customer has received the package. In this diagram, confirmation loops back to the start of the workflow.
+- **Investigate Undelivered**: In standard practice, this refers to the process of determining why a package was not delivered. In this diagram, it leads directly to marking the order complete.
+- **Mark Order Complete**: In standard practice, this signifies the end of the order fulfillment process. In this diagram, it is reached from multiple error states and also after delivery confirmation, which then loops back to the start.
+
+## High-Density QA Ground Truth Summary
+The order processing flowchart begins with "Start: Order Received", which initiates an "Inventory Check: Available?". If the inventory check fails ("No"), a "Send Out-of-Stock Notification" is triggered, which directly leads to "Mark Order Complete". If the inventory check is successful ("Yes"), the workflow proceeds to "Confirm Order Receipt", followed by a check for "Payment Received?". A negative payment check results in "Cancel Order", leading to "Mark Order Complete". A successful payment leads to "Package Items", then "Shipping Label Printed", and "Label Scanned?". A failed label scan loops back to "Package Items". A successful scan triggers "Ship Order", followed by "Delivery Received?". If delivery fails ("No"), the process moves to "Investigate Undelivered", which then immediately leads to "Mark Order Complete". If delivery is confirmed ("Yes"), a "Send Delivery Confirmation" is triggered, which counterfactually loops back to "Start: Order Received". The "Mark Order Complete" node is reached from out-of-stock notifications, order cancellations, failed deliveries, and, incorrectly, after delivery confirmation, marking the end of the process or looping back to the start. The standard practice of inventory management and order fulfillment is significantly altered in this diagram, with error states leading directly to completion and delivery confirmation restarting the process.

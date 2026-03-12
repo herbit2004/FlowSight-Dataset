@@ -1,0 +1,63 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow for handling client upload requests in a system. It outlines the steps involved in validating the request, authenticating the client, processing the content, storing the object, and updating metadata and search indices. The diagram serves as a visual representation of the upload process, aiding in understanding the system's architecture and data flow.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It depicts a linear flow with branching based on validation and content type checks. The start node is "Client Application," and the end node is "Indexer: Update Search Index."
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages:
+1. Initial Request and Validation
+2. Authentication and Routing
+3. Content Type Check
+4. Pre-Signed URL Generation and Client Upload
+5. Object Storage
+6. Metadata Update and Indexing
+
+## Node-by-Node Description
+- **A / Client Application**: Represents the client application initiating the upload request. visible in diagram; no further repository context available.
+- **B / Upload Request**: Represents the initial upload request received by the system. visible in diagram; no further repository context available.
+- **C / API Gateway**: Represents the API Gateway component responsible for validating the token and size of the upload request. visible in diagram; no further repository context available.
+- **D / Authentication Service: Verify Token**: Represents the authentication service responsible for verifying the client's token. visible in diagram; no further repository context available.
+- **E / Request Router**: Represents the component responsible for routing the request based on the token validation. visible in diagram; no further repository context available.
+- **F / Content Type Check**: Represents the content type check performed on the uploaded data. visible in diagram; no further repository context available.
+- **G / Pre-Signed URL Generator**: Represents the component responsible for generating a pre-signed URL for the client to upload the object. visible in diagram; no further repository context available.
+- **H / Return Pre-Signed URL to Client**: Represents the step where the pre-signed URL is returned to the client. visible in diagram; no further repository context available.
+- **I / Client Uploads to Object Storage**: Represents the client uploading the object to object storage using the pre-signed URL. visible in diagram; no further repository context available.
+- **J / Object Storage: Store Object**: Represents the object storage service storing the uploaded object. visible in diagram; no further repository context available.
+- **K / Event Queue: Object Uploaded**: Represents the event queue that receives an event when an object is uploaded. visible in diagram; no further repository context available.
+- **L / Metadata Service: Update Metadata**: Represents the metadata service responsible for updating the metadata of the uploaded object. visible in diagram; no further repository context available.
+- **M / Cache Invalidator: Invalidate CDN Cache**: Represents the cache invalidator responsible for invalidating the CDN cache. visible in diagram; no further repository context available.
+- **N / Indexer: Update Search Index**: Represents the indexer responsible for updating the search index with the new object. visible in diagram; no further repository context available.
+- **Z / Error Response to Client**: Represents the error response sent back to the client in case of invalid token, size limit exceeded, or rejected content type. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Client application initiates an upload request.
+- `B -- Valid Token & Size < Limit --> C`: The upload request proceeds to the API Gateway if the token is valid and the size is within the limit.
+- `B -- Invalid Token OR Size >= Limit --> Z`: An error response is sent to the client if the token is invalid or the size exceeds the limit.
+- `C --> D`: The API Gateway forwards the request to the Authentication Service.
+- `D -- Token Valid --> E`: The request is routed to the Request Router if the token is valid.
+- `D -- Token Invalid --> Z`: An error response is sent to the client if the token is invalid.
+- `E --> F`: The Request Router forwards the request to the Content Type Check.
+- `F -- Accepted Type --> G`: The process continues to the Pre-Signed URL Generator if the content type is accepted.
+- `F -- Rejected Type --> Z`: An error response is sent to the client if the content type is rejected.
+- `G --> H`: The Pre-Signed URL Generator returns the pre-signed URL to the client.
+- `H --> I`: The client uploads the object to object storage using the pre-signed URL.
+- `I --> J`: The object storage service stores the uploaded object.
+- `J --> K`: An event is added to the event queue when an object is uploaded.
+- `K --> L`: The Metadata Service updates the metadata of the uploaded object.
+- `L --> M`: The Cache Invalidator invalidates the CDN cache.
+- `M --> N`: The Indexer updates the search index.
+
+## Repository Context & Terminology
+- **API Gateway**: A service that acts as a single entry point for client requests, handling authentication, authorization, and rate limiting.
+- **Authentication Service**: A service responsible for verifying the identity of the client making the request.
+- **Pre-Signed URL**: A URL that grants temporary access to a specific object in object storage, allowing clients to upload or download the object without requiring further authentication.
+- **Object Storage**: A service for storing unstructured data, such as images, videos, and documents.
+- **Event Queue**: A message queue used to decouple services and enable asynchronous communication.
+- **Metadata Service**: A service responsible for managing metadata associated with objects stored in object storage.
+- **Cache Invalidator**: A service responsible for invalidating cached content in a CDN (Content Delivery Network).
+- **Indexer**: A service responsible for indexing data for search and retrieval.
+- **CDN (Content Delivery Network)**: A distributed network of servers that caches content closer to users, improving performance and reducing latency.
+
+## High-Density QA Ground Truth Summary
+The upload process begins with a "Client Application" initiating an "Upload Request." This request is first intercepted by the "API Gateway," which performs initial validation, checking if the "Token Valid & Size < Limit." If either the token is invalid or the size exceeds the limit ("Invalid Token OR Size >= Limit"), an "Error Response to Client" is immediately triggered, terminating the successful flow. If the initial validation passes, the request proceeds to the "Authentication Service: Verify Token." A valid token ("Token Valid") leads to the "Request Router," while an invalid token ("Token Invalid") also results in an "Error Response to Client." The "Request Router" then directs the flow to "Content Type Check." If the content type is "Rejected Type," an error is returned; otherwise, if "Accepted Type," a "Pre-Signed URL Generator" creates a pre-signed URL. This URL is then returned to the client ("Return Pre-Signed URL to Client"), who uses it to upload the object to "Object Storage: Store Object." Upon successful storage, an "Event Queue: Object Uploaded" is triggered, leading to the "Metadata Service: Update Metadata," then the "Cache Invalidator: Invalidate CDN Cache," and finally, the "Indexer: Update Search Index," completing the upload workflow. The use of a pre-signed URL allows the client to directly upload to object storage without further server-side handling, improving scalability.

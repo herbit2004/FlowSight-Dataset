@@ -1,0 +1,53 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the different layers and components of a Flask-based web application, including its interaction with external services and data storage. It depicts the flow of data and control between the client layer, application layer, core modules, network layer, external services, and data storage. The diagram serves as a high-level overview of the system's architecture, aiding in understanding the relationships between different parts of the application.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner, with the client layer at the top and the network layer and data storage at the bottom. It shows a hierarchical structure, starting from the client layer, progressing through the application and core modules, and finally reaching the network layer and data storage. The start node is the "Web Browser," and the end nodes are "JSON History File" and "Global State."
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing different layers of the application: Client Layer, Application Layer - Flask, Core Modules, Network Layer, External Services, and Data Storage.
+
+## Node-by-Node Description
+- **Browser / Web Browser**: Represents the user's web browser, which interacts with the application. visible in diagram; no further repository context available.
+- **UI / React-like UI Components**: Represents the React-like UI components within the client layer. visible in diagram; no further repository context available.
+- **App / Flask Application app.py**: Represents the Flask application, specifically the `app.py` file, which handles requests and responses.
+- **Routes / Route Handlers /, /dashboard, /history, /subdomain**: Represents the route handlers defined in the Flask application, including routes for the root path, dashboard, history, and subdomain.
+- **SocketIO / Flask-SocketIO WebSocket Server**: Represents the Flask-SocketIO WebSocket server, which enables real-time communication between the client and server.
+- **Scanner / Scanner Engine core/scanner.py**: Represents the scanner engine, implemented in the `core/scanner.py` file, which performs the core scanning functionality.
+- **Reporter / PDF Reporter core/reporter.py**: Represents the PDF reporter, implemented in the `core/reporter.py` file, which generates PDF reports.
+- **Socket / Python Socket API**: Represents the Python Socket API used for network communication. visible in diagram; no further repository context available.
+- **DNS / DNS Resolution**: Represents the DNS resolution component used for resolving domain names. visible in diagram; no further repository context available.
+- **IPv4 / IPv4 Support AF_INET**: Represents IPv4 support using the `AF_INET` address family. visible in diagram; no further repository context available.
+- **IPv6 / IPv6 Support AF_INET6**: Represents IPv6 support using the `AF_INET6` address family. visible in diagram; no further repository context available.
+- **Gemini / Google Gemini API AI Analysis**: Represents the Google Gemini API used for AI analysis. visible in diagram; no further repository context available.
+- **History / JSON History File scan_history.json**: Represents the JSON history file (`scan_history.json`) used for storing scan history. visible in diagram; no further repository context available.
+- **State / Global State latest_results**: Represents the global state, specifically the `latest_results`, which stores the latest scan results. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Browser --> App`: HTTP/WebSocket requests from the web browser are sent to the Flask application.
+- `App --> Routes`: The Flask application routes requests to the appropriate route handlers.
+- `App --> SocketIO`: The Flask application uses Flask-SocketIO for WebSocket communication.
+- `Routes --> Scanner`: Route handlers trigger the scanner engine.
+- `Routes --> Reporter`: Route handlers trigger the PDF reporter.
+- `SocketIO --> Browser`: Real-time events are sent from the Flask-SocketIO server to the web browser.
+- `Scanner --> Socket`: The scanner engine uses the Python Socket API for network communication.
+- `Scanner --> DNS`: The scanner engine uses DNS resolution for resolving domain names.
+- `Scanner --> IPv4`: The scanner engine uses IPv4 support for network communication.
+- `Scanner --> IPv6`: The scanner engine uses IPv6 support for network communication.
+- `App --> Gemini`: The Flask application interacts with the Google Gemini API for AI analysis.
+- `App --> History`: The Flask application stores scan history in the JSON history file.
+- `App --> State`: The Flask application stores the latest scan results in the global state.
+- `Reporter --> History`: The PDF reporter stores data in the JSON history file.
+
+## Repository Context & Terminology
+- **Flask**: A micro web framework written in Python. It is used to build the application layer.
+- **Flask-SocketIO**: A Flask extension that provides WebSocket support, enabling real-time communication.
+- **app.py**: The main file for the Flask application, containing the application logic and route definitions.
+- **core/scanner.py**: A Python file containing the implementation of the scanner engine.
+- **core/reporter.py**: A Python file containing the implementation of the PDF reporter.
+- **scan_history.json**: A JSON file used to store the history of scans performed by the application.
+- **AF_INET**: An address family used for IPv4 addresses.
+- **AF_INET6**: An address family used for IPv6 addresses.
+
+## High-Density QA Ground Truth Summary
+The architecture begins with the user interacting with the **Web Browser**, which communicates with the **Flask Application (app.py)** via HTTP/WebSocket. The Flask application then routes requests to specific **Route Handlers** such as `/`, `/dashboard`, `/history`, and `/subdomain`. These route handlers can trigger the **Scanner Engine (core/scanner.py)** or the **PDF Reporter (core/reporter.py)**. The Scanner Engine utilizes the **Python Socket API**, **DNS Resolution**, **IPv4 Support (AF_INET)**, and **IPv6 Support (AF_INET6)** for network scanning. The Flask application also interacts with the **Google Gemini API** for AI analysis. The Flask application and PDF Reporter store data in the **JSON History File (scan_history.json)**, while the Flask application also updates the **Global State (latest_results)**. The **Flask-SocketIO WebSocket Server** enables real-time events to be sent back to the **Web Browser**. The `core/scanner.py` and `core/reporter.py` files represent key modules within the application responsible for scanning and report generation respectively, highlighting the modular design of the system. The `scan_history.json` file serves as a persistent record of past scans, enabling users to review previous activity.

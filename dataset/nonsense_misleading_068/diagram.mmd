@@ -1,0 +1,14 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- No --> C[Send Order Confirmation];
+    B -- Yes --> D[Order Approved];
+    D --> E[Item Unavailable?];
+    E -- Yes --> F[Cancel Order];
+    E -- No --> G[Pack Order];
+    G --> H{Shipping Address Valid?};
+    H -- Yes --> I[Ship Order];
+    I --> J[Delivery Attempted];
+    J --> K{Delivery Successful?};
+    K -- No --> G;
+    K -- Yes --> C;
+    F --> C;

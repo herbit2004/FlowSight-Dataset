@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating different deployment models for a system incorporating a component named GUARDRAIL. The diagram shows how GUARDRAIL can be deployed in a service mesh model, as a gateway, or embedded directly within client and server modules. It serves to compare and contrast these deployment strategies.
+
+## Overall Layout
+The diagram is laid out vertically (TB). It has a hierarchical structure, with "Deployment Models" as the top-level container, encompassing "Service Mesh Model", "Gateway Model", and "Embedded Model". There is no single start or end node; each deployment model represents a distinct configuration.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Service Mesh Model**: Depicts GUARDRAIL deployed as sidecars within client and server pods, interacting with a control plane.
+- **Gateway Model**: Shows GUARDRAIL acting as a gateway between a client and a server.
+- **Embedded Model**: Illustrates GUARDRAIL integrated directly into client and server modules.
+
+## Node-by-Node Description
+- **Client Container**: Represents a client application container within a pod. visible in diagram; no further repository context available.
+- **GUARDRAIL Sidecar (Client Pod)**: Represents the GUARDRAIL component deployed as a sidecar alongside the client container. visible in diagram; no further repository context available.
+- **Server Container**: Represents a server application container within a pod. visible in diagram; no further repository context available.
+- **GUARDRAIL Sidecar (Server Pod)**: Represents the GUARDRAIL component deployed as a sidecar alongside the server container. visible in diagram; no further repository context available.
+- **Policy Server**: A component within the control plane responsible for enforcing policies. visible in diagram; no further repository context available.
+- **Identity Service**: A component within the control plane responsible for identity management. visible in diagram; no further repository context available.
+- **Audit Collector**: A component within the control plane responsible for collecting audit logs. visible in diagram; no further repository context available.
+- **Client (Gateway Model)**: Represents a client application in the gateway model. visible in diagram; no further repository context available.
+- **GUARDRAIL Gateway**: Represents the GUARDRAIL component acting as a gateway. visible in diagram; no further repository context available.
+- **Server (Gateway Model)**: Represents a server application in the gateway model. visible in diagram; no further repository context available.
+- **MCP Client**: Represents a client-side module using the MCP protocol. visible in diagram; no further repository context available.
+- **GUARDRAIL Client Module**: Represents the GUARDRAIL component integrated into the client-side module. visible in diagram; no further repository context available.
+- **GUARDRAIL Server Module**: Represents the GUARDRAIL component integrated into the server-side module. visible in diagram; no further repository context available.
+- **MCP Server**: Represents a server-side module using the MCP protocol. visible in diagram; no further repository context available.
+- **Host Process**: Represents a host process. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Client Container <--> GUARDRAIL Sidecar (Client Pod)`: Indicates communication between the client container and the GUARDRAIL sidecar in the client pod.
+- `GUARDRAIL Sidecar (Client Pod) <--> Policy Server`: Indicates communication between the GUARDRAIL sidecar and the policy server.
+- `GUARDRAIL Sidecar (Client Pod) <--> Identity Service`: Indicates communication between the GUARDRAIL sidecar and the identity service.
+- `GUARDRAIL Sidecar (Client Pod) <--> Audit Collector`: Indicates communication between the GUARDRAIL sidecar and the audit collector.
+- `Server Container <--> GUARDRAIL Sidecar (Server Pod)`: Indicates communication between the server container and the GUARDRAIL sidecar in the server pod.
+- `GUARDRAIL Sidecar (Server Pod) <--> Policy Server`: Indicates communication between the GUARDRAIL sidecar and the policy server.
+- `GUARDRAIL Sidecar (Server Pod) <--> Identity Service`: Indicates communication between the GUARDRAIL sidecar and the identity service.
+- `GUARDRAIL Sidecar (Server Pod) <--> Audit Collector`: Indicates communication between the GUARDRAIL sidecar and the audit collector.
+- `GUARDRAIL Sidecar (Client Pod) <--> GUARDRAIL Sidecar (Server Pod)`: Indicates communication between the client-side and server-side GUARDRAIL sidecars.
+- `Client (Gateway Model) <--> GUARDRAIL Gateway`: Indicates communication between the client and the GUARDRAIL gateway.
+- `GUARDRAIL Gateway <--> Server (Gateway Model)`: Indicates communication between the GUARDRAIL gateway and the server.
+- `MCP Client --> GUARDRAIL Client Module`: Indicates data flow from the MCP client to the GUARDRAIL client module.
+- `GUARDRAIL Client Module <--> GUARDRAIL Server Module`: Indicates communication between the GUARDRAIL client module and the GUARDRAIL server module.
+- `GUARDRAIL Server Module --> MCP Server`: Indicates data flow from the GUARDRAIL server module to the MCP server.
+
+## Repository Context & Terminology
+- **GUARDRAIL**: A component that can be deployed in various ways (sidecar, gateway, embedded) to provide security and policy enforcement.
+- **Sidecar**: A deployment pattern where a utility component (GUARDRAIL in this case) is deployed alongside the main application container in the same pod.
+- **Control Plane**: A set of components (Policy Server, Identity Service, Audit Collector) that manage and control the behavior of the system.
+- **MCP (Mesh Configuration Protocol)**: A protocol used for configuring and managing service meshes.
+- **Client Pod**: A pod containing a client application and its associated sidecars.
+- **Server Pod**: A pod containing a server application and its associated sidecars.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates three deployment models for GUARDRAIL: Service Mesh, Gateway, and Embedded. The Service Mesh Model starts with a Client Container communicating with a GUARDRAIL Sidecar within a Client Pod. This sidecar then communicates with the Policy Server, Identity Service, and Audit Collector in the Control Plane, as well as with a GUARDRAIL Sidecar in the Server Pod. The Server Pod also contains a Server Container. The Gateway Model features a Client communicating with a GUARDRAIL Gateway, which in turn communicates with a Server. The Embedded Model has an MCP Client sending data to a GUARDRAIL Client Module, which communicates with a GUARDRAIL Server Module, which then sends data to an MCP Server. A Host Process is also present in the Embedded Model. The Service Mesh Model leverages the sidecar pattern, where GUARDRAIL is deployed alongside application containers to intercept and manage traffic, enforcing policies defined in the Control Plane. The diagram highlights the flexibility of GUARDRAIL in adapting to different architectural needs, from a centralized gateway to distributed sidecars or direct embedding.

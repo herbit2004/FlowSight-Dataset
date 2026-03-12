@@ -1,0 +1,59 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow of an e-commerce system. It depicts the sequence of steps from when a user places an order to when the order is delivered, including payment processing, inventory checks, and handling of backorders and cancellations. This diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User Places Order" node at the top and flows downwards through various decision points and processes. The diagram contains an illogical loop, as the "Order Delivered" node feeds back into the "User Places Order" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: User Order Placement, Payment Processing, Shipment Preparation, Inventory Check, Order Fulfillment/Backorder, and Delivery/Cancellation.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial step where a user submits an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **C / Prepare Shipment**: Represents the process of preparing the order for shipment.
+  visible in diagram; no further repository context available.
+- **D / Inventory Available?**: A decision point to check if the ordered items are currently in stock.
+  visible in diagram; no further repository context available.
+- **E / Order Cancelled**: Represents the state where the order is cancelled due to payment failure.
+  visible in diagram; no further repository context available.
+- **F / Ship Order**: Represents the action of shipping the order to the user.
+  visible in diagram; no further repository context available.
+- **G / Order Delivered**: Represents the final state where the order has been successfully delivered to the user.
+  visible in diagram; no further repository context available.
+- **H / Notify User of Delay**: Represents the action of informing the user about a delay in their order.
+  visible in diagram; no further repository context available.
+- **I / Backorder Item**: Represents the action of backordering an item that is not currently in stock.
+  visible in diagram; no further repository context available.
+- **J / Refund Payment**: Represents the action of refunding the payment to the user after order cancellation.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `A --> B`: User places an order, initiating the payment check.
+  `B -- Yes --> C`: Payment is received, proceeding to shipment preparation.
+  `B -- No --> E`: Payment is not received, leading to order cancellation.
+  `C --> D`: Shipment is prepared, triggering an inventory availability check.
+  `D -- Yes --> F`: Inventory is available, proceeding to ship the order.
+  `D -- No --> I`: Inventory is not available, leading to backordering the item.
+  `F --> G`: Order is shipped, leading to order delivery.
+  `G --> A`: Order delivered loops back to user placing another order.
+  `I --> H`: Item is backordered, leading to notifying the user of the delay.
+  `H --> C`: User is notified of delay, looping back to prepare shipment.
+  `E --> J`: Order is cancelled, leading to refunding the payment.
+  `J --> G`: Payment is refunded, leading to order delivered.
+
+## Repository Context & Terminology
+- **User Places Order**: In standard e-commerce, this refers to the action of a customer submitting an order through a website or application. In this diagram, it's the starting point of the order processing workflow.
+- **Payment Received?**: This refers to the verification of payment for the order. In standard practice, this step confirms that the customer's payment method has been successfully charged. In this diagram, it's a decision point that determines whether the order proceeds to fulfillment or is cancelled.
+- **Prepare Shipment**: This refers to the process of packaging and labeling the order for delivery. In standard practice, this involves selecting the items, packing them securely, and generating shipping labels. In this diagram, it's a step that follows payment confirmation and precedes the inventory check.
+- **Inventory Available?**: This refers to checking if the ordered items are currently in stock. In standard practice, this involves querying the inventory management system to determine if there are enough items to fulfill the order. In this diagram, it's a decision point that determines whether the order can be shipped immediately or needs to be backordered.
+- **Ship Order**: This refers to the action of sending the order to the customer. In standard practice, this involves handing the package over to a shipping carrier. In this diagram, it's a step that follows the inventory check and precedes the order delivery.
+- **Order Delivered**: This refers to the successful delivery of the order to the customer. In standard practice, this is confirmed by a delivery confirmation from the shipping carrier. In this diagram, it's the final step of the order processing workflow, but it incorrectly loops back to the "User Places Order" node.
+- **Backorder Item**: This refers to the action of placing an order for an item that is not currently in stock. In standard practice, this involves notifying the customer that the item is on backorder and providing an estimated delivery date. In this diagram, it's a step that follows the inventory check and precedes notifying the user of the delay.
+- **Notify User of Delay**: This refers to informing the customer about a delay in their order. In standard practice, this involves sending an email or notification to the customer explaining the reason for the delay and providing an updated delivery date. In this diagram, it's a step that follows backordering the item and loops back to prepare shipment.
+- **Order Cancelled**: This refers to the termination of the order process, typically due to payment failure or other issues. In standard practice, this involves notifying the customer and initiating a refund. In this diagram, it's a step that follows a negative payment check and precedes refunding the payment.
+- **Refund Payment**: This refers to returning the payment to the customer after an order cancellation. In standard practice, this involves initiating a refund through the payment gateway. In this diagram, it's a step that follows order cancellation and incorrectly leads to "Order Delivered".
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "User Places Order" node, which then flows to the "Payment Received?" decision point. If payment is received ("Yes" branch), the process moves to "Prepare Shipment," followed by an "Inventory Available?" check. If inventory is available ("Yes" branch), the "Ship Order" node is reached, which then transitions to "Order Delivered." Illogically, "Order Delivered" loops back to "User Places Order," creating a perpetual cycle. If payment is not received ("No" branch from "Payment Received?"), the process goes to "Order Cancelled," then "Refund Payment," which incorrectly leads to "Order Delivered." If inventory is not available ("No" branch from "Inventory Available?"), the process goes to "Backorder Item," then "Notify User of Delay," which loops back to "Prepare Shipment." The standard e-commerce practice of notifying the user when the order is shipped is missing. The diagram contains several errors, including the illogical loop from "Order Delivered" back to "User Places Order," the incorrect flow from "Refund Payment" to "Order Delivered," and the swapped branch outcomes for `Inventory Available?` where the "No" branch goes to backorder instead of notifying the user immediately.

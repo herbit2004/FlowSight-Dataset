@@ -1,0 +1,51 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of audit log events through a system. It depicts the process from the origination of a log event, through authorization, routing, processing based on priority, and finally to storage and reporting. The diagram serves as a high-level overview of the audit logging pipeline.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It presents a hierarchical flow starting from the "Log Event Originator" and ending at the "Audit Reporting Service". The diagram includes decision points based on authorization and event type.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages:
+1. Event Origination and API Access
+2. Authorization
+3. Routing
+4. Processing
+5. Storage and Reporting
+
+## Node-by-Node Description
+- **A / Log Event Originator**: Represents the source that generates audit log events. visible in diagram; no further repository context available.
+- **B / Audit Service API**: Represents the entry point for audit log events into the system. visible in diagram; no further repository context available.
+- **C / Authorization Check**: Represents the process of verifying the authority of the log event originator. visible in diagram; no further repository context available.
+- **D / Audit Log Router**: Represents the component responsible for directing audit logs based on certain criteria. visible in diagram; no further repository context available.
+- **E / Rejection Response**: Represents the action taken when an audit log event is not authorized. visible in diagram; no further repository context available.
+- **F / Event Type?**: Represents a decision point where the system determines the type of the audit log event. visible in diagram; no further repository context available.
+- **G / Real-time Stream Processor**: Represents the component that processes high-priority audit log events in real-time. visible in diagram; no further repository context available.
+- **H / Batch Processor Queue**: Represents the queue that holds low-priority audit log events for batch processing. visible in diagram; no further repository context available.
+- **I / Central Audit Store**: Represents the storage location for high-priority audit log events. visible in diagram; no further repository context available.
+- **J / Data Lake Storage**: Represents the storage location for low-priority audit log events. visible in diagram; no further repository context available.
+- **K / Audit Reporting Service**: Represents the service responsible for generating reports from the stored audit log data. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Log event is sent to the Audit Service API.
+- `B -- Valid Request --> C`: A valid request is passed to the Authorization Check.
+- `C -- Authorized --> D`: Authorized requests are sent to the Audit Log Router.
+- `C -- Unauthorized --> E`: Unauthorized requests result in a Rejection Response.
+- `D --> F`: Audit Log Router sends events to be evaluated for Event Type.
+- `F -- High Priority --> G`: High-priority events are sent to the Real-time Stream Processor.
+- `F -- Low Priority --> H`: Low-priority events are sent to the Batch Processor Queue.
+- `G --> I`: Real-time Stream Processor sends events to the Central Audit Store.
+- `H --> J`: Batch Processor Queue sends events to the Data Lake Storage.
+- `I --> K`: Central Audit Store sends data to the Audit Reporting Service.
+- `J --> K`: Data Lake Storage sends data to the Audit Reporting Service.
+
+## Repository Context & Terminology
+- **Audit Log**: A record of events that occur within a system, used for security and compliance purposes.
+- **API (Application Programming Interface)**: A set of rules and specifications that software programs can follow to communicate with each other.
+- **Authorization**: The process of verifying that a user or system has permission to access a resource or perform an action.
+- **Real-time Stream Processing**: Processing data as it is generated, with minimal delay.
+- **Batch Processing**: Processing data in groups or batches, typically at scheduled intervals.
+- **Data Lake**: A centralized repository that allows you to store all your structured and unstructured data at any scale.
+- **Data Storage**: The process of storing data in a digital format.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "Log Event Originator" sending data to the "Audit Service API". A "Valid Request" is then passed to the "Authorization Check". If the request is "Authorized", it proceeds to the "Audit Log Router"; otherwise, a "Rejection Response" is triggered. The "Audit Log Router" then determines the "Event Type?". If the event is "High Priority", it is sent to the "Real-time Stream Processor" and then to the "Central Audit Store". If the event is "Low Priority", it is sent to the "Batch Processor Queue" and then to the "Data Lake Storage". Both the "Central Audit Store" and the "Data Lake Storage" feed into the "Audit Reporting Service". The distinction between high and low priority events determines whether real-time stream processing or batch processing is used, influencing the choice of storage between a central audit store and a data lake, respectively. The final "Audit Reporting Service" aggregates data from both storage locations to generate reports.

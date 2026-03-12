@@ -1,0 +1,30 @@
+graph TD
+    A[Customer Places Order] --> B{Payment Received?};
+    B -- No --> C[Order Cancelled - Insufficient Funds];
+    B -- Yes --> D[Inventory Check];
+    D -- Available --> E[Shipping Address Validated];
+    D -- Unavailable --> F[Request Supplier Restock];
+    F --> H[Production Complete & Inventory Updated];
+    E -- Invalid --> G[Contact Customer for Address Update];
+    G --> E;
+    E -- Valid --> I[Order Packed];
+    I --> J{Shipping Label Printed?};
+    J -- Yes --> K[Order Shipped - Tracking Sent];
+    J -- No --> L[Contact Customer Service];
+    L --> J;
+    K --> M[Order Delivered?];
+    M -- Yes --> N[Order Completion Email Sent];
+    M -- No --> O[Investigate Shipping Delay];
+    O --> M;
+    N --> P{Customer Satisfied?};
+    P -- No --> Q[Open Support Ticket];
+    Q --> R[Issue Refund];
+    R --> P;
+    P -- Yes --> S[System Log: Order Complete];
+    S --> T[Analytics Data Updated];
+    T --> B;
+    H --> D;
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+    style R fill:#f9f,stroke:#333,stroke-width:2px

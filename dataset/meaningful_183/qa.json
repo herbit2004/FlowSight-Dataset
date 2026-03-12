@@ -1,0 +1,74 @@
+[
+  {
+    "question": "What is the first step in the Backend Services subgraph?",
+    "options": [
+      "A. API Gateway: Receive request",
+      "B. Redemption Service: Authenticate user",
+      "C. Frontend: Submit redemption request",
+      "D. User selects reward"
+    ],
+    "correct_index": 0,
+    "type": "factual",
+    "difficulty": "easy"
+  },
+  {
+    "question": "If the user is authenticated and has sufficient points, what is the next node after 'Points Ledger: Debit points'?",
+    "options": [
+      "A. Reward Inventory Service: Check availability",
+      "B. Return error: Insufficient points",
+      "C. Redemption Service: Validate request",
+      "D. Return error: Authentication failed"
+    ],
+    "correct_index": 0,
+    "type": "factual",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Starting from 'User initiates points redemption', if the redemption channel is 'Web UI', the user selects a reward, and the user is authenticated, which node is reached immediately before 'Redemption Service: Validate request'?",
+    "options": [
+      "A. API Gateway: Receive request",
+      "B. Redemption Service: Authenticate user",
+      "C. Frontend: Submit redemption request",
+      "D. User selects reward"
+    ],
+    "correct_index": 1,
+    "type": "reasoning",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Starting from 'User initiates points redemption', which sequence of nodes is followed if the user is authenticated, has sufficient points, the reward is available, and the partner response is successful?",
+    "options": [
+      "A. Redemption Service: Authenticate user -> Redemption Service: Validate request -> Points Ledger: Debit points -> Reward Inventory Service: Check availability -> Reward Inventory Service: Reserve reward -> Orchestration Service: Initiate fulfillment -> Fulfillment Queue: Enqueue message -> Fulfillment Processor: Consume message -> Partner API: Submit fulfillment request -> Reward Inventory Service: Mark reward as fulfilled",
+      "B. Redemption Service: Authenticate user -> Redemption Service: Validate request -> Points Ledger: Debit points -> Reward Inventory Service: Check availability -> Reward Inventory Service: Reserve reward -> Orchestration Service: Initiate fulfillment -> Fulfillment Queue: Enqueue message -> Fulfillment Processor: Consume message -> Partner API: Submit fulfillment request -> Retry Fulfillment Queue: Enqueue message for retry",
+      "C. Redemption Service: Authenticate user -> Redemption Service: Validate request -> Points Ledger: Debit points -> Reward Inventory Service: Check availability -> Return error: Reward unavailable",
+      "D. Redemption Service: Authenticate user -> Return error: Authentication failed"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which of the following nodes does NOT directly lead to 'Return error to Frontend'?",
+    "options": [
+      "A. Return error: Authentication failed",
+      "B. Return error: Insufficient points",
+      "C. Return error: Reward unavailable",
+      "D. Fulfillment Completed"
+    ],
+    "correct_index": 3,
+    "type": "negation",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Starting from 'User initiates points redemption', which of the following paths will NOT lead to 'Frontend: Display success message'?",
+    "options": [
+      "A. Redemption channel? (Mobile App) -> User selects reward -> API Gateway: Receive request -> User authenticated? (Yes) -> Sufficient points? (Yes) -> Reward available? (Yes) -> Partner response: Success? (Yes)",
+      "B. Redemption channel? (Web UI) -> User selects reward -> API Gateway: Receive request -> User authenticated? (Yes) -> Sufficient points? (Yes) -> Reward available? (Yes) -> Partner response: Success? (No)",
+      "C. Redemption channel? (Web UI) -> User selects reward -> API Gateway: Receive request -> User authenticated? (Yes) -> Sufficient points? (Yes) -> Reward available? (Yes) -> Partner response: Success? (Yes)",
+      "D. Redemption channel? (Mobile App) -> User selects reward -> API Gateway: Receive request -> User authenticated? (Yes) -> Sufficient points? (Yes) -> Reward available? (Yes) -> Partner response: Success? (Yes)"
+    ],
+    "correct_index": 1,
+    "type": "negation",
+    "difficulty": "hard"
+  }
+]

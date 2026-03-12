@@ -1,0 +1,21 @@
+graph TD
+    A[Start: Order Received] --> B{Inventory Check: Available?};
+    B -- No --> C[Send Out-of-Stock Notification];
+    B -- Yes --> D[Confirm Order Receipt];
+    D --> E{Payment Received?};
+    E -- No --> F[Cancel Order];
+    E -- Yes --> G[Package Items];
+    G --> H[Shipping Label Printed];
+    H --> I{Label Scanned?};
+    I -- No --> G;
+    I -- Yes --> J[Ship Order];
+    J --> K{Delivery Received?};
+    K -- No --> L[Investigate Undelivered];
+    L --> M[Mark Order Complete];
+    K -- Yes --> N[Send Delivery Confirmation];
+    N --> A;
+    C --> M;
+    F --> M;
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style M fill:#f9f,stroke:#333,stroke-width:2px

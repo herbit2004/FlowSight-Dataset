@@ -1,0 +1,12 @@
+graph TD
+    A[Log Event Originator] --> B{Audit Service API};
+    B -- Valid Request --> C[Authorization Check];
+    C -- Authorized --> D[Audit Log Router];
+    C -- Unauthorized --> E[Rejection Response];
+    D --> F{Event Type?};
+    F -- High Priority --> G[Real-time Stream Processor];
+    F -- Low Priority --> H[Batch Processor Queue];
+    G --> I[Central Audit Store];
+    H --> J[Data Lake Storage];
+    I --> K[Audit Reporting Service];
+    J --> K;

@@ -1,0 +1,46 @@
+graph TD
+    subgraph Leader Election Process
+    A[Candidate Node Initialized] --> B{Obtain Election Token?};
+    B -- Yes --> C[Acquire Lock - Redis];
+    B -- No --> D[Wait for Election Event];
+    D --> B;
+    C -- Lock Acquired Successfully --> E[Become Leader - Claim Leadership];
+    C -- Lock Acquisition Failed --> F[Follower - Observe Leader];
+    E --> G[Start Leader Heartbeat];
+    G --> H{Heartbeat Acknowledged by Quorum?};
+    H -- Yes --> G;
+    H -- No --> I[Relinquish Leadership, Reset Election];
+    I --> B;
+    F --> J{Leader Heartbeat Received?};
+    J -- Yes --> F;
+    J -- No --> K[Suspect Leader Failure];
+    K --> L{Timeout Expired?};
+    L -- Yes --> M[Initiate New Election Round];
+    L -- No --> K;
+    M --> B;
+    end
+
+    subgraph Redis Cluster
+    R1[Redis Master Node 1];
+    R2[Redis Master Node 2];
+    R3[Redis Master Node 3];
+    R1 -- Write/Read --> C;
+    R2 -- Write/Read --> C;
+    R3 -- Write/Read --> C;
+    end
+
+    subgraph Application Nodes
+    N1[Application Node 1];
+    N2[Application Node 2];
+    N3[Application Node 3];
+
+    N1 --> A;
+    N2 --> A;
+    N3 --> A;
+    N1 --> F;
+    N2 --> F;
+    N3 --> F;
+    end
+
+    classDef active fill:#f9f,stroke:#333,stroke-width:2px
+    class E,G active

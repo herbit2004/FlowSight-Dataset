@@ -1,0 +1,72 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of automated time series (AutoTS) model selection and forecasting. It outlines the steps involved in initiating the model, importing templates, training, evaluating, and generating future forecasts, potentially using ensemble methods. The diagram serves as a visual representation of the AutoTS workflow.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom. It starts with initiating the AutoTS model and progresses through data processing, model training, evaluation, and forecasting. The flow converges and loops at various stages for iterative model improvement.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages:
+1.  **Initialization and Data Preparation**: Initiating the AutoTS model, importing templates, loading data, and splitting it into training and testing sets.
+2.  **Model Training and Evaluation**: Running initial template models, evaluating accuracy metrics, generating scores, and iteratively improving models using a genetic algorithm.
+3.  **Validation and Ensemble Creation**: Selecting best models, running validation templates, evaluating results, and creating ensembles if desired.
+4.  **Forecasting and Visualization**: Exporting best models, selecting a single best model, generating future time forecasts, and visualizing the results.
+
+## Node-by-Node Description
+- **A / Initiate AutoTS Model**: Starts the AutoTS modeling process. visible in diagram; no further repository context available.
+- **B / Import Best Models Template**: Imports pre-defined model templates to be used in the AutoTS process. visible in diagram; no further repository context available.
+- **C / Load Data**: Loads the time series data to be used for training and forecasting. visible in diagram; no further repository context available.
+- **D / Split Data Into Initial Train/Test Holdout**: Splits the loaded data into training and testing sets for model evaluation. visible in diagram; no further repository context available.
+- **E / Run Initial Template Models**: Runs the imported model templates on the training data. visible in diagram; no further repository context available.
+- **F / Evaluate Accuracy Metrics on Results**: Evaluates the performance of the trained models using various accuracy metrics. visible in diagram; no further repository context available.
+- **G / Generate Score from Accuracy Metrics**: Generates a score based on the evaluated accuracy metrics to rank the models. visible in diagram; no further repository context available.
+- **H / Max Generations Reached or Timeout?**: A decision point to determine if the maximum number of generations has been reached or if a timeout has occurred. visible in diagram; no further repository context available.
+- **I / Evaluate All Previous Templates**: Evaluates all previously used model templates. visible in diagram; no further repository context available.
+- **J / Genetic Algorithm Combines Best Results and New Random Parameters into New Template**: Uses a genetic algorithm to combine the best results from previous models with new random parameters to create new model templates. visible in diagram; no further repository context available.
+- **K / Run New Template Models and Evaluate**: Runs the newly created model templates and evaluates their performance. visible in diagram; no further repository context available.
+- **L / Select Best Models by Score for Validation Template**: Selects the best models based on their score for validation. visible in diagram; no further repository context available.
+- **M / Run Validation Template on Additional Holdouts**: Runs the selected models on additional holdout datasets for validation. visible in diagram; no further repository context available.
+- **N / Evaluate and Score Validation Results**: Evaluates and scores the validation results. visible in diagram; no further repository context available.
+- **O / Create Ensembles?**: A decision point to determine if ensembles should be created. visible in diagram; no further repository context available.
+- **P / Generate Ensembles from Validation Results**: Generates ensembles from the validation results. visible in diagram; no further repository context available.
+- **Q / Run Ensembles Through Validation**: Runs the generated ensembles through validation. visible in diagram; no further repository context available.
+- **R / Export Best Models Template**: Exports the best performing model template. visible in diagram; no further repository context available.
+- **S / Select Single Best Model**: Selects the single best model from the exported templates. visible in diagram; no further repository context available.
+- **T / Generate Future Time Forecast**: Generates a future time forecast using the selected best model. visible in diagram; no further repository context available.
+- **U / Visualize Results**: Visualizes the generated forecast results. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Initiates the process by importing the best models template.
+- `B --> C`: Loads the data after importing the template.
+- `C --> D`: Splits the loaded data into training and testing sets.
+- `D --> E`: Runs initial template models on the split data.
+- `E --> F`: Evaluates accuracy metrics on the results of the initial template models.
+- `F --> G`: Generates a score from the accuracy metrics.
+- `G --> H`: Checks if the maximum generations have been reached or if a timeout has occurred.
+- `H -- No --> I`: If the maximum generations have not been reached or a timeout has not occurred, evaluate all previous templates.
+- `I --> J`: A genetic algorithm combines best results and new random parameters into a new template.
+- `J --> K`: Runs new template models and evaluates them.
+- `K --> G`: Returns to generating a score from accuracy metrics for the new models.
+- `H -- Yes --> L`: If the maximum generations have been reached or a timeout has occurred, select the best models by score for validation.
+- `L --> M`: Runs the validation template on additional holdouts.
+- `M --> N`: Evaluates and scores the validation results.
+- `N --> O`: Checks if ensembles should be created.
+- `O -- Yes --> P`: If ensembles should be created, generate ensembles from the validation results.
+- `P --> Q`: Runs ensembles through validation.
+- `Q --> N`: Returns to evaluating and scoring the validation results.
+- `O -- No --> R`: If ensembles should not be created, export the best models template.
+- `R --> S`: Selects a single best model from the exported templates.
+- `S --> T`: Generates a future time forecast using the selected best model.
+- `T --> U`: Visualizes the results.
+- `R --> B`: Returns to importing the best models template.
+
+## Repository Context & Terminology
+- **AutoTS**: Automated Time Series forecasting, a process of automatically selecting and configuring time series models.
+- **Template Models**: Pre-defined model configurations used as a starting point for the AutoTS process.
+- **Accuracy Metrics**: Measures used to evaluate the performance of time series models, such as Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), etc.
+- **Genetic Algorithm**: An optimization algorithm used to iteratively improve model parameters.
+- **Ensembles**: Combining multiple models to improve overall forecasting accuracy.
+- **Validation**: Evaluating the performance of models on holdout datasets to ensure generalization.
+- **Holdout Datasets**: Data not used for training, used to validate the model.
+
+## High-Density QA Ground Truth Summary
+The AutoTS flowchart begins by initiating the AutoTS model and importing the best models template, followed by loading and splitting the data into initial training and testing holdout sets. The process then runs initial template models and evaluates their accuracy metrics, generating a score from these metrics. A key decision point determines if the maximum generations have been reached or a timeout has occurred. If 'No', the process evaluates all previous templates, uses a genetic algorithm to combine best results and new random parameters into new templates, runs these new template models, and returns to generating a score. If 'Yes', the process selects the best models by score for validation, runs a validation template on additional holdouts, and evaluates and scores the validation results. Another decision point asks 'Create Ensembles?'. If 'Yes', ensembles are generated from validation results and run through validation, returning to the evaluation and scoring stage. If 'No', the best models template is exported. Finally, a single best model is selected, a future time forecast is generated, and the results are visualized. The process can loop back to importing the best models template after exporting the best models template. The genetic algorithm step combines previous results with random parameters, demonstrating an evolutionary approach to model optimization.

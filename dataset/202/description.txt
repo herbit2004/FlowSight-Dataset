@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow between different components involved in font processing, from a typesetting application to font compilation and common font types. It depicts the interaction between modules like Chrome, skrifa, fontc, read-fonts, write-fonts, and font-types, showing how data is transformed and shared. The diagram serves as a high-level architecture overview of the font processing pipeline.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "Typesetting Application" and "Font Compiler" subgraphs at the top, flows through intermediate stages like "Load outlines and metadata", "read", and "write", and ends with the "common" subgraph at the bottom.
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Typesetting Application**: Represents the application using fonts (e.g., Chrome).
+- **Font Compiler**: Represents the font compilation process (e.g., fontc).
+- **Load outlines and metadata**: Represents the stage of loading font outlines and metadata (e.g., skrifa).
+- **read**: Represents the stage of reading fonts (e.g., read-fonts).
+- **write**: Represents the stage of writing fonts (e.g., write-fonts).
+- **common**: Represents the common font types (e.g., font-types).
+
+## Node-by-Node Description
+- **Chrome**: Represents the Chrome browser, a typesetting application.
+  visible in diagram; no further repository context available.
+- **fontc**: Represents the font compiler.
+  visible in diagram; no further repository context available.
+- **skrifa**: Represents the module responsible for loading outlines and metadata.
+  visible in diagram; no further repository context available.
+- **read-fonts**: Represents the module responsible for reading fonts.
+  In the repository this corresponds to the `read-fonts` directory in the `fontations` repository: https://github.com/googlefonts/fontations/tree/main/read-fonts
+- **write-fonts**: Represents the module responsible for writing fonts.
+  In the repository this corresponds to the `write-fonts` directory in the `fontations` repository: https://github.com/googlefonts/fontations/tree/main/write-fonts
+- **font-types**: Represents the common font types.
+  In the repository this corresponds to the `font-types` directory in the `fontations` repository: https://github.com/googlefonts/fontations/tree/main/font-types
+
+## Edges, Branches & Convergence
+- `Chrome --> skrifa`: Represents the flow of data from the Chrome browser to the skrifa module for loading outlines and metadata.
+- `fontc --> read-fonts`: Represents the flow of data from the font compiler to the read-fonts module for reading fonts.
+- `fontc --> write-fonts`: Represents the flow of data from the font compiler to the write-fonts module for writing fonts.
+- `skrifa --> read-fonts`: Represents the flow of data from the skrifa module to the read-fonts module.
+- `write-fonts --> read-fonts`: Represents the flow of data from the write-fonts module to the read-fonts module.
+- `read-fonts --> font-types`: Represents the flow of data from the read-fonts module to the font-types module.
+
+## Repository Context & Terminology
+- **fontmake-rs**: A Rust-based font compiler. (Linked in the Mermaid source, but not directly visible in the diagram).
+- **otexplorer**: A tool for exploring OpenType fonts, located in the `fontations` repository. (Linked in the Mermaid source, but not directly visible in the diagram).
+- **read-fonts**: A module in the `fontations` repository responsible for reading font data.
+- **write-fonts**: A module in the `fontations` repository responsible for writing font data.
+- **font-types**: A module in the `fontations` repository defining common font types.
+- **fontations**: A repository containing font-related tools and libraries.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a font processing pipeline, starting with either the `Chrome` typesetting application or the `fontc` font compiler. `Chrome` passes data to `skrifa` for loading outlines and metadata. `fontc` sends data to both `read-fonts` and `write-fonts`. `skrifa` and `write-fonts` both converge by sending data to `read-fonts`. The `read-fonts` module then passes data to the `font-types` module, representing the common font types. The `read-fonts` and `write-fonts` modules are part of the `fontations` repository, specifically within the `read-fonts` and `write-fonts` directories respectively, indicating their role in reading and writing font data. The `font-types` module, also within the `fontations` repository, defines the common font types used throughout the pipeline. The pipeline culminates in the `font-types` module, representing the final stage of processing common font types.

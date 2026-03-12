@@ -1,0 +1,36 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the architecture and data flow of a system. It depicts the interaction between different components, including a browser-based UI, a backend server, a task queue, a data store, and a worker process for media processing. The diagram serves as a high-level overview of the system's architecture and how data is processed.
+
+## Overall Layout
+The diagram flows from left to right. It starts with the "Browser / SvelteKit UI" node and ends with the "outputs/" node. The diagram illustrates the flow of data and control between the UI, backend, task queue, worker, and data store.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: UI interaction, backend processing, task queuing & data storage, and media processing.
+
+## Node-by-Node Description
+- **Browser / SvelteKit UI**: Represents the user interface built with SvelteKit. visible in diagram; no further repository context available.
+- **FastAPI Backend**: Represents the backend server built with FastAPI. visible in diagram; no further repository context available.
+- **Redis**: Represents the Redis data store used for task queuing and data storage. visible in diagram; no further repository context available.
+- **Celery Worker + FFmpeg NVENC**: Represents the Celery worker process that uses FFmpeg with NVENC for media processing. visible in diagram; no further repository context available.
+- **outputs/**: Represents the directory where the processed media files are stored. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Browser / SvelteKit UI --> FastAPI Backend`: Represents the upload and Server-Sent Events (SSE) flow from the UI to the backend.
+- `Browser / SvelteKit UI --> FastAPI Backend`: Represents the download flow from the UI to the backend.
+- `FastAPI Backend --> Redis`: Represents the enqueueing of tasks to the Redis queue.
+- `Celery Worker + FFmpeg NVENC --> Redis`: Represents the flow of progress updates and logs from the worker to Redis.
+- `FastAPI Backend --> Browser / SvelteKit UI`: Represents the Pub/Sub relay from the backend to the UI.
+- `Celery Worker + FFmpeg NVENC --> outputs/`: Represents the flow of processed files from the worker to the output directory.
+- `Browser / SvelteKit UI --> FastAPI Backend`: Represents the download flow from the UI to the backend.
+
+## Repository Context & Terminology
+- **SvelteKit**: A full-stack web framework based on Svelte.
+- **FastAPI**: A modern, high-performance web framework for building APIs with Python.
+- **Redis**: An in-memory data structure store, used as a database, cache, and message broker.
+- **Celery**: An asynchronous task queue or distributed task queue.
+- **FFmpeg**: A free and open-source software project consisting of a large suite of libraries and programs for handling video, audio, and other multimedia files and streams.
+- **NVENC**: NVIDIA Encoder, a hardware-accelerated video encoding API and SDK.
+- **Pub/Sub**: Publish-subscribe pattern, a messaging pattern where senders of messages, called publishers, do not program the messages to be sent directly to specific receivers, called subscribers, but instead categorize published messages into classes without knowledge of which subscribers, if any, there may be.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a media processing pipeline. It begins with the "Browser / SvelteKit UI" node, where a user interacts with the application. The UI uploads media files to the "FastAPI Backend" via an "Upload / SSE" connection. The backend then enqueues processing tasks to "Redis" via an "Enqueue" connection. The "Celery Worker + FFmpeg NVENC" node represents a worker process that retrieves tasks from Redis, processes media files using FFmpeg with NVENC for hardware acceleration, and stores the resulting "Files" in the "outputs/" directory. Progress updates and logs are sent from the worker back to "Redis" via a "Progress / Logs" connection. The "FastAPI Backend" also relays information back to the "Browser / SvelteKit UI" using a "Pub/Sub relay" connection, likely for real-time updates. The UI can also initiate downloads from the backend via a "Download" connection. The system leverages Redis as a central message broker for task queuing and progress monitoring, while Celery and FFmpeg handle the computationally intensive media processing.

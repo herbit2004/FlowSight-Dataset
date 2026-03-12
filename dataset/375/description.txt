@@ -1,0 +1,74 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of a system that processes user requests using a FastAPI server and VisualGPT. It outlines the steps involved in authenticating requests, routing them to the appropriate modules, and returning results to the user. The diagram serves as a high-level overview of the system's architecture and data flow.
+
+## Overall Layout
+The diagram has a top-to-bottom (TB) layout. It starts with user request entry points at the top and ends with the processed result being returned to the user at the bottom. The flow progresses through authentication, routing, and processing stages.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages:
+1. Request entry: User requests from various UIs.
+2. Authentication and Routing: FastAPI server authenticates and routes the request.
+3. Processing: VisualGPT provider processes the request using Cloudscraper or OSS uploader.
+4. Result Delivery: Processed results are returned to the user.
+
+## Node-by-Node Description
+- **A / 用户请求 (User Request)**: Represents the initial request made by a user.
+  visible in diagram; no further repository context available.
+- **M / Web UI**: Represents a web-based user interface.
+  visible in diagram; no further repository context available.
+- **N / ComfyUI**: Represents the ComfyUI user interface.
+  visible in diagram; no further repository context available.
+- **O / SD WebUI**: Represents the SD WebUI user interface.
+  visible in diagram; no further repository context available.
+- **B / FastAPI 服务器 (FastAPI Server)**: Represents the FastAPI server that handles incoming requests.
+  visible in diagram; no further repository context available.
+- **C / 认证验证 (Authentication Verification)**: Represents the authentication process.
+  visible in diagram; no further repository context available.
+- **D / 路由分发 (Route Dispatch)**: Represents the routing of the request after successful authentication.
+  visible in diagram; no further repository context available.
+- **E / 返回 401 错误 (Return 401 Error)**: Represents the error response returned when authentication fails.
+  visible in diagram; no further repository context available.
+- **F / VisualGPT 提供商 (VisualGPT Provider)**: Represents the VisualGPT provider module.
+  visible in diagram; no further repository context available.
+- **G / Cloudscraper 模块 (Cloudscraper Module)**: Represents the Cloudscraper module used for scraping data.
+  visible in diagram; no further repository context available.
+- **H / VisualGPT 官方 API (VisualGPT Official API)**: Represents the official VisualGPT API.
+  visible in diagram; no further repository context available.
+- **I / OSS 上传器 (OSS Uploader)**: Represents the OSS uploader module.
+  visible in diagram; no further repository context available.
+- **J / 阿里云 OSS (Alibaba Cloud OSS)**: Represents the Alibaba Cloud Object Storage Service.
+  visible in diagram; no further repository context available.
+- **K / 处理结果 (Processed Result)**: Represents the result after processing.
+  visible in diagram; no further repository context available.
+- **L / 返回用户 (Return to User)**: Represents the final step of returning the processed result to the user.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User request is sent to the FastAPI server.
+- `M --> B`: Web UI request is sent to the FastAPI server.
+- `N --> B`: ComfyUI request is sent to the FastAPI server.
+- `O --> B`: SD WebUI request is sent to the FastAPI server.
+- `B --> C`: FastAPI server initiates authentication verification.
+- `C -- 通过 (Pass) --> D`: If authentication passes, the request is routed.
+- `C -- 失败 (Fail) --> E`: If authentication fails, a 401 error is returned.
+- `D --> F`: Request is dispatched to the VisualGPT provider.
+- `F --> G`: VisualGPT provider uses the Cloudscraper module.
+- `F --> I`: VisualGPT provider uses the OSS uploader.
+- `G --> H`: Cloudscraper module interacts with the VisualGPT official API.
+- `I --> J`: OSS uploader uploads data to Alibaba Cloud OSS.
+- `H --> K`: VisualGPT official API provides the processed result.
+- `J --> K`: Alibaba Cloud OSS provides data to the processed result.
+- `H, J --> K`: The outputs of the VisualGPT API and Alibaba Cloud OSS converge at the "Processed Result" node.
+- `K --> L`: Processed result is returned to the user.
+
+## Repository Context & Terminology
+- **FastAPI**: A modern, fast (high-performance), web framework for building APIs with Python.
+- **VisualGPT**: A module or service that likely integrates visual processing capabilities with a GPT model.
+- **Cloudscraper**: A module used for scraping data from websites, potentially to feed data into VisualGPT.
+- **OSS (Object Storage Service)**: A service for storing unstructured data in the cloud. In this case, Alibaba Cloud OSS is used.
+- **Alibaba Cloud OSS**: Alibaba Cloud's object storage service, used for storing and retrieving files.
+- **401 Error**: An HTTP status code indicating that the request requires user authentication.
+- **API (Application Programming Interface)**: A set of rules and specifications that software programs can follow to communicate with each other.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with user requests originating from various user interfaces: a generic "User Request," "Web UI," "ComfyUI," and "SD WebUI." These requests are all directed to the "FastAPI Server," which acts as the central entry point. The server then performs "Authentication Verification." If authentication "Passes," the flow proceeds to "Route Dispatch," otherwise, a "401 Error" is returned, terminating the process. Upon successful routing, the request reaches the "VisualGPT Provider," which then branches into two parallel paths: one utilizing a "Cloudscraper Module" to interact with the "VisualGPT Official API," and the other employing an "OSS Uploader" to store data in "Alibaba Cloud OSS." The outputs from both the "VisualGPT Official API" and "Alibaba Cloud OSS" converge at the "Processed Result" node. Finally, the "Processed Result" is returned to the user, completing the workflow. The use of Alibaba Cloud OSS suggests that the system is deployed within or interacts with the Alibaba Cloud ecosystem, leveraging its object storage capabilities for data persistence or retrieval during the VisualGPT processing.

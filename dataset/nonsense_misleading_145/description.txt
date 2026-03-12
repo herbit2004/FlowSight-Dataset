@@ -1,0 +1,52 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the workflow of an order processing system, from the initial submission of an order by a user to the final processing of a refund. The diagram outlines the steps involved in fulfilling an order, handling potential issues, and processing refunds if necessary.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It presents a sequential flow with decision points that branch the process. The start node is "User Submits Order," and the end node is "Process Refund," which loops back to the start.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Payment, Order Confirmation, Item Processing, Shipping Address Validation, Issue Resolution, and Refund Processing.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Order Confirmation Sent**: Represents sending a confirmation message to the user after payment is received. visible in diagram; no further repository context available.
+- **D / Item Picked & Packed**: Represents the process of picking the ordered items from inventory and packing them for shipping. visible in diagram; no further repository context available.
+- **E / Shipping Address Valid?**: A decision point to validate the shipping address provided by the user. visible in diagram; no further repository context available.
+- **F / Notify User of Delay**: Represents notifying the user about a delay in the order processing. visible in diagram; no further repository context available.
+- **G / Resolve Address Issue**: Represents the process of resolving any issues with the shipping address. visible in diagram; no further repository context available.
+- **H / Cancel Order**: Represents the process of canceling the order. visible in diagram; no further repository context available.
+- **I / Package Shipped**: Represents the action of shipping the package to the user. visible in diagram; no further repository context available.
+- **J / Order Delivered**: Represents the successful delivery of the order to the user. visible in diagram; no further repository context available.
+- **K / Process Refund**: Represents the process of issuing a refund to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the payment check.
+- `B -- Yes --> C`: If payment is received, an order confirmation is sent.
+- `B -- No --> H`: If payment is not received, the order is canceled.
+- `C --> D`: After order confirmation, the item is picked and packed.
+- `D --> E`: After picking and packing, the shipping address is validated.
+- `E -- Yes --> F`: If the shipping address is valid, the user is notified of a delay.
+- `E -- No --> I`: If the shipping address is invalid, the package is shipped.
+- `F --> G`: After notifying the user of a delay, the address issue is resolved.
+- `G --> D`: After resolving the address issue, the process loops back to item picking and packing.
+- `I --> J`: After the package is shipped, the order is delivered.
+- `J --> K`: After the order is delivered, a refund is processed.
+- `H --> K`: If the order is canceled, a refund is processed.
+- `K --> A`: After processing the refund, the process loops back to the user submitting an order.
+
+## Repository Context & Terminology
+- **User Submits Order**: In standard practice, this refers to a customer initiating a purchase. In this diagram, it's the starting point of the order processing workflow.
+- **Payment Received?**: In standard practice, this is a check to ensure funds have been successfully transferred. In this diagram, it's a decision point determining whether to proceed with the order or cancel it.
+- **Order Confirmation Sent**: In standard practice, this is an email or message confirming the order details. In this diagram, it signifies the successful receipt of payment and the start of order fulfillment.
+- **Item Picked & Packed**: In standard practice, this involves retrieving items from inventory and preparing them for shipment. In this diagram, it's a step in the fulfillment process *before* address validation.
+- **Shipping Address Valid?**: In standard practice, this verifies the accuracy and deliverability of the provided address. In this diagram, a 'Yes' outcome leads to delay notification, and a 'No' outcome leads to shipping.
+- **Notify User of Delay**: In standard practice, this informs the customer about unexpected delays. In this diagram, it's triggered by a *valid* address and precedes address resolution.
+- **Resolve Address Issue**: In standard practice, this involves correcting or clarifying an invalid address. In this diagram, it's triggered *after* notifying the user of a delay.
+- **Cancel Order**: In standard practice, this terminates the order process, often due to payment failure or customer request. In this diagram, it's triggered by non-payment.
+- **Package Shipped**: In standard practice, this indicates the physical dispatch of the order. In this diagram, it's triggered by an *invalid* shipping address.
+- **Order Delivered**: In standard practice, this confirms the successful arrival of the order at the customer's address. In this diagram, it follows shipping *after* an invalid address.
+- **Process Refund**: In standard practice, this involves returning funds to the customer. In this diagram, it's triggered by both order cancellation *and* successful delivery, and loops back to the start.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "User Submits Order," which immediately leads to a "Payment Received?" check. If "Yes," an "Order Confirmation Sent," then "Item Picked & Packed." If "No," the order is "Cancel Order," leading to "Process Refund" and looping back to "User Submits Order." Post "Item Picked & Packed," the flow reaches "Shipping Address Valid?" If "Yes," the "Notify User of Delay" step is triggered, followed by "Resolve Address Issue," which then loops back to "Item Picked & Packed." If "No" at address validation, the "Package Shipped," then "Order Delivered," and finally "Process Refund." The "Process Refund" node is also reached directly from "Cancel Order" and "Order Delivered," creating an illogical convergence. The diagram incorrectly shows address validation *after* item picking and packing, and shipping occurring *before* address resolution when the address is invalid. The "Process Refund" step then loops back to the "User Submits Order" node, implying a new order is automatically created after a refund, which is counterfactual.

@@ -1,0 +1,56 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting a log processing pipeline. It illustrates the flow of log data from various sources through different stages of ingestion, processing, storage, and monitoring. The diagram serves as a high-level overview of the system's architecture for log management.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured into stages, starting with data origin and ending with alerting and monitoring. The start nodes are the data origin components, and the end nodes are the alerting and monitoring components, as well as the storage components.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing stages in the log processing pipeline:
+- **Data Origin**: Represents the sources of log data.
+- **Log Ingestion**: Handles the initial collection and queuing of logs.
+- **Log Processing & Enrichment**: Processes and enriches the log data.
+- **Storage & Search**: Stores and provides search capabilities for the processed logs.
+- **Alerting & Monitoring**: Monitors metrics derived from the logs and triggers alerts.
+
+## Node-by-Node Description
+- **A / Application Server: Generates Logs**: Represents an application server that generates log data. visible in diagram; no further repository context available.
+- **B / Database Server: Audit Logs**: Represents a database server that generates audit logs. visible in diagram; no further repository context available.
+- **C / Network Device: Syslog**: Represents a network device that generates syslog data. visible in diagram; no further repository context available.
+- **D / Fluentd Agent: Collects Logs**: Represents a Fluentd agent responsible for collecting logs from various sources. Fluentd is a popular open-source data collector.
+- **E / Kafka Broker: Message Queue**: Represents a Kafka broker used as a message queue for log data. Kafka is a distributed streaming platform.
+- **F / Logstash Instance 1: Filter & Enhance**: Represents a Logstash instance responsible for filtering and enhancing log data. Logstash is a data processing pipeline.
+- **G / Logstash Instance 2: Geo-IP Lookup**: Represents a Logstash instance performing Geo-IP lookup to enrich log data with geographical information.
+- **H / Spark Streaming Job: Aggregation**: Represents a Spark Streaming job that aggregates log data. Spark Streaming is a real-time data processing framework.
+- **I / Elasticsearch Cluster: Stores Indices**: Represents an Elasticsearch cluster used for storing indices of the processed log data. Elasticsearch is a search and analytics engine.
+- **J / Kibana Dashboard: Visualization**: Represents a Kibana dashboard used for visualizing the log data. Kibana is a data visualization dashboard for Elasticsearch.
+- **K / S3 Bucket: Archive Storage**: Represents an S3 bucket used for archiving log data. S3 is a cloud storage service.
+- **L / Prometheus: Monitors Metrics**: Represents Prometheus, a monitoring system that monitors metrics derived from the log data.
+- **M / Alertmanager: Manages Alerts**: Represents Alertmanager, a component that manages alerts triggered by Prometheus.
+
+## Edges, Branches & Convergence
+- `A --> D`: Application server sends logs to the Fluentd agent.
+- `B --> D`: Database server sends audit logs to the Fluentd agent.
+- `C --> D`: Network device sends syslog data to the Fluentd agent.
+- `D --> E`: Fluentd agent sends collected logs to the Kafka broker.
+- `E -- High Volume --> F`: Kafka broker sends high-volume logs to Logstash Instance 1 for filtering and enhancement.
+- `E -- Audit Logs --> G`: Kafka broker sends audit logs to Logstash Instance 2 for Geo-IP lookup.
+- `F --> H`: Logstash Instance 1 sends filtered and enhanced logs to the Spark Streaming job.
+- `G --> H`: Logstash Instance 2 sends Geo-IP enriched logs to the Spark Streaming job.
+- `H --> I`: Spark Streaming job sends aggregated data to the Elasticsearch cluster.
+- `H --> K`: Spark Streaming job sends aggregated data to the S3 bucket for archiving.
+- `I --> J`: Elasticsearch cluster provides data to the Kibana dashboard for visualization.
+- `I -- Metric: Indexing Rate --> L`: Elasticsearch cluster provides the indexing rate metric to Prometheus.
+- `L --> M`: Prometheus sends alerts to Alertmanager.
+
+## Repository Context & Terminology
+- **Fluentd**: An open-source data collector, often used for log aggregation.
+- **Kafka**: A distributed streaming platform used for building real-time data pipelines and streaming applications.
+- **Logstash**: A data processing pipeline that ingests data from various sources, transforms it, and then sends it to a "stash" like Elasticsearch.
+- **Elasticsearch**: A distributed, RESTful search and analytics engine capable of solving a growing number of use cases.
+- **Kibana**: A data visualization dashboard for Elasticsearch.
+- **Prometheus**: An open-source systems monitoring and alerting toolkit.
+- **Alertmanager**: Handles alerts sent by Prometheus.
+- **S3 Bucket**: A scalable cloud storage service offered by AWS, often used for archiving data.
+
+## High-Density QA Ground Truth Summary
+The log processing pipeline begins with data originating from various sources: Application Servers, Database Servers (audit logs), and Network Devices (syslog). These logs are collected by Fluentd agents and then sent to a Kafka broker, which acts as a message queue. From Kafka, the logs are split into two streams: high-volume logs are directed to Logstash Instance 1 for filtering and enhancement, while audit logs are sent to Logstash Instance 2 for Geo-IP lookup. Both Logstash instances then feed into a Spark Streaming job for aggregation. The aggregated data is then sent to an Elasticsearch cluster for indexing and storage, and also to an S3 bucket for archival purposes. The Elasticsearch cluster's indexing rate is monitored by Prometheus, which triggers alerts managed by Alertmanager. Finally, the data stored in Elasticsearch is visualized using a Kibana dashboard. This architecture leverages common open-source tools like Fluentd, Kafka, Logstash, Elasticsearch, and Prometheus to create a robust and scalable log processing and monitoring system.

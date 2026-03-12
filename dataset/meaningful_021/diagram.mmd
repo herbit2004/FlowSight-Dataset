@@ -1,0 +1,36 @@
+graph TD
+    subgraph Scheduled Job Dispatch System
+    A[User Request Job] --> B{Job Scheduler};
+    B -- Check Job Queues --> C{Job Queue Selector};
+    C -- Priority Queue --> D[Priority Job Queue]
+    C -- Short Queue --> E[Short Job Queue]
+    C -- Long Queue --> F[Long Job Queue]
+    D --> H{Resource Manager};
+    E --> H
+    F --> H
+    H -- Available Resources? (Yes) --> I[Job Dispatcher];
+    H -- Available Resources? (No) --> J[Pending Job Queue];
+    J -- Periodically Check --> H
+    I --> K{Job Executor Pool};
+    K -- Select Available Executor Thread --> L[Executor Thread];
+    L --> M[Execute Job Logic];
+    M -- Job Success --> N[Job Completion Handler];
+    M -- Job Failure --> O[Failure Handler];
+    N --> P[Update Job Status to Success];
+    O --> Q{Retry Policy};
+    Q -- Retry Allowed --> R[Retry Job];
+    Q -- Retry Not Allowed --> S[Update Job Status to Failed];
+    R --> J
+    P --> T[Notification Service];
+    S --> T
+    T -- Send Job Status Notification --> U[User/System Logs];
+    subgraph Monitoring & Alerting
+    U --> V[Monitoring Dashboard];
+    V -- Threshold Breached --> W[Alerting System];
+    end
+    end
+
+    classDef queue fill:#f9f,stroke:#333,stroke-width:2px
+    class D,E,F queue
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px
+    class B,C,H,Q decision

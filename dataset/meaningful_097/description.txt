@@ -1,0 +1,87 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the inventory deduction and rollback process within an order processing system. It depicts the sequence of operations involved in validating an order, reserving and deducting inventory for products, handling payment processing, and updating the order status. The diagram serves as a visual representation of the workflow, aiding in understanding the system's logic and identifying potential failure points.
+
+## Overall Layout
+The diagram flows from left to right (LR). It starts with an API request to place an order and ends with updating the order status to "Shipped" or rejecting the order due to various failures. The diagram shows a linear progression with decision points that can lead to rollback scenarios.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: `InventoryDeductionAndRollback`.
+
+## Node-by-Node Description
+- **A / API Request: Place Order**: Represents the initial API request to place an order.
+  visible in diagram; no further repository context available.
+- **B / Validate Order**: Represents the order validation process.
+  visible in diagram; no further repository context available.
+- **C / Check Inventory: ProductA**: Represents checking the inventory for Product A.
+  visible in diagram; no further repository context available.
+- **D / Reserve Inventory: ProductA**: Represents reserving the inventory for Product A.
+  visible in diagram; no further repository context available.
+- **E / Check Inventory: ProductB**: Represents checking the inventory for Product B.
+  visible in diagram; no further repository context available.
+- **F / Reserve Inventory: ProductB**: Represents reserving the inventory for Product B.
+  visible in diagram; no further repository context available.
+- **H / All Products Reserved?**: Represents a decision point to check if all products in the order have been reserved.
+  visible in diagram; no further repository context available.
+- **I / Create Order Record**: Represents creating an order record in the system.
+  visible in diagram; no further repository context available.
+- **J / Deduct Inventory: ProductA**: Represents deducting the inventory for Product A.
+  visible in diagram; no further repository context available.
+- **K / Deduct Inventory: ProductB**: Represents deducting the inventory for Product B.
+  visible in diagram; no further repository context available.
+- **L / Notify Warehouse: Order Ready**: Represents notifying the warehouse that the order is ready for fulfillment.
+  visible in diagram; no further repository context available.
+- **M / Payment Processing**: Represents the payment processing stage.
+  visible in diagram; no further repository context available.
+- **N / Order Confirmation**: Represents confirming the order after successful payment.
+  visible in diagram; no further repository context available.
+- **O / Ship Order**: Represents shipping the order.
+  visible in diagram; no further repository context available.
+- **P / Update Order Status: Shipped**: Represents updating the order status to "Shipped".
+  visible in diagram; no further repository context available.
+- **Z / Reject Order: Validation Failed**: Represents rejecting the order due to validation failure.
+  visible in diagram; no further repository context available.
+- **Z / Reject Order: Insufficient Stock**: Represents rejecting the order due to insufficient stock.
+  visible in diagram; no further repository context available.
+- **G / Rollback: ProductA Reservation**: Represents rolling back the reservation for Product A.
+  visible in diagram; no further repository context available.
+- **AA / Rollback: ProductA & ProductB Deductions**: Represents rolling back the deductions for Product A and Product B.
+  visible in diagram; no further repository context available.
+- **Z / Reject Order: Payment Failed**: Represents rejecting the order due to payment failure.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: API request triggers order validation.
+- `B -- Valid --> C`: Order is valid, proceed to check inventory for Product A.
+- `B -- Invalid --> Z`: Order is invalid, reject the order due to validation failure.
+- `C -- In Stock --> D`: Product A is in stock, reserve inventory for Product A.
+- `C -- Out of Stock --> Z`: Product A is out of stock, reject the order due to insufficient stock.
+- `D --> E`: Proceed to check inventory for Product B.
+- `E -- In Stock --> F`: Product B is in stock, reserve inventory for Product B.
+- `E -- Out of Stock --> G`: Product B is out of stock, rollback Product A reservation.
+- `G --> Z`: After rollback, reject the order due to insufficient stock.
+- `F --> H`: Check if all products have been reserved.
+- `H -- Yes --> I`: All products reserved, create order record.
+- `H -- No --> E`: Not all products reserved, loop back to check inventory for Product B.
+- `I --> J`: Proceed to deduct inventory for Product A.
+- `J --> K`: Proceed to deduct inventory for Product B.
+- `K --> L`: Notify the warehouse that the order is ready.
+- `L --> M`: Proceed to payment processing.
+- `M -- Success --> N`: Payment successful, confirm the order.
+- `M -- Failure --> AA`: Payment failed, rollback Product A and Product B deductions.
+- `AA --> Z`: After rollback, reject the order due to payment failure.
+- `N --> O`: Proceed to ship the order.
+- `O --> P`: Update the order status to "Shipped".
+
+## Repository Context & Terminology
+- **API Request**: An application programming interface (API) request is a message sent to a server to request a service or data.
+- **Order Validation**: The process of verifying that an order meets certain criteria, such as valid product IDs, sufficient quantities, and correct pricing.
+- **Inventory Check**: The process of verifying the availability of products in the inventory.
+- **Inventory Reservation**: The process of temporarily allocating inventory to an order, preventing it from being sold to other customers.
+- **Inventory Deduction**: The process of reducing the inventory count after an order has been fulfilled.
+- **Rollback**: The process of reversing changes made to the system, typically in response to an error or failure.
+- **Payment Processing**: The process of handling financial transactions, including authorization, settlement, and fraud detection.
+- **Order Confirmation**: The process of notifying the customer that their order has been successfully placed and is being processed.
+- **Order Status Update**: The process of updating the status of an order, such as "Pending," "Processing," "Shipped," or "Delivered."
+
+## High-Density QA Ground Truth Summary
+The process begins with an `API Request: Place Order`, which triggers the `Validate Order` step. If the order is deemed invalid, the process immediately terminates, resulting in a `Reject Order: Validation Failed` status. If the order is valid, the system proceeds to `Check Inventory: ProductA`. A branch occurs here: if Product A is `Out of Stock`, the order is rejected due to `Insufficient Stock`. If Product A is `In Stock`, the system `Reserve Inventory: ProductA` and then `Check Inventory: ProductB`. Another branch: if Product B is `Out of Stock`, a `Rollback: ProductA Reservation` is initiated, and the order is rejected due to `Insufficient Stock`. If Product B is `In Stock`, the system `Reserve Inventory: ProductB` and checks `All Products Reserved?`. If not all products are reserved, the process loops back to `Check Inventory: ProductB`. If all products are reserved, a `Create Order Record` is created, followed by `Deduct Inventory: ProductA` and `Deduct Inventory: ProductB`. The system then `Notify Warehouse: Order Ready` and proceeds to `Payment Processing`. Upon `Failure` during payment, a `Rollback: ProductA & ProductB Deductions` is triggered, and the order is rejected due to `Payment Failed`. Upon `Success` during payment, the system issues an `Order Confirmation`, `Ship Order`, and finally `Update Order Status: Shipped`. The `InventoryDeductionAndRollback` subgraph encapsulates the core logic of inventory management during the order fulfillment process.

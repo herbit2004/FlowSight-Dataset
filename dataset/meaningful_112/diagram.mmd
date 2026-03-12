@@ -1,0 +1,26 @@
+graph TD
+    subgraph Risk-Control Rule Engine
+    A[Incoming Transaction] --> B{Pre-Validation Rules?};
+    B -- Yes --> C[Execute Pre-Validation Rules];
+    B -- No --> D;
+    C --> D{Pass/Fail?};
+    D -- Pass --> E[Enrichment Service];
+    D -- Fail --> I[Reject Transaction - Pre-Validation];
+    E --> F[Risk Assessment Rules];
+    F --> G{Risk Score Threshold?};
+    G -- Over Threshold --> H[Escalate to Analyst Queue];
+    G -- Below Threshold --> J[Execute Post-Processing Rules];
+    J --> K{Post-Processing Success?};
+    K -- Yes --> L[Commit Transaction];
+    K -- No --> M[Rollback Transaction - Post Processing];
+    H --> N[Analyst Review & Override];
+    N --> O{Approve?};
+    O -- Yes --> L;
+    O -- No --> M;
+
+    I -.-> Log[Log Rejection];
+    M -.-> Log;
+    L -.-> Log;
+    D -.-> Log;
+    Log[Log Transaction];
+    end

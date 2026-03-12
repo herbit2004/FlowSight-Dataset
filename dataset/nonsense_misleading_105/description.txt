@@ -1,0 +1,84 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the process of order fulfillment, from the moment a user submits an order to the point where the order is marked as complete. The diagram outlines the steps involved in processing an order, including payment verification, inventory checks, and shipping.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts at the top with "User Submits Order" and progresses downwards through various decision points and actions, eventually converging at "Mark Order as Complete". The diagram contains a loop from "Mark Order as Complete" back to "User Submits Order".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Payment, Inventory Check, Backorder Handling (if needed), Order Fulfillment & Packaging, Shipping, and Completion.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **C / Cancel Order**: Represents the action of canceling the order.
+  visible in diagram; no further repository context available.
+- **D / Acknowledge Order**: Represents the action of acknowledging the order.
+  visible in diagram; no further repository context available.
+- **E / Inventory Check**: Represents the action of checking the inventory for the ordered items.
+  visible in diagram; no further repository context available.
+- **F / Enough Inventory?**: A decision point to check if there is enough inventory to fulfill the order.
+  visible in diagram; no further repository context available.
+- **G / Order Fulfilment**: Represents the action of fulfilling the order.
+  visible in diagram; no further repository context available.
+- **H / Notify Customer of Backorder**: Represents the action of notifying the customer that the order is on backorder.
+  visible in diagram; no further repository context available.
+- **I / Customer Approves Backorder?**: A decision point to check if the customer approves the backorder.
+  visible in diagram; no further repository context available.
+- **J / Package Order**: Represents the action of packaging the order.
+  visible in diagram; no further repository context available.
+- **K / Shipping Label Created**: Represents the action of creating a shipping label for the package.
+  visible in diagram; no further repository context available.
+- **L / Shipping Label Issues?**: A decision point to check if there are any issues with the shipping label.
+  visible in diagram; no further repository context available.
+- **M / Shipping Confirmation**: Represents the action of sending a shipping confirmation to the customer.
+  visible in diagram; no further repository context available.
+- **N / Order Shipped**: Represents the action of shipping the order.
+  visible in diagram; no further repository context available.
+- **O / Update Inventory**: Represents the action of updating the inventory after the order has been shipped.
+  visible in diagram; no further repository context available.
+- **P / Mark Order as Complete**: Represents the action of marking the order as complete.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the payment verification process.
+- `B -- No --> C`: If payment is not received, the order is canceled.
+- `B -- Yes --> D`: If payment is received, the order is acknowledged.
+- `D --> E`: After acknowledging the order, an inventory check is performed.
+- `E --> F`: Inventory check leads to a decision point to determine if there is enough inventory.
+- `F -- No --> G`: If there is not enough inventory, the order is fulfilled. (ERROR: should notify customer of backorder)
+- `F -- Yes --> H`: If there is enough inventory, the customer is notified of a backorder. (ERROR: should proceed to fulfillment)
+- `H --> I`: Customer is asked to approve the backorder.
+- `I -- Yes --> G`: If the customer approves the backorder, the order is fulfilled.
+- `I -- No --> C`: If the customer does not approve the backorder, the order is canceled.
+- `G --> J`: After order fulfillment, the order is packaged.
+- `J --> K`: After packaging, a shipping label is created.
+- `K --> L`: Shipping label creation leads to a decision point to determine if there are any issues.
+- `L -- Yes --> M`: If there are shipping label issues, a shipping confirmation is sent. (ERROR: wrong causal direction)
+- `L -- No --> N`: If there are no shipping label issues, the order is shipped.
+- `N --> O`: After the order is shipped, the inventory is updated.
+- `O --> P`: After updating inventory, the order is marked as complete.
+- `C --> P`: Canceled orders are marked as complete.
+- `M --> J`: Shipping confirmation leads to package order. (ERROR: wrong merge)
+- `P --> A`: After marking the order as complete, the process loops back to "User Submits Order". (ERROR: illogical loop)
+
+## Repository Context & Terminology
+- **User Submits Order**: In a standard e-commerce system, this refers to the action of a customer placing an order through a website or application. In this diagram, it represents the starting point of the order processing workflow.
+- **Payment Received?**: This refers to the verification of payment for the order. In a real system, this would involve checking with a payment gateway. In this diagram, it's a simple decision point.
+- **Acknowledge Order**: Typically, this involves sending an email or notification to the customer confirming that their order has been received. In this diagram, it's a step in the process after payment verification.
+- **Inventory Check**: This refers to checking the available stock of the ordered items. In a real system, this would involve querying a database. In this diagram, it's a step to determine if there's enough stock.
+- **Enough Inventory?**: This is a decision point to determine if there is sufficient stock to fulfill the order. In this diagram, the "Yes" and "No" branches are swapped.
+- **Notify Customer of Backorder**: This involves informing the customer that one or more items in their order are currently out of stock and will be shipped later. In this diagram, it's triggered incorrectly when there *is* enough inventory.
+- **Order Fulfilment**: This refers to the process of picking, packing, and preparing the order for shipment. In this diagram, it happens *before* checking stock levels.
+- **Package Order**: This refers to physically packing the items into a box or container for shipping. In this diagram, it follows order fulfillment.
+- **Shipping Label Created**: This refers to generating a label with the shipping address and other necessary information for the carrier. In this diagram, it precedes the "Shipping Label Issues?" check.
+- **Shipping Label Issues?**: This is a decision point to check for any problems with the generated shipping label.
+- **Shipping Confirmation**: This refers to sending a notification to the customer that their order has been shipped, usually including a tracking number. In this diagram, it's triggered *before* the order is actually shipped if there are label issues.
+- **Order Shipped**: This refers to the point when the package is handed over to the shipping carrier.
+- **Update Inventory**: This refers to adjusting the stock levels in the inventory system to reflect the items that have been shipped.
+- **Mark Order as Complete**: This refers to setting the order status to "complete" in the system. In this diagram, it loops back to "User Submits Order".
+- **Cancel Order**: This refers to stopping the order processing and refunding the payment.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Submits Order", which leads to a "Payment Received?" check. If payment is not received, the order is canceled; otherwise, the order is acknowledged. After acknowledgment, an "Inventory Check" is performed, leading to the "Enough Inventory?" decision. Here, the logic is flawed: a "Yes" (enough inventory) incorrectly triggers "Notify Customer of Backorder", while "No" (insufficient inventory) incorrectly triggers "Order Fulfilment". If the customer approves the backorder, the order proceeds to "Order Fulfilment"; otherwise, it's canceled. Post-fulfillment, the order is "Package Order", then "Shipping Label Created", followed by a "Shipping Label Issues?" check. If issues exist, a "Shipping Confirmation" is prematurely sent, then loops back to "Package Order"; if no issues, the "Order Shipped", then "Update Inventory". Finally, the "Mark Order as Complete" node is reached, which then loops back to the start, "User Submits Order", creating an infinite loop. The "Shipping Confirmation" step incorrectly occurs *before* the actual shipping, and the "Enough Inventory?" check has its "Yes" and "No" branches swapped, demonstrating a flawed order processing workflow.

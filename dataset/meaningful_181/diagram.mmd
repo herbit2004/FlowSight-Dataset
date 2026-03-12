@@ -1,0 +1,53 @@
+graph TD
+    subgraph User Check-In Process
+    A[User Opens Check-In App];
+    B{Is User Already Logged In Today?};
+    C[Display Check-In Questions];
+    D[Submit Check-In Response];
+    E[Validate Check-In Data];
+    F{Validation Successful?};
+    G[Record Check-In Data];
+    H[Display Task List];
+    I{User Completes Task};
+    J[Mark Task as Complete];
+    K[Update Task Status in Database];
+    L{Update Successful?};
+    M[Recalculate User Performance Score];
+    N[Display Updated Score];
+    end
+    subgraph Task Management System
+    O[Retrieve Task List from Database];
+    P[Task Completion Event Received];
+    Q[Update Task Metrics];
+    R[Trigger Performance Recalculation];
+    S[Publish Task Completion Event];
+    end
+
+    A --> B;
+    B -- Yes --> H;
+    B -- No --> C;
+    C --> D;
+    D --> E;
+    E --> F;
+    F -- Yes --> G;
+    F -- No --> C;
+    G --> H;
+    H --> I;
+    I --> J;
+    J --> K;
+    K --> L;
+    L -- Yes --> M;
+    L -- No --> H;
+    M --> N;
+
+    H --> O;
+    P --> Q;
+    Q --> R;
+    R --> M;
+    J --> S;
+    S --> P;
+
+    classDef green fill:#90EE90,stroke:#333,stroke-width:2px;
+    class A,C,D,G,H,I,J,M,N green;
+    classDef red fill:#F08080,stroke:#333,stroke-width:2px;
+    class B,F,L red;

@@ -1,0 +1,15 @@
+graph TD
+    A[Receive Customer Order] --> B{Inventory Available?};
+    B -- No --> H[Send Out-of-Stock Notification];
+    H --> A
+    B -- Yes --> C[Process Payment];
+    C --> D{Payment Successful?};
+    D -- No --> E[Cancel Order];
+    D -- Yes --> F[Package Order];
+    F --> G[Ship Order];
+    G --> I{Delivery Successful?};
+    I -- No --> E
+    I -- Yes --> J[Send Delivery Confirmation];
+    J --> K[Update Inventory];
+    K --> L[Close Order];
+    L --> A

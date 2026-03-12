@@ -1,0 +1,64 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow for deploying an application using GitHub Actions, Terraform, and AWS ECS (Elastic Container Service). It depicts the steps involved in building a Docker image, pushing it to a container registry (ECR), and updating the ECS service with the new image. The diagram serves as a visual representation of the deployment pipeline.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It is divided into three subgraphs representing different stages of the deployment process: GitHub Actions, Terraform, and AWS ECS. The start node is "GitHub Push to main" and the end node is "ECS Service Updated with New Containers".
+
+## Subgraphs / Stages
+- **GitHub_Actions**: This subgraph represents the automated workflow triggered by a push to the main branch of a GitHub repository. It includes steps for building and tagging a Docker image, pushing it to ECR, and initializing Terraform.
+- **Terraform**: This subgraph represents the infrastructure-as-code management using Terraform. It includes steps for initializing the backend, loading variables, using a container definitions template, and creating/updating the ECS task definition.
+- **AWS_ECS**: This subgraph represents the AWS Elastic Container Service, where the Docker image is stored, pulled, and used to run containers. It includes steps for updating the ECS service with the new containers.
+
+## Node-by-Node Description
+- **A1 / GitHub Push to main**: Represents a push event to the main branch of a GitHub repository. visible in diagram; no further repository context available.
+- **A2 / Trigger GitHub Actions Workflow**: Represents the triggering of a GitHub Actions workflow. visible in diagram; no further repository context available.
+- **A3 / Build Docker Image**: Represents the building of a Docker image. visible in diagram; no further repository context available.
+- **A4 / Tag Docker Image with Commit SHA**: Represents tagging the Docker image with the commit SHA. visible in diagram; no further repository context available.
+- **A5 / Push Image to ECR**: Represents pushing the Docker image to the Elastic Container Registry (ECR). visible in diagram; no further repository context available.
+- **A6 / Set IMAGE_URI Environment Variable**: Represents setting the IMAGE_URI environment variable. visible in diagram; no further repository context available.
+- **A7 / Initialize Terraform**: Represents initializing Terraform. visible in diagram; no further repository context available.
+- **A8 / Run terraform plan with IMAGE_URI**: Represents running the Terraform plan with the IMAGE_URI. visible in diagram; no further repository context available.
+- **A9 / Apply terraform plan**: Represents applying the Terraform plan. visible in diagram; no further repository context available.
+- **T1 / Initialize Backend with S3 and DynamoDB**: Represents initializing the Terraform backend with S3 and DynamoDB for state management. visible in diagram; no further repository context available.
+- **T2 / Load Variables from variables.tf**: Represents loading variables from the `variables.tf` file. visible in diagram; no further repository context available.
+- **T3 / Use container_definitions.json.tpl**: Represents using the `container_definitions.json.tpl` file, likely a template for defining container configurations. visible in diagram; no further repository context available.
+- **T4 / Create/Update ECS Task Definition**: Represents creating or updating the ECS task definition. visible in diagram; no further repository context available.
+- **T5 / Update ECS Service**: Represents updating the ECS service. visible in diagram; no further repository context available.
+- **T6 / Output Information from outputs.tf**: Represents outputting information from the `outputs.tf` file. visible in diagram; no further repository context available.
+- **E1 / ECR Stores Docker Image**: Represents the Elastic Container Registry (ECR) storing the Docker image. visible in diagram; no further repository context available.
+- **E2 / ECS Pulls Image from ECR**: Represents the ECS pulling the Docker image from ECR. visible in diagram; no further repository context available.
+- **E3 / Run Containers using ECS Task Definition**: Represents running containers using the ECS task definition. visible in diagram; no further repository context available.
+- **E4 / ECS Service Updated with New Containers**: Represents the ECS service being updated with the new containers. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A1 --> A2`: A push to the main branch triggers the GitHub Actions workflow.
+- `A2 --> A3`: The GitHub Actions workflow proceeds to build the Docker image.
+- `A3 --> A4`: The Docker image is tagged with the commit SHA.
+- `A4 --> A5`: The tagged Docker image is pushed to ECR.
+- `A5 --> A6`: The IMAGE_URI environment variable is set.
+- `A6 --> A7`: Terraform is initialized.
+- `A7 --> A8`: Terraform plan is run with the IMAGE_URI.
+- `A8 --> A9`: The Terraform plan is applied.
+- `A9 --> T1`: The Terraform stage begins by initializing the backend.
+- `T1 --> T2`: Variables are loaded from `variables.tf`.
+- `T2 --> T3`: The `container_definitions.json.tpl` template is used.
+- `T3 --> T4`: The ECS task definition is created or updated.
+- `T4 --> E2`: The ECS pulls the image from ECR, based on the updated task definition.
+- `T4 --> T5`: The ECS service is updated.
+- `T5 --> T6`: Information is output from `outputs.tf`.
+- `E1 --> E2`: ECR stores the Docker image, which ECS then pulls.
+- `E2 --> E3`: Containers are run using the ECS task definition.
+- `E3 --> E4`: The ECS service is updated with the new containers.
+
+## Repository Context & Terminology
+- **GitHub Actions**: A CI/CD platform that allows you to automate your build, test, and deployment pipeline.
+- **Terraform**: An infrastructure-as-code tool that allows you to define and provision infrastructure using declarative configuration files.
+- **AWS ECS (Elastic Container Service)**: A container orchestration service that allows you to run and manage Docker containers on AWS.
+- **ECR (Elastic Container Registry)**: A fully-managed Docker container registry that makes it easy to store, manage, and deploy Docker container images.
+- **IMAGE_URI**: An environment variable that stores the URI of the Docker image in ECR.
+- **variables.tf**: A Terraform file that defines the input variables for the Terraform configuration.
+- **container_definitions.json.tpl**: A template file used by Terraform to generate the `container_definitions.json` file, which defines the configuration for the containers in the ECS task definition.
+- **outputs.tf**: A Terraform file that defines the output values for the Terraform configuration.
+
+## High-Density QA Ground Truth Summary
+The deployment pipeline begins with a "GitHub Push to main", triggering a "GitHub Actions Workflow". This workflow first "Builds a Docker Image" and then "Tags the Docker Image with the Commit SHA" for version control. The tagged image is then "Pushed to ECR", AWS's container registry. Subsequently, the "IMAGE_URI Environment Variable" is set, providing the location of the image for later steps. Terraform is then initialized, and a Terraform plan is run using the `IMAGE_URI`. The Terraform plan is applied, which initializes the Terraform backend using S3 and DynamoDB for state management. Terraform then loads variables from `variables.tf` and uses the `container_definitions.json.tpl` template to configure the ECS task definition. The ECS task definition is then created or updated, triggering ECS to pull the image from ECR. Finally, the ECS service is updated with the new containers, and information is output from `outputs.tf`. The `container_definitions.json.tpl` file is crucial as it allows dynamic configuration of the ECS task definition based on the newly built Docker image. The pipeline culminates in the "ECS Service Updated with New Containers" node, signifying a successful deployment.

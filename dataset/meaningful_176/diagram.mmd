@@ -1,0 +1,53 @@
+graph TD
+    subgraph Receiving Dock
+        A[Dock Arrival Notification] --> B{Unload Truck?};
+        B -- Yes --> C[Initiate Pallet Scan];
+        B -- No --> D[Hold for Review];
+        C --> E[Verify ASN Data];
+        E -- Match --> F[Move to Staging Area];
+        E -- Mismatch --> G[Exception Handling];
+    end
+
+    subgraph Quality Assurance
+        F --> H{QA Sampling Required?};
+        H -- Yes --> I[Perform QA Inspection];
+        I -- Pass --> J[Release to Putaway];
+        I -- Fail --> K[Quarantine & Investigate];
+        H -- No --> J;
+    end
+
+    subgraph Putaway Process
+        J --> L[Assign Putaway Task];
+        L --> M[Move Pallet to Location];
+        M --> N[Confirm Putaway Completion];
+        N --> O[Update Inventory System];
+    end
+
+    subgraph Outbound Processing
+        P[Order Received] --> Q[Allocate Inventory];
+        Q -- Sufficient --> R[Generate Picking List];
+        Q -- Insufficient --> S[Backorder Management];
+
+        R --> T[Pick from Location];
+        T --> U[Verification Scan];
+        U --> V[Consolidate & Pack];
+    end
+
+    subgraph Shipping Dock
+        V --> W[Generate Shipping Label];
+        W --> X[Load onto Outbound Carrier];
+        X --> Y[Shipment Confirmation];
+    end
+
+    G --> Z[Investigate Discrepancy];
+    Z --> E;
+    K --> Z;
+    S --> AA[Notify Procurement];
+    AA --> Q;
+    O --> BB[Inventory Monitoring];
+    Y --> BB;
+
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,AA,BB process
+    class B,H decision

@@ -1,0 +1,43 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the user signup and subscription activation process. The diagram serves as a visual representation of the steps a user takes to create an account and activate a subscription, including email confirmation and payment information.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It presents a linear flow with branching decision points. The start node is "User Signs Up," and the end node is "Subscription Activated," which loops back to "User Signs Up."
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: User Signup, Email Confirmation, Profile Setup, Payment Information, and Subscription Activation.
+
+## Node-by-Node Description
+- **A / User Signs Up**: Represents the initial step where a user registers for the service. visible in diagram; no further repository context available.
+- **B / Email Confirmed?**: A decision point to check if the user has confirmed their email address. visible in diagram; no further repository context available.
+- **H / Account Suspended**: Represents the state where the user's account is suspended if the email is not confirmed. visible in diagram; no further repository context available.
+- **C / Set Up Profile**: Represents the step where the user sets up their profile. visible in diagram; no further repository context available.
+- **D / Payment Info Added?**: A decision point to check if the user has added their payment information. visible in diagram; no further repository context available.
+- **E / Start Free Trial**: Represents the option for the user to start a free trial if payment information is not added. visible in diagram; no further repository context available.
+- **F / Choose Plan**: Represents the option for the user to choose a subscription plan if payment information is added. visible in diagram; no further repository context available.
+- **G / Subscription Activated**: Represents the final state where the user's subscription is activated. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User signup triggers email confirmation check.
+- `B -- Yes --> C`: If email is confirmed, the user proceeds to set up their profile.
+- `B -- No --> H`: If email is not confirmed, the account is suspended.
+- `H --> C`: Suspended account leads to profile setup.
+- `C --> D`: Profile setup triggers payment information check.
+- `D -- No --> E`: If payment information is not added, the user starts a free trial.
+- `D -- Yes --> F`: If payment information is added, the user chooses a plan.
+- `F --> G`: Choosing a plan activates the subscription.
+- `E --> G`: Starting a free trial activates the subscription.
+- `G --> A`: Subscription activation loops back to user sign up.
+
+## Repository Context & Terminology
+- **User Signs Up**: Typically refers to the process where a new user provides their information to create an account. In this diagram, it's the starting point of the subscription process and also the endpoint of an illogical loop.
+- **Email Confirmed?**: Usually involves sending a confirmation email to the user's provided email address and verifying it. In this diagram, if the email is not confirmed, the account is suspended, which is followed by profile setup, an unusual flow.
+- **Account Suspended**: Generally means that the user's account is temporarily or permanently blocked. In this diagram, it leads to profile setup, which is not a typical recovery flow.
+- **Set Up Profile**: Refers to the process where a user provides additional information to personalize their account. In this diagram, it occurs after email confirmation (or account suspension), and before payment information, which is an unusual sequence.
+- **Payment Info Added?**: Refers to whether the user has provided their payment details. In this diagram, it determines whether the user starts a free trial or chooses a plan.
+- **Choose Plan**: Refers to selecting a specific subscription tier with associated features and pricing. In this diagram, it is an alternative to starting a free trial.
+- **Start Free Trial**: Refers to offering a limited-time access to the service without payment. In this diagram, it is an alternative to choosing a plan.
+- **Subscription Activated**: Typically means that the user has successfully subscribed to the service and can access its features. In this diagram, it loops back to "User Signs Up," creating an illogical cycle.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Signs Up," after which the system checks "Email Confirmed?". If the email is confirmed ("Yes" branch), the user proceeds to "Set Up Profile." If not ("No" branch), the "Account Suspended," which then incorrectly leads to "Set Up Profile." After setting up the profile, the system checks "Payment Info Added?". If payment information is added ("Yes" branch), the user can "Choose Plan," leading to "Subscription Activated." If payment information is not added ("No" branch), the user can "Start Free Trial," also leading to "Subscription Activated." Critically, "Subscription Activated" then loops back to "User Signs Up," creating a nonsensical cycle. The standard practice of sending a welcome email is skipped. The diagram reverses the typical sequence by having users set up their profile before adding payment information. The "Account Suspended" node incorrectly leads to profile setup instead of an account recovery process.

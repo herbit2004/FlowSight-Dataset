@@ -1,0 +1,44 @@
+graph TD
+    subgraph Data Acquisition
+        A[Source System: Order Management] --> B(Extract: Order Data)
+        B --> C{Data Validation Rules}
+        C -- Pass --> D(Persist to QA Staging)
+        C -- Fail --> E[Error Log & Alert]
+    end
+
+    subgraph Sample Selection & Review
+        D --> F{Sampling Algorithm: Stratified Random}
+        F -- Selected --> G(QA Sample Set Creation)
+        F -- Rejected --> D
+        G --> H(Assign Samples to Reviewers)
+        H --> I{Reviewer: Manual Data Check}
+        I -- Pass --> J(Approve Sample)
+        I -- Fail --> K(Reject Sample)
+    end
+
+    subgraph Remediation & Reporting
+        K --> L{Determine Root Cause}
+        L -- Data Error --> M(Data Correction Workflow)
+        L -- System Defect --> N(Bug Report to Development)
+        J --> O(Update Sample Status: Approved)
+        K --> P(Update Sample Status: Rejected)
+        O --> Q{Threshold Met: Sample Accuracy}
+        P --> Q
+        Q -- Yes --> R(Generate QA Report: Pass)
+        Q -- No --> S(Escalate: Further Investigation)
+        S --> T(Deep Dive Analysis: Root Cause)
+        T --> M
+        T --> N
+        R --> U[Final Report: QA Summary & Metrics]
+    end
+
+    M --> D
+    N --> V[Development Team Backlog]
+
+    classDef pass fill:#ccffcc,stroke:#336633,stroke-width:2px;
+    classDef fail fill:#ffcccc,stroke:#cc3333,stroke-width:2px;
+    classDef report fill:#ffffcc,stroke:#cc9933,stroke-width:2px;
+
+    class J,O pass;
+    class K,P fail;
+    class R,U report;

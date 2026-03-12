@@ -1,0 +1,32 @@
+graph TD
+    subgraph Device
+        A[Heartbeat Sender] --> B{Send HB};
+        B -- Every 60s --> C[Transmit HB to Broker];
+    end
+
+    subgraph Broker
+        C --> D{HB Receiver};
+        D --> E{Queue HB Data};
+    end
+
+    subgraph Backend
+        E --> F[HB Processor];
+        F --> G{Store HB Timestamp};
+        G --> H[Device Status Updater];
+        H --> I{Update Device Table};
+    end
+
+    subgraph  Offline Detection Service
+      I --> J{Offline Detector};
+      J -- Scheduled Task --> K{Query DB for Stale Heartbeats};
+      K --> L{Calculate Last HB Age};
+      L -- Device Age > Threshold? --> M{Mark Device Offline};
+      L -- Device Age <= Threshold? --> N{Device OK};
+      M --> O[Raise Alert];
+      O -->P(Notify Admin);
+      N -->Q[Do Nothing];
+
+    end
+
+    classDef offline fill:#f9f,stroke:#333,stroke-width:2px
+    class M,O,P offline

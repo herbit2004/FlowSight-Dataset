@@ -1,0 +1,17 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- No --> C[Cancel Order & Notify User];
+    B -- Yes --> D[Ship Order];
+    D --> E{Shipping Successful?};
+    E -- No --> F[Contact Customer Support];
+    E -- Yes --> G[Order Delivered];
+    G --> H[Send Delivery Confirmation Email];
+    H --> I{User Confirms Receipt?};
+    I -- No --> J[Mark Order as Delivered];
+    I -- Yes --> K[Update Inventory];
+    K --> A;
+    F --> L[Refund Payment];
+    L --> M[Update Inventory];
+    M --> N[Archive Order Details];
+    C --> N;
+    J --> N;

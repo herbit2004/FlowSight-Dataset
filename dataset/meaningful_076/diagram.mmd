@@ -1,0 +1,41 @@
+graph TD
+    subgraph Data Acquisition
+        A[External System: Payment Gateway] --> B(Transaction Log Ingestion);
+        B --> C{Data Validation & Enrichment};
+        C --> D[Normalized Transaction Data];
+    end
+
+    subgraph Reconciliation Engine
+        D --> E(Real-time Matching Engine);
+        F(Statement File Ingestion) --> G{Statement Validation & Parsing};
+        G --> H[Normalized Statement Data];
+        H --> E;
+        E -- Exact Match --> I{Match Found?};
+        E -- Fuzzy Match --> J{Potential Match Review};
+    end
+
+    subgraph Discrepancy Management
+        I -- Yes --> K(Automatic Reconciliation);
+        I -- No --> L{Discrepancy Investigation};
+        J -- Approved --> K;
+        J -- Rejected --> L;
+        L --> M[Discrepancy Queue: Requires Manual Review];
+        M --> N{Manual Adjustment Needed?};
+        N -- Yes --> O(Manual Adjustment);
+        N -- No --> P(Escalation to Support Team);
+        O --> K;
+    end
+
+    subgraph Settlement Processing
+        K --> Q(Settlement Calculation);
+        Q --> R{Sufficient Funds Available?};
+        R -- Yes --> S[Settlement Instruction Generation];
+        R -- No --> T(Retry Settlement);
+        T --> R;
+        S --> U[Bank Communication: Settlement Request];
+        U --> V[Settlement Confirmation Received];
+        V --> W(Posting to GL);
+    end
+
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px
+    class E,L highlight

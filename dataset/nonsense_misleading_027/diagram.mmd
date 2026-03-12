@@ -1,0 +1,19 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- No --> C[Send Payment Reminder];
+    C --> B;
+    B -- Yes --> E[Inventory Check];
+    E -- Available --> F[Ship Items];
+    E -- Unavailable --> D[Notify User of Delay];
+    D --> F;
+    F --> G{Shipping Confirmation Sent?};
+    G -- No --> H[Mark Order as Complete];
+    G -- Yes --> I[Order Delivered];
+    I --> J[Receive Delivery Confirmation];
+    J --> K[Invoice Generated];
+    K --> L[Archive Order];
+    L --> E;
+    style B fill:#f9f,stroke:#333,stroke-width:2px
+    style G fill:#f9f,stroke:#333,stroke-width:2px
+    style F fill:#ccf,stroke:#333,stroke-width:2px
+    style I fill:#ccf,stroke:#333,stroke-width:2px

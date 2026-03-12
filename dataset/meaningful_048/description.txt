@@ -1,0 +1,78 @@
+## Diagram Type & Purpose
+This is an architecture diagram, specifically a flowchart, illustrating the flow of a user request through a multi-layered system. It depicts the request's journey from external traffic through orchestration and application layers, including monitoring and scaling components, and interaction with a database. The diagram serves as a high-level overview of the system's architecture and request processing pipeline.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TB). It is hierarchically structured into four subgraphs representing different layers or functional areas. The start node is "User Request" and the end nodes are "Response to Client", "New Instance Provisioning", "Instance Decommissioning", and "No Action".
+
+## Subgraphs / Stages
+The diagram contains four explicit subgraphs:
+- **External Traffic**: Represents the entry point of user requests into the system.
+- **Orchestration Layer**: Manages the routing and discovery of services.
+- **Application Layer**: Contains the core business logic and data handling components.
+- **Monitoring & Scaling**: Monitors system metrics and adjusts resources based on load.
+- **Data Storage**: Represents the database cluster.
+
+## Node-by-Node Description
+- **User Request**: Represents an incoming request from a user. visible in diagram; no further repository context available.
+- **Load Balancer**: Distributes incoming traffic across multiple instances. In the repository this corresponds to a standard load balancing component, distributing traffic to available servers.
+- **Ingress Controller**: Manages external access to the services in a Kubernetes cluster. In the repository this corresponds to a Kubernetes Ingress Controller, routing external HTTP requests to the appropriate services within the cluster.
+- **Routing Service**: Responsible for routing requests to the appropriate service instance. visible in diagram; no further repository context available.
+- **Service Discovery**: Locates available service instances. In the repository this corresponds to a service discovery mechanism, such as Consul or etcd, used to dynamically locate available service instances.
+- **Target Application Instance**: Represents a specific instance of the application that will handle the request. visible in diagram; no further repository context available.
+- **Request Handler**: Handles incoming requests within the application layer. visible in diagram; no further repository context available.
+- **Business Logic**: Contains the core business rules and processing logic. visible in diagram; no further repository context available.
+- **Database Query**: Executes queries against the database. visible in diagram; no further repository context available.
+- **Response Builder**: Constructs the response to be sent back to the client. visible in diagram; no further repository context available.
+- **Response Cache**: Caches responses to improve performance. visible in diagram; no further repository context available.
+- **Response to Client**: Represents the final response sent back to the user. visible in diagram; no further repository context available.
+- **Metrics Collection**: Collects system metrics for monitoring and scaling. visible in diagram; no further repository context available.
+- **Horizontal Pod Autoscaler**: Automatically scales the number of pods in a deployment based on CPU utilization. In the repository this corresponds to a Kubernetes Horizontal Pod Autoscaler (HPA), automatically scaling the number of pods in a deployment based on observed CPU utilization or other select metrics.
+- **Scale Out**: Increases the number of service instances. visible in diagram; no further repository context available.
+- **Scale In**: Decreases the number of service instances. visible in diagram; no further repository context available.
+- **No Action**: No scaling action is required. visible in diagram; no further repository context available.
+- **New Instance Provisioning**: Provisions a new instance of the service. visible in diagram; no further repository context available.
+- **Instance Decommissioning**: Removes an existing instance of the service. visible in diagram; no further repository context available.
+- **Database Cluster**: Represents the database cluster used by the application. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Request --> Load Balancer`: User request is sent to the load balancer.
+- `Load Balancer --> Ingress Controller`: Load balancer forwards the request to the ingress controller.
+- `Ingress Controller -- HTTP Request --> Routing Service`: Ingress controller routes the HTTP request to the routing service.
+- `Routing Service --> Service Discovery`: Routing service queries the service discovery for the target application instance.
+- `Service Discovery -- Service Found --> Target Application Instance`: Service discovery returns the target application instance.
+- `Target Application Instance --> Request Handler`: Request is forwarded to the request handler.
+- `Request Handler --> Business Logic`: Request handler invokes the business logic.
+- `Business Logic --> Database Query`: Business logic queries the database.
+- `Database Query -- Data Retrieved --> Business Logic`: Database returns the requested data to the business logic.
+- `Business Logic --> Response Builder`: Business logic passes data to the response builder.
+- `Response Builder --> Response Cache`: Response builder attempts to retrieve the response from the cache.
+- `Response Cache -- Cache Hit? --> Response to Client`: If the response is found in the cache, it is sent to the client.
+- `Response Cache -- Cache Miss --> Response to Client`: If the response is not found in the cache, it is sent to the client after being built.
+- `Response Builder --> Response to Client`: Response builder sends the response to the client.
+- `Response to Client --> Load Balancer`: Response is returned to the load balancer.
+- `Load Balancer --> User Request`: Response is returned to the user.
+- `Target Application Instance --> Metrics Collection`: Target application instance sends metrics to the metrics collection.
+- `Metrics Collection --> Horizontal Pod Autoscaler`: Metrics collection sends metrics to the horizontal pod autoscaler.
+- `Horizontal Pod Autoscaler -- High CPU? --> Scale Out`: If CPU utilization is high, scale out.
+- `Horizontal Pod Autoscaler -- Low CPU? --> Scale In`: If CPU utilization is low, scale in.
+- `Horizontal Pod Autoscaler -- Within Threshold --> No Action`: If CPU utilization is within the threshold, no action is taken.
+- `Scale Out --> New Instance Provisioning`: Scale out triggers new instance provisioning.
+- `Scale In --> Instance Decommissioning`: Scale in triggers instance decommissioning.
+- `New Instance Provisioning --> Service Discovery`: New instance is registered with service discovery.
+- `Instance Decommissioning --> Service Discovery`: Instance is deregistered with service discovery.
+- `No Action --> Metrics Collection`: No action leads back to metrics collection for continued monitoring.
+- `Database Query --> Database Cluster`: Database query is sent to the database cluster.
+- `Database Cluster --> Database Query`: Database cluster returns the result to the database query.
+
+## Repository Context & Terminology
+- **Load Balancer**: A network device or software that distributes network traffic across multiple servers to ensure no single server is overwhelmed.
+- **Ingress Controller**: A component in Kubernetes that manages external access to services within the cluster, typically by routing HTTP/HTTPS traffic based on hostnames or paths.
+- **Service Discovery**: A mechanism that allows services to automatically discover and locate each other on a network.
+- **Horizontal Pod Autoscaler (HPA)**: A Kubernetes controller that automatically scales the number of pods in a deployment based on observed CPU utilization or other select metrics.
+- **Database Cluster**: A group of database servers that work together to provide high availability and scalability.
+- **Metrics Collection**: The process of gathering and storing performance metrics from various components of a system.
+- **Scale Out**: Increasing the number of instances of a service to handle increased load.
+- **Scale In**: Decreasing the number of instances of a service to reduce resource consumption.
+
+## High-Density QA Ground Truth Summary
+The process begins with a "User Request" directed to a "Load Balancer," which distributes the traffic to an "Ingress Controller." The "Ingress Controller" then routes the "HTTP Request" to a "Routing Service," which uses "Service Discovery" to locate a "Target Application Instance." If a service is found, the request proceeds to the "Application Layer," where the "Request Handler" invokes the "Business Logic." The "Business Logic" interacts with the "Database Query" to retrieve data from the "Database Cluster." The retrieved data is then used by the "Response Builder" to construct a response. The "Response Builder" checks the "Response Cache"; a cache hit results in an immediate "Response to Client," while a cache miss leads to building the response and sending it to the client. The "Target Application Instance" also sends metrics to "Metrics Collection," which feeds into the "Horizontal Pod Autoscaler." Based on CPU utilization, the "Horizontal Pod Autoscaler" decides to "Scale Out" (leading to "New Instance Provisioning" and registration with "Service Discovery"), "Scale In" (leading to "Instance Decommissioning" and deregistration with "Service Discovery"), or take "No Action," continuing to monitor metrics. The "Load Balancer" then returns the response to the "User Request," completing the cycle. The Kubernetes Horizontal Pod Autoscaler is a key component for dynamically adjusting resources based on demand.

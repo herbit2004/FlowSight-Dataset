@@ -1,0 +1,90 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow in an e-commerce system. It depicts the sequence of steps involved in receiving a new order, validating it, fulfilling it, processing payment, and shipping the order. The diagram serves as a visual representation of the system's logic and helps in understanding the flow of data and control between different services.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TB). It starts with a "New Order Request" and progresses through validation, fulfillment, payment, and shipping stages, ending with "Log Analytics." The diagram shows a linear flow with decision points that lead to alternative paths.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Intake & Validation, Fulfillment, Inventory Management, Payment Processing, Shipping, and Logging.
+
+## Node-by-Node Description
+- **A / Order Service: New Order Request**: Represents the initial step where a new order is received by the Order Service.
+  visible in diagram; no further repository context available.
+- **B / Validate Order**: Represents the validation process to ensure the order is valid.
+  visible in diagram; no further repository context available.
+- **C / Order Processor: Enqueue Order for Fulfillment**: Represents the action of enqueuing the order for fulfillment by the Order Processor.
+  visible in diagram; no further repository context available.
+- **D / Order Fulfillment Queue**: Represents the queue where orders are stored for fulfillment.
+  visible in diagram; no further repository context available.
+- **E / Fulfillment Service: Dequeue Order**: Represents the action of dequeuing an order from the fulfillment queue by the Fulfillment Service.
+  visible in diagram; no further repository context available.
+- **F / Check Inventory**: Represents the process of checking the inventory to determine if the items are in stock.
+  visible in diagram; no further repository context available.
+- **G / Inventory Service: Reserve Items**: Represents the action of reserving the items in the inventory by the Inventory Service.
+  visible in diagram; no further repository context available.
+- **H / Order Management: Mark Order as Backordered**: Represents the action of marking the order as backordered by the Order Management service.
+  visible in diagram; no further repository context available.
+- **I / Order Service: Send Backorder Notification**: Represents the action of sending a backorder notification by the Order Service.
+  visible in diagram; no further repository context available.
+- **K / Database: Update Inventory Records**: Represents the action of updating the inventory records in the database.
+  visible in diagram; no further repository context available.
+- **L / Payment Service: Authorize Payment**: Represents the action of authorizing the payment by the Payment Service.
+  visible in diagram; no further repository context available.
+- **M / Payment Authorized?**: Represents the decision point to check if the payment was authorized.
+  visible in diagram; no further repository context available.
+- **N / Package Order**: Represents the action of packaging the order.
+  visible in diagram; no further repository context available.
+- **O / Order Management: Cancel Order**: Represents the action of canceling the order by the Order Management service.
+  visible in diagram; no further repository context available.
+- **P / Order Service: Send Cancellation Notification**: Represents the action of sending a cancellation notification by the Order Service.
+  visible in diagram; no further repository context available.
+- **Q / Shipping Service: Create Shipping Label**: Represents the action of creating a shipping label by the Shipping Service.
+  visible in diagram; no further repository context available.
+- **R / Shipping Service: Notify Warehouse**: Represents the action of notifying the warehouse by the Shipping Service.
+  visible in diagram; no further repository context available.
+- **S / Webhook: Order Shipped Event**: Represents the event triggered when the order is shipped.
+  visible in diagram; no further repository context available.
+- **T / Order Service: Update Order Status**: Represents the action of updating the order status by the Order Service.
+  visible in diagram; no further repository context available.
+- **U / Order Service: Send Shipping Confirmation**: Represents the action of sending a shipping confirmation by the Order Service.
+  visible in diagram; no further repository context available.
+- **X / Order Service: Return Error to Client**: Represents the action of returning an error to the client by the Order Service.
+  visible in diagram; no further repository context available.
+- **Z / Log Analytics**: Represents the action of logging analytics data.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: A new order request is sent to the validation process.
+- `B -- Valid --> C`: If the order is valid, it is enqueued for fulfillment.
+- `B -- Invalid --> X`: If the order is invalid, an error is returned to the client.
+- `C --> D`: The order is placed in the Order Fulfillment Queue.
+- `D --> E`: The Fulfillment Service dequeues the order.
+- `E --> F`: The order proceeds to inventory check.
+- `F -- In Stock --> G`: If the items are in stock, they are reserved.
+- `F -- Out of Stock --> H`: If the items are out of stock, the order is marked as backordered.
+- `H --> I`: A backorder notification is sent.
+- `G --> K`: Inventory records are updated in the database.
+- `K --> L`: Payment authorization is requested.
+- `L --> M`: The system checks if the payment is authorized.
+- `M -- Yes --> N`: If the payment is authorized, the order is packaged.
+- `M -- No --> O`: If the payment is not authorized, the order is canceled.
+- `O --> P`: A cancellation notification is sent.
+- `N --> Q`: A shipping label is created.
+- `Q --> R`: The warehouse is notified.
+- `R --> S`: An order shipped event is triggered.
+- `S --> T`: The order status is updated.
+- `T --> U`: A shipping confirmation is sent.
+- `U --> Z`: Analytics are logged.
+
+## Repository Context & Terminology
+- **Order Service**: A microservice responsible for handling order-related operations, such as creating, validating, and updating orders.
+- **Order Processor**: A component responsible for processing orders and preparing them for fulfillment.
+- **Order Fulfillment Queue**: A message queue used to store orders awaiting fulfillment.
+- **Fulfillment Service**: A microservice responsible for fulfilling orders, including inventory management and shipping.
+- **Inventory Service**: A microservice responsible for managing inventory levels and reserving items.
+- **Payment Service**: A microservice responsible for processing payments and authorizing transactions.
+- **Shipping Service**: A microservice responsible for creating shipping labels and notifying the warehouse.
+- **Webhook**: A mechanism for triggering events in other systems when an order is shipped.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with the Order Service receiving a "New Order Request." The first step is to "Validate Order"; if the order is "Invalid," the Order Service returns an "Error to Client," terminating the process. If the order is "Valid," the "Order Processor" enqueues the order for fulfillment, placing it in the "Order Fulfillment Queue." The "Fulfillment Service" dequeues the order and proceeds to "Check Inventory." If the items are "Out of Stock," the "Order Management" marks the order as backordered, and the "Order Service" sends a "Backorder Notification." If the items are "In Stock," the "Inventory Service" reserves the items, and the "Database" updates "Inventory Records." Next, the "Payment Service" attempts to "Authorize Payment." If "Payment Authorized?" is "No," the "Order Management" cancels the order, and the "Order Service" sends a "Cancellation Notification." If "Yes," the order is "Package Order," then the "Shipping Service" creates a "Shipping Label" and notifies the "Warehouse." A "Webhook" triggers an "Order Shipped Event," the "Order Service" updates the "Order Status," and sends a "Shipping Confirmation." Finally, "Log Analytics" records the event. The use of microservices such as Order Service, Inventory Service, Payment Service, and Shipping Service allows for modularity and scalability in handling different aspects of the order processing workflow.

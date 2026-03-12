@@ -1,0 +1,41 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow in an e-commerce system. It depicts the sequence of steps from when a user places an order to when the customer receives it, including payment verification, inventory check, and shipping. The diagram is intended to provide a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with the "User Places Order" node at the top and progresses downwards through a series of steps, eventually looping back to the start. The start node is "User Places Order" and the end node is "Customer Receives Order", which then loops back to "User Places Order".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement, Payment Verification, Inventory Check, Shipping Preparation, Order Shipment, and Order Receipt.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial step where a user submits an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **H / Order Cancelled**: Represents the outcome when payment is not received, resulting in order cancellation. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of verifying if the ordered items are available in the inventory. visible in diagram; no further repository context available.
+- **E / Shipping Label Created**: Represents the creation of a shipping label for the order. visible in diagram; no further repository context available.
+- **G / Notify Customer Backorder**: Represents notifying the customer that the order is on backorder due to unavailability of items. visible in diagram; no further repository context available.
+- **D / Order Shipped**: Represents the stage where the order is shipped to the customer. visible in diagram; no further repository context available.
+- **F / Customer Receives Order**: Represents the final stage where the customer receives the order. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, triggering payment verification.
+- `B -- No --> H`: If payment is not received, the order is cancelled.
+- `B -- Yes --> C`: If payment is received, an inventory check is performed.
+- `C -- Available --> E`: If the inventory is available, a shipping label is created.
+- `C -- Unavailable --> G`: If the inventory is unavailable, the customer is notified about the backorder.
+- `E --> D`: After the shipping label is created, the order is shipped.
+- `D --> F`: After the order is shipped, the customer receives the order.
+- `F --> A`: After the customer receives the order, the process loops back to the beginning, where the user places another order.
+- `G --> B`: After notifying the customer about the backorder, the process loops back to payment verification.
+
+## Repository Context & Terminology
+- **Order**: A request from a customer to purchase goods or services. In this diagram, it represents the entire process from placement to receipt, including an illogical loop back to the start.
+- **Payment Received?**: A check to confirm if the payment for the order has been successfully processed. In this diagram, it acts as a decision point that determines whether the order proceeds or is cancelled.
+- **Inventory Check**: A process to verify the availability of items in stock. In this diagram, it determines whether a shipping label is created or the customer is notified of a backorder.
+- **Shipping Label Created**: The process of generating a label with the necessary information for shipping the order. In this diagram, it occurs even when inventory is unavailable, which is incorrect.
+- **Order Shipped**: The action of sending the order to the customer. In this diagram, it follows the creation of the shipping label.
+- **Customer Receives Order**: The final step where the customer receives the shipped order. In this diagram, it incorrectly triggers a new order placement.
+- **Notify Customer Backorder**: Informing the customer that an item is currently out of stock and will be shipped later. In this diagram, this incorrectly loops back to payment verification.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a user placing an order (A), which then proceeds to payment verification (B). If payment is not received (B -- No --> H), the order is cancelled. If payment is received (B -- Yes --> C), an inventory check is performed. If the inventory is available (C -- Available --> E), a shipping label is created. However, if the inventory is unavailable (C -- Unavailable --> G), the customer is notified about the backorder, which then incorrectly loops back to payment verification (G --> B). After the shipping label is created (E), the order is shipped (D), and the customer receives the order (F). Illogically, the process then loops back to the beginning, where the user places another order (F --> A). The diagram incorrectly shows shipping label creation even when inventory is unavailable, and the backorder notification loops back to payment verification instead of order placement. The final node, Customer Receives Order, should be the end of the process but instead triggers a new order.

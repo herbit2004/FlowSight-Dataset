@@ -1,0 +1,45 @@
+graph TD
+    subgraph Incoming Request Handling
+        A[Client Request] --> B(Rate Limit Check);
+        B -- Exceeds Limit? Yes --> C{Return 429 Error};
+        B -- No --> D(Circuit Breaker Check);
+        D -- Circuit Open? Yes --> E{Fallback Response};
+        D -- No --> F(Route to Upstream Service);
+    end
+
+    subgraph Upstream Service Interaction
+        F --> G(Upstream Service A);
+        F --> H(Upstream Service B);
+        G -- Success --> I(Response Validation);
+        H -- Success --> I;
+        G -- Failure --> J(Record Failure - A);
+        H -- Failure --> K(Record Failure - B);
+        J --> L{Failure Threshold Reached?};
+        K --> L;
+        I --> M(Return Validated Response);
+
+    end
+
+    subgraph Circuit Breaker Management
+        L -- Yes --> N{Open Circuit};
+        N --> O(Set Circuit Open State);
+        O --> D;
+        L -- No --> P{Continue Monitoring};
+        P --> D;
+        J --> P;
+        K --> P;
+    end
+
+    subgraph Dynamic Configuration Updates
+        Q[Configuration Server] -- Poll Updates --> R{Rate Limits Config};
+        Q -- Poll Updates --> S{Circuit Breaker Config};
+        R --> B;
+        S --> D;
+    end
+
+    C --> T[Log Rate Limit Event];
+    E --> U[Log Circuit Breaker Event];
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    C:::error
+    E:::error

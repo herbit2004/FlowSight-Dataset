@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a customer order processing workflow. It outlines the steps involved from receiving an order to closing it, including inventory checks, payment processing, shipping, and customer satisfaction. The diagram serves as a visual representation of the order fulfillment process, but contains intentional errors.
+
+## Overall Layout
+The diagram's primary direction is top-down. It starts with "Receive Customer Order" at the top and flows downwards through various stages of order processing, branching based on conditions like inventory availability, payment status, and customer satisfaction. The process ends with "Close Order", "Issue Refund", and loops back to "Receive Customer Order".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Receive Order, Inventory Check, Payment, Shipping, Customer Satisfaction, Closing, and Inventory Update.
+
+## Node-by-Node Description
+- **A / Receive Customer Order**: Represents the initial step of receiving a customer's order.
+  visible in diagram; no further repository context available.
+- **B / Inventory Check**: Represents the process of checking if the required inventory is available.
+  visible in diagram; no further repository context available.
+- **C / Cancel Order**: Represents the action of canceling the order due to insufficient inventory or other issues.
+  visible in diagram; no further repository context available.
+- **D / Initiate Payment**: Represents the process of initiating payment for the order.
+  visible in diagram; no further repository context available.
+- **E / Ship Order**: Represents the action of shipping the order to the customer after payment approval.
+  visible in diagram; no further repository context available.
+- **F / Send Order Confirmation**: Represents the action of sending an order confirmation to the customer. This occurs *after* payment decline, which is an error.
+  visible in diagram; no further repository context available.
+- **G / Order Delivered**: Represents the state where the order has been delivered to the customer.
+  visible in diagram; no further repository context available.
+- **H / Customer Satisfied?**: Represents a decision point where the customer's satisfaction is assessed.
+  visible in diagram; no further repository context available.
+- **I / Close Order**: Represents the final step of closing the order.
+  visible in diagram; no further repository context available.
+- **J / Issue Refund**: Represents the action of issuing a refund to the customer.
+  visible in diagram; no further repository context available.
+- **K / Update Inventory**: Represents the process of updating the inventory levels. This occurs after the order is closed, which is an error.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `A --> B`: The customer order is sent for inventory check.
+  `B -- Insufficient Inventory --> C`: If the inventory is insufficient, the order is canceled.
+  `B -- Sufficient Inventory --> D`: If the inventory is sufficient, payment is initiated.
+  `D -- Payment Approved --> E`: If the payment is approved, the order is shipped.
+  `D -- Payment Declined --> F`: If the payment is declined, an order confirmation is sent. This is an error; confirmation should precede payment request.
+  `E --> G`: The shipped order transitions to the delivered state.
+  `G --> H`: The delivered order is assessed for customer satisfaction.
+  `H -- Yes --> I`: If the customer is satisfied, the order is closed.
+  `H -- No --> J`: If the customer is not satisfied, a refund is issued.
+  `J --> B`: After issuing a refund, the process loops back to inventory check. This is an error; the process should not loop back to inventory check after a refund.
+  `C --> I`: Canceled orders lead to closing the order.
+  `F --> C`: Sending order confirmation leads to canceling the order.
+  `I --> K`: Closed orders lead to updating the inventory. This is an error; inventory should be updated *before* closing the order.
+  `K --> A`: Updating inventory loops back to receiving a customer order.
+
+## Repository Context & Terminology
+- **Receive Customer Order**: The initial step in the order processing workflow, where the system receives a new order from a customer. In standard practice, this involves capturing order details, customer information, and payment preferences. In this diagram, it simply represents the start of the process.
+- **Inventory Check**: A process to verify the availability of items requested in the customer's order. Typically, this involves querying a database or inventory management system. In this diagram, it's a binary check leading to either order fulfillment or cancellation.
+- **Initiate Payment**: The process of requesting payment from the customer for the order. This usually involves interacting with a payment gateway or processing system. In this diagram, it's a step that leads to either shipping the order or sending an order confirmation (incorrectly).
+- **Ship Order**: The process of preparing and sending the order to the customer. This involves packaging, labeling, and coordinating with a shipping carrier. In this diagram, it directly follows payment approval, skipping intermediate steps.
+- **Send Order Confirmation**: The process of sending a confirmation message to the customer regarding their order. Typically, this is sent immediately after the order is placed, *before* payment processing. In this diagram, it's sent *after* payment decline, which is an error.
+- **Order Delivered**: The state where the customer has received their order. This is usually confirmed by a shipping carrier or customer feedback. In this diagram, it's a step leading to customer satisfaction assessment.
+- **Issue Refund**: The process of returning money to the customer, typically due to dissatisfaction or a problem with the order. In standard practice, this involves several steps, including verification and processing. In this diagram, it loops back to inventory check, which is an error.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Receive Customer Order", which then proceeds to "Inventory Check". If the inventory is insufficient, the order is "Cancel Order" and then "Close Order", leading to "Update Inventory" and looping back to "Receive Customer Order". If the inventory is sufficient, the process moves to "Initiate Payment". A key branch occurs based on payment status: "Payment Approved" leads to "Ship Order", then "Order Delivered", and finally "Customer Satisfied?". "Payment Declined" incorrectly leads to "Send Order Confirmation" and then "Cancel Order". Another branch occurs based on customer satisfaction: "Yes" leads to "Close Order", while "No" leads to "Issue Refund", which then incorrectly loops back to "Inventory Check". The process ends with "Update Inventory" after "Close Order", which then loops back to "Receive Customer Order". The diagram contains several errors, including sending order confirmation after payment decline, looping back to inventory check after issuing a refund, and updating inventory after closing the order. The "Initiate Payment" node lacks intermediate fulfillment steps.

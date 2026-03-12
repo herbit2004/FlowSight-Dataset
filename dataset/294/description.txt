@@ -1,0 +1,65 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the components and data flow within an MCP (Management Control Plane) system, potentially running on Kubernetes. It depicts the interaction between data and management clients, authentication and authorization mechanisms, data and control planes, backend services, and a metadata store. The diagram serves as a high-level overview of the system's architecture and how different components interact with each other.
+
+## Overall Layout
+The diagram is laid out primarily from left to right, with some top-to-bottom elements within subgraphs. It shows the flow of requests from client components on the left, through the MCP Gateway in the center, to backend services and a metadata store on the right. The Kubernetes Cluster components are located at the top right, interacting with the MCP Gateway.
+
+## Subgraphs / Stages
+The diagram contains the following explicit subgraphs:
+- **Clients**: Contains the Agent/MCP Data Client and Management Client.
+- **MCP Gateway**: Contains the Authentication & Authorization, Data Plane, Control Plane, and Backend Services subgraphs.
+- **Authentication & Authorization**: Handles authentication and authorization for both data and control plane requests.
+- **Data Plane**: Contains components related to data routing.
+- **Control Plane**: Contains components related to adapter and tool management.
+- **Backend Services**: Contains the Deployment Manager and Metadata Manager.
+- **Kubernetes Cluster**: Contains the MCP Servers, Tool Gateway Routers, and Registered Tool Servers.
+- **MCP Servers**: Contains mcp-a-0, mcp-a-1, and mcp-b-0.
+- **Tool Gateway Routers**: Contains toolgateway-0 and toolgateway-1.
+- **Tool Servers**: Contains tool-1-0 and tool-2-0.
+
+## Node-by-Node Description
+- **DataClient / 🔌 Agent/MCP Data Client**: Represents a data client, potentially an agent interacting with the MCP. visible in diagram; no further repository context available.
+- **MgmtClient / ⚙️ Management Client**: Represents a management client interacting with the MCP. visible in diagram; no further repository context available.
+- **Auth / 🔐 Data Plane Auth Bearer Token / RBAC**: Handles data plane authentication and authorization using Bearer Tokens and RBAC (Role-Based Access Control). visible in diagram; no further repository context available.
+- **Auth2 / 🔐 Control Plane Auth Bearer Token / RBAC**: Handles control plane authentication and authorization using Bearer Tokens and RBAC. visible in diagram; no further repository context available.
+- **Routing / 🔀 Adapter Routing /adapters/{name}/mcp**: Responsible for routing data plane requests to specific adapters. visible in diagram; no further repository context available.
+- **ToolRouting / 🔀 Tool Router Gateway /mcp**: Responsible for routing data plane requests to specific tools. visible in diagram; no further repository context available.
+- **AdapterMgmt / 📦 Adapter Management /adapters CRUD**: Manages adapters using CRUD (Create, Read, Update, Delete) operations. visible in diagram; no further repository context available.
+- **ToolMgmt / 🔧 Tool Management /tools CRUD**: Manages tools using CRUD operations. visible in diagram; no further repository context available.
+- **DeploymentMgmt / ☸️ Deployment Manager**: Manages deployments within the system. visible in diagram; no further repository context available.
+- **MetadataMgmt / 📋 Metadata Manager**: Manages metadata associated with the system's components. visible in diagram; no further repository context available.
+- **PodA / mcp-a-0**: An MCP server instance. visible in diagram; no further repository context available.
+- **PodA1 / mcp-a-1**: Another MCP server instance. visible in diagram; no further repository context available.
+- **PodB / mcp-b-0**: Another MCP server instance. visible in diagram; no further repository context available.
+- **Router1 / toolgateway-0**: A tool gateway router instance. visible in diagram; no further repository context available.
+- **Router2 / toolgateway-1**: Another tool gateway router instance. visible in diagram; no further repository context available.
+- **Tool1 / tool-1-0**: A registered tool server instance. visible in diagram; no further repository context available.
+- **Tool2 / tool-2-0**: Another registered tool server instance. visible in diagram; no further repository context available.
+- **Metadata / 💾 Metadata Store Server & Tool Info**: Stores metadata and tool information. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `DataClient --> Auth`: Data client sends MCP requests to the Data Plane Authentication component.
+- `MgmtClient --> Auth2`: Management client sends API calls to the Control Plane Authentication component.
+- `Auth --> Routing`: Data Plane Authentication forwards requests to Adapter Routing.
+- `Auth --> ToolRouting`: Data Plane Authentication forwards requests to Tool Router Gateway.
+- `Auth2 --> AdapterMgmt`: Control Plane Authentication forwards requests to Adapter Management.
+- `Auth2 --> ToolMgmt`: Control Plane Authentication forwards requests to Tool Management.
+- `AdapterMgmt & ToolMgmt --> DeploymentMgmt`: Adapter and Tool Management both send requests to the Deployment Manager (convergence).
+- `AdapterMgmt & ToolMgmt --> MetadataMgmt`: Adapter and Tool Management both send requests to the Metadata Manager (convergence).
+- `Routing -.-> MCPServers`: Adapter Routing establishes session affinity with MCP Servers.
+- `ToolRouting -.-> ToolRouters`: Tool Router Gateway establishes session affinity with Tool Gateway Routers.
+- `ToolRouters ==> ToolServers`: Tool Gateway Routers perform dynamic routing to Registered Tool Servers.
+- `DeploymentMgmt --> Cluster`: Deployment Manager deploys and monitors the Kubernetes Cluster.
+- `MetadataMgmt <--> Metadata`: Metadata Manager reads and writes to the Metadata Store.
+
+## Repository Context & Terminology
+- **MCP (Management Control Plane)**: A system for managing and controlling various aspects of a software deployment, including adapters, tools, and metadata.
+- **Data Plane**: The part of the system that handles the actual data processing and routing.
+- **Control Plane**: The part of the system that manages the configuration and control of the data plane.
+- **RBAC (Role-Based Access Control)**: A method of regulating access to computer or network resources based on the roles of individual users within an organization.
+- **CRUD (Create, Read, Update, Delete)**: The four basic operations performed on persistent storage.
+- **Session Affinity**: A mechanism to ensure that requests from the same client are always routed to the same server instance.
+- **Dynamic Routing**: A routing technique where the routing path is determined dynamically based on network conditions.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the architecture of an MCP system, starting with either a Data Client sending "MCP Requests" or a Management Client sending "API Calls." The initial step involves authentication and authorization via "Data Plane Auth" or "Control Plane Auth," both utilizing Bearer Tokens and RBAC. Data plane requests are then routed through either "Adapter Routing" or "Tool Router Gateway," establishing session affinity with MCP Servers or Tool Gateway Routers respectively. Control plane requests proceed to "Adapter Management" or "Tool Management," both performing CRUD operations. These management components then interact with the "Deployment Manager" and "Metadata Manager." The Deployment Manager deploys and monitors the Kubernetes Cluster, while the Metadata Manager reads and writes to the "Metadata Store," which holds server and tool information. The Tool Gateway Routers perform dynamic routing to Registered Tool Servers within the Kubernetes cluster. The MCP architecture separates data and control planes, ensuring secure and managed access to data processing and system configuration.

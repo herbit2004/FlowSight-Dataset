@@ -1,0 +1,49 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of log events from a microservice to a log aggregator service. It depicts the routing, filtering, and downsampling processes applied to log data before aggregation. The diagram serves as a visual representation of the log processing pipeline, aiding in understanding and troubleshooting the system.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the log source and ends with the log aggregator service. The flow includes decision points for routing and sampling.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: Log Source, Routing, Sampling, and Aggregation.
+
+## Node-by-Node Description
+- **A / Log Source: Microservice A**: Represents the origin of the log events, specifically Microservice A.
+  visible in diagram; no further repository context available.
+- **B / Route to Aggregator?**: A decision point that determines whether the log event should be routed to the aggregator.
+  visible in diagram; no further repository context available.
+- **C / Kafka Topic: service-a-logs**: Represents a Kafka topic where log events from Microservice A are stored.
+  visible in diagram; no further repository context available.
+- **D / Drop Log Event**: Represents the action of discarding the log event.
+  visible in diagram; no further repository context available.
+- **E / Sampling Rate > Threshold?**: A decision point that checks if the sampling rate exceeds a predefined threshold.
+  visible in diagram; no further repository context available.
+- **F / Downsample Log Events**: Represents the action of reducing the volume of log events.
+  visible in diagram; no further repository context available.
+- **G / Forward All Logs**: Represents the action of sending all logs to the aggregator.
+  visible in diagram; no further repository context available.
+- **H / Log Aggregator Service**: Represents the service responsible for collecting and processing log data.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Log events flow from Microservice A to the routing decision point.
+- `B -- Yes --> C`: If the log event should be routed to the aggregator, it is sent to the Kafka topic "service-a-logs".
+- `B -- No --> D`: If the log event should not be routed to the aggregator, it is dropped.
+- `C --> E`: Log events from the Kafka topic are evaluated against a sampling rate threshold.
+- `E -- Yes --> F`: If the sampling rate is greater than the threshold, log events are downsampled.
+- `E -- No --> G`: If the sampling rate is not greater than the threshold, all logs are forwarded.
+- `F --> G`: Downsampled log events are forwarded.
+- `F` and `E` converge at `G`.
+- `G --> H`: All forwarded logs are sent to the Log Aggregator Service.
+
+## Repository Context & Terminology
+- **Microservice**: A small, independent, and self-contained service that performs a specific business function.
+- **Log Aggregator Service**: A centralized service that collects, processes, and stores log data from various sources.
+- **Kafka**: A distributed streaming platform used for building real-time data pipelines and streaming applications.
+- **Kafka Topic**: A category or feed name to which records are published in Kafka.
+- **Sampling Rate**: The frequency at which log events are selected for processing.
+- **Threshold**: A predefined value used to determine whether the sampling rate is considered high or low.
+- **Downsampling**: Reducing the volume of log data by discarding some events or reducing the detail of others.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with log events originating from "Log Source: Microservice A". The first decision point, "Route to Aggregator?", determines whether the log event should be sent to the log aggregator. If the answer is "Yes", the log event is published to the "Kafka Topic: service-a-logs". If the answer is "No", the log event is dropped via "Drop Log Event". Log events in the Kafka topic then proceed to the next decision point, "Sampling Rate > Threshold?". If the sampling rate exceeds the threshold ("Yes"), the log events are "Downsample Log Events" to reduce volume. Otherwise ("No"), all logs are forwarded. Both the downsampled logs and the logs that bypassed downsampling converge at "Forward All Logs". Finally, all forwarded logs are sent to the "Log Aggregator Service", which is the end node. The use of Kafka as a message queue enables asynchronous and scalable log processing, while downsampling helps manage the volume of log data sent to the aggregator.

@@ -1,0 +1,69 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow of a system. It illustrates the steps involved from when a user submits an order to when the customer receives the order or the order is returned to the sender. The diagram serves as a visual representation of the order fulfillment process, highlighting key stages and decision points.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured into four subgraphs representing different stages of the order processing workflow. The start node is "User Fills Order Form," and the end nodes are "Order Received," "Return to Sender," and "Order Collected."
+
+## Subgraphs / Stages
+The diagram contains four explicit subgraphs:
+- **User Submits Order**: This subgraph covers the initial steps taken by the user to place an order.
+- **System Processes Order**: This subgraph details the system's actions to process the order after submission.
+- **Shipping and Delivery**: This subgraph outlines the steps involved in packaging, labeling, and shipping the order.
+- **Customer Receives Order**: This subgraph describes the final stage where the customer receives the order or it is returned.
+
+## Node-by-Node Description
+- **User Fills Order Form**: The user submits their order details through a form. visible in diagram; no further repository context available.
+- **Payment Details Valid?**: A decision point to check if the payment details provided by the user are valid. visible in diagram; no further repository context available.
+- **Send Order Confirmation**: An order confirmation is sent to the user. visible in diagram; no further repository context available.
+- **Inventory Check**: The system checks the availability of the ordered items in the inventory. visible in diagram; no further repository context available.
+- **Place Backorder**: A backorder is placed if the inventory is insufficient. visible in diagram; no further repository context available.
+- **Allocate Stock**: The system allocates the available stock for the order. visible in diagram; no further repository context available.
+- **Package Items**: The ordered items are packaged for shipping. visible in diagram; no further repository context available.
+- **Generate Shipping Label**: A shipping label is generated for the package. visible in diagram; no further repository context available.
+- **Item Shipped**: The item is marked as shipped. visible in diagram; no further repository context available.
+- **Contact Supplier**: The supplier is contacted if generating the shipping label fails. visible in diagram; no further repository context available.
+- **Update Order Status**: The order status is updated in the system. visible in diagram; no further repository context available.
+- **Delivery Attempted**: An attempt is made to deliver the order to the customer. visible in diagram; no further repository context available.
+- **Holding at Depot**: The order is held at the depot if the delivery attempt fails. visible in diagram; no further repository context available.
+- **Customer Collection?**: A decision point to check if the customer will collect the order from the depot. visible in diagram; no further repository context available.
+- **Return to Sender**: The order is returned to the sender if the customer does not collect it. visible in diagram; no further repository context available.
+- **Order Collected**: The order is collected by the customer. visible in diagram; no further repository context available.
+- **Order Received**: The customer receives the order. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Fills Order Form --> Payment Details Valid?`: The user-filled order form is submitted for payment validation.
+- `Payment Details Valid? -- Yes --> Send Order Confirmation`: If the payment details are valid, an order confirmation is sent.
+- `Payment Details Valid? -- No --> User Fills Order Form`: If the payment details are invalid, the user is redirected back to fill the order form again.
+- `Send Order Confirmation --> Inventory Check`: After sending the order confirmation, the system checks the inventory.
+- `Inventory Check -- Insufficient Stock --> Place Backorder`: If the inventory is insufficient, a backorder is placed.
+- `Inventory Check -- Sufficient Stock --> Allocate Stock`: If the inventory is sufficient, the stock is allocated.
+- `Place Backorder --> Allocate Stock`: After placing a backorder, the process proceeds to allocate stock.
+- `Allocate Stock --> Package Items`: After allocating stock, the items are packaged.
+- `Package Items --> Generate Shipping Label`: After packaging, a shipping label is generated.
+- `Generate Shipping Label -- Success --> Item Shipped`: If the shipping label is generated successfully, the item is marked as shipped.
+- `Generate Shipping Label -- Fail --> Contact Supplier`: If the shipping label generation fails, the supplier is contacted.
+- `Contact Supplier --> Package Items`: After contacting the supplier, the process loops back to package items.
+- `Item Shipped --> Update Order Status`: After the item is shipped, the order status is updated.
+- `Update Order Status --> Delivery Attempted`: After updating the order status, a delivery attempt is made.
+- `Delivery Attempted -- Successful --> Order Received`: If the delivery is successful, the order is received.
+- `Delivery Attempted -- Failed --> Holding at Depot`: If the delivery fails, the order is held at the depot.
+- `Holding at Depot --> Customer Collection?`: After holding at the depot, it is checked if the customer will collect the order.
+- `Customer Collection? -- No --> Return to Sender`: If the customer does not collect the order, it is returned to the sender.
+- `Customer Collection? -- Yes --> Order Collected`: If the customer collects the order, it is marked as collected.
+- `Order Collected --> Order Received`: After the order is collected, the order is received.
+- `Return to Sender --> Allocate Stock`: After returning to sender, the process loops back to allocate stock.
+
+## Repository Context & Terminology
+- **User Fills Order Form**: In standard practice, this is a web form or application interface where the user enters their order details. In this diagram, it represents the starting point of the order process.
+- **Payment Details Valid?**: This refers to the process of verifying the user's payment information. In standard practice, this involves checking the card number, expiry date, and CVV. In this diagram, the "No" branch incorrectly leads to sending an order confirmation.
+- **Send Order Confirmation**: Typically, this is an email or message sent to the user confirming their order. In this diagram, it happens *before* inventory check, which is an error.
+- **Inventory Check**: This is the process of verifying if the ordered items are available in the warehouse. In standard practice, this step is crucial to avoid selling unavailable products.
+- **Place Backorder**: This refers to placing an order with the supplier to replenish the stock. In this diagram, placing a backorder directly leads to allocating stock, which is illogical.
+- **Allocate Stock**: This is the process of reserving the available stock for the order.
+- **Generate Shipping Label**: This involves creating a label with the customer's address and shipping information. In this diagram, failure to generate a shipping label leads to contacting the supplier, which is unusual.
+- **Delivery Attempted**: This is the process of attempting to deliver the order to the customer's address.
+- **Holding at Depot**: This refers to holding the order at a local depot if the delivery attempt fails.
+- **Return to Sender**: This is the process of returning the order to the sender if the customer does not collect it. In this diagram, returning the order to the sender loops back to allocate stock, which is illogical.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with the user filling out an order form. The system then checks if the payment details are valid. If the payment details are valid, an order confirmation is sent; if not, the user is redirected back to the order form. After sending the order confirmation, the system checks the inventory. If the inventory is insufficient, a backorder is placed; otherwise, the available stock is allocated. The diagram contains a critical error here: sending the order confirmation before checking inventory. After allocating stock, the items are packaged, and a shipping label is generated. If the shipping label generation is successful, the item is marked as shipped; if it fails, the supplier is contacted, and the process loops back to package items. After the item is shipped, the order status is updated, and a delivery attempt is made. If the delivery is successful, the order is received; if it fails, the order is held at the depot. If the customer collects the order from the depot, it is marked as collected and then received; if not, the order is returned to the sender, which then incorrectly loops back to allocate stock. The end nodes are "Order Received," "Return to Sender," and "Order Collected." The diagram also skips the critical step of charging the customer's card after payment details are validated.

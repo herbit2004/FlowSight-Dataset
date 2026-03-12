@@ -1,0 +1,62 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow in an e-commerce system. It depicts the sequence of steps involved from when a user submits an order to post-shipment tasks, including inventory checks, payment authorization, shipping, notifications, and analytics. The diagram serves as a visual representation of the system's architecture and the flow of data and control between different services.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into three main sections: User Interaction, Backend Services, and Messaging. The start node is "User Request: Submit Order" and the end nodes are "Data Warehouse: Store Analytics" and "Order Service: Update User Profile".
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs: User Interaction, Backend Services, and Messaging.
+- **User Interaction**: Represents the initial stage where the user interacts with the system to submit an order.
+- **Backend Services**: Encompasses the core order processing logic, involving various services such as inventory, payment, shipping, and notifications.
+- **Messaging**: Handles asynchronous communication between services, specifically for triggering recommendation services.
+
+## Node-by-Node Description
+- **User Request: Submit Order**: Represents the user submitting an order through the frontend. visible in diagram; no further repository context available.
+- **Frontend Gateway**: Represents the entry point for user requests, routing them to the backend services. visible in diagram; no further repository context available.
+- **Order Service: Receive Request**: The order service receives the order request from the frontend gateway. visible in diagram; no further repository context available.
+- **Inventory Service: Check Stock**: The inventory service checks the availability of the ordered items. visible in diagram; no further repository context available.
+- **Payment Service: Authorize Payment**: The payment service authorizes the payment for the order. visible in diagram; no further repository context available.
+- **Shipping Service: Schedule Shipment**: The shipping service schedules the shipment of the order. visible in diagram; no further repository context available.
+- **Notification Service: Send Shipment Confirmation**: The notification service sends a shipment confirmation to the user. visible in diagram; no further repository context available.
+- **Order Service: Update Order Status to 'Shipped'**: The order service updates the order status to 'Shipped'. visible in diagram; no further repository context available.
+- **Workflow Engine: Trigger Post-Shipment Tasks**: The workflow engine triggers post-shipment tasks. visible in diagram; no further repository context available.
+- **Loyalty Service: Award Points**: The loyalty service awards points to the user. visible in diagram; no further repository context available.
+- **Analytics Service: Log Shipment Data**: The analytics service logs shipment data. visible in diagram; no further repository context available.
+- **Data Warehouse: Store Analytics**: The data warehouse stores analytics data. visible in diagram; no further repository context available.
+- **Order Service: Update User Profile**: The order service updates the user profile. visible in diagram; no further repository context available.
+- **Event Bus**: An event bus for asynchronous communication. visible in diagram; no further repository context available.
+- **Recommendation Service: Prepare New Offers**: The recommendation service prepares new offers based on the order. visible in diagram; no further repository context available.
+- **Error Handling: Notify User**: Handles errors and notifies the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Request: Submit Order --> Frontend Gateway`: User submits an order request.
+- `Frontend Gateway --> Order Service: Receive Request`: The frontend gateway routes the request to the order service.
+- `Order Service: Receive Request -- Validate Order --> Inventory Service: Check Stock`: The order service validates the order and then requests inventory check.
+- `Inventory Service: Check Stock -- Sufficient Stock --> Payment Service: Authorize Payment`: If sufficient stock is available, the payment service is invoked.
+- `Inventory Service: Check Stock -- Insufficient Stock --> Error Handling: Notify User`: If insufficient stock is available, the user is notified.
+- `Payment Service: Authorize Payment -- Payment Approved --> Shipping Service: Schedule Shipment`: If payment is approved, the shipping service is invoked.
+- `Payment Service: Authorize Payment -- Payment Declined --> Error Handling: Notify User`: If payment is declined, the user is notified.
+- `Shipping Service: Schedule Shipment --> Notification Service: Send Shipment Confirmation`: The shipping service triggers a shipment confirmation notification.
+- `Notification Service: Send Shipment Confirmation --> Order Service: Update Order Status to 'Shipped'`: The order status is updated to 'Shipped'.
+- `Order Service: Update Order Status to 'Shipped' --> Workflow Engine: Trigger Post-Shipment Tasks`: Post-shipment tasks are triggered.
+- `Workflow Engine: Trigger Post-Shipment Tasks --> Loyalty Service: Award Points`: Loyalty points are awarded.
+- `Workflow Engine: Trigger Post-Shipment Tasks --> Analytics Service: Log Shipment Data`: Shipment data is logged for analytics.
+- `Analytics Service: Log Shipment Data --> Data Warehouse: Store Analytics`: Analytics data is stored in the data warehouse.
+- `Loyalty Service: Award Points --> Order Service: Update User Profile`: The user profile is updated with loyalty points.
+- `Order Service: Update Order Status to 'Shipped' --> Event Bus`: The event bus is notified of the shipment.
+- `Event Bus --> Recommendation Service: Prepare New Offers`: The recommendation service prepares new offers based on the shipment.
+- `Order Service: Receive Request -- Database Error --> Error Handling: Notify User`: If a database error occurs, the user is notified.
+- `Shipping Service: Schedule Shipment -- Shipping Error --> Error Handling: Notify User`: If a shipping error occurs, the user is notified.
+
+## Repository Context & Terminology
+- **Order Service**: A microservice responsible for managing orders, including receiving, validating, and updating order status.
+- **Inventory Service**: A microservice responsible for managing inventory levels and checking stock availability.
+- **Payment Service**: A microservice responsible for processing payments and authorizing transactions.
+- **Shipping Service**: A microservice responsible for scheduling and managing shipments.
+- **Notification Service**: A microservice responsible for sending notifications to users, such as shipment confirmations.
+- **Workflow Engine**: A system that automates and orchestrates post-shipment tasks, such as awarding loyalty points and logging analytics data.
+- **Event Bus**: A messaging system that enables asynchronous communication between services.
+- **Data Warehouse**: A central repository for storing and analyzing data from various sources.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with a user submitting an order via the "User Request: Submit Order" node, which is then routed through the "Frontend Gateway" to the "Order Service: Receive Request". The order service validates the order and triggers an inventory check with the "Inventory Service: Check Stock". If sufficient stock is available, the workflow proceeds to "Payment Service: Authorize Payment"; otherwise, the "Error Handling: Notify User" node is activated to inform the user of the stock issue. Upon successful payment authorization, indicated by "Payment Approved", the "Shipping Service: Schedule Shipment" is invoked. A "Shipping Error" triggers the "Error Handling: Notify User" node. After scheduling, the "Notification Service: Send Shipment Confirmation" informs the user, and the "Order Service: Update Order Status to 'Shipped'" updates the order status. This triggers the "Workflow Engine: Trigger Post-Shipment Tasks", which branches into "Loyalty Service: Award Points" and "Analytics Service: Log Shipment Data". The loyalty service updates the user profile via "Order Service: Update User Profile", while the analytics service stores data in the "Data Warehouse: Store Analytics". The "Order Service: Update Order Status to 'Shipped'" also publishes an event to the "Event Bus", triggering the "Recommendation Service: Prepare New Offers". A "Database Error" during order reception also triggers the "Error Handling: Notify User" node. This workflow ensures a seamless order processing experience, integrating various microservices for inventory management, payment processing, shipping, notifications, and post-shipment tasks, while also handling potential errors and providing asynchronous communication for personalized recommendations.

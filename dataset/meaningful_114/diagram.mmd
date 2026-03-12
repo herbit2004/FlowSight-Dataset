@@ -1,0 +1,26 @@
+graph TD
+    A[User Query] --> B{Query Parser};
+    B -- Valid Query --> C[Search Index Reader];
+    B -- Invalid Query --> D[Error Handler: Log & Return];
+    C --> E{Cache Hit?};
+    E -- Yes --> F[Return Cached Results];
+    E -- No --> G[Retrieval Engine];
+    G --> H[Scorer];
+    H --> I[Ranker];
+    I --> J[Result Assembler];
+    J --> K[Result Cache Writer];
+    K --> L[Return Results];
+    subgraph Index Update Flow
+    M[Data Ingest API] --> N[Data Validation];
+    N -- Validated --> O[Record Processor];
+    N -- Invalidated --> P[Dead Letter Queue];
+    O --> Q[Index Writer];
+    Q --> R[Index Committer];
+    R --> S[Notifications];
+    S --> T[Search Index Reader Refresh Listener];
+    end
+    T --> C;
+
+    style D fill:#f9f,stroke:#333,stroke-width:2px
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class D error

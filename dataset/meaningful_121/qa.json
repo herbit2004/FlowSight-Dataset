@@ -1,0 +1,74 @@
+[
+  {
+    "question": "What is the first step in the order processing workflow?",
+    "options": [
+      "A. Order Entry API",
+      "B. Customer Web App",
+      "C. Validate Order",
+      "D. Order Accepted Event Producer"
+    ],
+    "correct_index": 1,
+    "type": "factual",
+    "difficulty": "easy"
+  },
+  {
+    "question": "If an order is valid, which event producer is triggered?",
+    "options": [
+      "A. Order Rejection Event Producer",
+      "B. Backorder Event Producer",
+      "C. Order Accepted Event Producer",
+      "D. Ship Order Event Producer"
+    ],
+    "correct_index": 2,
+    "type": "factual",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which of the following is NOT a valid path segment in the diagram?",
+    "options": [
+      "A. Order Accepted Event Producer -> Kafka Topic: order.accepted",
+      "B. Kafka Topic: warehouse.order -> Package Order",
+      "C. Order Rejected Event Producer -> Package Order",
+      "D. Backorder Event Producer -> Kafka Topic: backorder.created"
+    ],
+    "correct_index": 2,
+    "type": "negation",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Starting from the 'Customer Web App', what is the complete sequence of nodes that must be traversed to reach the 'Kafka Topic: order.accepted' node, assuming the order is valid?",
+    "options": [
+      "A. Order Entry API, Validate Order, Order Accepted Event Producer",
+      "B. Order Entry API, Validate Order, Order Rejection Event Producer",
+      "C. Order Entry API, Validate Order, Order Accepted Event Producer, Inventory Check",
+      "D. Order Entry API, Validate Order, Order Accepted Event Producer, Warehouse Order Event Producer"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Following a valid order, what is the sequence of steps from 'Kafka Topic: order.accepted' to updating the 'Order History DB' if there is sufficient inventory?",
+    "options": [
+      "A. Inventory Check, Warehouse Order Event Producer, Kafka Topic: warehouse.order, Package Order, Ship Order Event Producer, Kafka Topic: order.shipped, Order Shipped Event Consumer",
+      "B. Inventory Check, Warehouse Order Event Producer, Kafka Topic: warehouse.order, Package Order, Ship Order Event Producer, Kafka Topic: order.shipped, Order Shipped Event Consumer, Order History DB",
+      "C. Inventory Check, Warehouse Order Event Producer, Kafka Topic: warehouse.order, Package Order, Ship Order Event Producer, Kafka Topic: order.shipped, Order Shipped Event Consumer, Order Accepted Event Consumer, Order History DB",
+      "D. Inventory Check, Warehouse Order Event Producer, Kafka Topic: warehouse.order, Package Order, Ship Order Event Producer, Kafka Topic: order.shipped, Order Shipped Event Consumer, Order Accepted Event Consumer"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which of the following paths will NOT lead to the 'Order History DB'?",
+    "options": [
+      "A. Order Accepted Event Producer -> Kafka Topic: order.accepted -> Inventory Check -> Sufficient Inventory -> Warehouse Order Event Producer -> Kafka Topic: warehouse.order -> Package Order -> Ship Order Event Producer -> Kafka Topic: order.shipped -> Order Shipped Event Consumer",
+      "B. Order Rejection Event Producer -> Kafka Topic: order.rejected -> Order Rejected Event Consumer",
+      "C. Order Accepted Event Producer -> Kafka Topic: order.accepted -> Order Accepted Event Consumer",
+      "D. Order Accepted Event Producer -> Kafka Topic: order.accepted -> Inventory Check -> Insufficient Inventory -> Backorder Event Producer -> Kafka Topic: backorder.created -> Backorder Event Consumer"
+    ],
+    "correct_index": 0,
+    "type": "negation",
+    "difficulty": "hard"
+  }
+]

@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the control flow and data flow within a media processing system, likely part of a browser extension or web application. It depicts how media elements on a webpage are identified, processed, and analyzed for silence detection and playback control. The diagram serves as a high-level overview of the system's architecture and the interactions between its key components.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the `watchAllElements` node at the top and branches into different processing paths based on the type of media element and the chosen controller. The end nodes are `SilenceDetector` (appearing twice) and implicit data flow back into `Lookahead` and `ElementPlaybackControllerStretching`.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages:
+1. **Media Element Detection**: `watchAllElements` and `AllMediaElementsController`.
+2. **Controller Selection**: `chooseController`.
+3. **Playback Control (Cloning or Stretching)**: `ElementPlaybackControllerCloning` and `ElementPlaybackControllerStretching` along with their respective sub-components.
+4. **Silence Detection**: `SilenceDetector` (both instances).
+
+## Node-by-Node Description
+- **watchAllElements / looks for media elements on the page**: This node represents the initial step of identifying media elements within a webpage. In the repository this corresponds to `src/entry-points/content/watchAllElements.ts`.
+- **AllMediaElementsController / the orchestrator**: This node represents the central controller responsible for managing and coordinating the processing of media elements. In the repository this corresponds to `src/entry-points/content/AllMediaElementsController.ts`.
+- **chooseController / choose appropriate controller**: This diamond-shaped node represents a decision point where the appropriate playback controller is selected based on the characteristics of the media element.
+- **ElementPlaybackControllerCloning / controls playbackRate of the original HTMLMediaElement**: This node represents a controller that adjusts the playback rate of the original HTMLMediaElement by cloning it. In the repository this corresponds to `src/entry-points/content/ElementPlaybackControllerCloning/ElementPlaybackControllerCloning.ts`.
+- **ElementPlaybackControllerStretching / controls playbackRate of the original HTMLMediaElement**: This node represents a controller that adjusts the playback rate of the original HTMLMediaElement by stretching it. In the repository this corresponds to `src/entry-points/content/ElementPlaybackControllerStretching/ElementPlaybackControllerStretching.ts`.
+- **Lookahead / plays back the clone element to look for silence ranges**: This node represents a component that plays back a cloned media element to identify silence ranges. In the repository this corresponds to `src/entry-points/content/ElementPlaybackControllerCloning/Lookahead.ts`.
+- **SilenceDetector / utilizes Web Audio API to detect silence**: This node represents a component that uses the Web Audio API to detect silence in the audio stream. In the repository this corresponds to `src/entry-points/content/SilenceDetector/SilenceDetectorProcessor.ts`.
+- **createCloneElementWithSameSrc**: This node represents a function that creates a clone of an HTML element, preserving the source. In the repository this corresponds to `src/entry-points/content/ElementPlaybackControllerCloning/createCloneElementWithSameSrc.ts`.
+- **cloneMediaSources / intercepts all MediaSources and holds a clone HTMLMediaElement**: This node represents a component that intercepts all MediaSources and holds a clone of the HTMLMediaElement. In the repository this corresponds to `src/entry-points/content/cloneMediaSources/lib.ts`.
+- **Popup / (UI, chart)**: This node represents the popup UI component, likely displaying a chart or other information. In the repository this corresponds to `src/entry-points/popup/App.svelte`.
+- **original HTMLMediaElement**: visible in diagram; no further repository context available.
+- **original HTMLMediaElement reference**: visible in diagram; no further repository context available.
+- **silence ranges**: visible in diagram; no further repository context available.
+- **original HTMLMediaElement audio**: visible in diagram; no further repository context available.
+- **SILENCE_END & SILENCE_START events with timestamps**: visible in diagram; no further repository context available.
+- **HTMLMediaElement clone**: visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `watchAllElements --> AllMediaElementsController`: When new media elements are detected on the page, they are passed to the `AllMediaElementsController`.
+- `AllMediaElementsController --> chooseController`: The `AllMediaElementsController` passes the original HTMLMediaElement to the `chooseController` for processing.
+- `AllMediaElementsController --> Popup`: The `AllMediaElementsController` sends telemetry data to the `Popup` component.
+- `chooseController --> ElementPlaybackControllerCloning`: If the cloning controller is appropriate, the original HTMLMediaElement is passed to it.
+- `chooseController --> ElementPlaybackControllerStretching`: If the stretching controller is appropriate, the original HTMLMediaElement is passed to it.
+- `ElementPlaybackControllerCloning --> Lookahead`: The cloning controller passes a reference to the original HTMLMediaElement to the `Lookahead` component.
+- `Lookahead --> ElementPlaybackControllerCloning`: The `Lookahead` component sends silence ranges back to the cloning controller.
+- `createCloneElementWithSameSrc --> Lookahead`: A cloned HTMLMediaElement is passed to the `Lookahead` component.
+- `Lookahead --> createCloneElementWithSameSrc`: The `Lookahead` component sends a reference to the original HTMLMediaElement to the `createCloneElementWithSameSrc` component.
+- `cloneMediaSources --> Lookahead`: A cloned HTMLMediaElement is passed to the `Lookahead` component.
+- `Lookahead --> cloneMediaSources`: The `Lookahead` component requests the `getMediaSourceCloneElement` from `cloneMediaSources`.
+- `Lookahead --> SilenceDetector1`: The `Lookahead` component sends a clone HTMLMediaElement audio to the `SilenceDetector1`.
+- `SilenceDetector1 --> Lookahead`: The `SilenceDetector1` sends `SILENCE_END` & `SILENCE_START` events with timestamps back to the `Lookahead` component.
+- `ElementPlaybackControllerStretching --> SilenceDetector2`: The stretching controller sends the original HTMLMediaElement audio to the `SilenceDetector2`.
+- `SilenceDetector2 --> ElementPlaybackControllerStretching`: The `SilenceDetector2` sends `SILENCE_END` & `SILENCE_START` events with timestamps back to the stretching controller.
+
+## Repository Context & Terminology
+- **watchAllElements.ts**: This module is responsible for observing the DOM for new media elements and triggering the processing pipeline.
+- **AllMediaElementsController.ts**: This module acts as the central orchestrator, managing the different playback controllers and coordinating their actions.
+- **ElementPlaybackControllerCloning.ts**: This module implements a playback controller that uses cloning to adjust the playback rate of media elements.
+- **ElementPlaybackControllerStretching.ts**: This module implements a playback controller that uses stretching to adjust the playback rate of media elements.
+- **Lookahead.ts**: This module is responsible for playing back a cloned media element and detecting silence ranges.
+- **SilenceDetectorProcessor.ts**: This module uses the Web Audio API to detect silence in the audio stream.
+- **createCloneElementWithSameSrc.ts**: This module creates a clone of an HTML element, preserving the source.
+- **cloneMediaSources/lib.ts**: This module intercepts all MediaSources and holds a clone of the HTMLMediaElement.
+
+## High-Density QA Ground Truth Summary
+The process begins with `watchAllElements`, which scans the webpage for media elements using DOM observation, as implemented in `src/entry-points/content/watchAllElements.ts`. Upon detecting a new media element, it passes control to `AllMediaElementsController`, the orchestrator (`src/entry-points/content/AllMediaElementsController.ts`). The controller then sends the original `HTMLMediaElement` to the `chooseController` decision node. Based on criteria not explicitly defined in the diagram, the process branches to either `ElementPlaybackControllerCloning` or `ElementPlaybackControllerStretching`. If the cloning controller is selected (`src/entry-points/content/ElementPlaybackControllerCloning/ElementPlaybackControllerCloning.ts`), the `Lookahead` component (`src/entry-points/content/ElementPlaybackControllerCloning/Lookahead.ts`) plays back a cloned element (created by `createCloneElementWithSameSrc.ts`) to detect silence ranges. `cloneMediaSources/lib.ts` intercepts media sources and holds clones. The `SilenceDetector` (`src/entry-points/content/SilenceDetector/SilenceDetectorProcessor.ts`) utilizes the Web Audio API to detect silence, sending `SILENCE_END` and `SILENCE_START` events back to `Lookahead`. Alternatively, if the stretching controller is chosen (`src/entry-points/content/ElementPlaybackControllerStretching/ElementPlaybackControllerStretching.ts`), the `SilenceDetector` directly analyzes the original audio, sending silence events back to the stretching controller. The `AllMediaElementsController` also sends telemetry data to the `Popup` component (`src/entry-points/popup/App.svelte`).

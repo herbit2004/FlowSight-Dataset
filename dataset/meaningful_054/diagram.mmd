@@ -1,0 +1,36 @@
+graph TD
+    subgraph SLA Tracking and Ticket Escalation System
+    A[Incident Created] --> B{SLA Policy Check};
+    B -- Matched Policy --> C[Start SLA Timer];
+    B -- No Policy --> D[Assign Default Policy];
+    D --> C;
+    C --> E{SLA Breach?};
+    E -- No Breach --> F[Monitor Until Resolved];
+    F --> E;
+    E -- Breach --> G[Escalate Ticket];
+    G --> H[Assign to Next Tier];
+    H --> I{Tier Acknowledgement?};
+    I -- Yes --> J[SLA Timer Reset];
+    J --> F;
+    I -- No --> K[Further Escalation Check];
+    K -- Time Exceeded --> L[Notify Management];
+    L --> M[Management Review];
+    K -- Time Not Exceeded --> H;
+    G --> N[Update Ticket Details];
+    N --> O[Log Escalation Event];
+    O --> P[Send Escalation Notification];
+    P --> Q[Alert On-Call Engineer];
+    Q --> I;
+    F --> R[Incident Resolved];
+    R --> S[Stop SLA Timer];
+    S --> T[Calculate Resolution Time];
+    T --> U[Store Data in Analytics DB];
+    U --> V[Generate SLA Report];
+    V --> W[Close Incident];
+    end
+
+    classDef breached fill:#f9f,stroke:#333,stroke-width:2px
+    classDef normal fill:#ccf,stroke:#333,stroke-width:2px
+
+    class E,G,H,K,L breached;
+    class A,B,C,D,F,I,J,N,O,P,Q,R,S,T,U,V,W normal;

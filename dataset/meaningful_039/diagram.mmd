@@ -1,0 +1,32 @@
+graph TD
+    subgraph Data Source
+        A[Raw Telemetry Data: Kafka Topic]
+    end
+
+    A --> B(Data Ingestion: Spark Streaming)
+    B --> C{Data Quality Checks}
+    C -- "Valid Records" --> D[Feature Preprocessing: PySpark]
+    C -- "Invalid Records" --> E[Reject Queue: SQS]
+
+    D --> F{Numerical Scaling: MinMax Scaler}
+    F -- "Numerical Features" --> G[Apply MinMax Scaling]
+    F -- "Categorical Features" --> H[One-Hot Encoding]
+
+    G --> I(Feature Aggregation: Pandas)
+    H --> I
+
+    I --> J{Temporal Feature Extractor}
+    J -- "Time Series Data" --> K[Rolling Statistics Calculation]
+    J -- "Static Features" --> L[Pass Through]
+
+    K --> M(Feature Selection: Variance Threshold)
+    L --> M
+
+    M --> N{Feature Store Eligibility}
+    N -- "High Variance" --> O[Persist to Feature Store: Redis]
+    N -- "Low Variance" --> P[Drop Column Alert: Slack]
+
+    O --> Q[Model Training Pipeline]
+
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q default

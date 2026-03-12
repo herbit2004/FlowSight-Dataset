@@ -1,0 +1,64 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a shader network graph, specifically for a glTF Physically Based Rendering (PBR) material. It illustrates the flow of data and operations within the shader, from input textures and parameters to the final surface material output. This diagram serves as a visual representation of the material's shading logic.
+
+## Overall Layout
+The diagram is laid out in a top-to-bottom (TB) direction. It features a main subgraph named "NG_main" containing the core shader network, with input nodes at the top and the output node in the middle. The diagram concludes with the surface material node at the bottom.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+
+- **NG_main**: This subgraph encapsulates the primary shader network responsible for calculating the base color. It includes texture coordinate manipulation, color mixing, and various mathematical operations.
+
+## Node-by-Node Description
+- **NG_main_uvtiling / input:vector2:8,8**: An input node providing a 2D vector, likely used for UV tiling with values of 8,8.
+  visible in diagram; no further repository context available.
+- **NG_main_color1 / input:color3:1,0.094118,0.031373**: An input node providing a color (RGB) value.
+  visible in diagram; no further repository context available.
+- **NG_main_color2 / input:color3:0.035294,0.090196,0.878431**: Another input node providing a color (RGB) value.
+  visible in diagram; no further repository context available.
+- **NG_main_output_N_mtlxmix_out / output:color3**: The output node of the "NG_main" subgraph, representing the calculated base color.
+  visible in diagram; no further repository context available.
+- **NG_main_N_mtlxmix / mix:color3**: A node that blends two colors based on a mix factor.
+  visible in diagram; no further repository context available.
+- **NG_main_N_mtlxdotproduct / dotproduct:float**: A node that calculates the dot product of two vectors, resulting in a float value.
+  visible in diagram; no further repository context available.
+- **NG_main_N_mtlxmult / multiply:vector2**: A node that multiplies two 2D vectors.
+  visible in diagram; no further repository context available.
+- **NG_main_N_mtlxsubtract / subtract:vector2**: A node that subtracts one 2D vector from another.
+  visible in diagram; no further repository context available.
+- **NG_main_N_mtlxfloor / floor:vector2**: A node that applies the floor function to a 2D vector, rounding each component down to the nearest integer.
+  visible in diagram; no further repository context available.
+- **NG_main_N_modulo / modulo:float**: A node that calculates the modulo of a float value.
+  visible in diagram; no further repository context available.
+- **NG_main_Texcoord / texcoord:vector2:0**: An input node providing texture coordinates (UVs).
+  visible in diagram; no further repository context available.
+- **Gltf_pbr / gltf_pbr:surfaceshader**: A node representing the glTF PBR surface shader.
+  visible in diagram; no further repository context available.
+- **MAT_Gltf_pbr / surfacematerial:material**: The final output node, representing the surface material.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `NG_main_N_mtlxmix --> NG_main_output_N_mtlxmix_out`: The blended color is output.
+- `NG_main_color1 --"fg"--> NG_main_N_mtlxmix`: The first color input ("fg") is fed into the mix node.
+- `NG_main_color2 --"bg"--> NG_main_N_mtlxmix`: The second color input ("bg") is fed into the mix node.
+- `NG_main_N_modulo --"mix"--> NG_main_N_mtlxmix`: The modulo result is used as the mix factor.
+- `NG_main_N_mtlxfloor --"in1"--> NG_main_N_mtlxdotproduct`: The floored vector is fed into the dot product node.
+- `NG_main_Texcoord --"in1"--> NG_main_N_mtlxmult`: The texture coordinates are fed into the multiply node.
+- `NG_main_uvtiling --"in2"--> NG_main_N_mtlxmult`: The UV tiling vector is fed into the multiply node.
+- `NG_main_N_mtlxmult --"in1"--> NG_main_N_mtlxsubtract`: The multiplied vector is fed into the subtract node.
+- `NG_main_N_mtlxsubtract --"in"--> NG_main_N_mtlxfloor`: The subtracted vector is fed into the floor node.
+- `NG_main_N_mtlxdotproduct --"in1"--> NG_main_N_modulo`: The dot product result is fed into the modulo node.
+- `NG_main_output_N_mtlxmix_out --"base_color"--> Gltf_pbr`: The base color is passed to the glTF PBR shader.
+- `Gltf_pbr --"surfaceshader"--> MAT_Gltf_pbr`: The surface shader is used to create the surface material.
+
+## Repository Context & Terminology
+- **glTF (GL Transmission Format)**: A royalty-free standard for 3D asset delivery.
+- **PBR (Physically Based Rendering)**: A rendering technique that simulates the interaction of light with surfaces in a physically plausible way.
+- **Shader**: A program that runs on the GPU and determines how a surface is rendered.
+- **Surface Shader**: A type of shader that calculates the final color of a surface.
+- **MaterialX**: A framework for describing material appearance. The `mtlx` prefix suggests that some nodes are MaterialX standard nodes.
+- **Vector2**: A 2D vector, typically used for texture coordinates (UVs).
+- **Color3**: A color represented by three components (RGB).
+
+## High-Density QA Ground Truth Summary
+The shader network begins with two input nodes: `texcoord:vector2:0` providing texture coordinates and `input:vector2:8,8` for UV tiling. The texture coordinates are multiplied by the tiling vector, and then subtracted from another vector before being floored. The floored vector is then used to compute a dot product, which is subsequently used as input to a modulo operation. Simultaneously, two color inputs, `input:color3:1,0.094118,0.031373` and `input:color3:0.035294,0.090196,0.878431`, are blended using the result of the modulo operation as the mix factor. The blended color, `output:color3`, is then passed as the `base_color` input to the `gltf_pbr:surfaceshader`. Finally, the surface shader is used to define the `surfacematerial:material`, which represents the final rendered output. The use of `gltf_pbr:surfaceshader` indicates that this shader network is designed to be compatible with the glTF standard for 3D model rendering, utilizing physically based rendering principles for realistic material appearance.

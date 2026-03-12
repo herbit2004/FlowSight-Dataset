@@ -1,0 +1,33 @@
+graph TD
+    subgraph "Order Submission Flow"
+        A[Order Received] --> B{Validate Order};
+        B -- Valid --> C[Process Payment];
+        B -- Invalid --> H[Reject Order];
+        C --> D{Payment Successful?};
+        D -- Yes --> E[Fulfill Order];
+        D -- No --> F[Payment Retry Logic];
+        E --> G[Order Completed];
+        F --> F1{Retry Attempt Limit Reached?};
+        F1 -- Yes --> H;
+        F1 -- No --> F2[Increment Retry Count];
+        F2 --> F3{Circuit Breaker Open?};
+        F3 -- Yes --> H;
+        F3 -- No --> F4[Attempt Payment Retry];
+        F4 --> D;
+        H --> I[Order Failed - Notify Support];
+        G --> J[Post-Processing Tasks];
+        J --> K[Inventory Update];
+    end
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style G fill:#f9f,stroke:#333,stroke-width:2px
+
+    classDef default fill:#ccf,stroke:#333,stroke-width:2px
+    classDef error fill:#fcc,stroke:#333,stroke-width:2px
+    classDef success fill:#cfc,stroke:#333,stroke-width:2px
+
+    classDef condition fill:#eee,stroke:#555,stroke-width:1px
+
+    class A,B,C,D,E,F,G,H,I,J,K default
+    class H,I error
+    class G success
+    class F1,F3 condition

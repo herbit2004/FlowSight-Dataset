@@ -1,0 +1,55 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the workflow of the TerraFract process. It depicts the sequence of operations, validations, and decision points involved in initiating, executing, and completing the TerraFract workflow. The diagram serves as a visual representation of the process flow, aiding in understanding the system's logic and identifying potential areas for optimization or error handling.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It presents a hierarchical flow starting with the initiation of the TerraFract workflow and ending with the submission of the artifact. The diagram includes decision nodes that branch the flow based on validation results.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Initiation, Core Validation, Resource Allocation, Data Processing, Post-Morph Validation, and Finalization.
+
+## Node-by-Node Description
+- **A / Start: Initiating TerraFract Workflow**: Represents the beginning of the TerraFract workflow. visible in diagram; no further repository context available.
+- **B / CoreSync Validation: Integrity Check?**: Represents a validation step to check the integrity of CoreSync. visible in diagram; no further repository context available.
+- **C / FluxBridge Router: Session Assignment**: Represents the assignment of a session by the FluxBridge Router. visible in diagram; no further repository context available.
+- **D / ArcLane Distributor: Allocate SpectraQueue Slice?**: Represents the allocation of a SpectraQueue slice by the ArcLane Distributor. visible in diagram; no further repository context available.
+- **E / ZenithGate Auth Layer: Grant Temporal Access**: Represents the granting of temporal access by the ZenithGate Auth Layer. visible in diagram; no further repository context available.
+- **F / ProximaDrive Buffer: Populate Transient Data**: Represents the population of transient data in the ProximaDrive Buffer. visible in diagram; no further repository context available.
+- **G / Process Transceivers: Execute Data Morphing**: Represents the execution of data morphing by the Process Transceivers. visible in diagram; no further repository context available.
+- **J / CoreSync Validation: Post-Morph Integrity Confirmation?**: Represents a validation step to confirm the post-morph integrity of CoreSync. visible in diagram; no further repository context available.
+- **K / TerraFract Fabricator: Finalize Data Assembly**: Represents the finalization of data assembly by the TerraFract Fabricator. visible in diagram; no further repository context available.
+- **L / End: TerraFract Complete: Submit Artifact**: Represents the end of the TerraFract workflow and the submission of the artifact. visible in diagram; no further repository context available.
+- **H / VaultNode Handshake: Initiate Rollback**: Represents the initiation of a rollback via VaultNode Handshake. visible in diagram; no further repository context available.
+- **M / Notify ChronosAdmin: Initiate Recalibration**: Represents the notification of ChronosAdmin to initiate recalibration. visible in diagram; no further repository context available.
+- **I / SpectraQueue Flush: Purge Inactive Streams**: Represents the purging of inactive streams in the SpectraQueue Flush. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Initiates the CoreSync integrity check.
+- `B -- Validated --> C`: Proceeds to session assignment if CoreSync integrity is validated.
+- `B -- Rejected --> H`: Initiates VaultNode Handshake if CoreSync integrity check fails.
+- `C --> D`: Proceeds to allocate a SpectraQueue slice.
+- `D -- Allocated --> E`: Grants temporal access if a SpectraQueue slice is allocated.
+- `D -- Unavailable --> I`: Purges inactive streams if a SpectraQueue slice is unavailable.
+- `E --> F`: Populates transient data in the ProximaDrive Buffer.
+- `F --> G`: Executes data morphing.
+- `G --> J`: Proceeds to post-morph integrity confirmation.
+- `J -- Validated --> K`: Finalizes data assembly if post-morph integrity is confirmed.
+- `J -- Rejected --> H`: Initiates VaultNode Handshake if post-morph integrity check fails.
+- `K --> L`: Completes TerraFract and submits the artifact.
+- `H --> M`: Notifies ChronosAdmin to initiate recalibration.
+- `M --> A`: Returns to the start of the workflow.
+- `I --> D`: Returns to the ArcLane Distributor to attempt SpectraQueue slice allocation.
+
+## Repository Context & Terminology
+- **TerraFract**: The overall workflow or process being depicted in the diagram.
+- **CoreSync**: A component or system whose integrity is validated at multiple points in the workflow.
+- **FluxBridge Router**: A component responsible for session assignment.
+- **ArcLane Distributor**: A component responsible for allocating SpectraQueue slices.
+- **SpectraQueue**: A queue-like resource that is allocated in slices.
+- **ZenithGate Auth Layer**: A component responsible for granting temporal access.
+- **ProximaDrive Buffer**: A buffer used to populate transient data.
+- **Process Transceivers**: Components responsible for executing data morphing.
+- **VaultNode Handshake**: A process for initiating a rollback.
+- **ChronosAdmin**: An administrative component that is notified to initiate recalibration.
+
+## High-Density QA Ground Truth Summary
+The TerraFract workflow begins with the "Start: Initiating TerraFract Workflow" node, immediately followed by a "CoreSync Validation: Integrity Check?". If the integrity check is "Validated", the process moves to "FluxBridge Router: Session Assignment"; otherwise, if "Rejected", it initiates a "VaultNode Handshake: Initiate Rollback". From session assignment, the workflow proceeds to "ArcLane Distributor: Allocate SpectraQueue Slice?". If a slice is "Allocated", "ZenithGate Auth Layer: Grant Temporal Access" is triggered, followed by "ProximaDrive Buffer: Populate Transient Data" and "Process Transceivers: Execute Data Morphing". If a slice is "Unavailable", "SpectraQueue Flush: Purge Inactive Streams" is triggered, returning to the ArcLane Distributor. After data morphing, "CoreSync Validation: Post-Morph Integrity Confirmation?" is performed. If "Validated", "TerraFract Fabricator: Finalize Data Assembly" is executed, leading to "End: TerraFract Complete: Submit Artifact". If "Rejected", it initiates "VaultNode Handshake: Initiate Rollback". The VaultNode Handshake then triggers "Notify ChronosAdmin: Initiate Recalibration", which loops back to the start of the TerraFract workflow. The CoreSync validation steps ensure data integrity throughout the process, while the ArcLane Distributor manages resource allocation for SpectraQueue processing.

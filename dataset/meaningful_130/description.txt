@@ -1,0 +1,86 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the user engagement platform process. It depicts the flow of events from a user action triggering an event, through various checks, A/B testing, notification delivery, and finally to analytics. The diagram serves as a visual representation of the system's logic and data flow, aiding in understanding and troubleshooting the user engagement process.
+
+## Overall Layout
+The diagram has a left-to-right (LR) primary direction. It consists of a single subgraph representing the User Engagement Platform. The flow starts with "User Action Triggers Event" and ends with "Analytics Dashboard".
+
+## Subgraphs / Stages
+The diagram contains one subgraph: "User Engagement Platform".
+
+## Node-by-Node Description
+- **A / User Action Triggers Event**: Represents the initial event triggered by a user action.
+  visible in diagram; no further repository context available.
+- **B / Event Router**: Routes the event to the appropriate handler.
+  visible in diagram; no further repository context available.
+- **C / Check User Opt-In**: Checks if the user has opted-in to receive notifications.
+  visible in diagram; no further repository context available.
+- **D / Notification Service**: Sends a notification to the user.
+  visible in diagram; no further repository context available.
+- **E / Log Opt-Out Event**: Logs the event if the user has opted-out.
+  visible in diagram; no further repository context available.
+- **F / AB Test Group?**: Checks if the user is part of an A/B test group.
+  visible in diagram; no further repository context available.
+- **G / AB Test Configuration**: Retrieves the A/B test configuration.
+  visible in diagram; no further repository context available.
+- **H / Variant Assignment**: Assigns a variant (A or B) to the user based on the A/B test configuration.
+  visible in diagram; no further repository context available.
+- **I / Prepare Variant A Payload**: Prepares the payload for variant A.
+  visible in diagram; no further repository context available.
+- **J / Prepare Variant B Payload**: Prepares the payload for variant B.
+  visible in diagram; no further repository context available.
+- **K / Send Notification - Variant A**: Sends the notification with the prepared payload.
+  visible in diagram; no further repository context available.
+- **L / Prepare Standard Payload**: Prepares a standard payload if the user is not part of an A/B test group.
+  visible in diagram; no further repository context available.
+- **M / Delivery Confirmation Received?**: Checks if a delivery confirmation has been received.
+  visible in diagram; no further repository context available.
+- **N / Record Delivery Success**: Records the delivery success.
+  visible in diagram; no further repository context available.
+- **O / Retry Attempt Limit?**: Checks if the retry attempt limit has been reached.
+  visible in diagram; no further repository context available.
+- **P / Retry Notification**: Retries sending the notification.
+  visible in diagram; no further repository context available.
+- **Q / Record Delivery Failure**: Records the delivery failure.
+  visible in diagram; no further repository context available.
+- **R / Update User Engagement Metrics**: Updates the user engagement metrics.
+  visible in diagram; no further repository context available.
+- **S / Analytics Dashboard**: Displays the analytics dashboard.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User action triggers an event.
+- `B --> C`: Event is routed to check user opt-in status.
+- `C -- Yes --> D`: User has opted-in; proceed to notification service.
+- `C -- No --> E`: User has opted-out; log the opt-out event.
+- `D --> F`: Check if the user is part of an A/B test group.
+- `F -- Yes --> G`: User is in A/B test group; retrieve A/B test configuration.
+- `F -- No --> L`: User is not in A/B test group; prepare standard payload.
+- `G --> H`: Assign a variant (A or B) to the user.
+- `H -- Variant A --> I`: Prepare variant A payload.
+- `H -- Variant B --> J`: Prepare variant B payload.
+- `I --> K`: Send notification with variant A payload.
+- `J --> K`: Send notification with variant B payload.
+- `L --> K`: Send notification with standard payload.
+- `K --> M`: Check if delivery confirmation has been received.
+- `M -- Yes --> N`: Delivery confirmation received; record delivery success.
+- `M -- No --> O`: Delivery confirmation not received; check retry attempt limit.
+- `O -- No --> P`: Retry attempt limit not reached; retry notification.
+- `O -- Yes --> Q`: Retry attempt limit reached; record delivery failure.
+- `P --> K`: Retry sending the notification.
+- `N --> R`: Update user engagement metrics after successful delivery.
+- `Q --> R`: Update user engagement metrics after delivery failure.
+- `R --> S`: Display analytics dashboard.
+
+## Repository Context & Terminology
+- **User Action Triggers Event**: An event initiated by a user's action within the application.
+- **Event Router**: A component responsible for directing events to the appropriate handlers or services.
+- **Opt-In/Opt-Out**: User's preference to receive notifications or communications.
+- **A/B Test**: A randomized experiment with two variants, A and B, used to determine which variant performs better.
+- **Payload**: The data transmitted in a notification or message.
+- **Delivery Confirmation**: A notification indicating that a message or notification has been successfully delivered.
+- **Retry Attempt Limit**: The maximum number of times a notification will be retried if delivery fails.
+- **User Engagement Metrics**: Data points used to measure user interaction and engagement with the application.
+- **Analytics Dashboard**: A visual representation of key metrics and data related to user engagement.
+
+## High-Density QA Ground Truth Summary
+The process begins when a "User Action Triggers Event", which is then routed by the "Event Router". The system first checks "Check User Opt-In"; if the user has not opted in ("No" branch), the system logs an "Log Opt-Out Event". If the user has opted in ("Yes" branch), the "Notification Service" is engaged. Next, the system checks "AB Test Group?". If the user is part of an A/B test ("Yes" branch), the system retrieves the "AB Test Configuration" and assigns a "Variant Assignment" (either A or B). Based on the variant, the system prepares the corresponding payload ("Prepare Variant A Payload" or "Prepare Variant B Payload"). If the user is not part of an A/B test ("No" branch), the system prepares a "Prepare Standard Payload". The system then attempts to "Send Notification - Variant A". After sending the notification, the system checks "Delivery Confirmation Received?". If delivery is confirmed ("Yes" branch), the system "Record Delivery Success". If not ("No" branch), the system checks "Retry Attempt Limit?". If the limit has not been reached ("No" branch), the system "Retry Notification". If the limit has been reached ("Yes" branch), the system "Record Delivery Failure". Both successful and failed deliveries lead to "Update User Engagement Metrics", which are then displayed on the "Analytics Dashboard". The A/B testing mechanism allows for experimentation with different notification strategies to optimize user engagement, a common practice in modern application development.

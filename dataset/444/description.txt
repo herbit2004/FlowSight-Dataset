@@ -1,0 +1,64 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the structure and relationships between different components of a system, likely related to AI clients and a module loading mechanism. It illustrates the flow of control and data between various modules, from AI clients to infrastructure components, providing a high-level overview of the system's architecture. The diagram serves as a blueprint for understanding the system's design and how its different parts interact.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) fashion, with the AI Clients at the top and the Infrastructure at the bottom. It is hierarchically structured, with distinct layers representing different aspects of the system, such as AI Clients, MCP Server Entry Points, Module Loader, Core Modules, MCP Infrastructure, Application Layer, Domain Layer, and Infrastructure. The start nodes are the AI Clients (Claude Code, Cursor IDE, Other MCP Clients), and the end nodes are the Infrastructure components (FileSystemPort, LoggerPort, PluginManager).
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing different layers or modules:
+- **AI Clients**: Represents the various AI clients that interact with the system.
+- **MCP Server - Entry Points**: Represents the entry points for the MCP server.
+- **Module Loader v1.6.2**: Represents the module loading mechanism.
+- **Core Modules**: Represents the core modules of the system.
+- **MCP Infrastructure**: Represents the infrastructure components of the system.
+- **Application Layer**: Represents the application layer of the system.
+- **Domain Layer**: Represents the domain layer of the system.
+- **Infrastructure**: Represents the infrastructure layer of the system.
+
+## Node-by-Node Description
+- **Claude Code**: Represents the Claude Code AI client. visible in diagram; no further repository context available.
+- **Cursor IDE**: Represents the Cursor IDE AI client. visible in diagram; no further repository context available.
+- **Other MCP Clients**: Represents other MCP clients. visible in diagram; no further repository context available.
+- **mcp-server.js / Legacy Entry**: Represents the mcp-server.js file, which serves as a legacy entry point. visible in diagram; no further repository context available.
+- **dist/index.js / TypeScript Entry**: Represents the dist/index.js file, which serves as a TypeScript entry point. visible in diagram; no further repository context available.
+- **moduleLoader.ts / Unified Loader**: Represents the moduleLoader.ts file, which is a unified loader. visible in diagram; no further repository context available.
+- **Path 1: ./utils/*.js / npm start, node dist/**: Represents the path ./utils/*.js, typically used with npm start or node dist/. visible in diagram; no further repository context available.
+- **Path 2: ../utils/*.js / npm run dev**: Represents the path ../utils/*.js, typically used with npm run dev. visible in diagram; no further repository context available.
+- **Path 3: ./*.js / npx context**: Represents the path ./*.js, typically used with npx context. visible in diagram; no further repository context available.
+- **Path 4: ../*.js / Alternative npx**: Represents the path ../*.js, used as an alternative with npx. visible in diagram; no further repository context available.
+- **documentGenerator / Codebase Analysis**: Represents the documentGenerator module, responsible for codebase analysis. visible in diagram; no further repository context available.
+- **specGenerator / Spec Documents**: Represents the specGenerator module, responsible for generating spec documents. visible in diagram; no further repository context available.
+- **MCPServer / Protocol Handler**: Represents the MCPServer, which handles protocols. visible in diagram; no further repository context available.
+- **ToolRegistry / Tool Management**: Represents the ToolRegistry, responsible for tool management. visible in diagram; no further repository context available.
+- **SessionManager / State Management**: Represents the SessionManager, responsible for state management. visible in diagram; no further repository context available.
+- **WorkflowEngine / Phase Management**: Represents the WorkflowEngine, responsible for phase management. visible in diagram; no further repository context available.
+- **RequirementsClarification / Interactive Q&A**: Represents the RequirementsClarification module, responsible for interactive Q&A. visible in diagram; no further repository context available.
+- **SteeringDocuments / Context Generation**: Represents the SteeringDocuments module, responsible for context generation. visible in diagram; no further repository context available.
+- **ProjectContext / Business Logic**: Represents the ProjectContext, which encapsulates business logic. visible in diagram; no further repository context available.
+- **WorkflowStateMachine / FSM**: Represents the WorkflowStateMachine, which implements a finite state machine (FSM). visible in diagram; no further repository context available.
+- **QualityGate / Validation**: Represents the QualityGate, responsible for validation. visible in diagram; no further repository context available.
+- **FileSystemPort / I/O Abstraction**: Represents the FileSystemPort, which provides I/O abstraction. visible in diagram; no further repository context available.
+- **LoggerPort / Logging**: Represents the LoggerPort, responsible for logging. visible in diagram; no further repository context available.
+- **PluginManager / Extensibility**: Represents the PluginManager, responsible for extensibility. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A1 & A2 & A3 --> B1 & B2`: AI Clients (Claude Code, Cursor IDE, Other MCP Clients) interact with the MCP Server Entry Points (mcp-server.js, dist/index.js).
+- `B2 --> ML`: The TypeScript entry point (dist/index.js) triggers the Module Loader.
+- `ML --> ML1 & ML2 & ML3 & ML4`: The Module Loader (moduleLoader.ts) loads modules from different paths.
+- `ML1 & ML2 & ML3 & ML4 --> C1 & C2`: The loaded modules (Path 1, Path 2, Path 3, Path 4) interact with the Core Modules (documentGenerator, specGenerator).
+- `B1 & B2 --> D1`: Both entry points (mcp-server.js, dist/index.js) interact with the MCPServer.
+- `D1 --> D2 & D3`: The MCPServer interacts with the ToolRegistry and SessionManager.
+- `D2 --> E1 & E2 & E3`: The ToolRegistry interacts with the WorkflowEngine, RequirementsClarification, and SteeringDocuments.
+- `E1 & E2 & E3 --> F1 & F2 & F3`: The Application Layer components (WorkflowEngine, RequirementsClarification, SteeringDocuments) interact with the Domain Layer components (ProjectContext, WorkflowStateMachine, QualityGate).
+- `F1 & F2 & F3 --> G1 & G2 & G3`: The Domain Layer components (ProjectContext, WorkflowStateMachine, QualityGate) interact with the Infrastructure components (FileSystemPort, LoggerPort, PluginManager).
+
+## Repository Context & Terminology
+- **MCP (Module Context Provider)**: Not explicitly defined in the diagram, but likely refers to a system or framework for managing modules and their context.
+- **npm start**: A standard npm command to start a Node.js application, often used in development environments.
+- **npm run dev**: A custom npm script, typically used to start a development server with features like hot reloading.
+- **npx**: A tool to execute npm package binaries.
+- **FSM (Finite State Machine)**: A computational model representing a system that can be in one of a finite number of states.
+- **./utils/*.js, ../utils/*.js, ./*.js, ../*.js**: These paths are used by the Module Loader to locate and load JavaScript modules. The different prefixes (`.`, `..`) indicate relative paths within the project structure.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a modular architecture beginning with AI Clients (Claude Code, Cursor IDE, Other MCP Clients) initiating interactions via MCP Server Entry Points (mcp-server.js for legacy, dist/index.js for TypeScript). The TypeScript entry point then triggers the Module Loader (moduleLoader.ts), a unified loader responsible for loading modules from various paths (`./utils/*.js` via npm start, `../utils/*.js` via npm run dev, `./*.js` via npx context, and `../*.js` as an alternative npx approach). These paths converge to load Core Modules: documentGenerator for codebase analysis and specGenerator for spec documents. The legacy entry point and TypeScript entry point both interact with the MCPServer, which then delegates to ToolRegistry and SessionManager. The ToolRegistry then interacts with WorkflowEngine, RequirementsClarification, and SteeringDocuments. These application layer components interact with the domain layer (ProjectContext, WorkflowStateMachine, QualityGate), which finally interacts with the infrastructure layer (FileSystemPort, LoggerPort, PluginManager). The Module Loader's use of different paths and npm commands highlights the system's flexibility in loading modules based on the execution context. The presence of both legacy and TypeScript entry points suggests a migration or coexistence strategy. The final infrastructure components provide essential services like I/O abstraction, logging, and extensibility.

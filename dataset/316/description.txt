@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture and data flow of a system. It illustrates the sequence of operations, data processing stages, and interactions between different components within the system. The diagram serves as a high-level overview of the system's architecture, showing how external triggers initiate processes that lead to various outputs and integrations.
+
+## Overall Layout
+The diagram has a left-to-right (LR) layout, showing the flow of data and processes from left to right. It starts with external triggers and scheduled events on the left and progresses through a series of processing stages to various outputs and integrations on the right. There are no explicit end nodes, but the rightmost nodes represent the final outputs and integrations.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages:
+1. **Input**: External Triggers and Schedule/Cron.
+2. **Queueing**: Per-Agent Durable Queue.
+3. **Runtime**: Persistent Agent Runtime.
+4. **Output/Integration**: Tools Layer, Comms Replies, Files/Reports/Artifacts.
+
+## Node-by-Node Description
+- **A / External Triggers\nSMS · Email · Webhook · API**: Represents external events that initiate processes within the system, including SMS messages, emails, webhooks, and API calls. visible in diagram; no further repository context available.
+- **C / Schedule / Cron**: Represents scheduled events or cron jobs that trigger processes within the system. visible in diagram; no further repository context available.
+- **B / Per-Agent Durable Queue**: Represents a durable queue that stores tasks or messages for each agent, ensuring that they are processed even if the system restarts. visible in diagram; no further repository context available.
+- **D / Persistent Agent Runtime**: Represents the core runtime environment where agents execute tasks and processes data. visible in diagram; no further repository context available.
+- **E / Tools Layer**: Represents a layer of tools and utilities used by the system for various purposes. visible in diagram; no further repository context available.
+- **E1 / Browser Automation\nheaded + profile-aware**: Represents browser automation capabilities, likely using a headless browser and profile-aware settings. visible in diagram; no further repository context available.
+- **E2 / SQLite State\nstructured memory tables**: Represents the use of SQLite for storing state information, likely using structured memory tables for efficient access. visible in diagram; no further repository context available.
+- **E3 / Outbound Integrations\nwebhooks + HTTP**: Represents outbound integrations with external systems using webhooks and HTTP requests. visible in diagram; no further repository context available.
+- **E4 / Agent-to-Agent\npeer messaging**: Represents direct communication between agents using peer-to-peer messaging. visible in diagram; no further repository context available.
+- **F / Comms Replies\nSMS · Email · Web**: Represents communication replies sent via SMS, email, or web interfaces. visible in diagram; no further repository context available.
+- **G / Files + Reports + Artifacts**: Represents the generation of files, reports, and other artifacts as output from the system. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: External triggers initiate tasks that are added to the per-agent durable queue.
+- `C --> B`: Scheduled events initiate tasks that are added to the per-agent durable queue.
+- `B --> D`: Tasks from the durable queue are processed by the persistent agent runtime.
+- `D --> E`: The persistent agent runtime utilizes the tools layer for various functions.
+- `E --> E1`: The tools layer uses browser automation.
+- `E --> E2`: The tools layer uses SQLite state management.
+- `E --> E3`: The tools layer performs outbound integrations.
+- `E --> E4`: The tools layer facilitates agent-to-agent messaging.
+- `D --> F`: The persistent agent runtime sends communication replies.
+- `D --> G`: The persistent agent runtime generates files, reports, and artifacts.
+
+## Repository Context & Terminology
+- **SMS, Email, Webhook, API**: These represent common methods for external systems to interact with the described system, triggering actions or providing data.
+- **Cron**: A time-based job scheduler in Unix-like computer operating systems. It enables users to schedule jobs (commands or shell scripts) to run automatically at a specific time, date, or interval.
+- **Durable Queue**: A message queue that persists messages to disk or another durable storage mechanism. This ensures that messages are not lost if the system crashes or restarts.
+- **Headless Browser**: A browser that runs without a graphical user interface. It is often used for automated testing and web scraping.
+- **Webhooks**: Automated HTTP callbacks triggered by events in one system and sent to another.
+- **HTTP**: Hypertext Transfer Protocol, the foundation of data communication on the World Wide Web.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a system architecture where external triggers (SMS, Email, Webhook, API) and scheduled cron jobs initiate processes. These triggers feed into a Per-Agent Durable Queue, ensuring task persistence. The Persistent Agent Runtime processes tasks from the queue, utilizing a Tools Layer for various functionalities. The Tools Layer branches out to Browser Automation (headless + profile-aware), SQLite State (structured memory tables), Outbound Integrations (webhooks + HTTP), and Agent-to-Agent peer messaging. The Persistent Agent Runtime also directly generates Comms Replies (SMS, Email, Web) and Files + Reports + Artifacts. The durable queue ensures that tasks are not lost during system restarts, a critical feature for reliable operation. The system leverages common integration methods like webhooks and HTTP for outbound communication. The use of a headless browser in the Tools Layer suggests automated web interactions.

@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the components and data flow within the Acontext system. It depicts the interaction between the client layer, the Acontext backend, and the dashboard, highlighting the infrastructure dependencies. The diagram serves as a high-level overview of the system's architecture.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner. It is hierarchically structured, with the client layer and dashboard at the top, the Acontext backend in the middle, and the infrastructure layer at the bottom. The start nodes are the client layer components and the dashboard, and the end nodes are the infrastructure components.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Client Layer**: Represents the client-side components that interact with the Acontext backend.
+- **Acontext Backend**: Represents the core logic and API of the Acontext system.
+- **Dashboard**: Represents the web dashboard for visualizing data.
+
+## Node-by-Node Description
+- **pip install acontext**: Represents the Python client installation using pip. visible in diagram; no further repository context available.
+- **npm i @acontext/acontext**: Represents the JavaScript client installation using npm. visible in diagram; no further repository context available.
+- **API / localhost:8029**: Represents the Acontext API, accessible at localhost:8029. visible in diagram; no further repository context available.
+- **Core**: Represents the core logic of the Acontext backend. visible in diagram; no further repository context available.
+- **Web Dashboard / localhost:3000**: Represents the web dashboard, accessible at localhost:3000. visible in diagram; no further repository context available.
+- **Infrastructures**: Represents the infrastructure components used by the Acontext backend. visible in diagram; no further repository context available.
+- **PostgreSQL**: Represents the PostgreSQL database. visible in diagram; no further repository context available.
+- **S3**: Represents the S3 storage. visible in diagram; no further repository context available.
+- **Redis**: Represents the Redis cache. visible in diagram; no further repository context available.
+- **RabbitMQ**: Represents the RabbitMQ message queue. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `pip install acontext --> API`: RESTful API call from the Python client to the Acontext API.
+- `npm i @acontext/acontext --> API`: RESTful API call from the JavaScript client to the Acontext API.
+- `Web Dashboard --> API`: RESTful API call from the web dashboard to the Acontext API.
+- `API --> Core`: Data flow from the API to the core logic, using FastAPI and MQ.
+- `API --> Infrastructures`: Data flow from the API to the infrastructure layer.
+- `Core --> Infrastructures`: Data flow from the core logic to the infrastructure layer.
+- `Infrastructures --> PostgreSQL`: Data flow from the infrastructure layer to the PostgreSQL database.
+- `Infrastructures --> S3`: Data flow from the infrastructure layer to the S3 storage.
+- `Infrastructures --> Redis`: Data flow from the infrastructure layer to the Redis cache.
+- `Infrastructures --> RabbitMQ`: Data flow from the infrastructure layer to the RabbitMQ message queue.
+
+## Repository Context & Terminology
+- **RESTful API**: An architectural style for designing networked applications. It relies on a stateless, client-server communication protocol, typically HTTP.
+- **FastAPI**: A modern, fast (high-performance), web framework for building APIs with Python 3.7+ based on standard Python type hints.
+- **MQ (Message Queue)**: A form of asynchronous service-to-service communication used in serverless and microservices architectures. Messages are stored on the queue until they are processed and deleted. RabbitMQ is a message broker.
+- **PostgreSQL**: A powerful, open source object-relational database system.
+- **S3 (Simple Storage Service)**: An object storage service offered by Amazon Web Services (AWS).
+- **Redis**: An open source (BSD licensed), in-memory data structure store, used as a database, cache and message broker.
+- **RabbitMQ**: A message-broker: it accepts and forwards messages.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the architecture of the Acontext system. The process begins with client-side interactions, either through a Python client installed via `pip install acontext` or a JavaScript client installed via `npm i @acontext/acontext`, or through the Web Dashboard running on `localhost:3000`. All three of these components make RESTful API calls to the Acontext API, which is hosted at `localhost:8029`. The API then interacts with the Core component, utilizing FastAPI and MQ for internal communication. Both the API and the Core component interact with the Infrastructures layer. The Infrastructures layer manages connections to PostgreSQL for persistent data storage, S3 for object storage, Redis for caching, and RabbitMQ for message queuing. The diagram highlights the dependencies between the client layer, the Acontext backend, and the underlying infrastructure, providing a comprehensive overview of the system's architecture and data flow. The use of RESTful APIs enables communication between the client and backend, while FastAPI and MQ facilitate internal communication within the backend.

@@ -1,0 +1,41 @@
+graph TD
+    subgraph User Request Flow
+        A[User Request] --> B{Traffic Router};
+        B -- Route to Prod --> C[Production Cluster];
+        B -- Route to Canary --> D[Canary Cluster];
+    end
+
+    subgraph Canary Release Management
+        E[New Version Deployed to Canary];
+        E --> F{Monitoring System};
+        F -- Initial Metrics Pass --> G[Automated Verification];
+        F -- Detects anomalies --> H[Rollback Canary];
+        G -- All Tests Pass --> I{Golden Metrics Check};
+        G -- Test Failure --> H;
+        I -- Golden Metrics Achieved --> J[Incremental Traffic Shift];
+        I -- Golden Metrics Breach --> H;
+        J --> K{Traffic Shifter API};
+        K -- Increase Canary Traffic % --> B;
+        B -- Canary Traffic at Max Threshold --> L{Sustained Success?};
+        L -- Yes (24 hours) --> M[Promote Canary to Production];
+        L -- No --> H;
+        M --> N{Production Update Orchestrator};
+        N --> O[Deploy Canary Version to Production];
+        O --> P{Verify Production Stability};
+        P -- Stable --> Q[Decommission Canary];
+        P -- Unstable --> H;
+        H --> R[Alerting System];
+        R --> S[Notify On-Call Engineer];
+        Q --> Z[End of Cycle];
+        O --> Z;
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#ccf,stroke:#333,stroke-width:2px
+    style Q fill:#ccf,stroke:#333,stroke-width:2px
+
+    classDef traffic fill:#f9f,stroke:#333,stroke-width:2px
+    classDef deploy fill:#ccf,stroke:#333,stroke-width:2px
+
+    class A,B traffic
+    class E,O,Q deploy

@@ -1,0 +1,79 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the client request flow, origin fetch process, asynchronous cache update mechanism, and error handling within a content delivery network (CDN) system. The diagram outlines the steps involved in serving content to a client, including checking the CDN edge cache, fetching content from the origin server if necessary, and updating the cache asynchronously. It serves as a visual representation of the CDN's content delivery workflow and error management.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It is organized into four subgraphs: Client Request Flow, Origin Fetch Process, Asynchronous Cache Update, and Error Handling & Monitoring. The start node is "Client Request," and the end nodes are "Log Request & Latency" and "Alert Operations Team."
+
+## Subgraphs / Stages
+- **Client Request Flow**: Describes the initial steps of receiving a client request and checking the CDN edge cache.
+- **Origin Fetch Process**: Details the process of fetching content from the origin server when it's not available in the CDN cache.
+- **Asynchronous Cache Update**: Illustrates the asynchronous updating of the CDN cache based on cache invalidation events.
+- **Error Handling & Monitoring**: Outlines the error handling and monitoring procedures for origin fetch failures.
+
+## Node-by-Node Description
+- **A / Client Request**: Represents the initial client request for content. visible in diagram; no further repository context available.
+- **B / CDN Edge Cache Hit?**: A decision point to determine if the requested content is available in the CDN edge cache. visible in diagram; no further repository context available.
+- **C / Serve Cached Content**: Represents serving the content directly from the CDN edge cache. visible in diagram; no further repository context available.
+- **D / Origin Fetch Initiated**: Indicates that the content needs to be fetched from the origin server. visible in diagram; no further repository context available.
+- **E / Capacity Check: Fetch Slots Available?**: Checks if there are available fetch slots to handle the origin fetch request. visible in diagram; no further repository context available.
+- **F / Queue Request**: Represents queuing the request when no fetch slots are available. visible in diagram; no further repository context available.
+- **G / Wait for Slot Availability**: Indicates waiting for a fetch slot to become available. visible in diagram; no further repository context available.
+- **H / Assign Fetch Slot**: Represents assigning a fetch slot to the request. visible in diagram; no further repository context available.
+- **I / Origin Authentication**: Represents authenticating with the origin server. visible in diagram; no further repository context available.
+- **J / Request Origin Server**: Represents sending a request to the origin server for the content. visible in diagram; no further repository context available.
+- **L / Origin Response Received?**: A decision point to determine if a response has been received from the origin server. visible in diagram; no further repository context available.
+- **M / Process Headers**: Represents processing the headers of the origin server response. visible in diagram; no further repository context available.
+- **N / Response Code Valid?**: A decision point to determine if the response code from the origin server is valid. visible in diagram; no further repository context available.
+- **O / Store in CDN Cache**: Represents storing the fetched content in the CDN cache. visible in diagram; no further repository context available.
+- **P / Store Negative Cache**: Represents storing a negative cache entry when the content is not found (404). visible in diagram; no further repository context available.
+- **Q / Handle Origin Error**: Represents handling an error response from the origin server (5xx). visible in diagram; no further repository context available.
+- **K / Return 502 Gateway Error**: Represents returning a 502 Gateway Error to the client. visible in diagram; no further repository context available.
+- **R / Serve Content to Client**: Represents serving the content to the client. visible in diagram; no further repository context available.
+- **S / Log Error & Increment Error Rate**: Represents logging the error and incrementing the error rate. visible in diagram; no further repository context available.
+- **T / Notify Monitoring System**: Represents notifying the monitoring system about the error. visible in diagram; no further repository context available.
+- **U / Alert Operations Team**: Represents alerting the operations team about the error. visible in diagram; no further repository context available.
+- **V / Log Request & Latency**: Represents logging the request and latency information. visible in diagram; no further repository context available.
+- **W / Cache Invalidation Event**: Represents an event that triggers cache invalidation. visible in diagram; no further repository context available.
+- **X / Trigger Asynchronous Fetch**: Represents triggering an asynchronous fetch to update the cache. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Client request is sent to check the CDN edge cache.
+- `B -- Yes --> C`: If the content is in the cache, serve it.
+- `B -- No --> D`: If the content is not in the cache, initiate an origin fetch.
+- `D --> E`: Origin fetch initiates a capacity check for available fetch slots.
+- `E -- Yes --> H`: If fetch slots are available, assign a slot.
+- `E -- No --> F`: If no fetch slots are available, queue the request.
+- `F --> G`: Request waits for a slot to become available.
+- `G --> E`: After waiting, re-check for slot availability.
+- `H --> I`: Assigning a fetch slot leads to origin authentication.
+- `I -- Auth Success --> J`: Successful authentication leads to requesting the origin server.
+- `I -- Auth Failure --> K`: Authentication failure leads to returning a 502 Gateway Error.
+- `J --> L`: Request sent to the origin server to check if a response is received.
+- `L -- Headers Only --> M`: Process headers if only headers are received.
+- `L -- Full Response --> M`: Process headers if a full response is received.
+- `M --> N`: Processed headers are checked for response code validity.
+- `N -- Yes --> O`: Valid response code leads to storing the content in the CDN cache.
+- `N -- 404 Not Found --> P`: 404 response leads to storing a negative cache entry.
+- `N -- 5xx Error --> Q`: 5xx error response leads to handling the origin error.
+- `O --> R`: Content from CDN cache is served to the client.
+- `P --> R`: Content served to the client after storing negative cache.
+- `Q --> K`: Handling the origin error leads to returning a 502 Gateway Error.
+- `K --> S`: 502 error triggers error logging and incrementing the error rate.
+- `Q --> S`: Handling origin error triggers error logging and incrementing the error rate.
+- `S --> T`: Error logging leads to notifying the monitoring system.
+- `T --> U`: Monitoring system notification leads to alerting the operations team.
+- `R --> V`: Serving content to the client leads to logging the request and latency.
+- `W --> X`: Cache invalidation event triggers an asynchronous fetch.
+- `X --> I`: Asynchronous fetch leads to origin authentication.
+
+## Repository Context & Terminology
+- **CDN (Content Delivery Network)**: A geographically distributed network of proxy servers and their data centers. The goal is to provide high availability and high performance by distributing the service spatially relative to end users.
+- **Edge Cache**: A cache server located at the edge of the CDN network, closer to the end-user, to provide faster content delivery.
+- **Origin Server**: The original server where the content resides. The CDN fetches content from the origin server when it's not available in the edge cache.
+- **Fetch Slot**: A resource or slot allocated to handle a request to fetch content from the origin server.
+- **Negative Cache**: A cache that stores information about content that is not found (e.g., 404 errors) to prevent repeated requests to the origin server.
+- **502 Gateway Error**: An HTTP status code indicating that the server, while acting as a gateway or proxy, received an invalid response from another server.
+- **Asynchronous Fetch**: A process to fetch content from the origin server in the background, without blocking the main request flow.
+
+## High-Density QA Ground Truth Summary
+The client request flow begins with a "Client Request" which is then checked against the "CDN Edge Cache." If a "CDN Edge Cache Hit" occurs (Yes branch), the "Serve Cached Content" node is executed, delivering the content directly from the edge cache. If there is no cache hit (No branch), an "Origin Fetch Initiated." The "Origin Fetch Process" starts with a "Capacity Check: Fetch Slots Available?" If slots are available (Yes), an "Assign Fetch Slot" action occurs, followed by "Origin Authentication." If no slots are available (No), the request is "Queue Request" and waits for "Slot Availability." After successful authentication ("Auth Success"), the system "Request Origin Server." An authentication failure ("Auth Failure") results in a "Return 502 Gateway Error." The system then checks "Origin Response Received?" and processes headers. A valid response ("Response Code Valid? -- Yes") leads to "Store in CDN Cache" and "Serve Content to Client." A "404 Not Found" response results in "Store Negative Cache" and then "Serve Content to Client." A "5xx Error" triggers "Handle Origin Error" and "Return 502 Gateway Error." Errors are logged ("Log Error & Increment Error Rate"), the "Notify Monitoring System," and "Alert Operations Team." Finally, the system "Log Request & Latency." An asynchronous cache update is triggered by a "Cache Invalidation Event," leading to "Trigger Asynchronous Fetch" and eventually "Origin Authentication." The CDN architecture uses edge caches to reduce latency and origin fetches to ensure content freshness, while error handling and monitoring maintain system stability.

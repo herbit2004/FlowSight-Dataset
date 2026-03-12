@@ -1,0 +1,24 @@
+graph TD
+    subgraph Invoice Request & Issuance
+    A[User: Initiates Invoice Request via UI] --> B{Request Valid?};
+    B -- Yes --> C[Invoice Request Service: Receives Request];
+    B -- No --> E[Return Error to UI: Invalid Request];
+    C --> D{Customer Account Active?};
+    D -- Yes --> F[Billing Engine: Calculates Invoice Details];
+    D -- No --> G[Return Error: Inactive Account];
+    F --> H[Tax Service: Calculates Applicable Taxes];
+    H --> I[Discount Engine: Applies Eligible Discounts];
+    I --> J[Invoice Generation Service: Creates Invoice Document];
+    J --> K[Persist Invoice to Database];
+    K --> L{Payment Method on File?};
+    L -- Yes --> M[Payment Service: Attempts Automated Payment];
+    L -- No --> N[Notification Service: Sends Invoice Notification];
+    M -- Payment Successful --> O[Update Invoice Status: Paid];
+    M -- Payment Failed --> P[Notification Service: Sends Payment Reminder];
+    N --> Q[Update Invoice Status: Awaiting Payment];
+    O --> R[Notification Service: Sends Payment Confirmation];
+    P --> Q;
+    end
+
+    classDef errorFill fill:#fbb,stroke:#333,stroke-width:2px;
+    class E,G errorFill;

@@ -1,0 +1,20 @@
+graph TD
+    A[User Places Order] --> B{Payment Received?};
+    B -- No --> C[Cancel Order];
+    B -- Yes --> D[Inventory Check];
+    D -- Available --> E[Order Shipped];
+    D -- Unavailable --> F[Notify Customer];
+    F --> G[Wait for Customer Reply];
+    G -- Accept Delay --> E;
+    G -- Cancel Order Request --> C;
+    E --> H[Delivery Attempted];
+    H -- Success --> I[Order Completed];
+    H -- Failure --> J[Return to Sender];
+    J --> D;
+    C --> I;
+    I --> K[Send Feedback Survey];
+    K --> L{Survey Completed?};
+    L -- No --> M[Customer Contacted];
+    L -- Yes --> N[Process Feedback];
+    N --> A;
+    M --> A;

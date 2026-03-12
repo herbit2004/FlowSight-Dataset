@@ -1,0 +1,39 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the network connections between a Windows 11 host and three other hosts running different operating systems (Ubuntu, Windows 11, and Apple macOS). The diagram illustrates the available VRAM on each host's GPU and the RAM on the Windows 11 host. It serves to visualize the hardware resources and network topology for a distributed computing or testing environment.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It shows a single central node (Windows 11 host) at the top, connected to four other hosts at the bottom. There is a clear hierarchical structure with the Windows 11 host acting as a central point of communication.
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs, each representing a host machine:
+- **Windows 11 (host4)**: Represents a Windows 11 machine with 11GiB of RAM remaining.
+- **Ubuntu (host1)**: Represents an Ubuntu machine with two NVIDIA GPUs.
+- **Windows 11 (host2)**: Represents a Windows 11 machine with an NVIDIA GPU.
+- **Apple macOS (host3)**: Represents an Apple macOS machine with an Apple M1 Max GPU.
+
+## Node-by-Node Description
+- **Windows 11 (host4)**: Represents a Windows 11 host machine.
+- **11GiB RAM remaining**: Represents the available RAM on the Windows 11 (host4) machine.
+- **Ubuntu (host1)**: Represents an Ubuntu host machine.
+- **NVIDIA 4080 0 (8GiB VRAM remaining)**: Represents an NVIDIA 4080 0 GPU with 8GiB of VRAM remaining on the Ubuntu (host1) machine.
+- **NVIDIA 4080 1 (10GiB VRAM remaining)**: Represents an NVIDIA 4080 1 GPU with 10GiB of VRAM remaining on the Ubuntu (host1) machine.
+- **Windows 11 (host2)**: Represents a Windows 11 host machine.
+- **NVIDIA 4090 (12GiB VRAM remaining)**: Represents an NVIDIA 4090 GPU with 12GiB of VRAM remaining on the Windows 11 (host2) machine.
+- **Apple macOS (host3)**: Represents an Apple macOS host machine.
+- **Apple M1 Max (6GiB VRAM remaining)**: Represents an Apple M1 Max GPU with 6GiB of VRAM remaining on the Apple macOS (host3) machine.
+
+## Edges, Branches & Convergence
+- `host4 --> gpu10`: TCP connection from Windows 11 (host4) to Apple M1 Max GPU on Apple macOS (host3).
+- `host4 --> gpu20`: TCP connection from Windows 11 (host4) to NVIDIA 4090 GPU on Windows 11 (host2).
+- `host4 --> gpu30`: TCP connection from Windows 11 (host4) to NVIDIA 4080 0 GPU on Ubuntu (host1).
+- `host4 --> gpu31`: TCP connection from Windows 11 (host4) to NVIDIA 4080 1 GPU on Ubuntu (host1).
+
+## Repository Context & Terminology
+- **TCP**: Transmission Control Protocol, a standard protocol for communication over networks.
+- **VRAM**: Video Random Access Memory, a type of RAM specifically used for storing image data for a computer display.
+- **GiB**: Gibibyte, a unit of information equal to 2^30 bytes.
+- **NVIDIA 4080 0, NVIDIA 4080 1, NVIDIA 4090, Apple M1 Max**: Specific models of GPUs from NVIDIA and Apple, respectively. The numbers indicate the model and performance tier.
+- **host1, host2, host3, host4**: Identifiers for the individual host machines in the network.
+
+## High-Density QA Ground Truth Summary
+The diagram starts with a Windows 11 host (host4) which has 11GiB of RAM remaining. This host establishes TCP connections to four other hosts. The first connection goes to an Apple macOS host (host3) equipped with an Apple M1 Max GPU, which has 6GiB of VRAM remaining. The second connection goes to a Windows 11 host (host2) with an NVIDIA 4090 GPU that has 12GiB of VRAM remaining. The third and fourth connections go to an Ubuntu host (host1) which has two NVIDIA GPUs: NVIDIA 4080 0 with 8GiB of VRAM remaining and NVIDIA 4080 1 with 10GiB of VRAM remaining. The diagram illustrates a network setup where the Windows 11 host (host4) potentially acts as a central server or orchestrator, distributing tasks to other machines based on their available GPU and VRAM resources. The use of TCP indicates reliable, connection-oriented communication between these hosts, suitable for tasks requiring data integrity. The specific GPU models (NVIDIA 4080, 4090, Apple M1 Max) suggest a focus on GPU-accelerated workloads, such as machine learning or graphics rendering.

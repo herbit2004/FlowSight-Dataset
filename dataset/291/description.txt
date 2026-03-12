@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow and processing steps within a system. It depicts the interaction between different components, including user input, runtime, model updates, background tasks, and terminal output. The diagram serves as a high-level overview of the system's architecture and execution flow.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "User Input" node at the top and flows downwards through various processing stages to the "Terminal" node at the bottom. The diagram shows a cyclical flow with the "Runtime" node receiving input from multiple sources.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: User Input, Model Update, View Generation, Background Processing, and Output.
+
+## Node-by-Node Description
+- **User Input**: Represents the initial input to the system, triggered by user actions.
+  visible in diagram; no further repository context available.
+- **Runtime**: Represents the core runtime environment of the system.
+  visible in diagram; no further repository context available.
+- **Model::update**: Represents the model update function or module.
+  visible in diagram; no further repository context available.
+- **Model::view**: Represents the model view generation function or module.
+  visible in diagram; no further repository context available.
+- **Bayesian Diff**: Represents a Bayesian differential analysis component.
+  visible in diagram; no further repository context available.
+- **Terminal**: Represents the final output destination, typically a command-line interface or display.
+  visible in diagram; no further repository context available.
+- **Background Thread**: Represents a background process or thread.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `User Input --> Runtime`: User input (Key/Mouse/Tick) triggers the runtime.
+  `Runtime --> Model::update`: The runtime sends a "CassMsg" to the model update function.
+  `Model::update --> Runtime`: The model update function sends a "Cmd" back to the runtime.
+  `Model::update --> Model::view`: The model update triggers the model view generation with a "State Change".
+  `Model::view --> Bayesian Diff`: The model view generates a "Frame" for the Bayesian differential analysis.
+  `Bayesian Diff --> Terminal`: The Bayesian differential analysis produces "Minimal Writes" to the terminal.
+  `Model::update --> Background Thread`: The model update triggers a background task with "Cmd::Task".
+  `Background Thread --> Runtime`: The background thread sends a "Result Msg" back to the runtime.
+
+## Repository Context & Terminology
+- **Model**: Represents the data model of the application. It likely contains the application's state and logic.
+- **Runtime**: The execution environment where the application runs. It handles user input, manages the model, and renders the view.
+- **Bayesian Diff**: A technique used to compare the current frame with previous frames, potentially for optimization or change detection.
+- **Terminal**: The output destination, which could be a command-line interface or a graphical display.
+- **Cmd**: Represents a command sent from the model to the runtime.
+- **CassMsg**: Represents a message sent from the runtime to the model.
+- **Cmd::Task**: Represents a task sent from the model to the background thread.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Input," which sends "Key/Mouse/Tick" events to the "Runtime." The "Runtime" then sends a "CassMsg" to the "Model::update" node. "Model::update" is a central node, branching in three directions: it sends a "Cmd" back to the "Runtime," triggers "Model::view" with a "State Change," and initiates a "Cmd::Task" in the "Background Thread." The "Model::view" generates a "Frame" that is processed by "Bayesian Diff," which then produces "Minimal Writes" to the "Terminal," the final node. The "Background Thread" sends a "Result Msg" back to the "Runtime," creating a feedback loop. The "Runtime" manages the overall application flow, receiving input from both the user and the background thread, and dispatching commands to update the model. The "Bayesian Diff" component likely optimizes output by only writing minimal changes to the "Terminal." The diagram illustrates a reactive system where user input and background tasks drive model updates and view generation, ultimately resulting in output to the terminal.

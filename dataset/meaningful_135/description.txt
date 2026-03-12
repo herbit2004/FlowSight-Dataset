@@ -1,0 +1,66 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the request processing pipeline for a machine learning model inference service. It depicts the flow of a user request through various stages, including rate limiting, model version routing, model-specific pre/post-processing, ensemble handling, and response building. The diagram serves as a high-level architectural overview of the inference service.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "User Request" subgraph and ends with the "User Application" node. The flow progresses through decision points and processing stages, ultimately converging to a response.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **User Request**: Represents the initial stage where the user application sends a request to the API Gateway.
+- **Model A / Model B**: These subgraphs represent the processing pipelines for different model versions (A and B), including inference, pre-processing, and post-processing steps.
+
+## Node-by-Node Description
+- **A / User Application**: Represents the application initiating the request. visible in diagram; no further repository context available.
+- **B / API Gateway**: The entry point for user requests, responsible for routing and managing API access. In the repository this corresponds to an API gateway service, potentially implemented using technologies like Kong, Tyk, or AWS API Gateway.
+- **C / Rate Limit Check**: A decision point to determine if the request exceeds the defined rate limit. visible in diagram; no further repository context available.
+- **D / Request Router**: Responsible for routing the request based on model version. visible in diagram; no further repository context available.
+- **E / Return 429**: Returns a 429 status code indicating too many requests. visible in diagram; no further repository context available.
+- **F / Model Version?**: A decision point to determine which model version to use. visible in diagram; no further repository context available.
+- **G / Model A Inference**: Performs inference using Model A. visible in diagram; no further repository context available.
+- **GA / Pre-processing A**: Pre-processes the input data for Model A. visible in diagram; no further repository context available.
+- **GB / Model A Core**: The core inference logic for Model A. visible in diagram; no further repository context available.
+- **GC / Post-processing A**: Post-processes the output from Model A. visible in diagram; no further repository context available.
+- **H / Model B Inference**: Performs inference using Model B. visible in diagram; no further repository context available.
+- **HA / Pre-processing B**: Pre-processes the input data for Model B. visible in diagram; no further repository context available.
+- **HB / Model B Core**: The core inference logic for Model B. visible in diagram; no further repository context available.
+- **HC / Post-processing B**: Post-processes the output from Model B. visible in diagram; no further repository context available.
+- **I / Ensemble?**: A decision point to determine if ensemble processing is required. visible in diagram; no further repository context available.
+- **J / Ensemble Stage**: Performs ensemble processing, combining the outputs from different models. visible in diagram; no further repository context available.
+- **K / Response Builder**: Constructs the final response to be sent back to the user. visible in diagram; no further repository context available.
+- **L / API Gateway**: The API Gateway sends the response back to the user. visible in diagram; no further repository context available.
+- **M / User Application**: The user application receives the response. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User application sends a request to the API Gateway.
+- `B --> C`: API Gateway forwards the request to the Rate Limit Check.
+- `C -- Within Limit --> D`: Request is within the rate limit, route to Request Router.
+- `C -- Exceeds Limit --> E`: Request exceeds the rate limit, return 429 error.
+- `D --> F`: Request Router forwards the request to the Model Version check.
+- `F -- Versioned --> G`: Use Model A if a specific version is requested.
+- `F -- Latest --> H`: Use Model B (latest version) if no version is specified.
+- `G --> GA`: Model A Inference forwards the request to Pre-processing A.
+- `GA --> GB`: Pre-processing A forwards the request to Model A Core.
+- `GB --> GC`: Model A Core forwards the request to Post-processing A.
+- `H --> HA`: Model B Inference forwards the request to Pre-processing B.
+- `HA --> HB`: Pre-processing B forwards the request to Model B Core.
+- `HB --> HC`: Model B Core forwards the request to Post-processing B.
+- `GC --> I`: Post-processing A forwards the output to the Ensemble check.
+- `HC --> I`: Post-processing B forwards the output to the Ensemble check.
+- `I -- Yes --> J`: Ensemble processing is required, route to Ensemble Stage.
+- `I -- No --> K`: Ensemble processing is not required, route to Response Builder.
+- `J --> K`: Ensemble Stage forwards the output to the Response Builder.
+- `K --> L`: Response Builder forwards the response to the API Gateway.
+- `L --> M`: API Gateway sends the response back to the User Application.
+
+## Repository Context & Terminology
+- **API Gateway**: A service that acts as a single entry point for all API requests, handling routing, authentication, and rate limiting.
+- **Rate Limiting**: A mechanism to control the number of requests a user can make within a given time period, preventing abuse and ensuring service availability.
+- **Model Inference**: The process of using a trained machine learning model to generate predictions on new data.
+- **Pre-processing**: Data transformation steps applied to the input data before feeding it to the model.
+- **Post-processing**: Data transformation steps applied to the model's output to make it more usable or presentable.
+- **Ensemble**: A technique that combines the predictions of multiple models to improve overall accuracy and robustness.
+- **Response Builder**: A component responsible for formatting the model's output into a standardized API response.
+- **429 Too Many Requests**: An HTTP status code indicating that the user has sent too many requests in a given amount of time.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Application" sending a request to the "API Gateway". The API Gateway then performs a "Rate Limit Check". If the request is "Within Limit", it proceeds to the "Request Router"; otherwise, a "429" error is returned. The "Request Router" then determines the "Model Version". Depending on the version ("Versioned" or "Latest"), the request is routed to either "Model A Inference" or "Model B Inference", respectively. Both models have their own pre-processing, core inference, and post-processing stages (e.g., "Pre-processing A", "Model A Core", "Post-processing A"). After model-specific processing, an "Ensemble?" check determines if the outputs need to be combined. If "Yes", the request goes to the "Ensemble Stage"; otherwise, it proceeds directly to the "Response Builder". The "Ensemble Stage" also feeds into the "Response Builder". Finally, the "Response Builder" constructs the response, which is sent back to the "API Gateway" and then to the "User Application". The API Gateway component is a critical element, handling initial request routing, rate limiting, and final response delivery, often implemented using technologies like Kong or AWS API Gateway.

@@ -1,0 +1,65 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow and processing steps within a search service. It depicts the journey of a user's search query from initial input to the display of search results, including various stages of query processing, ranking, personalization, and recommendation. The diagram serves as a high-level architectural overview of the search service's internal workings.
+
+## Overall Layout
+The diagram has a top-to-bottom (TD) layout. It is hierarchically structured into four subgraphs: User Interaction, Data Flow & Processing, Catalog & Recommendation, and Output & Monitoring. The start node is "User: Search Query / Browsing," and the end nodes are "Metrics Dashboard" and "Search Results Display."
+
+## Subgraphs / Stages
+- **User Interaction**: Represents the initial stage where the user inputs a search query or browses the system.
+- **Data Flow & Processing**: Encompasses the core logic of the search service, including query parsing, intent extraction, ranking, personalization, and diversity promotion.
+- **Catalog & Recommendation**: Focuses on leveraging product catalog data and collaborative filtering techniques to generate product recommendations.
+- **Output & Monitoring**: Deals with displaying search results to the user and monitoring the performance of the search service through A/B testing and metrics dashboards.
+
+## Node-by-Node Description
+- **A / User: Search Query / Browsing**: Represents the user's initial interaction with the system, either by entering a search query or browsing through categories. visible in diagram; no further repository context available.
+- **B / Search Service API**: The entry point for user search requests. visible in diagram; no further repository context available.
+- **C / Query Parsing & Intent Extraction**: Analyzes the user's query to determine their intent (e.g., search or browse). visible in diagram; no further repository context available.
+- **D / Keyword Expansion & Spelling Correction**: Expands the search query with related keywords and corrects any spelling errors. visible in diagram; no further repository context available.
+- **E / Category & Facet Filtering**: Filters search results based on category and facet selections. visible in diagram; no further repository context available.
+- **F / Vector Search Engine**: Performs a vector search to find relevant results based on the processed query. visible in diagram; no further repository context available.
+- **G / Ranking & Scoring**: Ranks and scores the search results based on relevance and other factors. visible in diagram; no further repository context available.
+- **H / Personalization Engine**: Personalizes the search results based on the user's past behavior and preferences. visible in diagram; no further repository context available.
+- **I / Diversity Promotion**: Promotes diversity in the search results to avoid showing too many similar items. visible in diagram; no further repository context available.
+- **J / Re-Ranking**: Re-ranks the search results after personalization and diversity promotion. visible in diagram; no further repository context available.
+- **K / Product Catalog**: Contains information about all the products in the system. visible in diagram; no further repository context available.
+- **L / Item Similarity Calculation**: Calculates the similarity between items in the product catalog. visible in diagram; no further repository context available.
+- **M / Collaborative Filtering**: Uses collaborative filtering techniques to generate product recommendations. visible in diagram; no further repository context available.
+- **N / Cold Start Handling**: Handles the cold start problem by recommending popular or trending items to new users. visible in diagram; no further repository context available.
+- **O / A/B Test Service**: Performs A/B testing to compare different versions of the search service. visible in diagram; no further repository context available.
+- **P / Metrics Dashboard**: Displays key metrics about the performance of the search service. visible in diagram; no further repository context available.
+- **Q / Search Results Display**: Displays the search results to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User interaction triggers a request to the Search Service API.
+- `B --> C`: The Search Service API passes the request to Query Parsing & Intent Extraction.
+- `C -- Intent: Search --> D`: If the intent is "Search," the query is passed to Keyword Expansion & Spelling Correction.
+- `C -- Intent: Browse --> E`: If the intent is "Browse," the query is passed to Category & Facet Filtering.
+- `D --> F`: Keyword Expansion & Spelling Correction passes the processed query to the Vector Search Engine.
+- `E --> F`: Category & Facet Filtering passes the filtered query to the Vector Search Engine.
+- `F --> G`: The Vector Search Engine passes the results to Ranking & Scoring.
+- `G --> H`: Ranking & Scoring passes the initial ranking to the Personalization Engine.
+- `H --> I`: The Personalization Engine passes the personalized ranking to Diversity Promotion.
+- `I --> J`: Diversity Promotion passes the results to Re-Ranking.
+- `J --> K`: Re-Ranking passes the results to the Product Catalog for recommendation.
+- `K --> L`: The Product Catalog passes product data to Item Similarity Calculation.
+- `L --> M`: Item Similarity Calculation passes the results to Collaborative Filtering.
+- `M --> N`: Collaborative Filtering passes candidate products to Cold Start Handling.
+- `N --> J`: Cold Start Handling feeds back into Re-Ranking.
+- `J -- Results --> O`: Re-Ranking passes results to A/B Test Service for A/B Testing.
+- `O --> P`: A/B Test Service passes data to the Metrics Dashboard.
+- `J --> Q`: Re-Ranking passes results to Search Results Display.
+
+## Repository Context & Terminology
+- **Search Service API**: An interface that allows users to submit search queries and receive search results.
+- **Query Parsing**: The process of analyzing a user's search query to understand its structure and meaning.
+- **Intent Extraction**: The process of determining the user's goal or purpose behind the search query.
+- **Keyword Expansion**: The process of adding related keywords to a search query to improve its relevance.
+- **Spelling Correction**: The process of correcting any spelling errors in a search query.
+- **Vector Search Engine**: A search engine that uses vector embeddings to represent documents and queries, allowing for semantic similarity search.
+- **Personalization Engine**: A system that tailors search results to individual users based on their past behavior and preferences.
+- **Collaborative Filtering**: A recommendation technique that suggests items to users based on the preferences of similar users.
+- **Cold Start Handling**: Techniques to provide recommendations to new users with limited interaction history.
+- **A/B Testing**: A method of comparing two versions of a system or feature to determine which one performs better.
+
+## High-Density QA Ground Truth Summary
+The search service begins with a user interacting via "User: Search Query / Browsing," which sends a request to the "Search Service API." The API then forwards the request to "Query Parsing & Intent Extraction." Here, a decision is made: if the intent is "Search," the query proceeds to "Keyword Expansion & Spelling Correction"; if the intent is "Browse," it goes to "Category & Facet Filtering." Both paths converge at the "Vector Search Engine," which performs the core search operation. The results are then passed to "Ranking & Scoring," followed by "Personalization Engine" and "Diversity Promotion" to refine the ranking. The "Re-Ranking" node then sends results to both "Search Results Display" for the user and to the "Product Catalog" for recommendations. The "Product Catalog" uses "Item Similarity Calculation" and "Collaborative Filtering" to generate "Candidate Products," which are then handled by "Cold Start Handling" before feeding back into "Re-Ranking." Finally, the "Re-Ranking" results are also sent to "A/B Test Service" for performance evaluation, which in turn feeds data to the "Metrics Dashboard." The primary end points are the "Search Results Display" and the "Metrics Dashboard," providing the user with results and the system with performance insights. The "Vector Search Engine" leverages vector embeddings, a common technique in modern search systems, to enable semantic similarity matching between queries and documents.

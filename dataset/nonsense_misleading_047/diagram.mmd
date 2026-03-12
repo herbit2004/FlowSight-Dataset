@@ -1,0 +1,37 @@
+graph TD
+    A[Receive Order] --> B{Payment Received?};
+    B -- Yes --> C[Acknowledge Order];
+    B -- No --> H[Cancel Order];
+    C --> D[Prepare Shipment];
+    D --> E{Inventory Sufficient?};
+    E -- No --> G[Order Backordered];
+    E -- Yes --> F[Ship Order];
+    F --> I[Notify Customer Shipped];
+
+    G --> C
+    I --> J[Order Delivered];
+    J --> K{Customer Satisfied?};
+    K -- No --> L[Investigate Issue];
+    K -- Yes --> G
+    L --> M[Issue Refund];
+    M --> N[Close Order];
+    H --> N;
+    F --> N;
+    G --> N
+
+    subgraph Order Processing
+    A
+    B
+    C
+    D
+    E
+    F
+    G
+    H
+    I
+    J
+    K
+    L
+    M
+    N
+    end

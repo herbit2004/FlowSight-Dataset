@@ -1,0 +1,15 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- No --> C[Order Cancelled Automatically];
+    B -- Yes --> D[Inventory Check];
+    D -- In Stock --> F[Shipping Label Created];
+    D -- Out of Stock --> E[Notify Customer: Out of Stock];
+    E --> B;
+    F --> G[Package Delivered];
+    G --> H{Customer Satisfied?};
+    H -- Yes --> I[Process Refund];
+    H -- No --> J[Order Completed];
+    I --> A;
+    J --> K[Update Inventory];
+    K --> L[Generate Invoice];
+    L --> M[Archive Order];

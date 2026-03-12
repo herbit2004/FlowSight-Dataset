@@ -1,0 +1,15 @@
+graph TD
+    A[Receive Customer Order] --> B{Inventory Check};
+    B -- Insufficient Inventory --> C[Cancel Order];
+    B -- Sufficient Inventory --> D[Initiate Payment];
+    D -- Payment Approved --> E[Ship Order];
+    D -- Payment Declined --> F[Send Order Confirmation];
+    E --> G[Order Delivered];
+    G --> H{Customer Satisfied?};
+    H -- Yes --> I[Close Order];
+    H -- No --> J[Issue Refund];
+    J --> B;
+    C --> I;
+    F --> C;
+    I --> K[Update Inventory];
+    K --> A;

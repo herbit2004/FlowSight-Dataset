@@ -1,0 +1,28 @@
+graph TD
+    subgraph Security Scan & Patching Process
+    A[Start: Scan Request] --> B{Scan Type?};
+    B -- Web App Scan --> C[Dynamic Scan: OWASP ZAP];
+    B -- Infrastructure Scan --> D[Nessus Scan];
+    C --> E{Vulnerabilities Found?};
+    D --> E;
+    E -- Yes --> F[Create JIRA Ticket];
+    F --> G[Severity Analysis];
+    G --> H{Severity >= High?};
+    H -- Yes --> I[Automated Patching Attempt];
+    H -- No --> J[Manual Review Required];
+    I --> K{Patch Successful?};
+    J --> K;
+    K -- Yes --> L[Verification Scan];
+    K -- No --> M[Escalate to Security Team];
+    L --> N{Verification Pass?};
+    N -- Yes --> O[Close JIRA Ticket];
+    N -- No --> M;
+    E -- No --> O;
+    M --> O;
+    O --> Z[End: Scan Complete];
+    end
+
+    classDef green fill:#90EE90,stroke:#333,stroke-width:2px;
+    classDef red fill:#F08080,stroke:#333,stroke-width:2px;
+    class E,K,N green;
+    class M red;

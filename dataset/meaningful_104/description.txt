@@ -1,0 +1,84 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the configuration management process within a distributed system. It illustrates how configuration requests are initiated, processed, cached, and pushed to clients. The diagram serves as a visual representation of the configuration update flow, aiding in understanding the system's architecture and data flow.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It is organized into several subgraphs representing different services or components. The flow starts with the "Initiate Configuration Request" node in the "Client Application" subgraph and ends with "Log Successful Push", "Return Throttling Error", "Return Error to Application", "Apply New Configuration", "Discard Event", and "Return Cached Configuration" nodes.
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Client Application**: Represents the client-side component initiating configuration requests and handling responses.
+- **Pull Request Service**: Handles client pull requests, including throttling.
+- **Configuration Service**: Manages configuration requests, validation, caching, and data retrieval.
+- **Data Store**: Represents the persistent storage for configuration data.
+- **Event Listener**: Listens for configuration change events and triggers updates.
+- **Push Notification Service**: Handles pushing configuration updates to clients.
+
+## Node-by-Node Description
+- **Initiate Configuration Request**: Represents the client application initiating a request for configuration data.
+- **Client Pull Request**: Represents the pull request received by the Pull Request Service.
+- **Throttle Check**: Checks if the client's request rate exceeds the allowed limit.
+- **Reject Pull Request**: Rejects the pull request due to throttling.
+- **Client Configuration Request**: Represents the configuration request received by the Configuration Service.
+- **Request Validation**: Validates the configuration request.
+- **Reject Configuration Request**: Rejects the configuration request due to invalid parameters.
+- **Configuration Lookup**: Checks if the configuration data is available in the cache.
+- **Fetch from Data Store**: Retrieves the configuration data from the data store.
+- **Transform Configuration Data**: Transforms the configuration data into a suitable format.
+- **Cache Configuration**: Caches the transformed configuration data.
+- **Return Cached Configuration**: Returns the cached configuration data to the client.
+- **Data Retrieval Logic**: Represents the logic for retrieving configuration data from the data store.
+- **Configuration Data**: Represents the configuration data stored in the data store.
+- **Configuration Change Event**: Represents an event indicating a change in the configuration.
+- **Filter Event: Config for Tenant?**: Filters the configuration change event based on the tenant.
+- **Update Configuration Cache**: Updates the configuration cache with the new configuration data.
+- **Discard Event**: Discards the configuration change event if it's not relevant to the tenant.
+- **Trigger Push Notification**: Triggers a push notification to the clients.
+- **Client Connection Check**: Checks the connection status of the client.
+- **Send Configuration Update**: Sends the configuration update to the client.
+- **Queue Push Notification**: Queues a push notification for the client.
+- **Retry Mechanism**: Retries sending the push notification if it fails.
+- **Acknowledgement Received**: Indicates that the client has acknowledged the configuration update.
+- **Log Successful Push**: Logs the successful push of the configuration update.
+- **Return Throttling Error**: Returns an error to the application indicating that the request was throttled.
+- **Return Error to Application**: Returns an error to the application indicating that the request failed.
+- **Apply New Configuration**: Applies the new configuration to the client application.
+
+## Edges, Branches & Convergence
+- `Initiate Configuration Request --> Client Pull Request`: The client application initiates a configuration request, which is sent to the Pull Request Service.
+- `Client Pull Request --> Throttle Check`: The Pull Request Service performs a throttle check on the request.
+- `Throttle Check -- Deny --> Reject Pull Request`: If the request is throttled, it is rejected.
+- `Throttle Check -- Allow --> Configuration Lookup`: If the request is allowed, it proceeds to the Configuration Lookup.
+- `Client Configuration Request --> Request Validation`: The Configuration Service validates the configuration request.
+- `Request Validation -- Valid --> Configuration Lookup`: If the request is valid, it proceeds to the Configuration Lookup.
+- `Request Validation -- Invalid --> Reject Configuration Request`: If the request is invalid, it is rejected.
+- `Configuration Lookup -- Cache Hit --> Return Cached Configuration`: If the configuration is found in the cache, it is returned to the client.
+- `Configuration Lookup -- Cache Miss --> Fetch from Data Store`: If the configuration is not found in the cache, it is fetched from the data store.
+- `Fetch from Data Store --> Transform Configuration Data`: The configuration data is transformed.
+- `Transform Configuration Data --> Cache Configuration`: The transformed configuration data is cached.
+- `Cache Configuration --> Return Cached Configuration`: The cached configuration is returned.
+- `Configuration Change Event --> Filter Event: Config for Tenant?`: An event listener filters configuration change events.
+- `Filter Event: Config for Tenant? -- Yes --> Update Configuration Cache`: If the event is relevant to the tenant, the cache is updated.
+- `Filter Event: Config for Tenant? -- No --> Discard Event`: If the event is not relevant, it is discarded.
+- `Update Configuration Cache --> Trigger Push Notification`: A push notification is triggered.
+- `Trigger Push Notification --> Client Connection Check`: The Push Notification Service checks the client connection.
+- `Client Connection Check -- Connected --> Send Configuration Update`: If the client is connected, the update is sent.
+- `Client Connection Check -- Disconnected --> Queue Push Notification`: If the client is disconnected, the notification is queued.
+- `Queue Push Notification --> Retry Mechanism`: A retry mechanism is used for queued notifications.
+- `Retry Mechanism --> Client Connection Check`: The connection is re-checked after a retry.
+- `Send Configuration Update --> Acknowledgement Received`: The system waits for acknowledgement.
+- `Acknowledgement Received --> Log Successful Push`: A successful push is logged.
+- `Reject Pull Request --> Return Throttling Error`: A throttling error is returned to the application.
+- `Reject Configuration Request --> Return Error to Application`: An error is returned to the application.
+- `Send Configuration Update --> Apply New Configuration`: The new configuration is applied to the client application.
+
+## Repository Context & Terminology
+- **Configuration**: The set of parameters and settings that define the behavior of a software application or system.
+- **Cache**: A temporary storage area that stores frequently accessed data for faster retrieval.
+- **Tenant**: A group of users or customers who share a common access with specific privileges to the software instance.
+- **Throttling**: Limiting the number of requests a client can make within a given time period to prevent abuse or overload.
+- **Push Notification**: A message sent from a server to a client application, typically to inform the user of an event or update.
+- **Data Store**: A persistent storage system for storing configuration data.
+- **Event Listener**: A component that listens for specific events and triggers actions in response.
+
+## High-Density QA Ground Truth Summary
+The configuration update process begins with the "Initiate Configuration Request" from the "Client Application", which sends a "Client Pull Request" to the "Pull Request Service". The "Pull Request Service" performs a "Throttle Check"; if denied, a "Return Throttling Error" is sent back to the application. If allowed, the request proceeds to the "Configuration Service" as a "Client Configuration Request". The "Configuration Service" validates the request; if invalid, a "Return Error to Application" is sent. If valid, a "Configuration Lookup" is performed to check the cache. A cache hit results in "Return Cached Configuration". A cache miss triggers "Fetch from Data Store", followed by "Transform Configuration Data" and "Cache Configuration". Separately, a "Configuration Change Event" triggers the "Event Listener" to "Filter Event: Config for Tenant?". If the event is for the tenant, the "Update Configuration Cache" is triggered, followed by "Trigger Push Notification". If not, the event is discarded. The "Push Notification Service" performs a "Client Connection Check"; if connected, a "Send Configuration Update" is initiated, leading to "Acknowledgement Received" and "Log Successful Push". If disconnected, a "Queue Push Notification" is initiated with a "Retry Mechanism" until the client connects. Finally, the client applies the new configuration using "Apply New Configuration". The "Data Store" contains the "Data Retrieval Logic" and "Configuration Data", representing the persistent storage of configurations.

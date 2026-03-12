@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture and data flow within a Revit plugin system. It illustrates how commands are initiated from a client application, processed through a server and plugin, and executed within the Revit environment. The diagram serves as a high-level overview of the command execution pipeline.
+
+## Overall Layout
+The diagram's primary direction is left-to-right. It is hierarchically organized into three main components: MCPClient, MCPServer, and Revit, with the Revit component containing a nested subgraph representing the Revit plugin. The flow starts with ClaudeDesktop and ends with CommandExecute, with a feedback loop to SocketService.
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **MCPClient**: Represents the client application initiating commands.
+- **MCPServer**: Represents the server component handling communication.
+- **Revit**: Represents the Revit application environment, containing the revit-mcp-plugin.
+  - **revit-mcp-plugin**: Represents the plugin within Revit that processes and executes commands.
+
+## Node-by-Node Description
+- **ClaudeDesktop**: Represents the client-side application initiating commands. visible in diagram; no further repository context available.
+- **revit-mcp**: Represents the server-side component handling communication with the Revit plugin. visible in diagram; no further repository context available.
+- **SocketService**: Represents a service within the Revit plugin responsible for handling socket communication. visible in diagram; no further repository context available.
+- **CommandProject1**: Represents a command project. visible in diagram; no further repository context available.
+- **CommandProject2**: Represents a command project. visible in diagram; no further repository context available.
+- **CommandProject...**: Represents additional command projects. visible in diagram; no further repository context available.
+- **CommandManager**: Represents a component within the Revit plugin responsible for managing commands. visible in diagram; no further repository context available.
+- **CommandSet**: Represents a set of commands to be executed. visible in diagram; no further repository context available.
+- **CommandExecute**: Represents the execution of a command within the Revit environment. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `ClaudeDesktop --> revit-mcp`: Represents the initiation of a command from the client to the server.
+- `revit-mcp --> SocketService`: Represents the server passing the command to the SocketService within the Revit plugin.
+- `SocketService -- commandName --> CommandSet`: Represents the SocketService passing the command name to the CommandSet.
+- `CommandManager --> CommandSet`: Represents the CommandManager providing commands to the CommandSet.
+- `CommandSet -- command --> CommandExecute`: Represents the CommandSet triggering the execution of a command.
+- `CommandExecute -- executeResult --> SocketService`: Represents the result of the command execution being sent back to the SocketService.
+- `CommandProject1 --> CommandManager`: Represents a command project providing commands to the CommandManager.
+- `CommandProject2 --> CommandManager`: Represents a command project providing commands to the CommandManager.
+- `CommandProject... --> CommandManager`: Represents additional command projects providing commands to the CommandManager.
+
+## Repository Context & Terminology
+- **MCPClient**: Represents the client-side application responsible for initiating commands.
+- **MCPServer**: Represents the server-side component responsible for handling communication between the client and the Revit plugin.
+- **Revit**: Represents the Autodesk Revit software environment.
+- **revit-mcp-plugin**: Represents a plugin developed for Autodesk Revit, facilitating communication and command execution.
+- **SocketService**: A service within the Revit plugin that manages socket-based communication.
+- **CommandManager**: A component responsible for managing and dispatching commands within the Revit plugin.
+- **CommandSet**: A collection or group of commands to be executed.
+- **CommandExecute**: The process of executing a specific command within the Revit environment.
+
+## High-Density QA Ground Truth Summary
+The process starts with the `ClaudeDesktop` client application initiating a command, which is then sent to the `revit-mcp` server. The server forwards the command to the `SocketService` within the `revit-mcp-plugin` inside the `Revit` environment. The `SocketService` then passes the `commandName` to the `CommandSet`. Multiple `CommandProject` nodes (1, 2, ...) feed into the `CommandManager`, which in turn provides commands to the `CommandSet`. The `CommandSet` then triggers the `CommandExecute` node with the `command`. After execution, the `executeResult` is sent back from `CommandExecute` to the `SocketService`, creating a feedback loop. The `CommandManager` aggregates commands from different `CommandProject` sources before passing them to the `CommandSet`. The `revit-mcp-plugin` acts as a bridge between the external client and the Revit environment, enabling the execution of custom commands. The final node, `CommandExecute`, represents the actual execution of the command within Revit.

@@ -1,0 +1,68 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a data pipeline for ingesting, processing, storing, and retrieving sensor logs. It depicts the flow of data from its source through validation, transformation, storage in hot and cold tiers, and eventual archival. The diagram serves as a high-level architecture overview of the data management system.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TD). It is divided into three main subgraphs: Data Ingestion Pipeline, Query & Retrieval, and Cold Tier Archival. The data flow starts with the Data Source (Sensor Logs) and ends with Glacier Storage and Return Results to User.
+
+## Subgraphs / Stages
+- **Data Ingestion Pipeline**: This subgraph focuses on the initial processing of sensor logs, including validation, indexing, transformation, and hot tier storage.
+- **Query & Retrieval**: This subgraph describes the process of handling user queries, determining data age, querying appropriate storage tiers, and returning results.
+- **Cold Tier Archival**: This subgraph outlines the process of aging data, serializing it, and storing it in cold tier object storage, followed by lifecycle management and archival to glacier storage.
+
+## Node-by-Node Description
+- **Data Source: Sensor Logs**: Represents the origin of the data, which are sensor logs. visible in diagram; no further repository context available.
+- **Data Validation**: Checks the validity of the incoming sensor data. visible in diagram; no further repository context available.
+- **Alerting System**: A system that triggers alerts based on invalid data. visible in diagram; no further repository context available.
+- **Timestamp Indexing**: Indexes the data based on timestamps for efficient retrieval. visible in diagram; no further repository context available.
+- **Data Transformation: Aggregate Stats**: Transforms the data by aggregating statistics. visible in diagram; no further repository context available.
+- **Hot Tier Storage: In-Memory Cache**: Stores the transformed data in an in-memory cache for fast access. visible in diagram; no further repository context available.
+- **Data Aging Policy Checker**: Checks if the data exceeds the age threshold for moving to cold storage. visible in diagram; no further repository context available.
+- **Data Serialization: Parquet**: Serializes the data into Parquet format for efficient storage. visible in diagram; no further repository context available.
+- **Cold Tier Storage: Object Storage**: Stores the serialized data in object storage. visible in diagram; no further repository context available.
+- **Data Lifecycle Management**: Manages the lifecycle of the data, including archival and deletion. visible in diagram; no further repository context available.
+- **Archive Infrequent Data**: Archives data that is infrequently accessed. visible in diagram; no further repository context available.
+- **Glacier Storage**: Stores the archived data in Glacier storage for long-term, low-cost storage. visible in diagram; no further repository context available.
+- **User Query Request**: Represents a request from a user to query the data. visible in diagram; no further repository context available.
+- **Check Data Age**: Checks the age of the data to determine which storage tier to query. visible in diagram; no further repository context available.
+- **Query Hot Tier**: Queries the hot tier storage for recent data. visible in diagram; no further repository context available.
+- **Query Cold Tier**: Queries the cold tier storage for older data. visible in diagram; no further repository context available.
+- **Data Deserialization**: Deserializes the data retrieved from the cold tier. visible in diagram; no further repository context available.
+- **Merge Results**: Merges the results from the hot and cold tiers. visible in diagram; no further repository context available.
+- **Return Results to User**: Returns the merged results to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Data Source: Sensor Logs --> Data Validation`: Data flows from the source to the validation step.
+- `Data Validation -- Invalid Data --> Alerting System`: If the data is invalid, an alert is triggered.
+- `Data Validation -- Valid Data --> Timestamp Indexing`: If the data is valid, it is timestamp indexed.
+- `Timestamp Indexing --> Data Transformation: Aggregate Stats`: Indexed data is transformed.
+- `Data Transformation: Aggregate Stats --> Hot Tier Storage: In-Memory Cache`: Transformed data is stored in the hot tier.
+- `Hot Tier Storage: In-Memory Cache --> Data Aging Policy Checker`: Data in hot tier is checked for aging policy.
+- `Data Aging Policy Checker -- Data Exceeds Age Threshold --> Data Serialization: Parquet`: If data exceeds age threshold, it is serialized.
+- `Data Serialization: Parquet --> Cold Tier Storage: Object Storage`: Serialized data is stored in cold tier object storage.
+- `Cold Tier Storage: Object Storage --> Data Lifecycle Management`: Data lifecycle management is initiated.
+- `Data Lifecycle Management --> Archive Infrequent Data`: Infrequently accessed data is archived.
+- `Archive Infrequent Data --> Glacier Storage`: Archived data is moved to Glacier storage.
+- `User Query Request --> Check Data Age`: A user query triggers a check of the data age.
+- `Check Data Age -- Data is Recent --> Query Hot Tier`: If the data is recent, the hot tier is queried.
+- `Check Data Age -- Data is Old --> Query Cold Tier`: If the data is old, the cold tier is queried.
+- `Query Hot Tier --> Merge Results`: Results from hot tier are merged.
+- `Query Cold Tier --> Data Deserialization`: Data from cold tier is deserialized.
+- `Data Deserialization --> Merge Results`: Deserialized data is merged.
+- `Merge Results --> Return Results to User`: Merged results are returned to the user.
+- `Query Hot Tier --> Hot Tier Storage: In-Memory Cache`: Hot tier is queried from in-memory cache.
+- `Cold Tier Storage: Object Storage --> Data Lifecycle Management`: Cold tier storage triggers data lifecycle management.
+
+## Repository Context & Terminology
+- **Sensor Logs**: Data generated by sensors, typically time-series data.
+- **Data Validation**: The process of ensuring that data meets certain quality criteria and is free from errors.
+- **Timestamp Indexing**: Indexing data based on timestamps to enable efficient time-based queries.
+- **Data Transformation**: The process of converting data from one format or structure to another.
+- **Hot Tier Storage**: A storage tier that provides fast access to frequently used data, often using in-memory caching.
+- **Cold Tier Storage**: A storage tier that provides lower-cost storage for infrequently accessed data, typically using object storage.
+- **Parquet**: A columnar storage format optimized for efficient data retrieval and analytics.
+- **Object Storage**: A storage architecture that manages data as objects, often used for large-scale, unstructured data.
+- **Data Lifecycle Management**: The process of managing the lifecycle of data, from creation to deletion or archival.
+- **Glacier Storage**: A low-cost, long-term storage service for infrequently accessed data.
+
+## High-Density QA Ground Truth Summary
+The data pipeline begins with `Data Source: Sensor Logs`, which feeds into `Data Validation`. If `Data Validation` determines the data is invalid, the pipeline branches to `Alerting System`; otherwise, it proceeds to `Timestamp Indexing` and then `Data Transformation: Aggregate Stats`. The transformed data is then stored in `Hot Tier Storage: In-Memory Cache`. Data in the hot tier is subject to `Data Aging Policy Checker`. If `Data Exceeds Age Threshold`, the data is serialized into `Data Serialization: Parquet` format and stored in `Cold Tier Storage: Object Storage`. From there, `Data Lifecycle Management` takes over, eventually leading to `Archive Infrequent Data` and finally `Glacier Storage` for long-term archival. User queries initiate at `User Query Request`, which triggers `Check Data Age`. Based on the age, the query branches to either `Query Hot Tier` or `Query Cold Tier`. Data from the cold tier undergoes `Data Deserialization` before being merged with hot tier results at `Merge Results`. Finally, the merged results are returned to the user via `Return Results to User`. The hot tier leverages an in-memory cache for rapid data access, while the cold tier utilizes object storage and Parquet serialization for cost-effective long-term storage, reflecting a common strategy in data warehousing and analytics architectures.

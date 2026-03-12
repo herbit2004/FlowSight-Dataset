@@ -1,0 +1,23 @@
+graph TD
+    subgraph Agent Cluster
+        A[Service Agent: Port 9000, Service A] --> B{Health Check: /health Endpoint}
+        B -- "Request Sent" --> C(HTTP Response)
+        C -- "Status: 200 OK" --> D{Update Service Registry}
+        C -- "Status: NOT 200" --> E{Mark Service as Unhealthy}
+    end
+
+    F[Service Registry: Redis Cluster] --> G{Read Entry: Service A}
+    G -- "Healthy" --> H[Load Balancer]
+    G -- "Unhealthy" --> I[Circuit Breaker Enabled]
+
+    H --> J(Route Traffic to A)
+    I --> K(Return Error to Caller)
+
+    L[External Client] --> M{Request: Service A}
+    M --> H
+    M --> I
+
+    classDef healthy fill:#ccffcc,stroke:#333,stroke-width:2px;
+    classDef unhealthy fill:#ffcccc,stroke:#333,stroke-width:2px;
+    class A,B,C,D,G,H healthy;
+    class E,I unhealthy;

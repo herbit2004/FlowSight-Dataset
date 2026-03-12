@@ -1,0 +1,54 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the LuminaCore boot sequence. It outlines the steps involved in initializing and validating the system, including integrity checks, handshake attempts, and authentication processes. The diagram serves as a visual representation of the boot process, aiding in understanding the system's startup procedure and potential failure points.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "Start: LuminaCore Boot Sequence" node at the top and progresses through a series of steps, validations, and decision points to the "End: LuminaCore Active" node at the bottom.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Boot Initialization, Core Validation, Handshake and Authentication, Dataflow Execution, and Completion/Failure.
+
+## Node-by-Node Description
+- **A / Start: LuminaCore Boot Sequence**: Represents the beginning of the LuminaCore boot process. visible in diagram; no further repository context available.
+- **B / CoreSync Validation**: Represents the validation of the CoreSync component. visible in diagram; no further repository context available.
+- **C / FluxBridge Router Initialization**: Represents the initialization of the FluxBridge Router. visible in diagram; no further repository context available.
+- **D / ArcLane Distributor Availability**: Represents a check for the availability of the ArcLane Distributor. visible in diagram; no further repository context available.
+- **E / VaultNode Handshake Attempt**: Represents an attempt to establish a handshake with the VaultNode. visible in diagram; no further repository context available.
+- **F / SpectraQueue Flush Trigger**: Represents the triggering of the SpectraQueue flush. visible in diagram; no further repository context available.
+- **G / ZenithGate Auth Layer Engagement**: Represents the engagement of the ZenithGate authentication layer. visible in diagram; no further repository context available.
+- **H / ZenithGate Request Submission**: Represents the submission of a request to the ZenithGate. visible in diagram; no further repository context available.
+- **I / Auth Layer Response**: Represents the response received from the authentication layer. visible in diagram; no further repository context available.
+- **J / Execute ArcLane Dataflow**: Represents the execution of the ArcLane dataflow. visible in diagram; no further repository context available.
+- **K / System Halt: Cascade Failure**: Represents a system halt due to a cascade failure. visible in diagram; no further repository context available.
+- **L / Complete: Post-Dataflow Integrity Check**: Represents the completion of the post-dataflow integrity check. visible in diagram; no further repository context available.
+- **M / End: LuminaCore Active**: Represents the successful completion of the LuminaCore boot sequence. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Starts the LuminaCore boot sequence and proceeds to CoreSync validation.
+- `B -- Core Integrity OK? --> C`: If CoreSync integrity is OK, proceeds to FluxBridge Router initialization.
+- `B -- Integrity Failed --> E`: If CoreSync integrity fails, proceeds to VaultNode Handshake Attempt.
+- `C --> D`: Proceeds from FluxBridge Router initialization to ArcLane Distributor availability check.
+- `D -- Distributor Ready --> F`: If the ArcLane Distributor is ready, proceeds to SpectraQueue Flush Trigger.
+- `D -- Distributor Offline --> E`: If the ArcLane Distributor is offline, proceeds to VaultNode Handshake Attempt.
+- `E -- Handshake Successful --> F`: If the VaultNode handshake is successful, proceeds to SpectraQueue Flush Trigger.
+- `E -- Handshake Failed --> G`: If the VaultNode handshake fails, proceeds to ZenithGate Auth Layer Engagement.
+- `F --> H`: Proceeds from SpectraQueue Flush Trigger to ZenithGate Request Submission.
+- `G --> H`: Proceeds from ZenithGate Auth Layer Engagement to ZenithGate Request Submission.
+- `H --> I`: Proceeds from ZenithGate Request Submission to Auth Layer Response.
+- `I -- Auth Granted --> J`: If authentication is granted, proceeds to Execute ArcLane Dataflow.
+- `I -- Auth Denied --> K`: If authentication is denied, proceeds to System Halt: Cascade Failure.
+- `J --> L`: Proceeds from Execute ArcLane Dataflow to Complete: Post-Dataflow Integrity Check.
+- `L --> M`: Proceeds from Complete: Post-Dataflow Integrity Check to End: LuminaCore Active.
+- `K --> M`: Proceeds from System Halt: Cascade Failure to End: LuminaCore Active.
+
+## Repository Context & Terminology
+- **LuminaCore**: The name of the system or component being booted.
+- **CoreSync**: A component that requires integrity validation during the boot process.
+- **FluxBridge Router**: A router component that is initialized after CoreSync validation.
+- **ArcLane Distributor**: A distributor component whose availability is checked during the boot process.
+- **VaultNode**: A node with which a handshake is attempted during the boot process.
+- **SpectraQueue**: A queue that is flushed after successful handshake or distributor availability.
+- **ZenithGate**: An authentication layer engaged after a failed handshake.
+- **Auth Layer**: The authentication layer that provides a response to the ZenithGate request.
+
+## High-Density QA Ground Truth Summary
+The LuminaCore boot sequence begins with the "Start: LuminaCore Boot Sequence" node, immediately followed by "CoreSync Validation." If the "CoreSync Validation" passes ("Core Integrity OK?"), the process moves to "FluxBridge Router Initialization" and then checks "ArcLane Distributor Availability." A ready distributor triggers "SpectraQueue Flush Trigger," while an offline distributor attempts a "VaultNode Handshake Attempt." A successful handshake also triggers "SpectraQueue Flush Trigger," but a failed handshake engages the "ZenithGate Auth Layer Engagement." Both "SpectraQueue Flush Trigger" and "ZenithGate Auth Layer Engagement" lead to "ZenithGate Request Submission," followed by an "Auth Layer Response." If authentication is granted, the system executes "ArcLane Dataflow" and completes a "Post-Dataflow Integrity Check" before reaching the "End: LuminaCore Active" state. However, if authentication is denied, the system undergoes a "System Halt: Cascade Failure" before also reaching the "End: LuminaCore Active" state. The "CoreSync Validation" step is crucial, as a failure here bypasses the "FluxBridge Router Initialization" and "ArcLane Distributor Availability" checks, directly attempting a "VaultNode Handshake Attempt" instead.

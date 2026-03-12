@@ -1,0 +1,49 @@
+graph TD
+    subgraph Client
+        A[User Application] --> B(API Gateway: ingress.example.com)
+    end
+
+    subgraph API Gateway
+        B --> C{Request Validation?}
+        C -- Invalid Request -->  Z[Return 400: Bad Request]
+        C -- Valid Request --> D{Authentication?}
+        D -- No Token --> E[Redirect to Auth Server]
+        D -- Valid Token --> F{JWT Verification?}
+        F -- Invalid Signature/Expired --> E[Redirect to Auth Server]
+        F -- Valid Signature --> G{Authorization?}
+        G -- Unauthorized --> H[Return 403: Forbidden]
+        G -- Authorized --> I{Routing Logic}
+    end
+
+    subgraph Auth Server
+        E --> L[Auth Service: auth.example.com]
+        L --> M{User Login?}
+        M -- Invalid Credentials --> N[Return Error]
+        M -- Valid Credentials --> O[Issue JWT]
+        O --> B
+        N --> B
+    end
+
+    subgraph Backend Services
+        I --> J[Rate Limiter]
+        J -- Throttled --> K[Return 429: Too Many Requests]
+        J -- Within Limit --> P[Service Discovery]
+        P --> Q{Backend Service Selection}
+        Q --> R[Target Service: orders-api.example.com]
+        Q --> S[Target Service: payments-api.example.com]
+        R --> T[Process Order Request]
+        S --> U[Process Payment Request]
+        T --> V[Return Order Response]
+        U --> W[Return Payment Response]
+    end
+
+    V --> B
+    W --> B
+
+    Z --> A
+    H --> A
+    K --> A
+    B --> A
+
+    classDef errorFill fill:#f9f,stroke:#333,stroke-width:2px;
+    class Z,H,K errorFill

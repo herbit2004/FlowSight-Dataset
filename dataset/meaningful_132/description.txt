@@ -1,0 +1,80 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of a user request through an experiment configuration and traffic splitting logic, ultimately directing the request to either an original or modified service. The diagram outlines the steps involved in determining whether an experiment is enabled, allocating traffic, and recording experiment events. It serves as a visual representation of the system's architecture and decision-making process for A/B testing or feature experimentation.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It is hierarchically structured, starting with user requests and progressing through entry point services, experiment configuration, traffic splitting logic, core services, and finally, metrics and reporting. The start node is "User Request," and the end nodes are "Reporting Dashboard" and "Error Logger."
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs representing different stages of the request processing:
+- **Users**: Represents the source of the request.
+- **Entrypoint Service**: Handles the initial routing of the request.
+- **Experiment Configuration**: Fetches the configuration for the experiment.
+- **Traffic Splitting Logic**: Allocates traffic based on the experiment configuration.
+- **Core Services**: Represents the original and modified services.
+- **Metrics & Reporting**: Records experiment events and generates reports.
+- **Feature Flag Service**: Checks if a feature flag is enabled.
+- **Error Handling**: Logs errors that occur during the process.
+
+## Node-by-Node Description
+- **User Request**: Represents a request initiated by a user.
+  visible in diagram; no further repository context available.
+- **Request Router**: Routes the user request to the appropriate service.
+  visible in diagram; no further repository context available.
+- **Experiment Enabled?**: A decision point that determines whether an experiment is enabled.
+  visible in diagram; no further repository context available.
+- **Fetch Experiment Config**: Fetches the configuration for the experiment.
+  visible in diagram; no further repository context available.
+- **Traffic Allocation**: A decision point that allocates traffic based on the experiment configuration.
+  visible in diagram; no further repository context available.
+- **Group A - Control**: Represents the control group in the experiment.
+  visible in diagram; no further repository context available.
+- **Group B - Treatment**: Represents the treatment group in the experiment.
+  visible in diagram; no further repository context available.
+- **Service X - Original**: Represents the original version of the service.
+  visible in diagram; no further repository context available.
+- **Service X - Modified**: Represents the modified version of the service.
+  visible in diagram; no further repository context available.
+- **Record Experiment Event**: Records an event related to the experiment.
+  visible in diagram; no further repository context available.
+- **Metrics Aggregator**: Aggregates metrics related to the experiment.
+  visible in diagram; no further repository context available.
+- **Reporting Dashboard**: Displays the results of the experiment.
+  visible in diagram; no further repository context available.
+- **Check Feature Flag**: Checks if a feature flag is enabled.
+  visible in diagram; no further repository context available.
+- **Error Logger**: Logs errors that occur during the process.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Request --> Request Router`: A user initiates a request, which is then routed by the request router.
+- `Request Router --> Fetch Experiment Config`: The request router fetches the experiment configuration.
+- `Fetch Experiment Config --> Experiment Enabled?`: The experiment configuration is used to determine if the experiment is enabled.
+- `Experiment Enabled? -- No Active Experiment --> Service X - Original`: If the experiment is not enabled, the request is routed to the original service.
+- `Experiment Enabled? -- Active Experiment --> Traffic Allocation`: If the experiment is enabled, the request is routed to the traffic allocation logic.
+- `Traffic Allocation -- Traffic <= Control Allocation --> Group A - Control`: If the traffic is less than or equal to the control allocation, the request is routed to the control group.
+- `Traffic Allocation -- Traffic > Control Allocation --> Group B - Treatment`: If the traffic is greater than the control allocation, the request is routed to the treatment group.
+- `Group A - Control --> Service X - Original`: The control group is routed to the original service.
+- `Group B - Treatment --> Service X - Modified`: The treatment group is routed to the modified service.
+- `Service X - Original --> Record Experiment Event`: The original service records an experiment event.
+- `Service X - Modified --> Record Experiment Event`: The modified service records an experiment event.
+- `Record Experiment Event --> Metrics Aggregator`: The experiment event is sent to the metrics aggregator.
+- `Metrics Aggregator --> Reporting Dashboard`: The metrics aggregator sends the aggregated metrics to the reporting dashboard.
+- `Request Router --> Check Feature Flag`: The request router checks the feature flag.
+- `Check Feature Flag -- Feature Flag Enabled --> Experiment Enabled?`: If the feature flag is enabled, the process continues to the experiment enabled check.
+- `Check Feature Flag -- Feature Flag Disabled --> Service X - Original`: If the feature flag is disabled, the request is routed to the original service.
+- `Request Router -- Error Fetching Config --> Error Logger`: If there is an error fetching the configuration, the error is logged.
+- `Service X - Original -- Internal Error --> Error Logger`: If there is an internal error in the original service, the error is logged.
+- `Service X - Modified -- Internal Error --> Error Logger`: If there is an internal error in the modified service, the error is logged.
+- `Record Experiment Event -- Error Recording Event --> Error Logger`: If there is an error recording the experiment event, the error is logged.
+
+## Repository Context & Terminology
+- **A/B Testing**: A method of comparing two versions of a webpage or app against each other to determine which one performs better.
+- **Feature Flag**: A software development technique that allows developers to enable or disable features without deploying new code.
+- **Control Group**: In A/B testing, the group that receives the original version of the webpage or app.
+- **Treatment Group**: In A/B testing, the group that receives the modified version of the webpage or app.
+- **Metrics Aggregator**: A component that collects and aggregates metrics from various sources.
+- **Reporting Dashboard**: A visual interface that displays key metrics and insights.
+- **Experiment Configuration**: Settings and parameters that define an A/B test or feature experiment.
+
+## High-Density QA Ground Truth Summary
+The process begins with a `User Request` entering the `Entrypoint Service` and being handled by the `Request Router`. The router fetches the `Experiment Configuration` to determine if an experiment is enabled. A `Feature Flag Service` checks if a feature flag is enabled, influencing whether the request proceeds to the experiment or directly to the `Service X - Original`. If no experiment is active, the request goes directly to `Service X - Original`. If an experiment is active, the request proceeds to `Traffic Splitting Logic`, where `Traffic Allocation` determines whether the request is assigned to `Group A - Control` or `Group B - Treatment` based on a traffic allocation percentage. Requests in `Group A - Control` are routed to `Service X - Original`, while requests in `Group B - Treatment` are routed to `Service X - Modified`. Both services then `Record Experiment Event`, which are aggregated by the `Metrics Aggregator` and displayed on the `Reporting Dashboard`. Errors at any stage, such as `Error Fetching Config`, `Internal Error` in either service, or `Error Recording Event`, are logged by the `Error Logger`. The `Reporting Dashboard` and `Error Logger` represent the terminal nodes of successful and unsuccessful paths, respectively. The traffic splitting logic is a key component for A/B testing, ensuring a controlled distribution of users between the original and modified services.

@@ -1,0 +1,76 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a watermark and authorization system. It depicts the flow of requests from a client application, the process of watermark addition and verification, and the authorization process for accessing resources. The diagram serves as a visual representation of the system's architecture and the steps involved in securing access to resources.
+
+## Overall Layout
+The diagram's primary direction is left to right (LR). It is hierarchically divided into two subgraphs: "Watermark & Authorization System" and "Authorization Service Details." The start node is "Client Application," and the end nodes are "Deliver Requested Resource" and "Access Denied - Insufficient Permissions."
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Watermark & Authorization System**: This subgraph encompasses the overall flow of the system, including client requests, watermark handling, and authorization.
+- **Authorization Service Details**: This subgraph focuses on the policy evaluation and access token granting within the authorization service.
+
+## Node-by-Node Description
+- **Client Application**: Represents the application requesting access to a resource.
+  visible in diagram; no further repository context available.
+- **Request Access**: A decision point where the system checks if a watermark is present.
+  visible in diagram; no further repository context available.
+- **Watermark Addition Module**: Responsible for adding a watermark if one is missing.
+  visible in diagram; no further repository context available.
+- **Retrieve Watermark Metadata**: Retrieves metadata associated with the watermark.
+  visible in diagram; no further repository context available.
+- **Apply Watermark**: Applies the watermark to the resource.
+  visible in diagram; no further repository context available.
+- **Verify Watermark**: Verifies the validity of the watermark.
+  visible in diagram; no further repository context available.
+- **Authorization Service**: Handles the authorization process based on the watermark and policies.
+  visible in diagram; no further repository context available.
+- **Resource Server**: Serves the requested resource if the client is authorized.
+  visible in diagram; no further repository context available.
+- **Deliver Requested Resource**: Delivers the requested resource to the client application.
+  visible in diagram; no further repository context available.
+- **Access Denied - Insufficient Permissions**: Indicates that access is denied due to insufficient permissions or an invalid watermark.
+  visible in diagram; no further repository context available.
+- **Generate Emergency Watermark**: Generates an emergency watermark if the metadata is not found.
+  visible in diagram; no further repository context available.
+- **Store Emergency Watermark**: Stores the generated emergency watermark.
+  visible in diagram; no further repository context available.
+- **Evaluate Policies**: Evaluates policies to determine if access should be granted.
+  visible in diagram; no further repository context available.
+- **Grant Access Token**: Grants an access token if the policies match.
+  visible in diagram; no further repository context available.
+- **Log Access Attempt**: Logs the access attempt if the policies do not match.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Client Application --> Request Access`: The client application requests access to a resource.
+- `Request Access -- Missing Watermark? --> Watermark Addition Module`: If a watermark is missing, the request is sent to the watermark addition module.
+- `Request Access -- Watermark Present --> Verify Watermark`: If a watermark is present, the request is sent to the watermark verification module.
+- `Watermark Addition Module --> Retrieve Watermark Metadata`: The watermark addition module retrieves the watermark metadata.
+- `Retrieve Watermark Metadata --> Apply Watermark`: After retrieving the metadata, the watermark is applied.
+- `Apply Watermark --> Verify Watermark`: After applying the watermark, the watermark is verified.
+- `Verify Watermark -- Valid Watermark --> Authorization Service`: If the watermark is valid, the request is sent to the authorization service.
+- `Verify Watermark -- Invalid Watermark --> Access Denied - Insufficient Permissions`: If the watermark is invalid, access is denied.
+- `Authorization Service -- Authorized --> Resource Server`: If the client is authorized, the resource server is accessed.
+- `Authorization Service -- Unauthorized --> Access Denied - Insufficient Permissions`: If the client is not authorized, access is denied.
+- `Resource Server --> Deliver Requested Resource`: The resource server delivers the requested resource.
+- `Deliver Requested Resource --> Client Application`: The requested resource is delivered back to the client application.
+- `Retrieve Watermark Metadata -- Watermark Metadata Not Found --> Generate Emergency Watermark`: If the watermark metadata is not found, an emergency watermark is generated.
+- `Generate Emergency Watermark --> Store Emergency Watermark`: The emergency watermark is stored.
+- `Store Emergency Watermark --> Apply Watermark`: The stored emergency watermark is applied.
+- `Authorization Service --> Evaluate Policies`: The authorization service evaluates policies.
+- `Evaluate Policies -- Policy Match --> Grant Access Token`: If the policies match, an access token is granted.
+- `Evaluate Policies -- No Match --> Log Access Attempt`: If the policies do not match, the access attempt is logged.
+- `Grant Access Token --> Resource Server`: The access token is used to access the resource server.
+- `Log Access Attempt --> Access Denied - Insufficient Permissions`: The access attempt is logged, and access is denied.
+
+## Repository Context & Terminology
+- **Watermark**: A unique identifier or data embedded in a resource to verify its authenticity and integrity.
+- **Authorization**: The process of verifying that a user or application has the necessary permissions to access a resource.
+- **Resource Server**: A server that hosts the resources being protected by the authorization system.
+- **Access Token**: A credential that allows a client to access protected resources on behalf of a user.
+- **Policy**: A set of rules that define who can access what resources and under what conditions.
+- **Metadata**: Data that provides information about other data, such as the watermark's creation date or issuer.
+- **Client Application**: The application requesting access to a protected resource.
+
+## High-Density QA Ground Truth Summary
+The process begins with a `Client Application` requesting access, which triggers a `Request Access` decision point. If a watermark is missing, the flow proceeds to the `Watermark Addition Module`, which retrieves `Watermark Metadata`. If the metadata is not found, an `Emergency Watermark` is generated and stored before being applied. After applying the watermark (either the original or emergency), the system proceeds to `Verify Watermark`. If the watermark is valid, the `Authorization Service` evaluates policies. A key branch occurs at `Evaluate Policies`: if the policies match, an `Access Token` is granted, leading to the `Resource Server` and finally `Deliver Requested Resource`. If the policies do not match, the access attempt is logged, and access is denied. If the watermark is invalid or authorization fails, the flow ends at `Access Denied - Insufficient Permissions`. The "Watermark" itself is a security measure, a unique identifier embedded in the resource, used to verify its authenticity before granting access, aligning with standard security practices.

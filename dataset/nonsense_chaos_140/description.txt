@@ -1,0 +1,49 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the boot sequence and error handling of a system called "TerraCore". It depicts the steps involved in starting the system, checking for stability, and handling potential failures that could lead to system shutdown and data compromise. The diagram serves as a visual representation of the system's operational flow and failure modes.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "TerraCore Boot Sequence" node at the top and flows downwards through a series of process and decision nodes, ultimately leading to either a successful "TerraCore Operational" state or a "System Failure" state.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: Boot Sequence, Stability Check, Error Handling, and Termination.
+
+## Node-by-Node Description
+- **A / Start: TerraCore Boot Sequence**: Represents the beginning of the TerraCore system's boot process. visible in diagram; no further repository context available.
+- **B / Is HydroResonance Stable?**: A decision node that checks the stability of the HydroResonance. visible in diagram; no further repository context available.
+- **C / Engage OmniPhase Regulator**: Represents the engagement of the OmniPhase Regulator. visible in diagram; no further repository context available.
+- **D / Initiate FluxCap Reset Cycle**: Represents the initiation of the FluxCap Reset Cycle. visible in diagram; no further repository context available.
+- **E / Reset Successful?**: A decision node that checks if the FluxCap Reset Cycle was successful. visible in diagram; no further repository context available.
+- **F / Trigger Emergency ZenithGate Shutdown**: Represents the triggering of an emergency shutdown via ZenithGate. visible in diagram; no further repository context available.
+- **G / Pulse SpectraQueue Flush**: Represents the flushing of the SpectraQueue. visible in diagram; no further repository context available.
+- **H / Flush Complete?**: A decision node that checks if the SpectraQueue flush is complete. visible in diagram; no further repository context available.
+- **I / CoreSync Validation**: Represents the validation of CoreSync. visible in diagram; no further repository context available.
+- **J / End: TerraCore Operational**: Represents the successful completion of the boot sequence and the system being operational. visible in diagram; no further repository context available.
+- **K / End: System Failure - VaultNode Compromised**: Represents the end state where the system has failed and the VaultNode is compromised. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Starts the boot sequence and proceeds to check HydroResonance stability.
+- `B -- Yes --> C`: If HydroResonance is stable, engage the OmniPhase Regulator.
+- `B -- No --> D`: If HydroResonance is not stable, initiate the FluxCap Reset Cycle.
+- `D --> E`: Proceeds to check if the FluxCap Reset Cycle was successful.
+- `E -- Yes --> C`: If the reset was successful, engage the OmniPhase Regulator.
+- `E -- No --> F`: If the reset was not successful, trigger an emergency ZenithGate shutdown.
+- `C --> G`: After engaging the OmniPhase Regulator, pulse the SpectraQueue flush.
+- `G --> H`: Proceeds to check if the SpectraQueue flush is complete.
+- `H -- Yes --> I`: If the flush is complete, perform CoreSync validation.
+- `H -- No --> F`: If the flush is not complete, trigger an emergency ZenithGate shutdown.
+- `I --> J`: After CoreSync validation, the system is operational.
+- `F --> K`: After triggering the emergency ZenithGate shutdown, the system enters a failure state.
+- Paths `E -- Yes --> C` and `B -- Yes --> C` converge at node `C`.
+
+## Repository Context & Terminology
+- **TerraCore**: The name of the system being booted.
+- **HydroResonance**: A system property or component whose stability is critical for proper operation.
+- **OmniPhase Regulator**: A component that is engaged when HydroResonance is stable or after a successful reset.
+- **FluxCap Reset Cycle**: A process initiated when HydroResonance is unstable, aimed at restoring stability.
+- **ZenithGate**: A component or process responsible for emergency shutdown.
+- **SpectraQueue**: A queue that needs to be flushed as part of the boot sequence.
+- **CoreSync**: A validation process that ensures core components are synchronized before declaring the system operational.
+- **VaultNode**: A node within the system whose compromise indicates a critical failure.
+
+## High-Density QA Ground Truth Summary
+The TerraCore boot sequence begins with the "Start: TerraCore Boot Sequence" node, immediately transitioning to the "Is HydroResonance Stable?" decision. If "Yes", the flow proceeds to "Engage OmniPhase Regulator"; if "No", the system initiates "Initiate FluxCap Reset Cycle". Following the reset cycle, the "Reset Successful?" decision determines the next step. A "Yes" outcome loops back to "Engage OmniPhase Regulator", while a "No" triggers "Trigger Emergency ZenithGate Shutdown", leading to the "End: System Failure - VaultNode Compromised" state. After the OmniPhase Regulator is engaged, the system executes "Pulse SpectraQueue Flush", followed by the "Flush Complete?" decision. A "Yes" outcome leads to "CoreSync Validation" and the successful "End: TerraCore Operational" state. A "No" outcome from the flush check also triggers the "Trigger Emergency ZenithGate Shutdown" and the "End: System Failure - VaultNode Compromised" state. The stability of "HydroResonance" is a critical initial check, and the "FluxCap Reset Cycle" is a key recovery mechanism. The "ZenithGate" mechanism is the last resort for preventing further damage in case of unrecoverable errors.

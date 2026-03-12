@@ -1,0 +1,75 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a video processing pipeline. It depicts the steps involved in ingesting, transcoding, processing, and publishing video content. The diagram serves as a visual representation of the workflow, outlining the sequence of operations and decision points within the system.
+
+## Overall Layout
+The diagram flows from top to bottom. It is divided into logical subgraphs representing different stages of the video processing pipeline. The start node is "Receive Upload," and the end nodes are "Reject & Notify Uploader" and "Notify User: Processing Complete."
+
+## Subgraphs / Stages
+The diagram contains four subgraphs:
+- **Video Ingestion**: Handles the initial upload and validation of the video.
+- **Transcoding Pipeline**: Transcodes the video into different formats and creates thumbnails.
+- **Screenshot Service**: Extracts a screenshot from the transcoded video.
+- **Metadata Management**: Updates the video metadata.
+- **Notification Service**: Notifies the user when processing is complete.
+
+## Node-by-Node Description
+- **A / Receive Upload**: Receives the video upload. visible in diagram; no further repository context available.
+- **B / Validation Checks**: Performs validation checks on the uploaded video. visible in diagram; no further repository context available.
+- **C / Is Prioritized?**: Determines if the video should be prioritized. visible in diagram; no further repository context available.
+- **D / Enqueue Priority Job**: Enqueues the video for priority processing. visible in diagram; no further repository context available.
+- **E / Enqueue Standard Job**: Enqueues the video for standard processing. visible in diagram; no further repository context available.
+- **F / Transcode: ProRes 422HQ**: Transcodes the video using the ProRes 422HQ profile. visible in diagram; no further repository context available.
+- **G / Transcode: H.264 High Profile**: Transcodes the video using the H.264 High profile. visible in diagram; no further repository context available.
+- **H / Transcode Success?**: Checks if the transcoding was successful. visible in diagram; no further repository context available.
+- **I / Create Thumbnails**: Creates thumbnails for the video. visible in diagram; no further repository context available.
+- **J / Thumbnail Success?**: Checks if the thumbnail creation was successful. visible in diagram; no further repository context available.
+- **K / Store Transcoded Videos & Thumbnails**: Stores the transcoded videos and thumbnails. visible in diagram; no further repository context available.
+- **L / Publish to CDN**: Publishes the transcoded videos and thumbnails to a Content Delivery Network (CDN). visible in diagram; no further repository context available.
+- **M / Extract Midpoint Timestamp**: Extracts the midpoint timestamp from the video. visible in diagram; no further repository context available.
+- **N / Request Screenshot From Transcoded Video**: Requests a screenshot from the transcoded video. visible in diagram; no further repository context available.
+- **O / Screenshot Generation Success?**: Checks if the screenshot generation was successful. visible in diagram; no further repository context available.
+- **P / Store Screenshot**: Stores the generated screenshot. visible in diagram; no further repository context available.
+- **Q / Update Video Metadata**: Updates the video metadata. visible in diagram; no further repository context available.
+- **R / Notify User: Processing Complete**: Notifies the user that the video processing is complete. visible in diagram; no further repository context available.
+- **ERR / Error Handling & Retry**: Handles errors and retries failed operations. visible in diagram; no further repository context available.
+- **S / Log Error & Alert Team**: Logs the error and alerts the team. visible in diagram; no further repository context available.
+- **Z / Reject & Notify Uploader**: Rejects the video and notifies the uploader. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Video upload is received and passed for validation.
+- `B -- Valid --> C`: Video passes validation checks and proceeds to prioritization.
+- `B -- Invalid --> Z`: Video fails validation and is rejected.
+- `C -- Yes --> D`: Video is prioritized and enqueued for priority processing.
+- `C -- No --> E`: Video is not prioritized and enqueued for standard processing.
+- `D --> F`: Priority video is transcoded using ProRes 422HQ.
+- `E --> G`: Standard video is transcoded using H.264 High Profile.
+- `F --> H`: ProRes 422HQ transcoding output is checked for success.
+- `G --> H`: H.264 High Profile transcoding output is checked for success.
+- `H -- Yes --> I`: Transcoding is successful, and thumbnails are created.
+- `H -- No --> ERR`: Transcoding fails, and error handling is initiated.
+- `I --> J`: Thumbnails are created and checked for success.
+- `J -- Yes --> K`: Thumbnail creation is successful, and transcoded videos and thumbnails are stored.
+- `J -- No --> ERR`: Thumbnail creation fails, and error handling is initiated.
+- `K --> L`: Transcoded videos and thumbnails are published to the CDN.
+- `L --> M`: Video is published to CDN and midpoint timestamp is extracted.
+- `L --> Q`: Video is published to CDN and metadata is updated.
+- `M --> N`: Midpoint timestamp is used to request a screenshot.
+- `N --> O`: Screenshot is requested and checked for success.
+- `O -- Yes --> P`: Screenshot generation is successful, and the screenshot is stored.
+- `O -- No --> ERR`: Screenshot generation fails, and error handling is initiated.
+- `P --> L`: Stored screenshot triggers publishing to CDN.
+- `Q --> R`: Video metadata is updated, and the user is notified.
+- `ERR --> S`: Error is logged, and the team is alerted.
+- `S --> Z`: Error is logged and the video is rejected.
+
+## Repository Context & Terminology
+- **Video Ingestion**: The process of receiving and initially processing video content.
+- **Transcoding**: Converting video from one format to another.
+- **H.264**: A video compression standard.
+- **ProRes 422HQ**: A high-quality video codec.
+- **CDN (Content Delivery Network)**: A network of servers that delivers content to users based on their geographic location.
+- **Metadata**: Data that provides information about other data. In this case, information about the video.
+- **Thumbnail**: A small preview image of a video.
+
+## High-Density QA Ground Truth Summary
+The video processing pipeline begins with "Receive Upload," where a video is ingested, followed by "Validation Checks." If the video fails validation, it is "Rejected & Notify Uploader." Otherwise, the system checks "Is Prioritized?" If yes, the video is enqueued as a "Priority Job" and transcoded using "ProRes 422HQ"; if no, it's enqueued as a "Standard Job" and transcoded using "H.264 High Profile." After transcoding, the system verifies "Transcode Success?" If successful, "Create Thumbnails" is initiated, followed by a "Thumbnail Success?" check. Successful thumbnails and transcoded videos are then "Store Transcoded Videos & Thumbnails" and "Publish to CDN." From the CDN, a "Screenshot Service" extracts a "Midpoint Timestamp" and requests a screenshot, verifying "Screenshot Generation Success?" before storing the "Screenshot." Simultaneously, "Metadata Management" updates "Video Metadata," and finally, the "Notification Service" alerts the user that "Processing Complete." Any failure in transcoding, thumbnail creation, or screenshot generation triggers "Error Handling & Retry," which logs the error and alerts the team, ultimately leading to "Reject & Notify Uploader." The use of ProRes 422HQ and H.264 profiles indicates a focus on video quality and compatibility across different devices and platforms.

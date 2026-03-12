@@ -1,0 +1,15 @@
+graph TD
+    A[Start: User Places Order] --> B{Payment Received?};
+    B -- No --> C[Order Cancelled];
+    B -- Yes --> D[Package Items];
+    D --> E{Items Available?};
+    E -- No --> F[Refund Payment];
+    E --> G[Shipping Label Printed];
+    G --> H[Package Shipped];
+    H --> I{Delivery Successful?};
+    I -- Yes --> J[Order Completed];
+    I -- No --> K[Create Return Label];
+    K --> L[File Claim to Carrier];
+    L --> M[Order Completed];
+    F --> A;
+    J --> C;

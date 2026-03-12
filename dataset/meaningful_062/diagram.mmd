@@ -1,0 +1,36 @@
+graph TD
+    subgraph Hot Tier
+        A[Hot Data - Recent Transactions] --> B(Indexing Engine - Lucene);
+        B --> C{Query Router};
+        C --> D[API - Real-time Reporting];
+        C --> E[Data Science - Model Training];
+    end
+
+    subgraph Warm Tier
+        F[Warm Data - Monthly Aggregations] --> G(Spark Processing);
+        G --> H{Data Lake - Parquet};
+        H --> C;
+        H --> I[Scheduled Reporting];
+    end
+
+    subgraph Cold Tier
+        J[Cold Data - Historical Archive] -->| Infrequent Access | K(Data Migration Tool);
+        K --> L[Object Storage - Glacier];
+        L --> M{Data Enrichment - AWS Glue};
+        M --> H;
+    end
+
+    subgraph Data Ingestion
+        N[Transaction Event Stream] --> O{Data Stream Processor - Flink};
+        O --> P{Data Validation Rules};
+        P -- Yes --> A;
+        P -- No --> Q[Dead Letter Queue];
+        O --> R[Schema Registry];
+    end
+
+    S[Data Aging Policy] --> K;
+    S --> G;
+    S --> B;
+
+    classDef tierFill fill:#f9f,stroke:#333,stroke-width:2px;
+    class Hot,Warm,Cold tierFill;

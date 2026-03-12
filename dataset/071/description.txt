@@ -1,0 +1,52 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow and processing steps involved in rendering a Markdown document with live preview functionality. It depicts how a Markdown file is written, processed by various tools (markdown-it, mermaid.js, highlight.js), and displayed in a browser. The diagram serves as a high-level overview of the live preview pipeline.
+
+## Overall Layout
+The diagram flows from left to right. It starts with the "Neovim Buffer" node and ends with the "Rendered Preview" node. The browser node branches out to three different processing nodes (markdown-it, mermaid.js, highlight.js) before converging at the final "Rendered Preview" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: Editing (Neovim Buffer to content.md), Server (content.md to Browser), Rendering (Browser to markdown-it, mermaid.js, highlight.js), and Preview (markdown-it, mermaid.js, highlight.js to Rendered Preview).
+
+## Node-by-Node Description
+- **Neovim Buffer**: Represents the buffer in the Neovim text editor where the Markdown content is written.
+  visible in diagram; no further repository context available.
+- **content.md**: Represents the Markdown file being edited.
+  visible in diagram; no further repository context available.
+- **live-server.nvim**: Represents a live server that watches for changes in the Markdown file.
+  visible in diagram; no further repository context available.
+- **Browser**: Represents the web browser that displays the rendered Markdown content.
+  visible in diagram; no further repository context available.
+- **markdown-it**: Represents the markdown-it library used for parsing and rendering Markdown.
+  visible in diagram; no further repository context available.
+- **mermaid.js**: Represents the mermaid.js library used for rendering diagrams defined in Markdown.
+  visible in diagram; no further repository context available.
+- **highlight.js**: Represents the highlight.js library used for syntax highlighting of code blocks in Markdown.
+  visible in diagram; no further repository context available.
+- **Rendered Preview**: Represents the final rendered output displayed in the browser.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Neovim Buffer --> content.md`: The Markdown content is written to the content.md file.
+- `Neovim Buffer -.-> content.md`: Optional mmdr.
+- `content.md --> live-server.nvim`: The live server watches the content.md file for changes.
+- `live-server.nvim --> Browser`: The live server sends updates to the browser via Server-Sent Events (SSE).
+- `Browser --> markdown-it`: The browser sends the Markdown content to markdown-it for parsing.
+- `Browser --> mermaid.js`: The browser sends the Markdown content to mermaid.js for diagram rendering.
+- `Browser --> highlight.js`: The browser sends the Markdown content to highlight.js for syntax highlighting.
+- `markdown-it --> Rendered Preview`: The output from markdown-it is sent to the rendered preview.
+- `mermaid.js --> Rendered Preview`: The output from mermaid.js is sent to the rendered preview.
+- `highlight.js --> Rendered Preview`: The output from highlight.js is sent to the rendered preview.
+The outputs of markdown-it, mermaid.js, and highlight.js converge at the Rendered Preview node.
+
+## Repository Context & Terminology
+- **Neovim**: A highly extensible Vim-based text editor.
+- **Markdown**: A lightweight markup language with plain text formatting syntax.
+- **live-server**: A simple development server with live reload capability.
+- **SSE (Server-Sent Events)**: A server push technology enabling real-time updates from the server to the browser.
+- **markdown-it**: A Markdown parser and compiler.
+- **mermaid.js**: A JavaScript library for diagramming and charting.
+- **highlight.js**: A JavaScript library for syntax highlighting.
+- **mmdr**: visible in diagram; no further repository context available.
+
+## High-Density QA Ground Truth Summary
+The diagram begins with the "Neovim Buffer," where a user writes Markdown content, which is then saved as "content.md." Optionally, the Neovim Buffer can use mmdr. The "live-server.nvim" monitors "content.md" for changes using file system watching. Upon detecting a change, "live-server.nvim" sends updates to the "Browser" via Server-Sent Events (SSE). The "Browser" then distributes the Markdown content to three separate processors: "markdown-it" for general Markdown parsing, "mermaid.js" for rendering any embedded diagrams, and "highlight.js" for syntax highlighting code blocks. The outputs from "markdown-it," "mermaid.js," and "highlight.js" are then combined and displayed in the "Rendered Preview" within the browser, providing a live, updated view of the Markdown document. The diagram illustrates a common workflow for live Markdown preview, leveraging tools like Neovim, live-server, and JavaScript libraries for rendering and highlighting.

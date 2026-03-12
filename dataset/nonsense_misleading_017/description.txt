@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the workflow of an order processing system, specifically focusing on payment verification, inventory management, and shipping confirmation. The diagram serves as a visual representation of the steps involved in fulfilling a user's order, from initial placement to final shipment or cancellation.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "User Places Order" node at the top and flows downwards through a series of decision points and processes, ultimately leading to the "End" node. There is a main linear flow with branches for handling different scenarios such as payment failure or insufficient stock.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Placement, Payment Verification, Inventory Check, Order Fulfillment/Cancellation, and Completion.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action of a user submitting an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision point to determine if the user's payment was successfully processed.
+  visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of verifying the availability of the ordered items in the inventory.
+  visible in diagram; no further repository context available.
+- **D / Sufficient Stock?**: A decision point to determine if there is enough stock to fulfill the order.
+  visible in diagram; no further repository context available.
+- **E / Notify User Out of Stock**: Represents the action of informing the user that the ordered items are currently out of stock.
+  visible in diagram; no further repository context available.
+- **F / Package Order**: Represents the process of preparing the order for shipment.
+  visible in diagram; no further repository context available.
+- **G / Send Shipping Confirmation**: Represents the action of notifying the user that their order has been shipped.
+  visible in diagram; no further repository context available.
+- **H / Cancel Order**: Represents the process of cancelling the order.
+  visible in diagram; no further repository context available.
+- **I / Update Order Status: Shipped**: Represents the action of updating the order status to "Shipped".
+  visible in diagram; no further repository context available.
+- **J / End**: Represents the final state of the order processing workflow.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `A --> B`: The user's order triggers the payment verification process.
+  `B -- Yes --> C`: If the payment is successful, proceed to check the inventory.
+  `B -- No --> H`: If the payment fails, the order is cancelled.
+  `C --> D`: After the inventory check, determine if there is sufficient stock.
+  `D -- No --> E`: If there is insufficient stock, notify the user.
+  `D -- Yes --> F`: If there is sufficient stock, package the order.
+  `E --> C`: After notifying the user about insufficient stock, loop back to inventory check.
+  `F --> G`: After packaging the order, send a shipping confirmation.
+  `G --> H`: Sending shipping confirmation leads to order cancellation.
+  `G --> I`: Sending shipping confirmation also updates the order status to shipped.
+  `H --> I`: Cancelling the order updates the order status to cancelled.
+  `I --> J`: Updating the order status leads to the end of the process.
+
+## Repository Context & Terminology
+- **User Places Order**: Standard meaning is a customer initiating a purchase. In this diagram, it's the starting point of the order processing workflow.
+- **Payment Successful?**: Standard meaning is verifying if the payment was processed without errors. In this diagram, it's a decision point that determines whether to proceed with the order or cancel it.
+- **Inventory Check**: Standard meaning is verifying the availability of items in stock. In this diagram, it's a process to determine if there's enough stock to fulfill the order.
+- **Sufficient Stock?**: Standard meaning is determining if the quantity of items in stock meets the order requirements. In this diagram, it's a decision point that determines whether to package the order or notify the user about insufficient stock.
+- **Notify User Out of Stock**: Standard meaning is informing the customer that an item is unavailable. In this diagram, it triggers a loop back to inventory check.
+- **Package Order**: Standard meaning is preparing the order for shipment. In this diagram, it precedes sending the shipping confirmation.
+- **Send Shipping Confirmation**: Standard meaning is notifying the customer that their order has been shipped. In this diagram, it triggers both order cancellation and order status update to shipped.
+- **Cancel Order**: Standard meaning is terminating the order process. In this diagram, it's triggered by payment failure or shipping confirmation.
+- **Update Order Status: Shipped**: Standard meaning is changing the order status to reflect that it has been shipped. In this diagram, it's triggered by sending shipping confirmation or cancelling the order.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Places Order," which initiates the "Payment Successful?" check. If payment fails ("No" branch), the "Cancel Order" process is triggered, leading to "Update Order Status: Shipped" and then "End." If payment is successful ("Yes" branch), an "Inventory Check" is performed, followed by a "Sufficient Stock?" decision. If stock is insufficient ("No" branch), the user is notified ("Notify User Out of Stock"), and the process loops back to "Inventory Check." If stock is sufficient ("Yes" branch), the "Package Order" process begins, followed by "Send Shipping Confirmation." Critically, "Send Shipping Confirmation" then triggers both "Cancel Order" and "Update Order Status: Shipped," before proceeding to "End." This means that after shipping confirmation, the order is immediately cancelled, and the status is updated to shipped. The loop from "Notify User Out of Stock" back to "Inventory Check" indicates a continuous monitoring of stock levels, but does not trigger a re-attempt of payment or order placement.

@@ -1,0 +1,61 @@
+graph TD
+    subgraph Device
+        A[Device Firmware] --> B{Update Check?};
+        B -- Yes --> C[Request Update Info];
+        B -- No --> Z[Normal Operation];
+        subgraph Update Process
+            C --> D[Receive Update Manifest];
+            D --> E{Manifest Valid?};
+            E -- Yes --> F[Download Update Image];
+            E -- No --> ERR[Error: Invalid Manifest];
+            F --> G{Image Downloaded OK?};
+            G -- Yes --> H[Verify Image Signature];
+            G -- No --> ERR2[Error: Download Failed];
+            H --> I{Signature Valid?};
+            I -- Yes --> J[Prepare Update Area];
+            I -- No --> ERR3[Error: Invalid Signature];
+            J --> K[Apply Update];
+            K --> L[Reboot Device];
+            L --> M[Verify New Firmware];
+        end
+        M -- Success --> N[Update Complete];
+        M -- Fail --> ERR4[Error: Update Failed, Rollback];
+    end
+
+    subgraph Server
+        S[Device Database] --> T[Update Server API];
+        T --> U{Device Registered?};
+        U -- Yes --> V[Generate Update Manifest];
+        U -- No --> ERR5[Error: Device Not Registered];
+        V --> W[Serve Update Manifest];
+        W --> D;
+        subgraph Artifact Storage
+            IMG[Update Image Storage] -- Contains --> X[Latest Firmware Image];
+            SIG[Signature Storage] -- Contains --> Y[Image Signature];
+             X --> W;
+             Y --> W;
+        end
+    end
+
+    C --> T;
+    F --> IMG;
+    H --> SIG;
+
+    ERR --> Z;
+    ERR2 --> Z;
+    ERR3 --> Z;
+    ERR4 --> Z;
+    ERR5 --> Z;
+
+    N --> Z;
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    classDef normal fill:#ccf,stroke:#333,stroke-width:2px
+    classDef process fill:#afa,stroke:#333,stroke-width:2px
+    classDef db fill:#fae,stroke:#333,stroke-width:2px
+
+    class A,B,Z,L,M normal;
+    class C,D,E,F,G,H,I,J,K,N process;
+    class S,T,U,V,W db;
+    class X,Y,IMG,SIG db;
+    class ERR,ERR2,ERR3,ERR4,ERR5 error;

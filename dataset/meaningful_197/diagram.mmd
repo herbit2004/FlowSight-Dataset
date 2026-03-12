@@ -1,0 +1,17 @@
+graph TD
+    subgraph Metrics Pipeline
+        A[Prometheus Scrape] --> B{Alert Rule Evaluation};
+        B -- Firing Alert --> C[Alertmanager];
+        B -- No Alert --> D[Continue Monitoring];
+        C --> E[Deduplication & Grouping];
+        E --> F{Severity Level};
+        F -- High --> G[PagerDuty Notification];
+        F -- Medium --> H[Slack Channel Post];
+        F -- Low --> I[Create JIRA Ticket];
+        H --> J[Escalation Policy Check];
+        J -- Escalate --> G;
+        J -- No Escalation --> K[Acknowledge/Resolve];
+    end
+
+    classDef highFill fill:#f9f,stroke:#333,stroke-width:2px
+    class G highFill

@@ -1,0 +1,74 @@
+[
+  {
+    "question": "What is the destination of the 'Valid User' edge from the 'AuthN/AuthZ' node?",
+    "options": [
+      "A. Comment/Like Service",
+      "B. Error: Authentication Required",
+      "C. Data Store: Comment/Like DB",
+      "D. Kafka Topic: user_activity"
+    ],
+    "correct_index": 0,
+    "type": "factual",
+    "difficulty": "easy"
+  },
+  {
+    "question": "If the 'Data Store: Comment/Like DB' operation fails, which node is reached?",
+    "options": [
+      "A. Kafka Topic: user_activity",
+      "B. Error: DB Write Failed",
+      "C. Activity Processor",
+      "D. Analytics Pipeline"
+    ],
+    "correct_index": 1,
+    "type": "factual",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Starting from 'User Action: Comment/Like', what is the ordered sequence of nodes if the user is valid and the database write is successful?",
+    "options": [
+      "A. API Gateway: /comments, /likes, AuthN/AuthZ, Comment/Like Service, Data Store: Comment/Like DB, Kafka Topic: user_activity",
+      "B. API Gateway: /comments, /likes, AuthN/AuthZ, Error: Authentication Required",
+      "C. API Gateway: /comments, /likes, AuthN/AuthZ, Comment/Like Service, Data Store: Comment/Like DB, Error: DB Write Failed",
+      "D. API Gateway: /comments, /likes, AuthN/AuthZ, Comment/Like Service, Data Store: Comment/Like DB, Activity Processor"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which of the following is NOT a possible path from 'Kafka Topic: user_activity'?",
+    "options": [
+      "A. Activity Processor -> Filter: Relevance Score > Threshold -> Feed Aggregator -> Data Store: User Feed DB",
+      "B. Analytics Pipeline -> Data Lake -> Reporting Dashboard",
+      "C. Activity Processor -> Filter: Relevance Score > Threshold -> Discard Event",
+      "D. Metrics Service -> Monitoring Dashboard -> Data Lake"
+    ],
+    "correct_index": 3,
+    "type": "negation",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Starting from 'User Action: Comment/Like', what is the ordered sequence of nodes if the user is valid, the database write is successful, the relevance score is relevant, the user feed DB write is successful?",
+    "options": [
+      "A. API Gateway: /comments, /likes, AuthN/AuthZ, Comment/Like Service, Data Store: Comment/Like DB, Kafka Topic: user_activity, Activity Processor, Filter: Relevance Score > Threshold, Feed Aggregator, Data Store: User Feed DB, Cache Invalidator, Redis Cache: User Feeds",
+      "B. API Gateway: /comments, /likes, AuthN/AuthZ, Comment/Like Service, Data Store: Comment/Like DB, Kafka Topic: user_activity, Activity Processor, Filter: Relevance Score > Threshold, Discard Event",
+      "C. API Gateway: /comments, /likes, AuthN/AuthZ, Comment/Like Service, Data Store: Comment/Like DB, Error: DB Write Failed",
+      "D. API Gateway: /comments, /likes, AuthN/AuthZ, Error: Authentication Required"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which of the following nodes does NOT have an outgoing edge to a diamond-shaped node?",
+    "options": [
+      "A. Activity Processor",
+      "B. Comment/Like Service",
+      "C. Feed Aggregator",
+      "D. Metrics Service"
+    ],
+    "correct_index": 3,
+    "type": "negation",
+    "difficulty": "medium"
+  }
+]

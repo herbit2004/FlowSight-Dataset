@@ -1,0 +1,38 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the transition logic within a Finite State Machine (FSM). It illustrates the steps involved in changing from one state to another, including checks for exit time requirements and state exit conditions. The diagram serves as a visual aid for understanding the state transition process within the FSM.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with a "Transition" node and ends with a "Change State" node. The flow includes decision points and a subgraph representing a delayed state change.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Delayed State Change". This subgraph represents a state change that is not immediate but occurs later based on some event or logic.
+
+## Node-by-Node Description
+- **Start / Transition**: Represents the beginning of a state transition process. visible in diagram; no further repository context available.
+- **NeedsExitTime / "Does active state need exit time?"**: A decision node that checks if the current active state requires an exit time. visible in diagram; no further repository context available.
+- **OnExitRequest / "FSM calls activeState.OnExitRequest()"**: Represents the FSM calling the `OnExitRequest()` method of the active state. visible in diagram; no further repository context available.
+- **StateCanExit / "Does the active state call fsm.StateCanExit()?"**: A decision node that checks if the active state calls the `fsm.StateCanExit()` method. visible in diagram; no further repository context available.
+- **Later / "Later in OnLogic / an event / ..."**: Represents a delayed state change triggered by some logic or event. visible in diagram; no further repository context available.
+- **CallStateCanExit / "fsm.StateCanExit()"**: Represents the call to the `fsm.StateCanExit()` method within the delayed state change process. visible in diagram; no further repository context available.
+- **End / Change State**: Represents the final state change. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Start --> NeedsExitTime`: Represents the start of the transition process.
+- `NeedsExitTime -- No --> End`: If the active state does not need exit time, the flow goes directly to the "Change State" node.
+- `NeedsExitTime -- Yes --> OnExitRequest`: If the active state needs exit time, the FSM calls `activeState.OnExitRequest()`.
+- `OnExitRequest --> StateCanExit`: After calling `OnExitRequest()`, the flow proceeds to check if the active state calls `fsm.StateCanExit()`.
+- `StateCanExit -- Yes --> End`: If the active state calls `fsm.StateCanExit()`, the flow goes to the "Change State" node.
+- `StateCanExit -- No --> Later`: If the active state does not call `fsm.StateCanExit()`, the flow goes to the "Delayed State Change" subgraph.
+- `Later --> CallStateCanExit`: Within the "Delayed State Change" subgraph, the `fsm.StateCanExit()` method is called.
+- `CallStateCanExit --> End`: After calling `fsm.StateCanExit()` in the delayed state change, the flow goes to the "Change State" node.
+- The paths from `NeedsExitTime -- No --> End`, `StateCanExit -- Yes --> End`, and `CallStateCanExit --> End` converge at the "Change State" node.
+
+## Repository Context & Terminology
+- **FSM (Finite State Machine)**: A computational model consisting of a finite number of states, transitions between those states, and actions.
+- **activeState**: The current state of the FSM.
+- **OnExitRequest()**: A method called on the active state when a transition away from that state is requested.
+- **fsm.StateCanExit()**: A method called to determine if the FSM can exit the current state.
+- **OnLogic / an event**: Represents the conditions or triggers that initiate the delayed state change.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins at the "Transition" node, initiating the state transition process. The first decision point is "Does active state need exit time?". If the answer is "No", the flow proceeds directly to the "Change State" node, completing the transition. If the answer is "Yes", the FSM calls `activeState.OnExitRequest()`. Next, the flowchart asks "Does the active state call fsm.StateCanExit()?". A "Yes" answer leads directly to the "Change State" node. A "No" answer triggers the "Delayed State Change" subgraph. Within this subgraph, "Later in OnLogic / an event / ..." indicates a delayed action based on some event or logic, after which `fsm.StateCanExit()` is called. Finally, this call leads to the "Change State" node. The "Change State" node represents the completion of the state transition, regardless of whether the transition was immediate or delayed. The `OnExitRequest()` and `StateCanExit()` methods are crucial for managing state transitions and ensuring that necessary actions are performed before a state is exited.
