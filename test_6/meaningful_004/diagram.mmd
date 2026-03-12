@@ -1,0 +1,39 @@
+graph TD
+    subgraph Message Queue System
+    A[Producer Application] --> B(Order Validation Logic);
+    B -- Valid Order --> C{Order Type?};
+    C --  Express --> D[Express Queue];
+    C -- Standard --> E[Standard Queue];
+
+    D --> F(Queue Manager);
+    E --> F;
+
+    F --> G[Consumer Group A: Order Processing];
+    F --> H[Consumer Group B: Analytics Ingestion];
+
+    G --> I{Inventory Check?};
+    I -- Available --> J[Create Order Record];
+    I -- Unavailable --> K[Order Backlog Queue];
+
+    J --> L(Transaction Manager / DB Commit);
+
+    H --> M[Data Transformation & Enrichment];
+    M --> N(Data Lake Ingestion);
+
+    K --> O{Retry Logic};
+    O -- Retry Enabled --> E;
+    O -- Retry Exhausted --> P[Exception Handling / Alerting];
+
+    P --> Q(Error Reporting System);
+
+    L --> R(Order Fulfillment System);
+    R --> S(Delivery Service Integration);
+
+    S --> T[Delivery Confirmation];
+    end
+
+    classDef queue fill:#f9f,stroke:#333,stroke-width:2px
+    classDef consumer fill:#ccf,stroke:#333,stroke-width:2px
+
+    class D,E,K queue;
+    class G,H consumer;

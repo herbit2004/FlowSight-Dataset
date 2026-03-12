@@ -1,0 +1,72 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the user registration and login flow of a typical web application. It outlines the steps involved in both creating a new user account and logging in with existing credentials, including validation checks, error handling, and security measures. The diagram serves as a visual representation of the authentication process.
+
+## Overall Layout
+The diagram flows from left to right. It starts with user input and branches into registration and login paths. The end nodes represent successful login (redirect to dashboard) or error states (displaying error messages).
+
+## Subgraphs / Stages
+The diagram contains one subgraph: "User Registration and Login Flow".
+
+## Node-by-Node Description
+- **A / User Input: Email/Password**: Represents the user entering their email address and password.
+  visible in diagram; no further repository context available.
+- **B / Valid Email Format?**: Checks if the entered email address is in a valid format.
+  visible in diagram; no further repository context available.
+- **C / Email Already Registered?**: Checks if the entered email address already exists in the system's database.
+  visible in diagram; no further repository context available.
+- **D / Create New User Account**: Creates a new user account in the system.
+  visible in diagram; no further repository context available.
+- **E / Display Error: Invalid Email**: Displays an error message indicating that the email format is invalid.
+  visible in diagram; no further repository context available.
+- **F / Send Verification Email**: Sends a verification email to the newly registered user's email address.
+  visible in diagram; no further repository context available.
+- **G / Await Email Verification**: Waits for the user to verify their email address by clicking a link in the verification email.
+  visible in diagram; no further repository context available.
+- **H / Attempt Login**: Attempts to log in the user with the provided email and password.
+  visible in diagram; no further repository context available.
+- **I / Valid Credentials?**: Checks if the provided email and password match the credentials stored in the system's database.
+  visible in diagram; no further repository context available.
+- **J / Generate JWT**: Generates a JSON Web Token (JWT) upon successful login.
+  visible in diagram; no further repository context available.
+- **K / Check Account Lockout**: Checks if the user account is locked due to too many failed login attempts.
+  visible in diagram; no further repository context available.
+- **L / Display Error: Account Locked**: Displays an error message indicating that the user account is locked.
+  visible in diagram; no further repository context available.
+- **M / Increment Failed Login Attempts**: Increments the counter for failed login attempts.
+  visible in diagram; no further repository context available.
+- **N / Display Error: Invalid Credentials**: Displays an error message indicating that the provided credentials are invalid.
+  visible in diagram; no further repository context available.
+- **O / Set Session Cookie**: Sets a session cookie in the user's browser to maintain the login session.
+  visible in diagram; no further repository context available.
+- **P / Redirect to User Dashboard**: Redirects the user to their dashboard upon successful login.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User input flows to email format validation.
+- `B -- Yes --> C`: If the email format is valid, proceed to check if the email is already registered.
+- `B -- No --> E`: If the email format is invalid, display an error.
+- `C -- No --> D`: If the email is not already registered, create a new user account.
+- `C -- Yes --> H`: If the email is already registered, attempt login.
+- `D --> F`: After creating a new account, send a verification email.
+- `F --> G`: After sending the verification email, await email verification.
+- `G -- Verified --> H`: After the email is verified, attempt login.
+- `H --> I`: Attempt login flows to credential validation.
+- `I -- Yes --> J`: If the credentials are valid, generate a JWT.
+- `I -- No --> K`: If the credentials are invalid, check account lockout.
+- `K -- Yes --> L`: If the account is locked, display an error.
+- `K -- No --> M`: If the account is not locked, increment failed login attempts.
+- `M --> N`: After incrementing failed login attempts, display an error.
+- `J --> O`: After generating a JWT, set a session cookie.
+- `O --> P`: After setting the session cookie, redirect to the user dashboard.
+
+## Repository Context & Terminology
+- **Email/Password**: Standard authentication credentials used for user login.
+- **Valid Email Format**: A check to ensure the email address conforms to a standard format (e.g., contains an @ symbol and a domain).
+- **JWT (JSON Web Token)**: A standard for securely transmitting information between parties as a JSON object. Used here for authentication and authorization.
+- **Session Cookie**: A small piece of data stored on the user's computer to maintain session state and track user activity.
+- **Account Lockout**: A security measure to prevent brute-force attacks by locking an account after a certain number of failed login attempts.
+- **User Dashboard**: The main interface for a logged-in user, providing access to various features and functionalities.
+- **Email Verification**: A process to confirm that the email address provided by a user during registration is valid and belongs to them.
+
+## High-Density QA Ground Truth Summary
+The user registration and login flow begins with the user providing their email and password. The system first validates the email format. If invalid, an error is displayed. If valid, the system checks if the email is already registered. If not, a new user account is created, and a verification email is sent. After verification, or if the email was already registered, the system attempts login. This involves validating the provided credentials. If valid, a JWT is generated, a session cookie is set, and the user is redirected to their dashboard. If the credentials are invalid, the system checks for account lockout. If the account is locked, an error is displayed. Otherwise, the failed login attempt is incremented, and an invalid credentials error is shown. The JWT is a crucial component, acting as a secure token for subsequent API calls, while the session cookie maintains the user's logged-in state. The account lockout mechanism is a security feature to prevent unauthorized access via brute-force attacks.

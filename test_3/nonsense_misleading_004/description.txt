@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts a process flow with checks, validation, storage, and notification steps. The diagram's purpose is to illustrate the sequence of operations, decision points, and potential loops within a system, but contains deliberate counter-intuitive alterations.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with "Configure" and "Start" nodes at the top, flows through a series of process and decision nodes, and ends with a "Complete" node, which then loops back to "Process".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Configure, Start, Check, Process, Validate, Store/Retry, Notify/Complete.
+
+## Node-by-Node Description
+- **I / Configure**: Represents the configuration stage of the process. visible in diagram; no further repository context available.
+- **A / Start**: Represents the beginning of the process. visible in diagram; no further repository context available.
+- **B / Check**: Represents a check or condition that determines the next step. visible in diagram; no further repository context available.
+- **C / Process**: Represents the processing stage. visible in diagram; no further repository context available.
+- **D / Validate**: Represents a validation step. visible in diagram; no further repository context available.
+- **E / Store**: Represents the storage stage. visible in diagram; no further repository context available.
+- **F / Retry**: Represents a retry mechanism. visible in diagram; no further repository context available.
+- **G / Notify**: Represents a notification stage. visible in diagram; no further repository context available.
+- **H / Complete**: Represents the completion of the process. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+`I --> A`: Configuration leads to the start of the process.
+`A --> B`: The process starts and proceeds to a check.
+`B -- Yes --> C`: If the check is successful, the process continues to the "Process" stage.
+`B -- No --> H`: If the check fails, the process goes to "Complete".
+`C --> D`: The process continues from "Process" to "Validate".
+`D -- Yes --> E`: If validation is successful, the process proceeds to "Store".
+`D -- No --> F`: If validation fails, the process goes to "Retry".
+`E --> G`: After storing, a notification is sent.
+`F --> B`: After retrying, the process loops back to the "Check" stage.
+`G --> H`: After notification, the process goes to "Complete".
+`H --> C`: After completion, the process loops back to the "Process" stage.
+
+## Repository Context & Terminology
+- **Configure**: Typically refers to setting up initial parameters or configurations before a process begins. In the diagram, "Configure" is shown before "Start," which is standard, but the sequence is reversed.
+- **Start**: The initiation of a process or workflow. In the diagram, "Start" is a clear entry point.
+- **Check**: A conditional step to verify a condition or state. The diagram shows a "Check" step, but the "No" outcome leads to "Complete" instead of a failure state or error handling.
+- **Process**: The core operation or computation being performed. The diagram shows "Process," but it's part of an illogical loop where "Complete" leads back to "Process."
+- **Validate**: Verifying the integrity or correctness of data or a process. The diagram includes a "Validate" step with "Yes" and "No" outcomes.
+- **Store**: Saving data or results to a persistent storage. The diagram shows "Store" after successful validation.
+- **Retry**: Attempting to repeat a failed operation. The diagram shows "Retry" looping back to "Check" after a failed validation.
+- **Notify**: Sending a notification to a user or system about the status of a process. In the diagram, "Notify" is shown before "Complete," which is counter-intuitive.
+- **Complete**: The final state of a process, indicating it has finished. The diagram shows "Complete," but it incorrectly loops back to "Process."
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Configure" leading to "Start," initiating the process. The process immediately proceeds to "Check," a decision point where a "Yes" outcome advances to "Process," while a "No" outcome incorrectly leads to "Complete." From "Process," the flow moves to "Validate," another decision point. A "Yes" from "Validate" directs the flow to "Store," followed by "Notify," while a "No" from "Validate" leads to "Retry," which loops back to "Check." "Notify" then incorrectly leads to "Complete," which, in turn, loops back to "Process," creating an illogical cycle. The standard sequence of "Configure" before "Start" is maintained, but the "Check" failure leading to "Complete" and the "Complete" node looping back to "Process" are deviations from typical process flows. The "Notify" step occurring before "Complete" also contradicts standard practice. The absence of error handling from "Process" to "Complete" is a critical omission, as is the "Complete" node looping back to "Process".

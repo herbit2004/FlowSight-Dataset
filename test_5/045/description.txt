@@ -1,0 +1,44 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the high-level structure and data flow of a Rust-based application. It outlines the interaction between the command-line interface (CLI), a text-based user interface (TUI), a server, an agent, and various backend components like providers, a tool registry, and session persistence. The diagram serves as a visual representation of the system's architecture, aiding in understanding the relationships between different modules and their responsibilities.
+
+## Overall Layout
+The diagram's layout is top-down (TD). The CLI and TUI act as entry points, leading to a central server and agent. The agent then fans out to interact with providers, a tool registry, and session persistence.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages:
+1.  User Interface (CLI/TUI)
+2.  Server
+3.  Agent
+4.  Backend Services (Provider/Tool Registry/Session Persistence)
+
+## Node-by-Node Description
+- **CLI (main.rs)**: Represents the command-line interface of the application, implemented in `main.rs`. The `jcode` command can `serve`, `connect`, or `run` the application.
+- **Standalone Agent Loop**: Represents a standalone loop for the agent. visible in diagram; no further repository context available.
+- **TUI (app.rs / ui.rs)**: Represents the text-based user interface, likely implemented in `app.rs` and `ui.rs`.
+- **Server (Unix Socket)**: Represents the server component, communicating via a Unix socket.
+- **Agent (agent.rs)**: Represents the agent component, implemented in `agent.rs`.
+- **Provider (Claude / Copilot / OpenAI / OpenRouter)**: Represents different provider options for the agent, including Claude, Copilot, OpenAI, and OpenRouter.
+- **Tool Registry (30+ tools)**: Represents a registry of available tools, with 30+ tools listed.
+- **Session Persistence**: Represents the session persistence mechanism. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `CLI --> TUI`: The CLI can interact with the TUI.
+- `CLI --> Server`: The CLI can start the server.
+- `CLI --> Standalone`: The CLI can initiate a standalone agent loop.
+- `TUI <--> Server`: The TUI and Server communicate via events.
+- `Server --> Agent`: The server passes requests to the agent.
+- `Agent --> Provider`: The agent uses a provider for specific tasks.
+- `Agent --> Tool Registry`: The agent accesses the tool registry.
+- `Agent --> Session Persistence`: The agent interacts with session persistence.
+
+## Repository Context & Terminology
+- **CLI (main.rs)**: The command-line interface is typically the entry point of a Rust application, and `main.rs` is the conventional file for the main function.
+- **TUI (app.rs / ui.rs)**: A text-based user interface, often built using libraries like `tui-rs` in Rust. The `app.rs` file likely contains the application logic, while `ui.rs` handles the UI rendering.
+- **Unix Socket**: A type of inter-process communication (IPC) mechanism commonly used in Unix-like operating systems.
+- **Agent (agent.rs)**: A component responsible for coordinating tasks, interacting with providers, and managing tools.
+- **Provider (Claude / Copilot / OpenAI / OpenRouter)**: Refers to different language model providers that the agent can use for tasks like code generation or natural language processing.
+- **Tool Registry**: A collection of tools or functions that the agent can utilize.
+- **Session Persistence**: The mechanism for saving and restoring the agent's state, allowing it to resume previous work.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates the architecture of a Rust application, starting with the CLI (implemented in `main.rs`) which offers `serve`, `connect`, and `run` commands. From the CLI, the application can either launch a standalone agent loop, interact with a TUI (likely implemented in `app.rs` and `ui.rs`), or start a server using Unix sockets. The TUI and Server communicate bidirectionally via events. The Server then passes requests to the Agent (implemented in `agent.rs`). The Agent acts as a central coordinator, interacting with various backend services. It selects a Provider from options like Claude, Copilot, OpenAI, or OpenRouter, depending on the task requirements. The Agent also utilizes a Tool Registry containing 30+ tools and interacts with Session Persistence to maintain state. The application's modular design allows for flexibility in choosing language model providers and extending the toolset. The CLI's `serve` command likely starts the server component, enabling communication between the TUI and the agent via Unix sockets.

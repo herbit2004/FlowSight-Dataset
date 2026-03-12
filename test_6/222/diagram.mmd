@@ -1,0 +1,33 @@
+flowchart TD
+    A[Start]
+    A-->Compiler{Compiler}
+    A-->VisualStudio
+    Compiler-->MSYS2{MSYS2}
+    MSYS2--->GCC
+    MSYS2--->Clang
+    Compiler-->MSVC
+
+    GCC-->CMake
+    Clang-->CMake
+    MSVC-->CMake
+
+    CMake-->IDE{IDE}
+    IDE-->VisualStudio
+    IDE-->QtCreator
+    IDE-->CLion
+
+    CMake-->Editor{Text Editor}
+    Editor-->Vim
+    Editor-->VSCode[Visual Studio Code]
+    
+    GTest[Google test & Doxygen]-. integrate .->VisualStudio
+    GTest[Google test & Doxygen]-. integrate .->VSCode
+    GTest[Google test & Doxygen]-. integrate .->CLion
+    GTest[Google test & Doxygen]-. integrate .->CMake
+
+    subgraph tooling
+    Additional[Additional tooling]---ReSharper
+    Additional---ClangTidy
+    Additional---ClangFormat
+    Additional---Incredibuild
+    end

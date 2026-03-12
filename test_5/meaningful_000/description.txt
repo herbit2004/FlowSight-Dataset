@@ -1,0 +1,53 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the user registration and login process for a system. It outlines the steps a user takes to either create a new account or log in to an existing one, including validation, authentication, and error handling. The diagram serves as a visual representation of the user authentication flow within the application.
+
+## Overall Layout
+The diagram flows from left to right. It starts with the user visiting the login page and branches into registration or login flows based on whether the user is existing or new. The diagram concludes with either a successful login redirecting to the dashboard or a successful registration displaying a verification email message.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "User Registration & Login".
+
+## Node-by-Node Description
+- **A / User visits Login Page**: The user navigates to the login page of the application. visible in diagram; no further repository context available.
+- **B / Existing User?**: A decision point to determine if the user already has an account. visible in diagram; no further repository context available.
+- **C / Enter Credentials**: The user enters their login credentials (username/email and password). visible in diagram; no further repository context available.
+- **D / Redirect to Registration Page**: The user is redirected to the registration page. visible in diagram; no further repository context available.
+- **E / Fill Registration Form**: The user fills out the registration form with the required information. visible in diagram; no further repository context available.
+- **F / Validate Registration Form Data**: The system validates the data entered in the registration form. visible in diagram; no further repository context available.
+- **G / Submit registration data to API Gateway**: The validated registration data is submitted to the API Gateway. visible in diagram; no further repository context available.
+- **H / Return to Registration Page with errors**: The user is redirected back to the registration page with error messages if the validation fails. visible in diagram; no further repository context available.
+- **I / API Gateway routes to User Service**: The API Gateway routes the registration request to the User Service. visible in diagram; no further repository context available.
+- **J / User Service creates new user account**: The User Service creates a new user account in the system. visible in diagram; no further repository context available.
+- **K / User Service sends verification email**: The User Service sends a verification email to the user's email address. visible in diagram; no further repository context available.
+- **L / User Service stores email verification token**: The User Service stores the email verification token. visible in diagram; no further repository context available.
+- **M / Return success to API Gateway**: The User Service returns a success message to the API Gateway. visible in diagram; no further repository context available.
+- **N / Display 'Verification Email Sent' message**: The system displays a message indicating that a verification email has been sent. visible in diagram; no further repository context available.
+- **O / Submit credentials to API Gateway**: The user's credentials are submitted to the API Gateway. visible in diagram; no further repository context available.
+- **P / API Gateway authenticates user via Auth Service**: The API Gateway authenticates the user's credentials via the Authentication Service. visible in diagram; no further repository context available.
+- **Q / Auth Service generates JWT**: The Authentication Service generates a JSON Web Token (JWT) upon successful authentication. visible in diagram; no further repository context available.
+- **R / Return JWT to API Gateway**: The Authentication Service returns the JWT to the API Gateway. visible in diagram; no further repository context available.
+- **S / Return authentication error**: The Authentication Service returns an authentication error if the credentials are invalid. visible in diagram; no further repository context available.
+- **T / API Gateway sets JWT as HTTP-only cookie**: The API Gateway sets the JWT as an HTTP-only cookie in the user's browser. visible in diagram; no further repository context available.
+- **U / Redirect user to Dashboard**: The user is redirected to the application's dashboard. visible in diagram; no further repository context available.
+- **V / Display 'Invalid credentials' error**: The system displays an error message indicating that the credentials are invalid. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User navigates to the login page.
+- `B -- Yes --> C`: User is an existing user.
+- `B -- No --> D`: User is not an existing user.
+- `F -- Valid --> G`: Registration form data is valid.
+- `F -- Invalid --> H`: Registration form data is invalid.
+- `P -- Valid Credentials --> Q`: User credentials are valid.
+- `P -- Invalid Credentials --> S`: User credentials are invalid.
+
+## Repository Context & Terminology
+- **API Gateway**: A service that acts as a single entry point for all API requests, routing them to the appropriate backend services.
+- **User Service**: A service responsible for managing user accounts, including creation, authentication, and authorization.
+- **Auth Service**: A service responsible for authenticating users and issuing JWTs.
+- **JWT (JSON Web Token)**: A standard for securely transmitting information between parties as a JSON object. It is commonly used for authentication and authorization.
+- **HTTP-only cookie**: A cookie that is only accessible by the server and not by client-side scripts, enhancing security.
+- **Dashboard**: The main landing page for a logged-in user, providing access to the application's features.
+- **Credentials**: The username/email and password used to authenticate a user.
+
+## High-Density QA Ground Truth Summary
+The user authentication flow begins when a user visits the login page. The system checks if the user is an existing user. If the user is not an existing user, they are redirected to the registration page, where they fill out a registration form. The system validates the registration form data, and if it's valid, the data is submitted to the API Gateway. The API Gateway routes the request to the User Service, which creates a new user account and sends a verification email. The User Service also stores the email verification token. After successful account creation, the API Gateway receives a success message and displays a "Verification Email Sent" message to the user. If the user is an existing user, they enter their credentials, which are submitted to the API Gateway. The API Gateway authenticates the user via the Auth Service. If the credentials are valid, the Auth Service generates a JWT, which is returned to the API Gateway. The API Gateway sets the JWT as an HTTP-only cookie and redirects the user to the dashboard. If the credentials are invalid, the Auth Service returns an authentication error, and the system displays an "Invalid credentials" error message. The API Gateway acts as a central point for routing requests and handling authentication, while the User Service manages user accounts and the Auth Service handles authentication and JWT generation.

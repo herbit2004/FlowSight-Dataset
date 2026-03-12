@@ -1,0 +1,65 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the workflow of an order processing system, from when a user submits an order to when the order is confirmed. The diagram outlines the steps involved in checking payment, inventory, packaging, shipping, and updating inventory count, including a reorder process.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It starts with the "User Submits Order" node at the top and ends with the "Order Confirmed" node at the bottom. The diagram includes decision diamonds that create branching paths based on conditions.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission, Payment Check, Inventory Check, Order Fulfillment, Inventory Update, and Order Confirmation.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user placing an order.
+  visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received.
+  visible in diagram; no further repository context available.
+- **C / Cancel Order**: Represents the action of canceling the order if payment is not received.
+  visible in diagram; no further repository context available.
+- **D / Inventory Check**: Represents the process of checking the inventory to see if there is sufficient stock to fulfill the order.
+  visible in diagram; no further repository context available.
+- **E / Sufficient Stock?**: A decision point to determine if there is enough stock available.
+  visible in diagram; no further repository context available.
+- **F / Notify User of Delay**: Represents the action of notifying the user that there will be a delay in fulfilling their order due to insufficient stock.
+  visible in diagram; no further repository context available.
+- **G / Package Order**: Represents the action of packaging the order for shipment.
+  visible in diagram; no further repository context available.
+- **H / Ship Order**: Represents the action of shipping the order to the user.
+  visible in diagram; no further repository context available.
+- **I / Update Inventory Count**: Represents the action of updating the inventory count after the order has been shipped.
+  visible in diagram; no further repository context available.
+- **J / Inventory Count < Threshold**: A decision point to check if the inventory count is below a certain threshold.
+  visible in diagram; no further repository context available.
+- **K / Order Confirmed**: Represents the final action of confirming the order.
+  visible in diagram; no further repository context available.
+- **L / Reorder Stock**: Represents the action of reordering stock if the inventory count is below the threshold.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the payment check.
+- `B -- No --> C`: If payment is not received, the order is canceled.
+- `B -- Yes --> D`: If payment is received, proceed to inventory check.
+- `D --> E`: Inventory check leads to a decision on stock sufficiency.
+- `E -- No --> F`: If there is insufficient stock, notify the user of the delay.
+- `F --> A`: After notifying the user of a delay, the process loops back to "User Submits Order".
+- `E -- Yes --> G`: If there is sufficient stock, package the order.
+- `G --> H`: Package order leads to shipping the order.
+- `H --> I`: Ship order leads to updating the inventory count.
+- `I --> J`: Update inventory count leads to checking if the inventory count is below the threshold.
+- `J -- No --> L`: If the inventory count is *not* below the threshold, reorder stock.
+- `J -- Yes --> K`: If the inventory count is below the threshold, the order is confirmed.
+- `L --> K`: After reordering stock, the process merges into "Order Confirmed".
+
+## Repository Context & Terminology
+- **User Submits Order**: In standard e-commerce, this is the initial action by a customer. In this diagram, after a delay notification, the process loops back to this step, which is unusual.
+- **Payment Received?**: Standard check to ensure payment before processing. In this diagram, it's a standard decision point.
+- **Inventory Check**: Standard process to verify stock availability. In this diagram, it's a standard check.
+- **Sufficient Stock?**: Standard decision based on inventory levels. In this diagram, it's a standard decision point.
+- **Notify User of Delay**: Standard practice to inform users of delays. In this diagram, it leads back to "User Submits Order", creating an illogical loop.
+- **Package Order**: Standard step in order fulfillment. In this diagram, it's a standard step.
+- **Ship Order**: Standard step in order fulfillment. In this diagram, it's a standard step.
+- **Update Inventory Count**: Standard practice to adjust inventory levels. In this diagram, it occurs *before* order confirmation, which is out of sequence.
+- **Inventory Count < Threshold**: Standard check to trigger reordering. In this diagram, the logic is reversed; reordering is triggered when the count is *not* below the threshold.
+- **Reorder Stock**: Standard action to replenish inventory. In this diagram, it merges into "Order Confirmed", which is incorrect.
+- **Order Confirmed**: Standard final step in order processing. In this diagram, it occurs after inventory update and reordering, and is the convergence point for reordering, which is incorrect.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Submits Order," which then proceeds to a "Payment Received?" check. If payment is not received, the order is "Cancel Order." If payment is received, an "Inventory Check" is performed, leading to the "Sufficient Stock?" decision. If stock is insufficient, the user is notified via "Notify User of Delay," and the process loops back to "User Submits Order." If stock is sufficient, the order is "Package Order" and then "Ship Order." Following shipment, the "Update Inventory Count" step occurs. The diagram then checks "Inventory Count < Threshold." Illogically, if the inventory count is *not* below the threshold, the system triggers "Reorder Stock"; if it *is* below the threshold, the system proceeds directly to "Order Confirmed." The "Reorder Stock" action then incorrectly merges into "Order Confirmed." The standard e-commerce flow is disrupted by the loop back to "User Submits Order" after a delay notification, the reversed logic for reordering stock, and the incorrect merge of the reorder process into order confirmation. The final "Order Confirmed" step is reached regardless of whether stock was reordered, and occurs after inventory is updated, which is out of sequence. There is no step to notify the user that their order has been shipped.

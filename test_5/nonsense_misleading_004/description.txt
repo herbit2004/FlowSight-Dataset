@@ -1,0 +1,57 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting an order processing workflow. It illustrates the steps involved from when a user places an order to when the order is archived, including payment verification, shipment preparation, and delivery confirmation. The diagram serves as a visual representation of the order fulfillment process, but contains intentional logical errors.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with the "User Places Order" node at the top and progresses downwards through various decision points and actions, eventually leading to the "Archive Order" node. There is one start node and multiple potential end nodes depending on the path taken.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Placement & Payment, Order Acknowledgment & Shipment Preparation, Inventory Check, Shipping & Delivery, Post-Delivery Actions, and Error Handling.
+
+## Node-by-Node Description
+- **A / User Places Order**: Represents the initial action where a user submits an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Acknowledge Order**: Represents the action of acknowledging the order after payment is received. visible in diagram; no further repository context available.
+- **D / Prepare Shipment**: Represents the action of preparing the order for shipment. visible in diagram; no further repository context available.
+- **F / Inventory Available?**: A decision point to check if the required inventory is available for the order. visible in diagram; no further repository context available.
+- **G / Notify User of Delay**: Represents the action of notifying the user about a delay in the order processing. visible in diagram; no further repository context available.
+- **E / Cancel Order - Contact User**: Represents the action of canceling the order and contacting the user. visible in diagram; no further repository context available.
+- **H / Print Shipping Label**: Represents the action of printing the shipping label for the order. visible in diagram; no further repository context available.
+- **I / Ship Order**: Represents the action of shipping the order. visible in diagram; no further repository context available.
+- **J / Delivery Successful?**: A decision point to check if the order delivery was successful. visible in diagram; no further repository context available.
+- **K / Archive Order**: Represents the action of archiving the order after successful delivery. visible in diagram; no further repository context available.
+- **L / Investigate Delivery Problem**: Represents the action of investigating a delivery problem. visible in diagram; no further repository context available.
+- **M / Send Feedback Request**: Represents the action of sending a feedback request to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User places an order, initiating the payment verification process.
+- `B -- Yes --> C`: If payment is received, the order is acknowledged.
+- `B -- No --> E`: If payment is not received, the order is canceled, and the user is contacted.
+- `C --> D`: After acknowledging the order, the shipment is prepared.
+- `D --> F`: After preparing the shipment, the inventory availability is checked.
+- `F -- Yes --> H`: If inventory is available, the shipping label is printed.
+- `F -- No --> G`: If inventory is not available, the user is notified of the delay.
+- `G --> A`: After notifying the user of a delay, the user is sent back to place the order again.
+- `H --> E`: After printing the shipping label, the order is canceled and the user is contacted.
+- `H --> I`: After printing the shipping label, the order is shipped.
+- `I --> J`: After shipping the order, the delivery success is checked.
+- `J -- Yes --> K`: If the delivery is successful, the order is archived.
+- `J -- No --> L`: If the delivery is not successful, the delivery problem is investigated.
+- `L --> K`: After investigating the delivery problem, the order is archived.
+- `K --> M`: After archiving the order, a feedback request is sent.
+- `M --> L`: After sending a feedback request, the delivery problem is investigated again.
+- `E --> D`: After canceling the order, the shipment is prepared.
+
+## Repository Context & Terminology
+- **User Places Order**: The initial action of a customer submitting an order. In this diagram, it's the starting point, but illogically becomes a loop destination after a delay notification.
+- **Payment Received?**: A check to verify if the payment has been processed. In this diagram, if payment fails, the order is canceled, but if it succeeds, the order is acknowledged *after* the payment check, which is a reversed sequence.
+- **Acknowledge Order**: Confirming the order with the user. In this diagram, this step occurs after payment, which is the correct sequence.
+- **Prepare Shipment**: Getting the order ready for shipping. In this diagram, this step is reached even after an order cancellation, which is illogical.
+- **Inventory Available?**: Checking if the items in the order are in stock. In this diagram, a "No" result leads to notifying the user of a delay and then restarting the entire order process.
+- **Print Shipping Label**: Creating a label for the package. In this diagram, printing the shipping label leads to both order cancellation and shipment.
+- **Ship Order**: The action of sending the order to the customer. In this diagram, this step occurs after printing the shipping label.
+- **Delivery Successful?**: Checking if the order was successfully delivered. In this diagram, a failed delivery leads to investigation, then archiving the order, which is a swapped branch outcome.
+- **Archive Order**: Storing the order information for record-keeping. In this diagram, this step is reached after successful delivery or after investigating a failed delivery.
+- **Send Feedback Request**: Requesting feedback from the customer. In this diagram, this step triggers re-investigation of delivery problems, creating an illogical loop.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "User Places Order," which then proceeds to a "Payment Received?" check. If payment is received ("Yes" branch), the system "Acknowledge Order," then "Prepare Shipment," and then checks "Inventory Available?". If payment is not received ("No" branch), the system "Cancel Order - Contact User," which then illogically flows into "Prepare Shipment". If inventory is available ("Yes" branch), the system "Print Shipping Label," which then flows into both "Cancel Order - Contact User" and "Ship Order". If inventory is not available ("No" branch), the system "Notify User of Delay" and sends the user back to "User Places Order" again. After "Ship Order," the system checks "Delivery Successful?". If delivery is successful ("Yes" branch), the system "Archive Order". If delivery is not successful ("No" branch), the system "Investigate Delivery Problem," which then flows into "Archive Order," a swapped branch outcome. After "Archive Order," the system "Send Feedback Request," which then loops back to "Investigate Delivery Problem," creating an illogical loop. The process can terminate at "Archive Order" or loop indefinitely between "Send Feedback Request" and "Investigate Delivery Problem." The "Acknowledge Order" step occurs after the payment check, which is a reversed sequence from standard practice.

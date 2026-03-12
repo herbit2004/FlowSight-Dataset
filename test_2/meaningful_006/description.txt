@@ -1,0 +1,88 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the client request flow through an API gateway, including authentication, authorization, rate limiting, and interaction with an upstream service. It outlines the steps involved in processing a client request, from initial receipt to final response, highlighting potential error conditions and security measures. The diagram serves as a visual representation of the request processing logic within the API gateway.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It is hierarchically structured with nested subgraphs representing different stages of the request processing pipeline. The start node is "Client Application" and the end node is also "Client Application," representing the round trip.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Client Request Flow**: Encompasses the initial stages of request processing, including route lookup, authentication, request enrichment, and forwarding to the upstream service.
+- **Rate Limiting & Observability**: Covers rate limiting, interaction with the upstream service, response handling, and logging.
+
+## Node-by-Node Description
+- **A / Client Application**: Represents the client application initiating the request.
+  visible in diagram; no further repository context available.
+- **B / API Gateway: Request Received**: Represents the API gateway receiving the client request.
+  visible in diagram; no further repository context available.
+- **C / Route Found?**: Represents a decision point where the API gateway checks if a route is found for the incoming request.
+  visible in diagram; no further repository context available.
+- **D / Route Configuration**: Represents the route configuration being applied to the request.
+  visible in diagram; no further repository context available.
+- **E / Error: Route Not Found**: Represents an error state when no route is found for the request.
+  visible in diagram; no further repository context available.
+- **F / Authentication Required?**: Represents a decision point where the API gateway checks if authentication is required for the route.
+  visible in diagram; no further repository context available.
+- **G / Auth Service: Validate Token**: Represents the authentication service validating the token.
+  visible in diagram; no further repository context available.
+- **H / Authorization Check?**: Represents a decision point where the API gateway checks if the user is authorized to access the resource.
+  visible in diagram; no further repository context available.
+- **I / Error: Invalid Token**: Represents an error state when the token is invalid.
+  visible in diagram; no further repository context available.
+- **J / Request Enrichment**: Represents the process of enriching the request with additional information.
+  visible in diagram; no further repository context available.
+- **K / Error: Unauthorized**: Represents an error state when the user is not authorized to access the resource.
+  visible in diagram; no further repository context available.
+- **L / Modify Request Headers**: Represents the process of modifying the request headers.
+  visible in diagram; no further repository context available.
+- **M / Forward to Upstream Service**: Represents the API gateway forwarding the request to the upstream service.
+  visible in diagram; no further repository context available.
+- **N / Rate Limiter: Apply Policy**: Represents the rate limiter applying the configured policy.
+  visible in diagram; no further repository context available.
+- **O / Upstream Service**: Represents the upstream service processing the request.
+  visible in diagram; no further repository context available.
+- **P / Error: Rate Limit Exceeded**: Represents an error state when the rate limit is exceeded.
+  visible in diagram; no further repository context available.
+- **Q / Upstream Response**: Represents the response received from the upstream service.
+  visible in diagram; no further repository context available.
+- **R / Record Metrics & Logs**: Represents the process of recording metrics and logs.
+  visible in diagram; no further repository context available.
+- **S / Client Response**: Represents the response sent back to the client application.
+  visible in diagram; no further repository context available.
+- **T / Client Application**: Represents the client application receiving the response.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Client application sends a request to the API Gateway.
+- `B --> C`: API Gateway performs a route lookup.
+- `C -- Yes --> D`: A route is found, proceed to route configuration.
+- `C -- No --> E`: No route is found, return "Error: Route Not Found".
+- `D --> F`: Proceed to authentication.
+- `F -- Yes --> G`: Authentication is required, validate the token.
+- `G -- Valid --> H`: Token is valid, proceed to authorization check.
+- `G -- Invalid --> I`: Token is invalid, return "Error: Invalid Token".
+- `H -- Authorized --> J`: User is authorized, proceed to request enrichment.
+- `H -- Unauthorized --> K`: User is unauthorized, return "Error: Unauthorized".
+- `F -- No --> J`: Authentication is not required, proceed to request enrichment.
+- `J --> L`: Enrich the request.
+- `L --> M`: Modify request headers.
+- `M --> N`: Forward the request to the rate limiter.
+- `N -- Allowed --> O`: Request is allowed by the rate limiter, forward to upstream service.
+- `N -- Limited --> P`: Rate limit exceeded, return "Error: Rate Limit Exceeded".
+- `O --> Q`: Upstream service returns a response.
+- `Q --> R`: Record metrics and logs.
+- `R --> S`: Send the client response.
+- `S --> T`: Client application receives the response.
+
+## Repository Context & Terminology
+- **API Gateway**: A service that acts as a single entry point for client requests, routing them to the appropriate backend services.
+- **Route Lookup**: The process of determining the appropriate backend service to handle a request based on the request's path or other attributes.
+- **Authentication**: The process of verifying the identity of a user or client.
+- **Authorization**: The process of determining whether a user or client has permission to access a resource.
+- **Token**: A security token used to authenticate a user or client.
+- **Request Enrichment**: The process of adding additional information to a request before it is sent to the backend service.
+- **Rate Limiting**: A mechanism to limit the number of requests that a user or client can make within a given time period.
+- **Upstream Service**: The backend service that handles the request.
+- **Metrics & Logs**: Data collected to monitor the performance and behavior of the system.
+
+## High-Density QA Ground Truth Summary
+The client request flow begins with the "Client Application" sending a request to the "API Gateway: Request Received." The API Gateway then performs a "Route Lookup" to determine the appropriate backend service. If a route is found ("Route Found? -- Yes"), the flow proceeds to "Route Configuration"; otherwise ("Route Found? -- No"), an "Error: Route Not Found" is returned. After route configuration, the system checks if "Authentication Required?". If yes, the "Auth Service: Validate Token" is invoked; an invalid token results in "Error: Invalid Token." A valid token leads to "Authorization Check?". If authorized, the flow proceeds to "Request Enrichment"; otherwise, an "Error: Unauthorized" is returned. If authentication is not required, the flow skips token validation and proceeds directly to "Request Enrichment." The request is then processed through "Modify Request Headers" and "Forward to Upstream Service." The "Rate Limiter: Apply Policy" determines if the request is allowed; if not, an "Error: Rate Limit Exceeded" is returned. An allowed request proceeds to the "Upstream Service," which returns an "Upstream Response." Finally, "Record Metrics & Logs" captures relevant data before sending the "Client Response" back to the "Client Application," completing the round trip. The API Gateway acts as a central point for managing and securing access to backend services, enforcing authentication, authorization, and rate limiting policies.

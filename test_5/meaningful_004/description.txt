@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of a marketing campaign system. It depicts the process from user form submission to data warehousing, including form validation, campaign identification, offer application, and personalized email sending. The diagram serves as a visual representation of the system's workflow, aiding in understanding and potentially optimizing the campaign process.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into two subgraphs: "Marketing Campaign" and "Data Processing Pipeline". The start node is "User Action: Submit Form", and the end node is "Data Warehouse".
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Marketing Campaign**: This subgraph represents the initial stage of the process, focusing on user interaction and form submission.
+- **Data Processing Pipeline**: This subgraph represents the backend processing of the submitted form data, including campaign identification, offer application, and data storage.
+
+## Node-by-Node Description
+- **A / User Action: Submit Form**: Represents the user submitting a form as part of a marketing campaign. visible in diagram; no further repository context available.
+- **B / Form Validation**: Represents the process of validating the submitted form data. visible in diagram; no further repository context available.
+- **C / Event Producer: 'form_submission'**: Represents the component that produces an event upon successful form submission. visible in diagram; no further repository context available.
+- **D / Message Queue: CampaignEvents**: Represents a message queue that stores campaign-related events. visible in diagram; no further repository context available.
+- **E / Display Error Message**: Represents the action of displaying an error message to the user if the form validation fails. visible in diagram; no further repository context available.
+- **F / Event Consumer: 'campaign_subscriber'**: Represents the component that consumes campaign events from the message queue. visible in diagram; no further repository context available.
+- **G / Identify Campaign**: Represents the process of identifying the relevant campaign based on the submitted form data. visible in diagram; no further repository context available.
+- **H / Campaign Logic: Apply Offer**: Represents the application of a specific offer based on the identified campaign. visible in diagram; no further repository context available.
+- **I / Log Unmatched Form**: Represents the action of logging the form submission if no matching campaign is found. visible in diagram; no further repository context available.
+- **J / Eligible for Discount?**: Represents a decision point to determine if the user is eligible for a discount. visible in diagram; no further repository context available.
+- **K / Create Discount Coupon**: Represents the creation of a discount coupon for eligible users. visible in diagram; no further repository context available.
+- **L / Send Generic Thank You**: Represents sending a generic thank you message to users who are not eligible for a discount. visible in diagram; no further repository context available.
+- **M / Store Coupon in User Profile**: Represents storing the created discount coupon in the user's profile. visible in diagram; no further repository context available.
+- **N / Send Personalized Email**: Represents sending a personalized email to the user. visible in diagram; no further repository context available.
+- **O / Update Campaign Metrics**: Represents updating the campaign metrics with the new form submission data. visible in diagram; no further repository context available.
+- **P / Data Warehouse**: Represents the data warehouse where campaign data is stored. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits the form.
+- `B -- Valid --> C`: Form validation is successful.
+- `B -- Invalid --> E`: Form validation fails.
+- `C --> D`: Event producer sends the 'form_submission' event to the message queue.
+- `D --> F`: Event consumer receives the 'form_submission' event from the message queue.
+- `F --> G`: Event consumer triggers campaign identification.
+- `G -- Campaign Found --> H`: A matching campaign is found.
+- `G -- No Campaign --> I`: No matching campaign is found.
+- `H --> J`: Campaign logic applies the offer.
+- `J -- Yes --> K`: User is eligible for a discount.
+- `J -- No --> L`: User is not eligible for a discount.
+- `K --> M`: Discount coupon is created.
+- `L --> N`: Generic thank you message is sent.
+- `M --> N`: Discount coupon is stored in the user profile.
+- `N --> O`: Personalized email is sent.
+- `O --> P`: Campaign metrics are updated.
+- `I --> P`: Unmatched form is logged.
+- `I, O --> P`: Paths converge at the Data Warehouse.
+
+## Repository Context & Terminology
+- **Marketing Campaign**: A coordinated set of actions designed to promote a product or service.
+- **Form Validation**: The process of ensuring that user-submitted data meets predefined criteria.
+- **Event Producer**: A component that generates events in response to specific actions.
+- **Message Queue**: A system for asynchronous communication between components.
+- **Event Consumer**: A component that processes events from a message queue.
+- **Data Warehouse**: A central repository for storing and analyzing data.
+- **Campaign Metrics**: Quantitative measures used to track the performance of a marketing campaign.
+
+## High-Density QA Ground Truth Summary
+The marketing campaign system begins with a user submitting a form, which triggers form validation. If the form is valid, an event producer generates a 'form_submission' event and sends it to the 'CampaignEvents' message queue. If the form is invalid, an error message is displayed to the user. An event consumer, 'campaign_subscriber', then retrieves the event from the queue and attempts to identify the relevant campaign. If a campaign is found, campaign logic applies an offer, and the system checks if the user is eligible for a discount. If eligible, a discount coupon is created and stored in the user's profile; otherwise, a generic thank you message is sent. Both scenarios lead to sending a personalized email. If no campaign is found during the identification step, the unmatched form is logged. Finally, campaign metrics are updated, and all data, including unmatched form logs, is stored in the Data Warehouse. The message queue facilitates asynchronous communication between the form submission and data processing stages, ensuring that the system can handle a high volume of submissions without performance bottlenecks.

@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts a process flow involving checking, storing, validating, processing, and notification steps. The diagram's purpose is to illustrate the sequence of operations, decision points, and potential loops within the process.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. The start node is at the top, and the end node is at the bottom. The overall structure includes branching and looping, creating a cyclical flow.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Start, Check, Store/Validate, Process, Complete?, Notify/Store, and Retry/End.
+
+## Node-by-Node Description
+- **A / Start**: The beginning of the process. visible in diagram; no further repository context available.
+- **B / Check**: A decision point to check a condition. visible in diagram; no further repository context available.
+- **D / Store**: A step to store data. visible in diagram; no further repository context available.
+- **I / Validate**: A step to validate data. visible in diagram; no further repository context available.
+- **C / Process**: A step to process data. visible in diagram; no further repository context available.
+- **E / Complete?**: A decision point to check if processing is complete. visible in diagram; no further repository context available.
+- **F / Store**: A step to store data. visible in diagram; no further repository context available.
+- **G / Notify**: A step to notify. visible in diagram; no further repository context available.
+- **H / Retry**: A step to retry the process. visible in diagram; no further repository context available.
+- **J / End**: The end of the process. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The process starts and proceeds to the check step.
+- `B -- Yes --> C`: If the check is successful, the process proceeds to the process step.
+- `B -- No --> D`: If the check fails, the process proceeds to the store step.
+- `D --> I`: After storing, the process proceeds to the validate step.
+- `I --> C`: After validation, the process proceeds to the process step.
+- `C --> E`: After processing, the process proceeds to the complete check.
+- `E -- Yes --> F`: If processing is complete, the process proceeds to the store step.
+- `E -- No --> G`: If processing is not complete, the process proceeds to the notify step.
+- `G --> H`: After notification, the process proceeds to the retry step.
+- `H --> A`: After retrying, the process returns to the start.
+- `F --> J`: After storing, the process proceeds to the end.
+- `J --> A`: After ending, the process returns to the start.
+
+## Repository Context & Terminology
+1.  **Check**: Typically, this refers to verifying a condition or state before proceeding. In the diagram, the check determines whether to store and validate *before* processing, which is counter-intuitive.
+2.  **Store**: Usually, this means saving data to a persistent medium. In the diagram, there are two store steps, one before validation (after a failed check) and one after processing (if complete), which is unusual.
+3.  **Validate**: This involves verifying the correctness or quality of data. In the diagram, validation occurs *after* a failed check and *before* processing, which is an atypical sequence.
+4.  **Process**: This refers to performing operations on data. The diagram shows processing after validation, which is standard, but the preceding steps are not.
+5.  **Complete?**: A check to see if the process is finished. The diagram's logic is reversed; 'Yes' leads to storing and ending, then restarting, while 'No' leads to retry.
+6.  **Notify**: This involves sending a notification, typically about a failure or completion. In the diagram, notification occurs when processing is *not* complete, which is standard.
+7.  **Retry**: This means attempting the process again. The diagram shows retry looping back to the start, which is standard, but the conditions leading to retry are not.
+8.  **End**: The logical conclusion of a process. The diagram shows the end looping back to the start, which is illogical.
+
+## High-Density QA Ground Truth Summary
+The process begins at the 'Start' node (A) and immediately proceeds to the 'Check' node (B). If the 'Check' (B) evaluates to 'Yes', the process flows to 'Process' (C). If 'Check' (B) evaluates to 'No', the process incorrectly flows to 'Store' (D) and then 'Validate' (I) before 'Process' (C). After 'Process' (C), the process reaches the 'Complete?' node (E). If 'Complete?' (E) is 'Yes', the process flows to 'Store' (F) and then 'End' (J), which then loops back to 'Start' (A). If 'Complete?' (E) is 'No', the process flows to 'Notify' (G) and then 'Retry' (H), which loops back to 'Start' (A). The 'End' node (J) incorrectly loops back to the 'Start' node (A), creating an illogical cycle. The standard sequence of store and validate is reversed when the initial check fails. The 'Complete?' branch logic is also inverted, with 'Yes' leading to 'End' and 'No' leading to 'Retry', contrary to typical process flow.

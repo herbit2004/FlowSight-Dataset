@@ -1,0 +1,18 @@
+flowchart LR
+    RAW["📥 Raw Data<br/>Ingestion"]:::input
+    CLEAN["🧹 Normalise<br/>& Clean"]:::process
+    FEAT["⚙️ Feature<br/>Extraction"]:::process
+    WINDOW["📐 Time-Window<br/>Slicing"]:::process
+    TRAIN["🧠 Model<br/>Training"]:::model
+    EVAL["📊 Evaluation<br/>& Tuning"]:::model
+    INFER["⚡ Real-Time<br/>Inference"]:::output
+    ALERT["🚨 Threat<br/>Alert + Block"]:::output
+
+    RAW --> CLEAN --> FEAT --> WINDOW --> TRAIN --> EVAL
+    EVAL -->|"re-train loop"| TRAIN
+    EVAL --> INFER --> ALERT
+
+    classDef input fill:#020c18,stroke:#00ff9d,color:#00ff9d
+    classDef process fill:#020c18,stroke:#00e5ff,color:#00e5ff
+    classDef model fill:#020c18,stroke:#b06aff,color:#b06aff
+    classDef output fill:#020c18,stroke:#ff5e1a,color:#ff5e1a

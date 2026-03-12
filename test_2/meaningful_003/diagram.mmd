@@ -1,0 +1,10 @@
+graph TD
+    A[Receive Order Request] --> B{Inventory Available?};
+    B -- Yes --> C[Deduct Inventory in 'Warehouse-Service'];
+    C --> D{Deduction Successful?};
+    D -- Yes --> E[Commit Transaction via 'Inventory-Txn-Manager'];
+    D -- No --> F[Compensation: Rollback to Initial State];
+    B -- No --> G[Reject Order: Insufficient Stock];
+    F --> E
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G default

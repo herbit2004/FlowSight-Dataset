@@ -1,0 +1,41 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow, specifically focusing on fraud detection. It outlines the steps involved in determining whether an order is fraudulent and the subsequent actions taken based on the fraud assessment. The diagram serves to visualize and communicate the order processing logic, particularly the fraud check mechanism.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "Order Request Received" node and flows through a series of decision points and processes, ultimately leading to either order rejection or order confirmation.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: Order Reception, Fraud Check, Payment Authorization, and Order Confirmation.
+
+## Node-by-Node Description
+- **A / Order Request Received**: Represents the initial state where an order request is received by the system. visible in diagram; no further repository context available.
+- **B / Fraud Check Required?**: A decision point to determine if a fraud check is necessary for the order. visible in diagram; no further repository context available.
+- **C / Fraud Detection Service**: Represents the process of using a fraud detection service to assess the order. visible in diagram; no further repository context available.
+- **D / Fraud Score > Threshold?**: A decision point to determine if the fraud score exceeds a predefined threshold. visible in diagram; no further repository context available.
+- **E / Reject Order**: Represents the action of rejecting the order due to a high fraud score. visible in diagram; no further repository context available.
+- **F / Authorize Payment**: Represents the process of authorizing the payment for the order. visible in diagram; no further repository context available.
+- **G / Create Order Record**: Represents the process of creating a record of the order in the system. visible in diagram; no further repository context available.
+- **H / Send Order Confirmation**: Represents the final step of sending an order confirmation to the customer. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The order request is passed to the fraud check decision.
+- `B -- Yes --> C`: If a fraud check is required, the process proceeds to the fraud detection service.
+- `B -- No --> F`: If a fraud check is not required, the process skips the fraud detection and proceeds to payment authorization.
+- `C --> D`: The fraud detection service provides a fraud score which is then evaluated against a threshold.
+- `D -- Yes --> E`: If the fraud score is greater than the threshold, the order is rejected.
+- `D -- No --> F`: If the fraud score is not greater than the threshold, the process proceeds to payment authorization.
+- `F --> G`: After payment authorization, an order record is created.
+- `G --> H`: After creating the order record, an order confirmation is sent.
+
+## Repository Context & Terminology
+- **Order Request**: A request submitted by a customer to purchase goods or services.
+- **Fraud Check**: A process to assess the likelihood of an order being fraudulent.
+- **Fraud Detection Service**: A service or system used to identify and assess potentially fraudulent activities.
+- **Fraud Score**: A numerical value representing the likelihood of an order being fraudulent, as determined by the fraud detection service.
+- **Threshold**: A predefined value used as a benchmark to determine whether a fraud score is considered high enough to reject an order.
+- **Authorize Payment**: The process of verifying and approving a payment transaction.
+- **Order Record**: A record of the order details stored in the system.
+- **Order Confirmation**: A notification sent to the customer confirming that their order has been received and is being processed.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with an "Order Request Received," which then proceeds to a decision point: "Fraud Check Required?". If the answer is "Yes," the process moves to the "Fraud Detection Service," which calculates a fraud score. This score is then compared to a predefined "Threshold" at the "Fraud Score > Threshold?" decision point. If the score exceeds the threshold ("Yes" branch), the order is "Reject Order." If the score is below the threshold ("No" branch), or if the initial "Fraud Check Required?" decision was "No," the process proceeds to "Authorize Payment." After payment authorization, a "Create Order Record" step is executed, followed by "Send Order Confirmation." The "Fraud Detection Service" likely integrates with a machine learning model trained on historical transaction data to identify patterns indicative of fraudulent activity, and the "Threshold" is a configurable parameter that balances the risk of false positives (rejecting legitimate orders) against the risk of false negatives (accepting fraudulent orders). The flowchart concludes with either "Reject Order" or "Send Order Confirmation," representing the two possible outcomes of the order processing workflow.

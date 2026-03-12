@@ -1,0 +1,39 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the process flow for order processing in a system. The diagram outlines the steps from when a user submits an order to when the order is closed in the system.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The flow starts with the "User Submits Order" node at the top and ends with the "Order Closed in System" node at the bottom. The diagram includes conditional branches based on payment and delivery status.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Order Submission, Payment Verification, Order Confirmation/Fulfillment, Shipping, and Order Closure.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action of a user submitting an order. visible in diagram; no further repository context available.
+- **B / Payment Received?**: Represents a decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Order Fulfillment Started**: Represents the start of the order fulfillment process. visible in diagram; no further repository context available.
+- **D / Order Confirmation Sent**: Represents the sending of an order confirmation to the user. visible in diagram; no further repository context available.
+- **E / Order Shipped**: Represents the shipping of the order. visible in diagram; no further repository context available.
+- **F / Delivery Successful?**: Represents a decision point to check if the delivery of the order was successful. visible in diagram; no further repository context available.
+- **G / Order Closed in System**: Represents the final step where the order is closed in the system. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The user submitting an order triggers the payment verification process.
+- `B -- Yes --> D`: If payment is received, an order confirmation is sent.
+- `B -- No --> C`: If payment is not received, order fulfillment is started.
+- `D --> C`: After order confirmation is sent, order fulfillment is started.
+- `C --> E`: Order fulfillment leads to the order being shipped.
+- `E --> F`: The order being shipped leads to a delivery success check.
+- `F -- Yes --> G`: If delivery is successful, the order is closed in the system.
+- `F -- No --> B`: If delivery is not successful, the process loops back to the payment received check.
+
+## Repository Context & Terminology
+- **Order**: A request from a user to purchase goods or services. In this diagram, the order's lifecycle is tracked from submission to closure.
+- **Payment Received?**: A check to determine if the payment for the order has been successfully processed. In this diagram, the outcome of this check determines whether an order confirmation is sent.
+- **Order Confirmation Sent**: Sending a confirmation message to the user indicating that their order has been received and is being processed. In this diagram, this step occurs *before* payment verification if payment is successful.
+- **Order Fulfillment Started**: The process of preparing and packaging the order for shipment. In this diagram, this step is initiated *before* payment if payment is unsuccessful.
+- **Order Shipped**: The process of sending the order to the user. In this diagram, this step follows order fulfillment.
+- **Delivery Successful?**: A check to determine if the order was successfully delivered to the user. In this diagram, a failed delivery loops back to the payment received check.
+- **Order Closed in System**: The final step in the order processing flow, indicating that the order has been completed and no further action is required. In this diagram, this step occurs after successful delivery.
+
+## High-Density QA Ground Truth Summary
+The process begins when a user submits an order, which then proceeds to a payment received check. If payment is received ("Yes" branch), an order confirmation is sent, and then order fulfillment starts. If payment is not received ("No" branch), order fulfillment starts immediately. Order fulfillment then leads to the order being shipped. After shipping, a delivery success check is performed. If delivery is successful ("Yes" branch), the order is closed in the system, marking the end of the process. However, if delivery is not successful ("No" branch), the process loops back to the payment received check, creating an illogical loop where a failed delivery prompts a re-check of payment status. The diagram incorrectly initiates order fulfillment *before* payment verification on the "No" branch. The diagram also sends order confirmation *before* payment verification on the "Yes" branch. The "Delivery Successful?" node is a decision point that, upon a "No" outcome, incorrectly loops back to "Payment Received?" instead of a reshipment or problem handling step.

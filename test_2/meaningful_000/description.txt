@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the user registration and login flow of a typical web application. It outlines the steps involved in creating a new user account, verifying their email address, and authenticating them for login. The diagram serves as a visual representation of the process, aiding in understanding and documenting the user authentication system.
+
+## Overall Layout
+The diagram flows from left to right. It starts with user input and proceeds through a series of validation, creation, and authentication steps. The start node is "User Input: Email and Password," and the end nodes are "Return JWT Token to User" and "Return Error: Invalid Credentials."
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into four stages:
+1. Input and Validation: User provides credentials, which are validated.
+2. Account Creation: If valid, a new user account is created and email verification is initiated.
+3. Authentication: Existing users are authenticated.
+4. Token Generation or Error: Upon successful authentication or account activation, a JWT token is generated; otherwise, an error is returned.
+
+## Node-by-Node Description
+- **A / User Input: Email and Password**: The initial step where the user enters their email address and password. visible in diagram; no further repository context available.
+- **B / User Exists?**: A decision point to check if the user already exists in the system. visible in diagram; no further repository context available.
+- **D / Validate Input Format**: Validates the format of the email and password entered by the user. visible in diagram; no further repository context available.
+- **E / Valid Email?**: A decision point to check if the email format is valid. visible in diagram; no further repository context available.
+- **F / Hash Password**: Hashes the user's password for security. visible in diagram; no further repository context available.
+- **G / Return Error: Invalid Email Format**: Returns an error message if the email format is invalid. visible in diagram; no further repository context available.
+- **H / Create User Account**: Creates a new user account in the system. visible in diagram; no further repository context available.
+- **I / Send Verification Email**: Sends a verification email to the user's email address. visible in diagram; no further repository context available.
+- **J / User Clicks Verification Link**: The user clicks on the verification link in the email. visible in diagram; no further repository context available.
+- **K / Verify Email Address**: Verifies the user's email address. visible in diagram; no further repository context available.
+- **L / Activate Account**: Activates the user's account. visible in diagram; no further repository context available.
+- **C / Authenticate User**: Authenticates the user using their email and password. visible in diagram; no further repository context available.
+- **M / Successful Authentication?**: A decision point to check if the authentication was successful. visible in diagram; no further repository context available.
+- **N / Generate JWT Token**: Generates a JSON Web Token (JWT) for the user. visible in diagram; no further repository context available.
+- **O / Return Error: Invalid Credentials**: Returns an error message if the authentication fails. visible in diagram; no further repository context available.
+- **P / Return JWT Token to User**: Returns the JWT token to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User input is passed to check if the user exists.
+- `B -- Yes --> C`: If the user exists, proceed to authentication.
+- `B -- No --> D`: If the user does not exist, proceed to input format validation.
+- `D --> E`: Validates the input format of the email.
+- `E -- Yes --> F`: If the email format is valid, hash the password.
+- `E -- No --> G`: If the email format is invalid, return an error.
+- `F --> H`: After hashing the password, create a user account.
+- `H --> I`: Send a verification email to the user.
+- `I --> J`: The user clicks the verification link.
+- `J --> K`: Verify the email address.
+- `K --> L`: Activate the user account.
+- `C --> M`: Authenticate the user.
+- `M -- Yes --> N`: If authentication is successful, generate a JWT token.
+- `M -- No --> O`: If authentication fails, return an error.
+- `L --> N`: After activating the account, generate a JWT token.
+- `N --> P`: Return the JWT token to the user.
+
+## Repository Context & Terminology
+- **User Registration**: The process of creating a new user account in the system.
+- **Login**: The process of authenticating an existing user to grant access to the system.
+- **Email Verification**: A security measure to ensure that the user's email address is valid and belongs to them.
+- **Hashing**: A cryptographic function that converts a password into a secure, irreversible string of characters.
+- **JWT (JSON Web Token)**: A standard for securely transmitting information between parties as a JSON object. It is commonly used for authentication and authorization.
+- **Authentication**: The process of verifying the identity of a user.
+- **Credentials**: The information used to authenticate a user, typically a username and password.
+
+## High-Density QA Ground Truth Summary
+The user registration and login flow begins with the user providing their email and password (A). The system first checks if the user already exists (B). If the user exists (B -- Yes --> C), the system proceeds to authenticate the user (C). If the user does not exist (B -- No --> D), the system validates the input format (D) and checks if the email is valid (E). If the email is invalid (E -- No --> G), an error is returned (G). If the email is valid (E -- Yes --> F), the password is hashed (F), a user account is created (H), and a verification email is sent (I). The user clicks the verification link (J), the email address is verified (K), and the account is activated (L). After successful authentication (M -- Yes --> N) or account activation (L --> N), a JWT token is generated (N) and returned to the user (P). If authentication fails (M -- No --> O), an error is returned (O). The JWT token is a standard method for securely transmitting user authentication information, allowing the user to access protected resources. The process ends either with the successful return of a JWT token (P) or an error message indicating invalid credentials or email format (G, O).

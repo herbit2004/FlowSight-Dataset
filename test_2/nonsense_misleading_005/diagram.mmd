@@ -1,0 +1,15 @@
+graph TD
+    A[User Action] --> B{Check Permissions}
+    B -- Yes --> C[Access Resource];
+    B -- No --> D[Logout];
+    C --> E[Write Cache];
+    E --> F{Payment Required?};
+    F -- No --> G[Success];
+    F -- Yes --> H[Retry Payment];
+    H --> I[Payment Successful];
+    I --> J[Payment Failed];
+    J --> H;  
+    G --> K[Audit Log];
+    K --> L[User Request];
+    L --> A;
+    D --> A;

@@ -1,0 +1,44 @@
+graph TD
+    subgraph Order Service
+        ODS(Order Data Service) --> MQS(Message Queue Sender);
+        MQS -- Order Placed Event --> MQ;
+    end
+
+    subgraph Message Queue Infrastructure
+        MQ(Message Queue - Orders) -- Received Order Message --> OMS(Order Management Service);
+    end
+
+    subgraph Order Management Service
+        OMS --> OV(Order Validator);
+        OV -- Valid Order --> AQS(Allocation Queue Sender);
+        OV -- Invalid Order --> ERR(Error Handling);
+        AQS -- Allocation Request Event --> MQ2;
+    end
+
+    subgraph Allocation Microservice
+        MQ2(Message Queue - Allocations) -- Received Allocation Request --> AS(Allocation Service);
+        AS --> INVS(Inventory Service);
+        INVS -- Sufficient Inventory --> AS2;
+        INVS -- Insufficient Inventory --> BO(Back Order);
+        AS2 -- Inventory Allocated --> PQS(Payment Queue Sender);
+        BO -- Back Order Created --> NOT(Notification Service);
+        NOT -- Order Backordered Notification --> CUST(Customer);
+        PQS -- Payment Request Event --> MQ3;
+    end
+
+    subgraph Payment Processing
+        MQ3(Message Queue - Payments) -- Received Payment Request --> PS(Payment Service);
+        PS -- Payment Successful --> FUL(Fulfillment Service);
+        PS -- Payment Failed --> ERR2(Error Handling - Payment);
+        FUL -- Order Fulfilled --> INVS2(Inventory Service - Update);
+        INVS2 -- Inventory Updated --> CLS(Closure Service);
+        CLS -- Order Completed Event --> AR(Analytics Reporting);
+        ERR -- Logging & Alerting --> SUP(Support Team);
+        ERR2 -- Logging & Alerting --> SUP;
+    end
+
+    classDef mqueue fill:#f9f,stroke:#333,stroke-width:2px;
+    class MQ,MQ2,MQ3 mqueue;
+
+    classDef errorfill fill:#fbb,stroke:#333,stroke-width:2px;
+    class ERR,ERR2 errorfill;

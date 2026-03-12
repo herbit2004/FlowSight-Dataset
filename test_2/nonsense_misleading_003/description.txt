@@ -1,0 +1,41 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts a user request flow involving authentication, authorization, and data access. The diagram's purpose is to illustrate the steps taken to process a user request, but it contains deliberate errors and deviations from standard practices.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with a "User Request" node at the top and ends with a "User Response" node at the bottom. The flow includes decision points for authentication and authorization.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: User Request, Authentication, Authorization, Data Access, and User Response.
+
+## Node-by-Node Description
+- **A / User Request**: Represents the initiation of a user request. visible in diagram; no further repository context available.
+- **B / Is Authenticated?**: A decision point to determine if the user is authenticated. visible in diagram; no further repository context available.
+- **C / Access Resource**: Represents direct access to a resource without authentication. visible in diagram; no further repository context available.
+- **D / Logout**: Represents a logout action. visible in diagram; no further repository context available.
+- **E / Authorization Granted?**: A decision point to determine if the user is authorized. visible in diagram; no further repository context available.
+- **F / Write Cache**: Represents writing data to a cache. visible in diagram; no further repository context available.
+- **G / DB Read**: Represents reading data from a database. visible in diagram; no further repository context available.
+- **H / User Response**: Represents the final user response. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: A user request is sent for authentication.
+- `B -- No --> C`: If the user is not authenticated, they directly access a resource. This is a deliberate error; normally, authentication would be required.
+- `B -- Yes --> D`: If the user is authenticated, a logout action is triggered. This is a deliberate error; normally, authentication success would lead to authorization.
+- `D --> E`: After logout, authorization is checked. This is a deliberate error; authorization would normally precede logout.
+- `E -- Yes --> F`: If authorization is granted, data is written to the cache. This is a deliberate error; normally, authorization success would lead to resource access.
+- `E -- No --> G`: If authorization is not granted, data is read from the database.
+- `G --> D`: After reading from the database, the flow loops back to logout. This is a deliberate error; normally, authorization failure would lead to an error response.
+- `F --> H`: After writing to the cache, a user response is sent.
+
+## Repository Context & Terminology
+1. **Authentication**: The process of verifying a user's identity. In standard practice, successful authentication would lead to authorization or resource access, not logout. The diagram DEVIATES by routing successful authentication to a "Logout" node.
+2. **Authorization**: The process of determining if an authenticated user has permission to access a specific resource. In standard practice, authorization would follow authentication. The diagram DEVIATES by placing authorization *after* logout.
+3. **Logout**: The process of terminating a user's session. In standard practice, logout would be a separate action, not part of the core authentication/authorization flow. The diagram DEVIATES by making logout a central step after authentication.
+4. **Cache**: A temporary storage area for frequently accessed data. In standard practice, writing to the cache would occur after successful resource access. The diagram DEVIATES by writing to the cache after authorization is granted, which is mislabeled.
+5. **Database (DB) Read**: Retrieving data from a database. In standard practice, a DB read might occur if data is not in the cache or if authorization fails. The diagram DEVIATES by initiating a DB read upon authorization failure and looping back to logout.
+6. **Access Resource**: The action of allowing a user to use a particular resource. The diagram DEVIATES by allowing direct access to a resource when a user is not authenticated.
+7. **User Request**: An action initiated by a user to access a resource or perform a task.
+8. **User Response**: The output or feedback provided to the user after processing their request.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Request," which proceeds to an "Is Authenticated?" decision. If the user is not authenticated ("No" branch), they directly "Access Resource," a deliberate deviation from standard security practices. If the user is authenticated ("Yes" branch), the flow incorrectly goes to "Logout," another deliberate error. Following "Logout," the flow proceeds to "Authorization Granted?". If authorization is granted ("Yes" branch), the system performs a "Write Cache" operation, which is mislabeled and should be 'Access Resource'. If authorization is not granted ("No" branch), a "DB Read" is performed, and the flow loops back to "Logout," an illogical loop. Finally, after "Write Cache," a "User Response" is sent. The diagram deviates from standard authentication and authorization flows by reversing the order of operations, mislabeling nodes, and creating illogical loops. The initial "Is Authenticated?" check should normally lead to authorization upon success, not logout, and unauthenticated users should not be able to directly access resources.

@@ -1,0 +1,40 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the order processing workflow, specifically focusing on inventory management and transaction handling. The diagram illustrates the steps involved in receiving an order, checking inventory availability, deducting inventory, and committing the transaction, including compensation mechanisms for failed deductions.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with "Receive Order Request" at the top and flows downwards through decision points and processing steps, ultimately converging on "Commit Transaction via 'Inventory-Txn-Manager'".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: Order Reception, Inventory Check, Inventory Deduction, and Transaction Commitment.
+
+## Node-by-Node Description
+- **A / Receive Order Request**: Represents the initial step of receiving an order. visible in diagram; no further repository context available.
+- **B / Inventory Available?**: A decision point to check if the required inventory is available. visible in diagram; no further repository context available.
+- **C / Deduct Inventory in 'Warehouse-Service'**: Represents the action of deducting the required inventory from the 'Warehouse-Service'.
+- **D / Deduction Successful?**: A decision point to check if the inventory deduction was successful. visible in diagram; no further repository context available.
+- **E / Commit Transaction via 'Inventory-Txn-Manager'**: Represents the action of committing the transaction through the 'Inventory-Txn-Manager'.
+- **F / Compensation: Rollback to Initial State**: Represents the compensation action to rollback the system to its initial state if the deduction fails.
+- **G / Reject Order: Insufficient Stock**: Represents the action of rejecting the order due to insufficient stock.
+
+## Edges, Branches & Convergence
+- `A --> B`: Represents the flow from receiving an order request to checking inventory availability.
+- `B -- Yes --> C`: Represents the flow when inventory is available, leading to inventory deduction.
+- `B -- No --> G`: Represents the flow when inventory is not available, leading to order rejection.
+- `C --> D`: Represents the flow from deducting inventory to checking if the deduction was successful.
+- `D -- Yes --> E`: Represents the flow when the deduction is successful, leading to transaction commitment.
+- `D -- No --> F`: Represents the flow when the deduction fails, leading to compensation (rollback).
+- `F --> E`: Represents the convergence of the compensation path to the transaction commitment stage.
+
+## Repository Context & Terminology
+- **Order Request**: A request placed by a customer to purchase goods or services.
+- **Inventory Availability**: The state of having sufficient stock to fulfill an order.
+- **Warehouse-Service**: A service responsible for managing and tracking inventory levels.
+- **Deduct Inventory**: The process of reducing the inventory count after an order is placed.
+- **Deduction Successful**: The state of successfully reducing the inventory count.
+- **Inventory-Txn-Manager**: A component responsible for managing transactions related to inventory changes.
+- **Commit Transaction**: The process of permanently saving the changes made during a transaction.
+- **Compensation**: A mechanism to undo changes made during a failed transaction, ensuring data consistency.
+- **Rollback**: The process of reverting the system to its previous state.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Receive Order Request," which initiates the order processing workflow. The immediate next step is to check "Inventory Available?". If inventory is available ("Yes" branch), the process proceeds to "Deduct Inventory in 'Warehouse-Service'". If inventory is not available ("No" branch), the order is "Reject Order: Insufficient Stock," terminating the process. After attempting to deduct inventory, the system checks "Deduction Successful?". If the deduction was successful ("Yes" branch), the flow proceeds to "Commit Transaction via 'Inventory-Txn-Manager'". If the deduction failed ("No" branch), a "Compensation: Rollback to Initial State" is triggered to revert any partial changes. Both the successful deduction path and the compensation path converge at "Commit Transaction via 'Inventory-Txn-Manager'". The 'Warehouse-Service' is responsible for managing inventory levels, and the 'Inventory-Txn-Manager' ensures that inventory changes are handled transactionally, providing atomicity and consistency. The process ends with either a committed transaction or a rejected order due to insufficient stock.

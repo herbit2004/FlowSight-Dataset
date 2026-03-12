@@ -1,0 +1,27 @@
+flowchart LR
+
+i[Integration]-->pb[Build]
+
+as[(Artifact Store)]
+mut-.->|Artifact|as
+
+subgraph m[Mainstream]
+  pb-->mut[Unit Testing]
+  mut-->td[Deploy]
+  subgraph t[Test Environment]
+    td[Deploy]-->tft[Automated Function Testing]
+  end
+  subgraph p[Production Environment]
+    subgraph s[Staging Environment]
+      tft-->sd[Deploy]
+      sd-->sft[Automated Functional Testing]
+    end
+    sft-->pd[Deploy]
+    pd-->pft[Automated Functional Testing]
+  end
+  as-.->|Artifact|td
+  as-.->|Artifact|sd
+  as-.->|Artifact|pd
+end
+
+style s stroke-dasharray: 5 5

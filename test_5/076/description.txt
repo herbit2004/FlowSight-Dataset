@@ -1,0 +1,58 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the layered structure and data flow within a 5G network monitoring system. It illustrates the interaction between different software and hardware components, from the web interface to the RF and network layers. The diagram serves as a high-level overview of the system's architecture, aiding in understanding the relationships between its various parts.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) fashion, with the Web Interface Layer at the top and the RF & Network Layer at the bottom. It is hierarchically structured, showing the flow of data and commands between different layers. The start node is the Web Interface Layer, and the end nodes are the data files in the Data Storage Layer.
+
+## Subgraphs / Stages
+The diagram is divided into five distinct subgraphs, representing different layers of the system:
+- **Web Interface Layer**: Handles user interaction and API endpoints.
+- **Core Application Layer**: Contains the core logic and control components.
+- **Data Storage Layer**: Stores configuration and scan results.
+- **Hardware Layer**: Interfaces with the SDR platform and performs signal processing.
+- **RF & Network Layer**: Represents the physical RF components and network elements.
+
+## Node-by-Node Description
+- **Web UI / HTML/CSS/JavaScript**: Represents the web-based user interface, built using HTML, CSS, and JavaScript. visible in diagram; no further repository context available.
+- **REST API / Flask Backend**: Represents the REST API backend, implemented using the Flask framework. visible in diagram; no further repository context available.
+- **Config Manager / config.py**: Manages the system's configuration. In the repository this corresponds to the `config.py` file.
+- **GSCN Calculator / gscn_calculator.py**: Calculates the GSCN (Global Synchronization Channel Number). In the repository this corresponds to the `gscn_calculator.py` file.
+- **USRP Controller / usrp_controller.py**: Controls the USRP (Universal Software Radio Peripheral) device. In the repository this corresponds to the `usrp_controller.py` file.
+- **FPGA Bitstream / Custom Processing**: Represents the FPGA bitstream used for custom signal processing. visible in diagram; no further repository context available.
+- **RFNoC Blocks / SSB Detection**: Represents the RFNoC (Radio Frequency Network on Chip) blocks used for SSB (Synchronization Signal Block) detection. visible in diagram; no further repository context available.
+- **USRP X310 / SDR Platform**: Represents the USRP X310 SDR (Software Defined Radio) platform. visible in diagram; no further repository context available.
+- **Antenna / 5G NR Bands**: Represents the antenna used for receiving 5G NR (New Radio) bands. visible in diagram; no further repository context available.
+- **SSB Signals / n1/n3/n77/n78/n79**: Represents the SSB signals in the specified frequency bands. visible in diagram; no further repository context available.
+- **gNodeB / Base Station**: Represents the gNodeB base station. visible in diagram; no further repository context available.
+- **config.json / Settings**: Stores the system's configuration settings. visible in diagram; no further repository context available.
+- **detected_frequencies.json / Scan Results**: Stores the scan results, including detected frequencies. visible in diagram; no further repository context available.
+- **\*.dat files / Signal Data**: Stores the raw signal data. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Web Interface Layer --> Core Application Layer`: Represents the flow of configuration data from the web interface to the core application.
+- `REST API -.-> Config Manager`: Configuration data flows from the REST API to the Config Manager.
+- `Config Manager <--> GSCN Calculator`: Represents the interaction between the Config Manager and the GSCN Calculator.
+- `GSCN Calculator <--> USRP Controller`: Represents the interaction between the GSCN Calculator and the USRP Controller.
+- `USRP Controller --> Hardware Layer`: Represents the flow of commands from the USRP Controller to the Hardware Layer.
+- `FPGA Bitstream --> RFNoC Blocks`: Represents the flow of data from the FPGA Bitstream to the RFNoC Blocks.
+- `RFNoC Blocks --> USRP X310`: Represents the flow of data from the RFNoC Blocks to the USRP X310.
+- `Hardware Layer --> RF & Network Layer`: Represents the connection between the hardware and the RF network.
+- `USRP Controller -.-> Data Storage Layer`: Represents the flow of captured data and scan results from the USRP Controller to the Data Storage Layer.
+- `USRP Controller -.-> detected_frequencies.json`: The USRP Controller stores scan results in the `detected_frequencies.json` file.
+- `USRP Controller -.-> *.dat files`: The USRP Controller captures signal data and stores it in `.dat` files.
+- `RF & Network Layer --> Hardware Layer`: Represents the flow of RF signals from the network to the hardware.
+- `Antenna <--> SSB Signals`: Represents the interaction between the antenna and the SSB signals.
+- `SSB Signals <--> gNodeB`: Represents the interaction between the SSB signals and the gNodeB base station.
+
+## Repository Context & Terminology
+- **USRP (Universal Software Radio Peripheral)**: A software-defined radio (SDR) platform used for transmitting and receiving radio signals. The USRP X310 is a specific model.
+- **FPGA (Field-Programmable Gate Array)**: An integrated circuit that can be reconfigured after manufacturing, allowing for custom hardware acceleration.
+- **RFNoC (Radio Frequency Network on Chip)**: A framework for building SDR applications on USRP devices with FPGAs.
+- **SSB (Synchronization Signal Block)**: A set of signals used in 5G NR for cell search and synchronization.
+- **GSCN (Global Synchronization Channel Number)**: A unique identifier for a 5G NR cell.
+- **config.py**: Python file likely containing configuration parameters for the system.
+- **gscn_calculator.py**: Python file likely containing the logic for calculating the GSCN.
+- **usrp_controller.py**: Python file likely containing the logic for controlling the USRP device.
+
+## High-Density QA Ground Truth Summary
+The system begins with the Web Interface Layer, where a user interacts with the Web UI (HTML/CSS/JavaScript) and the REST API (Flask Backend). Configuration data flows from the REST API to the Core Application Layer's Config Manager (config.py). The Config Manager interacts with the GSCN Calculator (gscn_calculator.py) to determine the Global Synchronization Channel Number. The GSCN Calculator then communicates with the USRP Controller (usrp_controller.py) to configure the USRP device. The USRP Controller sends commands to the Hardware Layer, specifically the FPGA Bitstream for custom processing and the RFNoC Blocks for SSB Detection on the USRP X310 SDR Platform. The RF signals are received by the Antenna in the RF & Network Layer, which interacts with SSB Signals (n1/n3/n77/n78/n79) and the gNodeB Base Station. The USRP Controller captures data and stores scan results in `detected_frequencies.json` and raw signal data in `.dat` files within the Data Storage Layer. The `config.json` file in the Data Storage Layer holds the system's settings. The USRP, a key component, is controlled by the `usrp_controller.py` script, enabling the system to capture and process radio signals.

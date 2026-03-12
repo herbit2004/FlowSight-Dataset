@@ -1,0 +1,86 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the user registration and login flow of a system. It outlines the steps involved in user registration, authentication, and account verification, including error handling and security measures. The diagram serves as a visual representation of the system's authentication process, aiding in understanding and troubleshooting.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It is divided into subgraphs for user registration and login flow, database interactions, and monitoring and logging. The start node is "User" and the end nodes are "User", "Return Login Error", "Return Account Not Verified Error".
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **User Registration and Login Flow**: This subgraph outlines the main steps for user registration and login, including input validation, authentication, and token generation.
+- **Database Interactions**: This subgraph focuses on the interactions with the user database, including storing and retrieving user data.
+- **Monitoring and Logging**: This subgraph describes the logging and monitoring of registration and login attempts for security purposes.
+
+## Node-by-Node Description
+- **User**: Represents the user interacting with the system. visible in diagram; no further repository context available.
+- **Initiate Request**: Represents the user initiating a registration or login request. visible in diagram; no further repository context available.
+- **Registration Service**: Handles user registration requests. In the repository this corresponds to a service responsible for creating new user accounts.
+- **Authentication Service**: Handles user login requests and authenticates users. In the repository this corresponds to a service responsible for verifying user credentials.
+- **Validate Input**: Validates the user input during registration. visible in diagram; no further repository context available.
+- **Return Error to User**: Returns an error to the user if the input is invalid or an email already exists. In the repository this corresponds to a function that returns an error message to the user interface.
+- **Check Email Uniqueness**: Checks if the email address is already registered. visible in diagram; no further repository context available.
+- **Generate Salt and Hash Password**: Generates a salt and hashes the user's password for security. In the repository this corresponds to a function that uses a cryptographic algorithm to hash the password.
+- **Store User Data in DB**: Stores the user data in the database. In the repository this corresponds to a database write operation.
+- **Send Verification Email**: Sends a verification email to the user. In the repository this corresponds to a function that uses an email service to send the verification email.
+- **Await Email Verification**: Waits for the user to verify their email address. visible in diagram; no further repository context available.
+- **Update User Status in DB**: Updates the user's status in the database after email verification. In the repository this corresponds to a database write operation.
+- **Registration Complete**: Indicates that the registration process is complete. visible in diagram; no further repository context available.
+- **Validate Credentials**: Validates the user's credentials during login. visible in diagram; no further repository context available.
+- **Return Login Error**: Returns an error to the user if the credentials are invalid. In the repository this corresponds to a function that returns an error message to the user interface.
+- **Retrieve User Data from DB**: Retrieves the user data from the database. In the repository this corresponds to a database read operation.
+- **Account Verified?**: Checks if the user's account is verified. visible in diagram; no further repository context available.
+- **Return Account Not Verified Error**: Returns an error to the user if the account is not verified. In the repository this corresponds to a function that returns an error message to the user interface.
+- **Generate JWT Token**: Generates a JSON Web Token (JWT) for the user. In the repository this corresponds to a function that uses a JWT library to generate the token.
+- **Return JWT Token to User**: Returns the JWT token to the user. In the repository this corresponds to a function that returns the JWT token to the user interface.
+- **Deactivate Account - Await Reactivation**: Deactivates the user's account and awaits reactivation. visible in diagram; no further repository context available.
+- **User Database**: Represents the user database. In the repository this corresponds to the database where user data is stored.
+- **Log Registration Attempt**: Logs registration attempts. visible in diagram; no further repository context available.
+- **Log Login Attempt**: Logs login attempts. visible in diagram; no further repository context available.
+- **Centralized Logging System**: Represents the centralized logging system. visible in diagram; no further repository context available.
+- **Monitor for Anomalous Activity**: Monitors for anomalous activity. visible in diagram; no further repository context available.
+- **Alerting System**: Represents the alerting system. visible in diagram; no further repository context available.
+- **Security Team**: Represents the security team. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User --> Initiate Request`: The user initiates a registration or login request.
+- `Initiate Request -- Register --> Registration Service`: The user chooses to register.
+- `Initiate Request -- Login --> Authentication Service`: The user chooses to login.
+- `Registration Service --> Validate Input`: The registration service validates the user input.
+- `Validate Input -- Invalid Info --> Return Error to User`: The input is invalid, return an error.
+- `Validate Input -- Valid Info --> Check Email Uniqueness`: The input is valid, check email uniqueness.
+- `Check Email Uniqueness -- Email Exists --> Return Error to User`: The email already exists, return an error.
+- `Check Email Uniqueness -- Email Available --> Generate Salt and Hash Password`: The email is available, generate salt and hash the password.
+- `Generate Salt and Hash Password --> Store User Data in DB`: Store the user data in the database.
+- `Store User Data in DB --> Send Verification Email`: Send a verification email to the user.
+- `Send Verification Email --> Await Email Verification`: Await email verification.
+- `Await Email Verification -- User Verifies --> Update User Status in DB`: The user verifies their email.
+- `Await Email Verification -- Timeout --> Deactivate Account - Await Reactivation`: The user does not verify their email in time.
+- `Update User Status in DB --> Registration Complete`: The registration is complete.
+- `Registration Complete --> User`: Registration flow ends, returns to user.
+- `Authentication Service --> Validate Credentials`: The authentication service validates the user's credentials.
+- `Validate Credentials -- Invalid Credentials --> Return Login Error`: The credentials are invalid, return an error.
+- `Validate Credentials -- Valid Credentials --> Retrieve User Data from DB`: The credentials are valid, retrieve user data from the database.
+- `Retrieve User Data from DB --> Account Verified?`: Check if the account is verified.
+- `Account Verified? -- No --> Return Account Not Verified Error`: The account is not verified, return an error.
+- `Account Verified? -- Yes --> Generate JWT Token`: The account is verified, generate a JWT token.
+- `Generate JWT Token --> Return JWT Token to User`: Return the JWT token to the user.
+- `Return JWT Token to User --> User`: Login flow ends, returns to user.
+- `Return Login Error --> User`: Login error, returns to user.
+- `Return Error to User --> User`: Registration error, returns to user.
+- `Deactivate Account - Await Reactivation --> User`: Account deactivated, returns to user.
+- `Log Registration Attempt --> Centralized Logging System`: Logs registration attempts to the centralized logging system.
+- `Log Login Attempt --> Centralized Logging System`: Logs login attempts to the centralized logging system.
+- `Centralized Logging System --> Monitor for Anomalous Activity`: The centralized logging system feeds data to the monitor for anomalous activity.
+- `Monitor for Anomalous Activity --> Alerting System`: Anomalous activity triggers the alerting system.
+- `Alerting System --> Security Team`: The alerting system notifies the security team.
+
+## Repository Context & Terminology
+- **Registration Service**: A service responsible for handling user registration requests, including validating input, checking email uniqueness, and storing user data.
+- **Authentication Service**: A service responsible for authenticating users based on their credentials, typically involving verifying the password against a stored hash.
+- **JWT (JSON Web Token)**: A standard for securely transmitting information between parties as a JSON object. It is commonly used for authentication and authorization.
+- **Salt and Hash**: A security technique used to protect passwords by adding a random value (salt) to the password before hashing it, making it more difficult to crack.
+- **Database Interactions**: Refers to the operations performed on the user database, such as storing user data during registration and retrieving user data during login.
+- **Centralized Logging System**: A system that collects and stores logs from various components of the application, enabling monitoring and analysis of system behavior.
+- **Anomalous Activity**: Unusual or suspicious activity that may indicate a security threat or system malfunction.
+
+## High-Density QA Ground Truth Summary
+The user registration and login flow begins with the "User" initiating a request, which branches into either "Register" or "Login". For registration, the "Registration Service" validates input; invalid input leads to "Return Error to User", while valid input proceeds to "Check Email Uniqueness". If the email exists, an error is returned; otherwise, a salt and hash are generated for the password, and the user data is stored in the database. A verification email is sent, and upon successful verification, the user's status is updated in the database, completing registration. If the user does not verify their email within a timeout, the account is deactivated. For login, the "Authentication Service" validates credentials; invalid credentials result in "Return Login Error". Valid credentials lead to retrieving user data from the database and checking if the account is verified. Unverified accounts trigger "Return Account Not Verified Error", while verified accounts generate a JWT token, which is then returned to the user. The "Monitoring and Logging" subgraph tracks registration and login attempts, feeding data to a centralized logging system. This system monitors for anomalous activity, triggering alerts to the security team. The flow ends with the user receiving either a JWT token upon successful login, or an error message in case of registration or login failure, or account deactivation. The JWT token is a standard for securely transmitting user authentication information.

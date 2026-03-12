@@ -1,0 +1,52 @@
+## Diagram Type & Purpose
+This is an architecture diagram depicting the flow of requests through an API Gateway in a microservices architecture. It illustrates how the gateway handles rate limiting, authentication, authorization, and routing to backend services. The diagram serves as a high-level overview of the gateway's functionality and request processing pipeline.
+
+## Overall Layout
+The diagram has a top-to-bottom (TD) layout. It is hierarchically structured, with a Gateway Cluster at the top, followed by routing logic, and then Backend Services at the bottom. The start node is the API Gateway, and the end nodes are the individual backend services (User Service, Product Service, Payment Service), the Client Application, and the "Redirect to Auth Server" and "Return 403" error responses.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Gateway Cluster**: Encompasses the API Gateway, Rate Limiter, Authentication Service, and Authorization Service. This represents the core components responsible for handling incoming requests and enforcing security policies.
+- **Backend Services**: Includes the User Service, Product Service, and Payment Service. These are the individual microservices that handle specific business functionalities.
+
+## Node-by-Node Description
+- **API Gateway**: The entry point for all client requests. It handles routing, authentication, authorization, and rate limiting. visible in diagram; no further repository context available.
+- **Rate Limiter**: Enforces rate limits to prevent abuse and ensure fair usage of the API. visible in diagram; no further repository context available.
+- **Authentication Service**: Verifies the identity of the client by validating the JWT (JSON Web Token). visible in diagram; no further repository context available.
+- **Authorization Service**: Determines whether the authenticated client has the necessary permissions to access the requested resource. visible in diagram; no further repository context available.
+- **Route Request**: Routes the request to the appropriate backend service based on the URL path. visible in diagram; no further repository context available.
+- **Client Application**: The application making requests to the API. visible in diagram; no further repository context available.
+- **Redirect to Auth Server**: Redirects the client to the authentication server if the JWT is invalid. visible in diagram; no further repository context available.
+- **Return 403**: Returns a 403 Forbidden error if the client is not authorized to access the requested resource. visible in diagram; no further repository context available.
+- **User Service**: Handles requests related to user accounts. visible in diagram; no further repository context available.
+- **Product Service**: Handles requests related to product information. visible in diagram; no further repository context available.
+- **Payment Service**: Handles requests related to payment processing. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `API Gateway --> Rate Limiter`: All requests pass through the rate limiter.
+- `Rate Limiter -- Exceeds Limit? --> Return 403`: If the rate limit is exceeded, a 403 error is returned.
+- `Rate Limiter -- Under Limit --> API Gateway`: If the rate limit is not exceeded, the request proceeds to the API Gateway.
+- `API Gateway --> Authentication Service`: Requests are passed to the Authentication Service for JWT validation.
+- `Authentication Service -- Valid JWT? (Yes) --> Authorization Service`: If the JWT is valid, the request proceeds to the Authorization Service.
+- `Authentication Service -- Valid JWT? (No) --> Redirect to Auth Server`: If the JWT is invalid, the client is redirected to the authentication server.
+- `Authorization Service -- Authorized? (Yes) --> Route Request`: If the client is authorized, the request is routed to the appropriate backend service.
+- `Authorization Service -- Authorized? (No) --> Return 403`: If the client is not authorized, a 403 error is returned.
+- `Route Request -- /users/* --> User Service`: Requests with the `/users/*` path are routed to the User Service.
+- `Route Request -- /products/* --> Product Service`: Requests with the `/products/*` path are routed to the Product Service.
+- `Route Request -- /payments/* --> Payment Service`: Requests with the `/payments/*` path are routed to the Payment Service.
+- `User Service --> API Gateway`: Responses from the User Service are returned to the API Gateway.
+- `Product Service --> API Gateway`: Responses from the Product Service are returned to the API Gateway.
+- `Payment Service --> API Gateway`: Responses from the Payment Service are returned to the API Gateway.
+- `API Gateway --> Client Application`: The API Gateway returns the response to the client application.
+
+## Repository Context & Terminology
+- **API Gateway**: A reverse proxy that sits in front of backend services, providing a single entry point for clients and handling tasks such as routing, authentication, and rate limiting.
+- **Rate Limiter**: A mechanism to control the rate of requests to prevent abuse and ensure fair usage.
+- **Authentication Service**: A service that verifies the identity of a user or client.
+- **Authorization Service**: A service that determines whether an authenticated user or client has the necessary permissions to access a resource.
+- **JWT (JSON Web Token)**: A standard for securely transmitting information between parties as a JSON object. It is commonly used for authentication and authorization.
+- **Microservices**: An architectural style that structures an application as a collection of loosely coupled, independently deployable services.
+- **403 Forbidden**: An HTTP status code indicating that the server understands the request but refuses to authorize it.
+
+## High-Density QA Ground Truth Summary
+The API Gateway is the initial entry point for client requests. The request first hits the Rate Limiter, which checks if the request is within the allowed rate. If the rate is exceeded, a 403 Forbidden error is returned to the client. Otherwise, the request proceeds to the Authentication Service, which validates the JWT. If the JWT is invalid, the client is redirected to the Auth Server for authentication. If the JWT is valid, the request is passed to the Authorization Service to check if the client has the necessary permissions. If the client is not authorized, a 403 Forbidden error is returned. If the client is authorized, the Route Request component routes the request to the appropriate backend service based on the URL path, such as `/users/*` to the User Service, `/products/*` to the Product Service, or `/payments/*` to the Payment Service. Each backend service processes the request and returns a response to the API Gateway, which then forwards the response to the Client Application. The JWT, a JSON Web Token, is a critical component for authentication, ensuring secure transmission of information between the client and the API Gateway.

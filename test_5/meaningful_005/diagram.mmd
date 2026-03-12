@@ -1,0 +1,24 @@
+graph TD
+    subgraph Client Application
+    A[Client App] --> B{Is Data in Local Cache?};
+    end
+
+    B -- Yes --> C[Return Data from Cache];
+    B -- No --> D[Request Data from Origin Server];
+
+    subgraph Origin Server Cluster
+    D --> E[Origin Server];
+    E --> F[Database Read];
+    F --> G[Return Data to Origin Server];
+    G --> H[Origin Server Response];
+    H --> I[Update Distributed Cache];
+    end
+
+    I --> J[Send Cache Invalidation Message];
+    J -- Success --> K[Origin Server Response to Client];
+    J -- Failure --> L[Log Error and Retry Invalidation];
+    K --> M[Store Data in Local Cache];
+    M --> C;
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px;
+    L:::error

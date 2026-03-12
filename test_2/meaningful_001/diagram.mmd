@@ -1,0 +1,37 @@
+graph TD
+    subgraph Order Creation
+        A[User initiates order on storefront] --> B(Add items to cart);
+        B --> C{Cart valid?};
+        C -- Yes --> D(Calculate totals);
+        C -- No --> E[Display error, return to storefront];
+        D --> F(Apply promotions/discounts);
+        F --> G(Select shipping method);
+        G --> H(Enter shipping address);
+        H --> I(Review order);
+        I --> J{Confirm order?};
+        J -- Yes --> K[Order creation service];
+        J -- No --> B;
+    end
+
+    subgraph Payment Processing
+        K --> L(Submit payment details to payment gateway);
+        L --> M{Payment accepted?};
+        M -- Yes --> N[Update order status to 'Paid'];
+        M -- No --> O[Display payment error to user];
+        O --> L;
+        N --> P(Trigger invoice generation);
+        P --> Q(Send confirmation email to user);
+        Q --> R[Initiate fulfillment process];
+    end
+
+    subgraph Fraud Detection
+        L --> S(Send payment data to Fraud Detection Service);
+        S --> T{Potential fraud detected?};
+        T -- Yes --> U[Hold order for manual review];
+        T -- No --> N;
+        U --> V(Notify fraud investigation team);
+    end
+
+    classDef important fill:#f9f,stroke:#333,stroke-width:2px;
+    K:::important
+    N:::important

@@ -1,0 +1,8 @@
+graph TD
+    A[API: /deduct_inventory] --> B{Validate Request & Auth}
+    B -- Valid --> C[InventorySvc: Attempt Deduction]
+    C -- Success --> D[OrderSvc: Mark Item 'Deducted']
+    C -- Insufficient Stock --> E[Return: HTTP 409 Conflict]
+    D -- Success --> F[Return: HTTP 200 OK]
+    D -- Failure --> G[InventorySvc: Rollback Deduction]
+    G --> E

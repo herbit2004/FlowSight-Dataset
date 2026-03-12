@@ -1,0 +1,65 @@
+graph TD
+    subgraph User Registration and Login Flow
+    A[User] --> B{Initiate Request};
+    B -- Register --> C[Registration Service];
+    B -- Login --> L[Authentication Service];
+
+    C --> D{Validate Input};
+    D -- Invalid Info --> E[Return Error to User];
+    D -- Valid Info --> F[Check Email Uniqueness];
+
+    F -- Email Exists --> E;
+    F -- Email Available --> G[Generate Salt and Hash Password];
+    G --> H[Store User Data in DB];
+
+    H --> I[Send Verification Email];
+    I --> J[Await Email Verification];
+
+    J -- User Verifies --> K[Update User Status in DB];
+    J -- Timeout --> M[Deactivate Account - Await Reactivation];
+
+    K --> N[Registration Complete];
+    N --> A;
+    E --> A;
+    M --> A;
+
+    L --> O{Validate Credentials};
+    O -- Invalid Credentials --> P[Return Login Error];
+    O -- Valid Credentials --> Q[Retrieve User Data from DB];
+
+    Q --> R{Account Verified?};
+    R -- No --> S[Return Account Not Verified Error];
+    R -- Yes --> T[Generate JWT Token];
+
+    T --> U[Return JWT Token to User];
+    U --> A;
+    P --> A;
+    S --> A;
+
+    subgraph Database Interactions
+    H --> DB[(User Database)];
+    K --> DB;
+    Q --> DB;
+    end
+    end
+
+    subgraph Monitoring and Logging
+    style AA fill:#f9f,stroke:#333,stroke-width:2px
+    style BB fill:#f9f,stroke:#333,stroke-width:2px
+    C --> AA[Log Registration Attempt];
+    L --> BB[Log Login Attempt];
+    AA --> CC[Centralized Logging System];
+    BB --> CC;
+    end
+
+    CC --> DD[Monitor for Anomalous Activity];
+
+    classDef highlight fill:#ccf,stroke:#333,stroke-width:2px;
+    class C,L highlight;
+    classDef error fill:#fbb,stroke:#333,stroke-width:2px;
+    class E,P,S error;
+    classDef db fill:#ddf,stroke:#333,stroke-width:2px;
+    class DB db;
+
+    DD --> EE[Alerting System];
+    EE --> FF[Security Team];

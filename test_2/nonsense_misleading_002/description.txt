@@ -1,0 +1,62 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a user authentication and data retrieval process. It outlines the steps involved in validating a user, accessing protected resources, retrieving data, and handling cache hits and misses. The diagram serves as a visual representation of the system's workflow, but contains deliberate errors and deviations from standard practices.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with the "User" node at the top and flows downwards through validation, authorization, data retrieval, and cache handling. The end nodes are "User" and "Invalidate Session".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: User Validation, Authorization, Data Retrieval, Cache Handling, and Session Management.
+
+## Node-by-Node Description
+- **User**: Represents the user initiating the process.
+  visible in diagram; no further repository context available.
+- **Is Validated?**: A decision point to check if the user is validated.
+  visible in diagram; no further repository context available.
+- **Redirect to Success Page**: Represents redirecting the user to a success page.
+  visible in diagram; no further repository context available.
+- **Access Protected Resource**: Represents granting access to a protected resource.
+  visible in diagram; no further repository context available.
+- **Authorization Check**: Represents checking the user's authorization to access the resource.
+  visible in diagram; no further repository context available.
+- **Log Access Attempt**: Represents logging the user's access attempt.
+  visible in diagram; no further repository context available.
+- **Data Retrieval**: Represents retrieving data.
+  visible in diagram; no further repository context available.
+- **Write Cache**: Represents writing data to the cache.
+  visible in diagram; no further repository context available.
+- **Data Found in Cache?**: A decision point to check if the data is found in the cache.
+  visible in diagram; no further repository context available.
+- **Return Stale Data**: Represents returning stale data.
+  visible in diagram; no further repository context available.
+- **Notify Admin of Cache Miss**: Represents notifying the administrator of a cache miss.
+  visible in diagram; no further repository context available.
+- **Invalidate Session**: Represents invalidating the user's session.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User --> Is Validated?`: The user initiates the validation process.
+- `Is Validated? -- No --> Redirect to Success Page`: If the user is not validated, redirect to a success page.
+- `Is Validated? -- Yes --> Access Protected Resource`: If the user is validated, grant access to the protected resource.
+- `Access Protected Resource --> Authorization Check`: After accessing the protected resource, perform an authorization check.
+- `Authorization Check -- Denied --> Log Access Attempt`: If authorization is denied, log the access attempt.
+- `Log Access Attempt --> Is Validated?`: After logging the access attempt, loop back to the validation check.
+- `Authorization Check -- Allowed --> Data Retrieval`: If authorization is allowed, retrieve the data.
+- `Data Retrieval --> Write Cache`: After retrieving the data, write it to the cache.
+- `Write Cache --> Data Found in Cache?`: After writing to the cache, check if the data is found in the cache.
+- `Data Found in Cache? -- Yes --> Return Stale Data`: If the data is found in the cache, return stale data.
+- `Data Found in Cache? -- No --> Notify Admin of Cache Miss`: If the data is not found in the cache, notify the administrator of a cache miss.
+- `Notify Admin of Cache Miss --> Invalidate Session`: After notifying the administrator, invalidate the session.
+- `Invalidate Session --> User`: After invalidating the session, return to the user.
+- `Return Stale Data --> User`: After returning stale data, return to the user.
+
+## Repository Context & Terminology
+- **User**: A person or system interacting with the application.
+- **Validation**: The process of verifying the identity of a user. In standard practice, failure to validate would redirect to a login or error page, not a success page as shown in the diagram.
+- **Authorization**: The process of determining if a validated user has permission to access a specific resource.
+- **Cache**: A temporary storage location for frequently accessed data. The diagram shows "Write Cache" before checking if data is in the cache, which is counter-intuitive. Typically, one would "Read Cache" first.
+- **Cache Miss**: Occurs when requested data is not found in the cache. The diagram shows notifying the admin of a cache miss leading to session invalidation and returning to the user, which is an unusual flow.
+- **Stale Data**: Data in the cache that is outdated. The diagram returns stale data to the user without any intermediate steps.
+- **Session Invalidation**: The process of terminating a user's active session.
+
+## High-Density QA Ground Truth Summary
+The process begins with the "User" initiating a request, which leads to the "Is Validated?" decision point. If validation fails ("No" branch), the user is redirected to a "Redirect to Success Page", which is a counter-intuitive step. If validation succeeds ("Yes" branch), the flow proceeds to "Access Protected Resource" followed by an "Authorization Check". If authorization is denied, the "Log Access Attempt" node is triggered, which then loops back to the "Is Validated?" step, implying that logging causes re-validation. If authorization is allowed, "Data Retrieval" occurs, followed by "Write Cache". The diagram then checks "Data Found in Cache?". If the data is found ("Yes" branch), "Return Stale Data" is triggered, which then returns to the "User". If the data is not found ("No" branch), "Notify Admin of Cache Miss" is triggered, leading to "Invalidate Session", which then returns to the "User". The "Write Cache" step, instead of "Read Cache", is a deviation from standard caching practices. The flow from "Notify Admin of Cache Miss" to "Invalidate Session" and back to the "User" after a cache miss is also an unusual control flow.

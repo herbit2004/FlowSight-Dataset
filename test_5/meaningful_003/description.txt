@@ -1,0 +1,89 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of deducting inventory in an inventory service, including pre-deduction checks, database updates, and a rollback process in case of failures. The diagram outlines the steps involved in ensuring inventory accuracy and handling potential errors during order processing. It serves as a visual representation of the inventory deduction workflow and error handling mechanisms.
+
+## Overall Layout
+The diagram flows from top to bottom. It starts with an "Inventory Service: Deduct Request" node and ends with either "Reject Request: Out of Stock", "Alerting System: Investigate Failure", or "Publish InventoryRollbackCompletedEvent". The diagram includes a subgraph representing the rollback process.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Rollback Process**: This subgraph outlines the steps taken to revert inventory changes when an order confirmation fails. It includes receiving confirmation, checking for failure, publishing a rollback request, handling the rollback, locking and increasing inventory, releasing the lock, and publishing a completion event.
+
+## Node-by-Node Description
+- **A / Inventory Service: Deduct Request**: Represents the initial request to deduct inventory.
+  visible in diagram; no further repository context available.
+- **B / Pre-Deduction Checks**: Represents the checks performed before deducting inventory, such as verifying sufficient stock.
+  visible in diagram; no further repository context available.
+- **C / Reject Request: Out of Stock**: Represents the rejection of the request due to insufficient stock.
+  visible in diagram; no further repository context available.
+- **D / Lock Inventory Record**: Represents locking the inventory record to prevent concurrent modifications.
+  visible in diagram; no further repository context available.
+- **E / Deduct Inventory Qty from Database**: Represents the actual deduction of inventory quantity from the database.
+  visible in diagram; no further repository context available.
+- **F / Deduction Successful?**: Represents a decision point to check if the deduction was successful.
+  visible in diagram; no further repository context available.
+- **G / Release Inventory Lock**: Represents releasing the inventory lock after a successful deduction.
+  visible in diagram; no further repository context available.
+- **H / Publish InventoryDeductedEvent to Message Queue**: Represents publishing an event to a message queue indicating a successful inventory deduction.
+  visible in diagram; no further repository context available.
+- **I / Order Service: Confirmation Received**: Represents receiving confirmation from the order service. This is the entry point to the Rollback Process.
+  visible in diagram; no further repository context available.
+- **J / Release Inventory Lock**: Represents releasing the inventory lock after a failed deduction.
+  visible in diagram; no further repository context available.
+- **K / Compensate: Log Deduction Failure**: Represents logging the deduction failure for compensation purposes.
+  visible in diagram; no further repository context available.
+- **L / Publish InventoryDeductionFailedEvent**: Represents publishing an event indicating a failed inventory deduction.
+  visible in diagram; no further repository context available.
+- **M / Alerting System: Investigate Failure**: Represents alerting the system to investigate the failure.
+  visible in diagram; no further repository context available.
+- **N / Order Confirmation Failed?**: Represents a decision point to check if the order confirmation failed.
+  visible in diagram; no further repository context available.
+- **O / Publish InventoryRollbackRequest**: Represents publishing a request to rollback the inventory deduction.
+  visible in diagram; no further repository context available.
+- **P / Inventory Service: Rollback Handler**: Represents the handler responsible for rolling back the inventory deduction.
+  visible in diagram; no further repository context available.
+- **Q / Lock Inventory Record**: Represents locking the inventory record during the rollback process.
+  visible in diagram; no further repository context available.
+- **R / Increase Inventory Qty in Database**: Represents increasing the inventory quantity in the database during the rollback process.
+  visible in diagram; no further repository context available.
+- **S / Release Inventory Lock**: Represents releasing the inventory lock after the rollback process.
+  visible in diagram; no further repository context available.
+- **T / Publish InventoryRollbackCompletedEvent**: Represents publishing an event indicating the completion of the inventory rollback.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Represents the flow from the initial request to the pre-deduction checks.
+- `B -- Insufficient Stock? --> C`: Represents the branch taken when there is insufficient stock.
+- `B -- OK --> D`: Represents the branch taken when there is sufficient stock.
+- `D --> E`: Represents the flow from locking the inventory record to deducting the quantity.
+- `E --> F`: Represents the flow from deducting the quantity to checking if the deduction was successful.
+- `F -- Yes --> G`: Represents the branch taken when the deduction was successful.
+- `G --> H`: Represents the flow from releasing the inventory lock to publishing the deduction event.
+- `H --> I`: Represents the flow from publishing the deduction event to receiving order confirmation.
+- `F -- No --> J`: Represents the branch taken when the deduction was unsuccessful.
+- `J --> K`: Represents the flow from releasing the inventory lock to logging the deduction failure.
+- `K --> L`: Represents the flow from logging the deduction failure to publishing the deduction failed event.
+- `L --> M`: Represents the flow from publishing the deduction failed event to alerting the system.
+- `I --> N`: Represents the flow from receiving order confirmation to checking if the confirmation failed.
+- `N -- Yes --> O`: Represents the branch taken when the order confirmation failed.
+- `O --> P`: Represents the flow from publishing the rollback request to the rollback handler.
+- `P --> Q`: Represents the flow from the rollback handler to locking the inventory record.
+- `Q --> R`: Represents the flow from locking the inventory record to increasing the inventory quantity.
+- `R --> S`: Represents the flow from increasing the inventory quantity to releasing the inventory lock.
+- `S --> T`: Represents the flow from releasing the inventory lock to publishing the rollback completed event.
+
+## Repository Context & Terminology
+- **Inventory Service**: A service responsible for managing and tracking inventory levels.
+- **Deduct Request**: A request to reduce the quantity of an item in the inventory.
+- **Pre-Deduction Checks**: Validations performed before deducting inventory, such as checking for sufficient stock.
+- **Lock Inventory Record**: A mechanism to prevent concurrent modifications to the inventory record, ensuring data consistency.
+- **Deduct Inventory Qty**: The process of reducing the quantity of an item in the inventory database.
+- **Message Queue**: A communication system that allows different services to exchange messages asynchronously.
+- **Rollback Process**: A procedure to revert changes made to the inventory in case of a failure.
+- **Rollback Handler**: A component responsible for executing the rollback process.
+- **InventoryDeductedEvent**: An event published to indicate a successful inventory deduction.
+- **InventoryDeductionFailedEvent**: An event published to indicate a failed inventory deduction.
+- **InventoryRollbackRequest**: A request to initiate the rollback process for a specific inventory deduction.
+- **InventoryRollbackCompletedEvent**: An event published to indicate the successful completion of the inventory rollback process.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "Inventory Service: Deduct Request," initiating the inventory deduction process. The immediate next step involves "Pre-Deduction Checks" to ensure sufficient stock. If "Insufficient Stock?" is true, the process branches to "Reject Request: Out of Stock," terminating the deduction. Otherwise, if the stock is sufficient ("OK"), the process proceeds to "Lock Inventory Record" to prevent concurrent modifications. The "Deduct Inventory Qty from Database" node represents the core operation of reducing the inventory quantity. A key decision point is "Deduction Successful?". If "Yes", the "Release Inventory Lock" node unlocks the record, and an "InventoryDeductedEvent" is published to a message queue, triggering the "Rollback Process" subgraph upon receiving order confirmation. If "No", the process branches to "Release Inventory Lock", "Compensate: Log Deduction Failure", and "Publish InventoryDeductionFailedEvent", ultimately leading to "Alerting System: Investigate Failure". The "Rollback Process" subgraph is entered when "Order Confirmation Failed?" is "Yes", publishing an "InventoryRollbackRequest", which is handled to increase inventory quantity and publish an "InventoryRollbackCompletedEvent". The flowchart concludes with three possible end states: "Reject Request: Out of Stock", "Alerting System: Investigate Failure", and "Publish InventoryRollbackCompletedEvent", reflecting successful deduction, failure handling, and rollback completion, respectively. The use of events and message queues enables asynchronous communication and decoupling of services within the inventory management system.

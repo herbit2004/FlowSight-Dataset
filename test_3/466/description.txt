@@ -1,0 +1,73 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process flow of an AI-powered system that handles user messages, leverages a mixture-of-experts architecture, and incorporates user feedback to refine its responses. The diagram outlines the steps from receiving a user message to generating a final response and incorporating user ratings for continuous improvement. It serves as a visual representation of the system's logic and data flow.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It starts with a "User Message" node at the top and ends with "User Gives Thumbs Up/No Update Needed" and "User Gives Thumbs Down/Need to Update Expert Weights/Go Through Another API Request" nodes at the bottom. The diagram depicts a sequential process with branching based on authentication and data availability.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages:
+1. Message Reception and Authentication
+2. AI Agent Preparation
+3. Data Retrieval from Pinecone
+4. Mixture-of-Experts Processing
+5. Response Generation and Display
+6. User Feedback and Model Update
+
+## Node-by-Node Description
+- **UM / User Message**: Represents the initial user input message. visible in diagram; no further repository context available.
+- **API / RESTful APIs**: Represents the RESTful APIs that receive the user message. visible in diagram; no further repository context available.
+- **RME / Receive Message Event**: Represents the event triggered upon receiving a message. visible in diagram; no further repository context available.
+- **BP / Backend Processing**: Represents the initial backend processing of the message. visible in diagram; no further repository context available.
+- **Auth / Is User Authenticated?**: A decision node that checks if the user is authenticated. visible in diagram; no further repository context available.
+- **LMDB / Load Conversation History from MongoDB**: Loads the conversation history from MongoDB if the user is authenticated. visible in diagram; no further repository context available.
+- **LBrowser / Load Conversation History from Local Browser Storage**: Loads the conversation history from local browser storage if the user is not authenticated. visible in diagram; no further repository context available.
+- **Prep / Prepare AI Agent Input (message + system history + system prompt)**: Prepares the input for the AI agent, including the message, system history, and system prompt. visible in diagram; no further repository context available.
+- **AInput / AI Agent Input**: Represents the input to the AI agent. visible in diagram; no further repository context available.
+- **Orchestration / Agent Tool Orchestration**: Orchestrates the different tools used by the AI agent. visible in diagram; no further repository context available.
+- **UsePinecone / Use Data from Pinecone?**: A decision node that checks if data from Pinecone is to be used. visible in diagram; no further repository context available.
+- **QueryPinecone / Queries Vectorized Properties Data from Pinecone**: Queries vectorized properties data from Pinecone. visible in diagram; no further repository context available.
+- **NoPinecone / Proceed without RAG data from Pinecone**: Proceeds without using RAG (Retrieval-Augmented Generation) data from Pinecone. visible in diagram; no further repository context available.
+- **MOE / Mixture-of-Experts API Request Pipeline (6 specialized AI experts + 1 AI merger)**: Represents the mixture-of-experts API request pipeline, consisting of 6 specialized AI experts and 1 AI merger. visible in diagram; no further repository context available.
+- **Generate / Generate Final Response (text + charts)**: Generates the final response, including text and charts. visible in diagram; no further repository context available.
+- **APIResp / API Request Response**: Represents the API request response. visible in diagram; no further repository context available.
+- **Display / Display Response (Show Output in UI)**: Displays the response in the user interface. visible in diagram; no further repository context available.
+- **Rate / User Rates Response?**: A decision node that checks if the user rates the response. visible in diagram; no further repository context available.
+- **Update / User Gives Thumbs Down/Need to Update Expert Weights/Go Through Another API Request**: Indicates that the user gave a thumbs down, requiring an update to the expert weights and another API request. visible in diagram; no further repository context available.
+- **End / User Gives Thumbs Up/No Update Needed**: Indicates that the user gave a thumbs up, and no update is needed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `UM --> API`: User message is sent to RESTful APIs.
+- `API --> RME`: RESTful APIs trigger a message event.
+- `RME --> BP`: Message event triggers backend processing.
+- `BP --> Auth`: Backend processing leads to authentication check.
+- `Auth -- Yes --> LMDB`: If user is authenticated, load conversation history from MongoDB.
+- `Auth -- No --> LBrowser`: If user is not authenticated, load conversation history from local browser storage.
+- `LMDB --> Prep`: Conversation history from MongoDB is used to prepare AI agent input.
+- `LBrowser --> Prep`: Conversation history from local browser storage is used to prepare AI agent input.
+- `Prep --> AInput`: Prepared input is fed into the AI agent.
+- `AInput --> Orchestration`: AI agent input leads to agent tool orchestration.
+- `Orchestration --> UsePinecone`: Agent tool orchestration leads to a decision on whether to use data from Pinecone.
+- `UsePinecone -- Yes --> QueryPinecone`: If data from Pinecone is to be used, query vectorized properties data from Pinecone.
+- `UsePinecone -- No --> NoPinecone`: If data from Pinecone is not to be used, proceed without RAG data from Pinecone.
+- `QueryPinecone --> MOE`: Vectorized properties data from Pinecone is fed into the mixture-of-experts API request pipeline.
+- `NoPinecone --> MOE`: Proceeding without RAG data from Pinecone leads to the mixture-of-experts API request pipeline.
+- `QueryPinecone` and `NoPinecone` converge at `MOE`.
+- `MOE --> Generate`: The mixture-of-experts API request pipeline generates the final response.
+- `Generate --> APIResp`: The final response is sent as an API request response.
+- `APIResp --> Display`: The API request response is displayed in the user interface.
+- `Display --> Rate`: The displayed response prompts the user to rate the response.
+- `Rate -- Thumbs Down --> Update`: If the user gives a thumbs down, update expert weights and go through another API request.
+- `Update --> MOE`: The update process loops back to the mixture-of-experts API request pipeline.
+- `Rate -- Thumbs Up --> End`: If the user gives a thumbs up, no update is needed.
+
+## Repository Context & Terminology
+- **RESTful APIs**: Represent an architectural style for building web services. In this context, they handle incoming user messages.
+- **MongoDB**: A NoSQL database used to store conversation history for authenticated users.
+- **Pinecone**: A vector database used for storing and querying vectorized property data, enabling Retrieval-Augmented Generation (RAG).
+- **RAG (Retrieval-Augmented Generation)**: A technique that enhances the AI model's knowledge by retrieving relevant information from a database (Pinecone in this case) and incorporating it into the response generation process.
+- **Mixture-of-Experts (MoE)**: An ensemble learning technique where multiple specialized AI models (experts) are combined to produce a final output.
+- **AI Agent**: A software entity that perceives its environment through sensors and acts upon that environment through actuators. In this context, it processes user messages and generates responses.
+- **Expert Weights**: Parameters that determine the contribution of each expert in the Mixture-of-Experts model. These weights are adjusted based on user feedback.
+
+## High-Density QA Ground Truth Summary
+The process begins with a "User Message" sent via "RESTful APIs," triggering a "Receive Message Event" and initiating "Backend Processing." The system then checks "Is User Authenticated?". If "Yes," the "Conversation History" is loaded "from MongoDB"; otherwise, it's loaded "from Local Browser Storage." Both paths converge at "Prepare AI Agent Input," which combines the message, system history, and a system prompt. This input is then processed by the "AI Agent," followed by "Agent Tool Orchestration." Next, the system decides "Use Data from Pinecone?". If "Yes," it "Queries Vectorized Properties Data from Pinecone"; if "No," it proceeds "without RAG data from Pinecone." Both paths then feed into a "Mixture-of-Experts API Request Pipeline" consisting of 6 specialized AI experts and 1 AI merger. The pipeline generates a "Final Response" containing text and charts, which is sent as an "API Request Response" and displayed in the UI. The user then rates the response. A "Thumbs Up" ends the process, indicating "No Update Needed." A "Thumbs Down" triggers an update to the "Expert Weights" and initiates another API request, looping back to the "Mixture-of-Experts API Request Pipeline" for further refinement. Pinecone is used as a vector database to store vectorized property data, enabling Retrieval-Augmented Generation (RAG) to enhance the AI model's knowledge.

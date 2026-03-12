@@ -1,0 +1,41 @@
+graph TD
+    subgraph Order Processing System
+        A[Client: Order Submission] --> B(Order Ingestion API Gateway);
+        B -- Valid Request --> C{Order Validation Service};
+        C -- Valid Order --> D(Order Enrichment Engine);
+        D --> E(Kafka Topic: orders.enriched);
+        C -- Invalid Order --> F{Error Handling Service};
+        F --> G(Dead Letter Queue: orders.invalid);
+    end
+
+    subgraph Fulfillment Subsystem
+        H(Kafka Consumer: Order Processor);
+        H -.-> E;
+        H --> I{Inventory Check Service};
+        I -- Inventory Available --> J(Order Routing Service);
+        I -- Insufficient Inventory --> K{Inventory Backorder Service};
+        K --> L(DB: Backorder Queue);
+        J -- Standard Shipping --> M(Shipping Service: Standard);
+        J -- Expedited Shipping --> N(Shipping Service: Expedited);
+        M --> O(Outbound Logistics System);
+        N --> O;
+        O --> P{Notification Service};
+        P --> Q[Client: Order Update];
+    end
+
+    subgraph Payment Processing
+        R(Order Enrichment Engine) --> S(Payment Gateway Adapter);
+        S --> T{Fraud Detection System};
+        T -- Fraudulent Transaction --> U(Transaction Reversal);
+        T -- Non-Fraudulent Transaction --> V(Payment Capture);
+        V --> W(Accounting System);
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style Q fill:#f9f,stroke:#333,stroke-width:2px
+    classDef api fill:#ccf,stroke:#333,stroke-width:1px
+    classDef queue fill:#ffc,stroke:#333,stroke-width:1px
+    classDef service fill:#cff,stroke:#333,stroke-width:1px
+    class A,B,I,J,M,N,S api;
+    class E,G,L queue;
+    class C,D,F,H,K,O,P,T,U,V service;

@@ -1,0 +1,29 @@
+flowchart TB
+  WCore[OfficeIMO.Word]
+  subgraph Extensions
+    WHtml[OfficeIMO.Word.Html]
+    WMd[OfficeIMO.Word.Markdown]
+    WPdf[OfficeIMO.Word.Pdf]
+  end
+
+  %% External deps
+  Angle[AngleSharp]
+  AngleCss[AngleSharp.Css]
+  OfficeIMO.Markdown
+  Quest[QuestPDF]
+  Skia[SkiaSharp]
+
+  %% Core to extensions (install these when you need that capability)
+  WCore --> WHtml
+  WCore --> WMd
+  WCore --> WPdf
+
+  %% Extension uses
+  WMd --> WHtml
+
+  %% External dependencies per extension
+  WHtml --> Angle
+  WHtml --> AngleCss
+  WMd   --> OfficeIMO.Markdown
+  WPdf  --> Quest
+  WPdf  --> Skia

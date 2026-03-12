@@ -1,0 +1,28 @@
+graph TD
+    A[Inventory Service: Deduct Request] --> B{Pre-Deduction Checks};
+    B -- Insufficient Stock? --> C[Reject Request: Out of Stock];
+    B -- OK --> D[Lock Inventory Record];
+    D --> E[Deduct Inventory Qty from Database];
+    E --> F{Deduction Successful?};
+    F -- Yes --> G[Release Inventory Lock];
+    G --> H[Publish InventoryDeductedEvent to Message Queue];
+    H --> I[Order Service: Confirmation Received];
+    F -- No --> J[Release Inventory Lock];
+    J --> K[Compensate: Log Deduction Failure];
+    K --> L[Publish InventoryDeductionFailedEvent];
+    L --> M[Alerting System: Investigate Failure];
+
+    subgraph Rollback Process
+        I --> N{Order Confirmation Failed?};
+        N -- Yes --> O[Publish InventoryRollbackRequest];
+        O --> P[Inventory Service: Rollback Handler];
+        P --> Q[Lock Inventory Record];
+        Q --> R[Increase Inventory Qty in Database];
+        R --> S[Release Inventory Lock];
+        S --> T[Publish InventoryRollbackCompletedEvent];
+    end
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    C:::error
+    K:::error
+    M:::error

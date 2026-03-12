@@ -1,0 +1,53 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing flow in an e-commerce system. It outlines the steps from when a user initiates an order to when the order is placed in the fulfillment queue or the payment fails. The diagram serves as a visual representation of the order processing logic, aiding in understanding and potentially optimizing the system.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It depicts a sequential process with decision points. The start node is "User Initiates Order," and the end nodes are "Order Placed in Fulfillment Queue" and "Retry Payment Flow."
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: Order Initiation & Availability Check, Checkout & Discount Application, Payment Processing, and Order Completion/Failure Handling.
+
+## Node-by-Node Description
+- **A / User Initiates Order**: Represents the start of the order process when a user begins placing an order. visible in diagram; no further repository context available.
+- **B / Product Availability Check**: Represents a check to determine if the products in the order are available in stock. visible in diagram; no further repository context available.
+- **C / Add to Cart**: Represents the action of adding the selected products to the user's shopping cart. visible in diagram; no further repository context available.
+- **D / Notify User of Out of Stock**: Represents notifying the user that a product is out of stock. visible in diagram; no further repository context available.
+- **E / User Proceeds to Checkout**: Represents the user moving from the shopping cart to the checkout process. visible in diagram; no further repository context available.
+- **F / Promotions/Discounts Applied?**: Represents a check to determine if any promotions or discounts apply to the order. visible in diagram; no further repository context available.
+- **G / Calculate Discounted Total**: Represents the calculation of the order total after applying any applicable discounts. visible in diagram; no further repository context available.
+- **H / Calculate Order Total**: Represents the calculation of the final order total. visible in diagram; no further repository context available.
+- **I / Payment Gateway Integration**: Represents the integration with a payment gateway to process the payment. visible in diagram; no further repository context available.
+- **J / Payment Successful?**: Represents a check to determine if the payment was successful. visible in diagram; no further repository context available.
+- **K / Order Confirmation Email**: Represents sending an order confirmation email to the user. In the repository this corresponds to a function call to the email service.
+- **M / Order Placed in Fulfillment Queue**: Represents placing the order in the fulfillment queue for processing. In the repository this corresponds to adding the order to a message queue.
+- **L / Payment Failed Notification**: Represents notifying the user that the payment failed. visible in diagram; no further repository context available.
+- **N / Retry Payment Flow**: Represents initiating a flow to retry the payment. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User initiating an order triggers the product availability check.
+- `B -- Available --> C`: If the product is available, it is added to the cart.
+- `B -- Unavailable --> D`: If the product is unavailable, the user is notified.
+- `C --> E`: Adding to cart leads to the user proceeding to checkout.
+- `E --> F`: Proceeding to checkout triggers the promotions/discounts check.
+- `F -- Yes --> G`: If promotions/discounts apply, calculate the discounted total.
+- `F -- No --> H`: If no promotions/discounts apply, calculate the order total.
+- `G --> H`: The discounted total is used to calculate the order total. Convergence point.
+- `H --> I`: Calculating the order total leads to payment gateway integration.
+- `I --> J`: Payment gateway integration triggers a check for payment success.
+- `J -- Yes --> K`: If the payment is successful, send an order confirmation email.
+- `J -- No --> L`: If the payment fails, send a payment failed notification.
+- `K --> M`: Sending an order confirmation email leads to placing the order in the fulfillment queue.
+- `L --> N`: Sending a payment failed notification leads to retrying the payment flow.
+
+## Repository Context & Terminology
+- **Order**: A request to purchase goods or services.
+- **Product Availability Check**: Verifying that the requested products are in stock.
+- **Add to Cart**: Placing selected items into a virtual shopping cart.
+- **Checkout**: The process of finalizing an order, including payment and shipping information.
+- **Promotions/Discounts**: Price reductions or special offers applied to an order.
+- **Payment Gateway**: A service that processes online payments.
+- **Fulfillment Queue**: A list of orders waiting to be processed and shipped.
+- **Order Confirmation Email**: An automated email sent to the customer confirming their order.
+
+## High-Density QA Ground Truth Summary
+The order processing flow begins when a user initiates an order, triggering a product availability check. If the products are available, they are added to the cart, and the user proceeds to checkout. If a product is unavailable, the user is notified. At checkout, the system checks if any promotions or discounts apply. If so, the discounted total is calculated; otherwise, the standard order total is calculated. Both paths converge at the "Calculate Order Total" node. Next, the system integrates with a payment gateway to process the payment. If the payment is successful, an order confirmation email is sent, and the order is placed in the fulfillment queue, a message queue for processing and shipping. If the payment fails, the user receives a payment failed notification, and the system initiates a retry payment flow. The "Order Confirmation Email" node corresponds to a function call to the email service, while the "Order Placed in Fulfillment Queue" node corresponds to adding the order to a message queue. The process concludes with either the order being placed in the fulfillment queue or the payment retry flow being initiated.

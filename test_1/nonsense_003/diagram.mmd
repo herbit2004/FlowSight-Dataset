@@ -1,0 +1,14 @@
+graph TD
+    A[User Request] --> B{Database};
+    B -- Yes --> C[Cache Read];
+    B -- No --> D[Login];
+    C --> E[API Gateway];
+    D --> F[Authorization];
+    F --> D;
+    E --> G{Payment Required?};
+    G -- No --> H[Message Queue];
+    G -- Yes --> I[Payment Processing];
+    I --> J[Logout];
+    J --> K[Cache Write];
+    K --> L((End));
+    H --> A;

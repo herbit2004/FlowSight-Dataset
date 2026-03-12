@@ -1,0 +1,39 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of deducting inventory in a system, likely part of an e-commerce or supply chain management application. The diagram outlines the steps involved in receiving a deduction request, verifying inventory availability, publishing a message to Kafka, and handling the success or failure of the deduction. It serves as a visual representation of the business logic for inventory management.
+
+## Overall Layout
+The diagram flows from top to bottom (TD). It starts with receiving a deduction request and proceeds through a series of checks and actions, ultimately leading to either committing the deduction or rolling it back. The start node is "Receive Deduction Request" and the end nodes are "Commit Deducting Quantity" and "Rollback: Revert Deducting Quantity".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: Request Reception & Validation, Inventory Adjustment, Message Publication, and Deduction Finalization.
+
+## Node-by-Node Description
+- **A / Receive Deduction Request**: Represents the initial step where a request to deduct a certain quantity of an item from the inventory is received. visible in diagram; no further repository context available.
+- **B / Inventory Available?**: A decision point where the system checks if there is sufficient inventory to fulfill the deduction request. visible in diagram; no further repository context available.
+- **C / Increment Deducting Quantity**: If inventory is available, this node represents the action of incrementing a temporary or "deducting" quantity, likely to reserve the inventory. visible in diagram; no further repository context available.
+- **Z / Reject Request: Insufficient Inventory**: If inventory is not available, the deduction request is rejected due to insufficient inventory. visible in diagram; no further repository context available.
+- **D / Publish Deduct Message to Kafka**: After incrementing the deducting quantity, a message is published to a Kafka topic, indicating that a deduction is in progress. visible in diagram; no further repository context available.
+- **E / Deduction Succeeded?**: A decision point where the system checks if the deduction process was successful. visible in diagram; no further repository context available.
+- **F / Commit Deducting Quantity**: If the deduction was successful, the deducting quantity is committed, permanently reducing the inventory. visible in diagram; no further repository context available.
+- **G / Rollback: Revert Deducting Quantity**: If the deduction failed, the deducting quantity is rolled back, reverting the temporary reservation of inventory. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The deduction request is passed to the inventory availability check.
+- `B -- Yes --> C`: If inventory is available, the process proceeds to increment the deducting quantity.
+- `B -- No --> Z`: If inventory is not available, the request is rejected.
+- `C --> D`: After incrementing the deducting quantity, a message is published to Kafka.
+- `D --> E`: The deduction message is passed to the deduction success check.
+- `E -- Yes --> F`: If the deduction succeeded, the deducting quantity is committed.
+- `E -- No --> G`: If the deduction failed, the deducting quantity is rolled back.
+
+## Repository Context & Terminology
+- **Deduction Request**: A request to reduce the quantity of a specific item in the inventory.
+- **Inventory**: The stock of goods or items held by a business.
+- **Kafka**: A distributed streaming platform used for building real-time data pipelines and streaming applications.
+- **Commit**: To permanently apply a change, in this case, reducing the inventory quantity.
+- **Rollback**: To revert a change, in this case, restoring the inventory quantity to its previous state.
+- **Deducting Quantity**: A temporary quantity that is reserved for deduction, before the deduction is finalized.
+- **Insufficient Inventory**: A situation where the available inventory is less than the requested deduction quantity.
+
+## High-Density QA Ground Truth Summary
+The process begins with receiving a "Deduction Request". The system then checks "Inventory Available?". If 'Yes', the "Deducting Quantity" is incremented, reserving the inventory. If 'No', the "Request" is rejected due to "Insufficient Inventory". After incrementing, a "Deduct Message" is published to Kafka, enabling asynchronous processing and potential integration with other systems. Subsequently, the system verifies "Deduction Succeeded?". On a 'Yes' branch, the "Deducting Quantity" is committed, permanently reducing the inventory. On a 'No' branch, a "Rollback" occurs, reverting the "Deducting Quantity" to its original state, thus maintaining inventory accuracy. Kafka is used for asynchronous messaging, decoupling the inventory service from other services that might depend on deduction events. The process ensures that inventory is only reduced if the deduction succeeds, and that any temporary reservations are rolled back in case of failure, maintaining data consistency. The end states are either "Commit Deducting Quantity" or "Rollback: Revert Deducting Quantity".

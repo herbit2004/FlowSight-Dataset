@@ -1,0 +1,37 @@
+graph TD
+    subgraph Gateway Cluster
+        API_GW(API Gateway)
+        RATE_LIMIT(Rate Limiter)
+        AUTHN(Authentication Service)
+        AUTHZ(Authorization Service)
+    end
+
+    Client[Client Application] --> API_GW
+    API_GW --> RATE_LIMIT
+    RATE_LIMIT -- Exceeds Limit? --> DENY[Return 429]
+    RATE_LIMIT -- Under Limit --> API_GW
+
+    API_GW --> AUTHN
+    AUTHN -- Valid JWT? (Yes) --> AUTHZ
+    AUTHN -- Valid JWT? (No) --> REAUTH[Redirect to Auth Server]
+    AUTHZ -- Authorized? (Yes) --> ROUTER(Route Request)
+    AUTHZ -- Authorized? (No) --> DENY[Return 403]
+
+
+    subgraph Backend Services
+        USER_SVC(User Service)
+        PRODUCT_SVC(Product Service)
+        PAYMENT_SVC(Payment Service)
+    end
+
+    ROUTER -- /users/* --> USER_SVC
+    ROUTER -- /products/* --> PRODUCT_SVC
+    ROUTER -- /payments/* --> PAYMENT_SVC
+
+    USER_SVC --> API_GW
+    PRODUCT_SVC --> API_GW
+    PAYMENT_SVC --> API_GW
+    API_GW --> Client
+
+    classDef rateLimit fill:#f9f,stroke:#333,stroke-width:2px
+    class RATE_LIMIT rateLimit

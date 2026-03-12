@@ -1,0 +1,56 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the process of analyzing CVs for a job offer. It illustrates the data flow and processing steps involved in extracting information from CVs and job offers, and matching candidates to job requirements. The diagram serves as a visual representation of the workflow for candidate matching.
+
+## Overall Layout
+The diagram is laid out from left to right. It has a hierarchical structure with nested subgraphs representing different stages of the process. The start nodes are `job_offer_pdf` and `cv_pdf` documents, and the end node is `match_analyses`.
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **batch_analyze_cvs_for_job_offer**: The outermost subgraph, encompassing the entire process.
+- **prepare_job_offer**: Responsible for extracting and analyzing job offer information.
+- **process_cv_batch**: Contains multiple instances of the `process_cv` subgraph, representing the processing of multiple CVs.
+- **process_cv**: Represents the processing of a single CV.
+
+## Node-by-Node Description
+- **job_offer_pdf / Document**: Represents the job offer document in PDF format.
+- **extract_one_job_offer**: Extracts information from the job offer document.
+- **job_offer_pages / Page**: Represents the extracted pages from the job offer.
+- **analyze_job_requirements**: Analyzes the job requirements from the extracted pages.
+- **job_requirements / JobRequirements**: Represents the analyzed job requirements.
+- **cv_pdf / Document**: Represents the CV document in PDF format.
+- **extract_one_cv**: Extracts information from the CV document.
+- **cv_pages / Page**: Represents the extracted pages from the CV.
+- **analyze_one_cv**: Analyzes the extracted CV pages.
+- **candidate_profile / CandidateProfile**: Represents the candidate profile generated from the CV analysis.
+- **analyze_match**: Analyzes the match between the candidate profile and job requirements.
+- **match_analysis / CandidateMatch**: Represents the result of the match analysis for a single CV.
+- **match_analyses / CandidateMatch**: Represents the aggregated match analyses for all CVs.
+
+## Edges, Branches & Convergence
+- `job_offer_pdf --> extract_one_job_offer`: The job offer document is fed into the extraction process.
+- `extract_one_job_offer --> job_offer_pages`: Extracted pages are passed to the next stage.
+- `job_offer_pages --> analyze_job_requirements`: Extracted pages are analyzed to determine job requirements.
+- `analyze_job_requirements --> job_requirements`: Analyzed job requirements are stored.
+- `cv_pdf --> extract_one_cv`: The CV document is fed into the extraction process.
+- `extract_one_cv --> cv_pages`: Extracted pages are passed to the next stage.
+- `cv_pages --> analyze_one_cv`: Extracted pages are analyzed to generate a candidate profile.
+- `analyze_one_cv --> candidate_profile`: Candidate profile is generated.
+- `candidate_profile --> analyze_match`: Candidate profile is passed to the match analysis stage.
+- `job_requirements --> analyze_match`: Job requirements are passed to the match analysis stage.
+- `analyze_match --> match_analysis`: The result of the match analysis is generated.
+- `match_analysis --[0]--> match_analyses`: The match analysis result from the first CV is aggregated.
+- `match_analysis --[1]--> match_analyses`: The match analysis result from the second CV is aggregated.
+- `match_analysis --[2]--> match_analyses`: The match analysis result from the third CV is aggregated.
+
+## Repository Context & Terminology
+- **Document**: Represents a PDF document, either a CV or a job offer.
+- **Page**: Represents the extracted pages from a document.
+- **CandidateProfile**: Represents the profile of a candidate, generated from their CV.
+- **JobRequirements**: Represents the requirements for a job, extracted from the job offer.
+- **CandidateMatch**: Represents the result of matching a candidate to a job.
+- **extract_one_cv**: Function or module responsible for extracting data from a CV document.
+- **analyze_one_cv**: Function or module responsible for analyzing a single CV.
+- **analyze_match**: Function or module responsible for analyzing the match between a candidate and a job.
+
+## High-Density QA Ground Truth Summary
+The process begins with two input documents: `job_offer_pdf` and multiple `cv_pdf` documents. The `job_offer_pdf` document is processed by `extract_one_job_offer` to extract pages, which are then analyzed by `analyze_job_requirements` to determine the `job_requirements`. Each `cv_pdf` document undergoes a similar process: `extract_one_cv` extracts pages, and `analyze_one_cv` analyzes these pages to create a `candidate_profile`. The `job_requirements` are then fed into the `analyze_match` process along with each `candidate_profile`. The `analyze_match` process generates a `match_analysis` for each CV. These individual `match_analysis` results are then aggregated into a final `match_analyses` output. The diagram shows three parallel `process_cv` subgraphs, implying that multiple CVs are processed concurrently. The final `match_analyses` represents the overall matching results, potentially used for ranking or filtering candidates based on their suitability for the job. The `CandidateMatch` data structure likely contains a score or other metric indicating the degree of match between a candidate and the job requirements.

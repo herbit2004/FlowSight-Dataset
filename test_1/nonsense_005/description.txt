@@ -1,0 +1,51 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a user request processing flow. It outlines the steps involved in handling a user request, including cache checks, authorization, login, payment processing (if required), and finally generating a user response. The diagram serves as a high-level overview of the request lifecycle.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with a "User Request" node at the top and ends with a "User Response" node at the bottom. The flow branches based on cache hits and payment requirements.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: User Request, Authentication, API Gateway, Payment Processing, Data Handling, and User Response.
+
+## Node-by-Node Description
+- **User Request**: Represents the initial user request received by the system. visible in diagram; no further repository context available.
+- **Cache Hit?**: A decision node that checks if the requested data is available in the cache. visible in diagram; no further repository context available.
+- **Database Write**: Represents writing data to the database. In the repository this corresponds to a database operation to persist data.
+- **Authz**: Represents the authorization process. visible in diagram; no further repository context available.
+- **Login**: Represents the user login process. visible in diagram; no further repository context available.
+- **API Gateway**: Represents the API Gateway component. visible in diagram; no further repository context available.
+- **Payment Required?**: A decision node that checks if payment is required for the requested service. visible in diagram; no further repository context available.
+- **Process Payment**: Represents the payment processing step. visible in diagram; no further repository context available.
+- **Message Queue**: Represents a message queue for asynchronous processing. visible in diagram; no further repository context available.
+- **Cache Write**: Represents writing data to the cache. visible in diagram; no further repository context available.
+- **Search Index**: Represents updating the search index. visible in diagram; no further repository context available.
+- **Logout**: Represents the user logout process. visible in diagram; no further repository context available.
+- **User Response**: Represents the final response sent back to the user. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+`User Request --> Cache Hit?`: The user request is passed to the cache check.
+`Cache Hit? -- Yes --> Database Write`: If there is a cache hit, data is written to the database.
+`Cache Hit? -- No --> Authz`: If there is a cache miss, the request proceeds to authorization.
+`Authz --> Login`: After authorization, the user needs to login.
+`Login --> API Gateway`: After login, the request is routed through the API Gateway.
+`API Gateway --> Payment Required?`: The API Gateway checks if payment is required.
+`Payment Required? -- Yes --> Process Payment`: If payment is required, the payment is processed.
+`Payment Required? -- No --> Message Queue`: If payment is not required, the request is sent to a message queue.
+`Process Payment --> Cache Write`: After payment is processed, data is written to the cache.
+`Cache Write --> API Gateway`: After writing to the cache, the flow loops back to the API Gateway.
+`Message Queue --> Search Index`: The message queue triggers an update to the search index.
+`Search Index --> Logout`: After updating the search index, the user is logged out.
+`Logout --> User Response`: After logout, the user response is generated.
+`Database Write --> User Request`: After writing to the database, the flow loops back to the user request.
+
+## Repository Context & Terminology
+- **User Request**: A request initiated by a user to access a service or resource. The diagram shows a loop back to User Request after Database Write, which is an error.
+- **Cache Hit**: When the requested data is found in the cache. The diagram incorrectly routes a cache hit to a database write.
+- **Cache Miss**: When the requested data is not found in the cache. The diagram correctly routes a cache miss to authorization.
+- **Authz (Authorization)**: The process of verifying if a user has the necessary permissions to access a resource. The diagram shows Login preceding Authz, which is an error.
+- **Login**: The process of authenticating a user. The diagram shows Logout preceding User Response, which is an error.
+- **API Gateway**: A service that acts as a single entry point for all API requests. The diagram shows a loop from Cache Write back to the API Gateway, which is unusual.
+- **Message Queue**: A service that allows asynchronous communication between different parts of a system. The diagram shows the Message Queue feeding the Search Index, which is an error.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Request," which is immediately evaluated by "Cache Hit?". A 'Yes' branch (incorrectly) leads to "Database Write" and then back to "User Request," forming a loop. A 'No' branch from "Cache Hit?" proceeds to "Authz" and then "Login," after which the request reaches the "API Gateway." The "API Gateway" then checks "Payment Required?". If 'Yes', the flow goes to "Process Payment," then "Cache Write," and loops back to the "API Gateway." If 'No', the flow goes to "Message Queue," then (incorrectly) to "Search Index," then (incorrectly) to "Logout," and finally to "User Response." The "Database Write" node incorrectly loops back to the "User Request" node. The "Message Queue" incorrectly feeds into the "Search Index." The "Login" and "Logout" processes are inverted in the flow. The "Cache Hit?" condition is inverted, leading to a database write on a cache hit instead of a cache miss. The payment processing step is shown after the API Gateway, which is unusual for systems requiring payment before service access.

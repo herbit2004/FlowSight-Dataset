@@ -1,0 +1,87 @@
+## Diagram Type & Purpose
+This is an architecture diagram and flowchart illustrating the end-to-end process of an e-commerce order processing system. It depicts the flow of requests and data between various services and databases, from the user interface to order confirmation and monitoring. The diagram serves as a high-level overview of the system's architecture and the interactions between its components.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured, starting with the User Device and progressing through Infrastructure, Databases, Rate Limiting and Monitoring. The start node is the User App, and the end nodes are Data Lake, Prometheus, and the User App (via order confirmation and error handling).
+
+## Subgraphs / Stages
+The diagram contains the following explicit subgraphs:
+- **User Device**: Represents the user's interface with the system.
+- **Infrastructure**: Encompasses the core services and components that handle requests, authentication, routing, and data processing.
+- **Databases**: Contains the various databases used to store information about inventory, customers, products, payments, and orders.
+- **Rate Limiting**: Manages the rate of requests to prevent abuse and ensure system stability.
+- **Monitoring**: Tracks the system's performance and handles errors.
+
+## Node-by-Node Description
+- **User App**: Represents the application used by the user to interact with the e-commerce system.
+- **API Gateway**: Acts as the entry point for all requests from the User App, routing them to the appropriate services.
+- **Authentication Service**: Verifies the identity of the user making the request.
+- **Request Routing**: Directs the request to the appropriate service based on the user's identity and the request type.
+- **Error Response: 401**: Indicates an authentication failure (Unauthorized).
+- **Inventory Service**: Manages the inventory of products.
+- **Customer Profile Service**: Manages customer profile information.
+- **Product Service**: Provides details about products.
+- **Inventory DB**: Database storing inventory information.
+- **Customer DB**: Database storing customer profile information.
+- **Cache / Redis**: Caching layer for frequently accessed data.
+- **Recommendations Service**: Provides product recommendations to the user.
+- **Pricing Service**: Calculates the dynamic price of products.
+- **Shipping Service**: Determines shipping options and costs.
+- **Payment Service**: Handles payment processing.
+- **Transaction Service**: Manages transactions.
+- **Payment DB**: Database storing payment information.
+- **Order Service**: Creates and manages orders.
+- **Order DB**: Database storing order information.
+- **Data Lake**: Repository for storing large volumes of data for analytics.
+- **Analytics Service**: Analyzes data to provide insights into user behavior and system performance.
+- **Notification Service**: Sends notifications to the user, such as order confirmations.
+- **Error Handling Service**: Handles errors that occur during the order processing flow.
+- **Prometheus**: Monitoring system that collects and analyzes metrics.
+- **Rate Limiter**: Limits the number of requests from a user within a given time period.
+- **Error 429**: Indicates that the user has exceeded the rate limit (Too Many Requests).
+- **Product DB**: Database storing product information.
+- **Determine Shipping Options**: visible in diagram; no further repository context available.
+- **Transaction DB**: visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User App --> API Gateway`: User App sends requests to the API Gateway.
+- `API Gateway --> Authentication Service`: API Gateway forwards the request to the Authentication Service for authentication.
+- `Authentication Service -- Valid User? --> Request Routing`: If the user is valid, the request is routed to the appropriate service.
+- `Authentication Service -- Invalid User --> Error Response: 401`: If the user is invalid, an error response is returned.
+- `Request Routing --> Inventory Service`: Request Routing forwards the request to the Inventory Service.
+- `Request Routing --> Customer Profile Service`: Request Routing forwards the request to the Customer Profile Service.
+- `Inventory Service -- Check Stock --> Product Service`: Inventory Service checks the stock of the product using the Product Service.
+- `Inventory Service -- Check Stock --> Inventory DB`: Inventory Service checks the stock of the product in the Inventory DB.
+- `Customer Profile Service -- Get Profile --> Customer DB`: Customer Profile Service retrieves the customer profile from the Customer DB.
+- `Product Service -- Get Product Details --> Recommendations Service`: Product Service provides product details to the Recommendations Service.
+- `Recommendations Service -- Fetch Similar Items --> Pricing Service`: Recommendations Service fetches similar items and passes them to the Pricing Service.
+- `Pricing Service -- Calculate Dynamic Price --> Shipping Service`: Pricing Service calculates the dynamic price and passes it to the Shipping Service.
+- `Shipping Service -- Determine Shipping Options --> Payment Service`: Shipping Service determines shipping options and passes them to the Payment Service.
+- `Payment Service -- Initiate Payment --> Transaction Service`: Payment Service initiates the payment process with the Transaction Service.
+- `Transaction Service -- Success? --> Order Service`: If the transaction is successful, the Order Service is invoked.
+- `Transaction Service -- Failure? --> Transaction DB`: If the transaction fails, the failure is logged in the Transaction DB.
+- `Order Service -- Create Order --> Order DB`: Order Service creates the order and stores it in the Order DB.
+- `Order Service -- Create Order --> Notification Service`: Order Service creates the order and sends a notification to the Notification Service.
+- `Transaction Service -- Log Transaction --> Analytics Service`: Transaction Service logs the transaction to the Analytics Service.
+- `Analytics Service --> Data Lake`: Analytics Service sends data to the Data Lake.
+- `Notification Service -- Send Order Confirmation --> User App`: Notification Service sends an order confirmation to the User App.
+- `Error Handling Service --> User App`: Error Handling Service sends an error message to the User App.
+- `API Gateway --> Rate Limiter`: API Gateway sends requests to the Rate Limiter.
+- `Rate Limiter -- Exceeds Limit? --> Error 429`: If the rate limit is exceeded, an error response is returned.
+- `Error 429 --> User App`: The Error 429 response is sent to the User App.
+- `Customer Profile Service --> Cache / Redis`: Customer Profile Service retrieves data from the Cache / Redis.
+- `Analytics Service --> Prometheus`: Analytics Service sends data to Prometheus.
+- `Notification Service --> Prometheus`: Notification Service sends data to Prometheus.
+- `Error Handling Service --> Prometheus`: Error Handling Service sends data to Prometheus.
+
+## Repository Context & Terminology
+- **API Gateway**: A reverse proxy that routes requests to different backend services.
+- **Authentication Service**: A service that verifies the identity of users.
+- **Rate Limiting**: A technique used to control the rate of requests to prevent abuse and ensure system stability.
+- **Inventory Service**: A service that manages the inventory of products.
+- **Customer Profile Service**: A service that manages customer profile information.
+- **Data Lake**: A centralized repository for storing large volumes of structured and unstructured data.
+- **Prometheus**: An open-source monitoring and alerting toolkit.
+
+## High-Density QA Ground Truth Summary
+The process begins with the User App sending a request to the API Gateway. The API Gateway then forwards the request to the Authentication Service to validate the user. If the user is valid, the request is routed via Request Routing to either the Inventory Service or the Customer Profile Service. The Inventory Service checks product stock by querying both the Product Service and the Inventory DB. The Customer Profile Service retrieves customer data, potentially from a Cache/Redis layer, and the Customer DB. Product details are fetched by the Recommendations Service, which then passes data to the Pricing Service for dynamic price calculation. The Shipping Service determines shipping options, and the Payment Service initiates payment processing through the Transaction Service. If the transaction is successful, the Order Service creates an order, storing it in the Order DB and triggering a notification to the User App via the Notification Service. A failed transaction logs to the Transaction DB. All transactions are logged to the Analytics Service, which feeds data into the Data Lake for analysis and Prometheus for monitoring. If the Authentication Service deems the user invalid, an Error Response 401 is returned. The Rate Limiter checks for request limits; exceeding them results in an Error 429 being sent to the User App. The Notification Service, Error Handling Service, and Analytics Service all send data to Prometheus for monitoring. The process ultimately concludes with either an order confirmation or an error message being sent back to the User App, or data being sent to the Data Lake and Prometheus.

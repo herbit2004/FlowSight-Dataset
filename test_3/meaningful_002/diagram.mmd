@@ -1,0 +1,39 @@
+graph TD
+    subgraph User Interaction
+        A[User Query Input] --> B(Query Understanding & Intent Extraction);
+        B --> C{Is Personalized Search Enabled?};
+    end
+
+    C -- Yes --> D[User Profile Retrieval];
+    C -- No --> E[Keyword Expansion & Synonym Generation];
+
+    D --> E;
+
+    E --> F[Pre-Filtered Product Index Search];
+
+    subgraph Candidate Ranking & Filtering
+        F --> G{Apply Ranking Model: Relevance Score};
+        G --> H[Ranked Product List];
+        H --> I[Filter: Inventory Availability];
+        I --> J[Filter: Vendor Rating Threshold];
+        J --> K[Filter: Price Range Constraints];
+    end
+
+    subgraph Recommendation Engine
+        K -- Remaining Products --> L{Run Collaborative Filtering};
+        L --> M[Generate Recommendation Candidates];
+        M --> N{Apply Ranking Model: Predicted Purchase Probability};
+    end
+
+    N --> O[Combine Search Results & Recommendations];
+    O --> P{Apply Diversity & Serendipity Boost};
+    P --> Q[Final Ranked Product List];
+
+    subgraph Output & Logging
+        Q --> R[Format & Present Results to User];
+        Q --> S[Log Search & Recommendation Event];
+        S --> T[Data Warehouse for Analytics];
+    end
+
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px;
+    class B,G,N highlight

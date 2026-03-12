@@ -1,0 +1,15 @@
+graph TD
+    A[User] --> B{Is Validated?};
+    B -- No --> C[Redirect to Success Page];
+    B -- Yes --> D[Access Protected Resource];
+    D --> E[Authorization Check];
+    E -- Denied --> F[Log Access Attempt];
+    F --> B;
+    E -- Allowed --> G[Data Retrieval];
+    G --> H[Write Cache];
+    H --> I{Data Found in Cache?};
+    I -- Yes --> J[Return Stale Data];
+    I -- No --> K[Notify Admin of Cache Miss];
+    K --> L[Invalidate Session];
+    L --> A;
+    J --> A;

@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the data flow and dependencies between different data entities in a customer analytics system. It illustrates how raw customer data is transformed and processed to generate customer insights, such as risk assessment, lifetime value, and customer segmentation, ultimately feeding into a 360-degree customer view.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with raw data sources and flows through a series of transformations and aggregations, culminating in the "customer_360" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into four stages: Raw Data (stg_customers, fact_orders, fact_payments), Data Transformation (dim_customers), Analytics & Insights (at_risk_customers, churn_risk_score, customer_lifetime_value, customer_segments), and Customer 360 View (customer_360).
+
+## Node-by-Node Description
+- **node1 / customer_segments**: Represents the segmentation of customers based on various attributes. visible in diagram; no further repository context available.
+- **node2 / customer_360**: Represents a comprehensive view of the customer, aggregating information from various sources. visible in diagram; no further repository context available.
+- **node3 / stg_customers**: Represents the staging area for raw customer data. visible in diagram; no further repository context available.
+- **node4 / dim_customers**: Represents the customer dimension table, containing cleaned and transformed customer data. visible in diagram; no further repository context available.
+- **node5 / at_risk_customers**: Represents the identification of customers who are at risk of churn. visible in diagram; no further repository context available.
+- **node6 / churn_risk_score**: Represents the score indicating the likelihood of a customer churning. visible in diagram; no further repository context available.
+- **node7 / fact_orders**: Represents the fact table containing customer order information. visible in diagram; no further repository context available.
+- **node8 / fact_payments**: Represents the fact table containing customer payment information. visible in diagram; no further repository context available.
+- **node9 / customer_lifetime_value**: Represents the predicted lifetime value of a customer. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `node1 --> node2`: Customer segments contribute to the customer 360 view.
+- `node3 --> node4`: Raw customer data from the staging area is transformed into the customer dimension table.
+- `node4 --> node9`: Customer dimension data is used to calculate customer lifetime value.
+- `node4 --> node5`: Customer dimension data is used to identify at-risk customers.
+- `node4 --> node6`: Customer dimension data is used to calculate churn risk score.
+- `node4 --> node2`: Customer dimension data contributes to the customer 360 view.
+- `node5 --> node6`: At-risk customer information is used to refine the churn risk score.
+- `node5 --> node2`: At-risk customer information contributes to the customer 360 view.
+- `node6 --> node2`: Churn risk score contributes to the customer 360 view.
+- `node7 --> node9`: Customer order data is used to calculate customer lifetime value.
+- `node7 --> node5`: Customer order data is used to identify at-risk customers.
+- `node8 --> node9`: Customer payment data is used to calculate customer lifetime value.
+- `node9 --> node1`: Customer lifetime value is used to determine customer segments.
+- `node9 --> node6`: Customer lifetime value is used to refine the churn risk score.
+- `node9 --> node2`: Customer lifetime value contributes to the customer 360 view.
+
+## Repository Context & Terminology
+- **stg_customers**: Staging table for customer data, typically the first landing point for raw data extracted from source systems.
+- **dim_customers**: Customer dimension table, a core component of the data warehouse, containing descriptive attributes of customers.
+- **fact_orders**: Fact table recording customer order transactions, used for sales and customer behavior analysis.
+- **fact_payments**: Fact table recording customer payment transactions, used for financial and risk analysis.
+- **customer_lifetime_value (CLV)**: A prediction of the net profit attributed to the entire future relationship with a customer.
+- **churn_risk_score**: A metric indicating the probability of a customer discontinuing their relationship with the business.
+- **customer_360**: A holistic view of the customer, aggregating data from all available sources to provide a complete understanding of their interactions and preferences.
+
+## High-Density QA Ground Truth Summary
+The process begins with `stg_customers`, the staging area for raw customer data, which is immediately transformed into `dim_customers`, the customer dimension table. This transformation is a crucial first step. `dim_customers` then feeds into multiple downstream processes: calculating `customer_lifetime_value`, identifying `at_risk_customers`, and determining the `churn_risk_score`. `fact_orders` and `fact_payments` also contribute to calculating `customer_lifetime_value` and identifying `at_risk_customers`. The `customer_lifetime_value` is then used to determine `customer_segments` and refine the `churn_risk_score`. All these elements, including `dim_customers`, `at_risk_customers`, `churn_risk_score`, `customer_lifetime_value`, and `customer_segments`, converge to create the `customer_360` view, providing a comprehensive understanding of each customer. The `churn_risk_score` is refined using both `at_risk_customers` and `customer_lifetime_value`. The ultimate goal is to build a complete `customer_360` profile, leveraging data from various sources and analytical processes. This 360 view is essential for personalized marketing, targeted interventions, and improved customer relationship management.

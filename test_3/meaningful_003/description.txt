@@ -1,0 +1,64 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the inventory deduction and rollback process within an order processing system. It outlines the steps involved in deducting inventory upon receiving an order request, handling payment success or failure, and managing inventory rollback in case of payment issues. The diagram serves as a visual representation of the workflow, aiding in understanding and troubleshooting the inventory management process.
+
+## Overall Layout
+The diagram's primary direction is left to right (LR). It depicts a linear flow with branching decision points. The start node is "Receive Order Request" and the end node is "Complete Order Processing."
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Inventory Deduction & Rollback".
+
+## Node-by-Node Description
+- **A / Receive Order Request**: Represents the initial step where an order request is received by the system. visible in diagram; no further repository context available.
+- **B / Check Inventory Availability**: Represents the process of verifying if the requested inventory is available. visible in diagram; no further repository context available.
+- **C / Deduct Inventory**: Represents the action of deducting the requested inventory from the available stock. visible in diagram; no further repository context available.
+- **D / Reject Order: Insufficient Inventory**: Represents the outcome where the order is rejected due to insufficient inventory. visible in diagram; no further repository context available.
+- **E / Log Inventory Deduction**: Represents the action of logging the inventory deduction event. visible in diagram; no further repository context available.
+- **F / Payment Successful?**: Represents a decision point to determine if the payment for the order was successful. visible in diagram; no further repository context available.
+- **G / Ship Order**: Represents the action of shipping the order to the customer. visible in diagram; no further repository context available.
+- **H / Rollback Inventory Deduction**: Represents the process of reversing the inventory deduction due to payment failure. visible in diagram; no further repository context available.
+- **I / Add Inventory Back**: Represents the action of adding the previously deducted inventory back to the available stock. visible in diagram; no further repository context available.
+- **J / Log Inventory Rollback**: Represents the action of logging the inventory rollback event. visible in diagram; no further repository context available.
+- **K / Notify Error Handler**: Represents the action of notifying the error handling system about the payment failure and inventory rollback. visible in diagram; no further repository context available.
+- **L / Create Deductible Record**: Represents the creation of a record indicating that inventory has been marked as deductible. visible in diagram; no further repository context available.
+- **M / Persist Deductible Record**: Represents the action of persisting the deductible record in the database. visible in diagram; no further repository context available.
+- **N / Successful Deductible Persist?**: Represents a decision point to determine if the deductible record was successfully persisted. visible in diagram; no further repository context available.
+- **O / Continue Workflow**: Represents the continuation of the order processing workflow. visible in diagram; no further repository context available.
+- **P / Trigger Compensation Transaction**: Represents the action of triggering a compensation transaction due to failure to persist the deductible record. visible in diagram; no further repository context available.
+- **Q / Log Compensation Trigger**: Represents the action of logging the compensation trigger event. visible in diagram; no further repository context available.
+- **R / Update Order Status: Processing**: Represents the action of updating the order status to "Processing". visible in diagram; no further repository context available.
+- **S / Complete Order Processing**: Represents the final step where the order processing is completed. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: An order request triggers the check for inventory availability.
+- `B -- Available --> C`: If inventory is available, proceed to deduct it.
+- `B -- Unavailable --> D`: If inventory is unavailable, reject the order.
+- `C --> E`: After deducting inventory, log the deduction.
+- `E --> F`: After logging the deduction, check if the payment was successful.
+- `F -- Yes --> G`: If payment was successful, ship the order.
+- `F -- No --> H`: If payment failed, rollback the inventory deduction.
+- `H --> I`: Rollback involves adding the inventory back.
+- `I --> J`: After adding inventory back, log the rollback.
+- `J --> K`: After logging the rollback, notify the error handler.
+- `C --> L`: After deducting inventory, create a deductible record.
+- `L --> M`: Persist the deductible record.
+- `M --> N`: Check if the deductible record was successfully persisted.
+- `N -- Yes --> O`: If the record was persisted successfully, continue the workflow.
+- `N -- No --> P`: If the record persistence failed, trigger a compensation transaction.
+- `P --> Q`: Log the compensation trigger.
+- `Q --> K`: The compensation trigger leads to notifying the error handler.
+- `G --> O`: Shipping the order leads to continuing the workflow.
+- `O --> R`: Continuing the workflow leads to updating the order status to processing.
+- `K --> R`: Notifying the error handler leads to updating the order status to processing.
+- `R --> S`: Updating the order status to processing leads to completing the order processing.
+
+## Repository Context & Terminology
+- **Inventory Deduction**: The process of reducing the quantity of a product in the inventory system when an order is placed.
+- **Rollback**: Reversing a transaction or operation, typically to restore the system to a previous state. In this case, it refers to adding the deducted inventory back to the stock.
+- **Compensation Transaction**: A transaction that is executed to counteract the effects of a previous transaction that failed.
+- **Error Handler**: A system component responsible for managing and responding to errors that occur during the execution of a process.
+- **Deductible Record**: A record indicating that inventory has been marked as deductible, usually before payment confirmation.
+- **Order Status**: The current state of an order in the order processing system (e.g., "Processing", "Shipped", "Completed").
+- **Workflow**: A sequence of steps or tasks that are performed to achieve a specific outcome.
+
+## High-Density QA Ground Truth Summary
+The inventory deduction and rollback process begins with receiving an order request (A), followed by checking inventory availability (B). If inventory is unavailable, the order is rejected (D). If available, the inventory is deducted (C) and logged (E). A key decision point (F) determines if payment is successful. If yes, the order is shipped (G), and the workflow continues (O) to update the order status to processing (R), eventually completing the order processing (S). If payment fails, the inventory deduction is rolled back (H), the inventory is added back (I), and the rollback is logged (J). The error handler is then notified (K), leading to updating the order status to processing (R) and completing the order processing (S). Parallel to the payment check, a deductible record is created (L) and persisted (M). If persistence fails (N), a compensation transaction is triggered (P) and logged (Q), ultimately notifying the error handler (K). The "Inventory Deduction & Rollback" subgraph encapsulates these steps, ensuring that inventory is accurately managed and any discrepancies due to payment failures or persistence issues are handled appropriately. The error handler (K) serves as a central point for managing failures and ensuring the order status is updated accordingly.

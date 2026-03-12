@@ -1,0 +1,28 @@
+flowchart TD
+    subgraph GitHub_Actions
+        A1[GitHub Push to main] --> A2[Trigger GitHub Actions Workflow]
+        A2 --> A3[Build Docker Image]
+        A3 --> A4[Tag Docker Image with Commit SHA]
+        A4 --> A5[Push Image to ECR]
+        A5 --> A6[Set IMAGE_URI Environment Variable]
+        A6 --> A7[Initialize Terraform]
+        A7 --> A8[Run terraform plan with IMAGE_URI]
+        A8 --> A9[Apply terraform plan]
+    end
+
+    subgraph Terraform
+        T1[Initialize Backend with S3 and DynamoDB] --> T2[Load Variables from variables.tf]
+        T2 --> T3[Use container_definitions.json.tpl]
+        T3 --> T4[Create/Update ECS Task Definition]
+        T4 --> T5[Update ECS Service]
+        T5 --> T6[Output Information from outputs.tf]
+    end
+
+    subgraph AWS_ECS
+        E1[ECR Stores Docker Image] --> E2[ECS Pulls Image from ECR]
+        E2 --> E3[Run Containers using ECS Task Definition]
+        E3 --> E4[ECS Service Updated with New Containers]
+    end
+
+    A9 --> T1
+    T4 --> E2

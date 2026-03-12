@@ -1,0 +1,39 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture of a tool registry and its associated tools. It illustrates the relationship between the central tool registry and various categories of tools, such as file tools, search tools, execution tools, web tools, memory tools, meta tools, and MCP tools. The diagram serves as a high-level overview of the system's structure and organization.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The "Tool Registry" node is at the top, serving as the root. The various tool categories are arranged below the registry, connected by edges.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into eight stages: Tool Registry, File Tools, Search & Nav, Execution, Web, Memory & RAG, Meta & Control, and MCP Tools.
+
+## Node-by-Node Description
+- **Tool Registry**: Represents the central tool registry component. It is implemented using `Arc<RwLock<HashMap<String, Arc<dyn Tool>>>>`.
+- **File Tools**: Represents a category of tools for file manipulation, including read, write, edit, multiedit, and patch operations.
+- **Search & Nav**: Represents a category of tools for searching and navigating code, including glob, grep, ls, and codesearch.
+- **Execution**: Represents a category of tools for executing commands and scripts, including bash, task, batch, and bg.
+- **Web**: Represents a category of tools for web-related tasks, including webfetch and websearch.
+- **Memory & RAG**: Represents a category of tools for memory management and retrieval-augmented generation, including remember, session_search, and conversation_search.
+- **Meta & Control**: Represents a category of tools for meta-level operations and control, including todo, skill, communicate, mcp, and selfdev.
+- **MCP Tools**: Represents a category of tools that are dynamically registered from external servers.
+
+## Edges, Branches & Convergence
+- `Tool Registry --> File Tools`: Represents the connection between the tool registry and file tools.
+- `Tool Registry --> Search & Nav`: Represents the connection between the tool registry and search & navigation tools.
+- `Tool Registry --> Execution`: Represents the connection between the tool registry and execution tools.
+- `Tool Registry --> Web`: Represents the connection between the tool registry and web tools.
+- `Tool Registry --> Memory & RAG`: Represents the connection between the tool registry and memory & RAG tools.
+- `Tool Registry --> Meta & Control`: Represents the connection between the tool registry and meta & control tools.
+- `Tool Registry --> MCP Tools`: Represents the connection between the tool registry and MCP tools.
+
+## Repository Context & Terminology
+- **Arc**: A type for atomically reference counted pointers.
+- **RwLock**: A reader-writer lock, allowing multiple readers or a single writer.
+- **HashMap**: A hash map data structure for storing key-value pairs.
+- **String**: A string data type.
+- **dyn Tool**: A dynamically-sized type representing a trait object for the `Tool` trait.
+- **MCP Tools**: Meta-Control-Planning tools, dynamically registered from external servers.
+- **RAG**: Retrieval-Augmented Generation.
+
+## High-Density QA Ground Truth Summary
+The diagram starts with the "Tool Registry," which is implemented as `Arc<RwLock<HashMap<String, Arc<dyn Tool>>>>`. This registry serves as the central point for accessing various tools. From the registry, there are seven outgoing edges, each leading to a different category of tools: "File Tools," "Search & Nav," "Execution," "Web," "Memory & RAG," "Meta & Control," and "MCP Tools." The "File Tools" category includes tools for read, write, edit, multiedit, and patch operations. The "Search & Nav" category includes tools like glob, grep, ls, and codesearch. The "Execution" category includes tools like bash, task, batch, and bg. The "Web" category includes webfetch and websearch. The "Memory & RAG" category includes remember, session_search, and conversation_search. The "Meta & Control" category includes todo, skill, communicate, mcp, and selfdev. The "MCP Tools" category represents tools that are dynamically registered from external servers, indicating a dynamic plugin or extension mechanism. The use of `Arc` and `RwLock` in the registry suggests thread-safe access to the tools.

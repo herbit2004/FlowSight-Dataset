@@ -1,0 +1,46 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing flow in an e-commerce system. It depicts the sequence of operations and interactions between different microservices involved in creating and fulfilling an order, from user interaction to email notification. The diagram serves as a visual representation of the system's architecture and the steps involved in a typical order lifecycle.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "User Interaction" subgraph at the top and flows down through various services to the "User Email Inbox" at the bottom. The "Order Service" acts as a central decision point, branching to other services.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **User Interaction**: This subgraph represents the initial interaction point for the user, including the "User Client Application" and the "API Gateway."
+
+## Node-by-Node Description
+- **A / User Client Application**: Represents the user interface or application used to interact with the system. visible in diagram; no further repository context available.
+- **B / API Gateway**: Represents the entry point for external requests, routing them to the appropriate backend services. visible in diagram; no further repository context available.
+- **C / Order Service**: Represents the service responsible for managing order creation, processing, and state transitions. visible in diagram; no further repository context available.
+- **D / Inventory Service**: Represents the service responsible for managing product inventory levels. visible in diagram; no further repository context available.
+- **E / Product Database**: Represents the database storing product information, including stock levels. visible in diagram; no further repository context available.
+- **F / Payment Service**: Represents the service responsible for processing payments and authorizing transactions. visible in diagram; no further repository context available.
+- **G / Payment Processor**: Represents the external payment gateway or service used to process payments. visible in diagram; no further repository context available.
+- **H / Notification Service**: Represents the service responsible for sending notifications, such as order confirmation emails. visible in diagram; no further repository context available.
+- **I / Email Service**: Represents the service responsible for sending emails. visible in diagram; no further repository context available.
+- **J / User Email Inbox**: Represents the user's email inbox where notifications are received. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `B -- /order/create --> C`: The API Gateway receives an order creation request and routes it to the Order Service.
+- `C --> D`: The Order Service requests the Inventory Service to check stock availability.
+- `D -- Check Stock --> E`: The Inventory Service queries the Product Database to check stock levels.
+- `E -- Stock OK --> D`: The Product Database returns stock availability information to the Inventory Service.
+- `D -- Reserve Products --> F`: The Inventory Service requests the Payment Service to reserve funds.
+- `F -- /payment/authorize --> G`: The Payment Service sends a payment authorization request to the Payment Processor.
+- `G -- Auth Success --> F`: The Payment Processor confirms successful payment authorization to the Payment Service.
+- `F -- Funds Reserved --> C`: The Payment Service informs the Order Service that funds have been reserved.
+- `C -- Order Created --> H`: The Order Service triggers the Notification Service to send an order confirmation.
+- `H --> I`: The Notification Service uses the Email Service to send an email.
+- `I --> J`: The Email Service delivers the email to the User Email Inbox.
+
+## Repository Context & Terminology
+- **API Gateway**: A service that acts as a single entry point for all client requests, routing them to the appropriate backend services.
+- **Microservice**: An independently deployable, modular service that performs a specific business function.
+- **Order Service**: A microservice responsible for managing the lifecycle of an order, including creation, processing, and fulfillment.
+- **Inventory Service**: A microservice responsible for managing product inventory levels.
+- **Payment Service**: A microservice responsible for processing payments and authorizing transactions.
+- **Notification Service**: A microservice responsible for sending notifications to users or other systems.
+- **Payment Processor**: A third-party service or gateway used to process payments securely.
+
+## High-Density QA Ground Truth Summary
+The order processing flow begins with the User Client Application interacting with the API Gateway, sending an `/order/create` request to the Order Service. The Order Service then branches to the Inventory Service to check stock. The Inventory Service queries the Product Database, and if `Stock OK`, it proceeds to reserve the products, sending a `Reserve Products` request to the Payment Service. The Payment Service then communicates with the Payment Processor via `/payment/authorize`. Upon `Auth Success` from the Payment Processor, the Payment Service confirms `Funds Reserved` to the Order Service. If the order is successfully created, the Order Service triggers the Notification Service with `Order Created`. The Notification Service then utilizes the Email Service to send a confirmation email, which is delivered to the User Email Inbox. The API Gateway acts as the entry point, routing requests to the appropriate microservices, while the Payment Processor handles the secure processing of payments, ensuring a complete order lifecycle.

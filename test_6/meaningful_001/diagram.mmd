@@ -1,0 +1,11 @@
+graph TD
+    A[Order Request Received] --> B{Fraud Check Required?};
+    B -- Yes --> C[Fraud Detection Service];
+    C --> D{Fraud Score > Threshold?};
+    D -- Yes --> E[Reject Order];
+    D -- No --> F[Authorize Payment];
+    B -- No --> F;
+    F --> G[Create Order Record];
+    G --> H[Send Order Confirmation];
+    classDef rejected fill:#f9f,stroke:#333,stroke-width:2px
+    class E rejected

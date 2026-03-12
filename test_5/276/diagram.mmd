@@ -1,0 +1,16 @@
+flowchart LR
+    A["User Input<br>- query<br>- max_iterations<br>- max_time"] --> B["Planner Agent"]
+    
+    B -->|"Report plan<br>(sections & background context)"| D2
+    
+    subgraph Parallel["Parallel Section Research"]
+        D1["IterativeResearcher<br>(Section 1)"]
+        D2["IterativeResearcher<br>(Section 2)"]
+        D3["IterativeResearcher<br>(Section 3)"]
+    end
+    
+    D1 -->|"Section 1<br>Draft"| E["Proofreader<br>Agent"]
+    D2 -->|"Section 2<br>Draft"| E
+    D3 -->|"Section 3<br>Draft"| E
+    
+    E --> F["Final<br>Research<br>Report"]

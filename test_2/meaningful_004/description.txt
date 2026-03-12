@@ -1,0 +1,75 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow in an e-commerce system. It illustrates the sequence of operations from order placement to fulfillment, including inventory allocation, payment processing, and error handling. The diagram serves as a visual representation of the system's architecture and data flow.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is hierarchically structured, with the process starting at the "Order Service" subgraph and ending at "Analytics Reporting" and "Support Team".
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Order Service**: Handles initial order placement.
+- **Message Queue Infrastructure**: Represents the message queues used for asynchronous communication.
+- **Order Management Service**: Validates orders and initiates allocation requests.
+- **Allocation Microservice**: Manages inventory allocation and backorders.
+- **Payment Processing**: Processes payments and handles fulfillment.
+
+## Node-by-Node Description
+- **ODS / Order Data Service**: Handles order data within the Order Service. visible in diagram; no further repository context available.
+- **MQS / Message Queue Sender**: Sends messages to the message queue. visible in diagram; no further repository context available.
+- **MQ / Message Queue - Orders**: Message queue for order-related events.
+- **OMS / Order Management Service**: Manages orders, including validation and allocation requests. visible in diagram; no further repository context available.
+- **OV / Order Validator**: Validates the order. visible in diagram; no further repository context available.
+- **AQS / Allocation Queue Sender**: Sends allocation requests to the allocation queue. visible in diagram; no further repository context available.
+- **ERR / Error Handling**: Handles errors during order validation.
+- **MQ2 / Message Queue - Allocations**: Message queue for allocation requests.
+- **AS / Allocation Service**: Service responsible for allocating inventory. visible in diagram; no further repository context available.
+- **INVS / Inventory Service**: Service that checks inventory levels. visible in diagram; no further repository context available.
+- **AS2**: Represents sufficient inventory allocation. visible in diagram; no further repository context available.
+- **BO / Back Order**: Represents the creation of a back order due to insufficient inventory. visible in diagram; no further repository context available.
+- **PQS / Payment Queue Sender**: Sends payment requests to the payment queue. visible in diagram; no further repository context available.
+- **NOT / Notification Service**: Notifies the customer about the back order. visible in diagram; no further repository context available.
+- **CUST / Customer**: Represents the customer receiving the back order notification.
+- **MQ3 / Message Queue - Payments**: Message queue for payment requests.
+- **PS / Payment Service**: Processes payments. visible in diagram; no further repository context available.
+- **FUL / Fulfillment Service**: Handles order fulfillment. visible in diagram; no further repository context available.
+- **ERR2 / Error Handling - Payment**: Handles errors during payment processing.
+- **INVS2 / Inventory Service - Update**: Updates inventory levels after fulfillment. visible in diagram; no further repository context available.
+- **CLS / Closure Service**: Closes the order after fulfillment. visible in diagram; no further repository context available.
+- **AR / Analytics Reporting**: Generates analytics reports. visible in diagram; no further repository context available.
+- **SUP / Support Team**: Provides support for order-related issues.
+
+## Edges, Branches & Convergence
+- `ODS --> MQS`: Order data is sent to the message queue sender.
+- `MQS --> MQ`: The message queue sender sends the order placed event to the message queue.
+- `MQ --> OMS`: The order management service receives the order message from the message queue.
+- `OMS --> OV`: The order management service sends the order to the order validator.
+- `OV -- Valid Order --> AQS`: If the order is valid, an allocation request is sent.
+- `OV -- Invalid Order --> ERR`: If the order is invalid, it goes to error handling.
+- `AQS --> MQ2`: The allocation queue sender sends the allocation request event to the message queue.
+- `MQ2 --> AS`: The allocation service receives the allocation request.
+- `AS --> INVS`: The allocation service checks the inventory service.
+- `INVS -- Sufficient Inventory --> AS2`: If there is sufficient inventory, it is allocated.
+- `INVS -- Insufficient Inventory --> BO`: If there is insufficient inventory, a back order is created.
+- `AS2 --> PQS`: The payment queue sender is triggered after inventory allocation.
+- `BO --> NOT`: The notification service is triggered after a back order is created.
+- `NOT --> CUST`: The customer receives a back order notification.
+- `PQS --> MQ3`: The payment queue sender sends the payment request event to the message queue.
+- `MQ3 --> PS`: The payment service receives the payment request.
+- `PS -- Payment Successful --> FUL`: If the payment is successful, the order is sent to fulfillment.
+- `PS -- Payment Failed --> ERR2`: If the payment fails, it goes to payment error handling.
+- `FUL --> INVS2`: The fulfillment service triggers an inventory update.
+- `INVS2 --> CLS`: The inventory update triggers the closure service.
+- `CLS --> AR`: The closure service triggers analytics reporting.
+- `ERR --> SUP`: Error handling triggers the support team.
+- `ERR2 --> SUP`: Payment error handling triggers the support team.
+
+## Repository Context & Terminology
+- **Order Service**: A microservice responsible for handling order creation and management.
+- **Message Queue**: An asynchronous communication protocol used for inter-service communication.
+- **Order Management Service**: A microservice responsible for validating orders and initiating allocation requests.
+- **Allocation Microservice**: A microservice responsible for allocating inventory for orders.
+- **Payment Service**: A microservice responsible for processing payments.
+- **Fulfillment Service**: A microservice responsible for fulfilling orders.
+- **Inventory Service**: A microservice responsible for managing inventory levels.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with the "Order Data Service" within the "Order Service" subgraph, which sends an "Order Placed Event" via the "Message Queue Sender" to the "Message Queue - Orders". The "Order Management Service" receives this message and uses the "Order Validator" to validate the order. If the order is valid, an "Allocation Request Event" is sent via the "Allocation Queue Sender" to the "Message Queue - Allocations". If the order is invalid, it goes to "Error Handling" and alerts the "Support Team". The "Allocation Microservice" receives the allocation request and checks inventory via the "Inventory Service". If sufficient inventory exists, it is allocated; otherwise, a "Back Order" is created, notifying the "Customer". After inventory allocation, a "Payment Request Event" is sent to the "Message Queue - Payments", triggering the "Payment Service". If payment is successful, the "Fulfillment Service" is invoked, updating inventory and triggering the "Closure Service", which leads to "Analytics Reporting". If payment fails, "Error Handling - Payment" is activated, also alerting the "Support Team". The message queues facilitate asynchronous communication between services, ensuring resilience and scalability in the e-commerce system. The process terminates at "Analytics Reporting" and "Support Team".

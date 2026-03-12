@@ -1,0 +1,67 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of a user request through a system, including API gateway routing, authentication, authorization, resource access, caching, and error handling. The diagram outlines the steps involved in processing a user request and the various decision points along the way. It serves as a visual representation of the system's architecture and request processing logic.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It is hierarchically structured into several subgraphs representing different stages of the request processing pipeline. The start node is "User Request," and the end nodes are "Return Resource to User" and "Logout."
+
+## Subgraphs / Stages
+The diagram contains explicit subgraphs:
+- **User Initiates Request**: Represents the initial stage where the user sends a request.
+- **API Gateway Routing**: Represents the API gateway's role in routing the request.
+- **Authentication & Authorization**: Represents the authentication and authorization process.
+- **Resource Access**: Represents the stage where the system accesses the requested resource.
+- **Caching**: Represents the caching mechanism used to improve performance.
+- **Error Handling & Retry**: Represents the error handling and retry logic.
+- **Final Response**: Represents the final stage where the system returns a response to the user.
+
+## Node-by-Node Description
+- **A / User Request**: Represents the initial user request. visible in diagram; no further repository context available.
+- **B / API Gateway**: Represents the API gateway that receives the user request. visible in diagram; no further repository context available.
+- **C / Rate Limit Exceeded?**: Represents a decision point to check if the rate limit has been exceeded. visible in diagram; no further repository context available.
+- **D / Authentication**: Represents the authentication process. visible in diagram; no further repository context available.
+- **E / Cache Hit**: Represents a cache hit scenario. visible in diagram; no further repository context available.
+- **F / Valid Credentials?**: Represents a decision point to validate user credentials. visible in diagram; no further repository context available.
+- **G / Authorization**: Represents the authorization process. visible in diagram; no further repository context available.
+- **H / Access Protected Resource**: Represents the process of accessing a protected resource. visible in diagram; no further repository context available.
+- **I / Resource Available?**: Represents a decision point to check if the requested resource is available. visible in diagram; no further repository context available.
+- **J / DB Write Operation**: Represents a database write operation. visible in diagram; no further repository context available.
+- **K / DB Read Operation**: Represents a database read operation. visible in diagram; no further repository context available.
+- **L / Retry Request**: Represents the process of retrying the request. visible in diagram; no further repository context available.
+- **M / Write Successful?**: Represents a decision point to check if the write operation was successful. visible in diagram; no further repository context available.
+- **N / Return Error to User**: Represents the process of returning an error to the user. visible in diagram; no further repository context available.
+- **O / Return Resource to User**: Represents the process of returning the requested resource to the user. visible in diagram; no further repository context available.
+- **P / Logout**: Represents the logout process. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User request is sent to the API Gateway.
+- `B --> C`: API Gateway routes the request to the rate limiting check.
+- `C -- No --> D`: If the rate limit is not exceeded, proceed to authentication.
+- `C -- Yes --> E`: If the rate limit is exceeded, a cache hit is attempted.
+- `D --> F`: Authentication leads to credential validation.
+- `F -- No --> G`: If credentials are not valid, proceed to authorization.
+- `F -- Yes --> H`: If credentials are valid, access the protected resource.
+- `H --> I`: Accessing the protected resource leads to a resource availability check.
+- `I -- No --> J`: If the resource is not available, perform a database write operation.
+- `I -- Yes --> K`: If the resource is available, perform a database read operation.
+- `E -- Data Found --> J`: If data is found in the cache, proceed to DB Write Operation.
+- `E -- Data Not Found --> F`: If data is not found in the cache, proceed to credential validation.
+- `G --> L`: Authorization leads to retrying the request.
+- `L --> B`: Retrying the request goes back to the API Gateway.
+- `J --> M`: Database write operation leads to a check for write success.
+- `M -- Yes --> N`: If the write operation was successful, return an error to the user.
+- `M -- No --> L`: If the write operation was not successful, retry the request.
+- `K --> O`: Database read operation leads to returning the resource to the user.
+- `N --> P`: Returning an error to the user leads to logout.
+- `P --> A`: Logout goes back to the User Request.
+
+## Repository Context & Terminology
+- **API Gateway**: A server that acts as a single entry point for all client requests. In this diagram, the API Gateway correctly receives the initial user request.
+- **Rate Limiting**: A mechanism to limit the number of requests a user can make within a certain time period. In this diagram, rate limiting is incorrectly placed *after* authentication.
+- **Authentication**: The process of verifying the identity of a user. In this diagram, the 'Valid Credentials?' No branch incorrectly goes to Authorization.
+- **Authorization**: The process of determining what a user is allowed to do. In this diagram, the 'Authorization' node should be 'Authentication Failure'.
+- **Caching**: A technique to store frequently accessed data in a cache to improve performance. In this diagram, a cache hit incorrectly leads to a DB Write Operation.
+- **DB Read/Write Operation**: Operations to read from or write to a database. In this diagram, a failed DB Write Operation incorrectly leads to returning an error to the user.
+- **Retry Request**: Re-attempting a failed request. In this diagram, Retry Request incorrectly loops back to API Gateway when a write operation is deemed to have failed, this should be going to Return Error to User.
+
+## High-Density QA Ground Truth Summary
+The process begins with a "User Request" being sent to the "API Gateway." The gateway then checks if the "Rate Limit Exceeded?". If the rate limit has not been exceeded ("No" branch), the request proceeds to "Authentication." If the rate limit is exceeded ("Yes" branch), a "Cache Hit" is attempted. After authentication, the system checks for "Valid Credentials?". If the credentials are not valid ("No" branch), the process goes to "Authorization" and then "Retry Request" back to the "API Gateway." If the credentials are valid ("Yes" branch), the system attempts to "Access Protected Resource," which leads to checking if the "Resource Available?". If the resource is not available ("No" branch), a "DB Write Operation" is performed. If the resource is available ("Yes" branch), a "DB Read Operation" is performed, leading to "Return Resource to User." A "Cache Hit" leads to "DB Write Operation." After the "DB Write Operation," the system checks if the "Write Successful?". If the write was successful ("Yes" branch), the system "Return Error to User" and then "Logout" back to "User Request." If the write was not successful ("No" branch), the system "Retry Request" back to the "API Gateway." The process ends with either "Return Resource to User" or "Logout." The placement of rate limiting after authentication is a deviation from standard practice.

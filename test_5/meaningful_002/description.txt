@@ -1,0 +1,77 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of a search engine and recommendation system. It depicts the flow of a user's search query through various stages of processing, ranking, personalization, and A/B testing, ultimately leading to the display of results and subsequent tracking for model retraining. The diagram serves as a visual representation of the system's architecture and decision-making processes.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with a "User Search Query" node at the top and progresses downwards through various processing and decision stages, ultimately ending with "Offline Model Retraining" at the bottom. There is a primary flow path with several branching and convergence points.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages:
+1. Initial Query Processing: User Search Query, Query Preprocessing, Search Engine API Call.
+2. Filtering and Ranking: Filtering & Ranking, Query Expansion, Personalization Engine.
+3. Personalized Ranking: Collaborative Filtering, Popularity-Based Ranking, Re-ranked Results.
+4. Alternative Recommendation Engine: Alternative Recommendation Engine, Diversity Score Check.
+5. A/B Testing: Combine Recommendations, Duplicate Removal, A/B Test Variant Assignment, Control Group Ranking, Experiment Group Ranking.
+6. Display and Tracking: Display Results, User Clicks & Engagement Tracking, Offline Model Retraining.
+
+## Node-by-Node Description
+- **A / User Search Query**: Represents the initial user-submitted search query. visible in diagram; no further repository context available.
+- **B / Query Preprocessing**: Represents the stage where the query is cleaned, tokenized, and prepared for the search engine. visible in diagram; no further repository context available.
+- **C / Search Engine API Call**: Represents the call to the search engine with the preprocessed query. visible in diagram; no further repository context available.
+- **D / Filtering & Ranking**: Represents the stage where the initial search results are filtered and ranked. visible in diagram; no further repository context available.
+- **E / Query Expansion**: Represents the process of expanding the original query with related terms to improve search results. visible in diagram; no further repository context available.
+- **F / Personalization Engine**: Represents the component responsible for personalizing search results based on user data. visible in diagram; no further repository context available.
+- **G / Collaborative Filtering**: Represents a personalization technique that recommends items based on the preferences of similar users. visible in diagram; no further repository context available.
+- **H / Popularity-Based Ranking**: Represents a ranking method that prioritizes items based on their overall popularity. visible in diagram; no further repository context available.
+- **I / Re-ranked Results**: Represents the results after personalization and ranking. visible in diagram; no further repository context available.
+- **J / Alternative Recommendation Engine**: Represents an alternative recommendation engine used to provide diverse recommendations. visible in diagram; no further repository context available.
+- **K / Acceptable Diversity?**: Represents a check to ensure the recommendations have acceptable diversity. visible in diagram; no further repository context available.
+- **L / Combine Recommendations**: Represents the stage where recommendations from different sources are combined. visible in diagram; no further repository context available.
+- **N / Duplicate Removal**: Represents the process of removing duplicate recommendations. visible in diagram; no further repository context available.
+- **O / A/B Test Variant Assignment**: Represents the assignment of users to different A/B test variants. visible in diagram; no further repository context available.
+- **P / Control Group Ranking**: Represents the ranking applied to the control group in the A/B test. visible in diagram; no further repository context available.
+- **Q / Experiment Group Ranking**: Represents the ranking applied to the experiment group in the A/B test. visible in diagram; no further repository context available.
+- **R / Display Results**: Represents the stage where the final search results are displayed to the user. visible in diagram; no further repository context available.
+- **S / User Clicks & Engagement Tracking**: Represents the tracking of user interactions with the search results. visible in diagram; no further repository context available.
+- **T / Offline Model Retraining**: Represents the process of retraining the recommendation models using the tracked user data. visible in diagram; no further repository context available.
+- **M / Increase Diversity Weight**: Represents the process of increasing the weight of diversity in the recommendation engine. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits a search query, which is passed to the query preprocessing stage.
+- `B -- Normalize Text --> C`: The preprocessed query is normalized and sent to the search engine API.
+- `C -- Results (Top N) --> D`: The search engine returns the top N results, which are passed to the filtering and ranking stage.
+- `D -- Insufficient Results? (N < Threshold) --> E`: If the number of results is below a threshold, the query is expanded.
+- `E -- Expanded Query --> C`: The expanded query is sent back to the search engine API.
+- `D -- Sufficient Results --> F`: If the number of results is sufficient, the results are passed to the personalization engine.
+- `F -- User Profile Available? --> G`: If a user profile is available, collaborative filtering is used.
+- `F -- User Profile Unavailable --> H`: If a user profile is unavailable, popularity-based ranking is used.
+- `G -- Personalized Ranking --> I`: The collaborative filtering results in a personalized ranking.
+- `H -- Popularity Ranking --> I`: The popularity-based ranking results in a popularity ranking.
+- `I --> J`: The re-ranked results are passed to the alternative recommendation engine.
+- `J -- Diversity Score Check --> K`: The alternative recommendation engine checks the diversity score of the recommendations.
+- `K -- Yes --> L`: If the diversity is acceptable, the recommendations are combined.
+- `K -- No --> M`: If the diversity is not acceptable, the diversity weight is increased.
+- `M --> J`: The increased diversity weight is fed back into the alternative recommendation engine.
+- `L --> N`: The combined recommendations undergo duplicate removal.
+- `N --> O`: The de-duplicated recommendations are assigned to A/B test variants.
+- `O -- Variant A --> P`: Variant A is assigned to the control group.
+- `O -- Variant B --> Q`: Variant B is assigned to the experiment group.
+- `P --> R`: The control group ranking is displayed.
+- `Q --> R`: The experiment group ranking is displayed.
+- `R --> S`: User clicks and engagement are tracked.
+- `S --> T`: The tracked data is used for offline model retraining.
+- Paths converge at nodes I and R.
+
+## Repository Context & Terminology
+- **User Search Query**: The text entered by a user to find information.
+- **Query Preprocessing**: Steps taken to clean and prepare the query for the search engine, including tokenization, stemming, and stop word removal.
+- **Search Engine API Call**: The request sent to the search engine to retrieve results based on the preprocessed query.
+- **Filtering & Ranking**: The process of filtering irrelevant results and ranking the remaining results based on relevance and other factors.
+- **Query Expansion**: Adding related terms to the original query to broaden the search and improve results.
+- **Personalization Engine**: A component that tailors search results based on individual user preferences and history.
+- **Collaborative Filtering**: A recommendation technique that suggests items based on the preferences of similar users.
+- **Popularity-Based Ranking**: A ranking method that prioritizes items based on their overall popularity or frequency of use.
+- **A/B Testing**: A method of comparing two versions of a system or feature to determine which performs better.
+- **Offline Model Retraining**: The process of updating machine learning models using historical data.
+
+## High-Density QA Ground Truth Summary
+The process begins with a "User Search Query," which is then passed to "Query Preprocessing" for normalization. The normalized text is used in a "Search Engine API Call" to retrieve initial results. A key decision point is "Filtering & Ranking": if the number of results is "Insufficient (N < Threshold)," the "Query Expansion" module is triggered, sending an expanded query back to the "Search Engine API Call." Otherwise, with "Sufficient Results," the flow proceeds to the "Personalization Engine." Here, another branch occurs based on "User Profile Available?": if yes, "Collaborative Filtering" is applied; if no, "Popularity-Based Ranking" is used. Both paths converge at "Re-ranked Results," which then feeds into the "Alternative Recommendation Engine." A "Diversity Score Check" determines if the recommendations are sufficiently diverse. If not, "Increase Diversity Weight" is applied, looping back to the "Alternative Recommendation Engine." If diversity is "Acceptable," "Combine Recommendations" and "Duplicate Removal" are performed. The results are then subjected to "A/B Test Variant Assignment," splitting the flow into "Control Group Ranking" and "Experiment Group Ranking." Both groups' results are then displayed via "Display Results." Finally, "User Clicks & Engagement Tracking" provides data for "Offline Model Retraining," closing the loop. The "Personalization Engine" leverages user profile data to tailor search results, demonstrating a key aspect of modern search and recommendation systems.

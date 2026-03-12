@@ -1,0 +1,19 @@
+graph TD
+    A[User Request] --> B{Authorized?};
+    B -- Yes --> C[Access Resource];
+    B -- No --> D[Return 403];
+    C --> E[DB Write];
+    E --> A;
+    D --> F[Log Access];
+    F --> G[Invalidate Cache];
+    G --> B;
+    H[Payment Request] --> I{Payment Success?};
+    I -- Yes --> J[Retry Payment];
+    I -- No --> K[Send Notification];
+    J --> L[Update Order Status: Failed];
+    K --> M[Rollback Transaction];
+    L --> N[Start Timeout];
+    M --> O[DB Read];
+    N --> P[Timeout Complete];
+    O --> P;
+    P --> H;

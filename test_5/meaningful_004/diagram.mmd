@@ -1,0 +1,30 @@
+graph TD
+    subgraph Marketing Campaign System
+        A[User Action: Submit Form] --> B{Form Validation};
+        B -- Valid --> C[Event Producer: 'form_submission'];
+        B -- Invalid --> E[Display Error Message];
+        C --> D((Message Queue: CampaignEvents));
+    end
+
+    subgraph Data Processing Pipeline
+        D --> F[Event Consumer: 'campaign_subscriber'];
+        F --> G{Identify Campaign};
+        G -- Campaign Found --> H[Campaign Logic: Apply Offer];
+        G -- No Campaign --> I[Log Unmatched Form];
+        H --> J{Eligible for Discount?};
+        J -- Yes --> K[Create Discount Coupon];
+        J -- No --> L[Send Generic Thank You];
+        K --> M[Store Coupon in User Profile];
+        M --> N[Send Personalized Email];
+        L --> N;
+        N --> O[Update Campaign Metrics];
+        O --> P((Data Warehouse));
+        I --> P;
+
+        classDef invalid fill:#f9f,stroke:#333,stroke-width:2px;
+        class E,I invalid;
+
+    end
+
+    style D fill:#ccf,stroke:#333,stroke-width:2px;
+    style P fill:#ccf,stroke:#333,stroke-width:2px;

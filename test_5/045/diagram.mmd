@@ -1,0 +1,20 @@
+graph TB
+    CLI["CLI (main.rs)<br><i>jcode [serve|connect|run|...]</i>"]
+
+    CLI --> TUI["TUI<br>app.rs / ui.rs"]
+    CLI --> Server["Server<br>Unix Socket"]
+    CLI --> Standalone["Standalone<br>Agent Loop"]
+
+    Server --> Agent["Agent<br>agent.rs"]
+    TUI <-->|events| Server
+
+    Agent --> Provider["Provider<br>Claude / Copilot / OpenAI / OpenRouter"]
+    Agent --> Registry["Tool Registry<br>30+ tools"]
+    Agent --> Session["Session<br>Persistence"]
+
+    style CLI fill:#f97316,color:#fff
+    style Agent fill:#8b5cf6,color:#fff
+    style Provider fill:#3b82f6,color:#fff
+    style Registry fill:#10b981,color:#fff
+    style TUI fill:#ec4899,color:#fff
+    style Server fill:#6366f1,color:#fff

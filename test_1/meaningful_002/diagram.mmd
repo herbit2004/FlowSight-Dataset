@@ -1,0 +1,36 @@
+graph TD
+    subgraph User Interaction
+        A[User Query] --> B(Query Parsing & Intent Recognition);
+        B --> C{Valid Intent?};
+        C -- Yes --> D(Category Filter Application);
+        C -- No --> E(Did You Mean Suggestion);
+        E --> F(Display Suggestions);
+        F --> A;
+    end
+
+    subgraph Search & Retrieval
+        D --> G(Product Index Query);
+        G --> H{Results Found?};
+        H -- Yes --> I(Rank & Score Products);
+        H -- No --> J(Expand Query Terms);
+        J --> G;
+        I --> K(Personalization Module: User Profile Enrichment);
+    end
+
+    subgraph Recommendation Engine
+        K --> L(Collaborative Filtering);
+        K --> M(Content-Based Filtering);
+        L --> N(Recommendation Fusion & Ranking);
+        M --> N;
+        N --> O(Final Product List);
+    end
+
+    subgraph Display
+        O --> P(A/B Test Selection);
+        P --> Q{Treatment Group A?};
+        Q -- Yes --> R(Display Standard Product Listing);
+        Q -- No --> S(Display Personalized Recommendations);
+        R --> T(User Feedback Capture);
+        S --> T;
+        T --> U(Performance Metrics Logging);
+    end

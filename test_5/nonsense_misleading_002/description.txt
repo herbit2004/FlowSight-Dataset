@@ -1,0 +1,67 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the process of order processing. It depicts the sequence of steps involved in receiving an order, checking inventory, processing payment, preparing the shipment, and notifying the customer of delivery. The diagram serves as a visual representation of the order fulfillment workflow.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It consists of a single subgraph representing the "Order Processing" flow. The process starts with "Receive Order" and ends with "Notify Customer: Delivered".
+
+## Subgraphs / Stages
+The diagram contains one subgraph: "Order Processing". This subgraph encapsulates the entire order fulfillment process, from receiving the order to notifying the customer of delivery.
+
+## Node-by-Node Description
+- **A / Receive Order**: Represents the initial step of receiving a customer order.
+  visible in diagram; no further repository context available.
+- **B / Inventory Check**: Represents the process of checking if the ordered items are in stock.
+  visible in diagram; no further repository context available.
+- **C / Payment Capture**: Represents the process of capturing the payment for the order.
+  visible in diagram; no further repository context available.
+- **D / Payment Successful?**: Represents a decision point to determine if the payment was successful.
+  visible in diagram; no further repository context available.
+- **E / Cancel Order**: Represents the action of canceling the order.
+  visible in diagram; no further repository context available.
+- **F / Notify Customer: Out of Stock**: Represents the action of notifying the customer that the order cannot be fulfilled due to insufficient stock.
+  visible in diagram; no further repository context available.
+- **H / Prepare Shipment**: Represents the process of preparing the order for shipment.
+  visible in diagram; no further repository context available.
+- **G / Packaging**: Represents the process of packaging the order.
+  visible in diagram; no further repository context available.
+- **I / Shipping**: Represents the process of shipping the order to the customer.
+  visible in diagram; no further repository context available.
+- **J / Delivery Successful?**: Represents a decision point to determine if the delivery was successful.
+  visible in diagram; no further repository context available.
+- **K / Notify Customer: Delivered**: Represents the action of notifying the customer that the order has been delivered.
+  visible in diagram; no further repository context available.
+- **L / Investigate Delivery Issue**: Represents the process of investigating any issues with the delivery.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `A --> B`: The order is sent for inventory check.
+  `B -- Yes --> C`: If the inventory check is successful (items are in stock), proceed to payment capture.
+  `B -- No --> F`: If the inventory check fails (items are out of stock), notify the customer.
+  `C --> D`: The payment capture process leads to a decision point.
+  `D -- No --> E`: If the payment is unsuccessful, cancel the order.
+  `D -- Yes --> H`: If the payment is successful, prepare the shipment.
+  `H --> G`: After preparing the shipment, the order is packaged.
+  `G --> I`: After packaging, the order is shipped.
+  `I --> J`: The shipping process leads to a decision point regarding delivery success.
+  `J -- Yes --> K`: If the delivery is successful, notify the customer.
+  `J -- No --> L`: If the delivery is unsuccessful, investigate the delivery issue.
+  `L --> K`: After investigating the delivery issue, notify the customer that the order has been delivered.
+  `E --> F`: Canceling the order triggers a notification to the customer that the items are out of stock.
+  `F --> A`: Notifying the customer about out-of-stock items loops back to receiving the order.
+
+## Repository Context & Terminology
+- **Receive Order**: In standard practice, this refers to the initial step of a customer placing an order. In this diagram, it's the starting point of the order processing flow, and also the endpoint of the out-of-stock notification loop.
+- **Inventory Check**: In standard practice, this is the process of verifying the availability of items in stock. In this diagram, it's a decision point that determines whether to proceed with payment or notify the customer of stock unavailability.
+- **Payment Capture**: In standard practice, this refers to the process of collecting payment from the customer. In this diagram, it's a step that follows inventory check and precedes the payment success check.
+- **Payment Successful?**: In standard practice, this is a check to ensure payment has been successfully processed. In this diagram, a 'No' outcome leads to order cancellation, and a 'Yes' outcome leads to shipment preparation.
+- **Cancel Order**: In standard practice, this is the process of terminating an order. In this diagram, it's triggered by unsuccessful payment and leads to notifying the customer of out-of-stock items.
+- **Notify Customer: Out of Stock**: In standard practice, this is the process of informing the customer that an item is unavailable. In this diagram, it's triggered by an inventory check failure or order cancellation, and loops back to the "Receive Order" step.
+- **Prepare Shipment**: In standard practice, this is the process of getting an order ready for shipping. In this diagram, it follows successful payment.
+- **Packaging**: In standard practice, this is the process of packing the order for shipping. In this diagram, it incorrectly follows shipment preparation.
+- **Shipping**: In standard practice, this is the process of transporting the order to the customer. In this diagram, it follows packaging.
+- **Delivery Successful?**: In standard practice, this is a check to ensure the order has been successfully delivered. In this diagram, a 'No' outcome leads to investigating the delivery issue, and a 'Yes' outcome leads to notifying the customer of delivery.
+- **Notify Customer: Delivered**: In standard practice, this is the process of informing the customer that the order has been delivered. In this diagram, it's the final step of the process, even after an unsuccessful delivery investigation.
+- **Investigate Delivery Issue**: In standard practice, this is the process of looking into problems with a delivery. In this diagram, it's triggered by an unsuccessful delivery and merges into the "Notify Customer: Delivered" step.
+
+## High-Density QA Ground Truth Summary
+The order processing flowchart begins with "Receive Order", which then flows to "Inventory Check". If the inventory check returns 'No', the process notifies the customer that the items are "Out of Stock" and then illogically loops back to "Receive Order". If the inventory check returns 'Yes', the process proceeds to "Payment Capture", followed by a check "Payment Successful?". A 'No' outcome from payment success leads to "Cancel Order", which then incorrectly triggers a "Notify Customer: Out of Stock" notification. A 'Yes' outcome from payment success leads to "Prepare Shipment", which is then followed by "Packaging" and "Shipping". After shipping, the process checks "Delivery Successful?". A 'Yes' outcome leads to "Notify Customer: Delivered". A 'No' outcome leads to "Investigate Delivery Issue", which then merges into "Notify Customer: Delivered", even if the issue is unresolved. The diagram contains several errors, including a reversed sequence of packaging and shipment preparation, swapped branch outcomes for payment success, an illogical loop after out-of-stock notification, and a wrong merge of parallel paths after delivery issue investigation. The "Notify Customer: Out of Stock" node is triggered by both inventory failure and order cancellation, and then loops back to the "Receive Order" node.

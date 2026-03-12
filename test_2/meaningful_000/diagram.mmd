@@ -1,0 +1,22 @@
+graph TD
+    subgraph User Registration and Login Flow
+        A[User Input: Email and Password] --> B{User Exists?};
+        B -- Yes --> C[Authenticate User];
+        B -- No --> D[Validate Input Format];
+        D --> E{Valid Email?};
+        E -- Yes --> F[Hash Password];
+        E -- No --> G[Return Error: Invalid Email Format];
+        F --> H[Create User Account];
+        H --> I[Send Verification Email];
+        I --> J[User Clicks Verification Link];
+        J --> K[Verify Email Address];
+        K --> L[Activate Account];
+        C --> M{Successful Authentication?};
+        M -- Yes --> N[Generate JWT Token];
+        M -- No --> O[Return Error: Invalid Credentials];
+        N --> P[Return JWT Token to User];
+        L --> N;
+
+    end
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    class G,O error

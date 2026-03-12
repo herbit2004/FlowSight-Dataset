@@ -1,0 +1,28 @@
+flowchart LR
+  subgraph OPSA[Ops Cluster A]
+    ACD1[Argo CD A]
+    OBSA[Observability A]
+  end
+  subgraph OPSB[Ops Cluster B]
+    ACD2[Argo CD B]
+    OBSB[Observability B]
+  end
+  subgraph ENVA[Env Clusters A]
+    D1[Dev A]
+    S1[Stage A]
+    P1[Prod A]
+  end
+  subgraph ENVB[Env Clusters B]
+    D2[Dev B]
+    S2[Stage B]
+    P2[Prod B]
+  end
+
+  ACD1 --> D1
+  ACD1 --> S1
+  ACD1 --> P1
+  ACD2 --> D2
+  ACD2 --> S2
+  ACD2 --> P2
+
+  OBSA -. optional aggregated exports .- OBSB

@@ -1,0 +1,27 @@
+graph TD
+    subgraph Inventory Deduction & Rollback
+        A[Receive Order Request] --> B{Check Inventory Availability};
+        B -- Available --> C[Deduct Inventory];
+        B -- Unavailable --> D[Reject Order: Insufficient Inventory];
+        C --> E[Log Inventory Deduction];
+        E --> F{Payment Successful?};
+        F -- Yes --> G[Ship Order];
+        F -- No --> H[Rollback Inventory Deduction];
+        H --> I[Add Inventory Back];
+        I --> J[Log Inventory Rollback];
+        J --> K[Notify Error Handler];
+        C --> L{Create Deductible Record};
+        L --> M[Persist Deductible Record];
+        M --> N{Successful Deductible Persist?};
+        N -- Yes --> O[Continue Workflow];
+        N -- No --> P[Trigger Compensation Transaction];
+        P --> Q[Log Compensation Trigger];
+        Q --> K;
+        G --> O;
+        O --> R[Update Order Status: Processing];
+        K --> R;
+        R --> S[Complete Order Processing];
+    end
+
+classDef default fill:#f9f,stroke:#333,stroke-width:2px
+class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S default

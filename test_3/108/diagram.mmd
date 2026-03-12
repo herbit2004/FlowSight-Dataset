@@ -1,0 +1,42 @@
+graph TB
+    subgraph "Long-term Memory"
+        VS[(Vector Store<br/>Embeddings DB)]
+        KB[Knowledge Base<br/>Domain Expertise]
+        Tools[Tools Knowledge<br/>Usage Patterns]
+    end
+
+    subgraph "Working Memory"
+        Context[Current Context<br/>Task State]
+        Goals[Active Goals<br/>Objectives]
+        State[System State<br/>Resources]
+    end
+
+    subgraph "Episodic Memory"
+        Actions[Past Actions<br/>Commands History]
+        Results[Action Results<br/>Outcomes]
+        Patterns[Success Patterns<br/>Best Practices]
+    end
+
+    Context --> |Query| VS
+    VS --> |Retrieve| Context
+
+    Goals --> |Consult| KB
+    KB --> |Guide| Goals
+
+    State --> |Record| Actions
+    Actions --> |Learn| Patterns
+    Patterns --> |Store| VS
+
+    Tools --> |Inform| State
+    Results --> |Update| Tools
+
+    VS --> |Enhance| KB
+    KB --> |Index| VS
+
+    classDef ltm fill:#f9f,stroke:#333,stroke-width:2px,color:#000
+    classDef wm fill:#bbf,stroke:#333,stroke-width:2px,color:#000
+    classDef em fill:#bfb,stroke:#333,stroke-width:2px,color:#000
+
+    class VS,KB,Tools ltm
+    class Context,Goals,State wm
+    class Actions,Results,Patterns em

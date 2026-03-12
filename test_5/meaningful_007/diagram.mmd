@@ -1,0 +1,17 @@
+graph TD
+    subgraph User Interaction
+        A[User Client Application] --> B(API Gateway)
+    end
+    B -- /order/create --> C{Order Service}
+    C --> D{Inventory Service}
+    D -- Check Stock --> E[Product Database]
+    E -- Stock OK --> D
+    D -- Reserve Products --> F{Payment Service}
+    F -- /payment/authorize --> G(Payment Processor)
+    G -- Auth Success --> F
+    F -- Funds Reserved --> C
+    C -- Order Created --> H{Notification Service}
+    H --> I[Email Service]
+    I --> J(User Email Inbox)
+    classDef microservice fill:#f9f,stroke:#333,stroke-width:2px
+    class C,D,F,H microservice

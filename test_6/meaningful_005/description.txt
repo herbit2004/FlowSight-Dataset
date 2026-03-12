@@ -1,0 +1,53 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the control and data flow within a cache system. It depicts the process of handling client requests, checking the cache for data, retrieving data from the backend if necessary, updating the cache, and invalidating cache entries. The diagram serves as a high-level overview of the cache system's architecture and operation.
+
+## Overall Layout
+The diagram's primary direction is left to right (LR). It shows a single subgraph, "Cache System", containing all nodes. The start node is "Client Request", and the primary end node is "Return Data To Client", which is reached via two paths.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **Cache System**: Encompasses the entire workflow, from receiving client requests to returning data.
+
+## Node-by-Node Description
+- **A / Client Request**: Represents an incoming request from a client. visible in diagram; no further repository context available.
+- **B / Request Router**: Responsible for routing the client request to the appropriate handler. visible in diagram; no further repository context available.
+- **C / Cache Lookup**: Performs a lookup in the cache to check if the requested data is present. visible in diagram; no further repository context available.
+- **D / Cache Hit?**: A decision point that determines whether the data was found in the cache. visible in diagram; no further repository context available.
+- **E / Cache Read**: Reads the data from the cache. visible in diagram; no further repository context available.
+- **F / Return Data To Client**: Returns the data to the client. visible in diagram; no further repository context available.
+- **G / Backend Service Request**: Sends a request to the backend service to retrieve the data. visible in diagram; no further repository context available.
+- **H / Update Cache**: Updates the cache with the data retrieved from the backend service. visible in diagram; no further repository context available.
+- **I / Return Data To Client**: Returns the data to the client after retrieving it from the backend and updating the cache. visible in diagram; no further repository context available.
+- **J / Cache Invalidation Request**: Represents a request to invalidate a cache entry. visible in diagram; no further repository context available.
+- **K / Invalidation Queue**: A queue that holds cache invalidation requests. visible in diagram; no further repository context available.
+- **L / Invalidate Cache Entry**: Invalidates the specified entry in the cache. visible in diagram; no further repository context available.
+- **M / Cache Miss Metrics**: Collects metrics related to cache misses. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The client request is sent to the request router.
+- `B --> C`: The request router forwards the request to the cache lookup.
+- `C --> D`: The cache lookup result is used to determine if there was a cache hit.
+- `D -- Yes --> E`: If there is a cache hit, the data is read from the cache.
+- `E --> F`: The data read from the cache is returned to the client.
+- `D -- No --> G`: If there is a cache miss, a request is sent to the backend service.
+- `G --> H`: The backend service request triggers an update to the cache.
+- `H --> I`: After updating the cache, the data is prepared to be returned to the client.
+- `I --> F`: The data retrieved from the backend is returned to the client.
+- `A --> J`: A client request can also trigger a cache invalidation request.
+- `J --> K`: The cache invalidation request is added to the invalidation queue.
+- `K --> L`: The invalidation queue processes the request to invalidate the cache entry.
+- `D -- No --> M`: If there is a cache miss, cache miss metrics are collected.
+- `M --> G`: Cache miss metrics trigger a backend service request.
+- Paths `E --> F` and `I --> F` converge at node `F`.
+
+## Repository Context & Terminology
+- **Cache**: A high-speed data storage layer that stores a subset of data, typically transient in nature, so that future requests for that data are served faster than is possible by accessing the data's primary storage location.
+- **Cache Hit**: Occurs when the requested data is found in the cache.
+- **Cache Miss**: Occurs when the requested data is not found in the cache and must be retrieved from the backend.
+- **Cache Invalidation**: The process of removing or marking cache data as invalid, forcing the system to retrieve fresh data from the backend on the next request.
+- **Backend Service**: The primary data storage and processing system that the cache sits in front of.
+- **Request Router**: A component that directs incoming requests to the appropriate handler or service.
+- **Metrics**: Quantitative measurements used to track and assess the performance and health of a system.
+
+## High-Density QA Ground Truth Summary
+The cache system process begins with a "Client Request" which is then passed to the "Request Router". The router forwards the request to "Cache Lookup" to determine if the data is already cached. The "Cache Hit?" decision node then determines the subsequent flow. If "Yes" (cache hit), the system proceeds to "Cache Read" and then "Return Data To Client". If "No" (cache miss), the system branches to "Backend Service Request", then "Update Cache", and subsequently "Return Data To Client". A separate path originating from "Client Request" handles cache invalidation. This path involves "Cache Invalidation Request", "Invalidation Queue", and "Invalidate Cache Entry", ensuring data consistency. Cache misses also trigger "Cache Miss Metrics" collection, which then triggers a "Backend Service Request". Both the "Cache Read" path and the "Update Cache" path converge at the "Return Data To Client" node, delivering the requested data back to the client. The cache system aims to reduce latency and improve performance by serving frequently accessed data from the cache, while maintaining data integrity through invalidation mechanisms.

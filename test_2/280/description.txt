@@ -1,0 +1,45 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a transform pipeline and its associated components. It illustrates the flow of data and operations within the pipeline, including content routing, compression, and interaction with an LLM provider. The diagram serves as a high-level architectural overview of the system.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It consists of a main "Transform Pipeline" subgraph at the top, which feeds into "ContentRouter dispatches" and "CCR: Compress-Cache-Retrieve" subgraphs at the bottom. The start node is "CacheAligner," and the end nodes are "CodeCompressor," "LLMLingua," and "Compressed\nStore."
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Transform Pipeline**: The main pipeline responsible for processing data through a series of steps.
+- **ContentRouter dispatches**: A subgraph showing the different compressors that the ContentRouter can dispatch to based on content type.
+- **CCR: Compress-Cache-Retrieve**: A subgraph representing a compress-cache-retrieve mechanism.
+
+## Node-by-Node Description
+- **CA / CacheAligner\nStabilizes prefix for KV cache**: The first step in the transform pipeline, responsible for stabilizing the prefix for the KV cache. visible in diagram; no further repository context available.
+- **CR / ContentRouter\nDetects content type, picks compressor**: Detects the content type and selects an appropriate compressor. visible in diagram; no further repository context available.
+- **IC / IntelligentContext\nScore-based token fitting**: Performs score-based token fitting. visible in diagram; no further repository context available.
+- **QE / Query Echo\nRe-injects user question**: Re-injects the user question. visible in diagram; no further repository context available.
+- **LLM / LLM Provider**: Provides language model services. visible in diagram; no further repository context available.
+- **SC / SmartCrusher\nAny JSON type**: A compressor for any JSON type. visible in diagram; no further repository context available.
+- **CC / CodeCompressor\nAST-aware code**: A compressor for AST-aware code. visible in diagram; no further repository context available.
+- **LL / LLMLingua\nML-based text**: A compressor for ML-based text. visible in diagram; no further repository context available.
+- **Store / Compressed\nStore**: Stores compressed data. visible in diagram; no further repository context available.
+- **Tool / headroom_retrieve**: Retrieves data from the compressed store. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `CA --> CR`: Data flows from CacheAligner to ContentRouter.
+- `CR --> IC`: Data flows from ContentRouter to IntelligentContext.
+- `IC --> QE`: Data flows from IntelligentContext to Query Echo.
+- `QE --> LLM`: Data flows from Query Echo to LLM Provider.
+- `LLM -. "retrieves when\nit needs more" .-> Tool`: LLM Provider retrieves data from headroom_retrieve when it needs more.
+- `CR --> Compressors`: ContentRouter dispatches to different compressors based on content type.
+- `SC -. "stores originals +\nsummary of what's omitted" .-> Store`: SmartCrusher stores originals and a summary of what's omitted in the Compressed Store.
+- `Tool <--> Store`: headroom_retrieve interacts with the Compressed Store.
+
+## Repository Context & Terminology
+- **KV Cache**: Key-Value cache, a data store that uses key-value pairs to store and retrieve data.
+- **AST**: Abstract Syntax Tree, a tree representation of the abstract syntactic structure of source code.
+- **ML**: Machine Learning.
+- **LLM**: Large Language Model.
+- **ContentRouter**: A component that detects the content type and selects an appropriate compressor.
+- **Compressor**: A component that compresses data.
+- **CCR**: Compress-Cache-Retrieve, a mechanism for compressing, caching, and retrieving data.
+
+## High-Density QA Ground Truth Summary
+The transform pipeline begins with the `CacheAligner` stabilizing the prefix for the KV cache. The data then flows to the `ContentRouter`, which detects the content type and picks an appropriate compressor. Based on the content type, the `ContentRouter` dispatches to one of the compressors: `SmartCrusher` for any JSON type, `CodeCompressor` for AST-aware code, or `LLMLingua` for ML-based text. The `SmartCrusher` stores originals and a summary of what's omitted in the `Compressed\nStore`. After `ContentRouter`, the data flows through `IntelligentContext` for score-based token fitting and then to `Query Echo`, which re-injects the user question. The `Query Echo` passes the data to the `LLM Provider`. The `LLM Provider` retrieves data from `headroom_retrieve` when it needs more data. The `headroom_retrieve` interacts with the `Compressed\nStore` to retrieve compressed data. The pipeline's end nodes are the different compressors and the `Compressed\nStore`. The `ContentRouter`'s dispatching logic is crucial for selecting the optimal compression strategy based on the input data's characteristics.

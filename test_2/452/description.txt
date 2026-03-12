@@ -1,0 +1,47 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the data flow and processing steps in a question-answering or information retrieval system. It illustrates the sequence of operations from user input to generating an answer with supporting evidence, highlighting the roles of different components like intent routing, planning, retrieval, writing, and quality control. The diagram serves as a high-level architecture overview.
+
+## Overall Layout
+The diagram has a top-to-bottom (TD) layout. It starts with the "User" node at the top and flows downwards through various processing stages to the "Answer + Evidence" node at the bottom. The diagram illustrates a sequential process with some feedback loops.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: User Input, Intent Routing, Planning, Retrieval, Writing, Quality Control, and Answer Generation.
+
+## Node-by-Node Description
+- **User**: Represents the user providing the initial query or request. visible in diagram; no further repository context available.
+- **Intent Router - Flash**: Responsible for identifying the user's intent from the input. visible in diagram; no further repository context available.
+- **Planner - Pro**: Creates a plan to fulfill the user's intent. visible in diagram; no further repository context available.
+- **Retrieval Planner - Pro**: Refines the plan for information retrieval. visible in diagram; no further repository context available.
+- **File-backed Memory**: A persistent storage mechanism for session data. visible in diagram; no further repository context available.
+- **WebRetriever - Google CSE + Fetch**: Retrieves information from the web using Google Custom Search Engine (CSE) and a fetching mechanism. visible in diagram; no further repository context available.
+- **VectorRetriever - FAISS**: Retrieves information using vector-based similarity search with FAISS (Facebook AI Similarity Search). visible in diagram; no further repository context available.
+- **Writer - Pro**: Formulates the answer based on the retrieved information. visible in diagram; no further repository context available.
+- **Critic - Pro**: Evaluates the quality and relevance of the answer. visible in diagram; no further repository context available.
+- **Guardrails**: Ensures the answer adheres to safety and ethical guidelines. visible in diagram; no further repository context available.
+- **Answer + Evidence**: The final output, consisting of the answer and supporting evidence. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `User --> Intent Router - Flash`: User input is passed to the intent router.
+  `Intent Router - Flash --> Planner - Pro`: The identified intent is passed to the planner.
+  `Planner - Pro --> Retrieval Planner - Pro`: The initial plan is refined for retrieval.
+  `Planner - Pro -. session .-> File-backed Memory`: Session data is stored in file-backed memory.
+  `Retrieval Planner - Pro --> VectorRetriever - FAISS`: The retrieval plan triggers vector-based information retrieval.
+  `Retrieval Planner - Pro --> WebRetriever - Google CSE + Fetch`: The retrieval plan triggers web-based information retrieval.
+  `VectorRetriever - FAISS --> Writer - Pro`: Retrieved information from vector search is passed to the writer.
+  `WebRetriever - Google CSE + Fetch --> Writer - Pro`: Retrieved information from the web is passed to the writer.
+  `Writer - Pro --> Critic - Pro`: The formulated answer is passed to the critic for evaluation.
+  `Critic - Pro --> Retrieval Planner - Pro`: If the answer is not satisfactory, the critic triggers a follow-up retrieval.
+  `Writer - Pro --> Guardrails`: The formulated answer is passed to the guardrails for safety checks.
+  `Guardrails --> Answer + Evidence`: The validated answer and evidence are presented as the final output.
+
+## Repository Context & Terminology
+- **Intent Router**: A component responsible for understanding the user's intention behind their query.
+- **Planner**: A module that creates a structured plan to fulfill the user's intent, often involving multiple steps like information retrieval, reasoning, and answer generation.
+- **Retrieval Planner**: A specialized planner focused on optimizing the information retrieval process.
+- **FAISS (Facebook AI Similarity Search)**: A library for efficient similarity search and clustering of dense vectors. It's used for quickly finding relevant information based on vector embeddings.
+- **Google CSE (Custom Search Engine)**: A programmable search engine that allows developers to create customized search experiences using Google's search infrastructure.
+- **Fetch**: A general term for retrieving data from a source, often referring to making HTTP requests to web servers.
+- **Guardrails**: Mechanisms to ensure the system's output is safe, ethical, and aligned with desired policies.
+
+## High-Density QA Ground Truth Summary
+The process begins with the `User` providing input, which is immediately processed by the `Intent Router - Flash` to determine the user's intention. This intent is then passed to the `Planner - Pro`, which formulates a high-level plan. The `Planner - Pro` also interacts with `File-backed Memory` to manage session data. The plan is refined by the `Retrieval Planner - Pro`, which then triggers two parallel retrieval processes: `VectorRetriever - FAISS` for vector-based similarity search and `WebRetriever - Google CSE + Fetch` for web-based information retrieval. The retrieved information from both sources converges at the `Writer - Pro`, which formulates an answer. The `Critic - Pro` evaluates the answer, and if it's unsatisfactory, a `follow-ups` loop sends the process back to the `Retrieval Planner - Pro` for further refinement. Simultaneously, the `Writer - Pro` passes the answer to `Guardrails` for safety and ethical checks. Finally, the validated `Answer + Evidence` is presented to the user. The use of `FAISS` suggests the system relies on vector embeddings for efficient information retrieval, while `Google CSE` indicates leveraging web search capabilities.

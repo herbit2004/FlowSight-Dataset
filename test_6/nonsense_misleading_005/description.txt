@@ -1,0 +1,60 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow of an e-commerce system. It illustrates the steps involved from when a user submits an order to when the order is delivered, including payment processing, inventory checks, and shipping. The diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "User Submits Order" node at the top and flows downwards through a series of processes and decision points, ultimately ending with the "Order Delivered" node. The diagram contains an illogical loop from the "Order Delivered" node back to the "User Submits Order" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: User Order Submission, Payment Processing, Shipment Preparation, Inventory Check, Order Fulfillment (Positive Path), Order Cancellation (Negative Path), and Order Completion/Error Handling.
+
+## Node-by-Node Description
+- **User Submits Order**: Represents the initial step where a user places an order. visible in diagram; no further repository context available.
+- **Payment Received?**: A decision point to check if the payment for the order has been received. visible in diagram; no further repository context available.
+- **Cancel Order**: Represents the action of canceling the order if payment is not received. visible in diagram; no further repository context available.
+- **Prepare Shipment**: Represents the process of preparing the order for shipment. visible in diagram; no further repository context available.
+- **Inventory Available?**: A decision point to check if the required inventory is available to fulfill the order. visible in diagram; no further repository context available.
+- **Notify User of Delay**: Represents the action of notifying the user about a delay in order fulfillment due to inventory unavailability. visible in diagram; no further repository context available.
+- **Refund Payment**: Represents the action of refunding the payment to the user due to inventory unavailability. visible in diagram; no further repository context available.
+- **Pack Order**: Represents the process of packing the order for shipment. visible in diagram; no further repository context available.
+- **Generate Shipping Label**: Represents the process of generating a shipping label for the order. visible in diagram; no further repository context available.
+- **Update Inventory**: Represents the process of updating the inventory levels after the order has been packed. visible in diagram; no further repository context available.
+- **Send Shipping Confirmation**: Represents the action of sending a shipping confirmation email to the user. visible in diagram; no further repository context available.
+- **Order Delivered**: Represents the final step where the order is delivered to the user. visible in diagram; no further repository context available.
+- **Close Order**: Represents the action of closing the order after refunding the payment. visible in diagram; no further repository context available.
+- **Log Error**: Represents the action of logging an error in case of inventory unavailability. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Submits Order --> Payment Received?`: Represents the flow from order submission to payment verification.
+- `Payment Received? -- Yes --> Prepare Shipment`: If payment is received, the process moves to shipment preparation.
+- `Payment Received? -- No --> Cancel Order`: If payment is not received, the order is canceled.
+- `Cancel Order --> Prepare Shipment`: Illogical flow; canceled orders proceed to shipment preparation.
+- `Prepare Shipment --> Inventory Available?`: Represents the flow from shipment preparation to inventory availability check.
+- `Inventory Available? -- Yes --> Pack Order`: If inventory is available, the order is packed.
+- `Inventory Available? -- No --> Notify User of Delay`: If inventory is not available, the user is notified of the delay.
+- `Notify User of Delay --> Refund Payment`: User is notified of delay, then payment is refunded.
+- `Pack Order --> Generate Shipping Label`: Represents the flow from packing the order to generating a shipping label.
+- `Generate Shipping Label --> Update Inventory`: Represents the flow from generating a shipping label to updating the inventory.
+- `Update Inventory --> Send Shipping Confirmation`: Represents the flow from updating inventory to sending a shipping confirmation.
+- `Refund Payment --> Close Order`: Represents the flow from refunding payment to closing the order.
+- `Close Order --> Log Error`: Represents the flow from closing the order to logging an error.
+- `Log Error --> Send Shipping Confirmation`: Represents the flow from logging an error to sending a shipping confirmation.
+- `Send Shipping Confirmation --> Order Delivered`: Represents the flow from sending a shipping confirmation to order delivery.
+- `Order Delivered --> User Submits Order`: Illogical loop; order delivery leads back to order submission.
+
+## Repository Context & Terminology
+- **User Submits Order**: In standard e-commerce, this is the initial action by the customer. In this diagram, it's also the endpoint of an illogical loop.
+- **Payment Received?**: Standard check to ensure payment before fulfillment. Here, the "No" branch leads to order cancellation, as expected.
+- **Prepare Shipment**: Standard step in order fulfillment. In this diagram, it's reached even after an order is canceled, which is incorrect.
+- **Inventory Available?**: Standard check to prevent overselling. Here, a "No" result triggers a notification *before* a refund, which is reversed.
+- **Notify User of Delay**: Standard customer service practice. Here, it precedes the refund, which is unusual.
+- **Refund Payment**: Standard action when an order cannot be fulfilled. Here, it doesn't directly lead to order closure.
+- **Pack Order**: Standard step in order fulfillment.
+- **Generate Shipping Label**: Standard step in order fulfillment.
+- **Update Inventory**: Standard step in order fulfillment.
+- **Send Shipping Confirmation**: Standard notification to the customer. Here, it's reached after error logging, which is incorrect.
+- **Order Delivered**: Standard final step in order fulfillment. Here, it loops back to "User Submits Order," which is illogical.
+- **Close Order**: Standard action to finalize an order.
+- **Log Error**: Standard practice for tracking issues. Here, it's triggered after closing the order and before sending shipping confirmation, which is incorrect.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "User Submits Order," which flows to the "Payment Received?" decision. If "Yes," the process moves to "Prepare Shipment"; if "No," the order is "Cancel Order" and then proceeds to "Prepare Shipment" (an error). "Prepare Shipment" leads to "Inventory Available?" If "Yes," the order is "Pack Order," then "Generate Shipping Label," followed by "Update Inventory," and finally "Send Shipping Confirmation" before reaching "Order Delivered." If "Inventory Available?" is "No," the user receives a "Notify User of Delay" message, followed by "Refund Payment," then "Close Order," "Log Error," and finally "Send Shipping Confirmation." The "Refund Payment" step does not directly lead to "Close Order" but instead to "Log Error" and then "Send Shipping Confirmation," which is incorrect. The "Order Delivered" node then loops back to "User Submits Order," creating an illogical cycle. The standard practice of refunding payment before notifying the user of a delay is reversed in this diagram, and the error logging occurs before sending the shipping confirmation, which is also incorrect.

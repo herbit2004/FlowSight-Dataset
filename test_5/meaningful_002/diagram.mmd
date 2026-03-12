@@ -1,0 +1,35 @@
+graph TD
+    A[User Search Query] --> B{Query Preprocessing};
+    B -- Normalize Text --> C[Search Engine API Call];
+    C -- Results (Top N) --> D{Filtering & Ranking};
+    D -- Insufficient Results? (N < Threshold) --> E[Query Expansion];
+    E -- Expanded Query --> C;
+    D -- Sufficient Results --> F[Personalization Engine];
+    F -- User Profile Available? --> G{Collaborative Filtering};
+    F -- User Profile Unavailable --> H[Popularity-Based Ranking];
+    G -- Personalized Ranking --> I[Re-ranked Results];
+    H -- Popularity Ranking --> I;
+    I --> J[Alternative Recommendation Engine];
+
+    J -- Diversity Score Check --> K{Acceptable Diversity?};
+    K -- Yes --> L[Combine Recommendations];
+    K -- No --> M[Increase Diversity Weight];
+    M --> J;
+
+    L --> N[Duplicate Removal];
+    N --> O[A/B Test Variant Assignment];
+    O -- Variant A --> P[Control Group Ranking];
+    O -- Variant B --> Q[Experiment Group Ranking];
+    P --> R[Display Results];
+    Q --> R;
+    R --> S[User Clicks & Engagement Tracking];
+    S --> T[Offline Model Retraining];
+
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px
+    class A,C,E,G,H,P,Q,S default
+    classDef decision fill:#ccf,stroke:#333,stroke-width:2px
+    class B,D,F,K,O decision
+    classDef important fill:#afa,stroke:#333,stroke-width:2px
+    class L,N,R important
+    classDef alternative fill:#aaf,stroke:#333,stroke-width:2px
+    class J,M,T alternative

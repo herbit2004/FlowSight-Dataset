@@ -1,0 +1,95 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the end-to-end process of order processing, fulfillment, and payment processing in an e-commerce system. It depicts the flow of data and control between different services and systems involved in handling a customer order, from initial submission to final notification. The diagram serves as a high-level architectural overview of the order processing pipeline.
+
+## Overall Layout
+The diagram is arranged vertically (top-to-bottom) and horizontally (left-to-right), with three main subgraphs representing different stages of the process. The start nodes are "Client: Order Submission" and "Order Enrichment Engine", and the end nodes are "Client: Order Update", "Accounting System", "Dead Letter Queue: orders.invalid", and "DB: Backorder Queue".
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **Order Processing System**: Handles the initial order submission, validation, and enrichment.
+- **Fulfillment Subsystem**: Manages inventory checks, order routing, and shipping.
+- **Payment Processing**: Processes payments, detects fraud, and handles transaction reversals.
+
+## Node-by-Node Description
+- **Client: Order Submission**: Represents the customer submitting an order.
+  visible in diagram; no further repository context available.
+- **Order Ingestion API Gateway**: An API gateway that receives order requests from the client.
+  visible in diagram; no further repository context available.
+- **Order Validation Service**: Validates the order data.
+  visible in diagram; no further repository context available.
+- **Order Enrichment Engine**: Enriches the order data with additional information.
+  visible in diagram; no further repository context available.
+- **Kafka Topic: orders.enriched**: A Kafka topic where enriched orders are published.
+  visible in diagram; no further repository context available.
+- **Error Handling Service**: Handles invalid orders.
+  visible in diagram; no further repository context available.
+- **Dead Letter Queue: orders.invalid**: A queue for storing invalid orders.
+  visible in diagram; no further repository context available.
+- **Kafka Consumer: Order Processor**: A Kafka consumer that processes orders from the "orders.enriched" topic.
+  visible in diagram; no further repository context available.
+- **Inventory Check Service**: Checks the availability of items in the order.
+  visible in diagram; no further repository context available.
+- **Inventory Backorder Service**: Handles orders with insufficient inventory.
+  visible in diagram; no further repository context available.
+- **DB: Backorder Queue**: A database queue for storing backordered items.
+  visible in diagram; no further repository context available.
+- **Order Routing Service**: Routes the order to the appropriate shipping service.
+  visible in diagram; no further repository context available.
+- **Shipping Service: Standard**: A standard shipping service.
+  visible in diagram; no further repository context available.
+- **Shipping Service: Expedited**: An expedited shipping service.
+  visible in diagram; no further repository context available.
+- **Outbound Logistics System**: Manages the outbound logistics process.
+  visible in diagram; no further repository context available.
+- **Notification Service**: Sends order updates to the client.
+  visible in diagram; no further repository context available.
+- **Client: Order Update**: Represents the client receiving an order update.
+  visible in diagram; no further repository context available.
+- **Order Enrichment Engine**: Enriches the order data with additional information for payment processing.
+  visible in diagram; no further repository context available.
+- **Payment Gateway Adapter**: Adapts the payment request to the payment gateway.
+  visible in diagram; no further repository context available.
+- **Fraud Detection System**: Detects fraudulent transactions.
+  visible in diagram; no further repository context available.
+- **Transaction Reversal**: Reverses fraudulent transactions.
+  visible in diagram; no further repository context available.
+- **Payment Capture**: Captures the payment for non-fraudulent transactions.
+  visible in diagram; no further repository context available.
+- **Accounting System**: Records the payment in the accounting system.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Client: Order Submission --> Order Ingestion API Gateway`: The client submits an order to the API gateway.
+- `Order Ingestion API Gateway --> Order Validation Service`: The API gateway sends the order to the validation service.
+- `Order Validation Service -- Valid Order --> Order Enrichment Engine`: If the order is valid, it is sent to the enrichment engine.
+- `Order Validation Service -- Invalid Order --> Error Handling Service`: If the order is invalid, it is sent to the error handling service.
+- `Error Handling Service --> Dead Letter Queue: orders.invalid`: Invalid orders are sent to the dead letter queue.
+- `Order Enrichment Engine --> Kafka Topic: orders.enriched`: Enriched orders are published to the Kafka topic.
+- `Kafka Consumer: Order Processor --> Inventory Check Service`: The order processor consumes orders from the Kafka topic and sends them to the inventory check service.
+- `Inventory Check Service -- Inventory Available --> Order Routing Service`: If inventory is available, the order is sent to the routing service.
+- `Inventory Check Service -- Insufficient Inventory --> Inventory Backorder Service`: If inventory is insufficient, the order is sent to the backorder service.
+- `Inventory Backorder Service --> DB: Backorder Queue`: Backordered items are added to the backorder queue.
+- `Order Routing Service -- Standard Shipping --> Shipping Service: Standard`: The order is routed to the standard shipping service.
+- `Order Routing Service -- Expedited Shipping --> Shipping Service: Expedited`: The order is routed to the expedited shipping service.
+- `Shipping Service: Standard --> Outbound Logistics System`: The standard shipping service sends the order to the outbound logistics system.
+- `Shipping Service: Expedited --> Outbound Logistics System`: The expedited shipping service sends the order to the outbound logistics system.
+- `Outbound Logistics System --> Notification Service`: The outbound logistics system sends a notification to the notification service.
+- `Notification Service --> Client: Order Update`: The notification service sends an order update to the client.
+- `Order Enrichment Engine --> Payment Gateway Adapter`: The order enrichment engine sends data to the payment gateway adapter.
+- `Payment Gateway Adapter --> Fraud Detection System`: The payment gateway adapter sends the payment to the fraud detection system.
+- `Fraud Detection System -- Fraudulent Transaction --> Transaction Reversal`: If the transaction is fraudulent, it is reversed.
+- `Fraud Detection System -- Non-Fraudulent Transaction --> Payment Capture`: If the transaction is not fraudulent, the payment is captured.
+- `Payment Capture --> Accounting System`: The payment capture service sends the payment information to the accounting system.
+- `Kafka Topic: orders.enriched -.-> Kafka Consumer: Order Processor`: Dotted line indicates that the Kafka Consumer subscribes to the Kafka Topic.
+
+## Repository Context & Terminology
+- **API Gateway**: A service that acts as a single entry point for clients to access backend services.
+- **Kafka Topic**: A category or feed name to which records are published in a Kafka messaging system.
+- **Kafka Consumer**: An application that subscribes to one or more Kafka topics and processes the records.
+- **Dead Letter Queue**: A queue for storing messages that could not be processed.
+- **Backorder**: An order for a product that is temporarily out of stock.
+- **Payment Gateway**: A service that processes payments for online transactions.
+- **Fraud Detection System**: A system that detects fraudulent transactions.
+
+## High-Density QA Ground Truth Summary
+The order processing system begins with a "Client: Order Submission" which sends a request to the "Order Ingestion API Gateway". The gateway then passes the "Valid Request" to the "Order Validation Service". If the order is "Invalid Order", it is routed to the "Error Handling Service" and ends up in the "Dead Letter Queue: orders.invalid". If the order is "Valid Order", it proceeds to the "Order Enrichment Engine" and is published to the "Kafka Topic: orders.enriched". The "Kafka Consumer: Order Processor" consumes the enriched order and sends it to the "Inventory Check Service". If "Insufficient Inventory" is available, the order goes to "Inventory Backorder Service" and is stored in "DB: Backorder Queue". If "Inventory Available", the order is sent to the "Order Routing Service", which routes it to either "Shipping Service: Standard" or "Shipping Service: Expedited" based on the shipping method. Both shipping services then send the order to the "Outbound Logistics System", which triggers the "Notification Service" to send a "Client: Order Update". Simultaneously, the "Order Enrichment Engine" feeds into the "Payment Processing" subgraph, starting with the "Payment Gateway Adapter" and then the "Fraud Detection System". "Fraudulent Transaction" leads to "Transaction Reversal", while "Non-Fraudulent Transaction" leads to "Payment Capture" and finally the "Accounting System". The Kafka topic acts as a central messaging hub, decoupling the order processing and fulfillment subsystems, allowing for asynchronous processing and improved scalability.

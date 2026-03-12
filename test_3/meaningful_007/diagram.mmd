@@ -1,0 +1,26 @@
+graph TD
+    subgraph User Request Flow
+        A[User Request via API Gateway] --> B{Authentication Service: Verify JWT};
+    end
+
+    B -- JWT Valid --> C[Pricing Service: Get Product Price];
+    B -- JWT Invalid --> X[Return: 401 Authentication Failed];
+
+    C --> D[Inventory Service: Check Availability];
+
+    D -- Available --> E[Order Service: Create Pending Order];
+    D -- Unavailable --> Y[Return: Error - Out of Stock];
+
+    E --> F{Payment Service: Authorize Payment};
+
+    F -- Payment Success --> G[Order Service: Finalize Order];
+    F -- Payment Failure --> H[Order Service: Cancel Pending Order];
+
+    G --> I[Notification Service: Send Order Confirmation Email];
+    H --> J[Notification Service: Send Payment Failed Notification];
+
+    I --> K[Return: Order Confirmation];
+    H --> K
+
+    classDef authFail fill:#f9d2d0,stroke:#cc0000,stroke-width:2px;
+    class X,Y authFail;

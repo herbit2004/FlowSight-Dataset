@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a process flow with decision points, actions, and potential retries. The diagram illustrates a sequence of steps involving status checks, processing, storage, routing, validation, and notifications, ultimately leading to either completion or a retry loop. It plays a role in visualizing and documenting the workflow of a system, although with intentional logical flaws.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with a "Start" node at the top and progresses downwards through a series of interconnected nodes. The end nodes are "End" and "Completion".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Start, Status Check, Processing & Storage, Routing & Notification, Validation, Retry, and Completion.
+
+## Node-by-Node Description
+- **A / Start**: The starting point of the process. visible in diagram; no further repository context available.
+- **B / Check Status**: A decision point where the status is checked. visible in diagram; no further repository context available.
+- **C / Process**: A processing step performed when the status check is positive. visible in diagram; no further repository context available.
+- **D / Notify**: A notification step triggered by a negative status check or a storage failure. visible in diagram; no further repository context available.
+- **E / Store**: A storage step following the processing step. visible in diagram; no further repository context available.
+- **F / Route**: A routing step performed after successful storage. visible in diagram; no further repository context available.
+- **G / Validate**: A validation step performed after routing. visible in diagram; no further repository context available.
+- **H / Retry**: A retry step triggered by a successful validation. visible in diagram; no further repository context available.
+- **I / Completion**: The successful completion point of the process. visible in diagram; no further repository context available.
+- **J / End**: An end point reached after notification. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The process starts and proceeds to check the status.
+- `B -- Yes --> C`: If the status check is positive, the process proceeds to the processing step.
+- `B -- No --> D`: If the status check is negative, a notification is sent.
+- `C --> E`: After processing, the data is stored.
+- `E -- Success --> F`: If storage is successful, the data is routed.
+- `E -- Failure --> D`: If storage fails, a notification is sent.
+- `F --> G`: After routing, the data is validated.
+- `G -- Yes --> H`: If validation is successful, the process retries.
+- `G -- No --> I`: If validation fails, the process completes.
+- `H --> C`: The retry step loops back to the processing step.
+- `D --> J`: After notification, the process ends.
+- `I --> A`: Completion loops back to the start.
+
+## Repository Context & Terminology
+- **Start**: Typically signifies the initiation of a process or workflow. In this diagram, it's the entry point, but illogically receives feedback from "Completion," suggesting completion triggers a new start.
+- **Check Status**: Usually involves evaluating a condition or state to determine the next course of action. Here, the source of the status is not defined.
+- **Process**: Generally refers to performing operations or transformations on data. In this diagram, the specifics of the processing are not detailed.
+- **Store**: Commonly means saving data to a persistent storage medium. In this diagram, storage occurs *before* routing, which is counter-intuitive.
+- **Route**: Typically involves directing data to a specific destination based on certain criteria. In this diagram, routing occurs after storage, which is an unusual sequence.
+- **Validate**: Usually refers to verifying the correctness or integrity of data. Here, validation is placed after routing, which is a reversed sequence. Also, a successful validation leads to a retry, which is a swapped branch outcome.
+- **Notify**: Generally involves sending alerts or messages to inform stakeholders about events or status changes. In this diagram, notification is triggered by both negative status checks and storage failures, but merges directly into "End," losing information about the cause.
+- **Retry**: Typically involves re-attempting a failed operation. In this diagram, retry loops back to "Process," potentially creating an infinite loop if the underlying issue persists.
+- **Completion**: Usually signifies the successful termination of a process. In this diagram, completion feeds back into "Start," which is an illogical causal direction.
+
+## High-Density QA Ground Truth Summary
+The process begins at the "Start" node, immediately proceeding to "Check Status." If the status check returns "Yes," the flow advances to "Process"; otherwise ("No"), it goes to "Notify," which then leads to "End." After processing, the data is "Stored." A successful storage operation routes to "Route," while a failure triggers "Notify." The "Route" node then feeds into "Validate." Here, a "Yes" outcome (successful validation) incorrectly leads to "Retry," looping back to "Process," whereas a "No" outcome (failed validation) leads to "Completion." The "Completion" node then illogically feeds back into the "Start" node. The standard sequence of routing before storing is reversed, and the validation outcome is swapped. The diagram lacks a step to obtain the initial status being checked. The "Notify" node merges directly into "End," and the "Retry" node loops directly back to "Process," bypassing validation. The "Completion" node's feedback into "Start" suggests completion triggers a new process, which is counterfactual.

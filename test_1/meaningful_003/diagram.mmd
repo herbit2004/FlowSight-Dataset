@@ -1,0 +1,10 @@
+graph TD
+    A[Receive Deduction Request] --> B{Inventory Available?};
+    B -- Yes --> C[Increment Deducting Quantity];
+    B -- No --> Z[Reject Request: Insufficient Inventory];
+    C --> D[Publish Deduct Message to Kafka];
+    D --> E{Deduction Succeeded?};
+    E -- Yes --> F[Commit Deducting Quantity];
+    E -- No --> G[Rollback: Revert Deducting Quantity];
+    classDef success fill:#ccffcc,stroke:#333,stroke-width:2px;
+    F:::success

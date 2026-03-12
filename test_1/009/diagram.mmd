@@ -1,0 +1,35 @@
+graph TD
+    Input[User Request: Text/Images/Documents] --> Router[Intelligent Router]
+    Router -- Intent Classification --> Graph[LangGraph Orchestrator]
+
+    subgraph Agents [Specialized Agents - XML Tag Output]
+        AgentMM[MindMap Agent<br/>Markdown/Markmap]
+        AgentFlow[Flowchart Agent<br/>React Flow JSON]
+        AgentChart[Data Chart Agent<br/>ECharts Config]
+        AgentDraw[Draw.io Agent<br/>mxGraph XML]
+        AgentMermaid[Mermaid Agent<br/>Mermaid Syntax]
+        AgentInfo[Infographic Agent<br/>AntV DSL]
+        AgentGeneral[General Agent<br/>Plain Text]
+    end
+
+    Graph -->|Route by Intent| Agents
+
+    subgraph Output [Streaming XML Tag Output]
+        Agents -->|LLM Generation| Tags["&lt;design_concept&gt;...&lt;/design_concept&gt;<br/>&lt;code&gt;...&lt;/code&gt;"]
+        Tags -->|Parse & Stream| Parser[StreamingTagParser]
+    end
+
+    Parser -->|design_concept events| DC[Design Concept Stream]
+    Parser -->|code events| Code[Code Stream]
+
+    DC -->|SSE| Frontend[React 19 Frontend]
+    Code -->|SSE| Frontend
+
+    Frontend -->|Real-time Render| Canvas[Interactive Canvas]
+    Frontend -->|Process Trace| Trace[Execution Trace UI]
+
+    style Input fill:#f9f,stroke:#333
+    style Router fill:#bbf,stroke:#333
+    style Tags fill:#bfb,stroke:#333
+    style Canvas fill:#fdf,stroke:#333
+    style DC fill:#ffc,stroke:#333

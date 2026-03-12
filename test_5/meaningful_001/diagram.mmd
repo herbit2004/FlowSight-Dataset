@@ -1,0 +1,18 @@
+graph TD
+    A[User Initiates Order] --> B{Product Availability Check};
+    B -- Available --> C[Add to Cart];
+    B -- Unavailable --> D[Notify User of Out of Stock];
+    C --> E[User Proceeds to Checkout];
+    E --> F{Promotions/Discounts Applied?};
+    F -- Yes --> G[Calculate Discounted Total];
+    F -- No --> H[Calculate Order Total];
+    G --> H;
+    H --> I[Payment Gateway Integration];
+    I --> J{Payment Successful?};
+    J -- Yes --> K[Order Confirmation Email];
+    J -- No --> L[Payment Failed Notification];
+    K --> M[Order Placed in Fulfillment Queue];
+    L --> N[Retry Payment Flow];
+
+    classDef success fill:#90EE90,stroke:#333,stroke-width:2px;
+    class K,M success;

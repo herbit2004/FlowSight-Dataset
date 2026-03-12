@@ -1,0 +1,83 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the checkout process of an e-commerce application. It depicts the flow of user interaction, authentication, and various service calls involved in processing an order from initiation to completion, including success and failure paths. The diagram serves as a visual representation of the system's architecture and workflow for checkout.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into three subgraphs: User Interaction, Authentication & Authorization, and Checkout Processing. The start node is "User App" and the end nodes are "BI Dashboard" and multiple "Notify User: Email" nodes.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs:
+- **User Interaction**: Represents the initial interaction of the user with the application.
+- **Authentication & Authorization**: Depicts the authentication and authorization process using JWT validation.
+- **Checkout Processing**: Illustrates the core checkout workflow, including order creation, inventory reservation, payment authorization, and fulfillment.
+
+## Node-by-Node Description
+- **User App**: Represents the user interface or application used by the customer.
+  visible in diagram; no further repository context available.
+- **API Gateway: /checkout**: Represents the API endpoint for initiating the checkout process.
+  visible in diagram; no further repository context available.
+- **Auth Service\nValidate JWT**: Represents the authentication service responsible for validating the JWT (JSON Web Token).
+  visible in diagram; no further repository context available.
+- **Request Routing**: Represents the routing of the request after successful authentication.
+  visible in diagram; no further repository context available.
+- **Return 401**: Represents the return of a 401 error code indicating unauthorized access.
+  visible in diagram; no further repository context available.
+- **Order Service: Create Order**: Represents the service responsible for creating a new order.
+  visible in diagram; no further repository context available.
+- **Inventory Service\nReserve Items**: Represents the service responsible for reserving the items in the inventory.
+  visible in diagram; no further repository context available.
+- **Order Service: Mark as Failed**: Represents the service responsible for marking the order as failed.
+  visible in diagram; no further repository context available.
+- **Notify User: Email**: Represents the action of sending an email notification to the user.
+  visible in diagram; no further repository context available.
+- **Payment Service: Authorize**: Represents the service responsible for authorizing the payment.
+  visible in diagram; no further repository context available.
+- **Payment Service: Refund**: Represents the service responsible for refunding the payment.
+  visible in diagram; no further repository context available.
+- **Shipping Service: Estimate**: Represents the service responsible for estimating the shipping cost.
+  visible in diagram; no further repository context available.
+- **Recommendation Service: Fetch Upsells**: Represents the service responsible for fetching upsell recommendations.
+  visible in diagram; no further repository context available.
+- **Order Service: Finalize Order**: Represents the service responsible for finalizing the order.
+  visible in diagram; no further repository context available.
+- **Order Confirmation\nEmail Queue**: Represents the queue for sending order confirmation emails.
+  visible in diagram; no further repository context available.
+- **Data Warehouse\nOrder Metrics**: Represents the data warehouse where order metrics are stored.
+  visible in diagram; no further repository context available.
+- **BI Dashboard**: Represents the business intelligence dashboard for visualizing order metrics.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User App --> API Gateway: /checkout`: User initiates the checkout process via the API gateway.
+- `API Gateway: /checkout --> Auth Service\nValidate JWT`: The API gateway forwards the request to the authentication service for JWT validation.
+- `Auth Service\nValidate JWT -- Valid --> Request Routing`: If the JWT is valid, the request is routed to the next step.
+- `Auth Service\nValidate JWT -- Invalid --> Return 401`: If the JWT is invalid, a 401 error is returned to the user app.
+- `Request Routing --> Order Service: Create Order`: The request is routed to the order service to create a new order.
+- `Order Service: Create Order --> Inventory Service\nReserve Items`: The order service calls the inventory service to reserve the items.
+- `Inventory Service\nReserve Items -- Success --> Payment Service: Authorize`: If the items are successfully reserved, the payment service is called to authorize the payment.
+- `Inventory Service\nReserve Items -- Failure --> Order Service: Mark as Failed`: If the items cannot be reserved, the order is marked as failed.
+- `Order Service: Mark as Failed --> Notify User: Email`: The user is notified via email that the order has failed.
+- `Payment Service: Authorize -- Auth Success --> Shipping Service: Estimate`: If the payment is authorized successfully, the shipping service is called to estimate the shipping cost.
+- `Payment Service: Authorize -- Auth Failure --> Order Service: Mark as Failed`: If the payment authorization fails, the order is marked as failed.
+- `Order Service: Mark as Failed --> Payment Service: Refund`: The payment service is called to refund the payment.
+- `Payment Service: Refund --> Notify User: Email`: The user is notified via email that the payment has been refunded.
+- `Shipping Service: Estimate --> Recommendation Service: Fetch Upsells`: The shipping service calls the recommendation service to fetch upsells.
+- `Shipping Service: Estimate --> Order Service: Finalize Order`: The shipping service calls the order service to finalize the order.
+- `Recommendation Service: Fetch Upsells --> Order Confirmation\nEmail Queue`: The order confirmation email is added to the queue.
+- `Order Service: Finalize Order --> Notify User: Email`: The user is notified via email that the order has been finalized.
+- `Order Confirmation\nEmail Queue --> Data Warehouse\nOrder Metrics`: Order metrics are sent to the data warehouse.
+- `Data Warehouse\nOrder Metrics --> BI Dashboard`: The BI dashboard displays the order metrics.
+- Multiple paths converge at `User App` via `Return 401`, `Notify User: Email` after order failure, and `Notify User: Email` after order finalization.
+
+## Repository Context & Terminology
+- **API Gateway**: A reverse proxy that routes client requests to the appropriate backend services.
+- **JWT (JSON Web Token)**: A standard for securely transmitting information between parties as a JSON object. It is commonly used for authentication and authorization.
+- **Order Service**: A microservice responsible for managing orders, including creation, modification, and retrieval.
+- **Inventory Service**: A microservice responsible for managing inventory levels and reserving items.
+- **Payment Service**: A microservice responsible for processing payments, including authorization and refunds.
+- **Shipping Service**: A microservice responsible for calculating shipping costs and managing shipments.
+- **Recommendation Service**: A microservice responsible for providing product recommendations.
+- **Data Warehouse**: A central repository for storing and analyzing large volumes of data.
+- **BI Dashboard**: A visual interface for displaying key performance indicators (KPIs) and other business metrics.
+
+## High-Density QA Ground Truth Summary
+The checkout process begins with the "User App" initiating a request to the "API Gateway: /checkout". The API gateway then forwards this request to the "Auth Service\nValidate JWT" for authentication and authorization. If the JWT is valid, the flow proceeds to "Request Routing" and then to "Order Service: Create Order". If the JWT is invalid, a "Return 401" error is sent back to the "User App", terminating the process. After order creation, the "Inventory Service\nReserve Items" attempts to reserve the ordered items. A successful reservation leads to "Payment Service: Authorize"; a failure leads to "Order Service: Mark as Failed", followed by "Notify User: Email" and a return to the "User App". Upon successful payment authorization, the "Shipping Service: Estimate" calculates shipping costs, triggering parallel calls to "Recommendation Service: Fetch Upsells" and "Order Service: Finalize Order". The upsell recommendations are queued in "Order Confirmation\nEmail Queue", which feeds into "Data Warehouse\nOrder Metrics" for analysis and visualization on the "BI Dashboard". The "Order Service: Finalize Order" triggers a "Notify User: Email" to confirm the order, also returning to the "User App". If payment authorization fails, the "Order Service: Mark as Failed" is invoked, followed by "Payment Service: Refund" and "Notify User: Email", ultimately returning to the "User App". The JWT validation step ensures that only authenticated users can proceed with the checkout process, preventing unauthorized access.

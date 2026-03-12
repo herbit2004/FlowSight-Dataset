@@ -1,0 +1,50 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of events from Keycloak to various external systems. It depicts an event-driven architecture where Keycloak events are processed by a core module and then distributed to different providers for handling. The diagram serves as a high-level overview of the event processing pipeline.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It shows a hierarchical flow starting from Keycloak, proceeding through a ServiceLoader and a Core Module, and then branching out to different providers before reaching external systems. The start node is "Keycloak (Event Source)" and the end nodes are "External HTTP Server", "RabbitMQ Broker", and "Syslog Server".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: Keycloak Event Source, Service Loading, Core Module Processing, and Provider-Specific Handling.
+
+## Node-by-Node Description
+- **A / Keycloak (Event Source)**: Represents Keycloak as the source of events.
+  visible in diagram; no further repository context available.
+- **B / ServiceLoader (SPI)**: Represents the ServiceLoader mechanism, likely using Java's Service Provider Interface (SPI) to load event processing services.
+  visible in diagram; no further repository context available.
+- **C / Core Module**: Represents the core module responsible for processing events and routing them to appropriate providers.
+  visible in diagram; no further repository context available.
+- **D / HTTP Provider**: Represents a provider that handles events via HTTP.
+  visible in diagram; no further repository context available.
+- **E / AMQP Provider**: Represents a provider that handles events via AMQP (Advanced Message Queuing Protocol).
+  visible in diagram; no further repository context available.
+- **F / Syslog Provider**: Represents a provider that handles events via Syslog.
+  visible in diagram; no further repository context available.
+- **G / External HTTP Server**: Represents an external HTTP server that receives events from the HTTP Provider.
+  visible in diagram; no further repository context available.
+- **H / RabbitMQ Broker**: Represents a RabbitMQ message broker that receives events from the AMQP Provider.
+  visible in diagram; no further repository context available.
+- **I / Syslog Server**: Represents a Syslog server that receives events from the Syslog Provider.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: Keycloak events are passed to the ServiceLoader.
+- `B --> C`: The ServiceLoader loads and passes event processing services to the Core Module.
+- `C --> D`: The Core Module routes events to the HTTP Provider.
+- `C --> E`: The Core Module routes events to the AMQP Provider.
+- `C --> F`: The Core Module routes events to the Syslog Provider.
+- `D --> G`: The HTTP Provider sends events to the External HTTP Server.
+- `E --> H`: The AMQP Provider sends events to the RabbitMQ Broker.
+- `F --> I`: The Syslog Provider sends events to the Syslog Server.
+
+## Repository Context & Terminology
+- **Keycloak**: An open-source Identity and Access Management solution. It provides features like Single Sign-On (SSO), identity brokering, and social login. In this context, it acts as the source of events.
+- **ServiceLoader (SPI)**: A mechanism in Java that allows loose coupling between interfaces and implementations. It enables the discovery and loading of service providers at runtime.
+- **AMQP (Advanced Message Queuing Protocol)**: A messaging protocol used for asynchronous communication between applications. RabbitMQ is a popular AMQP broker.
+- **Syslog**: A standard protocol for message logging. Syslog is commonly used for system and security event logging.
+- **HTTP**: Hypertext Transfer Protocol, the foundation of data communication on the World Wide Web.
+- **RabbitMQ Broker**: A message broker that implements the AMQP protocol. It facilitates asynchronous communication between applications by routing messages.
+- **Syslog Server**: A server that collects and stores Syslog messages from various sources.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates an event-driven system initiated by Keycloak (Event Source). Keycloak events are first processed by a ServiceLoader (SPI), which dynamically loads event processing services. These services are then passed to a Core Module. The Core Module acts as a central processing unit, routing events to different providers based on the event type or configuration. The diagram branches at the Core Module, with events being directed to either the HTTP Provider, the AMQP Provider, or the Syslog Provider. The HTTP Provider forwards events to an External HTTP Server, enabling web-based event handling. The AMQP Provider sends events to a RabbitMQ Broker, facilitating asynchronous messaging. The Syslog Provider transmits events to a Syslog Server, enabling centralized logging. The end nodes are the External HTTP Server, RabbitMQ Broker, and Syslog Server, representing the final destinations of the events. The use of ServiceLoader (SPI) allows for a flexible and extensible architecture, enabling new event providers to be added without modifying the core module.

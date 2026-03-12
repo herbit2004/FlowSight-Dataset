@@ -1,0 +1,39 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the workflow for deducting inventory in an order processing system. It illustrates the steps involved in validating a request, attempting the deduction, handling success and failure scenarios, and managing insufficient stock situations. The diagram serves as a visual representation of the business logic and error handling within the inventory deduction process.
+
+## Overall Layout
+The diagram flows from top to bottom (TB). It starts with an API endpoint and progresses through validation, inventory deduction, order marking, and finally returns an HTTP status code. The diagram includes decision points for request validation and deduction success, leading to different execution paths.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: API entry and validation, inventory deduction attempt, order service update, and return status.
+
+## Node-by-Node Description
+- **A / API: /deduct_inventory**: Represents the API endpoint that initiates the inventory deduction process. visible in diagram; no further repository context available.
+- **B / Validate Request & Auth**: Represents the validation of the incoming request and authentication of the user or service making the request. visible in diagram; no further repository context available.
+- **C / InventorySvc: Attempt Deduction**: Represents the Inventory Service attempting to deduct the requested quantity from the available stock. visible in diagram; no further repository context available.
+- **D / OrderSvc: Mark Item 'Deducted'**: Represents the Order Service marking the item as 'Deducted' in the order record. visible in diagram; no further repository context available.
+- **F / Return: HTTP 200 OK**: Represents the successful return of an HTTP 200 OK status code, indicating that the inventory deduction and order update were successful. visible in diagram; no further repository context available.
+- **G / InventorySvc: Rollback Deduction**: Represents the Inventory Service rolling back the deduction in case of failure in the Order Service. visible in diagram; no further repository context available.
+- **E / Return: HTTP 409 Conflict**: Represents the return of an HTTP 409 Conflict status code, indicating a conflict, such as insufficient stock or a failure during rollback. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The API endpoint triggers the request validation process.
+- `B -- Valid --> C`: If the request is valid, the process proceeds to attempt inventory deduction.
+- `C -- Success --> D`: If the inventory deduction is successful, the process moves to marking the item as deducted in the order.
+- `C -- Insufficient Stock --> E`: If there is insufficient stock, the process returns an HTTP 409 Conflict.
+- `D -- Success --> F`: If marking the item as deducted is successful, the process returns an HTTP 200 OK.
+- `D -- Failure --> G`: If marking the item as deducted fails, the process initiates a rollback of the inventory deduction.
+- `G --> E`: After rolling back the deduction, the process returns an HTTP 409 Conflict.
+- Paths `C -- Insufficient Stock --> E` and `G --> E` converge at node `E`.
+
+## Repository Context & Terminology
+- **API (Application Programming Interface)**: A set of rules and specifications that software programs can follow to communicate with each other.
+- **InventorySvc (Inventory Service)**: A service responsible for managing and tracking the inventory levels of products.
+- **OrderSvc (Order Service)**: A service responsible for managing and processing customer orders.
+- **Deduction**: The process of reducing the quantity of an item in the inventory.
+- **Rollback**: The process of reversing a previous operation, in this case, restoring the inventory to its previous state.
+- **HTTP 200 OK**: A standard HTTP status code indicating that the request was successful.
+- **HTTP 409 Conflict**: A standard HTTP status code indicating that the request could not be completed due to a conflict, such as insufficient stock.
+
+## High-Density QA Ground Truth Summary
+The process begins with an API call to the `/deduct_inventory` endpoint, which triggers a validation of the request and authentication. If the request is deemed `Valid`, the `InventorySvc` attempts to deduct the requested items from the inventory. A key branch occurs here: if there is `Insufficient Stock`, the process immediately returns an HTTP 409 Conflict. If the deduction is successful, the `OrderSvc` marks the item as 'Deducted'. Another branch occurs based on the success of this operation. On `Success`, an HTTP 200 OK is returned, indicating a successful inventory deduction and order update. However, if marking the item as deducted `Failure`, the `InventorySvc` initiates a `Rollback Deduction` to revert the inventory changes. After the rollback, an HTTP 409 Conflict is returned. The insufficient stock and rollback paths converge, both resulting in the HTTP 409 Conflict response. The InventorySvc and OrderSvc represent microservices responsible for managing inventory and order-related operations, respectively, and the HTTP status codes are used to communicate the outcome of the process to the client.

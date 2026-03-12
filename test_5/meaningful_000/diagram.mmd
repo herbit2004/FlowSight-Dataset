@@ -1,0 +1,27 @@
+graph TD
+    subgraph User Registration & Login
+        A[User visits Login Page] --> B{Existing User?};
+        B -- Yes --> C[Enter Credentials];
+        B -- No --> D[Redirect to Registration Page];
+        D --> E[Fill Registration Form];
+        E --> F[Validate Registration Form Data];
+        F -- Valid --> G[Submit registration data to API Gateway];
+        F -- Invalid --> H[Return to Registration Page with errors];
+        G --> I[API Gateway routes to User Service];
+        I --> J[User Service creates new user account];
+        J --> K[User Service sends verification email];
+        K --> L[User Service stores email verification token];
+        L --> M[Return success to API Gateway];
+        M --> N[Display 'Verification Email Sent' message];
+        C --> O[Submit credentials to API Gateway];
+        O --> P[API Gateway authenticates user via Auth Service];
+        P -- Valid Credentials --> Q[Auth Service generates JWT];
+        Q --> R[Return JWT to API Gateway];
+        P -- Invalid Credentials --> S[Return authentication error];
+        R --> T[API Gateway sets JWT as HTTP-only cookie];
+        T --> U[Redirect user to Dashboard];
+        S --> V[Display 'Invalid credentials' error];
+    end
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    V:::error
+    H:::error

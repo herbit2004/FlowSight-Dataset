@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts the workflow of an order processing system, from order receipt to customer notification. The diagram outlines the steps involved in fulfilling an order, including payment processing, shipping, and handling of backorders and cancellations.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with "Order Received" at the top and flows downwards through various stages of order processing, ending with "Notify Customer" at the bottom. There is a loop back to the start node from the "Backorder Items" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Order Reception, Payment Processing, Shipping Preparation, Inventory Check, Order Fulfillment, Order Cancellation, and Customer Notification.
+
+## Node-by-Node Description
+- **A / Order Received**: Represents the initial stage where an order is received by the system. visible in diagram; no further repository context available.
+- **B / Payment Successful?**: A decision node that checks if the payment for the order was successful. visible in diagram; no further repository context available.
+- **G / Shipping Label Printed**: Represents the step where a shipping label is printed for the order. visible in diagram; no further repository context available.
+- **D / Package Items**: Represents the step where the items for the order are packaged. visible in diagram; no further repository context available.
+- **H / Items In-Stock?**: A decision node that checks if all the items in the order are currently in stock. visible in diagram; no further repository context available.
+- **I / Backorder Items**: Represents the step where items are backordered if they are not in stock. visible in diagram; no further repository context available.
+- **E / Order Shipped**: Represents the step where the order is shipped to the customer. visible in diagram; no further repository context available.
+- **F / Delivery Confirmed**: Represents the step where the delivery of the order is confirmed. visible in diagram; no further repository context available.
+- **C / Cancel Order**: Represents the step where the order is cancelled. visible in diagram; no further repository context available.
+- **J / Notify Customer**: Represents the final step where the customer is notified about the order status. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: An order received triggers a payment success check.
+- `B -- No --> C`: If payment is not successful, the order is cancelled.
+- `B -- Yes --> G`: If payment is successful, a shipping label is printed.
+- `G --> D`: After the shipping label is printed, the items are packaged.
+- `D --> H`: After packaging, the system checks if the items are in stock.
+- `H -- No --> I`: If items are not in stock, they are backordered.
+- `I --> A`: Backordering items loops back to the "Order Received" stage, creating a new order.
+- `H -- Yes --> E`: If items are in stock, the order is shipped.
+- `E --> F`: After shipping, delivery is confirmed.
+- `F --> C`: After delivery is confirmed, the order is cancelled.
+- `C --> J`: After cancellation, the customer is notified.
+
+## Repository Context & Terminology
+- **Order Received**: In standard practice, this refers to the initial stage when a customer places an order. In this diagram, it's the starting point, but also the point where backordered items incorrectly loop back to, creating a new order.
+- **Payment Successful?**: In standard practice, this checks if the payment has been processed successfully. In this diagram, a 'No' leads to cancellation, but a 'Yes' incorrectly leads to printing a shipping label before checking stock.
+- **Shipping Label Printed**: In standard practice, this occurs after items are packaged and ready to ship. In this diagram, it occurs *before* packaging, which is an error.
+- **Package Items**: In standard practice, this involves preparing the items for shipment. In this diagram, it happens after printing the shipping label, but before checking stock.
+- **Items In-Stock?**: In standard practice, this checks if the ordered items are available in the inventory. In this diagram, a 'No' leads to backordering, which incorrectly loops back to creating a new order.
+- **Order Shipped**: In standard practice, this means the order has left the warehouse and is on its way to the customer. In this diagram, it happens after confirming items are in stock.
+- **Delivery Confirmed**: In standard practice, this confirms that the customer has received the order. In this diagram, it incorrectly leads to order cancellation.
+- **Cancel Order**: In standard practice, this means the order is terminated and will not be fulfilled. In this diagram, it is triggered by unsuccessful payment and, illogically, by confirmed delivery.
+- **Notify Customer**: In standard practice, this informs the customer about the order status. In this diagram, it only occurs after the order is cancelled.
+- **Backorder Items**: In standard practice, this means items are temporarily out of stock and will be shipped later. In this diagram, backordering incorrectly loops back to the "Order Received" stage.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with "Order Received," which initiates the order processing workflow. The immediate next step is "Payment Successful?" where a 'No' branch leads to "Cancel Order" and then "Notify Customer," ending the process. A 'Yes' branch from "Payment Successful?" incorrectly proceeds to "Shipping Label Printed" *before* packaging or stock confirmation. "Shipping Label Printed" then flows to "Package Items," followed by "Items In-Stock?". If items are not in stock ('No' branch), the process goes to "Backorder Items" and then, illogically, loops back to "Order Received," creating a new order. If items are in stock ('Yes' branch), the process continues to "Order Shipped," then "Delivery Confirmed." Critically, "Delivery Confirmed" then leads to "Cancel Order," which is counterfactual, and finally to "Notify Customer." The loop from "Backorder Items" to "Order Received" will create infinite duplicate orders. The sequence of "Shipping Label Printed" before "Package Items" and "Items In-Stock?" is also incorrect. The final step, "Notify Customer," is reached only after order cancellation, regardless of delivery status.

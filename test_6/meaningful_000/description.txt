@@ -1,0 +1,83 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating an authentication flow, including account registration and login processes. It depicts the steps a user takes to create an account, log in, and gain access to an authorized area. The diagram serves as a visual representation of the authentication logic within a system.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It consists of three main subgraphs: Authentication Flow, Auth Service, and Account Registration, with the User Management Service nested within Account Registration. The start nodes are "User Initiates login" and "User Initiates account creation," and the end node is "Redirect to Authorized Area."
+
+## Subgraphs / Stages
+The diagram contains the following subgraphs:
+- **Authentication Flow**: Encompasses the entire authentication process, including login and account registration.
+- **Auth Service**: Details the authentication service's operations, such as credential validation and JWT token generation.
+- **Account Registration**: Focuses on the account creation process, including username availability checks and account creation.
+- **User Management Service**: Details the user management service's operations, such as checking username availability and creating new user accounts.
+
+## Node-by-Node Description
+- **User Initiates login**: Represents the user starting the login process. visible in diagram; no further repository context available.
+- **Check for existing session**: A decision point to determine if the user already has an active session. visible in diagram; no further repository context available.
+- **Display Login Form**: Presents the login form to the user. visible in diagram; no further repository context available.
+- **User submits credentials**: The user enters their login credentials. visible in diagram; no further repository context available.
+- **Return Login Error**: Indicates that the login attempt failed. visible in diagram; no further repository context available.
+- **Call Auth Service**: Invokes the authentication service to validate the user's credentials. visible in diagram; no further repository context available.
+- **Validate Credentials**: The authentication service verifies the provided credentials. visible in diagram; no further repository context available.
+- **Generate JWT Token**: Creates a JSON Web Token (JWT) upon successful authentication. visible in diagram; no further repository context available.
+- **Store JWT in Redis Cache**: Stores the generated JWT in a Redis cache for session management. visible in diagram; no further repository context available.
+- **Return JWT Token**: Returns the generated JWT token. visible in diagram; no further repository context available.
+- **Return Authentication Failure**: Indicates that the authentication failed. visible in diagram; no further repository context available.
+- **Log failed login attempt**: Records the failed login attempt. visible in diagram; no further repository context available.
+- **Set JWT as Cookie**: Sets the JWT as a cookie in the user's browser. visible in diagram; no further repository context available.
+- **Create new user session**: Establishes a new user session. visible in diagram; no further repository context available.
+- **Forward session ID**: Passes the session ID to the next step. visible in diagram; no further repository context available.
+- **Redirect to Authorized Area**: Redirects the user to the authorized area upon successful login. visible in diagram; no further repository context available.
+- **User Initiates account creation**: Represents the user starting the account creation process. visible in diagram; no further repository context available.
+- **Display Registration Form**: Presents the registration form to the user. visible in diagram; no further repository context available.
+- **User submits registration form**: The user enters their registration information. visible in diagram; no further repository context available.
+- **Return registration errors**: Indicates that the registration form contains errors. visible in diagram; no further repository context available.
+- **Call User Management Service**: Invokes the user management service to create a new account. visible in diagram; no further repository context available.
+- **Check username availability**: Verifies if the entered username is available. visible in diagram; no further repository context available.
+- **Return username taken error**: Indicates that the username is already taken. visible in diagram; no further repository context available.
+- **Create new user account**: Creates a new user account in the system. visible in diagram; no further repository context available.
+- **Send welcome email**: Sends a welcome email to the newly registered user. visible in diagram; no further repository context available.
+- **Return account creation success**: Indicates that the account creation was successful. visible in diagram; no further repository context available.
+- **Display username taken error message**: Displays an error message indicating that the username is already taken. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Initiates login --> Check for existing session`: The user initiates the login process.
+- `Check for existing session -- Yes --> Redirect to Authorized Area`: If an existing session is found, the user is redirected to the authorized area.
+- `Check for existing session -- No --> Display Login Form`: If no existing session is found, the login form is displayed.
+- `Display Login Form --> User submits credentials`: The login form is displayed, and the user submits their credentials.
+- `User submits credentials -- Invalid --> Return Login Error`: If the credentials are invalid, a login error is returned, looping back to the display login form.
+- `User submits credentials -- Valid --> Call Auth Service`: If the credentials are valid, the authentication service is called.
+- `Call Auth Service --> Validate Credentials`: The authentication service validates the credentials.
+- `Validate Credentials -- Invalid --> Return Authentication Failure`: If the credentials are invalid, authentication failure is returned.
+- `Validate Credentials -- Valid --> Generate JWT Token`: If the credentials are valid, a JWT token is generated.
+- `Generate JWT Token --> Store JWT in Redis Cache`: The generated JWT token is stored in the Redis cache.
+- `Store JWT in Redis Cache --> Return JWT Token`: The JWT token is returned.
+- `Return Authentication Failure --> Log failed login attempt`: A failed login attempt is logged.
+- `Return JWT Token --> Set JWT as Cookie`: The JWT token is set as a cookie.
+- `Set JWT as Cookie --> Create new user session`: A new user session is created.
+- `Create new user session --> Forward session ID`: The session ID is forwarded.
+- `Forward session ID --> Redirect to Authorized Area`: The user is redirected to the authorized area.
+- `User Initiates account creation --> Display Registration Form`: The user initiates the account creation process.
+- `Display Registration Form --> User submits registration form`: The registration form is displayed, and the user submits their information.
+- `User submits registration form -- Invalid --> Return registration errors`: If the registration form contains errors, registration errors are returned, looping back to the display registration form.
+- `User submits registration form -- Valid --> Call User Management Service`: If the registration form is valid, the user management service is called.
+- `Call User Management Service --> Check username availability`: The user management service checks the username availability.
+- `Check username availability -- Not Available --> Return username taken error`: If the username is not available, a username taken error is returned.
+- `Check username availability -- Available --> Create new user account`: If the username is available, a new user account is created.
+- `Create new user account --> Send welcome email`: A welcome email is sent to the new user.
+- `Send welcome email --> Return account creation success`: Account creation success is returned.
+- `Return account creation success --> Set JWT as Cookie`: The JWT token is set as a cookie.
+- `Return username taken error --> Display username taken error message`: A username taken error message is displayed.
+- `Display username taken error message --> Display Registration Form`: The registration form is redisplayed.
+
+## Repository Context & Terminology
+- **Authentication Flow**: The sequence of steps involved in verifying a user's identity.
+- **Auth Service**: A service responsible for authenticating users and managing their sessions.
+- **JWT (JSON Web Token)**: A standard for securely transmitting information as a JSON object. It's commonly used for authentication and authorization.
+- **Redis Cache**: An in-memory data store used for caching JWT tokens for faster session validation.
+- **User Management Service**: A service responsible for managing user accounts, including creation, modification, and deletion.
+- **Session**: A period of interaction between a user and a system, typically identified by a unique session ID.
+- **Credentials**: Information used to verify a user's identity, such as a username and password.
+
+## High-Density QA Ground Truth Summary
+The authentication flow begins with either "User Initiates login" or "User Initiates account creation." For login, the system first "Check for existing session." If a session exists ("Yes" branch), the user is immediately "Redirect to Authorized Area." Otherwise ("No" branch), the "Display Login Form" is shown, prompting the "User submits credentials." Invalid credentials trigger "Return Login Error," looping back to the login form. Valid credentials invoke the "Call Auth Service," which "Validate Credentials." Upon successful validation ("Valid" branch), a "Generate JWT Token" is created and stored in "Store JWT in Redis Cache." The "Return JWT Token" is then set as a cookie ("Set JWT as Cookie"), a "Create new user session" is initiated, the "Forward session ID" is passed, and finally, the user is "Redirect to Authorized Area." Failed credential validation ("Invalid" branch) leads to "Return Authentication Failure" and "Log failed login attempt." Account creation starts with "User Initiates account creation," leading to "Display Registration Form." After "User submits registration form," the system checks for validity. Invalid forms "Return registration errors," looping back to the form. Valid forms invoke "Call User Management Service" to "Check username availability." If the username is taken ("Not Available" branch), "Return username taken error" and "Display username taken error message" are triggered, redisplaying the registration form. If available ("Available" branch), "Create new user account" and "Send welcome email" occur, followed by "Return account creation success," which then proceeds to "Set JWT as Cookie" and the rest of the login flow. The JWT, a standard for secure information transmission, is cached in Redis for efficient session management. The entire process culminates in the user being "Redirect to Authorized Area."

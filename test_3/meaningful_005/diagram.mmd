@@ -1,0 +1,37 @@
+graph TD
+    subgraph Client Application
+        A[Application Request] --> B(Cache Lookup Key Gen);
+    end
+
+    B --> C{Cache Hit?};
+    C -- Yes --> D[Return Cached Data];
+    C -- No --> E[Data Layer Request];
+    E --> F(Data Layer Auth);
+
+    subgraph Data Layer
+        F --> G{Authorized?};
+        G -- Yes --> H[Fetch Data from Source];
+        G -- No --> I[Return Error];
+        H --> J(Data Serialization);
+    end
+
+    J --> K[Cache Write Queuing];
+    K --> L(Write to Cache);
+    L --> M{Successful Write?};
+    M -- Yes --> N[Return Data to Client];
+    M -- No --> O[Log Write Failure];
+    O --> N;
+
+    E --> I;
+    N --> D;
+    D --> P[Application Response];
+
+    subgraph Invalidation Service
+        Q[Update Received] --> R(Invalidation Key Gen);
+        R --> S[Cache Invalidation Queue];
+        S --> T(Invalidate Cache Entity);
+    end
+
+    classDef error fill:#fbb,stroke:#f66,stroke-width:2px
+    I:::error
+    O:::error

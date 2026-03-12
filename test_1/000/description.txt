@@ -1,0 +1,66 @@
+## Diagram Type & Purpose
+This is a flowchart diagram outlining the process of generating documentation and an interactive DeepWiki for a given code repository. The diagram details the steps involved in analyzing the code structure, creating embeddings, selecting a model provider, generating documentation and visual diagrams, and finally organizing the information into a wiki. It serves as a high-level overview of the documentation generation pipeline.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with user input and progresses through a series of steps, branching at the model selection stage, before converging again to organize the output as a wiki. The start node is "User inputs GitHub/GitLab/Bitbucket repo" and the end node is "Interactive DeepWiki".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages:
+1. Repository Input and Preparation: User input and access token handling.
+2. Code Analysis: Cloning, analyzing structure, and creating embeddings.
+3. Model Selection and Generation: Choosing a model provider and generating documentation.
+4. Content Creation: Generating documentation and visual diagrams.
+5. Organization and Output: Organizing content as a wiki and creating an interactive DeepWiki.
+
+## Node-by-Node Description
+- **A / User inputs GitHub/GitLab/Bitbucket repo**: Represents the initial step where the user provides the repository URL (GitHub, GitLab, or Bitbucket). visible in diagram; no further repository context available.
+- **AA / Private repo?**: A decision node that checks if the repository is private. visible in diagram; no further repository context available.
+- **AB / Add access token**: If the repository is private, this step requires the user to provide an access token. visible in diagram; no further repository context available.
+- **B / Clone Repository**: Clones the specified repository to the local machine. visible in diagram; no further repository context available.
+- **C / Analyze Code Structure**: Analyzes the code structure of the cloned repository. visible in diagram; no further repository context available.
+- **D / Create Code Embeddings**: Creates code embeddings from the analyzed code structure. visible in diagram; no further repository context available.
+- **M / Select Model Provider**: A decision node where the user selects a model provider (Google Gemini, OpenAI, OpenRouter, Local Ollama, or Azure). visible in diagram; no further repository context available.
+- **E1 / Generate with Gemini**: Generates documentation using Google Gemini. visible in diagram; no further repository context available.
+- **E2 / Generate with OpenAI**: Generates documentation using OpenAI. visible in diagram; no further repository context available.
+- **E3 / Generate with OpenRouter**: Generates documentation using OpenRouter. visible in diagram; no further repository context available.
+- **E4 / Generate with Ollama**: Generates documentation using Local Ollama. visible in diagram; no further repository context available.
+- **E5 / Generate with Azure**: Generates documentation using Azure. visible in diagram; no further repository context available.
+- **E / Generate Documentation**: Generates documentation based on the selected model provider. visible in diagram; no further repository context available.
+- **F / Create Visual Diagrams**: Creates visual diagrams of the code. visible in diagram; no further repository context available.
+- **G / Organize as Wiki**: Organizes the generated documentation and visual diagrams into a wiki format. visible in diagram; no further repository context available.
+- **H / Interactive DeepWiki**: Creates an interactive DeepWiki from the organized content. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> AA`: User input flows to the private repository check.
+- `AA -- Yes --> AB`: If the repository is private, the flow goes to adding an access token.
+- `AA -- No --> B`: If the repository is not private, the flow goes directly to cloning the repository.
+- `AB --> B`: After adding the access token, the flow goes to cloning the repository.
+- `B --> C`: The cloned repository is then analyzed for its code structure.
+- `C --> D`: Code embeddings are created from the analyzed code structure.
+- `D --> M`: The code embeddings are used to select a model provider.
+- `M --> E1`: If Google Gemini is selected, documentation is generated with Gemini.
+- `M --> E2`: If OpenAI is selected, documentation is generated with OpenAI.
+- `M --> E3`: If OpenRouter is selected, documentation is generated with OpenRouter.
+- `M --> E4`: If Local Ollama is selected, documentation is generated with Ollama.
+- `M --> E5`: If Azure is selected, documentation is generated with Azure.
+- `E1 --> E`: Documentation generated with Gemini flows to the "Generate Documentation" node.
+- `E2 --> E`: Documentation generated with OpenAI flows to the "Generate Documentation" node.
+- `E3 --> E`: Documentation generated with OpenRouter flows to the "Generate Documentation" node.
+- `E4 --> E`: Documentation generated with Ollama flows to the "Generate Documentation" node.
+- `E5 --> E`: Documentation generated with Azure flows to the "Generate Documentation" node.
+- `D --> F`: Code embeddings are also used to create visual diagrams.
+- `E --> G`: Generated documentation is organized as a wiki.
+- `F --> G`: Created visual diagrams are organized as a wiki.
+- `E` and `F` converge at `G`.
+- `G --> H`: The organized wiki is transformed into an interactive DeepWiki.
+
+## Repository Context & Terminology
+- **GitHub/GitLab/Bitbucket**: These are popular online platforms for hosting and version controlling code repositories.
+- **Private Repo**: A repository with restricted access, requiring authentication (e.g., an access token) to clone or access its contents.
+- **Access Token**: A credential used to authenticate and authorize access to a private repository.
+- **Code Embeddings**: Vector representations of code snippets, capturing their semantic meaning. These embeddings are used by the models to understand the code and generate relevant documentation.
+- **Google Gemini, OpenAI, OpenRouter, Local Ollama, Azure**: These are different model providers that can be used to generate documentation. Each provider offers different models with varying capabilities and pricing.
+- **DeepWiki**: An interactive wiki that leverages deep learning techniques to provide enhanced search, navigation, and content understanding.
+
+## High-Density QA Ground Truth Summary
+The process begins with the user providing a repository URL from GitHub, GitLab, or Bitbucket. The system then checks if the repository is private. If it is, the user is prompted to add an access token; otherwise, the process proceeds directly to cloning the repository. After cloning, the code structure is analyzed, and code embeddings are created. These embeddings serve as input for the next stage, where a model provider is selected from options like Google Gemini, OpenAI, OpenRouter, Local Ollama, or Azure. Based on the selected provider, documentation is generated. Simultaneously, visual diagrams of the code are created. The generated documentation and visual diagrams are then organized into a wiki. Finally, this wiki is transformed into an interactive DeepWiki. The selection of the model provider determines the specific AI model used for documentation generation, influencing the style, quality, and potential cost of the generated documentation. The final interactive DeepWiki provides a user-friendly interface for exploring and understanding the codebase.

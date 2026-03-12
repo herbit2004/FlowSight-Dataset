@@ -1,0 +1,51 @@
+graph TD
+    subgraph Client Interaction
+        Client[Client Application] --> API_GW(API Gateway)
+    end
+
+    subgraph API Gateway
+        API_GW --> Rate_Limiter{Rate Limiter};
+        Rate_Limiter -- Exceeds Limit? --> Error429[Return 429 Error];
+        Rate_Limiter -- OK --> Authentication_Handler{Authentication Handler};
+        Authentication_Handler -- Valid JWT? --> Authorization_Engine[Authorization Engine];
+        Authentication_Handler -- Invalid JWT --> Error401[Return 401 Error];
+        Authorization_Engine -- Authorized? --> Route_Decision[Route Decision];
+        Authorization_Engine -- Unauthorized --> Error403[Return 403 Error];
+        Route_Decision --> Service_Registry[Service Registry];
+    end
+
+    subgraph Service Registry
+        Service_Registry --> Lookup_Service{Service Lookup};
+        Lookup_Service --> Service_A_Instance_Selection{Service A Instance Selection};
+        Lookup_Service --> Service_B_Instance_Selection{Service B Instance Selection};
+    end
+
+    subgraph Service A
+        Service_A_Instance_Selection -- Service A Path --> Service_A_Endpoint[Service A Endpoint];
+        Service_A_Endpoint --> Service_A_Response(Service A Response);
+        Service_A_Response --> API_GW;
+    end
+
+    subgraph Service B
+        Service_B_Instance_Selection -- Service B Path --> Service_B_Endpoint[Service B Endpoint];
+        Service_B_Endpoint --> Service_B_Response(Service B Response);
+        Service_B_Response --> API_GW;
+    end
+
+    subgraph Error Handling
+        Error429 --> Client;
+        Error401 --> Client;
+        Error403 --> Client;
+    end
+
+    API_GW --> Client;
+
+    classDef authFail fill:#f9d2d0,stroke:#cc0033,stroke-width:2px;
+    classDef successfill fill:#aeffa0,stroke:#339933,stroke-width:2px;
+    classDef routing fill:#f0f8ff,stroke:#4169e1,stroke-width:2px;
+    classDef clientInteract fill:#fffacd,stroke:#daa520,stroke-width:2px;
+
+    class Error401,Error403,Error429 authFail;
+    class Service_A_Response,Service_B_Response successfill;
+    class Route_Decision routing;
+    class Client clientInteract;

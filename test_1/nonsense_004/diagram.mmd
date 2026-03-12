@@ -1,0 +1,21 @@
+graph TD
+    A[User Request] --> B((Database));
+    B -- Yes --> C{Is Data Available?};
+    C -- No --> D[API Gateway];
+    C -- Yes --> E[Payment Service];
+    D --> B;
+    E --> F((Cache));
+    F -- Success --> A;
+    F -- Failure --> G[Message Queue];
+    G --> H{Authentication?};
+    H -- No --> I[Authorization];
+    H -- Yes --> J[Logging];
+    I --> J;
+    J --> K[Rate Limiter];
+    K --> L((User Profile));
+    L --> M([Logout]);
+    M --> N((Fraud Detection));
+    N --> O{Charge User?};
+    O -- No --> P[User Interface];
+    O -- Yes --> F;
+    P --> A;

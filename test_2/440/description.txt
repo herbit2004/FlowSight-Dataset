@@ -1,0 +1,52 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture and data flow of a system, likely for processing and visualizing data. It illustrates the sequence of operations from user integration through core processing, asynchronous I/O, and finally, visualization in a web browser. The diagram serves as a high-level overview of the system's components and their interactions.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TB). It is hierarchically structured into four main stages: User Integration, Core Engine, Async I/O Layer, and Visualization. The start nodes are `@trace / @trace_class`, `FastAPI Middleware`, and `LangChain Callback`, and the end node is `Web Browser`.
+
+## Subgraphs / Stages
+The diagram contains four explicit subgraphs:
+- **User Integration**: Represents the entry points for user interactions and external integrations.
+- **Core Engine**: Contains the core processing logic, including context management, event handling, and data masking.
+- **Async I/O Layer**: Handles asynchronous input/output operations, including queuing and file handling.
+- **Visualization**: Deals with monitoring, serving, and displaying the processed data in a web browser.
+
+## Node-by-Node Description
+- **@trace / @trace_class**: Decorators for tracing function calls. visible in diagram; no further repository context available.
+- **FastAPI Middleware**: Middleware component within the FastAPI framework. visible in diagram; no further repository context available.
+- **LangChain Callback**: Callback function for LangChain integration. visible in diagram; no further repository context available.
+- **ContextVars (Trace Context)**: Manages trace context using ContextVars. visible in diagram; no further repository context available.
+- **Event Bus (LogContext)**: An event bus for handling log contexts. visible in diagram; no further repository context available.
+- **Data Masking (Sanitizer)**: Masks sensitive data using a sanitizer. visible in diagram; no further repository context available.
+- **Async Queue (Non-blocking)**: An asynchronous queue for non-blocking operations. visible in diagram; no further repository context available.
+- **File Handler (Rotating/Timed)**: Handles file operations with rotating and timed features. visible in diagram; no further repository context available.
+- **.mmd File**: A file containing data, likely in Mermaid format. visible in diagram; no further repository context available.
+- **Watchdog (File Monitor)**: Monitors files for changes. visible in diagram; no further repository context available.
+- **FastAPI Server (SSE Support)**: A FastAPI server with Server-Sent Events (SSE) support. visible in diagram; no further repository context available.
+- **Web Browser (Mermaid.js + PanZoom)**: A web browser that renders Mermaid diagrams with PanZoom functionality. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `@trace / @trace_class --> ContextVars (Trace Context)`: Data flow from the tracing decorators to the context variables.
+- `FastAPI Middleware --> ContextVars (Trace Context)`: Data flow from the FastAPI middleware to the context variables.
+- `LangChain Callback --> ContextVars (Trace Context)`: Data flow from the LangChain callback to the context variables.
+- `ContextVars (Trace Context) --> Event Bus (LogContext)`: Data flow from the context variables to the event bus.
+- `Event Bus (LogContext) --> Data Masking (Sanitizer)`: Data flow from the event bus to the data masking component.
+- `Data Masking (Sanitizer) --> Async Queue (Non-blocking)`: Data flow from the data masking component to the asynchronous queue.
+- `Async Queue (Non-blocking) --> File Handler (Rotating/Timed)`: Data flow from the asynchronous queue to the file handler.
+- `File Handler (Rotating/Timed) --> .mmd File`: Data flow from the file handler to the .mmd file.
+- `.mmd File -.-> Watchdog (File Monitor)`: The Watchdog monitors the .mmd file for changes.
+- `Watchdog (File Monitor) --> FastAPI Server (SSE Support)`: Data flow from the file monitor to the FastAPI server.
+- `FastAPI Server (SSE Support) == "SSE Push" ==> Web Browser (Mermaid.js + PanZoom)`: Server-Sent Events (SSE) push data from the FastAPI server to the web browser.
+
+## Repository Context & Terminology
+- **@trace / @trace_class**: Python decorators often used for tracing function execution, commonly found in logging or monitoring frameworks.
+- **FastAPI**: A modern, fast (high-performance), web framework for building APIs with Python 3.7+ based on standard Python type hints.
+- **Middleware**: Software that acts as a bridge between an operating system or database and applications, especially on a network.
+- **LangChain**: A framework for developing applications powered by language models.
+- **ContextVars**: Provides context-local variables, similar to thread-local storage, but works correctly with async/await code.
+- **Event Bus**: A software pattern that allows components to communicate without direct dependencies, often used for logging or asynchronous tasks.
+- **SSE (Server-Sent Events)**: A server push technology enabling a server to automatically send data updates to a client's web browser.
+- **Mermaid.js**: A JavaScript-based diagramming and charting tool that uses Markdown-inspired text definitions to create diagrams dynamically in the browser.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a data processing and visualization pipeline, starting with user integration points such as `@trace` decorators, FastAPI middleware, and LangChain callbacks. These entry points feed into the Core Engine, where `ContextVars` manage the trace context, followed by an `Event Bus` handling log contexts. Sensitive data is then masked by the `Data Masking (Sanitizer)` component. The processed data is passed to the `Async I/O Layer`, where an `Async Queue` ensures non-blocking operations before the `File Handler` writes the data to a `.mmd` file. The `Watchdog (File Monitor)` observes the `.mmd` file for changes, triggering updates to the `FastAPI Server` which supports Server-Sent Events (SSE). Finally, the `FastAPI Server` pushes updates to the `Web Browser` using SSE, where `Mermaid.js` renders the diagram and `PanZoom` provides interactive navigation. The use of `@trace` suggests a focus on monitoring and debugging, while FastAPI and SSE indicate a modern, real-time web application.

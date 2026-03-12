@@ -1,0 +1,23 @@
+graph TD
+        O[Observability] --> L[Logs]
+        O --> M[Metrics]
+        O --> T[Traces]
+
+        L --Provides--> LD[Detailed Event Context]
+        M --Provides--> MA[Aggregated System Health & Trends]
+        T --Provides--> TP[Request Flow & Bottleneck Analysis]
+
+        subgraph System
+            App1[Application/Service 1]
+            App2[Application/Service 2]
+            App3[Infrastructure]
+        end
+
+        App1 --> L
+        App1 --> M
+        App1 -- Generates Spans For --> T
+        App2 --> L
+        App2 --> M
+        App2 -- Generates Spans For --> T
+        App3 --> L
+        App3 --> M

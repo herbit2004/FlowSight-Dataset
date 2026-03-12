@@ -1,0 +1,72 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order processing workflow in an e-commerce system. It depicts the sequence of steps involved in order creation, payment processing, and fraud detection, from the user initiating an order to the fulfillment process. The diagram serves as a visual representation of the system's logic and helps in understanding the flow of data and control between different components.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into three subgraphs: Order Creation, Payment Processing, and Fraud Detection. The start node is "User initiates order on storefront," and the end nodes are "Initiate fulfillment process" and "Notify fraud investigation team."
+
+## Subgraphs / Stages
+- **Order Creation**: This subgraph covers the steps involved in creating an order, from adding items to the cart to confirming the order.
+- **Payment Processing**: This subgraph deals with the payment process, including submitting payment details, checking payment acceptance, and updating the order status.
+- **Fraud Detection**: This subgraph focuses on detecting potential fraud by analyzing payment data and taking appropriate actions.
+
+## Node-by-Node Description
+- **A / User initiates order on storefront**: The user starts the order process on the storefront. visible in diagram; no further repository context available.
+- **B / Add items to cart**: The user adds items to their shopping cart. visible in diagram; no further repository context available.
+- **C / Cart valid?**: A decision point to check if the cart is valid (e.g., items in stock, quantities within limits). visible in diagram; no further repository context available.
+- **D / Calculate totals**: The system calculates the total cost of the order. visible in diagram; no further repository context available.
+- **E / Display error, return to storefront**: An error message is displayed, and the user is redirected to the storefront. visible in diagram; no further repository context available.
+- **F / Apply promotions/discounts**: Promotions and discounts are applied to the order. visible in diagram; no further repository context available.
+- **G / Select shipping method**: The user selects a shipping method. visible in diagram; no further repository context available.
+- **H / Enter shipping address**: The user enters their shipping address. visible in diagram; no further repository context available.
+- **I / Review order**: The user reviews the order details. visible in diagram; no further repository context available.
+- **J / Confirm order?**: A decision point to confirm the order. visible in diagram; no further repository context available.
+- **K / Order creation service**: A service responsible for creating the order in the system. visible in diagram; no further repository context available.
+- **L / Submit payment details to payment gateway**: Payment details are submitted to the payment gateway for processing. visible in diagram; no further repository context available.
+- **M / Payment accepted?**: A decision point to check if the payment is accepted by the payment gateway. visible in diagram; no further repository context available.
+- **N / Update order status to 'Paid'**: The order status is updated to 'Paid'. visible in diagram; no further repository context available.
+- **O / Display payment error to user**: An error message is displayed to the user if the payment fails. visible in diagram; no further repository context available.
+- **P / Trigger invoice generation**: An invoice is generated for the order. visible in diagram; no further repository context available.
+- **Q / Send confirmation email to user**: A confirmation email is sent to the user. visible in diagram; no further repository context available.
+- **R / Initiate fulfillment process**: The fulfillment process is initiated. visible in diagram; no further repository context available.
+- **S / Send payment data to Fraud Detection Service**: Payment data is sent to the Fraud Detection Service for analysis. visible in diagram; no further repository context available.
+- **T / Potential fraud detected?**: A decision point to check if potential fraud is detected. visible in diagram; no further repository context available.
+- **U / Hold order for manual review**: The order is held for manual review due to potential fraud. visible in diagram; no further repository context available.
+- **V / Notify fraud investigation team**: The fraud investigation team is notified. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User adds items to cart after initiating order.
+- `B --> C`: Cart validity is checked after adding items.
+- `C -- Yes --> D`: If the cart is valid, calculate totals.
+- `C -- No --> E`: If the cart is not valid, display an error and return to the storefront.
+- `D --> F`: Apply promotions/discounts after calculating totals.
+- `F --> G`: Select shipping method after applying promotions/discounts.
+- `G --> H`: Enter shipping address after selecting shipping method.
+- `H --> I`: Review order after entering shipping address.
+- `I --> J`: Confirm order after reviewing the order.
+- `J -- Yes --> K`: If the order is confirmed, proceed to the order creation service.
+- `J -- No --> B`: If the order is not confirmed, return to adding items to the cart.
+- `K --> L`: Submit payment details to the payment gateway after order creation.
+- `L --> M`: Check if the payment is accepted.
+- `L --> S`: Send payment data to Fraud Detection Service.
+- `M -- Yes --> N`: If the payment is accepted, update the order status to 'Paid'.
+- `M -- No --> O`: If the payment is not accepted, display a payment error to the user.
+- `O --> L`: After displaying the payment error, return to submitting payment details.
+- `S --> T`: Check if potential fraud is detected.
+- `T -- Yes --> U`: If potential fraud is detected, hold the order for manual review.
+- `T -- No --> N`: If no potential fraud is detected, update the order status to 'Paid'.
+- `U --> V`: Notify the fraud investigation team after holding the order.
+- `N --> P`: Trigger invoice generation after updating the order status to 'Paid'.
+- `P --> Q`: Send a confirmation email to the user after triggering invoice generation.
+- `Q --> R`: Initiate the fulfillment process after sending the confirmation email.
+
+## Repository Context & Terminology
+- **Storefront**: The user-facing interface of the e-commerce platform where users can browse products and initiate orders.
+- **Cart**: A temporary storage area where users can add items they intend to purchase.
+- **Payment Gateway**: A service that processes payments securely.
+- **Fraud Detection Service**: A service that analyzes payment data to detect potential fraud.
+- **Order Creation Service**: A service responsible for creating and managing orders in the system.
+- **Fulfillment Process**: The process of preparing and shipping the order to the customer.
+- **Invoice Generation**: The process of creating an invoice for the order.
+
+## High-Density QA Ground Truth Summary
+The order processing workflow begins with the user initiating an order on the storefront (A) and adding items to their cart (B). The system then checks if the cart is valid (C). If the cart is not valid, an error is displayed, and the user is returned to the storefront (E). If the cart is valid, the system calculates totals (D) and applies promotions/discounts (F). The user then selects a shipping method (G), enters their shipping address (H), and reviews the order (I). After reviewing, the user confirms the order (J). If the order is confirmed, the order creation service is invoked (K). Payment details are then submitted to a payment gateway (L), and simultaneously, payment data is sent to a Fraud Detection Service (S). The system checks if the payment is accepted (M). If the payment is not accepted, a payment error is displayed to the user (O), and the process returns to submitting payment details. If potential fraud is detected (T), the order is held for manual review (U), and the fraud investigation team is notified (V). If the payment is accepted and no fraud is detected, the order status is updated to 'Paid' (N), an invoice is generated (P), a confirmation email is sent to the user (Q), and the fulfillment process is initiated (R). The 'Order creation service' (K) represents a key backend component responsible for persisting order details, while the 'Payment Gateway' (L) ensures secure transaction processing, aligning with standard e-commerce architecture.

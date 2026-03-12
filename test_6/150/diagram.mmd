@@ -1,0 +1,7 @@
+flowchart TD
+
+A[Are you ok blocking the caller thread while waiting for processing to finish?] -->|No| B[Use ParallelCollectors.parallel]
+A -->|Yes| C{Does the order of elements matter?}
+
+C -->|Yes| D["Use ParallelCollectors.parallelToStream with c -> c.ordered()"]
+C -->|No| E[Use ParallelCollectors.parallelToStream]

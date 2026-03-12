@@ -1,0 +1,35 @@
+graph TD
+    subgraph Client Application
+        A[App: Read Key X] --> B{Cache Hit?}
+    end
+
+    B -- Yes --> C[Return Cached Value X]
+    C --> D[App: Process Data]
+
+    B -- No --> E[Cache Miss: Request Data X from Origin]
+    E --> F{Origin Database Available?}
+
+    F -- Yes --> G[Origin: Query for Data X]
+    G --> H[Origin: Return Data X]
+    H --> I[Cache: Store Data X]
+
+
+    I --> J[Return Data X to App]
+    J --> D
+
+    F -- No --> K[Return Error: Origin Unavailable]
+    K --> L[App: Handle Error]
+
+    subgraph Cache Invalidation Process
+        M[External Event: Data X Changed] --> N[Invalidation Service: Receive Event]
+        N --> O{Cache Server Reachable?}
+        O -- Yes --> P[Cache: Invalidate Entry for X]
+        P --> Q[Log Invalidation Success]
+
+        O -- No --> R[Queue Invalidation Request]
+        R --> S[Retry Later]
+        S --> O
+    end
+
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px
+    style A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S highlight

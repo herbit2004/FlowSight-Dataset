@@ -1,0 +1,56 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the order processing workflow of an e-commerce system. It illustrates the sequence of steps from when a user submits an order to when the order is closed, including payment verification, inventory checks, shipping, and delivery confirmation. This diagram serves as a visual representation of the order fulfillment process.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with the "User Submits Order" node at the top and flows downwards through a series of process and decision nodes, eventually leading to the "Close Order" node at the bottom.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Order Submission & Payment, Inventory Check, Shipping Preparation, Order Shipment, Delivery Confirmation, and Order Closure.
+
+## Node-by-Node Description
+- **A / User Submits Order**: Represents the initial action where a user places an order in the system. visible in diagram; no further repository context available.
+- **B / Payment Received?**: A decision node that checks if the payment for the order has been received. visible in diagram; no further repository context available.
+- **C / Inventory Check**: Represents the process of verifying if the items ordered are available in the inventory. visible in diagram; no further repository context available.
+- **D / Inventory Available?**: A decision node that checks if the inventory is available for all the items in the order. visible in diagram; no further repository context available.
+- **E / Notify User Order Canceled**: Represents the action of notifying the user that their order has been canceled due to unavailability of inventory. visible in diagram; no further repository context available.
+- **F / Determine Shipping Method**: Represents the process of selecting the appropriate shipping method for the order. visible in diagram; no further repository context available.
+- **G / Package Items for Shipping**: Represents the process of packaging the items in preparation for shipping. visible in diagram; no further repository context available.
+- **I / Shipping Label Printed?**: A decision node that checks if the shipping label has been printed. visible in diagram; no further repository context available.
+- **J / Order Shipped**: Represents the action of shipping the order to the user. visible in diagram; no further repository context available.
+- **K / Notify User of Shipment**: Represents the action of notifying the user that their order has been shipped. visible in diagram; no further repository context available.
+- **L / Order Delivered**: Represents the state where the order has been delivered to the user. visible in diagram; no further repository context available.
+- **M / User Confirms Delivery?**: A decision node that checks if the user has confirmed the delivery of their order. visible in diagram; no further repository context available.
+- **N / Close Order**: Represents the final action of closing the order in the system. visible in diagram; no further repository context available.
+- **H / Cancel Order Process**: Represents the process of canceling the order. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User submits an order, initiating the order processing workflow.
+- `B -- Yes --> C`: Payment is received, proceeding to inventory check.
+- `B -- No --> H`: Payment is not received, proceeding to cancel the order process.
+- `C --> D`: Inventory check is performed.
+- `D -- Yes --> F`: Inventory is available, proceeding to determine the shipping method.
+- `D -- No --> E`: Inventory is not available, proceeding to notify the user about order cancellation.
+- `E --> H`: After notifying the user, the process proceeds to cancel the order process.
+- `F --> G`: Shipping method is determined, proceeding to package items for shipping.
+- `G --> I`: Items are packaged for shipping.
+- `I -- Yes --> G`: Shipping label is printed, looping back to package items for shipping.
+- `I -- No --> J`: Shipping label is not printed, proceeding to order shipped.
+- `J --> K`: Order is shipped, proceeding to notify the user of shipment.
+- `K --> L`: User is notified of shipment, proceeding to order delivered.
+- `L --> M`: Order is delivered.
+- `M -- Yes --> N`: User confirms delivery, proceeding to close the order.
+- `M -- No --> K`: User does not confirm delivery, looping back to notify user of shipment.
+- `H --> N`: Cancel order process merges into close order.
+
+## Repository Context & Terminology
+- **User Submits Order**: In a real-world e-commerce system, this refers to the user completing the checkout process and submitting their order details. In this diagram, it's the starting point of the workflow.
+- **Payment Received?**: In a real-world system, this involves verifying the payment through a payment gateway. In this diagram, it's a binary check with no details on the verification process.
+- **Inventory Check**: In a real-world system, this involves querying a database to check the availability of items. In this diagram, it's a simple process step.
+- **Inventory Available?**: In a real-world system, this would involve comparing the requested quantity with the available quantity. In this diagram, it's a binary check.
+- **Determine Shipping Method**: In a real-world system, this involves calculating shipping costs and presenting options to the user. In this diagram, it's a simple process step.
+- **Package Items for Shipping**: In a real-world system, this involves physically packing the items and generating a shipping label. In this diagram, it's a simple process step.
+- **Shipping Label Printed?**: In a real-world system, this confirms the label is ready for attachment to the package. In this diagram, the "Yes" outcome loops back to packaging, which is incorrect.
+- **Close Order**: In a real-world system, this involves updating the order status and finalizing the transaction. In this diagram, it's the ending point of the workflow.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a "User Submits Order," which leads to a "Payment Received?" check. If payment is received ("Yes"), the process moves to "Inventory Check" and then to "Inventory Available?". If inventory is not available ("No"), the user is notified ("Notify User Order Canceled"), and the process proceeds to "Cancel Order Process," which incorrectly merges into "Close Order." If inventory is available ("Yes"), the system determines the shipping method ("Determine Shipping Method") and packages the items ("Package Items for Shipping"). The diagram then checks "Shipping Label Printed?". If the label is printed ("Yes"), the process loops back to "Package Items for Shipping," which is an error. If the label is not printed ("No"), the order is marked as "Order Shipped," which is also an error, as the label should be printed before shipping. The user is then notified of shipment ("Notify User of Shipment"), and the order is marked as "Order Delivered." The system then checks "User Confirms Delivery?". If the user confirms ("Yes"), the order is closed ("Close Order"). If the user does not confirm ("No"), the system loops back to "Notify User of Shipment," creating an illogical loop. The "Cancel Order Process" incorrectly merges into the "Close Order" node, regardless of the cancellation reason.

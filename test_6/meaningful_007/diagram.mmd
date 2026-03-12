@@ -1,0 +1,59 @@
+graph TD
+    subgraph User Device
+        A[User App] --> B(API Gateway)
+    end
+
+    subgraph Infrastructure
+        B --> C{Authentication Service}
+        C -- Valid User? --> D[Request Routing]
+        C -- Invalid User --> E(Error Response: 401)
+
+        D --> F{Inventory Service}
+        F -- Check Stock --> G[Product Service]
+        G -- Get Product Details --> H[Recommendations Service]
+        H -- Fetch Similar Items --> I[Pricing Service]
+        I -- Calculate Dynamic Price --> J[Shipping Service]
+        J -- Determine Shipping Options --> K[Payment Service]
+        K -- Initiate Payment --> L{Transaction Service}
+        L -- Log Transaction --> M[Analytics Service]
+        M --> N(Data Lake)
+
+        L -- Success? --> O[Order Service]
+        O -- Create Order --> P{Notification Service}
+        P -- Send Order Confirmation --> A
+
+        L -- Failure? --> Q(Error Handling Service)
+        Q --> A
+
+       D --> R[Customer Profile Service]
+       R --> S(Cache / Redis)
+
+        subgraph Databases
+            G -->|Read Product| T[Product DB]
+            F -->|Check Stock| U[Inventory DB]
+            R -->|Get Profile| V[Customer DB]
+            K -->|Record attempts| W[Payment DB]
+            L -->|Log Transaction| X[Transaction DB]
+            O -->|Create Order| Y[Order DB]
+        end
+
+        subgraph Monitoring
+            M --> Z[Prometheus]
+            Q --> Z
+            P --> Z
+        end
+
+        subgraph Rate Limiting
+          B --> AA(Rate Limiter)
+          AA --> B
+          AA -- Exceeds Limit? --> BB(Error 429)
+          BB --> A
+        end
+
+    end
+
+    classDef success fill:#90EE90,stroke:#333,stroke-width:2px;
+    classDef error fill:#F08080,stroke:#333,stroke-width:2px;
+
+    class A,P success
+    class Q,E,BB error

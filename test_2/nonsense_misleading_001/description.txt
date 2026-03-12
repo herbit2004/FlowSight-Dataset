@@ -1,0 +1,59 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting a user request and payment processing flow. It illustrates the steps involved in authorizing a user request and processing a payment, including error handling and retries. The diagram serves as a visual representation of the system's logic, but contains deliberate errors and deviations from standard practices.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TD). It consists of two main flows: one for user authorization and another for payment processing. The start nodes are "User Request" and "Payment Request," and the end node is "Timeout Complete."
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into two stages: User Request Authorization and Payment Request Processing.
+
+## Node-by-Node Description
+- **User Request**: Represents an incoming request from a user. visible in diagram; no further repository context available.
+- **Authorized?**: Represents a decision point to determine if the user is authorized. visible in diagram; no further repository context available.
+- **Access Resource**: Represents granting access to the requested resource. visible in diagram; no further repository context available.
+- **DB Write**: Represents writing data to the database. visible in diagram; no further repository context available.
+- **Return 403**: Represents returning a 403 error code, indicating unauthorized access. visible in diagram; no further repository context available.
+- **Log Access**: Represents logging the access attempt. visible in diagram; no further repository context available.
+- **Invalidate Cache**: Represents invalidating the cache. visible in diagram; no further repository context available.
+- **Payment Request**: Represents an incoming payment request. visible in diagram; no further repository context available.
+- **Payment Success?**: Represents a decision point to determine if the payment was successful. visible in diagram; no further repository context available.
+- **Retry Payment**: Represents retrying the payment. visible in diagram; no further repository context available.
+- **Send Notification**: Represents sending a notification about the payment failure. visible in diagram; no further repository context available.
+- **Update Order Status: Failed**: Represents updating the order status to failed. visible in diagram; no further repository context available.
+- **Rollback Transaction**: Represents rolling back the transaction due to payment failure. visible in diagram; no further repository context available.
+- **DB Read**: Represents reading data from the database. visible in diagram; no further repository context available.
+- **Start Timeout**: Represents starting a timeout process. visible in diagram; no further repository context available.
+- **Timeout Complete**: Represents the completion of the timeout process. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Request --> Authorized?`: A user request is sent to the authorization check.
+- `Authorized? -- Yes --> Access Resource`: If authorized, access to the resource is granted.
+- `Authorized? -- No --> Return 403`: If not authorized, a 403 error is returned.
+- `Access Resource --> DB Write`: Accessing the resource triggers a database write.
+- `DB Write --> User Request`: The database write triggers a new user request (reversed causation).
+- `Return 403 --> Log Access`: Returning a 403 error triggers logging the access attempt.
+- `Log Access --> Invalidate Cache`: Logging the access attempt triggers cache invalidation.
+- `Invalidate Cache --> Authorized?`: Cache invalidation triggers a new authorization check.
+- `Payment Request --> Payment Success?`: A payment request is sent to the payment success check.
+- `Payment Success? -- Yes --> Retry Payment`: If payment is successful, the payment is retried (counter-intuitive).
+- `Payment Success? -- No --> Send Notification`: If payment is not successful, a notification is sent.
+- `Retry Payment --> Update Order Status: Failed`: Retrying the payment leads to updating the order status to failed.
+- `Send Notification --> Rollback Transaction`: Sending a notification triggers a transaction rollback.
+- `Update Order Status: Failed --> Start Timeout`: Updating the order status to failed starts a timeout.
+- `Rollback Transaction --> DB Read`: Rolling back the transaction triggers a database read.
+- `Start Timeout --> Timeout Complete`: The timeout process completes.
+- `DB Read --> Timeout Complete`: The database read also leads to timeout completion.
+- `Timeout Complete --> Payment Request`: Timeout completion triggers a new payment request.
+
+## Repository Context & Terminology
+- **User Request**: Typically, a user request initiates a process, but in this diagram, it is triggered by a DB Write, which is a reversed causation.
+- **Authorized?**: This should represent a login or authentication check. The diagram has swapped the Yes/No branches, granting access when authorization fails.
+- **403 Error**: A standard HTTP status code for unauthorized access. In the diagram, logging access happens *after* returning the 403, which is an incorrect sequence.
+- **Payment Success?**: A check to determine if a payment was successful. The diagram's "Yes" branch leads to "Retry Payment," which is counter-intuitive; retries usually happen on failure.
+- **Retry Payment**: Typically, a payment is retried after a failure, but here it's triggered by success.
+- **Rollback Transaction**: Usually performed after a payment failure to revert any partial changes. The diagram shows this correctly following a failed payment notification.
+- **Timeout**: A mechanism to handle long-running processes. The diagram shows timeout completion triggering a new payment request, and also being triggered by both DB Read and Start Timeout.
+- **Invalidate Cache**: Typically performed after a logout or data change. The diagram shows this as 'Invalidate Cache' and triggered after logging access, which is an unusual sequence.
+
+## High-Density QA Ground Truth Summary
+The diagram begins with either a "User Request" or a "Payment Request." The "User Request" flow proceeds to an "Authorized?" check. Critically, the Yes/No branches are swapped: if authorization fails ("No"), a "Return 403" error is issued, followed by "Log Access" and "Invalidate Cache," which then loops back to the "Authorized?" check. If authorization succeeds ("Yes" — but should be "No"), the flow grants "Access Resource" and performs a "DB Write," which then incorrectly triggers a new "User Request," creating a reversed causation loop. The "Payment Request" flow goes to a "Payment Success?" check. Again, the logic is inverted: if the payment is deemed successful ("Yes"), the system initiates a "Retry Payment" and updates the "Order Status: Failed," before starting a "Timeout." If the payment fails ("No"), a "Send Notification" is triggered, followed by a "Rollback Transaction" and a "DB Read." Both "DB Read" and "Start Timeout" converge on "Timeout Complete," which then triggers a new "Payment Request." The diagram contains several deviations from standard practice, including reversed causation, swapped branch conditions, and illogical sequences, making it a deliberately misleading representation of a typical user request and payment processing system.

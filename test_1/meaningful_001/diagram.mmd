@@ -1,0 +1,30 @@
+graph TD
+    subgraph Order Creation
+        A[User: Initiates Order] --> B{Product Selection & Quantity};
+        B --> C{Add to Cart};
+        C --> D{View Cart};
+        D --> E{Apply Promo Code?};
+        E -- Yes --> F[Promo Code Validation];
+        E -- No --> G{Shipping Address};
+        F --> G{Shipping Address};
+        G --> H{Shipping Options};
+        H --> I[Calculate Total];
+        I --> J{Confirm Order};
+    end
+
+    subgraph Payment Processing
+        J --> K[Payment Gateway: Redirect];
+        K --> L{User: Enters Payment Info};
+        L --> M[Authorize Payment];
+        M -- Success --> N[Capture Payment];
+        M -- Failure --> X[Notify User: Payment Failed];
+        N --> O[Update Order Status: Paid];
+        O --> P[Initiate Shipment];
+        X --> Q[Return to Cart];
+    end
+    P --> R[Send Confirmation Email];
+    R --> S[Logistics Service API];
+    S --> T[Update Order With Tracking Info];
+
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T default

@@ -1,0 +1,53 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data retrieval process in a system employing local and distributed caching. It depicts the flow of requests and data between a client application, an origin server cluster, and various cache layers. The diagram serves to visualize the decision-making process for data retrieval, prioritizing local cache, then origin server, and finally updating caches.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into logical stages representing the client application and the origin server cluster. The start node is "Client App," and the end node is "Return Data from Cache."
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Client Application**: Represents the client-side logic for requesting and caching data.
+- **Origin Server Cluster**: Represents the server-side logic for retrieving data from the database and managing the distributed cache.
+
+## Node-by-Node Description
+- **A / Client App**: Represents the client application initiating the data request. visible in diagram; no further repository context available.
+- **B / Is Data in Local Cache?**: A decision point to check if the requested data exists in the client's local cache. visible in diagram; no further repository context available.
+- **C / Return Data from Cache**: Returns the data from the local cache to the client application. visible in diagram; no further repository context available.
+- **D / Request Data from Origin Server**: The origin server receives a request for data. visible in diagram; no further repository context available.
+- **E / Origin Server**: Represents the origin server processing the request. visible in diagram; no further repository context available.
+- **F / Database Read**: The origin server reads the requested data from the database. visible in diagram; no further repository context available.
+- **G / Return Data to Origin Server**: The origin server returns the data retrieved from the database. visible in diagram; no further repository context available.
+- **H / Origin Server Response**: Represents the origin server's response containing the requested data. visible in diagram; no further repository context available.
+- **I / Update Distributed Cache**: The origin server updates the distributed cache with the new data. visible in diagram; no further repository context available.
+- **J / Send Cache Invalidation Message**: A message is sent to invalidate the local cache. visible in diagram; no further repository context available.
+- **K / Origin Server Response to Client**: The origin server sends the data to the client. visible in diagram; no further repository context available.
+- **L / Log Error and Retry Invalidation**: Logs an error and retries the cache invalidation process. visible in diagram; no further repository context available.
+- **M / Store Data in Local Cache**: The client stores the received data in its local cache. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The client application initiates a data request.
+- `B -- Yes --> C`: If the data is found in the local cache, it is returned to the client.
+- `B -- No --> D`: If the data is not found in the local cache, a request is sent to the origin server.
+- `D --> E`: The request is processed by the origin server.
+- `E --> F`: The origin server reads the data from the database.
+- `F --> G`: The data is returned to the origin server.
+- `G --> H`: The origin server prepares a response.
+- `H --> I`: The distributed cache is updated.
+- `I --> J`: A cache invalidation message is sent.
+- `J -- Success --> K`: If the cache invalidation is successful, the origin server responds to the client.
+- `J -- Failure --> L`: If the cache invalidation fails, an error is logged, and the invalidation is retried.
+- `K --> M`: The client stores the data in the local cache.
+- `M --> C`: After storing in local cache, the data is returned from cache.
+- `L --> C`: After logging the error and retrying invalidation, the data is returned from cache.
+
+## Repository Context & Terminology
+- **Client Application**: The application running on the user's device or browser that initiates data requests.
+- **Local Cache**: A storage mechanism on the client-side to store frequently accessed data for faster retrieval.
+- **Origin Server**: The primary server responsible for storing and serving the original data.
+- **Origin Server Cluster**: A group of origin servers working together to handle requests and ensure high availability.
+- **Database Read**: The process of retrieving data from the database.
+- **Distributed Cache**: A caching system distributed across multiple servers to improve performance and scalability.
+- **Cache Invalidation**: The process of removing or updating stale data in the cache to ensure data consistency.
+
+## High-Density QA Ground Truth Summary
+The process begins with the "Client App" initiating a data request, which leads to a check: "Is Data in Local Cache?". If the data is present in the local cache (Yes branch), the data is immediately "Return Data from Cache" to the client. However, if the data is not in the local cache (No branch), the process proceeds to the "Origin Server Cluster". Here, the "Request Data from Origin Server" node initiates a series of actions: "Origin Server" processes the request, followed by a "Database Read" to fetch the data. The data is then "Return Data to Origin Server", and an "Origin Server Response" is prepared. Next, the "Update Distributed Cache" node ensures the distributed cache is up-to-date. A "Send Cache Invalidation Message" is then triggered. If this message is successfully sent (Success branch), the "Origin Server Response to Client" delivers the data, which is then "Store Data in Local Cache" for future use, eventually leading to "Return Data from Cache". If the cache invalidation fails (Failure branch), "Log Error and Retry Invalidation" handles the error, and the process eventually leads to "Return Data from Cache". The local and distributed caches are used to reduce latency and load on the origin server, which is a common strategy in modern web applications.

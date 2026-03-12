@@ -1,0 +1,65 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating a message queue system. It depicts the flow of messages through various components, including producer applications, queues, consumer groups, and data processing stages. The diagram serves as a high-level architecture overview, outlining the steps involved in processing messages from creation to delivery and analytics.
+
+## Overall Layout
+The diagram flows from left to right (LR). It starts with the "Producer Application" and ends with "Delivery Confirmation", "Error Reporting System", and "Data Lake Ingestion". The diagram shows a main flow with branching and convergence points.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph: "Message Queue System".
+
+## Node-by-Node Description
+- **Producer Application**: Represents the application that generates messages to be processed. visible in diagram; no further repository context available.
+- **Order Validation Logic**: Represents the process of validating the order received from the producer application. visible in diagram; no further repository context available.
+- **Order Type?**: A decision point that determines the type of order (Express or Standard). visible in diagram; no further repository context available.
+- **Express Queue**: A message queue for express orders. In the repository this corresponds to a high-priority queue.
+- **Queue Manager**: Manages the routing of messages from different queues to consumer groups. visible in diagram; no further repository context available.
+- **Consumer Group A: Order Processing**: A consumer group responsible for processing orders. visible in diagram; no further repository context available.
+- **Inventory Check?**: A decision point to check the availability of inventory. visible in diagram; no further repository context available.
+- **Create Order Record**: Creates a record of the order. visible in diagram; no further repository context available.
+- **Transaction Manager / DB Commit**: Manages the database transaction and commits the order. visible in diagram; no further repository context available.
+- **Order Fulfillment System**: Handles the fulfillment of the order. visible in diagram; no further repository context available.
+- **Delivery Service Integration**: Integrates with a delivery service. visible in diagram; no further repository context available.
+- **Delivery Confirmation**: Confirms the delivery of the order. visible in diagram; no further repository context available.
+- **Order Backlog Queue**: A queue for orders that are backlogged due to inventory unavailability. visible in diagram; no further repository context available.
+- **Retry Logic**: Implements retry logic for failed order processing. visible in diagram; no further repository context available.
+- **Exception Handling / Alerting**: Handles exceptions and generates alerts. visible in diagram; no further repository context available.
+- **Error Reporting System**: Reports errors encountered during processing. visible in diagram; no further repository context available.
+- **Consumer Group B: Analytics Ingestion**: A consumer group responsible for ingesting data for analytics. visible in diagram; no further repository context available.
+- **Data Transformation & Enrichment**: Transforms and enriches the data for analytics. visible in diagram; no further repository context available.
+- **Data Lake Ingestion**: Ingests the transformed data into a data lake. visible in diagram; no further repository context available.
+- **Standard Queue**: A message queue for standard orders. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Producer Application --> Order Validation Logic`: The producer application sends an order to the order validation logic.
+- `Order Validation Logic -- Valid Order --> Order Type?`: Validated order is sent to determine the order type.
+- `Order Type? -- Express --> Express Queue`: Express orders are routed to the express queue.
+- `Order Type? -- Standard --> Standard Queue`: Standard orders are routed to the standard queue.
+- `Express Queue --> Queue Manager`: Express queue sends messages to the queue manager.
+- `Standard Queue --> Queue Manager`: Standard queue sends messages to the queue manager.
+- `Queue Manager --> Consumer Group A: Order Processing`: The queue manager routes messages to consumer group A for order processing.
+- `Queue Manager --> Consumer Group B: Analytics Ingestion`: The queue manager routes messages to consumer group B for analytics ingestion.
+- `Consumer Group A: Order Processing --> Inventory Check?`: Consumer group A checks the inventory.
+- `Inventory Check? -- Available --> Create Order Record`: If inventory is available, an order record is created.
+- `Inventory Check? -- Unavailable --> Order Backlog Queue`: If inventory is unavailable, the order is sent to the order backlog queue.
+- `Create Order Record --> Transaction Manager / DB Commit`: An order record is sent to the transaction manager for database commit.
+- `Transaction Manager / DB Commit --> Order Fulfillment System`: The committed order is sent to the order fulfillment system.
+- `Order Fulfillment System --> Delivery Service Integration`: The order fulfillment system integrates with the delivery service.
+- `Delivery Service Integration --> Delivery Confirmation`: The delivery service confirms the delivery.
+- `Order Backlog Queue --> Retry Logic`: Backlogged orders are sent to retry logic.
+- `Retry Logic -- Retry Enabled --> Standard Queue`: If retry is enabled, the order is sent back to the standard queue.
+- `Retry Logic -- Retry Exhausted --> Exception Handling / Alerting`: If retry is exhausted, an exception is handled and an alert is generated.
+- `Exception Handling / Alerting --> Error Reporting System`: Exceptions are reported to the error reporting system.
+- `Consumer Group B: Analytics Ingestion --> Data Transformation & Enrichment`: Consumer group B sends data to data transformation and enrichment.
+- `Data Transformation & Enrichment --> Data Lake Ingestion`: Transformed data is ingested into the data lake.
+
+## Repository Context & Terminology
+- **Message Queue**: A software component that allows applications to communicate asynchronously by sending and receiving messages.
+- **Producer**: An application that sends messages to a message queue.
+- **Consumer**: An application that receives messages from a message queue.
+- **Queue Manager**: A component that manages the routing of messages between queues and consumers.
+- **Consumer Group**: A group of consumers that process messages from a queue.
+- **Data Lake**: A centralized repository for storing structured and unstructured data.
+- **Transaction Manager**: A component that manages database transactions.
+
+## High-Density QA Ground Truth Summary
+The message queue system begins with a "Producer Application" sending data to "Order Validation Logic". Validated orders proceed to the "Order Type?" decision point, branching into "Express Queue" or "Standard Queue" based on order type. Both queues converge at the "Queue Manager", which then distributes messages to "Consumer Group A: Order Processing" and "Consumer Group B: Analytics Ingestion". Consumer Group A performs an "Inventory Check?", branching to "Create Order Record" if available, leading to "Transaction Manager / DB Commit", "Order Fulfillment System", "Delivery Service Integration", and finally "Delivery Confirmation". If inventory is unavailable, the order goes to "Order Backlog Queue" and "Retry Logic". Retries are attempted via the "Standard Queue"; if exhausted, "Exception Handling / Alerting" and "Error Reporting System" are triggered. Consumer Group B handles analytics, sending data to "Data Transformation & Enrichment" and then "Data Lake Ingestion". The "Express Queue" and "Standard Queue" represent different priority levels within the message queue system, a common pattern for managing diverse workloads. The system terminates at "Delivery Confirmation", "Error Reporting System", and "Data Lake Ingestion", representing successful order completion, error reporting, and data analytics, respectively.

@@ -1,0 +1,104 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the request flow through an API Gateway, including authentication, authorization, rate limiting, and routing to backend services. It depicts the architecture and process flow for handling user requests, ensuring security, and distributing traffic across multiple service instances. The diagram serves as documentation for understanding the system's request processing pipeline.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It is hierarchically structured, starting with the client application and progressing through the API Gateway to backend services. The start node is "User Application" and the end node is also "User Application," representing the round trip of a request and response.
+
+## Subgraphs / Stages
+The diagram contains three explicit subgraphs: Client, API Gateway, Authentication Service, and External Services.
+- **Client**: Represents the user application interacting with the system.
+- **API Gateway**: The central component responsible for request validation, authentication, authorization, rate limiting, routing, and response aggregation.
+- **Authentication Service**: Handles token validation and user context retrieval.
+- **External Services**: Represents the backend services (Service A, Service B, Service C) and their respective databases.
+
+## Node-by-Node Description
+- **User Application**: Represents the client application initiating the request. visible in diagram; no further repository context available.
+- **API Gateway (Client subgraph)**: Entry point for user requests. visible in diagram; no further repository context available.
+- **API Gateway (API Gateway subgraph)**: The central component handling request processing. visible in diagram; no further repository context available.
+- **Request Validation**: Checks if the incoming request is valid. visible in diagram; no further repository context available.
+- **Return 400**: Returns an HTTP 400 error code for invalid requests. visible in diagram; no further repository context available.
+- **Authentication Service**: Validates the user's token and retrieves user context.
+- **Authorization**: Checks if the user is authorized to access the requested resource. visible in diagram; no further repository context available.
+- **Return 401**: Returns an HTTP 401 error code for unauthenticated requests. visible in diagram; no further repository context available.
+- **Rate Limiter**: Limits the number of requests a user can make within a given time period. visible in diagram; no further repository context available.
+- **Return 403**: Returns an HTTP 403 error code for unauthorized requests. visible in diagram; no further repository context available.
+- **Return 429**: Returns an HTTP 429 error code when the rate limit is exceeded. visible in diagram; no further repository context available.
+- **Request Routing**: Determines the appropriate backend service to handle the request. visible in diagram; no further repository context available.
+- **Route Configuration**: Determines the specific route for the request. visible in diagram; no further repository context available.
+- **Service A Load Balancer**: Distributes traffic across multiple instances of Service A. visible in diagram; no further repository context available.
+- **Service B Load Balancer**: Distributes traffic across multiple instances of Service B. visible in diagram; no further repository context available.
+- **Service C Load Balancer**: Distributes traffic across multiple instances of Service C. visible in diagram; no further repository context available.
+- **Service A Instance 1**: An instance of Service A. visible in diagram; no further repository context available.
+- **Service A Instance 2**: Another instance of Service A. visible in diagram; no further repository context available.
+- **Service B Instance 1**: An instance of Service B. visible in diagram; no further repository context available.
+- **Service B Instance 2**: Another instance of Service B. visible in diagram; no further repository context available.
+- **Service C Instance 1**: An instance of Service C. visible in diagram; no further repository context available.
+- **Service C Instance 2**: Another instance of Service C. visible in diagram; no further repository context available.
+- **Response Aggregation**: Aggregates responses from multiple backend services. visible in diagram; no further repository context available.
+- **API Gateway (Response)**: The API Gateway component that returns the response to the client. visible in diagram; no further repository context available.
+- **Return Response**: Returns the aggregated response to the user application. visible in diagram; no further repository context available.
+- **Authentication Service (Subgraph)**: Handles token validation and user context retrieval. visible in diagram; no further repository context available.
+- **Token Validation**: Validates the user's token. visible in diagram; no further repository context available.
+- **Fetch User Context**: Retrieves user context from the user database. visible in diagram; no further repository context available.
+- **User Database**: Stores user information. visible in diagram; no further repository context available.
+- **Service A (External Services)**: Represents the Service A. visible in diagram; no further repository context available.
+- **Service B (External Services)**: Represents the Service B. visible in diagram; no further repository context available.
+- **Service C (External Services)**: Represents the Service C. visible in diagram; no further repository context available.
+- **Database A**: The database for Service A. visible in diagram; no further repository context available.
+- **Database B**: The database for Service B. visible in diagram; no further repository context available.
+- **Database C**: The database for Service C. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Application --> API Gateway (Client subgraph)`: User initiates a request to the API Gateway.
+- `API Gateway (Client subgraph) --> Request Validation`: The API Gateway validates the incoming request.
+- `Request Validation -- Valid --> Authentication Service`: If the request is valid, proceed to authentication.
+- `Request Validation -- Invalid --> Return 400`: If the request is invalid, return a 400 error.
+- `Authentication Service -- Authenticated --> Authorization`: If the user is authenticated, proceed to authorization.
+- `Authentication Service -- Unauthenticated --> Return 401`: If the user is not authenticated, return a 401 error.
+- `Authorization -- Authorized --> Rate Limiter`: If the user is authorized, proceed to rate limiting.
+- `Authorization -- Unauthorized --> Return 403`: If the user is not authorized, return a 403 error.
+- `Rate Limiter -- Within Limit --> Request Routing`: If the rate limit is not exceeded, proceed to request routing.
+- `Rate Limiter -- Limit Exceeded --> Return 429`: If the rate limit is exceeded, return a 429 error.
+- `Request Routing --> Route Configuration`: Route the request based on configuration.
+- `Route Configuration -- Service A Route --> Service A Load Balancer`: Route the request to Service A.
+- `Route Configuration -- Service B Route --> Service B Load Balancer`: Route the request to Service B.
+- `Route Configuration -- Service C Route --> Service C Load Balancer`: Route the request to Service C.
+- `Service A Load Balancer --> Service A Instance 1`: Distribute traffic to Service A Instance 1.
+- `Service A Load Balancer --> Service A Instance 2`: Distribute traffic to Service A Instance 2.
+- `Service B Load Balancer --> Service B Instance 1`: Distribute traffic to Service B Instance 1.
+- `Service B Load Balancer --> Service B Instance 2`: Distribute traffic to Service B Instance 2.
+- `Service C Load Balancer --> Service C Instance 1`: Distribute traffic to Service C Instance 1.
+- `Service C Load Balancer --> Service C Instance 2`: Distribute traffic to Service C Instance 2.
+- `Service A Instance 1 --> Response Aggregation`: Service A Instance 1 sends its response to the aggregation.
+- `Service A Instance 2 --> Response Aggregation`: Service A Instance 2 sends its response to the aggregation.
+- `Service B Instance 1 --> Response Aggregation`: Service B Instance 1 sends its response to the aggregation.
+- `Service B Instance 2 --> Response Aggregation`: Service B Instance 2 sends its response to the aggregation.
+- `Service C Instance 1 --> Response Aggregation`: Service C Instance 1 sends its response to the aggregation.
+- `Service C Instance 2 --> Response Aggregation`: Service C Instance 2 sends its response to the aggregation.
+- `Response Aggregation --> API Gateway (Response)`: Aggregated response is sent back to the API Gateway.
+- `API Gateway (Response) --> Return Response`: API Gateway returns the response.
+- `Return Response --> User Application`: The response is returned to the user application.
+- `Authentication Service --> Token Validation`: Authentication Service validates the token.
+- `Token Validation -- Valid Token --> Fetch User Context`: If the token is valid, fetch user context.
+- `Token Validation -- Invalid Token --> Authentication Service`: If the token is invalid, return to Authentication Service.
+- `Fetch User Context --> User Database`: Fetch user context from the database.
+- `User Database --> Fetch User Context`: User context is returned.
+- `Fetch User Context --> Authentication Service`: User context is returned to the Authentication Service.
+- `Service A Instance 1 -.-> Database A`: Service A Instance 1 interacts with Database A.
+- `Service A Instance 2 -.-> Database A`: Service A Instance 2 interacts with Database A.
+- `Service B Instance 1 -.-> Database B`: Service B Instance 1 interacts with Database B.
+- `Service B Instance 2 -.-> Database B`: Service B Instance 2 interacts with Database B.
+- `Service C Instance 1 -.-> Database C`: Service C Instance 1 interacts with Database C.
+- `Service C Instance 2 -.-> Database C`: Service C Instance 2 interacts with Database C.
+
+## Repository Context & Terminology
+- **API Gateway**: A reverse proxy that sits in front of backend services, handling tasks such as authentication, authorization, rate limiting, and request routing.
+- **Authentication**: The process of verifying the identity of a user or service.
+- **Authorization**: The process of determining whether an authenticated user or service has permission to access a specific resource.
+- **Rate Limiting**: A mechanism to limit the number of requests a user or service can make within a given time period, preventing abuse and ensuring fair usage.
+- **Load Balancer**: Distributes network traffic across multiple servers to ensure no single server is overwhelmed.
+- **Token Validation**: The process of verifying the authenticity and validity of a security token, such as a JWT (JSON Web Token).
+- **User Context**: Information about the user, such as their roles, permissions, and preferences, used for authorization and personalization.
+
+## High-Density QA Ground Truth Summary
+The request flow begins with a User Application sending a request to the API Gateway. The API Gateway first performs Request Validation; if invalid, a 400 error is returned directly to the User Application, terminating the flow. If the request is valid, the flow proceeds to the Authentication Service, where Token Validation occurs. An invalid token loops back to the Authentication Service, whereas a valid token triggers fetching the User Context from the User Database. After authentication, the flow reaches Authorization; unauthorized requests result in a 403 error. Authorized requests proceed to the Rate Limiter; exceeding the limit returns a 429 error. Within the rate limit, Request Routing occurs based on Route Configuration, directing the request to either Service A, B, or C. Each service's Load Balancer distributes traffic across multiple instances (e.g., Service A Instance 1 and 2). These instances interact with their respective databases (Database A, B, C). Responses from the service instances are aggregated at the Response Aggregation node, sent back through the API Gateway, and finally returned to the User Application, completing the request cycle. The API Gateway acts as a central point for managing security and traffic, ensuring backend services are protected and requests are handled efficiently.

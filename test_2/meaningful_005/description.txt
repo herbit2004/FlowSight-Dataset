@@ -1,0 +1,80 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the data flow and cache invalidation process within a client application. It depicts how the application reads data, handles cache hits and misses, interacts with an origin database, and manages cache invalidation events. The diagram serves as a visual representation of the system's architecture and data retrieval logic.
+
+## Overall Layout
+The diagram is laid out from top to bottom (TD). It is divided into two main sections: "Cache Invalidation Process" on the left and "Client Application" on the right. The "Client Application" section represents the main flow, starting with reading a key and ending with processing data or handling errors.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs: "Cache Invalidation Process" and "Client Application".
+
+## Node-by-Node Description
+- **A / App: Read Key X**: The client application attempts to read data associated with key X.
+  visible in diagram; no further repository context available.
+- **B / Cache Hit?**: A decision point to determine if the data for key X is present in the cache.
+  visible in diagram; no further repository context available.
+- **C / Return Cached Value X**: The cached data for key X is returned to the application.
+  visible in diagram; no further repository context available.
+- **D / App: Process Data**: The application processes the data received (either from cache or origin).
+  visible in diagram; no further repository context available.
+- **E / Cache Miss: Request Data X from Origin**: The application requests the data for key X from the origin database.
+  visible in diagram; no further repository context available.
+- **F / Origin Database Available?**: A decision point to determine if the origin database is available.
+  visible in diagram; no further repository context available.
+- **G / Origin: Query for Data X**: The origin database is queried for data associated with key X.
+  visible in diagram; no further repository context available.
+- **H / Origin: Return Data X**: The origin database returns the data for key X.
+  visible in diagram; no further repository context available.
+- **I / Cache: Store Data X**: The data for key X is stored in the cache.
+  visible in diagram; no further repository context available.
+- **J / Return Data X to App**: The data for key X is returned to the application.
+  visible in diagram; no further repository context available.
+- **K / Return Error: Origin Unavailable**: An error is returned to the application indicating the origin is unavailable.
+  visible in diagram; no further repository context available.
+- **L / App: Handle Error**: The application handles the error condition.
+  visible in diagram; no further repository context available.
+- **M / External Event: Data X Changed**: An external event indicates that the data associated with key X has changed.
+  visible in diagram; no further repository context available.
+- **N / Invalidation Service: Receive Event**: The invalidation service receives the event indicating data change.
+  visible in diagram; no further repository context available.
+- **O / Cache Server Reachable?**: A decision point to determine if the cache server is reachable.
+  visible in diagram; no further repository context available.
+- **P / Cache: Invalidate Entry for X**: The cache entry for key X is invalidated.
+  visible in diagram; no further repository context available.
+- **Q / Log Invalidation Success**: A log entry is created to indicate successful invalidation.
+  visible in diagram; no further repository context available.
+- **R / Queue Invalidation Request**: An invalidation request is queued for later processing.
+  visible in diagram; no further repository context available.
+- **S / Retry Later**: The invalidation request is retried at a later time.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: The application attempts to read data for key X, leading to a cache lookup.
+- `B -- Yes --> C`: If the data is found in the cache (cache hit), the cached value is returned.
+- `B -- No --> E`: If the data is not found in the cache (cache miss), a request is sent to the origin.
+- `E --> F`: The application checks if the origin database is available.
+- `F -- Yes --> G`: If the origin database is available, a query is made for the data.
+- `F -- No --> K`: If the origin database is unavailable, an error is returned.
+- `G --> H`: The origin database returns the data.
+- `H --> I`: The data is stored in the cache.
+- `I --> J`: The data is returned to the application.
+- `K --> L`: The application handles the error.
+- `C --> D`: The cached value is processed by the application.
+- `J --> D`: The data from the origin is processed by the application.
+- `M --> N`: An external event triggers the invalidation service.
+- `N --> O`: The invalidation service checks if the cache server is reachable.
+- `O -- Yes --> P`: If the cache server is reachable, the cache entry is invalidated.
+- `O -- No --> R`: If the cache server is unreachable, an invalidation request is queued.
+- `R --> S`: The invalidation request is retried later.
+- `S --> O`: The process loops back to check if the cache server is reachable.
+
+## Repository Context & Terminology
+- **Cache**: A temporary storage location for frequently accessed data, designed to improve performance by reducing the need to retrieve data from slower sources.
+- **Origin Database**: The primary source of data for the application.
+- **Invalidation**: The process of removing or marking data in the cache as stale, ensuring that the application retrieves the most up-to-date information.
+- **Key**: A unique identifier used to retrieve data from the cache or origin database.
+- **Cache Hit**: When the requested data is found in the cache.
+- **Cache Miss**: When the requested data is not found in the cache, requiring retrieval from the origin database.
+- **Queue**: A data structure used to store invalidation requests for later processing, typically used when the cache server is temporarily unavailable.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with the "App: Read Key X" node, representing the client application's attempt to retrieve data associated with a specific key. This leads to the "Cache Hit?" decision point. If the data is present in the cache (cache hit), the flow proceeds to "Return Cached Value X," and the application processes this data via "App: Process Data." However, if the data is not in the cache (cache miss), the flow branches to "Cache Miss: Request Data X from Origin," initiating a request to the origin database. The availability of the origin database is then checked at "Origin Database Available?". If available, the flow proceeds to "Origin: Query for Data X," followed by "Origin: Return Data X," "Cache: Store Data X," and "Return Data X to App," before finally reaching "App: Process Data." If the origin database is unavailable, the flow branches to "Return Error: Origin Unavailable," leading to "App: Handle Error." Concurrently, the "Cache Invalidation Process" subgraph is triggered by an "External Event: Data X Changed," which then checks "Cache Server Reachable?". If reachable, the cache entry is invalidated via "Cache: Invalidate Entry for X" and logged as a success. If not reachable, the invalidation request is queued and retried later. The cache invalidation process ensures data consistency by removing stale entries when the underlying data changes in the origin database.

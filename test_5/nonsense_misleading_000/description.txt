@@ -1,0 +1,57 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the incident management process. It depicts the flow of an incident from submission to resolution, involving support and engineering teams. The diagram outlines the steps taken to address and resolve incidents, including severity determination, assignment, escalation, and deployment of fixes.
+
+## Overall Layout
+The diagram's layout is top-down (TD). It starts with the "User Submits Incident Report" node at the top and flows downwards through decision points and actions. The diagram ends with the "Incident Marked as Resolved" node, which incorrectly loops back to the start.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Incident Submission, Severity Assessment, Initial Support, Engineering Escalation (if needed), Fix Deployment (if needed), and Resolution/Notification.
+
+## Node-by-Node Description
+- **A / User Submits Incident Report**: Represents the initial submission of an incident report by a user.
+  visible in diagram; no further repository context available.
+- **B / Severity Determined?**: A decision point to determine the severity of the incident.
+  visible in diagram; no further repository context available.
+- **C / Incident Assign to Support**: Represents the assignment of the incident to the support team.
+  visible in diagram; no further repository context available.
+- **D / Support Resolves Incident?**: A decision point to determine if the support team can resolve the incident.
+  visible in diagram; no further repository context available.
+- **E / Escalate Incident to Engineering**: Represents the escalation of the incident to the engineering team.
+  visible in diagram; no further repository context available.
+- **F / Engineering Fixes Incident?**: A decision point to determine if the engineering team can fix the incident.
+  visible in diagram; no further repository context available.
+- **G / Deploy Fix to Production**: Represents the deployment of the fix to the production environment.
+  visible in diagram; no further repository context available.
+- **H / Incident Closed**: Represents the closure of the incident.
+  visible in diagram; no further repository context available.
+- **I / Notify User of Resolution**: Represents notifying the user about the resolution of the incident.
+  visible in diagram; no further repository context available.
+- **J / Incident Marked as Resolved**: Represents marking the incident as resolved.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `A --> B`: User submits an incident report, initiating the process.
+  `B -- Yes --> C`: If the severity is determined, the incident is assigned to support.
+  `B -- No --> H`: If the severity is not determined, the incident is immediately closed.
+  `C --> D`: The support team attempts to resolve the incident.
+  `D -- No --> E`: If support cannot resolve the incident, it is escalated to engineering.
+  `D -- Yes --> G`: If support resolves the incident, the fix is deployed to production.
+  `E --> F`: Engineering attempts to fix the incident.
+  `F -- Yes --> G`: If engineering fixes the incident, the fix is deployed to production.
+  `F -- No --> H`: If engineering cannot fix the incident, the incident is closed.
+  `G --> D`: After deploying the fix to production, the process incorrectly loops back to "Support Resolves Incident?".
+  `H --> I`: After the incident is closed, the user is notified of the (lack of) resolution.
+  `I --> J`: The user is notified of the resolution, and then the incident is marked as resolved.
+  `J --> A`: Marking the incident as resolved incorrectly loops back to submitting a new incident report.
+
+## Repository Context & Terminology
+- **Incident Report**: A formal record of an issue or problem encountered by a user. In this diagram, it's the starting point of the workflow.
+- **Severity**: The level of impact or urgency of an incident. In this diagram, if severity cannot be determined, the incident is immediately closed, which is an error.
+- **Support Team**: The team responsible for initial triage and resolution of incidents. In this diagram, they attempt to resolve the incident after it's assigned.
+- **Engineering Team**: The team responsible for resolving more complex incidents that require code changes or infrastructure modifications. In this diagram, incidents are escalated to engineering if the support team cannot resolve them.
+- **Fix**: A solution or patch that resolves an incident. In this diagram, the fix is deployed to production after either the support or engineering team resolves the incident.
+- **Production**: The live environment where the application or service is running. In this diagram, the fix is deployed to the production environment.
+- **Resolution**: The act of resolving an incident. In this diagram, the user is notified of the resolution, and the incident is marked as resolved.
+
+## High-Density QA Ground Truth Summary
+The incident management process begins when a user submits an incident report (A). The first decision point is whether the severity of the incident can be determined (B). If the severity cannot be determined (B -- No --> H), the incident is immediately closed, which is an error in the flow. If the severity is determined (B -- Yes --> C), the incident is assigned to the support team. The support team then attempts to resolve the incident (D). If support cannot resolve the incident (D -- No --> E), it is escalated to the engineering team. If support resolves the incident (D -- Yes --> G), the fix is deployed to production, which is also an error as it should lead to notification. The engineering team attempts to fix the incident (F). If engineering fixes the incident (F -- Yes --> G), the fix is deployed to production. If engineering cannot fix the incident (F -- No --> H), the incident is closed. After the incident is closed, the user is notified (I). After the user is notified, the incident is marked as resolved (J). Marking the incident as resolved incorrectly loops back to the beginning of the process, where a user submits a new incident report (J --> A). The "Deploy Fix to Production" node (G) incorrectly loops back to the "Support Resolves Incident?" decision (D), creating a cycle.

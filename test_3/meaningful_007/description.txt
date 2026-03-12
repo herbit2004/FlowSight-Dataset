@@ -1,0 +1,66 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the user request flow in an e-commerce or similar system. It depicts the sequence of operations and decisions involved in processing a user request, from initial API gateway entry to order confirmation or failure notification. The diagram serves as a visual representation of the system's workflow, aiding in understanding and troubleshooting.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It starts with the "User Request via API Gateway" node and progresses through various service calls and decision points, ultimately leading to either a successful order confirmation or an error/failure state.
+
+## Subgraphs / Stages
+The diagram contains one explicit subgraph:
+- **User Request Flow**: This subgraph encapsulates the initial steps of the user request processing, specifically the API gateway entry and JWT authentication.
+
+## Node-by-Node Description
+- **A / User Request via API Gateway**: Represents the entry point for user requests into the system, typically handled by an API gateway.
+  visible in diagram; no further repository context available.
+- **B / Authentication Service: Verify JWT**: Represents the authentication service responsible for verifying the validity of the JSON Web Token (JWT) provided with the user request.
+  visible in diagram; no further repository context available.
+- **C / Pricing Service: Get Product Price**: Represents the pricing service, which retrieves the price of the product being requested.
+  visible in diagram; no further repository context available.
+- **X / Return: 401 Authentication Failed**: Represents the return of a 401 Authentication Failed error, indicating that the JWT was invalid.
+  visible in diagram; no further repository context available.
+- **D / Inventory Service: Check Availability**: Represents the inventory service, which checks the availability of the requested product.
+  visible in diagram; no further repository context available.
+- **E / Order Service: Create Pending Order**: Represents the order service, which creates a pending order if the product is available.
+  visible in diagram; no further repository context available.
+- **Y / Return: Error - Out of Stock**: Represents the return of an "Out of Stock" error, indicating that the product is unavailable.
+  visible in diagram; no further repository context available.
+- **F / Payment Service: Authorize Payment**: Represents the payment service, which authorizes the payment for the order.
+  visible in diagram; no further repository context available.
+- **G / Order Service: Finalize Order**: Represents the order service, which finalizes the order upon successful payment authorization.
+  visible in diagram; no further repository context available.
+- **H / Order Service: Cancel Pending Order**: Represents the order service, which cancels the pending order upon payment failure.
+  visible in diagram; no further repository context available.
+- **I / Notification Service: Send Order Confirmation Email**: Represents the notification service, which sends an order confirmation email to the user.
+  visible in diagram; no further repository context available.
+- **J / Notification Service: Send Payment Failed Notification**: Represents the notification service, which sends a payment failed notification to the user.
+  visible in diagram; no further repository context available.
+- **K / Return: Order Confirmation**: Represents the return of an order confirmation to the user.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User request is passed from the API Gateway to the Authentication Service.
+- `B -- JWT Valid --> C`: If the JWT is valid, the flow proceeds to the Pricing Service.
+- `B -- JWT Invalid --> X`: If the JWT is invalid, a 401 Authentication Failed error is returned.
+- `C --> D`: The flow proceeds from the Pricing Service to the Inventory Service.
+- `D -- Available --> E`: If the product is available, the flow proceeds to the Order Service to create a pending order.
+- `D -- Unavailable --> Y`: If the product is unavailable, an "Out of Stock" error is returned.
+- `E --> F`: The flow proceeds from the Order Service to the Payment Service for payment authorization.
+- `F -- Payment Success --> G`: If the payment is successful, the flow proceeds to the Order Service to finalize the order.
+- `F -- Payment Failure --> H`: If the payment fails, the flow proceeds to the Order Service to cancel the pending order.
+- `G --> I`: The flow proceeds from the Order Service to the Notification Service to send an order confirmation email.
+- `H --> J`: The flow proceeds from the Order Service to the Notification Service to send a payment failed notification.
+- `I --> K`: The flow proceeds from the Notification Service to return the order confirmation.
+- `J --> K`: The flow proceeds from the Notification Service to return the order confirmation.
+
+## Repository Context & Terminology
+- **API Gateway**: A service that acts as a single entry point for all client requests, routing them to the appropriate backend services.
+- **JWT (JSON Web Token)**: A standard for securely transmitting information between parties as a JSON object. It is commonly used for authentication and authorization.
+- **Authentication Service**: A service responsible for verifying the identity of a user or application.
+- **Pricing Service**: A service that provides the price of a product or service.
+- **Inventory Service**: A service that tracks the availability of products in stock.
+- **Order Service**: A service responsible for managing orders, including creation, modification, and cancellation.
+- **Payment Service**: A service that handles payment processing.
+- **Notification Service**: A service that sends notifications to users, such as order confirmations or payment failure alerts.
+- **401 Authentication Failed**: An HTTP status code indicating that the request requires authentication and the user has not provided valid credentials.
+
+## High-Density QA Ground Truth Summary
+The user request flow begins with a `User Request via API Gateway`, which then passes the request to the `Authentication Service` to `Verify JWT`. If the `JWT` is `Invalid`, the flow immediately returns a `401 Authentication Failed` error. If the `JWT` is `Valid`, the flow proceeds to the `Pricing Service` to `Get Product Price`, followed by the `Inventory Service` to `Check Availability`. If the product is `Unavailable`, an `Error - Out of Stock` is returned. If `Available`, the `Order Service` creates a `Pending Order`. The flow then reaches the `Payment Service` to `Authorize Payment`. A successful payment leads the `Order Service` to `Finalize Order`, and the `Notification Service` sends an `Order Confirmation Email`. A failed payment causes the `Order Service` to `Cancel Pending Order`, and the `Notification Service` sends a `Payment Failed Notification`. Both successful and failed payment paths ultimately lead to a `Return: Order Confirmation` node, although the content of the confirmation will differ based on the outcome. The API Gateway acts as a reverse proxy, shielding internal services and providing a single point of entry, while JWTs ensure secure and stateless authentication.

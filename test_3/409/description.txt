@@ -1,0 +1,56 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the high-level components and data flow within a distributed system. It depicts the different layers of the system, from client interaction to data storage and caching. The diagram serves as a blueprint for understanding the system's structure and how different services interact with each other.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner, representing a layered architecture. It starts with the Client Layer at the top and progresses through Gateway, Application, Data, and Caching Layers. There are multiple entry points from the Client Layer, and the diagram converges towards the Data and Caching Layers.
+
+## Subgraphs / Stages
+The diagram contains the following explicit subgraphs, representing architectural layers:
+- **Client Layer**: Represents the entry point for users interacting with the system.
+- **Gateway Layer**: Handles routing and load balancing of incoming requests.
+- **Application Layer**: Contains the core business logic and services.
+- **Data Layer**: Manages data persistence and retrieval.
+- **Caching Layer**: Provides caching mechanisms for improved performance.
+
+## Node-by-Node Description
+- **A / Web Clients**: Represents web-based clients accessing the system. visible in diagram; no further repository context available.
+- **B / Mobile Clients**: Represents mobile application clients accessing the system. visible in diagram; no further repository context available.
+- **C / Load Balancer**: Distributes incoming traffic across multiple API Gateway instances. visible in diagram; no further repository context available.
+- **D / API Gateway**: Acts as a single entry point for all client requests, routing them to the appropriate services. visible in diagram; no further repository context available.
+- **E / Service 1**: Represents a microservice responsible for a specific business function. visible in diagram; no further repository context available.
+- **F / Service 2**: Represents another microservice responsible for a specific business function. visible in diagram; no further repository context available.
+- **G / Service 3**: Represents another microservice responsible for a specific business function. visible in diagram; no further repository context available.
+- **H / Redis/Memcached**: Represents a caching layer using Redis or Memcached for storing frequently accessed data. visible in diagram; no further repository context available.
+- **I / Primary DB**: Represents the primary database used for persistent data storage. visible in diagram; no further repository context available.
+- **J / Read Replicas**: Represents read-only replicas of the primary database for scaling read operations. visible in diagram; no further repository context available.
+- **K / Message Queue**: Represents a message queue used for asynchronous communication between services. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> C`: Web client requests are routed to the Load Balancer.
+- `B --> C`: Mobile client requests are routed to the Load Balancer.
+- `C --> D`: The Load Balancer forwards requests to the API Gateway.
+- `D --> E`: The API Gateway routes requests to Service 1.
+- `D --> F`: The API Gateway routes requests to Service 2.
+- `D --> G`: The API Gateway routes requests to Service 3.
+- `E --> H`: Service 1 interacts with the Caching Layer.
+- `F --> H`: Service 2 interacts with the Caching Layer.
+- `G --> H`: Service 3 interacts with the Caching Layer.
+- `E --> I`: Service 1 interacts with the Primary DB.
+- `F --> I`: Service 2 interacts with the Primary DB.
+- `G --> I`: Service 3 interacts with the Primary DB.
+- `I --> J`: Data from the Primary DB is replicated to Read Replicas.
+- `E --> K`: Service 1 publishes messages to the Message Queue.
+- `F --> K`: Service 2 publishes messages to the Message Queue.
+- `G --> K`: Service 3 publishes messages to the Message Queue.
+
+## Repository Context & Terminology
+- **Client Layer**: The presentation layer of the application, responsible for user interaction.
+- **Gateway Layer**: Acts as a reverse proxy and load balancer, providing a single entry point to the application.
+- **Application Layer**: Contains the core business logic and services of the application.
+- **Data Layer**: Responsible for data persistence and retrieval, typically involving databases and message queues.
+- **Caching Layer**: Improves performance by storing frequently accessed data in memory.
+- **Microservice**: An independently deployable service that performs a specific business function.
+- **API Gateway**: A service that acts as a single entry point for all client requests, routing them to the appropriate microservices.
+
+## High-Density QA Ground Truth Summary
+The architecture diagram illustrates a layered system, beginning with the Client Layer, which includes Web Clients and Mobile Clients. These clients initiate requests that are routed to the Gateway Layer, specifically the Load Balancer. The Load Balancer distributes traffic to the API Gateway, which acts as a central point for routing requests to the Application Layer. This layer consists of three microservices: Service 1, Service 2, and Service 3. Each service interacts with the Caching Layer (Redis/Memcached) to improve performance by caching frequently accessed data. All three services also interact with the Data Layer, which includes the Primary DB for persistent storage. Data from the Primary DB is replicated to Read Replicas for read-heavy operations. Additionally, the services communicate asynchronously via a Message Queue. The API Gateway's role is crucial for abstracting the underlying microservice architecture from the clients, providing a unified interface. The use of Redis/Memcached in the Caching Layer demonstrates a focus on optimizing response times and reducing the load on the Primary DB.

@@ -1,0 +1,92 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the workflow of an automated system for product development. It outlines the phases from initial report generation to creating a pull request, incorporating AI agents for task planning and execution. The diagram serves as a visual representation of the system's process flow, aiding in understanding and potentially debugging the automated workflow.
+
+## Overall Layout
+The diagram flows from top to bottom (TB). It is hierarchically structured into phases. The start node is "Generate Daily Report" and the end node is "Pull Request Ready for review".
+
+## Subgraphs / Stages
+The diagram is divided into the following subgraphs, representing distinct phases:
+- **Phase 0: Your System**: Generates daily reports from the system.
+- **Phase 1: Analysis**: Analyzes the generated reports using an LLM API.
+- **Phase 2: Planning**: Plans the tasks based on the analysis.
+- **Phase 3: Execution Loop**: Executes the planned tasks in a loop.
+- **Output**: Creates a Git push and a pull request.
+
+## Node-by-Node Description
+- **GEN / Generate Daily Report**: Generates a daily report from the system's code, cron jobs, etc.
+  - In the repository this corresponds to the initial data gathering step.
+- **R / reports/*.md**: Represents the daily reports containing metrics, errors, and feedback.
+  - In the repository this corresponds to markdown files containing the daily reports.
+- **A / analyze-report.sh**: Analyzes the daily reports using an LLM API.
+  - In the repository this corresponds to the `analyze-report.sh` script.
+- **J / analysis.json**: Represents the analysis results in JSON format, including priority and criteria.
+  - In the repository this corresponds to a JSON file containing the analysis results.
+- **B / Create Branch**: Creates a new branch for the feature.
+  - visible in diagram; no further repository context available.
+- **PRD / AI Agent Load prd skill**: Loads the product requirement document (PRD) skill for the AI agent.
+  - In the repository this corresponds to loading the PRD skill from `skills/prd/SKILL.md`.
+- **MD / tasks/prd-feature.md**: Represents the product requirement document (PRD) for the feature.
+  - In the repository this corresponds to a markdown file containing the PRD.
+- **TASKS / AI Agent Load tasks skill**: Loads the tasks skill for the AI agent.
+  - In the repository this corresponds to loading the tasks skill from `skills/tasks/SKILL.md`.
+- **JSON / prd.json**: Represents the executable tasks in JSON format.
+  - visible in diagram; no further repository context available.
+- **LOOP / loop.sh**: Executes the tasks in a loop with a maximum number of iterations.
+  - In the repository this corresponds to the `loop.sh` script.
+- **PICK / Pick next task**: Selects the next task to implement where passes is false.
+  - visible in diagram; no further repository context available.
+- **IMPL / AI Agent Implement task**: Implements the selected task using an AI agent.
+  - visible in diagram; no further repository context available.
+- **CHECK / Quality Checks?**: Performs quality checks on the implemented task.
+  - visible in diagram; no further repository context available.
+- **COMMIT / Git Commit**: Commits the changes to the Git repository.
+  - visible in diagram; no further repository context available.
+- **UPDATE / Update prd.json**: Updates the `prd.json` file to mark the task as passed.
+  - visible in diagram; no further repository context available.
+- **DONE / All tasks done?**: Checks if all tasks are completed.
+  - visible in diagram; no further repository context available.
+- **EXIT / Exit loop**: Exits the execution loop.
+  - visible in diagram; no further repository context available.
+- **PUSH / Git Push**: Pushes the changes to the Git repository.
+  - visible in diagram; no further repository context available.
+- **PR / Pull Request**: Creates a pull request for review.
+  - visible in diagram; no further repository context available.
+- **FIX / Fix & Retry**: Fixes the task and retries.
+  - visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `GEN --> R`: Generates daily reports.
+- `R --> A`: Analyzes the reports.
+- `A --> J`: Creates the analysis JSON.
+- `J --> B`: Creates a new branch.
+- `B --> PRD`: Loads the PRD skill.
+- `PRD --> MD`: Loads the PRD markdown file.
+- `MD --> TASKS`: Loads the tasks skill.
+- `TASKS --> JSON`: Creates the executable tasks JSON.
+- `JSON --> LOOP`: Starts the execution loop.
+- `LOOP --> PICK`: Picks the next task.
+- `PICK --> IMPL`: Implements the task.
+- `IMPL --> CHECK`: Performs quality checks.
+- `CHECK -- Pass --> COMMIT`: If the quality checks pass, commit the changes.
+- `CHECK -- Fail --> FIX`: If the quality checks fail, fix and retry.
+- `FIX --> CHECK`: Retries the quality checks after fixing.
+- `COMMIT --> UPDATE`: Updates the prd.json file.
+- `UPDATE --> DONE`: Checks if all tasks are done.
+- `DONE -- No --> PICK`: If not all tasks are done, pick the next task.
+- `DONE -- Yes --> EXIT`: If all tasks are done, exit the loop.
+- `EXIT --> PUSH`: Pushes the changes.
+- `PUSH --> PR`: Creates a pull request.
+- The path `FIX --> CHECK` and `UPDATE --> DONE` converge at `CHECK` and `DONE` respectively.
+
+## Repository Context & Terminology
+- **analyze-report.sh**: A shell script that analyzes the daily reports, likely using an LLM API to extract relevant information and prioritize tasks.
+- **loop.sh**: A shell script that executes the tasks in a loop, potentially with a maximum number of iterations to prevent infinite loops.
+- **prd.json**: A JSON file containing the executable tasks, likely generated from the product requirement document (PRD).
+- **skills/prd/SKILL.md**: A markdown file containing the product requirement document (PRD) skill, used by the AI agent to understand the product requirements.
+- **skills/tasks/SKILL.md**: A markdown file containing the tasks skill, used by the AI agent to plan and execute the tasks.
+- **AI Agent**: An automated agent that uses skills to load PRDs and tasks, and implements the tasks.
+- **LLM API**: A Large Language Model API used for analyzing reports.
+- **reports/*.md**: Markdown files containing daily reports with metrics, errors, and feedback.
+
+## High-Density QA Ground Truth Summary
+The process begins with the "Generate Daily Report" node, which creates reports containing metrics, errors, and feedback. These reports, stored as `reports/*.md`, are then analyzed by the `analyze-report.sh` script using an LLM API. The analysis results in a `analysis.json` file, which includes priority and criteria for subsequent task planning. A new branch is created, and the AI Agent loads the PRD skill from `skills/prd/SKILL.md` and the tasks skill from `skills/tasks/SKILL.md`. These skills are used to generate executable tasks stored in `prd.json`. The `loop.sh` script then executes these tasks in a loop. Inside the loop, the system picks the next task where 'passes' is false, implements it using an AI Agent, and performs quality checks. If the checks pass, the changes are committed via Git, and `prd.json` is updated. If the checks fail, the task is fixed and retried. The loop continues until all tasks are done. Finally, the changes are pushed to Git, and a pull request is created, signaling that the work is ready for review. The quality check outcome determines whether a task is retried or committed, forming a critical decision point in the execution loop.

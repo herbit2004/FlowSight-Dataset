@@ -1,0 +1,41 @@
+graph TD
+    subgraph User Interaction
+        A[User App] --> B(API Gateway: /checkout);
+    end
+
+    subgraph Authentication & Authorization
+        B --> C{Auth Service\nValidate JWT};
+        C -- Valid --> D[Request Routing];
+        C -- Invalid --> E(Return 401);
+        E --> A;
+    end
+
+    subgraph Checkout Processing
+        D --> F(Order Service: Create Order);
+        F --> G{Inventory Service\nReserve Items};
+        G -- Success --> H(Payment Service: Authorize);
+        G -- Failure --> I(Order Service: Mark as Failed);
+        I --> J(Notify User: Email);
+        I --> A;
+
+        H -- Auth Success --> K(Shipping Service: Estimate);
+        H -- Auth Failure --> L(Order Service: Mark as Failed);
+        L --> M(Payment Service: Refund);
+        M --> N(Notify User: Email);
+        N --> A;
+
+        K --> O(Recommendation Service: Fetch Upsells);
+        O --> P(Order Confirmation\nEmail Queue);
+        P --> Q(Data Warehouse\nOrder Metrics);
+
+        Q --> R(BI Dashboard);
+        K --> S(Order Service: Finalize Order);
+        S --> T(Notify User: Email);
+        T --> A;
+    end
+
+    classDef auth fill:#f9f,stroke:#333,stroke-width:2px
+    class C,E auth
+
+    classDef fail fill:#f44,stroke:#333,stroke-width:2px
+    class I,L fail

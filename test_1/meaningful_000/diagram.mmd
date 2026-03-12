@@ -1,0 +1,19 @@
+graph TD
+    subgraph User Registration and Login Flow
+    A[User Input: Email/Password] --> B{Valid Email Format?};
+    B -- Yes --> C{Email Already Registered?};
+    B -- No --> E[Display Error: Invalid Email];
+    C -- No --> D[Create New User Account];
+    D --> F[Send Verification Email];
+    F --> G[Await Email Verification];
+    C -- Yes --> H[Attempt Login];
+    H --> I{Valid Credentials?};
+    I -- Yes --> J[Generate JWT];
+    I -- No --> K[Check Account Lockout];
+    K -- Yes --> L[Display Error: Account Locked];
+    K -- No --> M[Increment Failed Login Attempts];
+    M --> N[Display Error: Invalid Credentials];
+    J --> O[Set Session Cookie];
+    O --> P[Redirect to User Dashboard];
+    G -- Verified --> H;
+    end

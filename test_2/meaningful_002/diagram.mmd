@@ -1,0 +1,32 @@
+graph TD
+    subgraph User Activity Monitoring
+    UA1(Clickstream Ingestion) --> UA2(Real-Time Event Processing)
+    UA2 --> UA3(User Profile Updates)
+    end
+
+    subgraph Catalog Ingestion & Enrichment
+    CI1(Product Data Feed) --> CI2(Data Validation & Cleaning)
+    CI2 --> CI3(Image Feature Extraction)
+    CI2 --> CI4(Textual Feature Extraction)
+    CI3 & CI4 --> CI5(Enriched Product Catalog)
+    end
+
+    UA3 --> RS1(Query Understanding & Context)
+    CI5 --> RS1
+
+    subgraph Recommendation Service
+    RS1 --> RS2{Query Intent: Fuzzy Match?}
+    RS2 -- Yes --> RS3(Keyword Expansion & Correction)
+    RS2 -- No --> RS4(Semantic Similarity Search)
+    RS3 --> RS4
+    RS4 --> RS5(Candidate Product Retrieval)
+    RS5 --> RS6(Re-Ranking & Filtering)
+    RS6 --> RS7(Personalization Layer)
+    RS7 --> RS8(Result Aggregation & Prioritization)
+    RS8 --> RS9(Product Recommendation Response)
+    end
+
+    RS9 --> FE1(Frontend Display)
+    style RS3 fill:#f9f,stroke:#333,stroke-width:2px
+    classDef highlight fill:#ccf,stroke:#333,stroke-width:2px
+    class UA1,UA2,UA3,CI1,CI2,CI3,CI4,CI5,RS1,RS2,RS3,RS4,RS5,RS6,RS7,RS8,RS9,FE1 highlight

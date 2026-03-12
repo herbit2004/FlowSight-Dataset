@@ -1,0 +1,41 @@
+graph TD
+    subgraph Order Creation
+        A[User Action: Initiate Order] --> B{Product Availability Check};
+        B -- Available --> C[Create Order Instance];
+        B -- Unavailable --> D[Display Out-of-Stock Message];
+        C --> E[Apply Promotions/Discounts];
+        E --> F[Calculate Order Total];
+    end
+
+    subgraph Payment Processing
+        F --> G{Select Payment Method};
+        G -- Credit Card --> H[CC Validation & Auth via Payment Gateway];
+        G -- PayPal --> I[Redirect to PayPal for Login];
+        H -- Approved --> J[Capture Funds from CC];
+        H -- Declined --> K[Display Payment Error];
+        I --> L[PayPal Authorization Obtained];
+
+        L --> M[Capture Funds from PayPal];
+        M --> N[Payment Confirmation Received];
+    end
+
+    subgraph Order Fulfillment
+        N --> O[Update Order Status: Paid];
+        O --> P[Inventory Management: Deduct Stock];
+        P --> Q[Generate Shipping Label];
+        Q --> R[Notify Warehouse for Fulfillment];
+        R --> S[Order Fulfilled & Shipped];
+    end
+
+    subgraph Post-Processing
+        S --> T[Send Order Confirmation Email];
+        T --> U[Log Order & Transaction Data];
+    end
+
+    K --> V[Display Generic Payment Failure];
+    V --> A;
+
+    classDef error fill:#f9f,stroke:#333,stroke-width:2px
+    K:::error
+    V:::error
+    D:::error

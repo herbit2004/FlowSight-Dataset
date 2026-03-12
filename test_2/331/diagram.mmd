@@ -1,0 +1,30 @@
+graph TB
+    Start([Start Project]) --> ProjectLevel{Project-Level Setup}
+
+    ProjectLevel --> CoreRoadmap["/core-roadmap<br/>ROADMAP.md & BACKLOG.md"]
+    ProjectLevel --> CoreArch["/core-architecture<br/>ARCHITECTURE.md"]
+    ProjectLevel --> CoreGuidelines["/core-guidelines<br/>frontend/backend guidelines"]
+    ProjectLevel --> CoreStyle["/core-style<br/>STYLE.md"]
+
+    CoreRoadmap --> ReqLevel
+    CoreArch --> ReqLevel
+    CoreGuidelines --> ReqLevel
+    CoreStyle --> ReqLevel
+
+    ReqLevel([Requirement-Level Development]) --> FlowInit["/flow:init<br/>harness:init + harness:pack"]
+    FlowInit --> FlowSpec["/flow:spec<br/>harness:plan<br/>task-manifest"]
+    FlowSpec --> FlowDev["/flow:dev<br/>harness:dispatch/resume<br/>runtime-events"]
+    FlowDev --> FlowVerify["/flow:verify<br/>harness:verify<br/>report-card"]
+    FlowVerify --> FlowRelease["/flow:release<br/>harness:release/janitor<br/>release-note"]
+    FlowRelease --> End([Release Complete])
+
+    FlowVerify -.->|Can be re-run at any stage| ReqLevel
+
+    style ProjectLevel fill:#e1f5ff
+    style ReqLevel fill:#fff4e1
+    style FlowInit fill:#e8f5e9
+    style FlowSpec fill:#e8f5e9
+    style FlowDev fill:#f3e5f5
+    style FlowVerify fill:#e1bee7
+    style FlowRelease fill:#e0f2f1
+    style End fill:#e3f2fd

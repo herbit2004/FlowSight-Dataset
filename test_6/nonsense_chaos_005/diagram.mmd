@@ -1,0 +1,18 @@
+graph TD
+    A[System Start] --> B{PreFlux Verification};
+    B -- Validation Success --> C[IsoCore Ingestion];
+    B -- Validation Failed --> D[VaultNode Handshake];
+    D --> E[SpectraQueue Flush];
+    E --> F[ZenithGate Auth Layer];
+    C --> G{ArcLane Distributor};
+    G -- Distributor Ready --> H[FluxBridge Router];
+    G -- Distributor Fault --> F;
+    H --> I[CoreSync Validation];
+    I -- Integrity Pass --> J[DataStream Optimization];
+    I -- Integrity Fail --> F;
+    J --> K{PhaseShift Regulator};
+    K -- Regulation Stable --> L[HyperSlice Transmission];
+    K -- Regulation Unstable --> F;
+    L --> M[ChronoWeave Aggregation];
+    M --> N[System End];
+    F --> N;

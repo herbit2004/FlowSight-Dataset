@@ -1,0 +1,21 @@
+graph TD
+    subgraph Order Processing
+        A[Receive Order] --> B{Inventory Check};
+        B -- Yes --> C[Payment Capture];
+        B -- No --> F[Notify Customer: Out of Stock];
+        C --> D{Payment Successful?};
+        D -- No --> E[Cancel Order];
+        D -- Yes --> H[Prepare Shipment];
+        H --> G[Packaging];
+        G --> I[Shipping];
+        I --> J{Delivery Successful?};
+        J -- Yes --> K[Notify Customer: Delivered];
+        J -- No --> L[Investigate Delivery Issue];
+        L --> K;
+        E --> F;
+        F --> A;
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style K fill:#ccf,stroke:#333,stroke-width:2px
+    style E fill:#fcc,stroke:#333,stroke-width:2px

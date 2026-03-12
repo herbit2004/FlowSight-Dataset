@@ -1,0 +1,70 @@
+graph TD
+    subgraph Client
+        A[User Application] --> B(API Gateway);
+    end
+
+    subgraph API Gateway
+        B --> C{Request Validation};
+        C -- Valid --> D[Authentication Service];
+        C -- Invalid --> E[Return 400];
+        D -- Authenticated --> F{Authorization};
+        D -- Unauthenticated --> G[Return 401];
+        F -- Authorized --> H[Rate Limiter];
+        F -- Unauthorized --> I[Return 403];
+        H -- Within Limit --> J[Request Routing];
+        H -- Limit Exceeded --> K[Return 429];
+        J --> L{Route Configuration};
+        L -- Service A Route --> MA[Service A Load Balancer];
+        L -- Service B Route --> MB[Service B Load Balancer];
+        L -- Service C Route --> MC[Service C Load Balancer];
+
+        MA --> SA[Service A Instance 1];
+        MA --> SB[Service A Instance 2];
+        MB --> SC[Service B Instance 1];
+        MB --> SD[Service B Instance 2];
+        MC --> SE[Service C Instance 1];
+        MC --> SF[Service C Instance 2];
+        SA --> R[Response Aggregation];
+        SB --> R;
+        SC --> R;
+        SD --> R;
+        SE --> R;
+        SF --> R;
+        R --> N(API Gateway);
+        N --> O[Return Response];
+    end
+
+    subgraph Authentication Service
+        D --> P{Token Validation};
+        P -- Valid Token --> Q[Fetch User Context];
+        P -- Invalid Token --> D;
+        Q --> Z[User Database];
+        Z --> Q;
+        Q --> D;
+    end
+
+    subgraph External Services
+        subgraph Service A
+        SA-.->X[Database A];
+        SB-.->X;
+        end
+        subgraph Service B
+        SC-.->Y[Database B];
+        SD-.->Y;
+        end
+        subgraph Service C
+        SE-.->W[Database C];
+        SF-.->W;
+        end
+    end
+
+    O --> AA[User Application];
+
+    classDef invalid fill:#f9f,stroke:#333,stroke-width:2px
+    class E,G,I,K invalid
+
+    classDef auth fill:#ccf,stroke:#333,stroke-width:2px
+    class D,F,P,Q auth
+
+    classDef route fill:#cfc,stroke:#333,stroke-width:2px
+    class J,L,MA,MB,MC route

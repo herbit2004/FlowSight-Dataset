@@ -1,0 +1,74 @@
+[
+  {
+    "question": "What is the label of the node that directly follows 'Pre-Deduction Checks' when the check is 'OK'?",
+    "options": [
+      "A. Reject Request: Out of Stock",
+      "B. Lock Inventory Record",
+      "C. Release Inventory Lock",
+      "D. Deduct Inventory Qty from Database"
+    ],
+    "correct_index": 1,
+    "type": "factual",
+    "difficulty": "easy"
+  },
+  {
+    "question": "If 'Pre-Deduction Checks' results in 'OK', and 'Deduction Successful?' results in 'Yes', what is the next node?",
+    "options": [
+      "A. Release Inventory Lock",
+      "B. Compensate: Log Deduction Failure",
+      "C. Publish InventoryDeductionFailedEvent",
+      "D. Alerting System: Investigate Failure"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Starting from 'Inventory Service: Deduct Request', if 'Pre-Deduction Checks' results in 'OK' and 'Deduction Successful?' results in 'No', which node is eventually reached?",
+    "options": [
+      "A. Publish InventoryDeductedEvent to Message Queue",
+      "B. Alerting System: Investigate Failure",
+      "C. Publish InventoryRollbackCompletedEvent",
+      "D. Order Service: Confirmation Received"
+    ],
+    "correct_index": 1,
+    "type": "reasoning",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which of the following nodes is NOT part of the 'Rollback Process' subgraph?",
+    "options": [
+      "A. Order Service: Confirmation Received",
+      "B. Increase Inventory Qty in Database",
+      "C. Compensate: Log Deduction Failure",
+      "D. Publish InventoryRollbackRequest"
+    ],
+    "correct_index": 2,
+    "type": "negation",
+    "difficulty": "medium"
+  },
+  {
+    "question": "If the 'Deduction Successful?' check results in 'No', what is published after releasing the inventory lock?",
+    "options": [
+      "A. InventoryRollbackRequest",
+      "B. InventoryDeductedEvent to Message Queue",
+      "C. InventoryRollbackCompletedEvent",
+      "D. InventoryDeductionFailedEvent"
+    ],
+    "correct_index": 3,
+    "type": "reasoning",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Starting from 'Inventory Service: Deduct Request', what is the sequence of nodes traversed if 'Pre-Deduction Checks' results in 'OK', 'Deduction Successful?' results in 'Yes', and 'Order Confirmation Failed?' results in 'Yes'?",
+    "options": [
+      "A. Lock Inventory Record, Deduct Inventory Qty from Database, Release Inventory Lock, Publish InventoryDeductedEvent to Message Queue, Order Service: Confirmation Received, Publish InventoryRollbackRequest, Inventory Service: Rollback Handler, Lock Inventory Record, Increase Inventory Qty in Database, Release Inventory Lock, Publish InventoryRollbackCompletedEvent",
+      "B. Lock Inventory Record, Deduct Inventory Qty from Database, Release Inventory Lock, Publish InventoryDeductedEvent to Message Queue, Order Service: Confirmation Received, Publish InventoryRollbackRequest",
+      "C. Lock Inventory Record, Deduct Inventory Qty from Database, Release Inventory Lock, Publish InventoryDeductedEvent to Message Queue, Order Service: Confirmation Received, Inventory Service: Rollback Handler, Lock Inventory Record, Increase Inventory Qty in Database, Release Inventory Lock, Publish InventoryRollbackCompletedEvent",
+      "D. Lock Inventory Record, Deduct Inventory Qty from Database, Release Inventory Lock, Publish InventoryDeductedEvent to Message Queue, Order Service: Confirmation Received, Order Confirmation Failed?, Publish InventoryRollbackRequest, Inventory Service: Rollback Handler, Lock Inventory Record, Increase Inventory Qty in Database, Release Inventory Lock, Publish InventoryRollbackCompletedEvent"
+    ],
+    "correct_index": 0,
+    "type": "reasoning",
+    "difficulty": "hard"
+  }
+]

@@ -1,0 +1,57 @@
+## Diagram Type & Purpose
+This is an architecture diagram illustrating the high-level structure of a NestJS monorepo application. It depicts the relationships between different services (apps) and shared libraries (libs) within the monorepo. The diagram serves as a visual representation of the system's components and their dependencies, aiding in understanding the overall architecture.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) manner. It is structured hierarchically, with the root node representing the monorepo, followed by subgraphs for applications and shared libraries. There is no explicit start or end node, but the applications at the top level can be considered entry points.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **apps/ (Independent Services)**: This subgraph contains the independent services that make up the application, including `api-server`, `worker`, `websocket-service`, and `admin`.
+- **libs/ (Shared Libraries)**: This subgraph contains the shared libraries used by the services, including `db`, `configuration`, `common`, `security`, and `swagger`.
+
+## Node-by-Node Description
+- **Root / 📦 nestjs-monorepo-template/**: Represents the root of the NestJS monorepo. visible in diagram; no further repository context available.
+- **Apps / 📱 apps/ (Independent Services)**: Represents the directory containing the independent services. visible in diagram; no further repository context available.
+- **API / api-server**: Represents the API server application, running on port 3001. It provides REST APIs, validation, and Swagger documentation.
+- **Worker / worker**: Represents a background service with no HTTP server, responsible for cron jobs and queue processing.
+- **WS / websocket-service**: Represents a websocket service running on port 3002, providing real-time event broadcasting using Socket.IO.
+- **Admin / admin**: Represents the admin panel application, running on port 3003, providing an admin panel and Swagger documentation.
+- **Libs / 📚 libs/ (Shared Libraries)**: Represents the directory containing the shared libraries. visible in diagram; no further repository context available.
+- **DB / db/**: Represents the database abstraction library, supporting MongoDB, PostgreSQL, and MySQL, with auto-switching via environment variables.
+- **Config / configuration/**: Represents the configuration library, providing environment configuration, type-safe validation, and centralized settings.
+- **Common / common/**: Represents the common utilities library, providing logging, error handling, filters, and reusable services.
+- **Security / security/**: Represents the security middleware library, providing Helmet, rate limiting, compression, and logging.
+- **Swagger / swagger/**: Represents the Swagger API documentation library, providing OpenAPI and an interactive UI, ready for development and production.
+- **Cache**: Represents a cache component. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `API --> DB`: The API server uses the database abstraction library.
+- `API --> Config`: The API server uses the configuration library.
+- `API --> Common`: The API server uses the common utilities library.
+- `API --> Security`: The API server uses the security middleware library.
+- `API --> Swagger`: The API server uses the Swagger API documentation library.
+- `API --> Cache`: The API server uses the cache.
+- `Worker --> DB`: The worker uses the database abstraction library.
+- `Worker --> Config`: The worker uses the configuration library.
+- `Worker --> Common`: The worker uses the common utilities library.
+- `Worker --> Cache`: The worker uses the cache.
+- `WS --> DB`: The websocket service uses the database abstraction library.
+- `WS --> Config`: The websocket service uses the configuration library.
+- `WS --> Common`: The websocket service uses the common utilities library.
+- `Admin --> DB`: The admin panel uses the database abstraction library.
+- `Admin --> Config`: The admin panel uses the configuration library.
+- `Admin --> Common`: The admin panel uses the common utilities library.
+- `Admin --> Security`: The admin panel uses the security middleware library.
+- `Admin --> Swagger`: The admin panel uses the Swagger API documentation library.
+
+## Repository Context & Terminology
+- **NestJS Monorepo**: A repository structure where multiple applications and libraries are managed within a single repository.
+- **Apps Directory**: Contains independent services like `api-server`, `worker`, `websocket-service`, and `admin`.
+- **Libs Directory**: Contains shared libraries used across multiple applications.
+- **Swagger Docs**: API documentation generated using Swagger/OpenAPI.
+- **Environment Variables (ENV)**: Used to configure the application, including database selection.
+- **REST API**: An architectural style for building web services.
+- **Socket.IO**: A library that enables real-time, bidirectional communication between web clients and servers.
+
+## High-Density QA Ground Truth Summary
+The diagram illustrates a NestJS monorepo architecture, starting with the `nestjs-monorepo-template` root. The architecture is divided into `apps` and `libs`. The `apps` subgraph contains independent services: `api-server` (port 3001, REST API), `worker` (background service), `websocket-service` (port 3002, real-time events), and `admin` (port 3003, admin panel). Each of these applications `uses` shared libraries from the `libs` subgraph. The `libs` subgraph includes `db` (database abstraction for MongoDB, PostgreSQL, MySQL, configurable via ENV), `configuration` (environment config), `common` (utilities), `security` (middleware), and `swagger` (API documentation). The `api-server` application uses `db`, `config`, `common`, `security`, `swagger`, and `cache`. The `worker` application uses `db`, `config`, `common`, and `cache`. The `websocket-service` uses `db`, `config`, and `common`. The `admin` application uses `db`, `config`, `common`, `security`, and `swagger`. The database abstraction library `db` allows auto-switching between MongoDB, PostgreSQL, and MySQL based on environment variables, demonstrating a key configuration aspect of the monorepo. The `cache` node is used by both the `api-server` and `worker` applications.

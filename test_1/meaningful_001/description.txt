@@ -1,0 +1,69 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the order creation and payment processing flow in an e-commerce system. It depicts the sequence of steps a user takes from initiating an order to the final update of the order with tracking information. The diagram serves as a visual representation of the system's workflow, aiding in understanding and potentially optimizing the order fulfillment process.
+
+## Overall Layout
+The diagram is laid out in a top-down (TD) direction. It is divided into two subgraphs: "Order Creation" and "Payment Processing". The start node is "User: Initiates Order", and the end node is "Update Order With Tracking Info".
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Order Creation**: This subgraph encompasses the steps involved in creating an order, from product selection to confirming the order.
+- **Payment Processing**: This subgraph details the payment process, from redirecting to a payment gateway to capturing the payment and initiating shipment.
+
+## Node-by-Node Description
+- **A / User: Initiates Order**: The starting point of the order process, where the user begins placing an order. visible in diagram; no further repository context available.
+- **B / Product Selection & Quantity**: The user selects the desired products and specifies the quantity for each. visible in diagram; no further repository context available.
+- **C / Add to Cart**: The selected products and quantities are added to the user's shopping cart. visible in diagram; no further repository context available.
+- **D / View Cart**: The user reviews the items in their shopping cart. visible in diagram; no further repository context available.
+- **E / Apply Promo Code?**: A decision point where the user can apply a promotional code. visible in diagram; no further repository context available.
+- **F / Promo Code Validation**: The system validates the entered promotional code. visible in diagram; no further repository context available.
+- **G / Shipping Address**: The user provides the shipping address for the order. visible in diagram; no further repository context available.
+- **H / Shipping Options**: The user selects the desired shipping option. visible in diagram; no further repository context available.
+- **I / Calculate Total**: The system calculates the total cost of the order, including shipping and any discounts. visible in diagram; no further repository context available.
+- **J / Confirm Order**: The user confirms the order and proceeds to payment. visible in diagram; no further repository context available.
+- **K / Payment Gateway: Redirect**: The user is redirected to a payment gateway to enter payment information. visible in diagram; no further repository context available.
+- **L / User: Enters Payment Info**: The user enters their payment information on the payment gateway. visible in diagram; no further repository context available.
+- **M / Authorize Payment**: The system attempts to authorize the payment. visible in diagram; no further repository context available.
+- **N / Capture Payment**: If the payment is authorized, the system captures the payment. visible in diagram; no further repository context available.
+- **X / Notify User: Payment Failed**: If the payment authorization fails, the user is notified. visible in diagram; no further repository context available.
+- **O / Update Order Status: Paid**: The order status is updated to "paid". visible in diagram; no further repository context available.
+- **Q / Return to Cart**: The user is redirected back to the shopping cart. visible in diagram; no further repository context available.
+- **P / Initiate Shipment**: The shipment process is initiated. visible in diagram; no further repository context available.
+- **R / Send Confirmation Email**: A confirmation email is sent to the user. visible in diagram; no further repository context available.
+- **S / Logistics Service API**: The system interacts with a logistics service API to obtain tracking information. visible in diagram; no further repository context available.
+- **T / Update Order With Tracking Info**: The order is updated with the tracking information. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `A --> B`: User proceeds from initiating the order to selecting products and quantity.
+- `B --> C`: Selected products and quantity are added to the cart.
+- `C --> D`: User proceeds from adding to cart to viewing the cart.
+- `D --> E`: User proceeds from viewing the cart to applying a promo code.
+- `E -- Yes --> F`: If the user applies a promo code, the system proceeds to promo code validation.
+- `E -- No --> G`: If the user does not apply a promo code, the system proceeds to shipping address.
+- `F --> G`: After promo code validation, the system proceeds to shipping address.
+- `G --> H`: User proceeds from shipping address to shipping options.
+- `H --> I`: User proceeds from shipping options to calculating the total.
+- `I --> J`: User proceeds from calculating the total to confirming the order.
+- `J --> K`: User proceeds from confirming the order to payment gateway redirect.
+- `K --> L`: User proceeds from payment gateway redirect to entering payment information.
+- `L --> M`: User proceeds from entering payment information to authorizing payment.
+- `M -- Success --> N`: If payment authorization is successful, the system proceeds to capture payment.
+- `M -- Failure --> X`: If payment authorization fails, the system proceeds to notify the user of payment failure.
+- `N --> O`: After capturing payment, the order status is updated to paid.
+- `X --> Q`: After payment failure notification, the user is returned to the cart.
+- `O --> P`: After updating order status to paid, shipment is initiated.
+- `P --> R`: After initiating shipment, a confirmation email is sent.
+- `R --> S`: After sending a confirmation email, the logistics service API is called.
+- `S --> T`: After calling the logistics service API, the order is updated with tracking information.
+
+## Repository Context & Terminology
+- **Order Creation**: The process of a customer placing an order for goods or services.
+- **Payment Processing**: The process of securely handling financial transactions between a customer and a business.
+- **Payment Gateway**: A third-party service that authorizes and processes payments for online transactions.
+- **Promo Code**: A code that provides a discount or special offer to customers.
+- **Logistics Service API**: An interface that allows the system to interact with a logistics provider to track shipments and obtain delivery information.
+- **Shipping Options**: The different methods available for delivering the order to the customer (e.g., standard, express).
+- **Authorize Payment**: The process of verifying that the customer has sufficient funds to cover the order total.
+- **Capture Payment**: The process of transferring funds from the customer's account to the business's account.
+
+## High-Density QA Ground Truth Summary
+The order process begins with the user initiating an order, followed by product selection and quantity specification. These items are then added to the cart, and the user can view the cart's contents. A key decision point is whether the user applies a promo code; if so, the code is validated before proceeding. Regardless of promo code usage, the user then provides a shipping address and selects shipping options. The system calculates the total cost, and the user confirms the order, leading to payment processing. The user is redirected to a payment gateway to enter their payment information. The system attempts to authorize the payment; upon success, the payment is captured, and the order status is updated to "paid". If authorization fails, the user is notified and returned to the cart. After successful payment, shipment is initiated, a confirmation email is sent, and the system interacts with a logistics service API to obtain tracking information. Finally, the order is updated with this tracking information, completing the fulfillment process. The interaction with the Logistics Service API is crucial for providing real-time shipment updates to the customer, enhancing transparency and customer satisfaction.

@@ -1,0 +1,45 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts a data processing workflow, including data validation, filtering, and routing. The diagram outlines the steps involved in processing data, checking limits, notifying users, validating output, applying filters, and routing data for storage.
+
+## Overall Layout
+The diagram's primary direction is top-down (TD). It starts with a "Start" node and ends with an "End" node, with several intermediate steps and decision points.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 6 stages: Start, Data Processing & Limit Checking, User Notification, Output Validation & Filtering, Data Routing, and Data Storage/End.
+
+## Node-by-Node Description
+- **Start**: The starting point of the data processing workflow. visible in diagram; no further repository context available.
+- **Process Data**: Represents the initial data processing step. visible in diagram; no further repository context available.
+- **Check Limits**: A decision point to check if the processed data meets certain limits. visible in diagram; no further repository context available.
+- **Notify User**: A step to notify the user, triggered if the data limits are within acceptable bounds according to the 'Check Limits' node. visible in diagram; no further repository context available.
+- **Validate Output**: A decision point to validate the processed output. visible in diagram; no further repository context available.
+- **Apply Filters**: Applies filters to the data after successful validation. visible in diagram; no further repository context available.
+- **Route Data**: A decision point to route the data based on certain criteria. visible in diagram; no further repository context available.
+- **Store Data**: Stores the data based on the routing decision. visible in diagram; no further repository context available.
+- **End**: The end point of the data processing workflow. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `Start --> Process Data`: Initiates the data processing.
+- `Process Data -- Success --> Check Limits`: Proceeds to check data limits after successful processing.
+- `Process Data -- Failure --> End`: Ends the process if data processing fails.
+- `Check Limits -- Yes --> Notify User`: Notifies the user if the data limits are within acceptable bounds.
+- `Check Limits -- No --> Store Data`: Stores the data if the data limits are not within acceptable bounds.
+- `Notify User --> Validate Output`: Proceeds to validate the output after notifying the user.
+- `Validate Output -- Yes --> Apply Filters`: Applies filters if the output is validated successfully.
+- `Validate Output -- No --> Start`: Returns to the start if the output validation fails.
+- `Apply Filters --> Route Data`: Routes the data after applying filters.
+- `Route Data -- Priority --> Store Data`: Routes the data to storage with priority.
+- `Route Data -- Normal --> End`: Routes the data to the end point under normal conditions.
+- `Store Data --> Process Data`: After storing the data, the process loops back to process data again.
+
+## Repository Context & Terminology
+- **Process Data**: Typically refers to the initial transformation or manipulation of raw data into a usable format. In the diagram, this step is standard, but the subsequent flow deviates.
+- **Check Limits**: In a real-world scenario, this would involve verifying if the processed data falls within predefined acceptable ranges. The diagram's flow after this check is non-standard.
+- **Notify User**: Usually involves sending a message or alert to a user regarding the status or outcome of a process. The diagram places this step in an unusual sequence.
+- **Validate Output**: This step ensures the processed data is accurate and reliable. The diagram's loop back to 'Start' upon validation failure is highly unusual.
+- **Apply Filters**: This involves refining the data by removing noise or irrelevant information. The diagram's placement of this step is standard.
+- **Route Data**: This step determines the destination or storage location of the processed data. The diagram shows a standard routing decision.
+- **Store Data**: This involves saving the processed data to a database or other storage medium. The diagram's placement of this step before validation is counter-intuitive.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins at the "Start" node, immediately proceeding to "Process Data." After processing, the flow branches based on success or failure; failure leads directly to the "End" node, while success proceeds to "Check Limits." If the data limits are within acceptable bounds ("Yes" branch), the "Notify User" node is triggered; otherwise ("No" branch), the data is sent to "Store Data." After storing, the process loops back to "Process Data." Following user notification, the "Validate Output" node is reached. If validation fails ("No" branch), the process restarts from the "Start" node, discarding prior processing. Successful validation ("Yes" branch) leads to "Apply Filters," followed by "Route Data." The routing decision branches based on priority; "Priority" routes the data to "Store Data," while "Normal" routes it to the "End" node. The diagram deviates from standard practice by placing "Store Data" before "Validate Output" when limits are not met, looping back to the start on validation failure, and notifying the user before validating the output. The "Check Limits" node determines whether to notify the user or store the data, a decision that is reversed from typical data processing workflows.

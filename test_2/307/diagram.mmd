@@ -1,0 +1,43 @@
+graph TB
+    subgraph Adapter Layer
+        Controller[REST Controller]
+        RpcProvider[RPC Provider]
+    end
+    
+    subgraph Application Layer
+        Service[Application Service]
+        CmdExe[Command Executor]
+        QryExe[Query Executor]
+        Assembler[DTO Assembler]
+    end
+    
+    subgraph Domain Layer
+        Entity[Aggregate Root/Entity]
+        ValueObject[Value Object]
+        DomainService[Domain Service]
+        DomainEvent[Domain Event]
+        Gateway[Anti-corruption Layer Interface]
+    end
+    
+    subgraph Infrastructure Layer
+        GatewayImpl[Gateway Implementation]
+        Mapper[Data Mapper]
+        DataObject[Data Object]
+        EventHandler[Event Handler]
+    end
+    
+    Controller --> Service
+    RpcProvider --> Service
+    Service --> CmdExe
+    Service --> QryExe
+    CmdExe --> Entity
+    CmdExe --> DomainService
+    CmdExe --> Gateway
+    QryExe --> Mapper
+    Entity --> ValueObject
+    Entity --> DomainEvent
+    DomainService --> Gateway
+    GatewayImpl -.->|Implements| Gateway
+    GatewayImpl --> Mapper
+    Mapper --> DataObject
+    EventHandler --> DomainEvent

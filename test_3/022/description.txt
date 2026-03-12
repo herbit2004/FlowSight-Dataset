@@ -1,0 +1,48 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It illustrates the process of requesting file data, checking a key-value (KV) cache, fetching data from the GitHub API, and handling compression based on file size. The diagram outlines the logic for caching and retrieving data, optimizing for size and compression.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom (TD). It starts with a "Request File/Data" node and flows through a series of decision points and processes, eventually converging at the "Return Data" node.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 4 stages: Request and Cache Check, Data Fetching, Compression Handling, and Data Return.
+
+## Node-by-Node Description
+- **req / Request File/Data**: Represents the initial request for a file or data. visible in diagram; no further repository context available.
+- **kv / Check KV Cache**: Represents checking the key-value cache for the requested data. visible in diagram; no further repository context available.
+- **checkComp / Compressed?**: Represents a decision point to check if the data retrieved from the cache is compressed. visible in diagram; no further repository context available.
+- **decomp / Decompress with Gunzip**: Represents decompressing the data using Gunzip. visible in diagram; no further repository context available.
+- **ret1 / Return Data**: Represents returning the data. visible in diagram; no further repository context available.
+- **gh / Fetch from GitHub API**: Represents fetching the data from the GitHub API. visible in diagram; no further repository context available.
+- **checkSize / Size > 2MB?**: Represents a decision point to check if the size of the fetched data is greater than 2MB. visible in diagram; no further repository context available.
+- **skip / Skip Caching**: Represents skipping the caching process. visible in diagram; no further repository context available.
+- **comp / Compress with Gzip**: Represents compressing the data using Gzip. visible in diagram; no further repository context available.
+- **store / Store in KV with gz: prefix**: Represents storing the compressed data in the key-value store with a "gz:" prefix. visible in diagram; no further repository context available.
+- **ret2 / Return Data**: Represents returning the data. visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `req --> kv`: Represents the flow from requesting the file/data to checking the KV cache.
+- `kv -- Hit --> checkComp`: If there is a cache hit, the flow proceeds to check if the data is compressed.
+- `checkComp -- Yes --> decomp`: If the data is compressed, it is decompressed using Gunzip.
+- `checkComp -- No --> ret1`: If the data is not compressed, it is returned directly.
+- `decomp --> ret1`: The decompressed data is returned.
+- `kv -- Miss --> gh`: If there is a cache miss, the data is fetched from the GitHub API.
+- `gh --> checkSize`: The fetched data is checked for its size.
+- `checkSize -- Yes --> skip`: If the size is greater than 2MB, caching is skipped.
+- `checkSize -- No --> comp`: If the size is not greater than 2MB, the data is compressed using Gzip.
+- `comp --> store`: The compressed data is stored in the KV store with a "gz:" prefix.
+- `store --> ret2`: The stored data is returned.
+- `skip --> ret2`: The process skips caching and returns the data.
+- `ret2 --> req`: The data is returned to the request.
+
+## Repository Context & Terminology
+- **KV Cache**: A key-value cache is a data storage paradigm where data is stored and retrieved as key-value pairs. It's used for fast data retrieval.
+- **GitHub API**: The GitHub API allows programmatic access to GitHub resources, such as repositories, files, and issues.
+- **Gunzip**: A compression algorithm and file format used for data compression and decompression.
+- **Gzip**: Another compression algorithm and file format, similar to Gunzip, used for data compression and decompression.
+- **gz: prefix**: A prefix added to the key when storing compressed data in the KV store, indicating that the data is Gzip-compressed.
+- **Compression**: The process of reducing the size of data to save storage space or bandwidth.
+- **Caching**: The process of storing data in a cache for faster retrieval in the future.
+
+## High-Density QA Ground Truth Summary
+The process begins with a "Request File/Data," which triggers a check of the "KV Cache." If there's a "Hit" in the cache, the system verifies if the data is "Compressed?". If "Yes," it proceeds to "Decompress with Gunzip" before "Return Data." If the cached data is not compressed ("No"), it directly "Return Data." A "Miss" in the "KV Cache" leads to fetching data from the "GitHub API." The system then checks if the "Size > 2MB?". If "Yes," caching is "Skip Caching" and the data is returned. If the size is not greater than 2MB ("No"), the data is "Compress with Gzip" and then "Store in KV with gz: prefix" before "Return Data." The "gz: prefix" indicates that the data is Gzip-compressed when stored in the KV cache. The process ends with "Return Data," which can originate from either the cache (decompressed or not) or the GitHub API (compressed or not), depending on the size and cache availability. The data is returned to the initial request.

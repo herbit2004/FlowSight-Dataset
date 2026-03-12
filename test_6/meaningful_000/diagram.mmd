@@ -1,0 +1,46 @@
+graph TD
+    subgraph Authentication Flow
+        A[User initiates login] --> B{Check for existing session};
+        B -- Yes --> C[Redirect to Authorized Area];
+        B -- No --> D[Display Login Form];
+        D --> E{User submits credentials};
+        E -- Invalid --> F[Return Login Error];
+        F --> D;
+        E -- Valid --> G[Call Auth Service];
+
+        subgraph Auth Service
+            G --> H{Validate Credentials};
+            H -- Invalid --> I[Return Authentication Failure];
+            H -- Valid --> J[Generate JWT Token];
+            J --> K[Store JWT in Redis Cache];
+            K --> L[Return JWT Token];
+            I --> M[Log failed login attempt];
+        end
+
+        G --> I;
+        L --> N[Set JWT as Cookie];
+        N --> O[Create new user session];
+        O --> P[Forward session ID];
+        P --> C;
+
+        subgraph Account Registration
+          U[User initiates account creation] --> V[Display Registration Form];
+          V --> W{User submits registration form};
+          W -- Invalid --> X[Return registration errors];
+          X --> V;
+          W -- Valid --> Y[Call User Management Service];
+
+          subgraph User Management Service
+            Y --> Z{Check username availability};
+            Z -- Not Available --> AA[Return username taken error];
+            Z -- Available --> BB[Create new user account];
+            BB --> CC[Send welcome email];
+            CC --> DD[Return account creation success];
+          end
+          Y --> AA;
+          DD --> N;
+          AA --> EE[Display username taken error message];
+          EE --> V;
+        end
+
+    end

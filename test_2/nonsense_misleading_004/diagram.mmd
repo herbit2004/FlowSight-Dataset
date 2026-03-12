@@ -1,0 +1,41 @@
+graph TD
+    subgraph User Initiates Request
+        A[User Request] --> B(API Gateway);
+    end
+
+    subgraph API Gateway Routing
+        B --> C{Rate Limit Exceeded?};
+        C -- No --> D[Authentication];
+        C -- Yes --> E[Cache Hit];
+    end
+
+    subgraph Authentication & Authorization
+        D --> F{Valid Credentials?};
+        F -- No --> G[Authorization];
+        F -- Yes --> H[Access Protected Resource]
+    end
+
+    subgraph Resource Access
+        H --> I{Resource Available?};
+        I -- No --> J[DB Write Operation];
+        I -- Yes --> K[DB Read Operation];
+    end
+
+    subgraph Caching
+        E -- Data Found --> J
+        E -- Data Not Found --> F
+    end
+
+    subgraph Error Handling & Retry
+        G --> L[Retry Request];
+        L --> B;
+        J --> M{Write Successful?};
+        M -- Yes --> N[Return Error to User];
+        M -- No --> L
+    end
+
+    subgraph Final Response
+        K --> O[Return Resource to User];
+        N --> P[Logout];
+        P --> A
+    end

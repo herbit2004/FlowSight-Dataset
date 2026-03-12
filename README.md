@@ -1,98 +1,156 @@
-# FlowSight 数据集（FlowSight-Dataset）
+# FlowSight Dataset
 
-FlowSight 是一个面向**多模态流程图/架构图理解与生成**的评测数据集。每条样本由 Mermaid 源码、渲染图像与结构化中文描述组成，适用于图表理解、描述生成、图文对齐等任务的模型评估（不用于微调）。
-
----
-
-## 数据集概览
-
-### 样本结构
-
-每个样本对应 `dataset/<id>/` 目录，包含：
-
-| 文件 | 说明 |
-|------|------|
-| `diagram.mmd` | Mermaid 源码（graph / flowchart 等） |
-| `diagram.png` | 由 [mermaid.ink](https://mermaid.ink) 渲染的 PNG 图 |
-| `description.txt` | 结构化中文描述（见下） |
-
-元数据统一存放在 `dataset/metadata.json`（JSON 数组），每项包含：`id`、`repo`、`repo_stars`、`file_path`、`branch`、`raw_url`、`mermaid_hash`、`struct_hash`、`ai_reason`、`files` 等字段。
-
-### 描述格式（description.txt）
-
-描述采用固定的 **7 节**结构，便于作为评测与 QA 的 ground truth：
-
-1. **图类型与用途** — 图的类型、描述对象、在仓库中的作用  
-2. **图的整体布局** — 方向（TD/LR/TB）、层次、起点/终点  
-3. **分组/子图/阶段说明** — subgraph / 阶段划分  
-4. **节点逐项说明** — 关键节点及仓库语境下的含义  
-5. **连线、分支与汇聚关系** — 边与条件分支的说明  
-6. **仓库语境与术语解释** — 与图相关的术语、模块、配置  
-7. **可作为 QA Ground Truth 的高信息密度摘要** — 一段可还原主结构的摘要  
-
-### 质量与来源
-
-- **来源**：GitHub 热门仓库的 README 及文档（按 stars 排序），覆盖微服务、云原生、CI/CD、系统设计、API、数据流等场景。  
-- **过滤**：多语言 README 过滤（仅保留英文主 README）、规则预过滤（节点数、标签质量、路径黑名单）、AI 质量判断（Gemini Flash 判定是否为真实架构/流程图）。  
-- **去重**：按节点 ID 与连线拓扑做结构去重，跨仓库与同仓库内去重；每仓库最多保留若干张不重复结构的图。
+FlowSight is a **multimodal flowchart/architecture diagram understanding** benchmark dataset.
+Each sample consists of a Mermaid source file, a rendered PNG image, a structured English
+description, and multiple-choice QA — designed for evaluating multimodal model capabilities
+across tasks such as diagram comprehension, description generation, and image-text alignment.
 
 ---
 
-## 当前构建流程
+## Dataset Overview
 
-构建由单脚本 `build_dataset.py` 完成，从爬取到生成 description 一气呵成。
+### Sample types
 
-### 流程步骤
+| Type | Directory pattern | Count | Notes |
+|------|-------------------|-------|-------|
+| **Real** | `dataset/000` – `dataset/499` | 500 | Crawled from GitHub real-world repositories |
+| **Meaningful** | `dataset/meaningful_000` – `…_199` | 200 | Synthetic — realistic fictional flows |
+| **Chaos** | `dataset/nonsense_000` – `…_149` | 150 | Synthetic — deliberately incoherent |
+| **Misleading** | `dataset/nonsense_150` – `…_299` | 150 | Synthetic — counterfactual errors injected |
 
-1. **爬取** — 按预设搜索词在 GitHub 搜索仓库，从已知文档路径（如 README.md、docs/architecture.md）拉取内容，通过 raw CDN 下载，尽量少用 REST API。  
-2. **过滤与去重** — 提取 Mermaid 块，经规则过滤与 AI 质量判断，再按结构 hash 去重。  
-3. **落盘与渲染** — 通过 mermaid.ink 将 Mermaid 渲染为 PNG，与源码一并写入样本目录。  
-4. **上下文拉取** — 拉取仓库目录树、README、图所在文档；由 LLM 从仓库中选取与图最相关的代码/配置文件并下载片段。  
-5. **多模态生成描述** — 将 PNG、Mermaid、README、文档上下文、所选代码片段一并送入多模态模型（OpenRouter / Gemini），生成上述 7 节结构化 description，写入 `description.txt`。  
-6. **写元数据** — 仅当 mmd、png、description 均成功时，才将该样本目录计入并追加到 `metadata.json`，避免出现孤儿目录或残缺样本。
+### Files per sample
 
-### 运行方式
+| File | Description |
+|------|-------------|
+| `diagram.mmd` | Mermaid source (graph / flowchart syntax) |
+| `diagram.png` | PNG rendered by [mermaid.ink](https://mermaid.ink) |
+| `context.json` | *(real samples only)* Repository context: tree, README, doc excerpt, code snippets |
+| `description.txt` | 7-section structured English description |
+| `qa.json` | 6 multiple-choice questions (JSON array) |
 
-```bash
-# 在 FlowSight-Dataset 目录下
-uv sync
-cp .env.example .env   # 填 OPENROUTER_API_KEY（可选填 GITHUB_TOKEN）
-uv run python build_dataset.py
+Metadata files:
+- `dataset/metadata.json` — real samples
+- `dataset/synthetic_metadata.json` — synthetic samples
+
+### Description format (7 sections)
+
+1. **Diagram Type & Purpose** — type, subject, role in the repository
+2. **Overall Layout** — direction (TD/LR/TB), hierarchy, start/end nodes
+3. **Subgraphs / Stages** — explicit subgraphs or logical stage divisions
+4. **Node-by-Node Description** — every key node with repository context where available
+5. **Edges, Branches & Convergence** — edge descriptions and branch conditions
+6. **Repository Context & Terminology** — terms, modules, configs relevant to the diagram
+7. **High-Density QA Ground Truth Summary** — self-contained dense paragraph for QA reference
+
+### QA format
+
+Each `qa.json` contains 6 items:
+
+```json
+[
+  {
+    "question": "Which node is reached when branch condition is No?",
+    "options": ["A. NodeX", "B. NodeY", "C. NodeZ", "D. NodeW"],
+    "correct_index": 1,
+    "type": "reasoning",
+    "difficulty": "medium"
+  }
+]
 ```
 
-- **首次运行**：从零采集，目标条数由脚本内 `TARGET_COUNT` 控制（默认 100）。  
-- **续采**：若已存在 `dataset/metadata.json`，则在其基础上继续采集；目标条数 = 当前条数 + 环境变量 `ADD_MORE`（默认 100），例如：  
-  `ADD_MORE=200 python build_dataset.py`  
-- **可选**：设置 `GITHUB_TOKEN` 可提高 GitHub API 限额（可写在 `.env` 或环境变量中）。
-
-构建日志写入 `dataset/build.log`。
+Question type distribution per sample: ≥2 reasoning, ≥1 negation; difficulty: ≤1 easy, ≥2 medium, ≥2 hard.
 
 ---
 
-## 后续构建计划
+## Quick Start
 
-- **QA 对生成**：基于现有 description 与图表，生成问答对并纳入样本（如四元组：image, mermaid, description, QA）。  
-- **多风格图像**：对同一 Mermaid 源码生成多种渲染风格（如不同 Mermaid 主题），用于风格鲁棒性或多模态对齐实验。  
-- **合成数据扩展**：在真实采集样本之外，增加合成 Mermaid 图（例如：一部分为“拟真”架构/流程图，一部分为“反事实/无意义”图），用于区分能力与鲁棒性评测。  
-- **规模与多样性**：继续扩展采集关键词与仓库来源，提高样本数量与领域覆盖。
+```bash
+cp .env.example .env        # fill in OPENROUTER_API_KEY (and optionally GITHUB_TOKEN)
+uv sync                     # install dependencies into .venv
+```
+
+### Step-by-step dataset generation
+
+```bash
+# 1. Crawl 500 real diagrams from GitHub (resumable)
+uv run python main.py crawl
+
+# 2. Generate 500 synthetic diagrams (resumable)
+uv run python main.py synth
+
+# 3. Generate descriptions for all samples (resumable)
+uv run python main.py describe
+
+# 4. Generate QA for all samples (resumable)
+uv run python main.py qa
+
+# 5. Run multi-model benchmark evaluation
+uv run python main.py benchmark init
+uv run python main.py benchmark run
+```
+
+All steps are **interruptible and resumable** — re-run the same command to continue from
+where it left off.
+
+### CLI reference
+
+```
+python main.py crawl      [--target N] [--add-more N]
+python main.py synth      [--type meaningful|chaos|misleading|all] [--count N] [--start-index N]
+python main.py describe   [--type real|meaningful|chaos|misleading|all] [--overwrite] [--retry-failed]
+python main.py qa         [--type real|meaningful|chaos|misleading|all] [--overwrite] [--retry-failed]
+python main.py benchmark  [init|run|status|retry-failed] [--allow-partial]
+                          [--count-real N] [--count-meaningful N] [--count-chaos N] [--count-misleading N]
+```
 
 ---
 
-## 目录结构
+## Environment variables (`.env`)
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `OPENROUTER_API_KEY` | **Yes** | Used for all LLM calls |
+| `GITHUB_TOKEN` | No | Increases GitHub API rate limit (5000 vs 60 req/hr) |
+| `GENERATION_MODEL` | No | LLM for crawl/synth/describe/qa (default: `google/gemini-2.0-flash-001`) |
+| `BENCHMARK_MODELS` | No | Comma-separated model IDs for benchmark evaluation |
+
+See `.env.example` for full details and default values.
+
+---
+
+## Project structure
 
 ```
 FlowSight-Dataset/
-├── README.md           # 本文件
-├── build_dataset.py    # 数据集构建脚本
-├── dataset/
-│   ├── metadata.json   # 样本元数据（JSON 数组）
-│   ├── README.md       # 数据集简要说明
-│   ├── build.log       # 构建日志
-│   ├── 000/
-│   │   ├── diagram.mmd
-│   │   ├── diagram.png
-│   │   └── description.txt
-│   ├── 001/
-│   └── ...
-└── OpenRouterDocs-main/   # （可选）OpenRouter API 参考
+├── main.py                  # Unified CLI entry point
+├── env_config.py            # API key & model config loader
+├── .env.example             # Template — copy to .env and fill in keys
+├── pyproject.toml           # uv / pip dependency file
+├── flowsight/
+│   ├── __init__.py
+│   ├── config.py            # Constants, paths, targets, themes
+│   ├── utils.py             # Shared: logging, HTTP, OpenRouter API, mermaid.ink, helpers
+│   ├── crawl.py             # GitHub crawl module
+│   ├── synth.py             # Synthetic diagram generation module
+│   ├── describe.py          # Description generation module
+│   ├── qa.py                # QA generation module
+│   └── benchmark.py         # Benchmark evaluation module
+└── dataset/
+    ├── metadata.json
+    ├── synthetic_metadata.json
+    ├── 000/ … 499/          (real: mmd + png + context + description + qa)
+    ├── meaningful_000/ …    (synthetic meaningful)
+    └── nonsense_000/ …      (synthetic chaos / misleading)
 ```
+
+---
+
+## Quality & sourcing
+
+- **Source**: GitHub top-starred repositories (sorted by stars), across domains including
+  microservices, cloud-native, CI/CD, system design, API gateways, data pipelines, etc.
+- **Filtering**: English-only README filter; rule-based pre-filter (node count, label quality,
+  path blacklist); AI quality check (LLM judges whether diagram has genuine architectural /
+  process value, not tutorial or placeholder content).
+- **Deduplication**: Structural hash deduplication by node/edge topology — across repositories
+  and within the same repository; maximum `MAX_PER_REPO` (3) non-duplicate diagrams per repo.

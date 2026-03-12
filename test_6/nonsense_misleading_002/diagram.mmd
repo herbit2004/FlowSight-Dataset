@@ -1,0 +1,18 @@
+graph TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- Yes --> C[Inventory Check];
+    B -- No --> H[Cancel Order Process];
+    C --> D{Inventory Available?};
+    D -- No --> E[Notify User Order Canceled];
+    E --> H;
+    D -- Yes --> F[Determine Shipping Method];
+    F --> G[Package Items for Shipping];
+    G --> I{Shipping Label Printed?};
+  	I -- No  --> J[Order Shipped];	
+    I -- Yes --> G;	
+    J --> K[Notify User of Shipment];
+    K --> L[Order Delivered];
+    L --> M{User Confirms Delivery?};
+    M -- Yes --> N[Close Order];
+    M -- No --> K;
+    H --> N;

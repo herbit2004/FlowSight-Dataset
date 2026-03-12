@@ -1,0 +1,79 @@
+flowchart TB
+    subgraph WEB[🌐 Web Interface Layer]
+        direction LR
+        UI[📱 Web UI<br/>HTML/CSS/JavaScript]
+        API[🔌 REST API<br/>Flask Backend]
+        UI <--> API
+    end
+    
+    subgraph CORE[⚙️ Core Application Layer]
+        direction LR
+        CFG[📋 Config Manager<br/>config.py]
+        CALC[📊 GSCN Calculator<br/>gscn_calculator.py]
+        CTRL[🎛️ USRP Controller<br/>usrp_controller.py]
+        
+        CFG <--> CALC
+        CALC <--> CTRL
+    end
+    
+    subgraph DATA[💾 Data Storage Layer]
+        direction LR
+        JSON[(📄 config.json<br/>Settings)]
+        FREQ[(📈 detected_frequencies.json<br/>Scan Results)]
+        FILES[(📁 *.dat files<br/>Signal Data)]
+        
+        JSON -.-> FREQ
+        FREQ -.-> FILES
+    end
+    
+    subgraph HW[🔧 Hardware Layer]
+        direction LR
+        FPGA[💻 FPGA Bitstream<br/>Custom Processing]
+        RFNOC[🔍 RFNoC Blocks<br/>SSB Detection]
+        X310[📡 USRP X310<br/>SDR Platform]
+        
+        FPGA --> RFNOC
+        RFNOC --> X310
+    end
+    
+    subgraph RF[📡 RF & Network Layer]
+        direction LR
+        ANT[📶 Antenna<br/>5G NR Bands]
+        SSB[📊 SSB Signals<br/>n1/n3/n77/n78/n79]
+        GNB[🏢 gNodeB<br/>Base Station]
+        
+        ANT <--> SSB
+        SSB <--> GNB
+    end
+    
+    %% Inter-layer connections
+    WEB --> CORE
+    CORE --> DATA
+    CORE --> HW
+    HW --> RF
+    
+    %% Data flow connections
+    API -.->|Configuration| CFG
+    CTRL -.->|Store Results| FREQ
+    CTRL -.->|Capture Data| FILES
+    CTRL -->|Commands| RFNOC
+    
+    %% Professional color scheme
+    style WEB fill:#e1f5ff,stroke:#0066cc,stroke-width:3px
+    style CORE fill:#fff2e6,stroke:#e67300,stroke-width:3px
+    style DATA fill:#f0f8ff,stroke:#003d82,stroke-width:3px
+    style HW fill:#ffe6e6,stroke:#cc0000,stroke-width:3px
+    style RF fill:#e6ffe6,stroke:#009900,stroke-width:3px
+    
+    %% Component styling
+    style UI fill:#cce7ff,stroke:#0052cc
+    style API fill:#cce7ff,stroke:#0052cc
+    style CFG fill:#ffe6cc,stroke:#cc5200
+    style CALC fill:#ffe6cc,stroke:#cc5200
+    style CTRL fill:#ffe6cc,stroke:#cc5200
+    style FPGA fill:#ffcccc,stroke:#990000
+    style RFNOC fill:#ffcccc,stroke:#990000
+    style X310 fill:#ffcccc,stroke:#990000
+    style ANT fill:#ccffcc,stroke:#006600
+    style SSB fill:#ccffcc,stroke:#006600
+    style GNB fill:#ccffcc,stroke:#006600

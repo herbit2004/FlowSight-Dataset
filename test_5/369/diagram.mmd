@@ -1,0 +1,29 @@
+flowchart TD
+    subgraph Planning["Phase 1: Planning"]
+        A[Problem Input] --> B[GRD Generation]
+        B --> C[Numerical Masking]
+        C --> D[Protocol Validation]
+    end
+    
+    subgraph Execution["Phase 2: Execution"]
+        D --> E[Stateful Engine]
+        E --> F{Conditional Branching}
+        F -->|Step| G[Model Call]
+        G --> H{Critic Review}
+        H -->|Retry| E
+        H -->|Success| F
+        F -->|Done| I[Final Answer]
+    end
+    
+    subgraph Analysis["Phase 3: Analysis"]
+        I --> J[PPD Metrics]
+        J --> K[Efficiency Report]
+    end
+
+    classDef planningPhase fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    classDef executionPhase fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    classDef analysisPhase fill:#fff4e1,stroke:#e65100,stroke-width:2px
+    
+    class Planning,A,B,C,D planningPhase
+    class Execution,E,F,G,H,I executionPhase
+    class Analysis,J,K analysisPhase

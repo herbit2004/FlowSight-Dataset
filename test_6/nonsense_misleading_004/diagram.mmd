@@ -1,0 +1,27 @@
+flowchart TD
+    A[User Submits Order] --> B{Payment Received?};
+    B -- No --> C[Notify User of Payment Failure];
+    C --> D[Order Cancelled Automatically];
+    B -- Yes --> E[Logistics Assigned];
+    E --> F{Inventory Available?};
+    F -- Yes --> G[Item Shipped];
+    G --> H[Update Inventory];
+    F -- No --> H;
+    H --> I{Shipping Confirmation Sent?};
+    I -- No --> J[Notify Warehouse of Shortage];
+    J --> K[Warehouse Restocks];
+    K --> L[Logistics Reassigned];
+    L --> G;
+    I -- Yes --> M[Order Delivered];
+    M --> N{User Receives Order?};
+    N -- No --> O[Issue Refund];
+    O --> A;
+    N -- Yes --> P[Close Order];
+    P --> Q[Generate Sales Report];
+    Q --> R[Archive Order Data];
+    R --> S[Customer Satisfaction Survey Sent];
+    S --> T{Survey Completed?};
+    T -- Yes --> U[Analyze Survey Results];
+    U --> P;
+    T -- No --> V[Escalate for Follow Up - Customer Unhappy];
+    V --> P;

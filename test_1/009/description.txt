@@ -1,0 +1,73 @@
+## Diagram Type & Purpose
+This is a flowchart diagram depicting the architecture and data flow of a system that processes user requests (text, images, documents) to generate various outputs, including visualizations and code. The diagram illustrates how user input is routed, processed by specialized agents, transformed into streaming XML, parsed, and ultimately rendered in a frontend application. It serves as a high-level overview of the system's components and their interactions.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. It starts with a "User Request" node at the top and flows downwards through various processing stages. The end nodes are "Interactive Canvas" and "Execution Trace UI" at the bottom.
+
+## Subgraphs / Stages
+The diagram contains two explicit subgraphs:
+- **Specialized Agents - XML Tag Output**: This subgraph encapsulates various agents responsible for generating different types of outputs (MindMap, Flowchart, Data Chart, Draw.io, Mermaid, Infographic, General) in XML format.
+- **Streaming XML Tag Output**: This subgraph includes the LLM Generation and StreamingTagParser components.
+
+## Node-by-Node Description
+- **User Request: Text/Images/Documents**: Represents the initial user input to the system.
+  visible in diagram; no further repository context available.
+- **Intelligent Router**: Routes the user request based on intent.
+  visible in diagram; no further repository context available.
+- **Intent Classification**: Classifies the intent of the user request.
+  visible in diagram; no further repository context available.
+- **LangGraph Orchestrator**: Orchestrates the processing of the user request.
+  visible in diagram; no further repository context available.
+- **MindMap Agent Markdown/Markmap**: Generates mind maps in Markdown or Markmap format.
+  visible in diagram; no further repository context available.
+- **Flowchart Agent React Flow JSON**: Generates flowcharts in React Flow JSON format.
+  visible in diagram; no further repository context available.
+- **Data Chart Agent ECharts Config**: Generates data charts using ECharts configuration.
+  visible in diagram; no further repository context available.
+- **Draw.io Agent mxGraph XML**: Generates diagrams in Draw.io's mxGraph XML format.
+  visible in diagram; no further repository context available.
+- **Mermaid Agent Mermaid Syntax**: Generates diagrams using Mermaid syntax.
+  visible in diagram; no further repository context available.
+- **Infographic Agent AntV DSL**: Generates infographics using AntV DSL.
+  visible in diagram; no further repository context available.
+- **General Agent Plain Text**: Generates plain text output.
+  visible in diagram; no further repository context available.
+- **LLM Generation <design_concept>...</design_concept> <code>...</code>**: Represents the generation of code and design concepts using a Large Language Model.
+  visible in diagram; no further repository context available.
+- **StreamingTagParser**: Parses the streaming XML tags.
+  visible in diagram; no further repository context available.
+- **Design Concept Stream**: Represents the stream of design concept events.
+  visible in diagram; no further repository context available.
+- **Code Stream**: Represents the stream of code events.
+  visible in diagram; no further repository context available.
+- **React 19 Frontend**: The React 19 frontend application.
+  visible in diagram; no further repository context available.
+- **Interactive Canvas**: The interactive canvas for rendering design concepts.
+  visible in diagram; no further repository context available.
+- **Execution Trace UI**: The user interface for displaying execution traces.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+- `User Request: Text/Images/Documents --> Intelligent Router`: The user request is sent to the intelligent router.
+- `Intelligent Router -- Intent Classification --> LangGraph Orchestrator`: The intelligent router classifies the intent and sends it to the LangGraph Orchestrator.
+- `LangGraph Orchestrator --> Specialized Agents - XML Tag Output`: The LangGraph Orchestrator routes the request to the specialized agents.
+- `Specialized Agents - XML Tag Output --> LLM Generation`: The specialized agents pass their output to the LLM Generation stage.
+- `LLM Generation --> StreamingTagParser`: The LLM generated output is sent to the StreamingTagParser.
+- `StreamingTagParser --> Design Concept Stream`: The StreamingTagParser emits design concept events to the Design Concept Stream.
+- `StreamingTagParser --> Code Stream`: The StreamingTagParser emits code events to the Code Stream.
+- `Design Concept Stream -- SSE --> React 19 Frontend`: The Design Concept Stream sends data to the React 19 Frontend via Server-Sent Events (SSE).
+- `Code Stream -- SSE --> React 19 Frontend`: The Code Stream sends data to the React 19 Frontend via Server-Sent Events (SSE).
+- `React 19 Frontend --> Interactive Canvas`: The React 19 Frontend renders the design concepts on the Interactive Canvas.
+- `React 19 Frontend --> Execution Trace UI`: The React 19 Frontend displays execution traces in the Execution Trace UI.
+
+## Repository Context & Terminology
+- **LangGraph**: A framework for building conversational agents. In this context, it orchestrates the processing of user requests.
+- **Streaming XML Tag Output**: The system uses streaming XML to handle the output from the LLM, allowing for efficient parsing and processing of large amounts of data.
+- **SSE (Server-Sent Events)**: A server push technology enabling real-time data streaming from the server to the client (React 19 Frontend).
+- **React 19 Frontend**: The user interface built with React 19, responsible for rendering the processed data and providing interactive elements.
+- **ECharts**: A powerful charting and visualization library used by the Data Chart Agent.
+- **AntV**: A data visualization library used by the Infographic Agent.
+- **mxGraph XML**: The XML format used by draw.io for storing diagrams.
+
+## High-Density QA Ground Truth Summary
+The process begins with a "User Request" containing text, images, or documents, which is then passed to an "Intelligent Router". The router performs "Intent Classification" and forwards the request to the "LangGraph Orchestrator". The orchestrator routes the request to the "Specialized Agents - XML Tag Output" subgraph, which contains agents like "MindMap Agent", "Flowchart Agent", and "Data Chart Agent", each responsible for generating specific output formats. The output from these agents is then fed into the "LLM Generation" stage, producing XML-tagged output with `<design_concept>` and `<code>` sections. This XML is parsed and streamed by the "StreamingTagParser", which emits "design_concept events" and "code events" to the "Design Concept Stream" and "Code Stream" respectively. Both streams use Server-Sent Events (SSE) to transmit data to the "React 19 Frontend". Finally, the frontend renders the design concepts on an "Interactive Canvas" and displays execution traces in the "Execution Trace UI". The use of streaming XML and SSE enables real-time updates and efficient handling of large datasets, while LangGraph orchestrates the entire process.

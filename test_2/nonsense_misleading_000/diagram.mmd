@@ -1,0 +1,14 @@
+graph TD
+    A[User Request] --> B{Cache Hit?};
+    B -- Yes --> C[Database Write];
+    B -- No --> D[Retrieve from DB];
+    D --> E[Write Cache];
+    E --> A;
+    C --> F{Payment Required?};
+    F -- No --> G[Fulfill Order];
+    F -- Yes --> H[Process Payment];
+    H --> I{Payment Success?};
+    I -- No --> H;
+    I -- Yes --> G;
+    G --> J[Order Confirmation];
+    J --> K[Log Out];

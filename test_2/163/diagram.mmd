@@ -1,0 +1,45 @@
+flowchart TD
+    subgraph "Phase 0: Your System"
+        GEN[Generate Daily Report<br/>your code, cron, etc.]
+        GEN --> R[📊 reports/*.md<br/>metrics, errors, feedback]
+    end
+    
+    subgraph "Phase 1: Analysis"
+        A[analyze-report.sh<br/>LLM API]
+        R --> A
+        A --> J[analysis.json<br/>priority + criteria]
+    end
+    
+    subgraph "Phase 2: Planning"
+        B[Create Branch<br/>compound/feature-name]
+        J --> B
+        B --> PRD[AI Agent<br/>Load prd skill]
+        PRD --> MD[tasks/prd-feature.md]
+        MD --> TASKS[AI Agent<br/>Load tasks skill]
+        TASKS --> JSON[prd.json<br/>executable tasks]
+    end
+    
+    subgraph "Phase 3: Execution Loop"
+        LOOP[loop.sh<br/>max N iterations]
+        JSON --> LOOP
+        LOOP --> PICK[Pick next task<br/>where passes: false]
+        PICK --> IMPL[AI Agent<br/>Implement task]
+        IMPL --> CHECK{Quality<br/>Checks?}
+        CHECK -->|Pass| COMMIT[Git Commit]
+        CHECK -->|Fail| FIX[Fix & Retry]
+        FIX --> CHECK
+        COMMIT --> UPDATE[Update prd.json<br/>passes: true]
+        UPDATE --> DONE{All tasks<br/>done?}
+        DONE -->|No| PICK
+        DONE -->|Yes| EXIT[Exit loop]
+    end
+    
+    subgraph Output
+        EXIT --> PUSH[Git Push]
+        PUSH --> PR[🎉 Pull Request<br/>Ready for review]
+    end
+    
+    click A "https://github.com/snarktank/compound-product/blob/main/scripts/analyze-report.sh" "View analyze-report.sh"
+    click LOOP "https://github.com/snarktank/compound-product/blob/main/scripts/loop.sh" "View loop.sh"
+    click PRD "https://github.com/snarktank/compound-product/blob/main/skills/prd/SKILL.md" "View PRD skill"
+    click TASKS "https://github.com/snarktank/compound-product/blob/main/skills/tasks/SKILL.md" "View Tasks skill"

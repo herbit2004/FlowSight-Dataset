@@ -1,0 +1,51 @@
+flowchart TB
+    subgraph Root["📦 nestjs-monorepo-template/"]
+        direction TB
+
+        subgraph Apps["📱 apps/ (Independent Services)"]
+            direction TB
+            API["api-server<br/>📍 Port 3001<br/>REST API • Validation<br/>Swagger Docs"]
+            Worker["worker<br/>⚙️ Background Service<br/>No HTTP Server<br/>Cron Jobs • Queues"]
+            WS["websocket-service<br/>📍 Port 3002<br/>Real-time • Socket.IO<br/>Event Broadcasting"]
+            Admin["admin<br/>📍 Port 3003<br/>Admin Panel<br/>Swagger Docs"]
+        end
+
+        subgraph Libs["📚 libs/ (Shared Libraries)"]
+            direction TB
+            DB["db/<br/>🗄️ Database Abstraction<br/>MongoDB ↔ PostgreSQL ↔ MySQL<br/>Auto-switch via ENV"]
+            Config["configuration/<br/>⚙️ Environment Config<br/>Type-safe • Validation<br/>Centralized Settings"]
+            Common["common/<br/>🛠️ Utilities<br/>Logging • Errors • Filters<br/>Reusable Services"]
+            Security["security/<br/>🔒 Security Middleware<br/>Helmet • Rate Limit<br/>Compression • Logging"]
+            Swagger["swagger/<br/>📚 API Documentation<br/>OpenAPI • Interactive UI<br/>Dev & Prod Ready"]
+        end
+    end
+
+    %% Dependencies
+    API -->|uses| DB
+    API -->|uses| Config
+    API -->|uses| Common
+    API -->|uses| Security
+    API -->|uses| Swagger
+    API -->|uses| Cache
+
+    Worker -->|uses| DB
+    Worker -->|uses| Config
+    Worker -->|uses| Common
+    Worker -->|uses| Cache
+
+    WS -->|uses| DB
+    WS -->|uses| Config
+    WS -->|uses| Common
+
+    Admin -->|uses| DB
+    Admin -->|uses| Config
+    Admin -->|uses| Common
+    Admin -->|uses| Security
+    Admin -->|uses| Swagger
+
+    %% Styling
+    classDef app fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000,font-weight:bold
+    classDef lib fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000,font-weight:bold
+
+    class API,Worker,WS,Admin app
+    class DB,Config,Common,Security,Swagger,Cache lib

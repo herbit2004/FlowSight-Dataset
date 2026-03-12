@@ -1,0 +1,38 @@
+graph TD
+    subgraph Client Request Flow
+        A[Client Application] --> B(API Gateway: Request Received);
+        B -- Route Lookup --> C{Route Found?};
+        C -- Yes --> D[Route Configuration];
+        C -- No --> E[Error: Route Not Found];
+        D --> F{Authentication Required?};
+        subgraph Authentication
+            F -- Yes --> G[Auth Service: Validate Token];
+            G -- Valid --> H{Authorization Check?};
+            G -- Invalid --> I[Error: Invalid Token];
+            H -- Authorized --> J[Request Enrichment];
+            H -- Unauthorized --> K[Error: Unauthorized];
+            F -- No --> J;
+        end
+        J --> L[Modify Request Headers];
+        L --> M[Forward to Upstream Service];
+    end
+
+    subgraph Rate Limiting & Observability
+        M --> N(Rate Limiter: Apply Policy);
+        N -- Allowed --> O[Upstream Service];
+        N -- Limited --> P[Error: Rate Limit Exceeded];
+        O --> Q[Upstream Response];
+        Q --> R[Record Metrics & Logs];
+        R --> S[Client Response];
+    end
+
+    S --> T[Client Application];
+
+    classDef errorFill fill:#fbb,stroke:#f66,stroke-width:2px;
+    classDef successFill fill:#ccf,stroke:#66f,stroke-width:2px;
+
+    classDef serviceNode fill:#eee,stroke:#999,stroke-width:1px;
+
+    class E,I,K,P errorFill;
+    class A,T successFill;
+    class B,D,G,J,L,N,O,Q,R serviceNode;

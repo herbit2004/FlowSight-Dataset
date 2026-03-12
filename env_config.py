@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-统一从环境配置文件加载 API Key，避免硬编码。
-优先读取项目根目录下的 .env 文件（该文件已加入 .gitignore，请勿提交）。
+Load API keys and model settings from the project-root .env file.
+All scripts import from here — keys are never hard-coded.
 """
 from __future__ import annotations
 
@@ -20,7 +18,7 @@ _ENV_LOADED: bool = False
 
 
 def load_env() -> None:
-    """从项目根目录的 .env 加载环境变量（可被环境变量覆盖）。"""
+    """Load .env / .env.local from project root (does not override shell env vars)."""
     global _ENV_LOADED
     if _ENV_LOADED:
         return
@@ -32,12 +30,36 @@ def load_env() -> None:
 
 
 def get_openrouter_api_key() -> str:
-    """OpenRouter API Key，用于调用多模型接口。"""
     load_env()
     return os.environ.get("OPENROUTER_API_KEY", "").strip()
 
 
 def get_github_token() -> str:
-    """GitHub Token，用于提高 API 限额（可选）。"""
     load_env()
     return os.environ.get("GITHUB_TOKEN", "").strip()
+
+
+def get_generation_model() -> str:
+    """Model used for crawl quality-check, description generation, and QA generation."""
+    load_env()
+    return os.environ.get("GENERATION_MODEL", "google/gemini-2.0-flash-001").strip()
+
+
+def get_benchmark_models() -> list[str]:
+    """Comma-separated benchmark model list from .env, or built-in defaults."""
+    load_env()
+    raw = os.environ.get("BENCHMARK_MODELS", "").strip()
+    if raw:
+        return [m.strip() for m in raw.split(",") if m.strip()]
+    return [
+        "qwen/qwen3-vl-8b-instruct",
+        "qwen/qwen3-vl-30b-a3b-instruct",
+        "qwen/qwen3-vl-235b-a22b-instruct",
+        "qwen/qwen3-vl-8b-thinking",
+        "qwen/qwen3-vl-30b-a3b-thinking",
+        "qwen/qwen3-vl-235b-a22b-thinking",
+        "google/gemini-2.5-flash-lite",
+        "google/gemini-2.5-flash",
+        "bytedance-seed/seed-2.0-mini",
+        "openai/gpt-4o-mini",
+    ]

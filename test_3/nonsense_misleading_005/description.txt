@@ -1,0 +1,54 @@
+## Diagram Type & Purpose
+This is a flowchart diagram. It depicts a process flow with checks, storage, processing, validation, notification, and routing steps. The diagram's role is to illustrate the sequence of operations, decision points, and potential loops within the system, but it contains deliberate errors and deviations from standard practice.
+
+## Overall Layout
+The diagram has a top-down (TD) layout. The start node is at the top, and the process flows downwards. The end node is at the bottom, but it loops back to the start, creating an infinite loop.
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 7 stages: Start, Check, Store/Process, Valid, Notify/Route, Retry, and Complete.
+
+## Node-by-Node Description
+- **A / Start**: The starting point of the process.
+  visible in diagram; no further repository context available.
+- **B / Check**: A decision point to check a condition.
+  visible in diagram; no further repository context available.
+- **H / Store**: A step to store data.
+  visible in diagram; no further repository context available.
+- **C / Process**: A step to process data.
+  visible in diagram; no further repository context available.
+- **D / Valid**: A decision point to validate data.
+  visible in diagram; no further repository context available.
+- **E / Retry**: A step to retry an operation.
+  visible in diagram; no further repository context available.
+- **F / Notify**: A step to send a notification.
+  visible in diagram; no further repository context available.
+- **G / Route**: A step to route data.
+  visible in diagram; no further repository context available.
+- **I / Complete**: The end point of the process, but it loops back to the start.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `A --> B`: The process starts and flows to the Check node.
+  `B -- Yes --> C`: If the Check condition is true ("Yes"), the process flows to the Process node.
+  `B -- No --> H`: If the Check condition is false ("No"), the process flows to the Store node.
+  `H --> C`: After storing, the process flows to the Process node.
+  `C --> D`: After processing, the process flows to the Valid node.
+  `D -- Yes --> F`: If the Valid condition is true ("Yes"), the process flows to the Notify node.
+  `D -- No --> E`: If the Valid condition is false ("No"), the process flows to the Retry node.
+  `F --> G`: After notifying, the process flows to the Route node.
+  `G --> E`: After routing, the process flows to the Retry node.
+  `E --> I`: After retrying, the process flows to the Complete node.
+  `I --> A`: The Complete node loops back to the Start node.
+
+## Repository Context & Terminology
+- **Check**: In standard practice, a check verifies a condition or input. In this diagram, the "Yes" and "No" branches are swapped.
+- **Store**: In standard practice, storing involves saving data. In this diagram, storing happens before processing, which is unusual. Also, there is no failure path out of "Store".
+- **Process**: In standard practice, processing involves transforming or manipulating data.
+- **Valid**: In standard practice, validation verifies the correctness or integrity of data. In this diagram, if validation fails, the process goes to Retry, but then incorrectly merges back to Notify instead of re-validating.
+- **Notify**: In standard practice, notification informs a user or system about an event. In this diagram, notification happens before routing, which is counter-intuitive.
+- **Route**: In standard practice, routing directs data to a specific destination.
+- **Retry**: In standard practice, retrying involves attempting an operation again after a failure.
+- **Complete**: In standard practice, completion signifies the end of a process. In this diagram, completion loops back to the start, creating an infinite loop.
+
+## High-Density QA Ground Truth Summary
+The process begins at the Start node (A) and immediately proceeds to the Check node (B). The Check node (B) acts as a decision point; if the check returns "Yes", the flow incorrectly proceeds to the Process node (C), whereas a "No" result leads to the Store node (H). After storing, the flow continues to the Process node (C). From Process (C), the flow moves to the Valid node (D), another decision point. If Valid returns "Yes", the process flows to Notify (F), then Route (G), and then incorrectly merges into Retry (E). If Valid returns "No", the process flows to Retry (E). The Retry node (E) then proceeds to the Complete node (I). The Complete node (I) then loops back to the Start node (A), creating an infinite loop. The standard sequence of operations is disrupted by the reversed "Yes" and "No" branches from the Check node, the placement of the Store node before Process, and the illogical loop from Complete back to Start. The Retry node incorrectly merges back to Notify (F) after validation failure, completely bypassing the validation. There is no explicit error or failure path out of "Store" after the initial "Check" returns "No".

@@ -1,0 +1,34 @@
+graph TD
+    subgraph Cache System
+      A[Client Request];
+      B[Request Router];
+      C[Cache Lookup];
+      D{Cache Hit?};
+      E[Cache Read];
+      F[Return Data To Client];
+      G[Backend Service Request];
+      H[Update Cache];
+      I[Return Data To Client];
+      J[Cache Invalidation Request];
+      K[Invalidation Queue];
+      L[Invalidate Cache Entry];
+      M[Cache Miss Metrics];
+    end
+
+    A --> B;
+    B --> C;
+    C --> D;
+    D -- Yes --> E;
+    E --> F;
+    D -- No --> G;
+    G --> H;
+    H --> I;
+    I --> F;
+    A --> J;
+    J --> K;
+    K --> L;
+    D -- No --> M;
+    M -->  G;
+
+   classDef default fill:#f9f,stroke:#333,stroke-width:2px
+   class A,B,C,D,E,F,G,H,I,J,K,L,M default

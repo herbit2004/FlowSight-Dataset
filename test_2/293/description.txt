@@ -1,0 +1,44 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the flow of data and control between different components in a system, likely related to interacting with a large language model (LLM) like Claude via Telegram. The diagram outlines the steps involved in receiving a message from Telegram, processing it through a bridge server and Claude, and then reading the transcript of the interaction. This diagram serves as a high-level overview of the system's architecture and message flow.
+
+## Overall Layout
+The diagram's layout is left-to-right (LR). The flow starts with the "Telegram" node and ends with the "Read Transcript" node. There is a feedback loop from "Read Transcript" back to "Telegram" via "Send Response".
+
+## Subgraphs / Stages
+No explicit subgraphs; logically divided into 5 stages: Telegram Input, Tunneling and Bridging, LLM Interaction, Transcript Processing, and Response.
+
+## Node-by-Node Description
+- **A / Telegram**: Represents the Telegram messaging platform, where the initial message originates.
+  visible in diagram; no further repository context available.
+- **B / Cloudflare Tunnel**: Represents a Cloudflare Tunnel, which likely provides a secure connection to the bridge server.
+  visible in diagram; no further repository context available.
+- **C / Bridge Server**: Represents a server that acts as an intermediary between the Cloudflare Tunnel and the Claude code.
+  visible in diagram; no further repository context available.
+- **D / Claude Code**: Represents the code that interacts with the Claude LLM.
+  visible in diagram; no further repository context available.
+- **E / Read Transcript**: Represents the process of reading or accessing the transcript of the interaction with Claude.
+  visible in diagram; no further repository context available.
+- **tmux send-keys**: Represents the action of sending keys to a tmux session.
+  visible in diagram; no further repository context available.
+- **Stop Hook**: Represents the action of stopping a hook.
+  visible in diagram; no further repository context available.
+- **Send Response**: Represents the action of sending a response back to Telegram.
+  visible in diagram; no further repository context available.
+
+## Edges, Branches & Convergence
+  `A --> B`: A message is sent from Telegram to the Cloudflare Tunnel.
+  `B --> C`: The message is forwarded from the Cloudflare Tunnel to the Bridge Server.
+  `C --> D`: The Bridge Server sends keys to a tmux session to interact with the Claude Code.
+  `D --> E`: The Claude Code interaction is completed, and a stop hook is triggered before reading the transcript.
+  `E --> A`: A response is sent back from the Read Transcript stage to Telegram.
+
+## Repository Context & Terminology
+- **Telegram**: A popular messaging platform used for sending and receiving messages.
+- **Cloudflare Tunnel**: A service that creates a secure, outbound-only connection between your origin server and Cloudflare's global network.
+- **Bridge Server**: A server that facilitates communication between different systems or networks. In this case, it likely handles the interaction between the Cloudflare Tunnel and the Claude code.
+- **tmux**: A terminal multiplexer that allows you to create and manage multiple terminal sessions within a single window. It is used here to send keys to the Claude code.
+- **Claude**: A large language model (LLM) developed by Anthropic.
+- **Hook**: A mechanism that allows you to execute code before or after a specific event.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a message originating from Telegram (A), which is then securely transmitted through a Cloudflare Tunnel (B) to a Bridge Server (C). The Bridge Server then uses `tmux send-keys` to interact with the Claude Code (D), which represents the interaction with the Claude LLM. After the interaction, a `Stop Hook` is triggered, and the transcript of the interaction is read (E). Finally, a response is sent back to Telegram (A) via `Send Response`, creating a feedback loop. The use of Cloudflare Tunnel suggests a focus on secure communication, while `tmux send-keys` indicates a command-line interface interaction with Claude. The "Read Transcript" node implies that the conversation history is being captured and potentially used for further processing or analysis. The overall flow depicts a system designed to facilitate interaction with the Claude LLM through Telegram, with a focus on security and transcript management.

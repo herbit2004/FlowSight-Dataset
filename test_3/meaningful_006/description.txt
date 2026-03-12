@@ -1,0 +1,69 @@
+## Diagram Type & Purpose
+This is a flowchart diagram illustrating the request flow through an API gateway, including rate limiting, authentication, authorization, service discovery, and routing to backend services. It depicts the architecture and process of handling client requests, ensuring security, and directing traffic to the appropriate service endpoints. The diagram serves as a visual representation of the API gateway's functionality and decision-making process.
+
+## Overall Layout
+The diagram's primary direction is top-to-bottom. It is hierarchically structured into stages: Client Interaction, API Gateway, Service Registry, Service A, Service B, and Error Handling. The start node is the Client Application, and the end nodes are Service A Response, Service B Response, Return 429 Error, Return 401 Error, and Return 403 Error.
+
+## Subgraphs / Stages
+The diagram contains the following explicit subgraphs:
+- **Client Interaction**: Represents the client application initiating the request.
+- **API Gateway**: Represents the central component responsible for request routing, authentication, authorization, and rate limiting.
+- **Service Registry**: Represents the component responsible for service discovery and instance selection.
+- **Service A**: Represents one of the backend services.
+- **Service B**: Represents another backend service.
+- **Error Handling**: Represents the handling of different error scenarios.
+
+## Node-by-Node Description
+- **Client Application**: Represents the application making the API request.
+- **API Gateway**: Represents the entry point for all client requests, responsible for routing, authentication, authorization, and rate limiting.
+- **Rate Limiter**: Checks if the client has exceeded the allowed request limit.
+- **Return 429 Error**: Returns a "Too Many Requests" error if the rate limit is exceeded.
+- **Authentication Handler**: Validates the client's JWT (JSON Web Token).
+- **Return 401 Error**: Returns an "Unauthorized" error if the JWT is invalid.
+- **Authorization Engine**: Determines if the client has the necessary permissions to access the requested resource.
+- **Return 403 Error**: Returns a "Forbidden" error if the client is not authorized.
+- **Route Decision**: Determines the appropriate backend service to route the request to.
+- **Service Registry**: Responsible for looking up available services and their instances.
+- **Service Lookup**: Queries the service registry to find the appropriate service.
+- **Service A Instance Selection**: Selects an instance of Service A to handle the request.
+- **Service B Instance Selection**: Selects an instance of Service B to handle the request.
+- **Service A Endpoint**: The specific endpoint within Service A that handles the request.
+- **Service B Endpoint**: The specific endpoint within Service B that handles the request.
+- **Service A Response**: The response from Service A.
+- **Service B Response**: The response from Service B.
+
+## Edges, Branches & Convergence
+- `Client Application --> API Gateway`: The client application sends a request to the API Gateway.
+- `API Gateway --> Rate Limiter`: The API Gateway forwards the request to the Rate Limiter.
+- `Rate Limiter -- Exceeds Limit? --> Return 429 Error`: If the rate limit is exceeded, a 429 error is returned.
+- `Rate Limiter -- OK --> Authentication Handler`: If the rate limit is not exceeded, the request is passed to the Authentication Handler.
+- `Authentication Handler -- Valid JWT? --> Authorization Engine`: If the JWT is valid, the request is passed to the Authorization Engine.
+- `Authentication Handler -- Invalid JWT --> Return 401 Error`: If the JWT is invalid, a 401 error is returned.
+- `Authorization Engine -- Authorized? --> Route Decision`: If the client is authorized, the request is passed to the Route Decision.
+- `Authorization Engine -- Unauthorized --> Return 403 Error`: If the client is not authorized, a 403 error is returned.
+- `Route Decision --> Service Registry`: The Route Decision component consults the Service Registry.
+- `Service Registry --> Service Lookup`: The Service Registry performs a service lookup.
+- `Service Lookup --> Service A Instance Selection`: The Service Lookup leads to Service A instance selection.
+- `Service Lookup --> Service B Instance Selection`: The Service Lookup also leads to Service B instance selection.
+- `Service A Instance Selection -- Service A Path --> Service A Endpoint`: The request is routed to the Service A endpoint.
+- `Service B Instance Selection -- Service B Path --> Service B Endpoint`: The request is routed to the Service B endpoint.
+- `Service A Endpoint --> Service A Response`: Service A processes the request and returns a response.
+- `Service B Endpoint --> Service B Response`: Service B processes the request and returns a response.
+- `Service A Response --> API Gateway`: Service A Response is sent back to the API Gateway.
+- `Service B Response --> API Gateway`: Service B Response is sent back to the API Gateway.
+- `API Gateway --> Client Application`: The API Gateway returns the response to the client application.
+- `Return 429 Error --> Client Application`: The 429 error is returned to the client application.
+- `Return 401 Error --> Client Application`: The 401 error is returned to the client application.
+- `Return 403 Error --> Client Application`: The 403 error is returned to the client application.
+
+## Repository Context & Terminology
+- **API Gateway**: A reverse proxy that acts as a single entry point for backend services, providing routing, authentication, authorization, and other cross-cutting concerns.
+- **Rate Limiter**: A mechanism to control the number of requests a client can make within a given time period, preventing abuse and ensuring service availability.
+- **JWT (JSON Web Token)**: A standard for securely transmitting information between parties as a JSON object, commonly used for authentication and authorization.
+- **Authentication**: The process of verifying the identity of a user or client.
+- **Authorization**: The process of determining whether a user or client has permission to access a specific resource.
+- **Service Registry**: A database or directory that contains information about available services and their locations, enabling service discovery.
+- **Service Discovery**: The process of automatically locating and connecting to available services.
+
+## High-Density QA Ground Truth Summary
+The flowchart begins with a Client Application sending a request to the API Gateway. The API Gateway first checks the Rate Limiter. If the request exceeds the limit, a 429 error is returned to the Client Application, terminating the flow. Otherwise, the request proceeds to the Authentication Handler, which validates the JWT. An invalid JWT results in a 401 error being returned to the client. A valid JWT leads to the Authorization Engine, which determines if the client is authorized. If not, a 403 error is returned. If authorized, the Route Decision component determines the appropriate backend service using the Service Registry. The Service Registry performs a Service Lookup, leading to either Service A Instance Selection or Service B Instance Selection. The request is then routed to the corresponding Service A Endpoint or Service B Endpoint. Each service processes the request and returns a Service A Response or Service B Response back to the API Gateway, which then forwards the response to the Client Application. The API Gateway acts as a central point for managing security and routing, leveraging a Service Registry for dynamic service discovery.
