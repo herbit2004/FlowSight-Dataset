@@ -135,12 +135,14 @@ FlowSight-Dataset/
 │   ├── describe.py          # Description generation module
 │   ├── qa.py                # QA generation module
 │   └── benchmark.py         # Benchmark evaluation module
-└── dataset/
-    ├── metadata.json
-    ├── synthetic_metadata.json
-    ├── 000/ … 499/          (real: mmd + png + context + description + qa)
-    ├── meaningful_000/ …    (synthetic meaningful)
-    └── nonsense_000/ …      (synthetic chaos / misleading)
+├── dataset/
+│   ├── metadata.json
+│   ├── synthetic_metadata.json
+│   ├── 000/ … 499/          (real: mmd + png + context + description + qa)
+│   ├── meaningful_000/ …    (synthetic meaningful)
+│   └── nonsense_000/ …      (synthetic chaos / misleading)
+├── pilots/                  # Standalone pilot scripts (pilot, pilot_v2, pilot_v3, pilot_v4)
+└── tests/                   # Test runs (e.g. tests/test_1, tests/test_1_benchmark)
 ```
 
 ---

@@ -30,7 +30,7 @@ load_env()
 API_KEY = get_openrouter_api_key()
 
 DATASET_DIR = PROJECT_ROOT / "dataset"
-OUT_DIR = PROJECT_ROOT / "pilot_v2" / "out"
+OUT_DIR = PROJECT_ROOT / "pilots" / "pilot_v2" / "out"
 SAMPLE_SIZE = 10
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"

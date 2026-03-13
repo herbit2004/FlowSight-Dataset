@@ -32,7 +32,7 @@ load_env()
 API_KEY = get_openrouter_api_key()
 
 DATASET_DIR = PROJECT_ROOT / "dataset"
-OUT_DIR = PROJECT_ROOT / "pilot_v3" / "out"
+OUT_DIR = PROJECT_ROOT / "pilots" / "pilot_v3" / "out"
 REAL_METADATA = DATASET_DIR / "metadata.json"
 SYNTHETIC_METADATA = DATASET_DIR / "synthetic_metadata.json"
 SAMPLE_PER_TYPE = 10

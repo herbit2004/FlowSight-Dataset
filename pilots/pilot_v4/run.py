@@ -31,8 +31,8 @@ from env_config import load_env, get_openrouter_api_key
 load_env()
 API_KEY = get_openrouter_api_key()
 
-PILOT_V3_OUT = PROJECT_ROOT / "pilot_v3" / "out"
-OUT_DIR = PROJECT_ROOT / "pilot_v4" / "out"
+PILOT_V3_OUT = PROJECT_ROOT / "pilots" / "pilot_v3" / "out"
+OUT_DIR = PROJECT_ROOT / "pilots" / "pilot_v4" / "out"
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 

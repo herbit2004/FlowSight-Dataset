@@ -110,7 +110,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--base-dir", default=None, dest="base_dir", metavar="DIR",
         help="Override dataset directory (default: dataset/). "
              "Benchmark state will be stored in <DIR>_benchmark/. "
-             "Example: --base-dir test_1",
+             "Example: --base-dir tests/test_1",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 

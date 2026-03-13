@@ -29,7 +29,8 @@ load_env()
 OPENROUTER_API_KEY = get_openrouter_api_key()
 
 DATASET_DIR = PROJECT_ROOT / "dataset"
-PILOT_DIR = PROJECT_ROOT / "pilot" / "pilot_data"
+# Use script-relative path so this works when pilot/ is under pilots/pilot
+PILOT_DIR = Path(__file__).resolve().parent / "pilot_data"
 PILOT_SIZE = 10
 
 MERMAID_INK_BASE = "https://mermaid.ink/img/{encoded}?type=png"
