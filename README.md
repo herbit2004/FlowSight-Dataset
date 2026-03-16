@@ -126,24 +126,64 @@ FlowSight-Dataset/
 ├── env_config.py            # API key & model config loader
 ├── .env.example             # Template — copy to .env and fill in keys
 ├── pyproject.toml           # uv / pip dependency file
-├── flowsight/
+│
+├── flowsight/               # 实验代码模块
 │   ├── __init__.py
 │   ├── config.py            # Constants, paths, targets, themes
 │   ├── utils.py             # Shared: logging, HTTP, OpenRouter API, mermaid.ink, helpers
-│   ├── crawl.py             # GitHub crawl module
-│   ├── synth.py             # Synthetic diagram generation module
-│   ├── describe.py          # Description generation module
-│   ├── qa.py                # QA generation module
-│   └── benchmark.py         # Benchmark evaluation module
-├── dataset/
-│   ├── metadata.json
-│   ├── synthetic_metadata.json
-│   ├── 000/ … 499/          (real: mmd + png + context + description + qa)
-│   ├── meaningful_000/ …    (synthetic meaningful)
-│   └── nonsense_000/ …      (synthetic chaos / misleading)
-├── pilots/                  # Standalone pilot scripts (pilot, pilot_v2, pilot_v3, pilot_v4)
-└── tests/                   # Test runs (e.g. tests/test_1, tests/test_1_benchmark)
+│   ├── crawl.py             # GitHub 爬取真实 Mermaid 图表
+│   ├── synth.py             # 合成数据生成模块 (meaningful/chaos/misleading)
+│   ├── describe.py          # 结构化描述生成模块
+│   ├── qa.py                # 多选题生成模块
+│   └── benchmark.py         # 多模型评测模块
+│
+├── paper/                   # 毕业论文 (中山大学学位论文模板)
+│   ├── flowsight_paper.md   # 论文初稿 (Markdown格式)
+│   ├── paper_demo.md        # 论文参考示例
+│   └── sysu_thesis/         # LaTeX论文模板及内容
+│       └── sysu-thesis-1.1.20230212/
+│           ├── main.tex     # 论文主文件
+│           ├── docs/        # 各章节内容 (chap01-chap06.tex)
+│           └── image/       # 论文图表 (chap03-chap05/)
+│
+├── dataset/                 # 数据集 (1000条)
+│   ├── metadata.json        # 真实数据元信息
+│   ├── synthetic_metadata.json  # 合成数据元信息
+│   ├── 000-499/             # Real: 爬取自GitHub的真实图表 (500条)
+│   ├── meaningful_000-199/  # Meaningful: 有意义的合成图表 (200条)
+│   ├── nonsense_000-149/    # Chaos: 混乱无意义的图表 (150条)
+│   └── nonsense_150-299/   # Misleading: 误导性图表 (150条)
+│
+├── benchmark_run/           # 实验运行记录与结果
+│   ├── state.json           # 完整评测状态 (JSON, 包含所有模型/样本/题目结果)
+│   ├── run.log              # 运行日志
+│   ├── probe_history.jsonl  # API探测历史
+│   ├── node_edge_accuracy_stats.txt  # 节点边识别准确率统计
+│   └── selection_manifest.json  # 采样清单
+│
+├── pilots/                  # 小规模实验调试记录
+│   ├── pilot/               # 初步探索实验
+│   ├── pilot_v2/            # 第二版实验
+│   ├── pilot_v3/            # 第三版实验 (含详细分析)
+│   └── pilot_v4/            # 第四版实验
+│
+├── tests/                   # 正式测试运行记录
+│   ├── test_1/ ... test_6/ # 6轮测试运行
+│   └── test_1_benchmark/   # 测试1的评测结果
+│
+└── generate_chap0*.py      # 论文图表生成脚本
+    ├── generate_chap03.py  # 第三章数据集结构图
+    ├── generate_chap04.py  # 第四章任务流程图
+    └── generate_chap05.py  #第五章实验结果图表
 ```
+
+### 核心流程
+
+1. **数据构建**: `crawl` → `synth` → `describe` → `qa`
+2. **模型评测**: `benchmark init` → `benchmark run`
+3. **论文图表**: 运行 `generate_chap0*.py` 生成 LaTeX 图表
+
+详见各模块内的 README 文档。
 
 ---
 
