@@ -14,6 +14,12 @@ import seaborn as sns
 
 plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams['font.size'] = 14
+plt.rcParams['axes.labelsize'] = 16
+plt.rcParams['axes.titlesize'] = 20
+plt.rcParams['xtick.labelsize'] = 14
+plt.rcParams['ytick.labelsize'] = 14
+plt.rcParams['legend.fontsize'] = 14
 
 BENCHMARK_PATH = '/Users/herbit/Desktop/code/FlowSight-Dataset/benchmark_run'
 BASE_PATH = '/Users/herbit/Desktop/code/FlowSight-Dataset/paper/sysu_thesis/sysu-thesis-1.1.20230212/image/chap05'
@@ -62,12 +68,12 @@ def generate_chap05_charts():
     wedges, texts, autotexts = ax.pie(sizes, labels=labels, colors=colors_pie, 
                                        autopct='%1.1f%%', startangle=90)
     for text in texts:
-        text.set_fontsize(14)
+        text.set_fontsize(18)
         text.set_fontweight('bold')
     for autotext in autotexts:
-        autotext.set_fontsize(13)
+        autotext.set_fontsize(16)
         autotext.set_fontweight('bold')
-    ax.set_title('Data Distribution', fontsize=18, fontweight='bold')
+    ax.set_title('Data Distribution', fontsize=22, fontweight='bold')
     plt.tight_layout()
     plt.savefig(f'{BASE_PATH}/data_distribution.pdf', dpi=200)
     plt.close()
@@ -81,19 +87,20 @@ def generate_chap05_charts():
         model_acc[model] = correct / total * 100 if total > 0 else 0
     
     sorted_models = sorted(model_acc.items(), key=lambda x: x[1], reverse=True)
-    model_labels = [m[0].split('/')[-1].replace('-', '\n') for m in sorted_models]
+    # 使用完整模型名
+    model_labels = [m[0].split('/')[-1] for m in sorted_models]
     accuracies = [m[1] for m in sorted_models]
-    
-    fig, ax = plt.subplots(figsize=(16, 10))
+
+    fig, ax = plt.subplots(figsize=(18, 12))
     colors = plt.cm.viridis(np.linspace(0.2, 0.8, len(model_labels)))
     bars = ax.barh(range(len(model_labels)), accuracies, color=colors, height=0.6)
     ax.set_yticks(range(len(model_labels)))
-    ax.set_yticklabels(model_labels, fontsize=11, fontweight='bold')
-    ax.set_xlabel('Accuracy (%)', fontsize=15, fontweight='bold')
-    ax.set_title('Overall Accuracy by Model', fontsize=18, fontweight='bold')
+    ax.set_yticklabels(model_labels, fontsize=18, fontweight='bold')
+    ax.set_xlabel('Accuracy (%)', fontsize=22, fontweight='bold')
+    ax.set_title('Overall Accuracy by Model', fontsize=26, fontweight='bold')
     ax.set_xlim(55, 95)
     for i, v in enumerate(accuracies):
-        ax.text(v + 2.0, i, f'{v:.1f}%', va='center', fontsize=12, fontweight='bold')
+        ax.text(v + 2.0, i, f'{v:.1f}%', va='center', fontsize=18, fontweight='bold')
     ax.grid(axis='x', alpha=0.3)
     plt.tight_layout()
     plt.savefig(f'{BASE_PATH}/overall_accuracy.pdf', dpi=200)
@@ -116,13 +123,13 @@ def generate_chap05_charts():
     colors = ['#2196F3', '#4CAF50', '#FF9800', '#F44336']
     bars = ax.bar(range(len(dtypes)), dtype_acc, color=colors, width=0.6, edgecolor='black', linewidth=1.5)
     ax.set_xticks(range(len(dtypes)))
-    ax.set_xticklabels([dtype_names[d] for d in dtypes], fontsize=14, fontweight='bold')
-    ax.set_ylabel('Accuracy (%)', fontsize=15, fontweight='bold')
-    ax.set_title('Accuracy by Data Type', fontsize=18, fontweight='bold')
+    ax.set_xticklabels([dtype_names[d] for d in dtypes], fontsize=16, fontweight='bold')
+    ax.set_ylabel('Accuracy (%)', fontsize=18, fontweight='bold')
+    ax.set_title('Accuracy by Data Type', fontsize=22, fontweight='bold')
     ax.set_ylim(0, 100)
     for bar, acc in zip(bars, dtype_acc):
         ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 1.5, 
-                f'{acc:.1f}%', ha='center', fontsize=13, fontweight='bold')
+                f'{acc:.1f}%', ha='center', fontsize=16, fontweight='bold')
     ax.grid(axis='y', alpha=0.3)
     plt.tight_layout()
     plt.savefig(f'{BASE_PATH}/difficulty_analysis.pdf', dpi=200)
@@ -147,13 +154,13 @@ def generate_chap05_charts():
     colors = ['#4CAF50', '#2196F3', '#FF5722']
     bars = ax.bar(range(len(qtypes)), qtype_acc, color=colors, width=0.6, edgecolor='black', linewidth=1.5)
     ax.set_xticks(range(len(qtypes)))
-    ax.set_xticklabels([q.capitalize() for q in qtypes], fontsize=14, fontweight='bold')
-    ax.set_ylabel('Accuracy (%)', fontsize=15, fontweight='bold')
-    ax.set_title('Accuracy by Question Type (Overall)', fontsize=18, fontweight='bold')
+    ax.set_xticklabels([q.capitalize() for q in qtypes], fontsize=16, fontweight='bold')
+    ax.set_ylabel('Accuracy (%)', fontsize=18, fontweight='bold')
+    ax.set_title('Accuracy by Question Type (Overall)', fontsize=22, fontweight='bold')
     ax.set_ylim(0, 100)
     for bar, acc in zip(bars, qtype_acc):
         ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 1.5, 
-                f'{acc:.1f}%', ha='center', fontsize=14, fontweight='bold')
+                f'{acc:.1f}%', ha='center', fontsize=16, fontweight='bold')
     ax.grid(axis='y', alpha=0.3)
     plt.tight_layout()
     plt.savefig(f'{BASE_PATH}/qtype_overall_accuracy.pdf', dpi=200)
@@ -169,25 +176,31 @@ def generate_chap05_charts():
                 qt = pq.get('type', '').lower()
                 if qt in model_qtype:
                     model_qtype[qt][model].append(1 if pq.get('is_correct', False) else 0)
-    
+
     factual_acc = [np.mean(model_qtype['factual'].get(m, [0])) * 100 for m in models]
     reasoning_acc = [np.mean(model_qtype['reasoning'].get(m, [0])) * 100 for m in models]
     negation_acc = [np.mean(model_qtype['negation'].get(m, [0])) * 100 for m in models]
+
+    # 使用完整模型名
+    model_labels = [m.split('/')[-1] for m in models]
+
+    # 横向柱状图
+    fig, ax = plt.subplots(figsize=(12, 14))
+    y = np.arange(len(models))
+    height = 0.25
     
-    fig, ax = plt.subplots(figsize=(14, 8))
-    x = np.arange(len(models))
-    width = 0.25
-    ax.bar(x - width, factual_acc, width, label='Factual', color='#4CAF50', alpha=0.85, edgecolor='black', linewidth=0.5)
-    ax.bar(x, reasoning_acc, width, label='Reasoning', color='#2196F3', alpha=0.85, edgecolor='black', linewidth=0.5)
-    ax.bar(x + width, negation_acc, width, label='Negation', color='#FF5722', alpha=0.85, edgecolor='black', linewidth=0.5)
-    ax.set_xlabel('Model', fontsize=14, fontweight='bold')
-    ax.set_ylabel('Accuracy (%)', fontsize=14, fontweight='bold')
-    ax.set_title('Accuracy by Question Type', fontsize=16, fontweight='bold')
-    ax.set_xticks(x)
-    ax.set_xticklabels([m.split('/')[-1].replace('-', '\n') for m in models], fontsize=9, fontweight='bold')
-    ax.legend(loc='upper right', fontsize=12)
-    ax.set_ylim(0, 110)
-    ax.grid(axis='y', alpha=0.3)
+    ax.barh(y - height, factual_acc, height, label='Factual', color='#4CAF50', alpha=0.85, edgecolor='black', linewidth=0.5)
+    ax.barh(y, reasoning_acc, height, label='Reasoning', color='#2196F3', alpha=0.85, edgecolor='black', linewidth=0.5)
+    ax.barh(y + height, negation_acc, height, label='Negation', color='#FF5722', alpha=0.85, edgecolor='black', linewidth=0.5)
+    
+    ax.set_xlabel('Accuracy (%)', fontsize=20, fontweight='bold')
+    ax.set_ylabel('Model', fontsize=20, fontweight='bold')
+    ax.set_title('Accuracy by Question Type', fontsize=24, fontweight='bold')
+    ax.set_yticks(y)
+    ax.set_yticklabels(model_labels, fontsize=12, fontweight='bold')
+    ax.legend(loc='lower right', fontsize=16)
+    ax.set_xlim(0, 110)
+    ax.grid(axis='x', alpha=0.3)
     plt.tight_layout()
     plt.savefig(f'{BASE_PATH}/question_type_accuracy.pdf', dpi=200)
     plt.close()
@@ -217,12 +230,12 @@ def generate_chap05_charts():
     ax.bar(x - width, factual_data, width, label='Factual', color='#4CAF50', alpha=0.85, edgecolor='black', linewidth=1)
     ax.bar(x, reasoning_data, width, label='Reasoning', color='#2196F3', alpha=0.85, edgecolor='black', linewidth=1)
     ax.bar(x + width, negation_data, width, label='Negation', color='#FF5722', alpha=0.85, edgecolor='black', linewidth=1)
-    ax.set_xlabel('Data Type', fontsize=14, fontweight='bold')
-    ax.set_ylabel('Accuracy (%)', fontsize=14, fontweight='bold')
-    ax.set_title('Data Type × Question Type', fontsize=16, fontweight='bold')
+    ax.set_xlabel('Data Type', fontsize=18, fontweight='bold')
+    ax.set_ylabel('Accuracy (%)', fontsize=18, fontweight='bold')
+    ax.set_title('Data Type × Question Type', fontsize=22, fontweight='bold')
     ax.set_xticks(x)
-    ax.set_xticklabels([dtype_names[dt] for dt in dtypes], fontsize=13, fontweight='bold')
-    ax.legend(loc='upper right', fontsize=12)
+    ax.set_xticklabels([dtype_names[dt] for dt in dtypes], fontsize=16, fontweight='bold')
+    ax.legend(loc='upper right', fontsize=16)
     ax.set_ylim(0, 110)
     ax.grid(axis='y', alpha=0.3)
     plt.tight_layout()
@@ -242,17 +255,21 @@ def generate_chap05_charts():
                         correct += task['correct']
                         total += task['total']
             model_dtype_acc[model][dt] = correct / total * 100 if total > 0 else 0
-    
+
     df = pd.DataFrame(model_dtype_acc).T
     df.columns = [dtype_names[d] for d in dtypes]
-    df.index = [m.split('/')[-1].replace('-', '\n') for m in df.index]
-    
-    fig, ax = plt.subplots(figsize=(12, 9))
-    sns.heatmap(df, annot=True, fmt='.1f', cmap='YlOrRd', vmin=55, vmax=95, ax=ax, 
-                cbar_kws={'label': 'Accuracy (%)'}, annot_kws={'fontsize': 10, 'fontweight': 'bold'})
-    ax.set_title('Model × Data Type Accuracy', fontsize=16, fontweight='bold')
-    ax.set_xlabel('Data Type', fontsize=13, fontweight='bold')
-    ax.set_ylabel('Model', fontsize=13, fontweight='bold')
+    # 使用完整模型名
+    df.index = [m.split('/')[-1] for m in df.index]
+
+    fig, ax = plt.subplots(figsize=(14, 10))
+    sns.heatmap(df, annot=True, fmt='.1f', cmap='YlOrRd', vmin=55, vmax=95, ax=ax,
+                cbar_kws={'label': 'Accuracy (%)'}, annot_kws={'fontsize': 14, 'fontweight': 'bold'})
+    ax.set_title('Model × Data Type Accuracy', fontsize=24, fontweight='bold')
+    ax.set_xlabel('Data Type', fontsize=20, fontweight='bold')
+    ax.set_ylabel('Model', fontsize=20, fontweight='bold')
+    ax.tick_params(axis='both', labelsize=14)
+    cbar = ax.collections[0].colorbar
+    cbar.ax.tick_params(labelsize=14)
     plt.tight_layout()
     plt.savefig(f'{BASE_PATH}/model_dtype_heatmap.pdf', dpi=200)
     plt.close()
@@ -280,35 +297,35 @@ def generate_chap05_charts():
     width = 0.35
     ax.bar(x - width/2, inst_acc, width, label='Instruct', color='#9C27B0', alpha=0.85, edgecolor='black')
     ax.bar(x + width/2, think_acc, width, label='Thinking', color='#FF9800', alpha=0.85, edgecolor='black')
-    ax.set_xlabel('Parameter Size', fontsize=14, fontweight='bold')
-    ax.set_ylabel('Accuracy (%)', fontsize=14, fontweight='bold')
-    ax.set_title('Thinking vs Instruct Mode', fontsize=16, fontweight='bold')
+    ax.set_xlabel('Parameter Size', fontsize=18, fontweight='bold')
+    ax.set_ylabel('Accuracy (%)', fontsize=18, fontweight='bold')
+    ax.set_title('Thinking vs Instruct Mode', fontsize=22, fontweight='bold')
     ax.set_xticks(x)
-    ax.set_xticklabels(param_sizes, fontsize=13, fontweight='bold')
-    ax.legend(loc='upper right', fontsize=12)
+    ax.set_xticklabels(param_sizes, fontsize=16, fontweight='bold')
+    ax.legend(loc='upper right', fontsize=16)
     ax.set_ylim(70, 95)
     for i, (inst, think) in enumerate(zip(inst_acc, think_acc)):
-        ax.text(i - width/2, inst + 0.5, f'{inst:.1f}%', ha='center', fontsize=11, fontweight='bold')
-        ax.text(i + width/2, think + 0.5, f'{think:.1f}%', ha='center', fontsize=11, fontweight='bold')
+        ax.text(i - width/2, inst + 0.5, f'{inst:.1f}%', ha='center', fontsize=14, fontweight='bold')
+        ax.text(i + width/2, think + 0.5, f'{think:.1f}%', ha='center', fontsize=14, fontweight='bold')
     ax.grid(axis='y', alpha=0.3)
     plt.tight_layout()
     plt.savefig(f'{BASE_PATH}/thinking_vs_instruct.pdf', dpi=200)
     plt.close()
     print("已生成: thinking_vs_instruct.pdf")
     
-    # ===== 8. 思考时间与准确率关系（三个并排折线图）=====
+    # ===== 8. 思考时间与准确率关系（三个竖向排列折线图）=====
     # 每个参数量的模型：按思考时间排序，分20百分位一组
     thinking_model_configs = [
         ('qwen/qwen3-vl-8b-thinking', 'qwen/qwen3-vl-8b-instruct', '8B'),
         ('qwen/qwen3-vl-30b-a3b-thinking', 'qwen/qwen3-vl-30b-a3b-instruct', '30B'),
         ('qwen/qwen3-vl-235b-a22b-thinking', 'qwen/qwen3-vl-235b-a22b-instruct', '235B')
     ]
-    
-    fig, axes = plt.subplots(1, 3, figsize=(16, 5))
-    
+
+    fig, axes = plt.subplots(3, 1, figsize=(10, 10))
+
     for idx, (think_model, inst_model, param) in enumerate(thinking_model_configs):
         ax = axes[idx]
-        
+
         # 收集该模型所有样本的思考时间和准确率
         samples_data = []
         for task_key, task in data['tasks'].items():
@@ -318,52 +335,52 @@ def generate_chap05_charts():
                 if reasoning_tokens > 0:
                     acc = task['correct'] / task['total'] * 100 if task['total'] > 0 else 0
                     samples_data.append({'tokens': reasoning_tokens, 'accuracy': acc})
-        
+
         if len(samples_data) < 10:
-            ax.text(0.5, 0.5, 'Insufficient Data', ha='center', va='center', transform=ax.transAxes)
+            ax.text(0.5, 0.5, 'Insufficient Data', ha='center', va='center', transform=ax.transAxes, fontsize=14)
             ax.set_title(f'{param} Model', fontsize=14, fontweight='bold')
             continue
-        
+
         # 按思考时间排序
         samples_data.sort(key=lambda x: x['tokens'])
         n = len(samples_data)
-        
+
         # 分成5个桶（每20百分位）
         n_per_bucket = n // 5
         bucket_means = []
         bucket_centers = []
-        
+
         for i in range(5):
             start = i * n_per_bucket
             end = start + n_per_bucket if i < 4 else n
             bucket = samples_data[start:end]
-            
+
             avg_tokens = np.mean([s['tokens'] for s in bucket])
             avg_acc = np.mean([s['accuracy'] for s in bucket])
-            
+
             bucket_centers.append(avg_tokens)
             bucket_means.append(avg_acc)
-        
+
         # 绘制折线图
         percentiles = ['P0-20', 'P21-40', 'P41-60', 'P61-80', 'P81-100']
-        ax.plot(percentiles, bucket_means, marker='o', linewidth=2.5, markersize=10, 
+        ax.plot(percentiles, bucket_means, marker='o', linewidth=2, markersize=7,
                 color='#2196F3', label='Thinking')
-        
+
         # 获取instruct模型的整体准确率作为基线
-        inst_correct = sum(t['correct'] for k, t in data['tasks'].items() 
+        inst_correct = sum(t['correct'] for k, t in data['tasks'].items()
                          if t['model'] == inst_model and t['status'] == 'done')
-        inst_total = sum(t['total'] for k, t in data['tasks'].items() 
+        inst_total = sum(t['total'] for k, t in data['tasks'].items()
                         if t['model'] == inst_model and t['status'] == 'done')
         inst_acc_val = inst_correct / inst_total * 100 if inst_total > 0 else 0
-        
+
         # 绘制基线虚线
-        ax.axhline(y=inst_acc_val, color='#9C27B0', linestyle='--', linewidth=2, 
+        ax.axhline(y=inst_acc_val, color='#9C27B0', linestyle='--', linewidth=2,
                    label=f'Instruct: {inst_acc_val:.1f}%')
-        
-        ax.set_xlabel('Thinking Time Percentile', fontsize=12, fontweight='bold')
-        ax.set_ylabel('Accuracy (%)', fontsize=12, fontweight='bold')
+
+        ax.set_xlabel('Thinking Time Percentile', fontsize=11, fontweight='bold')
+        ax.set_ylabel('Accuracy (%)', fontsize=11, fontweight='bold')
         ax.set_title(f'{param} Model', fontsize=14, fontweight='bold')
-        ax.legend(loc='upper right', fontsize=10)
+        ax.legend(loc='upper right', fontsize=9)
         ax.set_ylim(60, 100)
         ax.grid(True, alpha=0.3)
     
@@ -404,7 +421,7 @@ def generate_chap05_charts():
             point_colors.append(['#2196F3', '#4CAF50', '#FF9800', '#F44336'][i])
     
     if not avg_tokens:
-        ax.text(0.5, 0.5, 'No Data', ha='center', va='center', transform=ax.transAxes)
+        ax.text(0.5, 0.5, 'No Data', ha='center', va='center', transform=ax.transAxes, fontsize=16)
     else:
         for i, dt in enumerate(dtypes):
             if not dt_data[dt]['tokens']:
@@ -419,10 +436,10 @@ def generate_chap05_charts():
             x_line = np.linspace(min(avg_tokens), max(avg_tokens), 100)
             ax.plot(x_line, p(x_line), 'r--', alpha=0.6, linewidth=2, label='Trend')
     
-    ax.set_xlabel('Avg Thinking Tokens', fontsize=12, fontweight='bold')
-    ax.set_ylabel('Avg Accuracy (%)', fontsize=12, fontweight='bold')
-    ax.set_title('Data Type × Thinking Length vs Accuracy (Thinking Models)', fontsize=14, fontweight='bold')
-    ax.legend(loc='best', fontsize=9)
+    ax.set_xlabel('Avg Thinking Tokens', fontsize=16, fontweight='bold')
+    ax.set_ylabel('Avg Accuracy (%)', fontsize=16, fontweight='bold')
+    ax.set_title('Data Type × Thinking Length vs Accuracy (Thinking Models)', fontsize=18, fontweight='bold')
+    ax.legend(loc='best', fontsize=12)
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
     plt.savefig(f'{BASE_PATH}/thinking_dtype_all.pdf', dpi=200)
@@ -442,10 +459,13 @@ def generate_chap05_charts():
     
     fig, ax = plt.subplots(figsize=(10, 7))
     sns.heatmap(df_heatmap, annot=True, fmt='.1f', cmap='YlOrRd', vmin=50, vmax=95, ax=ax,
-                annot_kws={'fontsize': 14, 'fontweight': 'bold'}, cbar_kws={'label': 'Accuracy (%)'})
-    ax.set_title('Data Type × Question Type Heatmap', fontsize=16, fontweight='bold')
-    ax.set_xlabel('Question Type', fontsize=13, fontweight='bold')
-    ax.set_ylabel('Data Type', fontsize=13, fontweight='bold')
+                annot_kws={'fontsize': 16, 'fontweight': 'bold'}, cbar_kws={'label': 'Accuracy (%)'})
+    ax.set_title('Data Type × Question Type Heatmap', fontsize=22, fontweight='bold')
+    ax.set_xlabel('Question Type', fontsize=18, fontweight='bold')
+    ax.set_ylabel('Data Type', fontsize=18, fontweight='bold')
+    ax.tick_params(axis='both', labelsize=14)
+    cbar = ax.collections[0].colorbar
+    cbar.ax.tick_params(labelsize=12)
     plt.tight_layout()
     plt.savefig(f'{BASE_PATH}/dtype_qtype_by_model.pdf', dpi=200)
     plt.close()
@@ -495,44 +515,42 @@ def generate_statistical_charts():
             if task['model'] == model and task['status'] == 'done':
                 correct += task['correct']
                 total += task['total']
-        
+
         if total > 0:
             acc = correct / total * 100
             ci_low, ci_high = wilson_ci(correct, total)
+            # 使用完整模型名
+            name = model.split('/')[-1]
             model_stats.append({
-                'model': model.split('/')[-1].replace('-', '\n'),
+                'model': name,
                 'acc': acc,
                 'ci_low': ci_low * 100,
                 'ci_high': ci_high * 100
             })
-    
+
     model_stats.sort(key=lambda x: x['acc'], reverse=True)
-    
-    fig, ax = plt.subplots(figsize=(14, 9))
+
+    fig, ax = plt.subplots(figsize=(16, 10))
     y_pos = range(len(model_stats))
     accs = [m['acc'] for m in model_stats]
     errors = [[m['acc'] - m['ci_low'] for m in model_stats],
               [m['ci_high'] - m['acc'] for m in model_stats]]
-    
+
     colors = plt.cm.viridis(np.linspace(0.2, 0.8, len(model_stats)))
-    ax.barh(y_pos, accs, xerr=errors, color=colors, height=0.6, 
+    ax.barh(y_pos, accs, xerr=errors, color=colors, height=0.6,
             error_kw={'ecolor': 'gray', 'capsize': 5, 'capthick': 2, 'elinewidth': 2},
             edgecolor='black', linewidth=1)
-    
-    # 添加随机基线
-    ax.axvline(x=25, color='red', linestyle='--', linewidth=2, label='Random (25%)')
-    
+
     ax.set_yticks(y_pos)
-    ax.set_yticklabels([m['model'] for m in model_stats], fontsize=10, fontweight='bold')
-    ax.set_xlabel('Accuracy (%)', fontsize=14, fontweight='bold')
-    ax.set_title('Model Accuracy with 95% Confidence Intervals', fontsize=16, fontweight='bold')
+    ax.set_yticklabels([m['model'] for m in model_stats], fontsize=16, fontweight='bold')
+    ax.set_xlabel('Accuracy (%)', fontsize=20, fontweight='bold')
+    ax.set_title('Model Accuracy with 95% Confidence Intervals', fontsize=24, fontweight='bold')
     ax.set_xlim(60, 95)
-    ax.legend(loc='lower right', fontsize=12)
     ax.grid(axis='x', alpha=0.3)
-    
+
     # 添加数值标签
     for i, m in enumerate(model_stats):
-        ax.text(m['acc'] + 1.5, i, f"{m['acc']:.1f}%", va='center', fontsize=10, fontweight='bold')
+        ax.text(m['acc'] + 1.5, i, f"{m['acc']:.1f}%", va='center', fontsize=16, fontweight='bold')
     
     plt.tight_layout()
     plt.savefig(f'{BASE_PATH}/model_ci.pdf', dpi=200)
@@ -571,18 +589,15 @@ def generate_statistical_charts():
             error_kw={'ecolor': 'gray', 'capsize': 5, 'capthick': 2, 'elinewidth': 2},
             edgecolor='black', linewidth=1.5)
     
-    ax.axvline(x=25, color='red', linestyle='--', linewidth=2, label='Random (25%)')
-    
     ax.set_yticks(y_pos)
-    ax.set_yticklabels([d['dtype'] for d in dtype_stats], fontsize=13, fontweight='bold')
-    ax.set_xlabel('Accuracy (%)', fontsize=14, fontweight='bold')
-    ax.set_title('Data Type Accuracy with 95% Confidence Intervals', fontsize=16, fontweight='bold')
+    ax.set_yticklabels([d['dtype'] for d in dtype_stats], fontsize=16, fontweight='bold')
+    ax.set_xlabel('Accuracy (%)', fontsize=18, fontweight='bold')
+    ax.set_title('Data Type Accuracy with 95% Confidence Intervals', fontsize=22, fontweight='bold')
     ax.set_xlim(60, 95)
-    ax.legend(loc='lower right', fontsize=12)
     ax.grid(axis='x', alpha=0.3)
     
     for i, d in enumerate(dtype_stats):
-        ax.text(d['acc'] + 1.5, i, f"{d['acc']:.1f}%", va='center', fontsize=12, fontweight='bold')
+        ax.text(d['acc'] + 1.5, i, f"{d['acc']:.1f}%", va='center', fontsize=14, fontweight='bold')
     
     plt.tight_layout()
     plt.savefig(f'{BASE_PATH}/dtype_ci.pdf', dpi=200)
@@ -622,18 +637,15 @@ def generate_statistical_charts():
             error_kw={'ecolor': 'gray', 'capsize': 5, 'capthick': 2, 'elinewidth': 2},
             edgecolor='black', linewidth=1.5)
     
-    ax.axvline(x=25, color='red', linestyle='--', linewidth=2, label='Random (25%)')
-    
     ax.set_yticks(y_pos)
-    ax.set_yticklabels([q['qtype'] for q in qtype_stats], fontsize=13, fontweight='bold')
-    ax.set_xlabel('Accuracy (%)', fontsize=14, fontweight='bold')
-    ax.set_title('Question Type Accuracy with 95% Confidence Intervals', fontsize=16, fontweight='bold')
+    ax.set_yticklabels([q['qtype'] for q in qtype_stats], fontsize=16, fontweight='bold')
+    ax.set_xlabel('Accuracy (%)', fontsize=18, fontweight='bold')
+    ax.set_title('Question Type Accuracy with 95% Confidence Intervals', fontsize=22, fontweight='bold')
     ax.set_xlim(60, 95)
-    ax.legend(loc='lower right', fontsize=12)
     ax.grid(axis='x', alpha=0.3)
     
     for i, q in enumerate(qtype_stats):
-        ax.text(q['acc'] + 1.5, i, f"{q['acc']:.1f}%", va='center', fontsize=12, fontweight='bold')
+        ax.text(q['acc'] + 1.5, i, f"{q['acc']:.1f}%", va='center', fontsize=14, fontweight='bold')
     
     plt.tight_layout()
     plt.savefig(f'{BASE_PATH}/qtype_ci.pdf', dpi=200)
@@ -673,18 +685,15 @@ def generate_statistical_charts():
             error_kw={'ecolor': 'gray', 'capsize': 5, 'capthick': 2, 'elinewidth': 2},
             edgecolor='black', linewidth=1.5)
     
-    ax.axvline(x=25, color='red', linestyle='--', linewidth=2, label='Random (25%)')
-    
     ax.set_yticks(y_pos)
-    ax.set_yticklabels([d['difficulty'] for d in diff_stats], fontsize=13, fontweight='bold')
-    ax.set_xlabel('Accuracy (%)', fontsize=14, fontweight='bold')
-    ax.set_title('Difficulty Level Accuracy with 95% Confidence Intervals', fontsize=16, fontweight='bold')
+    ax.set_yticklabels([d['difficulty'] for d in diff_stats], fontsize=16, fontweight='bold')
+    ax.set_xlabel('Accuracy (%)', fontsize=18, fontweight='bold')
+    ax.set_title('Difficulty Level Accuracy with 95% Confidence Intervals', fontsize=22, fontweight='bold')
     ax.set_xlim(60, 95)
-    ax.legend(loc='lower right', fontsize=12)
     ax.grid(axis='x', alpha=0.3)
     
     for i, d in enumerate(diff_stats):
-        ax.text(d['acc'] + 1.5, i, f"{d['acc']:.1f}%", va='center', fontsize=12, fontweight='bold')
+        ax.text(d['acc'] + 1.5, i, f"{d['acc']:.1f}%", va='center', fontsize=14, fontweight='bold')
     
     plt.tight_layout()
     plt.savefig(f'{BASE_PATH}/difficulty_ci.pdf', dpi=200)
