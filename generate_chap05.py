@@ -453,5 +453,243 @@ def generate_chap05_charts():
     
     print("\n第五章所有图表生成完成！")
 
+def generate_statistical_charts():
+    """生成统计分析图表（置信区间图）"""
+    import json
+    import math
+    import matplotlib.pyplot as plt
+    import numpy as np
+    
+    plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
+    plt.rcParams['axes.unicode_minus'] = False
+    
+    BENCHMARK_PATH = '/Users/herbit/Desktop/code/FlowSight-Dataset/benchmark_run'
+    BASE_PATH = '/Users/herbit/Desktop/code/FlowSight-Dataset/paper/sysu_thesis/sysu-thesis-1.1.20230212/image/chap05'
+    
+    with open(f'{BENCHMARK_PATH}/state.json', 'r') as f:
+        data = json.load(f)
+    
+    sample_to_dtype = {sid: sinfo['data_type'] for sid, sinfo in data['samples'].items()}
+    models = data['models']
+    dtypes = ['real', 'meaningful', 'chaos', 'misleading']
+    qtypes = ['factual', 'reasoning', 'negation']
+    difficulties = ['easy', 'medium', 'hard']
+    
+    # Wilson置信区间
+    def wilson_ci(successes, total, confidence=0.95):
+        if total == 0:
+            return 0, 0
+        p = successes / total
+        z = 1.96
+        denom = 1 + z**2 / total
+        center = (p + z**2 / (2 * total)) / denom
+        margin = z * math.sqrt(p * (1 - p) / total + z**2 / (4 * total**2)) / denom
+        return max(0, center - margin), min(1, center + margin)
+    
+    # ===== A. 模型置信区间 =====
+    model_stats = []
+    for model in models:
+        correct = 0
+        total = 0
+        for task in data['tasks'].values():
+            if task['model'] == model and task['status'] == 'done':
+                correct += task['correct']
+                total += task['total']
+        
+        if total > 0:
+            acc = correct / total * 100
+            ci_low, ci_high = wilson_ci(correct, total)
+            model_stats.append({
+                'model': model.split('/')[-1].replace('-', '\n'),
+                'acc': acc,
+                'ci_low': ci_low * 100,
+                'ci_high': ci_high * 100
+            })
+    
+    model_stats.sort(key=lambda x: x['acc'], reverse=True)
+    
+    fig, ax = plt.subplots(figsize=(14, 9))
+    y_pos = range(len(model_stats))
+    accs = [m['acc'] for m in model_stats]
+    errors = [[m['acc'] - m['ci_low'] for m in model_stats],
+              [m['ci_high'] - m['acc'] for m in model_stats]]
+    
+    colors = plt.cm.viridis(np.linspace(0.2, 0.8, len(model_stats)))
+    ax.barh(y_pos, accs, xerr=errors, color=colors, height=0.6, 
+            error_kw={'ecolor': 'gray', 'capsize': 5, 'capthick': 2, 'elinewidth': 2},
+            edgecolor='black', linewidth=1)
+    
+    # 添加随机基线
+    ax.axvline(x=25, color='red', linestyle='--', linewidth=2, label='Random (25%)')
+    
+    ax.set_yticks(y_pos)
+    ax.set_yticklabels([m['model'] for m in model_stats], fontsize=10, fontweight='bold')
+    ax.set_xlabel('Accuracy (%)', fontsize=14, fontweight='bold')
+    ax.set_title('Model Accuracy with 95% Confidence Intervals', fontsize=16, fontweight='bold')
+    ax.set_xlim(60, 95)
+    ax.legend(loc='lower right', fontsize=12)
+    ax.grid(axis='x', alpha=0.3)
+    
+    # 添加数值标签
+    for i, m in enumerate(model_stats):
+        ax.text(m['acc'] + 1.5, i, f"{m['acc']:.1f}%", va='center', fontsize=10, fontweight='bold')
+    
+    plt.tight_layout()
+    plt.savefig(f'{BASE_PATH}/model_ci.pdf', dpi=200)
+    plt.close()
+    print("已生成: model_ci.pdf")
+    
+    # ===== B. 数据类型置信区间 =====
+    dtype_stats = []
+    for dtype in dtypes:
+        correct = 0
+        total = 0
+        for task in data['tasks'].values():
+            if task['status'] == 'done':
+                if sample_to_dtype.get(task['sample_id']) == dtype:
+                    correct += task['correct']
+                    total += task['total']
+        
+        if total > 0:
+            acc = correct / total * 100
+            ci_low, ci_high = wilson_ci(correct, total)
+            dtype_stats.append({
+                'dtype': dtype.capitalize(),
+                'acc': acc,
+                'ci_low': ci_low * 100,
+                'ci_high': ci_high * 100
+            })
+    
+    fig, ax = plt.subplots(figsize=(10, 7))
+    y_pos = range(len(dtype_stats))
+    accs = [d['acc'] for d in dtype_stats]
+    errors = [[d['acc'] - d['ci_low'] for d in dtype_stats],
+              [d['ci_high'] - d['acc'] for d in dtype_stats]]
+    
+    colors = ['#2196F3', '#4CAF50', '#FF9800', '#F44336']
+    ax.barh(y_pos, accs, xerr=errors, color=colors, height=0.6,
+            error_kw={'ecolor': 'gray', 'capsize': 5, 'capthick': 2, 'elinewidth': 2},
+            edgecolor='black', linewidth=1.5)
+    
+    ax.axvline(x=25, color='red', linestyle='--', linewidth=2, label='Random (25%)')
+    
+    ax.set_yticks(y_pos)
+    ax.set_yticklabels([d['dtype'] for d in dtype_stats], fontsize=13, fontweight='bold')
+    ax.set_xlabel('Accuracy (%)', fontsize=14, fontweight='bold')
+    ax.set_title('Data Type Accuracy with 95% Confidence Intervals', fontsize=16, fontweight='bold')
+    ax.set_xlim(60, 95)
+    ax.legend(loc='lower right', fontsize=12)
+    ax.grid(axis='x', alpha=0.3)
+    
+    for i, d in enumerate(dtype_stats):
+        ax.text(d['acc'] + 1.5, i, f"{d['acc']:.1f}%", va='center', fontsize=12, fontweight='bold')
+    
+    plt.tight_layout()
+    plt.savefig(f'{BASE_PATH}/dtype_ci.pdf', dpi=200)
+    plt.close()
+    print("已生成: dtype_ci.pdf")
+    
+    # ===== C. 题型置信区间 =====
+    qtype_stats = []
+    for qtype in qtypes:
+        correct = 0
+        total = 0
+        for task in data['tasks'].values():
+            if task['status'] == 'done':
+                for pq in task.get('per_question', []):
+                    if pq.get('type', '').lower() == qtype:
+                        correct += 1 if pq.get('is_correct', False) else 0
+                        total += 1
+        
+        if total > 0:
+            acc = correct / total * 100
+            ci_low, ci_high = wilson_ci(correct, total)
+            qtype_stats.append({
+                'qtype': qtype.capitalize(),
+                'acc': acc,
+                'ci_low': ci_low * 100,
+                'ci_high': ci_high * 100
+            })
+    
+    fig, ax = plt.subplots(figsize=(10, 7))
+    y_pos = range(len(qtype_stats))
+    accs = [q['acc'] for q in qtype_stats]
+    errors = [[q['acc'] - q['ci_low'] for q in qtype_stats],
+              [q['ci_high'] - q['acc'] for q in qtype_stats]]
+    
+    colors = ['#4CAF50', '#2196F3', '#FF5722']
+    ax.barh(y_pos, accs, xerr=errors, color=colors, height=0.6,
+            error_kw={'ecolor': 'gray', 'capsize': 5, 'capthick': 2, 'elinewidth': 2},
+            edgecolor='black', linewidth=1.5)
+    
+    ax.axvline(x=25, color='red', linestyle='--', linewidth=2, label='Random (25%)')
+    
+    ax.set_yticks(y_pos)
+    ax.set_yticklabels([q['qtype'] for q in qtype_stats], fontsize=13, fontweight='bold')
+    ax.set_xlabel('Accuracy (%)', fontsize=14, fontweight='bold')
+    ax.set_title('Question Type Accuracy with 95% Confidence Intervals', fontsize=16, fontweight='bold')
+    ax.set_xlim(60, 95)
+    ax.legend(loc='lower right', fontsize=12)
+    ax.grid(axis='x', alpha=0.3)
+    
+    for i, q in enumerate(qtype_stats):
+        ax.text(q['acc'] + 1.5, i, f"{q['acc']:.1f}%", va='center', fontsize=12, fontweight='bold')
+    
+    plt.tight_layout()
+    plt.savefig(f'{BASE_PATH}/qtype_ci.pdf', dpi=200)
+    plt.close()
+    print("已生成: qtype_ci.pdf")
+    
+    # ===== D. 难度置信区间 =====
+    diff_stats = []
+    for diff in difficulties:
+        correct = 0
+        total = 0
+        for task in data['tasks'].values():
+            if task['status'] == 'done':
+                for pq in task.get('per_question', []):
+                    if pq.get('difficulty', '').lower() == diff:
+                        correct += 1 if pq.get('is_correct', False) else 0
+                        total += 1
+        
+        if total > 0:
+            acc = correct / total * 100
+            ci_low, ci_high = wilson_ci(correct, total)
+            diff_stats.append({
+                'difficulty': diff.capitalize(),
+                'acc': acc,
+                'ci_low': ci_low * 100,
+                'ci_high': ci_high * 100
+            })
+    
+    fig, ax = plt.subplots(figsize=(10, 7))
+    y_pos = range(len(diff_stats))
+    accs = [d['acc'] for d in diff_stats]
+    errors = [[d['acc'] - d['ci_low'] for d in diff_stats],
+              [d['ci_high'] - d['acc'] for d in diff_stats]]
+    
+    colors = ['#8BC34A', '#FFC107', '#F44336']  # 绿色->黄色->红色 表示easy->hard
+    ax.barh(y_pos, accs, xerr=errors, color=colors, height=0.6,
+            error_kw={'ecolor': 'gray', 'capsize': 5, 'capthick': 2, 'elinewidth': 2},
+            edgecolor='black', linewidth=1.5)
+    
+    ax.axvline(x=25, color='red', linestyle='--', linewidth=2, label='Random (25%)')
+    
+    ax.set_yticks(y_pos)
+    ax.set_yticklabels([d['difficulty'] for d in diff_stats], fontsize=13, fontweight='bold')
+    ax.set_xlabel('Accuracy (%)', fontsize=14, fontweight='bold')
+    ax.set_title('Difficulty Level Accuracy with 95% Confidence Intervals', fontsize=16, fontweight='bold')
+    ax.set_xlim(60, 95)
+    ax.legend(loc='lower right', fontsize=12)
+    ax.grid(axis='x', alpha=0.3)
+    
+    for i, d in enumerate(diff_stats):
+        ax.text(d['acc'] + 1.5, i, f"{d['acc']:.1f}%", va='center', fontsize=12, fontweight='bold')
+    
+    plt.tight_layout()
+    plt.savefig(f'{BASE_PATH}/difficulty_ci.pdf', dpi=200)
+    plt.close()
+    print("已生成: difficulty_ci.pdf")
+
 if __name__ == '__main__':
-    generate_chap05_charts()
+    generate_statistical_charts()
