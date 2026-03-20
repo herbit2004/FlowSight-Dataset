@@ -495,6 +495,21 @@ def generate_statistical_charts():
     qtypes = ['factual', 'reasoning', 'negation']
     difficulties = ['easy', 'medium', 'hard']
     
+    # 完整模型名映射表
+    MODEL_DISPLAY = {
+        'qwen/qwen3-vl-8b-instruct':         'Qwen3-VL-8B-Instruct',
+        'qwen/qwen3-vl-30b-a3b-instruct':    'Qwen3-VL-30B-A3B-Instruct',
+        'qwen/qwen3-vl-235b-a22b-instruct':   'Qwen3-VL-235B-A22B-Instruct',
+        'qwen/qwen3-vl-8b-thinking':         'Qwen3-VL-8B-Thinking',
+        'qwen/qwen3-vl-30b-a3b-thinking':    'Qwen3-VL-30B-A3B-Thinking',
+        'qwen/qwen3-vl-235b-a22b-thinking':  'Qwen3-VL-235B-A22B-Thinking',
+        'google/gemini-2.5-flash':            'Gemini-2.5-Flash',
+        'google/gemini-2.5-flash-image':      'Gemini-2.5-Flash-Image',
+        'google/gemini-2.5-flash-lite':       'Gemini-2.5-Flash-Lite',
+        'openai/gpt-4o-mini':                 'GPT-4o-mini',
+        'minimax/minimax-01':                 'MiniMax-01',
+    }
+    
     # Wilson置信区间
     def wilson_ci(successes, total, confidence=0.95):
         if total == 0:
@@ -519,8 +534,7 @@ def generate_statistical_charts():
         if total > 0:
             acc = correct / total * 100
             ci_low, ci_high = wilson_ci(correct, total)
-            # 使用完整模型名
-            name = model.split('/')[-1]
+            name = MODEL_DISPLAY.get(model, model)
             model_stats.append({
                 'model': name,
                 'acc': acc,
@@ -530,7 +544,7 @@ def generate_statistical_charts():
 
     model_stats.sort(key=lambda x: x['acc'], reverse=True)
 
-    fig, ax = plt.subplots(figsize=(16, 10))
+    fig, ax = plt.subplots(figsize=(18, 10))
     y_pos = range(len(model_stats))
     accs = [m['acc'] for m in model_stats]
     errors = [[m['acc'] - m['ci_low'] for m in model_stats],
