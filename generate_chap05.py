@@ -323,18 +323,15 @@ def generate_chap05_charts(regenerate_all=False):
     plt.close()
     print("已生成: thinking_vs_instruct.pdf")
     
-    # ===== 8. 思考时间与准确率关系（三个竖向排列折线图）=====
-    # 每个参数量的模型：按思考时间排序，分20百分位一组
+    # ===== 8. 思考时间与准确率关系（三个独立折线图）=====
     thinking_model_configs = [
         ('qwen/qwen3-vl-8b-thinking', 'qwen/qwen3-vl-8b-instruct', '8B'),
         ('qwen/qwen3-vl-30b-a3b-thinking', 'qwen/qwen3-vl-30b-a3b-instruct', '30B'),
         ('qwen/qwen3-vl-235b-a22b-thinking', 'qwen/qwen3-vl-235b-a22b-instruct', '235B')
     ]
 
-    fig, axes = plt.subplots(3, 1, figsize=(10, 10))
-
     for idx, (think_model, inst_model, param) in enumerate(thinking_model_configs):
-        ax = axes[idx]
+        fig, ax = plt.subplots(figsize=(6, 3))
 
         # 收集该模型所有样本的思考时间和准确率
         samples_data = []
@@ -349,55 +346,49 @@ def generate_chap05_charts(regenerate_all=False):
         if len(samples_data) < 10:
             ax.text(0.5, 0.5, '数据不足', ha='center', va='center', transform=ax.transAxes, fontsize=14)
             ax.set_title(f'{param}模型', fontsize=14, fontweight='bold')
-            continue
+        else:
+            # 按思考时间排序
+            samples_data.sort(key=lambda x: x['tokens'])
+            n = len(samples_data)
 
-        # 按思考时间排序
-        samples_data.sort(key=lambda x: x['tokens'])
-        n = len(samples_data)
+            # 分成5个桶（每20百分位）
+            n_per_bucket = n // 5
+            bucket_means = []
 
-        # 分成5个桶（每20百分位）
-        n_per_bucket = n // 5
-        bucket_means = []
-        bucket_centers = []
+            for i in range(5):
+                start = i * n_per_bucket
+                end = start + n_per_bucket if i < 4 else n
+                bucket = samples_data[start:end]
+                avg_acc = np.mean([s['accuracy'] for s in bucket])
+                bucket_means.append(avg_acc)
 
-        for i in range(5):
-            start = i * n_per_bucket
-            end = start + n_per_bucket if i < 4 else n
-            bucket = samples_data[start:end]
+            # 绘制折线图
+            percentiles = ['P0-20', 'P21-40', 'P41-60', 'P61-80', 'P81-100']
+            ax.plot(percentiles, bucket_means, marker='o', linewidth=2, markersize=7,
+                    color='#2196F3', label='Thinking模式')
 
-            avg_tokens = np.mean([s['tokens'] for s in bucket])
-            avg_acc = np.mean([s['accuracy'] for s in bucket])
+            # 获取instruct模型的整体准确率作为基线
+            inst_correct = sum(t['correct'] for k, t in data['tasks'].items()
+                             if t['model'] == inst_model and t['status'] == 'done')
+            inst_total = sum(t['total'] for k, t in data['tasks'].items()
+                            if t['model'] == inst_model and t['status'] == 'done')
+            inst_acc_val = inst_correct / inst_total * 100 if inst_total > 0 else 0
 
-            bucket_centers.append(avg_tokens)
-            bucket_means.append(avg_acc)
+            # 绘制基线虚线
+            ax.axhline(y=inst_acc_val, color='#9C27B0', linestyle='--', linewidth=2,
+                       label=f'Instruct模式: {inst_acc_val:.1f}%')
 
-        # 绘制折线图
-        percentiles = ['P0-20', 'P21-40', 'P41-60', 'P61-80', 'P81-100']
-        ax.plot(percentiles, bucket_means, marker='o', linewidth=2, markersize=7,
-                color='#2196F3', label='Thinking模式')
+            ax.set_xlabel('思考时间百分位', fontsize=11, fontweight='bold')
+            ax.set_ylabel('准确率 (%)', fontsize=11, fontweight='bold')
+            ax.set_title(f'{param}模型', fontsize=14, fontweight='bold')
+            ax.legend(loc='upper right', fontsize=9)
+            ax.set_ylim(60, 100)
+            ax.grid(True, alpha=0.3)
 
-        # 获取instruct模型的整体准确率作为基线
-        inst_correct = sum(t['correct'] for k, t in data['tasks'].items()
-                         if t['model'] == inst_model and t['status'] == 'done')
-        inst_total = sum(t['total'] for k, t in data['tasks'].items()
-                        if t['model'] == inst_model and t['status'] == 'done')
-        inst_acc_val = inst_correct / inst_total * 100 if inst_total > 0 else 0
-
-        # 绘制基线虚线
-        ax.axhline(y=inst_acc_val, color='#9C27B0', linestyle='--', linewidth=2,
-                   label=f'Instruct模式: {inst_acc_val:.1f}%')
-
-        ax.set_xlabel('思考时间百分位', fontsize=11, fontweight='bold')
-        ax.set_ylabel('准确率 (%)', fontsize=11, fontweight='bold')
-        ax.set_title(f'{param}模型', fontsize=14, fontweight='bold')
-        ax.legend(loc='upper right', fontsize=9)
-        ax.set_ylim(60, 100)
-        ax.grid(True, alpha=0.3)
-    
-    plt.tight_layout()
-    plt.savefig(f'{BASE_PATH}/thinking_time_analysis.pdf', dpi=200)
-    plt.close()
-    print("已生成: thinking_time_analysis.pdf")
+        plt.tight_layout()
+        plt.savefig(f'{BASE_PATH}/thinking_time_{param}.pdf', dpi=200)
+        plt.close()
+        print(f"已生成: thinking_time_{param}.pdf")
     
     # ===== 9. 数据类型 × 思考长度与准确率（不按参数分组，合并展示）=====
     thinking_models = {cfg[0] for cfg in thinking_model_configs}
