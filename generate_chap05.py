@@ -594,7 +594,7 @@ def generate_statistical_charts():
                 'ci_high': ci_high * 100
             })
     
-    fig, ax = plt.subplots(figsize=(10, 7))
+    fig, ax = plt.subplots(figsize=(10, 6))
     y_pos = range(len(dtype_stats))
     accs = [d['acc'] for d in dtype_stats]
     errors = [[d['acc'] - d['ci_low'] for d in dtype_stats],
@@ -642,7 +642,7 @@ def generate_statistical_charts():
                 'ci_high': ci_high * 100
             })
     
-    fig, ax = plt.subplots(figsize=(10, 7))
+    fig, ax = plt.subplots(figsize=(10, 5))
     y_pos = range(len(qtype_stats))
     accs = [q['acc'] for q in qtype_stats]
     errors = [[q['acc'] - q['ci_low'] for q in qtype_stats],
@@ -690,7 +690,7 @@ def generate_statistical_charts():
                 'ci_high': ci_high * 100
             })
     
-    fig, ax = plt.subplots(figsize=(10, 7))
+    fig, ax = plt.subplots(figsize=(10, 5))
     y_pos = range(len(diff_stats))
     accs = [d['acc'] for d in diff_stats]
     errors = [[d['acc'] - d['ci_low'] for d in diff_stats],

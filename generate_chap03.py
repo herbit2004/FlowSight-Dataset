@@ -53,18 +53,18 @@ def render_mermaid(mermaid_code: str, output_path: str, width: int = 1200, retri
 
 # Fig 1: 数据集整体结构（简化版本）
 FIG1_DATASET_STRUCTURE = '''graph TD
-    DS[("FlowSight Dataset<br/>1000 samples")]
-    DS --> REAL["Real Data<br/>500 samples<br/>from GitHub"]
-    DS --> SYN["Synthetic Data<br/>500 samples<br/>LLM Generated"]
-    SYN --> MEAN["Meaningful<br/>200 samples"]
-    SYN --> NONE["Nonsense<br/>300 samples"]
-    NONE --> CHAOS["Chaos<br/>150"]
-    NONE --> MISLED["Misleading<br/>150"]
-    REAL --> ITEM["Sample Format<br/>mmd+png+txt+json"]
+    DS[("FlowSight 数据集<br/>共 1000 条样本")]
+    DS --> REAL["Real<br/>500 条<br/>来自 GitHub"]
+    DS --> SYN["合成数据<br/>500 条<br/>LLM 生成"]
+    SYN --> MEAN["Meaningful<br/>200 条"]
+    SYN --> NONE["无意义<br/>300 条"]
+    NONE --> CHAOS["Chaos<br/>150 条"]
+    NONE --> MISLED["Misleading<br/>150 条"]
+    REAL --> ITEM["样本格式<br/>mmd + png + txt + json"]
     MEAN --> ITEM
     CHAOS --> ITEM
     MISLED --> ITEM
-    ITEM --> QA["6 QA per sample<br/>F/R/N × E/M/H"]
+    ITEM --> QA["每样本 6 道题<br/>F/R/N × E/M/H"]
     style DS fill:#f0f4ff,stroke:#6c8ebf,stroke-width:2px
     style REAL fill:#d5e8d4,stroke:#82b366
     style SYN fill:#fff2cc,stroke:#d6b656
